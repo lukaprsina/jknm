@@ -16,14 +16,13 @@ export const content_validator = z
 
 export const article_hit_validator = z.object({
   objectID: z.string(),
+  is_draft: z.boolean(),
   title: z.string(),
   url: z.string(),
   created_at: z.number(), // unix timestamp
   content_preview: z.string().max(1000), // maybe 600
-  author_names: z.array(z.string()),
+  author_ids: z.array(z.string()),
   image: z.string().optional(),
-  published: z.boolean(),
-  has_draft: z.boolean(),
   year: z.string(),
 });
 

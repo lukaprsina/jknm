@@ -1,0 +1,23 @@
+import React, { createContext } from "react";
+import type { PublishedArticle } from "~/server/db/schema";
+
+const PublishedArticleContext = createContext<
+  typeof PublishedArticle.$inferSelect | undefined
+>(undefined);
+
+type PublishedArticleProviderProps = {
+  published_article: typeof PublishedArticle.$inferSelect;
+  children: React.ReactNode;
+};
+
+export const PublishedArticleProvider: React.FC<
+  PublishedArticleProviderProps
+> = ({ published_article, children }) => {
+  return (
+    <PublishedArticleContext.Provider value={published_article}>
+      {children}
+    </PublishedArticleContext.Provider>
+  );
+};
+
+export default PublishedArticleContext;

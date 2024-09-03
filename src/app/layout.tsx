@@ -2,8 +2,14 @@ import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-
+import { Open_Sans } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { TRPCReactProvider } from "~/trpc/react";
+import { HydrateClient } from "~/trpc/server";
+import { TooltipProvider } from "~/components/ui/tooltip";
+import { Toaster } from "~/components/ui/toaster";
+import { cn } from "~/lib/utils";
+import { GeistMono } from "geist/font/mono";
 
 export const metadata: Metadata = {
   title: "Jamarski klub Novo mesto",
@@ -12,13 +18,33 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+const open_sans = Open_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-opensans",
+});
+
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+      <body
+        className={cn(
+          "font-sans antialiased",
+          open_sans.variable,
+          GeistMono.variable,
+        )}
+      >
+        <TRPCReactProvider>
+          <HydrateClient>
+            <TooltipProvider>
+              {children}
+              <Toaster />
+              <SpeedInsights />
+            </TooltipProvider>
+          </HydrateClient>
+        </TRPCReactProvider>
       </body>
     </html>
   );

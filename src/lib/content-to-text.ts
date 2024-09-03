@@ -1,6 +1,5 @@
 import DOMPurify from "isomorphic-dompurify";
-
-import type { ArticleContentType } from "@acme/db/schema";
+import type { ArticleContentType } from "~/server/db/schema";
 
 const ALLOWED_BLOCKS = ["paragraph", "list", "quote"];
 
