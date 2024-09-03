@@ -20,10 +20,17 @@ export const env = createEnv({
       // Since NextAuth.js automatically uses the VERCEL_URL if present.
       (str) => process.env.VERCEL_URL ?? str,
       // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-      process.env.VERCEL ? z.string() : z.string().url()
+      process.env.VERCEL ? z.string() : z.string().url(),
     ),
-    DISCORD_CLIENT_ID: z.string(),
-    DISCORD_CLIENT_SECRET: z.string(),
+    GOOGLE_CLIENT_ID: z.string(),
+    GOOGLE_CLIENT_SECRET: z.string(),
+    AWS_ACCESS_KEY_ID: z.string(),
+    AWS_SECRET_ACCESS_KEY: z.string(),
+    AWS_REGION: z.string(),
+    AWS_BUCKET_NAME: z.string(),
+    ALGOLIA_ADMIN_KEY: z.string(),
+    JKNM_WORKSPACE_ID: z.string(),
+    JKNM_SERVICE_ACCOUNT_CREDENTIALS: z.string(),
   },
 
   /**
@@ -33,6 +40,8 @@ export const env = createEnv({
    */
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_ALGOLIA_ID: z.string(),
+    NEXT_PUBLIC_ALGOLIA_SEARCH_KEY: z.string(),
   },
 
   /**
@@ -44,8 +53,20 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
-    DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+    AWS_REGION: process.env.AWS_REGION,
+    AWS_BUCKET_NAME: process.env.AWS_BUCKET_NAME,
+    ALGOLIA_ADMIN_KEY: process.env.ALGOLIA_ADMIN_KEY,
+    JKNM_WORKSPACE_ID: process.env.JKNM_WORKSPACE_ID,
+    JKNM_SERVICE_ACCOUNT_CREDENTIALS:
+      process.env.JKNM_SERVICE_ACCOUNT_CREDENTIALS,
+
+    // public
+    NEXT_PUBLIC_ALGOLIA_ID: process.env.NEXT_PUBLIC_ALGOLIA_ID,
+    NEXT_PUBLIC_ALGOLIA_SEARCH_KEY: process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

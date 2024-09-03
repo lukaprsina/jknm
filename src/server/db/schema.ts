@@ -2,6 +2,8 @@ import { relations, sql } from "drizzle-orm";
 import {
   index,
   integer,
+  json,
+  pgEnum,
   pgTableCreator,
   primaryKey,
   serial,
@@ -10,7 +12,9 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
-
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
+import { content_validator } from "../validators";
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
  * database instance for multiple projects.
@@ -19,7 +23,7 @@ import { type AdapterAccount } from "next-auth/adapters";
  */
 export const createTable = pgTableCreator((name) => `jknm_${name}`);
 
-export const posts = createTable(
+/* export const posts = createTable(
   "post",
   {
     id: serial("id").primaryKey(),
@@ -38,7 +42,152 @@ export const posts = createTable(
     createdByIdIdx: index("created_by_idx").on(example.createdById),
     nameIndex: index("name_idx").on(example.name),
   })
+); */
+
+export interface ArticleBlockType {
+  id?: string;
+  type: string;
+  data: object;
+}
+export interface ArticleContentType {
+  time?: number;
+  blocks: ArticleBlockType[];
+  version?: string;
+}
+
+export const PublishedArticle = createTable(
+  "published_article",
+  {
+    id: serial("id").primaryKey(),
+    old_id: integer("old_id"),
+    title: varchar("title", { length: 255 }).notNull(),
+    url: varchar("url", { length: 255 }).notNull(),
+    created_at: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updated_at: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+      () => new Date(),
+    ),
+    content: json("content").$type<ArticleContentType>(),
+    preview_image: varchar("preview_image", { length: 255 }),
+  },
+  (published_article) => ({
+    created_at_index: index("created_at_index").on(
+      published_article.created_at,
+    ),
+  }),
 );
+
+export const PublishedArticleRelations = relations(
+  PublishedArticle,
+  ({ many }) => ({
+    published_articles_to_authors: many(PublishedArticlesToAuthors),
+  }),
+);
+
+export const DraftArticle = createTable(
+  "draft_article",
+  {
+    id: serial("id").primaryKey(),
+    published_id: integer("published_id").references(() => PublishedArticle.id),
+    title: varchar("title", { length: 255 }).notNull(),
+    created_at: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updated_at: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+      () => new Date(),
+    ),
+    content: json("content").$type<ArticleContentType>(),
+    preview_image: varchar("preview_image", { length: 255 }),
+  },
+  (draft_article) => ({
+    created_at_index: index("created_at_index").on(draft_article.created_at),
+  }),
+);
+
+export const DraftArticleRelations = relations(
+  DraftArticle,
+  ({ one, many }) => ({
+    draft_articles_to_authors: many(DraftArticlesToAuthors),
+    published_article: one(PublishedArticle, {
+      fields: [DraftArticle.published_id],
+      references: [PublishedArticle.id],
+    }),
+  }),
+);
+
+export const author_type_enum = pgEnum("author_type", ["member", "guest"]);
+
+// guests have name only
+export const Author = createTable("author", {
+  id: serial("id").primaryKey(),
+  author_type: author_type_enum("author_type").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: text("email"),
+  image: varchar("image", { length: 255 }),
+});
+
+export const PublishedArticlesToAuthors = createTable(
+  "published_articles_to_authors",
+  {
+    published_article_id: integer("published_article_id")
+      .notNull()
+      .references(() => PublishedArticle.id),
+    author_id: integer("author_id")
+      .notNull()
+      .references(() => Author.id),
+  },
+  (published_articles_to_authors) => ({
+    compoundKey: primaryKey({
+      columns: [
+        published_articles_to_authors.published_article_id,
+        published_articles_to_authors.author_id,
+      ],
+    }),
+  }),
+);
+
+export const DraftArticlesToAuthors = createTable(
+  "draft_articles_to_authors",
+  {
+    draft_article_id: integer("draft_article_id")
+      .notNull()
+      .references(() => DraftArticle.id),
+    author_id: integer("author_id")
+      .notNull()
+      .references(() => Author.id),
+  },
+  (draft_articles_to_authors) => ({
+    compoundKey: primaryKey({
+      columns: [
+        draft_articles_to_authors.draft_article_id,
+        draft_articles_to_authors.author_id,
+      ],
+    }),
+  }),
+);
+
+export const CreateDraftArticleSchema = createInsertSchema(DraftArticle, {
+  content: content_validator,
+  updated_at: z.date(),
+}).omit({
+  created_at: true,
+});
+
+export const SaveDraftArticleSchema = createInsertSchema(DraftArticle, {
+  id: z.number(),
+  content: content_validator,
+  updated_at: z.date(),
+}).omit({
+  created_at: true,
+});
+
+export const PublishArticleSchema = createInsertSchema(DraftArticle, {
+  content: content_validator,
+  updated_at: z.date(),
+}).omit({
+  created_at: true,
+});
 
 export const users = createTable("user", {
   id: varchar("id", { length: 255 })
@@ -84,7 +233,7 @@ export const accounts = createTable(
       columns: [account.provider, account.providerAccountId],
     }),
     userIdIdx: index("account_user_id_idx").on(account.userId),
-  })
+  }),
 );
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
@@ -107,7 +256,7 @@ export const sessions = createTable(
   },
   (session) => ({
     userIdIdx: index("session_user_id_idx").on(session.userId),
-  })
+  }),
 );
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
@@ -126,5 +275,5 @@ export const verificationTokens = createTable(
   },
   (vt) => ({
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
-  })
+  }),
 );
