@@ -7,6 +7,7 @@ import { cn } from "~/lib/utils";
 import { article_variants } from "~/lib/page-variants";
 import { ArticleDrizzleCard } from "./article-card-adapter";
 import { ErrorCard } from "../error-card";
+import { Test } from "./test";
 
 export type IntersectionRef = ReturnType<typeof useIntersectionObserver>["ref"];
 const ARTICLE_LOAD_MORE_OFFSET = 9;
@@ -48,6 +49,7 @@ export function InfiniteArticles() {
 
   return (
     <>
+      <Test />
       {articles && articles.length !== 0 ? (
         /* prose-h3:my-0 prose-p:mt-0 lg:prose-xl prose-p:text-lg mx-auto   */
         <div

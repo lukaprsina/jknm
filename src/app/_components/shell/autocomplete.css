@@ -1,0 +1,66 @@
+body {
+  --aa-search-input-height: 36px;
+  --aa-base-z-index: 101;
+  --aa-panel-border-color-alpha: 0;
+  --aa-input-border-color-alpha: 0;
+  --aa-icon-size: 40px;
+}
+
+.aa-Detached {
+  overflow: visible;
+}
+
+.aa-Panel {
+  z-index: 5000;
+}
+
+.aa-Form {
+  border: 0px;
+  border-radius: 6px;
+}
+
+.aa-DetachedSearchButton {
+  border: 0px;
+  border-radius: 6px;
+  padding-right: 20px;
+}
+
+.aa-Autocomplete {
+  border: 0px;
+  box-sizing: border-box;
+  border-radius: 6px; /* calc(var(--radius) - 2px) */
+  height: 36px;
+}
+
+body:not(.dark) {
+  /* --aa-background-color-rgb: 63, 69, 84; */
+
+  --aa-text-color-rgb: 15, 23, 42;
+
+  --aa-primary-color-rgb: 63, 69, 84;
+
+  --aa-panel-border-color-rgb: 63, 69, 84;
+
+  /* --aa-selected-color-rgb: 250, 250, 0; */
+  /* --aa-panel-max-height: 36px; */
+}
+
+body.dark {
+  /* --aa-background-color-rgb: ; */
+  /* --aa-input-background-color-alpha: 0; */
+  /* --aa-text-color-rgb: 15, 23, 42; */
+  --aa-text-color-rgb: 237, 240, 242;
+
+  --aa-input-background-color-rgb: 15, 23, 42;
+  /* --aa-input-background-color-rgb: 237, 240, 242; */
+  /* --aa-muted-color-rgb: 237, 240, 242; */
+  --aa-muted-color-rgb: 15, 23, 42;
+  --aa-muted-color-alpha: 1;
+
+  --aa-primary-color-rgb: 237, 240, 242;
+
+  --aa-panel-border-color-alpha: 0;
+
+  /* --aa-selected-color-rgb: 250, 250, 0; */
+  /* --aa-panel-max-height: 36px; */
+}

@@ -17,8 +17,6 @@ export const ArticleDrizzleCard = ({
   featured?: boolean;
   ref?: IntersectionRef;
 }) => {
-  // const all_authors = api.google.users.useQuery();
-
   return (
     <ArticleCard
       featured={featured}
@@ -28,12 +26,13 @@ export const ArticleDrizzleCard = ({
       preview_image={article.preview_image ?? undefined}
       content_preview={content_to_text(article.content ?? undefined)}
       created_at={article.created_at}
-      author_ids={article}
+      // TODO
+      author_ids={[]}
     />
   );
 };
 
-export function ArticleAlgoliaCard({ hit }: { hit: SearchHit<ArticleHit> }) {
+/* export function ArticleAlgoliaCard({ hit }: { hit: SearchHit<ArticleHit> }) {
   return (
     <ArticleCard
       title={hit.title}
@@ -46,3 +45,4 @@ export function ArticleAlgoliaCard({ hit }: { hit: SearchHit<ArticleHit> }) {
     />
   );
 }
+ */

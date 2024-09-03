@@ -10,6 +10,7 @@ import { TooltipProvider } from "~/components/ui/tooltip";
 import { Toaster } from "~/components/ui/toaster";
 import { cn } from "~/lib/utils";
 import { GeistMono } from "geist/font/mono";
+import { StrictMode } from "react";
 
 export const metadata: Metadata = {
   title: "Jamarski klub Novo mesto",
@@ -30,24 +31,26 @@ export default async function RootLayout({
   await api.author.get_authors.prefetch();
 
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
-      <body
-        className={cn(
-          "font-sans antialiased",
-          open_sans.variable,
-          GeistMono.variable,
-        )}
-      >
-        <TRPCReactProvider>
-          <HydrateClient>
-            <TooltipProvider>
-              {children}
-              <Toaster />
-              <SpeedInsights />
-            </TooltipProvider>
-          </HydrateClient>
-        </TRPCReactProvider>
-      </body>
-    </html>
+    <StrictMode>
+      <html lang="en" className={`${GeistSans.variable}`}>
+        <body
+          className={cn(
+            "font-sans antialiased",
+            open_sans.variable,
+            GeistMono.variable,
+          )}
+        >
+          <TRPCReactProvider>
+            <HydrateClient>
+              <TooltipProvider>
+                {children}
+                <Toaster />
+                <SpeedInsights />
+              </TooltipProvider>
+            </HydrateClient>
+          </TRPCReactProvider>
+        </body>
+      </html>
+    </StrictMode>
   );
 }

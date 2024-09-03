@@ -1,5 +1,8 @@
 import { cn } from "~/lib/utils";
 import type { PublishedArticle } from "~/server/db/schema";
+import { DesktopHeader, MobileHeader } from "./header";
+import { Footer } from "./footer";
+import { getServerAuthSession } from "~/server/auth";
 
 interface ShellProps {
   children: React.ReactNode;
@@ -8,11 +11,18 @@ interface ShellProps {
   className?: string;
 }
 
-export function Shell({ children, without_footer, className }: ShellProps) {
+export async function Shell({
+  children,
+  without_footer,
+  className,
+}: ShellProps) {
+  const session = await getServerAuthSession();
+
   return (
     <div className={cn("w-full", className)}>
       <header>
-        <Header />
+        <DesktopHeader className="hidden md:flex" session={session} />
+        <MobileHeader className="flex md:hidden" session={session} />
       </header>
       <main className="relative w-full">{children}</main>
       {!without_footer ? (
