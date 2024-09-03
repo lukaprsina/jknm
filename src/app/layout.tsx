@@ -5,7 +5,7 @@ import { type Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { TRPCReactProvider } from "~/trpc/react";
-import { HydrateClient } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { Toaster } from "~/components/ui/toaster";
 import { cn } from "~/lib/utils";
@@ -27,6 +27,8 @@ const open_sans = Open_Sans({
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  await api.author.get_authors.prefetch();
+
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body

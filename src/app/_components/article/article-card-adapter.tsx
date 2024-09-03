@@ -6,6 +6,7 @@ import type { ArticleHit } from "~/server/validators";
 import { api } from "~/trpc/react";
 import type { IntersectionRef } from "./infinite-articles";
 import { content_to_text } from "~/lib/content-to-text";
+import { ArticleCard } from "./article-card";
 
 export const ArticleDrizzleCard = ({
   article,
@@ -24,12 +25,10 @@ export const ArticleDrizzleCard = ({
       ref={ref}
       title={article.title}
       url={article.url}
-      // TODO:
-      has_draft={false}
       preview_image={article.preview_image ?? undefined}
       content_preview={content_to_text(article.content ?? undefined)}
       created_at={article.created_at}
-      author_names={get_author_names(article, all_authors.data)}
+      author_ids={article}
     />
   );
 };

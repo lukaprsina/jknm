@@ -1,11 +1,15 @@
 import { env } from "~/env";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import type { JWTInput } from "google-auth-library";
 import { google } from "googleapis";
 import type { Author } from "~/server/db/schema";
 
-export const google_router = createTRPCRouter({
-  sync_users: protectedProcedure.query(async () => {
+export const author_router = createTRPCRouter({
+  get_authors: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.Author.findMany();
+  }),
+
+  sync_with_google: protectedProcedure.query(async () => {
     console.log("GETTING GOOGLE USERS");
 
     const credentials = env.JKNM_SERVICE_ACCOUNT_CREDENTIALS;
