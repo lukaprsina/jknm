@@ -4,7 +4,7 @@ import {
   integer,
   json,
   pgEnum,
-  pgTableCreator,
+  pgTable,
   primaryKey,
   serial,
   text,
@@ -21,9 +21,9 @@ import { content_validator } from "../validators";
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = pgTableCreator((name) => `jknm_${name}`);
+// export const createTable = pgTableCreator((name) => `jknm_${name}`);
 
-/* export const posts = createTable(
+/* export const posts = pgTable(
   "post",
   {
     id: serial("id").primaryKey(),
@@ -55,7 +55,7 @@ export interface ArticleContentType {
   version?: string;
 }
 
-export const PublishedArticle = createTable(
+export const PublishedArticle = pgTable(
   "published_article",
   {
     id: serial("id").primaryKey(),
@@ -72,7 +72,7 @@ export const PublishedArticle = createTable(
     preview_image: varchar("preview_image", { length: 255 }),
   },
   (published_article) => ({
-    created_at_index: index("created_at_index").on(
+    created_at_index: index("p_created_at_idx").on(
       published_article.created_at,
     ),
   }),
@@ -85,7 +85,7 @@ export const PublishedArticleRelations = relations(
   }),
 );
 
-export const DraftArticle = createTable(
+export const DraftArticle = pgTable(
   "draft_article",
   {
     id: serial("id").primaryKey(),
@@ -101,7 +101,7 @@ export const DraftArticle = createTable(
     preview_image: varchar("preview_image", { length: 255 }),
   },
   (draft_article) => ({
-    created_at_index: index("created_at_index").on(draft_article.created_at),
+    created_at_index: index("d_created_at_idx").on(draft_article.created_at),
   }),
 );
 
@@ -119,7 +119,7 @@ export const DraftArticleRelations = relations(
 export const author_type_enum = pgEnum("author_type", ["member", "guest"]);
 
 // guests have name only
-export const Author = createTable("author", {
+export const Author = pgTable("author", {
   id: serial("id").primaryKey(),
   author_type: author_type_enum("author_type").notNull(),
   name: varchar("name", { length: 255 }).notNull(),
@@ -128,10 +128,10 @@ export const Author = createTable("author", {
   image: varchar("image", { length: 255 }),
 });
 
-export const PublishedArticlesToAuthors = createTable(
-  "published_articles_to_authors",
+export const PublishedArticlesToAuthors = pgTable(
+  "p_articles_to_authors",
   {
-    published_article_id: integer("published_article_id")
+    article_id: integer("article_id")
       .notNull()
       .references(() => PublishedArticle.id),
     author_id: integer("author_id")
@@ -141,17 +141,17 @@ export const PublishedArticlesToAuthors = createTable(
   (published_articles_to_authors) => ({
     compoundKey: primaryKey({
       columns: [
-        published_articles_to_authors.published_article_id,
+        published_articles_to_authors.article_id,
         published_articles_to_authors.author_id,
       ],
     }),
   }),
 );
 
-export const DraftArticlesToAuthors = createTable(
-  "draft_articles_to_authors",
+export const DraftArticlesToAuthors = pgTable(
+  "d_articles_to_authors",
   {
-    draft_article_id: integer("draft_article_id")
+    article_id: integer("article_id")
       .notNull()
       .references(() => DraftArticle.id),
     author_id: integer("author_id")
@@ -161,7 +161,7 @@ export const DraftArticlesToAuthors = createTable(
   (draft_articles_to_authors) => ({
     compoundKey: primaryKey({
       columns: [
-        draft_articles_to_authors.draft_article_id,
+        draft_articles_to_authors.article_id,
         draft_articles_to_authors.author_id,
       ],
     }),
@@ -190,7 +190,7 @@ export const PublishArticleSchema = createInsertSchema(DraftArticle, {
   created_at: true,
 });
 
-export const users = createTable("user", {
+export const users = pgTable("user", {
   id: varchar("id", { length: 255 })
     .notNull()
     .primaryKey()
@@ -208,7 +208,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
 }));
 
-export const accounts = createTable(
+export const accounts = pgTable(
   "account",
   {
     userId: varchar("user_id", { length: 255 })
@@ -241,7 +241,7 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
   user: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));
 
-export const sessions = createTable(
+export const sessions = pgTable(
   "session",
   {
     sessionToken: varchar("session_token", { length: 255 })
@@ -264,7 +264,7 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
   user: one(users, { fields: [sessions.userId], references: [users.id] }),
 }));
 
-export const verificationTokens = createTable(
+export const verificationTokens = pgTable(
   "verification_token",
   {
     identifier: varchar("identifier", { length: 255 }).notNull(),

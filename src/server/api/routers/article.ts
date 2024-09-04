@@ -82,7 +82,7 @@ export const article_router = createTRPCRouter({
         .from(DraftArticlesToAuthors)
         .leftJoin(
           DraftArticle,
-          eq(DraftArticlesToAuthors.draft_article_id, DraftArticle.id),
+          eq(DraftArticlesToAuthors.article_id, DraftArticle.id),
         )
         .leftJoin(Author, eq(DraftArticlesToAuthors.author_id, Author.id))
         .where(eq(DraftArticle.id, input.draft_id));
