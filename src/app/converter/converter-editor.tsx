@@ -37,9 +37,9 @@ export function ArticleConverter() {
 
   const [doSplice, setDoSplice] = useState(true);
   const [doDryRun, setDoDryRun] = useState(true);
-  const [doUpdate, setDoUpdate] = useState(true);
-  const [firstArticle, setFirstArticle] = useState("0"); // 32
-  const [lastArticle, setLastArticle] = useState("33");
+  const [doUpdate, setDoUpdate] = useState(false);
+  const [firstArticle, setFirstArticle] = useState("1"); // 32
+  const [lastArticle, setLastArticle] = useState("10");
   const all_authors = api.author.get_all.useQuery();
 
   return (

@@ -6,7 +6,7 @@ import { useIntersectionObserver } from "usehooks-ts";
 import { cn } from "~/lib/utils";
 import { article_variants } from "~/lib/page-variants";
 import { ArticleDrizzleCard } from "./article-card-adapter";
-import { ErrorCard } from "../error-card";
+import { InfoCard } from "../error-card";
 import { Test } from "./test";
 
 export type IntersectionRef = ReturnType<typeof useIntersectionObserver>["ref"];
@@ -66,7 +66,7 @@ export function InfiniteArticles() {
           ))}
         </div>
       ) : (
-        <ErrorCard
+        <InfoCard
           title="Ni mogoče naložiti novičk."
           description="Preverite internetno povezavo."
         />

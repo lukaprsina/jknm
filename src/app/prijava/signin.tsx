@@ -2,10 +2,12 @@
 
 import type { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
-import { ErrorCard } from "~/components/error-card";
+import Link from "next/link";
+import { InfoCard } from "~/components/error-card";
 import { Shell } from "~/components/shell";
 import { Logo } from "~/components/shell/logo";
 import { Button } from "~/components/ui/button";
+import { CardContent } from "~/components/ui/card";
 
 export default function SignIn({ session }: { session: Session | null }) {
   if (!session) {
@@ -35,10 +37,21 @@ export default function SignIn({ session }: { session: Session | null }) {
   }
 
   return (
-    <Shell>
-      <ErrorCard title="Prijavljeni ste" description="Lahko se odjavite." />
+    <>
+      <InfoCard title="Prijavljeni ste">
+        <CardContent className="flex items-baseline gap-2">
+          Lahko se odjavite.
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={async () => await signOut()}
+          >
+            Odjava
+          </Button>
+        </CardContent>
+      </InfoCard>
       <Button onClick={async () => await signOut()}>Odjava</Button>
-    </Shell>
+    </>
   );
 }
 
@@ -47,8 +60,7 @@ function GoogleSignInButton() {
     <button
       className="gsi-material-button"
       onClick={async () => {
-        console.log("signing in");
-        await signIn();
+        await signIn("google");
       }}
     >
       <div className="gsi-material-button-state"></div>

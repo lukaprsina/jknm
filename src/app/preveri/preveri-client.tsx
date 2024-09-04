@@ -13,7 +13,7 @@ import { cn } from "~/lib/utils";
 import { EditButton } from "~/components/shell/editing-buttons";
 import { EditorToReact } from "~/components/editor/editor-to-react";
 
-import { ErrorCard } from "~/components/error-card";
+import { InfoCard } from "~/components/error-card";
 
 export function PreveriClient({
   articles,
@@ -136,7 +136,7 @@ export function PreveriClient({
             <EditorToReact session={null} article={article.data} />
           </>
         ) : (
-          <ErrorCard title="Nekaj je narobe" description="Pokliči me" />
+          <InfoCard title="Nekaj je narobe" description="Pokliči me" />
         )}
       </div>
     </div>

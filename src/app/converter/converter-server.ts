@@ -1,5 +1,5 @@
 "use server";
-
+import path from "node:path";
 import fs from "node:fs";
 import fs_promises from "node:fs/promises";
 import { finished } from "node:stream/promises";
@@ -117,9 +117,11 @@ export async function read_articles() {
 
   const csv_articles: CSVType[] = [];
 
+  const objave_path = path.join(process.cwd(), "src/assets/Objave.txt");
+
   await finished(
     fs
-      .createReadStream(`./assets/Objave.txt`)
+      .createReadStream(objave_path)
       .pipe(csv_parse({ delimiter: "," }))
       .on("data", function (csvrow: string[]) {
         if (typeof csvrow[2] == "undefined" || parseInt(csvrow[2]) !== 1)
@@ -200,8 +202,13 @@ export async function get_problematic_html(
   id: string,
   problematic_dir: string,
 ) {
-  const dir = `./pt-novicke/${problematic_dir}`;
-  return fs_promises.readFile(`${dir}/${id}.html`, "utf-8");
+  const problematic_html = path.join(
+    process.cwd(),
+    "src/app/converter/_htmls",
+    problematic_dir,
+    `${id}.html`,
+  );
+  return fs_promises.readFile(problematic_html, "utf-8");
 }
 
 export async function get_article_count() {
@@ -377,8 +384,13 @@ const JKNM_SERVED_DIR = "D:/JKNM/served";
 } */
 
 export async function get_authors_by_name() {
+  const authors_by_name_path = path.join(
+    process.cwd(),
+    "src/app/converter/_info/authors_by_name.json",
+  );
+
   const authors_by_name = await fs_promises.readFile(
-    "pt-testing/authors_by_name.json",
+    authors_by_name_path,
     "utf-8",
   );
   const authors = JSON.parse(authors_by_name) as AuthorType[];

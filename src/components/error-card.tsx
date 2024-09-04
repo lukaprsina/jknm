@@ -7,12 +7,14 @@ import {
 import { page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
 
-export function ErrorCard({
+export function InfoCard({
   title,
   description,
+  children,
 }: {
   title: string;
-  description: string;
+  description?: string;
+  children?: React.ReactNode;
 }) {
   return (
     <div
@@ -24,7 +26,8 @@ export function ErrorCard({
       <Card>
         <CardHeader>
           <CardTitle>{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
+          {description && <CardDescription>{description}</CardDescription>}
+          {children}
         </CardHeader>
       </Card>
     </div>
