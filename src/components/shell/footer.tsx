@@ -2,7 +2,8 @@ import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { getServerAuthSession } from "~/server/auth";
-import { signOut } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
+import { SignInGoogle, SignOut } from "./auth";
 
 export async function Footer() {
   const session = await getServerAuthSession();
@@ -16,14 +17,18 @@ export async function Footer() {
             Jamarski klub Novo mesto
           </p>
           <div>
-            {!session?.user ? (
-              <Button asChild variant="link">
-                <Link href="/prijava">Prijava</Link>
-              </Button>
+            {session?.user ? (
+              <>
+                <SignOut />
+              </>
             ) : (
-              <form>
-                <Button onClick={async () => await signOut()}>Odjava</Button>
-              </form>
+              // <Button onClick={async () => await signOut()}>Odjava</Button>
+              <>
+                <SignInGoogle />
+                {/* <Button asChild variant="link">
+                  <Link href="/prijava">Prijava</Link>
+                </Button> */}
+              </>
             )}
           </div>
         </div>

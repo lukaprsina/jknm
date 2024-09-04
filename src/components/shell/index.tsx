@@ -8,22 +8,26 @@ interface ShellProps {
   children: React.ReactNode;
   published_article?: typeof PublishedArticle.$inferSelect;
   without_footer?: boolean;
+  without_header?: boolean;
   className?: string;
 }
 
 export async function Shell({
   children,
   without_footer,
+  without_header,
   className,
 }: ShellProps) {
   const session = await getServerAuthSession();
 
   return (
     <div className={cn("w-full", className)}>
-      <header>
-        <DesktopHeader className="hidden md:flex" session={session} />
-        <MobileHeader className="flex md:hidden" session={session} />
-      </header>
+      {!without_header ? (
+        <header>
+          <DesktopHeader className="hidden md:flex" session={session} />
+          <MobileHeader className="flex md:hidden" session={session} />
+        </header>
+      ) : undefined}
       <main className="relative w-full">{children}</main>
       {!without_footer ? (
         <footer className="bottom-0">

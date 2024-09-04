@@ -19,9 +19,9 @@ export function InfiniteArticles() {
         limit: 6 * 5,
       },
       {
-        // maxPages: 100,
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-        getPreviousPageParam: (firstPage) => firstPage.nextCursor,
+        maxPages: 100,
+        getNextPageParam: (lastPage) => lastPage.last_token,
+        getPreviousPageParam: (firstPage) => firstPage.last_token,
       },
     );
 

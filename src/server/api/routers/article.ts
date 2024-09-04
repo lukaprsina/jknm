@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-import { withCursorPagination } from "drizzle-pagination";
 import {
   Author,
   CreateDraftArticleSchema,
@@ -9,10 +8,64 @@ import {
   PublishedArticle,
   SaveDraftArticleSchema,
 } from "~/server/db/schema";
+import { generateCursor } from "drizzle-cursor";
 import { eq } from "drizzle-orm";
+
+const cursor_asc = generateCursor({
+  cursors: [
+    {
+      order: "ASC",
+      key: "created_at_asc",
+      schema: PublishedArticle.created_at,
+    },
+  ],
+  primaryCursor: { order: "ASC", key: "id_asc", schema: PublishedArticle.id },
+});
+
+const cursor_desc = generateCursor({
+  cursors: [
+    {
+      order: "DESC",
+      key: "created_at_desc",
+      schema: PublishedArticle.created_at,
+    },
+  ],
+  primaryCursor: { order: "DESC", key: "id_desc", schema: PublishedArticle.id },
+});
 
 export const article_router = createTRPCRouter({
   get_infinite_published: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(1000).default(50),
+        cursor: z.string().nullable(),
+        direction: z.enum(["forward", "backward"]).optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      if (input.direction === "backward") {
+        console.error("backward is not supported");
+      }
+
+      const last_item = cursor_desc.parse(input.cursor);
+
+      const data = await ctx.db
+        .select()
+        .from(PublishedArticle)
+        .orderBy(...cursor_desc.orderBy)
+        .where(cursor_desc.where(last_item))
+        .limit(input.limit);
+
+      const last_token = cursor_desc.serialize(data.at(-1));
+
+      return {
+        data,
+        last_token,
+      };
+
+      // page.at(-1)
+    }),
+  /* get_infinite_published: publicProcedure
     .input(
       z.object({
         limit: z.number().min(1).max(1000).default(50),
@@ -23,20 +76,29 @@ export const article_router = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const direction = input.direction === "backward" ? "asc" : "desc";
 
-      const data = await ctx.db.query.PublishedArticle.findMany(
-        withCursorPagination({
+      const data = await ctx.db.query.PublishedArticle.findMany({
+        with: {
+          published_articles_to_authors: {
+            where: eq(PublishedArticlesToAuthors.author_id, 1),
+            with: {
+              author: true,
+            },
+          },
+        },
+        ...withCursorPagination({
           limit: input.limit,
           cursors: [[PublishedArticle.created_at, direction, input.cursor]],
         }),
-      );
+      });
 
       const last = data.at(data.length - 1);
+      // last?.published_articles_to_authors.at(0).
 
       return {
         data,
         nextCursor: last?.created_at,
       };
-    }),
+    }), */
 
   get_published_by_id: publicProcedure
     .input(z.number())
@@ -77,7 +139,7 @@ export const article_router = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       // TODO
-      const draft = ctx.db
+      const draft = await ctx.db
         .select()
         .from(DraftArticlesToAuthors)
         .leftJoin(
@@ -87,7 +149,7 @@ export const article_router = createTRPCRouter({
         .leftJoin(Author, eq(DraftArticlesToAuthors.author_id, Author.id))
         .where(eq(DraftArticle.id, input.draft_id));
 
-      console.log("DRAFT", draft);
+      console.log("DRAFT", { draft });
     }),
 
   delete_both: protectedProcedure
