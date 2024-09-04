@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { getServerAuthSession } from "~/server/auth";
-import { signIn, signOut } from "next-auth/react";
-import { SignInGoogle, SignOut } from "./auth";
+import { SignIn, SignOut } from "./auth";
 
 export async function Footer() {
   const session = await getServerAuthSession();
@@ -24,10 +23,13 @@ export async function Footer() {
             ) : (
               // <Button onClick={async () => await signOut()}>Odjava</Button>
               <>
-                <SignInGoogle />
-                {/* <Button asChild variant="link">
-                  <Link href="/prijava">Prijava</Link>
-                </Button> */}
+                {/* <SignIn /> */}
+                <Link
+                  href="/prijava"
+                  className={buttonVariants({ variant: "link" })}
+                >
+                  Prijava
+                </Link>
               </>
             )}
           </div>

@@ -2,6 +2,8 @@
 
 import type { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
+import { ErrorCard } from "~/components/error-card";
+import { Shell } from "~/components/shell";
 import { Logo } from "~/components/shell/logo";
 import { Button } from "~/components/ui/button";
 
@@ -23,9 +25,9 @@ export default function SignIn({ session }: { session: Session | null }) {
                 Prijava je možna samo z Google računom info@jknm.si.
               </p>
             </div>
-            <form className="w-full text-center">
+            <div className="w-full text-center">
               <GoogleSignInButton />
-            </form>
+            </div>
           </div>
         </div>
       </div>
@@ -33,21 +35,10 @@ export default function SignIn({ session }: { session: Session | null }) {
   }
 
   return (
-    <>
-      <p>Prijavljen</p>
-      <form className="w-full text-center">
-        <Button
-          type="submit"
-          onClick={async () => {
-            // "use server";
-            await signOut();
-          }}
-          variant="outline"
-        >
-          Odjavi se
-        </Button>
-      </form>
-    </>
+    <Shell>
+      <ErrorCard title="Prijavljeni ste" description="Lahko se odjavite." />
+      <Button onClick={async () => await signOut()}>Odjava</Button>
+    </Shell>
   );
 }
 
@@ -56,8 +47,8 @@ function GoogleSignInButton() {
     <button
       className="gsi-material-button"
       onClick={async () => {
-        // "use server";
-        await signIn("google", { redirectTo: "/" });
+        console.log("signing in");
+        await signIn();
       }}
     >
       <div className="gsi-material-button-state"></div>

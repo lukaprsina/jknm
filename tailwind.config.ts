@@ -6,9 +6,65 @@ export default {
   darkMode: ["class"],
   content: ["./src/**/*.tsx"],
   theme: {
+    container: {
+      padding: "2rem",
+      center: true,
+      screens: {
+        sm: "100%",
+        md: "100%",
+        lg: "1024px",
+        xl: "1280px",
+      },
+    },
     extend: {
+      typography: (theme: (variable: string) => string) => ({
+        DEFAULT: {
+          css: {
+            maxWidth: "1280px",
+            lineHeight: "1.5",
+            color: theme("colors.neutral.700"),
+            "--card-foreground": theme("colors.neutral.700"),
+            "--tw-prose-bullets": theme("colors.neutral[500]"),
+            p: {
+              // fontWeight: "400",
+              fontSize: "16px",
+            },
+            h1: {
+              fontWeight: "500", // 500
+              color: theme("colors.blue.800"),
+              // fontSize: "36px",
+            },
+            h2: {
+              fontWeight: "400",
+              color: theme("colors.blue.800"),
+              // fontSize: "24px",
+            },
+            h3: {
+              fontWeight: "400",
+              color: theme("colors.blue.800"),
+              fontSize: "18px",
+            },
+            li: {
+              marginTop: "0em",
+              marginBottom: "0em",
+            },
+            figure: {
+              marginTop: "1em",
+              marginBottom: "1em",
+            },
+            figcaption: {
+              marginTop: "4px",
+            },
+          },
+        },
+      }),
       fontFamily: {
-        sans: ["var(--font-geist-sans)", ...fontFamily.sans],
+        sans: [
+          "var(--font-opensans)",
+          "var(--font-geist-sans)",
+          ...fontFamily.sans,
+        ],
+        mono: ["var(--font-geist-mono)", ...fontFamily.mono],
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -85,8 +85,6 @@ export function DesktopHeader({
       </div>
       <Separator
         style={{
-          // TODO
-          // eslint-disable-next-line react-compiler/react-compiler
           marginBottom: sticky ? sticky_navbar.current?.clientHeight : "",
         }}
       />

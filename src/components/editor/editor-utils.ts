@@ -1,9 +1,12 @@
 import type { OutputData } from "@editorjs/editorjs";
 import sanitize_filename from "sanitize-filename";
+import { v4 as uuid4 } from "uuid";
 
 export function get_clean_url(dangerous_url: string) {
-  const sanitized = sanitize_filename(dangerous_url, { replacement: "-" });
-  return sanitized.toLowerCase().replace(/\s/g, "-");
+  const sanitized = sanitize_filename(dangerous_url, { replacement: "" });
+  const ws_replaced = sanitized.toLowerCase().replace(/\s/g, "-").trim();
+  if (ws_replaced === "") return uuid4();
+  return ws_replaced;
 }
 
 interface HeadingReturnType {

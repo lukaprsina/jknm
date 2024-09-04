@@ -23,7 +23,7 @@ export async function Shell({
   return (
     <div className={cn("w-full", className)}>
       {!without_header ? (
-        <header>
+        <header className="h-28 w-full md:h-auto">
           <DesktopHeader className="hidden md:flex" session={session} />
           <MobileHeader className="flex md:hidden" session={session} />
         </header>

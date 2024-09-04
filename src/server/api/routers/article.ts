@@ -4,12 +4,15 @@ import {
   CreateDraftArticleSchema,
   DraftArticle,
   PublishedArticle,
+  PublishedArticlesToAuthors,
   SaveDraftArticleSchema,
 } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { named_promise_all_settled } from "~/lib/named-promise";
 import { assert_at_most_one, assert_one } from "~/lib/assert-length";
 import { withCursorPagination } from "drizzle-pagination";
+import { get_clean_url } from "~/components/editor/editor-utils";
+import { format_date_for_url } from "~/lib/format-date";
 
 export const article_router = createTRPCRouter({
   get_infinite_published: publicProcedure
@@ -92,10 +95,38 @@ export const article_router = createTRPCRouter({
 
         if (!draft) throw new Error("Draft not found");
 
-        // TODO
-        /* tx.insert(PublishedArticle).values({
-          
-        }); */
+        const new_url = get_clean_url(draft.title);
+        const new_date = format_date_for_url(draft.created_at);
+        const url_with_date = `${new_url}-${new_date}`;
+
+        await tx.insert(PublishedArticle).values([
+          {
+            content: draft.content,
+            title: draft.title,
+            preview_image: draft.preview_image,
+            created_at: draft.created_at,
+            url: url_with_date,
+          },
+        ]);
+
+        for (const author of draft.draft_articles_to_authors) {
+          await tx.insert(PublishedArticlesToAuthors).values([
+            {
+              author_id: author.author_id,
+              article_id: draft.id,
+            },
+          ]);
+        }
+
+        await tx.delete(DraftArticle).where(eq(DraftArticle.id, input));
+        return tx.query.PublishedArticle.findFirst({
+          where: eq(PublishedArticle.url, url_with_date),
+          with: {
+            published_articles_to_authors: {
+              with: { author: true },
+            },
+          },
+        });
       });
     }),
 
@@ -110,6 +141,11 @@ export const article_router = createTRPCRouter({
 
         assert_one(draft_result);
         const draft = draft_result[0];
+
+        /* await tx
+          .delete(DraftArticlesToAuthors)
+          .where(eq(DraftArticlesToAuthors.article_id, input)); */
+
         if (!draft.published_id) return { draft };
 
         const published = await tx.query.PublishedArticle.findFirst({
@@ -127,6 +163,11 @@ export const article_router = createTRPCRouter({
       return await ctx.db.transaction(async (tx) => {
         const all_published = await tx.query.PublishedArticle.findMany({
           where: eq(PublishedArticle.id, input),
+          with: {
+            published_articles_to_authors: {
+              with: { author: true },
+            },
+          },
         });
 
         assert_one(all_published);
@@ -147,6 +188,9 @@ export const article_router = createTRPCRouter({
         } satisfies typeof DraftArticle.$inferInsert;
 
         await tx.delete(PublishedArticle).where(eq(PublishedArticle.id, input));
+        /* await tx
+          .delete(PublishedArticlesToAuthors)
+          .where(eq(PublishedArticlesToAuthors.article_id, input)); */
 
         const draft_return = draft
           ? await tx

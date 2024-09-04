@@ -15,6 +15,7 @@ import type { AdapterAccount } from "next-auth/adapters";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { content_validator } from "../../lib/validators";
+
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
  * database instance for multiple projects.
@@ -135,7 +136,9 @@ export const PublishedArticlesToAuthors = pgTable(
   {
     article_id: integer("article_id")
       .notNull()
-      .references(() => PublishedArticle.id),
+      .references(() => PublishedArticle.id, {
+        onDelete: "cascade",
+      }),
     author_id: integer("author_id")
       .notNull()
       .references(() => Author.id),
@@ -169,7 +172,7 @@ export const DraftArticlesToAuthors = pgTable(
   {
     article_id: integer("article_id")
       .notNull()
-      .references(() => DraftArticle.id),
+      .references(() => DraftArticle.id, { onDelete: "cascade" }),
     author_id: integer("author_id")
       .notNull()
       .references(() => Author.id),

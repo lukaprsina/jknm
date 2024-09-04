@@ -22,10 +22,15 @@ import Undo from "editorjs-undo";
 import { content_to_text } from "~/lib/content-to-text";
 import { api } from "~/trpc/react";
 import type { DraftArticle } from "~/server/db/schema";
-import { get_image_data_from_editor } from "./editor-utils";
+import {
+  get_clean_url,
+  get_heading_from_editor,
+  get_image_data_from_editor,
+} from "./editor-utils";
 import { editor_store } from "./editor-store";
 import { EDITOR_JS_PLUGINS } from "./plugins";
 import { Button } from "../ui/button";
+import { useToast } from "~/hooks/use-toast";
 
 export interface EditorContextType {
   editor?: EditorJS;
@@ -69,7 +74,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   const editorJS = useRef<EditorJS | null>(null);
   const [dirty, setDirty] = useState(false);
   const trpc_utils = api.useUtils();
-  const all_authors = api.author.get_all.useQuery();
+  const toast = useToast();
 
   useEffect(() => {
     if (dirty) {
@@ -203,8 +208,8 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       setSavingText("Objavljam spremembe ...");
     },
     onSuccess: async (data) => {
-      const returned_data = data.at(0);
-      if (!editorJS.current || !returned_data || !article) return;
+      const returned_data = data;
+      if (!editorJS.current || !returned_data) return;
       console.warn("published", returned_data);
 
       const content_preview = content_to_text(
@@ -215,7 +220,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         console.error("No content preview", returned_data);
       }
 
-      await update_algolia_article({
+      /* await update_algolia_article({
         objectID: returned_data.id.toString(),
         title: returned_data.title,
         url: returned_data.url,
@@ -223,12 +228,12 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         year: returned_data.created_at.getFullYear().toString(),
         content_preview,
         published: true,
-        has_draft: !!returned_data.draft_content,
         image: returned_data.preview_image ?? undefined,
-        author_names: get_author_names(returned_data, all_authors.data),
-      });
+        author_ids: get_author_names(returned_data, all_authors.data),
+      }); */
 
-      const old_article_url = `${get_clean_url(article.url)}-${article.id}`;
+      // TODO use the old id
+      /* const old_article_url = `${get_clean_url(article.url)}-${article.id}`;
       const new_article_url = `${get_clean_url(returned_data.url)}-${returned_data.id}`;
 
       console.log("Renaming S3 directory", {
@@ -266,14 +271,14 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         spliced_urls,
       });
 
-      await clean_s3_directory(new_article_url, spliced_urls);
+      await clean_s3_directory(new_article_url, spliced_urls); */
 
       setSavingText(undefined);
       setDirty(false);
 
       await trpc_utils.article.invalidate();
 
-      router.replace(`/novica/${generate_encoded_url(returned_data)}`);
+      router.replace(`/novica/${returned_data.url}`);
     },
   });
 
@@ -301,13 +306,14 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     onMutate: () => {
       setSavingText("Brišem novičko ...");
     },
-    onSuccess: async (data) => {
-      const returned_data = data.at(0);
+    // eslint-disable-next-line @typescript-eslint/require-await
+    onSuccess: async (_data) => {
+      /* const returned_data = data.at(0);
       if (!returned_data) return;
 
       await delete_algolia_article(returned_data.id.toString());
       await delete_s3_directory(`${returned_data.url}-${returned_data.id}`);
-      await trpc_utils.article.invalidate();
+      await trpc_utils.article.invalidate(); */
 
       router.replace(`/`);
     },
@@ -320,21 +326,21 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     editorJS.current = temp_editor;
   }, [editor_factory]);
 
-  const configure_article_before_publish = async () => {
-    if (!editorJS.current || !article) return;
+  const configure_article_before_publish = useCallback(async () => {
+    if (!editorJS.current) return;
 
     let editor_content = await editorJS.current.save();
 
     const { title: new_title, error } = get_heading_from_editor(editor_content);
 
     if (error === "NO_HEADING") {
-      toast({
+      toast.toast({
         title: "Naslov ni nastavljen",
         description: "Prva vrstica mora biti H1 naslov.",
         action: <NoHeadingButton editor={editorJS.current} />,
       });
     } else if (error === "WRONG_HEADING_LEVEL") {
-      toast({
+      toast.toast({
         title: "Naslov ni pravilne ravni",
         description: "Prva vrstica mora biti H1 naslov.",
         action: (
@@ -351,7 +357,8 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     editor_content = await editorJS.current.save();
     rename_files_in_editor(editor_content, new_article_url);
 
-    update_settings_from_editor(article, editor_content, new_title, new_url);
+    // TODO
+    // update_settings_from_editor(article, editor_content, new_title, new_url);
 
     const preview_image = editor_store.get.preview_image();
 
@@ -362,7 +369,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     editor_store.set.preview_image(new_preview_image);
 
     return editor_content;
-  };
+  }, [article, toast]);
 
   return (
     <EditorContext.Provider
