@@ -1,5 +1,5 @@
-import { liteClient as algoliasearch } from "algoliasearch/lite";
-import type { SearchClient } from "instantsearch.js";
+import type { SearchClient } from "algoliasearch";
+import algoliasearch from "algoliasearch";
 import { env } from "~/env";
 
 class AlgoliaClient {

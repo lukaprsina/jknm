@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 import { NoviceAutocomplete } from "./autocomplete";
@@ -10,6 +10,16 @@ import { MobileSheet } from "./mobile-sheet";
 import { cn } from "~/lib/utils";
 import { Separator } from "~/components/ui/separator";
 import type { Session } from "next-auth";
+import { buttonVariants } from "~/components/ui/button";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "~/components/ui/navigation-menu";
 
 export function DesktopHeader({
   className,
@@ -38,11 +48,6 @@ export function DesktopHeader({
       window.removeEventListener("scroll", handleScroll);
     };
   }, [sticky]);
-
-  const navbar_height = useMemo(
-    () => sticky_navbar.current?.clientHeight,
-    [sticky_navbar],
-  );
 
   return (
     <>
@@ -80,7 +85,9 @@ export function DesktopHeader({
       </div>
       <Separator
         style={{
-          marginBottom: sticky ? navbar_height : "",
+          // TODO
+          // eslint-disable-next-line react-compiler/react-compiler
+          marginBottom: sticky ? sticky_navbar.current?.clientHeight : "",
         }}
       />
       <div
@@ -98,13 +105,11 @@ export function DesktopHeader({
 }
 
 export function MobileHeader({
-  // article,
-  // session,
+  session,
   className,
   ...props
 }: React.ComponentProps<"div"> & {
-  article?: typeof Article.$inferSelect;
-  session?: Session;
+  session: Session | null;
 }) {
   return (
     <div
@@ -118,6 +123,7 @@ export function MobileHeader({
       <Link className="text-2xl font-bold" href="/">
         Jamarski klub Novo mesto
       </Link>
+      <EditingButtons session={session} />
       <MobileSheet />
     </div>
   );

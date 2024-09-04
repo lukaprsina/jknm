@@ -1,22 +1,17 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { Button, type ButtonProps } from "~/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@radix-ui/react-popover";
-
-import type { ButtonProps } from "@acme/ui/button";
-import { cn } from "@acme/ui";
-import { Button } from "@acme/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@acme/ui/card";
+} from "~/components/ui/popover";
 
 import { content_to_text } from "~/lib/content-to-text";
-import { generate_encoded_url } from "~/lib/generate-encoded-url";
-import { create_algolia_article } from "~/server/algolia";
+import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
-import { get_author_names } from "./authors";
 
 export default function NewArticleLoader({
   title,
@@ -25,9 +20,9 @@ export default function NewArticleLoader({
 }: ButtonProps & { title?: string; url?: string }) {
   const router = useRouter();
   const trpc_utils = api.useUtils();
-  const all_authors = api.article.google_users.useQuery()
+  const all_authors = api.author.get_authors.useQuery();
 
-  const article_create = api.article.create_article.useMutation({
+  const article_create = api.article.create_draft.useMutation({
     onSuccess: async (data) => {
       const returned_data = data.at(0);
       if (!returned_data) return;
@@ -37,7 +32,7 @@ export default function NewArticleLoader({
         content_to_text(returned_data.content ?? undefined) ?? "";
       // if (!content_preview) return;
 
-      await create_algolia_article({
+      /* await create_algolia_article({
         objectID: returned_data.id.toString(),
         title: returned_data.title,
         url: returned_data.url,
@@ -47,12 +42,12 @@ export default function NewArticleLoader({
         has_draft: !!returned_data.draft_content,
         year: returned_data.created_at.getFullYear().toString(),
         author_names: get_author_names(returned_data, all_authors.data),
-      });
+      }); */
 
       await trpc_utils.article.invalidate();
 
       // console.log("/uredi", generate_encoded_url(returned_data));
-      router.push(`/uredi/${generate_encoded_url(returned_data)}`);
+      router.push(`/uredi/${returned_data.id}`);
     },
   });
 
@@ -80,9 +75,9 @@ export default function NewArticleLoader({
 
             article_create.mutate({
               title: article_title,
-              url: article_url,
+              // url: article_url, TODO
               preview_image: "",
-              draft_content: template,
+              content: template,
               updated_at: new Date(),
             });
           }}
