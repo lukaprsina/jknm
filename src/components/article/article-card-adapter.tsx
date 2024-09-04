@@ -2,8 +2,7 @@
 
 import type { Hit as SearchHit } from "instantsearch.js";
 import type { PublishedArticle } from "~/server/db/schema";
-import type { ArticleHit } from "~/server/validators";
-import { api } from "~/trpc/react";
+import type { ArticleHit } from "~/lib/validators";
 import type { IntersectionRef } from "./infinite-articles";
 import { content_to_text } from "~/lib/content-to-text";
 import { ArticleCard } from "./article-card";
@@ -32,17 +31,15 @@ export const ArticleDrizzleCard = ({
   );
 };
 
-/* export function ArticleAlgoliaCard({ hit }: { hit: SearchHit<ArticleHit> }) {
+export function ArticleAlgoliaCard({ hit }: { hit: SearchHit<ArticleHit> }) {
   return (
     <ArticleCard
       title={hit.title}
-      url={generate_encoded_url({ id: parseInt(hit.objectID), url: hit.url })}
-      published
+      url={hit.url}
       preview_image={hit.image ?? undefined}
       content_preview={hit.content_preview}
       created_at={new Date(hit.created_at)}
-      author_names={hit.author_names}
+      author_ids={hit.author_ids}
     />
   );
 }
- */

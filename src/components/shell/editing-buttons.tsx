@@ -50,14 +50,14 @@ export function EditButton({
   id,
   url,
   content_preview,
-  has_draft,
+  is_draft,
   new_tab,
   variant = "ghost",
 }: {
   id: number;
   url: string;
   content_preview?: string;
-  has_draft?: boolean;
+  is_draft?: boolean;
   new_tab?: boolean;
   variant?: ButtonProps["variant"];
 }) {
@@ -107,7 +107,7 @@ export function EditButton({
             // console.log({ has_draft });
             const new_url = `/uredi/${id})}`;
 
-            if (has_draft) {
+            if (is_draft) {
               if (new_tab) {
                 window.open(new_url, "_blank");
               } else {

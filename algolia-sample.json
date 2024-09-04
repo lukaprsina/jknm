@@ -1,0 +1,13 @@
+[
+  {
+    "objectID": "1",
+    "is_draft": false,
+    "title": "Prvi članek",
+    "url": "prvi-clanek",
+    "created_at": 1725451142051,
+    "content_preview": "lorem",
+    "author_ids": ["1", "4"],
+    "image": "https://via.placeholder.com/150",
+    "year": "2024"
+  }
+]

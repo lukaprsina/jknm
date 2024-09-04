@@ -25,7 +25,7 @@ import "./autocomplete.css";
 
 import { PoweredBy } from "react-instantsearch";
 import { Separator } from "~/components/ui/separator";
-import type { ArticleHit } from "~/server/validators";
+import type { ArticleHit } from "~/lib/validators";
 
 export function NoviceAutocomplete({ detached }: { detached?: string }) {
   const searchClient = algolia.getClient();

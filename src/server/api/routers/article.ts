@@ -89,4 +89,20 @@ export const article_router = createTRPCRouter({
 
       console.log("DRAFT", draft);
     }),
+
+  delete_both: protectedProcedure
+    .input(z.number())
+    .mutation(async ({ ctx, input }) => {
+      const published_article = ctx.db
+        .delete(PublishedArticle)
+        .where(eq(PublishedArticle.id, input))
+        .returning();
+
+      const draft_article = ctx.db
+        .delete(DraftArticle)
+        .where(eq(DraftArticle.published_id, input))
+        .returning();
+
+      await Promise.allSettled([published_article, draft_article]);
+    }),
 });

@@ -1,6 +1,6 @@
 import { api } from "~/trpc/server";
-import { Shell } from "./_components/shell";
-import { InfiniteArticles } from "./_components/article/infinite-articles";
+import { Shell } from "../components/shell";
+import { InfiniteArticles } from "../components/article/infinite-articles";
 
 export default async function HomePageServer() {
   await api.article.get_infinite_published.prefetchInfinite(
