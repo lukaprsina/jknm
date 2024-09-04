@@ -7,7 +7,7 @@
 
 declare module "@eslint/js" {
   // Why the hell doesn't eslint themselves export their types?
-  import type { Linter } from "eslint";
+  import type { Linter } from "eslint-types";
 
   export const configs: {
     readonly recommended: { readonly rules: Readonly<Linter.RulesRecord> };
@@ -16,7 +16,7 @@ declare module "@eslint/js" {
 }
 
 declare module "eslint-plugin-import" {
-  import type { Linter, Rule } from "eslint";
+  import type { Linter, Rule } from "eslint-types";
 
   export const configs: {
     recommended: { rules: Linter.RulesRecord };
@@ -25,7 +25,7 @@ declare module "eslint-plugin-import" {
 }
 
 declare module "eslint-plugin-react" {
-  import type { Linter, Rule } from "eslint";
+  import type { Linter, Rule } from "eslint-types";
 
   export const configs: {
     recommended: { rules: Linter.RulesRecord };
@@ -36,7 +36,7 @@ declare module "eslint-plugin-react" {
 }
 
 declare module "eslint-plugin-react-hooks" {
-  import type { Linter, Rule } from "eslint";
+  import type { Linter, Rule } from "eslint-types";
 
   export const configs: {
     recommended: {
@@ -50,7 +50,7 @@ declare module "eslint-plugin-react-hooks" {
 }
 
 declare module "@next/eslint-plugin-next" {
-  import type { Linter, Rule } from "eslint";
+  import type { Linter, Rule } from "eslint-types";
 
   export const configs: {
     recommended: { rules: Linter.RulesRecord };

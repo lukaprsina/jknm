@@ -1,11 +1,13 @@
-/// <reference types="./eslint.d.ts" />
+/// <reference types="./eslint-types.d.ts" />
 
 import * as path from "node:path";
 import { includeIgnoreFile } from "@eslint/compat";
 import eslint from "@eslint/js";
 import importPlugin from "eslint-plugin-import";
-import turboPlugin from "eslint-plugin-turbo";
 import tseslint from "typescript-eslint";
+import nextPlugin from "@next/eslint-plugin-next";
+import reactPlugin from "eslint-plugin-react";
+import hooksPlugin from "eslint-plugin-react-hooks";
 
 /**
  * All packages that leverage t3-env should use this rule
@@ -36,13 +38,15 @@ export const restrictEnvAccess = tseslint.config({
 
 export default tseslint.config(
   // Ignore files not tracked by VCS and any config files
-  includeIgnoreFile(path.join(import.meta.dirname, "../../.gitignore")),
+  includeIgnoreFile(path.join(import.meta.dirname, ".gitignore")),
   { ignores: ["**/*.config.*"] },
   {
     files: ["**/*.js", "**/*.ts", "**/*.tsx"],
     plugins: {
       import: importPlugin,
-      turbo: turboPlugin,
+      "@next/next": nextPlugin,
+      react: reactPlugin,
+      "react-hooks": hooksPlugin,
     },
     extends: [
       eslint.configs.recommended,
@@ -51,7 +55,14 @@ export default tseslint.config(
       ...tseslint.configs.stylisticTypeChecked,
     ],
     rules: {
-      ...turboPlugin.configs.recommended.rules,
+      // react
+      ...reactPlugin.configs["jsx-runtime"].rules,
+      ...hooksPlugin.configs.recommended.rules,
+
+      // next
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs["core-web-vitals"].rules,
+      "@next/next/no-duplicate-head": "off",
       "@typescript-eslint/no-unused-vars": [
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },

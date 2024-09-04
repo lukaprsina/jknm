@@ -24,6 +24,7 @@ import { api } from "~/trpc/react";
 import type { DraftArticle } from "~/server/db/schema";
 import { get_image_data_from_editor } from "./editor-utils";
 import { editor_store } from "./editor-store";
+import { EDITOR_JS_PLUGINS } from "./plugins";
 
 export interface EditorContextType {
   editor?: EditorJS;
@@ -85,36 +86,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   }, [dirty]);
 
   const content = useMemo(
-    () => article?.content ?? NO_CONTENT_EDITOR_VALUE,
-    [article],
-  );
-
-  const update_settings_from_editor = useCallback(
-    (editor_content: OutputData, title?: string, url?: string) => {
-      if (!editorJS.current) return;
-
-      const image_data = get_image_data_from_editor(editor_content);
-      const preview_image = editor_store.get.preview_image();
-
-      editor_store.set.state((draft) => {
-        if (!preview_image) {
-          if (article.preview_image) {
-            draft.preview_image = article.preview_image;
-          } else {
-            draft.preview_image = image_data.at(0)?.file.url;
-          }
-        }
-
-        draft.image_data = image_data;
-        draft.id = article.id;
-        draft.image_data = image_data;
-        if (typeof title !== "undefined") draft.title = title;
-        if (typeof url !== "undefined") draft.url = url;
-
-        draft.google_ids = article.author_ids ?? [];
-        draft.custom_author_names = article.custom_author_names ?? [];
-      });
-    },
+    () => article.content ?? NO_CONTENT_EDITOR_VALUE,
     [article],
   );
 
@@ -154,7 +126,6 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           forceUpdate();
         }, 1000);
 
-        if (!article) return;
         if (!editorJS.current) {
           console.error("No editorJS.current");
           return;
@@ -162,14 +133,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
         async function update_article() {
           const editor_content = await editorJS.current?.save();
-          if (!editor_content || !article) return;
-          editor_store.set.preview_image(undefined);
+          if (!editor_content) return;
+          editor_store.reset();
 
-          update_settings_from_editor(
-            editor_content,
-            article.title,
-            article.url,
-          );
+          update_settings_from_editor(article, editor_content, article.title);
         }
 
         void update_article();
@@ -190,7 +157,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   const save_draft = api.article.save_draft.useMutation({
     onMutate: () => {
-      if (!article?.id) {
+      if (!article.id) {
         console.error("Article ID is missing.");
         return;
       }
@@ -212,7 +179,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   const delete_draft = api.article.delete_draft.useMutation({
     onMutate: () => {
-      if (!article?.id) {
+      if (!article.id) {
         console.error("Article ID is missing.");
         return;
       }
@@ -220,7 +187,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       setSavingText("Brišem osnutek ...");
     },
     onSuccess: async (data) => {
-      const returned_data = data?.at(0);
+      const returned_data = data.at(0);
       if (!editorJS.current || !returned_data || !article) return;
 
       setSavingText(undefined);
@@ -238,7 +205,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   const publish = api.article.publish.useMutation({
     onMutate: () => {
-      if (!article?.id) {
+      if (!article.id) {
         console.error("Article ID is missing.");
         return;
       }
@@ -325,7 +292,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       setSavingText("Skrivam novičko ...");
     },
     onSuccess: async (data) => {
-      const returned_data = data?.at(0);
+      const returned_data = data.at(0);
       if (!returned_data) return;
 
       setSavingText(undefined);
@@ -474,6 +441,36 @@ function WrongHeadingButton({
       Popravi naslov
     </Button>
   );
+}
+
+/* url?: string */
+function update_settings_from_editor(
+  article: typeof DraftArticle.$inferSelect,
+  editor_content: OutputData,
+  title?: string,
+) {
+  const image_data = get_image_data_from_editor(editor_content);
+  const preview_image = editor_store.get.preview_image();
+
+  editor_store.set.state((draft) => {
+    if (!preview_image) {
+      if (article.preview_image) {
+        draft.preview_image = article.preview_image;
+      } else {
+        draft.preview_image = image_data.at(0)?.file.url;
+      }
+    }
+
+    draft.image_data = image_data;
+    draft.id = article.id;
+    draft.image_data = image_data;
+    if (typeof title !== "undefined") draft.title = title;
+    //  if (typeof url !== "undefined") draft.url = url;
+
+    // TODO
+    // draft.google_ids = article.author_ids ?? [];
+    // draft.custom_author_names = article.custom_author_names ?? [];
+  });
 }
 
 function rename_files_in_editor(editor_content: OutputData, new_dir: string) {
