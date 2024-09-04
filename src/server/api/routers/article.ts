@@ -1,69 +1,47 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import {
-  Author,
   CreateDraftArticleSchema,
   DraftArticle,
-  DraftArticlesToAuthors,
   PublishedArticle,
   SaveDraftArticleSchema,
 } from "~/server/db/schema";
-import { generateCursor } from "drizzle-cursor";
 import { eq } from "drizzle-orm";
 import { named_promise_all_settled } from "~/lib/named-promise";
-
-// TODO
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const cursor_asc = generateCursor({
-  cursors: [
-    {
-      order: "ASC",
-      key: "created_at_asc",
-      schema: PublishedArticle.created_at,
-    },
-  ],
-  primaryCursor: { order: "ASC", key: "id_asc", schema: PublishedArticle.id },
-});
-
-const cursor_desc = generateCursor({
-  cursors: [
-    {
-      order: "DESC",
-      key: "created_at_desc",
-      schema: PublishedArticle.created_at,
-    },
-  ],
-  primaryCursor: { order: "DESC", key: "id_desc", schema: PublishedArticle.id },
-});
+import { assert_at_most_one, assert_one } from "~/lib/assert-length";
+import { withCursorPagination } from "drizzle-pagination";
 
 export const article_router = createTRPCRouter({
   get_infinite_published: publicProcedure
     .input(
       z.object({
         limit: z.number().min(1).max(1000).default(50),
-        cursor: z.string().nullable(),
+        cursor: z.date().optional(),
         direction: z.enum(["forward", "backward"]).optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
-      if (input.direction === "backward") {
-        console.error("backward is not supported");
-      }
+      const direction = input.direction === "backward" ? "asc" : "desc";
 
-      const last_item = cursor_desc.parse(input.cursor);
+      const data = await ctx.db.query.PublishedArticle.findMany({
+        with: {
+          published_articles_to_authors: {
+            with: {
+              author: true,
+            },
+          },
+        },
+        ...withCursorPagination({
+          limit: input.limit,
+          cursors: [[PublishedArticle.created_at, direction, input.cursor]],
+        }),
+      });
 
-      const data = await ctx.db
-        .select()
-        .from(PublishedArticle)
-        .orderBy(...cursor_desc.orderBy)
-        .where(cursor_desc.where(last_item))
-        .limit(input.limit);
-
-      const last_token = cursor_desc.serialize(data.at(-1));
+      const last = data.at(-1);
 
       return {
         data,
-        last_token,
+        next_cursor: last?.created_at,
       };
     }),
 
@@ -98,34 +76,48 @@ export const article_router = createTRPCRouter({
     }),
 
   publish: protectedProcedure
-    .input(
-      z.object({
-        draft_id: z.number(),
-        created_at: z.date(),
-      }),
-    )
+    .input(z.number())
     .mutation(async ({ ctx, input }) => {
-      // TODO
-      const draft = await ctx.db
-        .select()
-        .from(DraftArticlesToAuthors)
-        .leftJoin(
-          DraftArticle,
-          eq(DraftArticlesToAuthors.article_id, DraftArticle.id),
-        )
-        .leftJoin(Author, eq(DraftArticlesToAuthors.author_id, Author.id))
-        .where(eq(DraftArticle.id, input.draft_id));
+      return await ctx.db.transaction(async (tx) => {
+        const draft = await tx.query.DraftArticle.findFirst({
+          where: eq(DraftArticle.id, input),
+          with: {
+            draft_articles_to_authors: {
+              with: {
+                author: true,
+              },
+            },
+          },
+        });
 
-      console.log("DRAFT", { draft });
+        if (!draft) throw new Error("Draft not found");
+
+        // TODO
+        /* tx.insert(PublishedArticle).values({
+          
+        }); */
+      });
     }),
 
   delete_draft: protectedProcedure
     .input(z.number())
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db
-        .delete(DraftArticle)
-        .where(eq(DraftArticle.id, input))
-        .returning();
+      return await ctx.db.transaction(async (tx) => {
+        const draft_result = await tx
+          .delete(DraftArticle)
+          .where(eq(DraftArticle.id, input))
+          .returning();
+
+        assert_one(draft_result);
+        const draft = draft_result[0];
+        if (!draft.published_id) return { draft };
+
+        const published = await tx.query.PublishedArticle.findFirst({
+          where: eq(PublishedArticle.id, draft.published_id),
+        });
+
+        return { draft, url: published?.url };
+      });
     }),
 
   // TODO: warn user that draft will be ovewrriten
@@ -137,20 +129,14 @@ export const article_router = createTRPCRouter({
           where: eq(PublishedArticle.id, input),
         });
 
-        const published = all_published.at(0);
-
-        if (all_published.length > 1) {
-          throw new Error(
-            `Multiple published articles found with ID: ${input}`,
-          );
-        } else if (!published) {
-          throw new Error(`No published article found with ID: ${input}`);
-        }
+        assert_one(all_published);
+        const published = all_published[0];
 
         const all_drafts = await tx.query.DraftArticle.findMany({
           where: eq(DraftArticle.published_id, input),
         });
 
+        assert_at_most_one(all_drafts);
         const draft = all_drafts.at(0);
 
         const draft_fields = {
@@ -159,10 +145,6 @@ export const article_router = createTRPCRouter({
           created_at: published.created_at,
           preview_image: published.preview_image,
         } satisfies typeof DraftArticle.$inferInsert;
-
-        if (all_drafts.length > 1) {
-          throw new Error(`Multiple draft articles found with ID: ${input}`);
-        }
 
         await tx.delete(PublishedArticle).where(eq(PublishedArticle.id, input));
 
@@ -203,33 +185,53 @@ export const article_router = createTRPCRouter({
     .input(
       z.object({
         limit: z.number().min(1).max(1000).default(50),
-        cursor: z.date().optional(),
+        cursor: z.string().nullable(),
         direction: z.enum(["forward", "backward"]).optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
-      const direction = input.direction === "backward" ? "asc" : "desc";
+      if (input.direction === "backward") {
+        console.error("backward is not supported");
+      }
 
-      const data = await ctx.db.query.PublishedArticle.findMany({
-        with: {
-          published_articles_to_authors: {
-            where: eq(PublishedArticlesToAuthors.author_id, 1),
-            with: {
-              author: true,
-            },
-          },
-        },
-        ...withCursorPagination({
-          limit: input.limit,
-          cursors: [[PublishedArticle.created_at, direction, input.cursor]],
-        }),
-      });
+      const last_item = cursor_desc.parse(input.cursor);
 
-      const last = data.at(data.length - 1);
-      // last?.published_articles_to_authors.at(0).
+      const data = await ctx.db
+        .select()
+        .from(PublishedArticle)
+        .orderBy(...cursor_desc.orderBy)
+        .where(cursor_desc.where(last_item))
+        .limit(input.limit);
+
+      const last_token = cursor_desc.serialize(data.at(-1));
 
       return {
         data,
-        nextCursor: last?.created_at,
+        last_token,
       };
     }), */
+
+/* 
+// TODO
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const cursor_asc = generateCursor({
+  cursors: [
+    {
+      order: "ASC",
+      key: "created_at_asc",
+      schema: PublishedArticle.created_at,
+    },
+  ],
+  primaryCursor: { order: "ASC", key: "id_asc", schema: PublishedArticle.id },
+});
+
+const cursor_desc = generateCursor({
+  cursors: [
+    {
+      order: "DESC",
+      key: "created_at_desc",
+      schema: PublishedArticle.created_at,
+    },
+  ],
+  primaryCursor: { order: "DESC", key: "id_desc", schema: PublishedArticle.id },
+}); */

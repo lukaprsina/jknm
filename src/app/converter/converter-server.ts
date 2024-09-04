@@ -57,7 +57,7 @@ export interface TempArticleType {
   csv_url: string;
   created_at: Date;
   updated_at: Date;
-  author_ids: string[];
+  author_ids: number[];
 }
 
 function convert_article(

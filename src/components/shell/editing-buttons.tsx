@@ -63,7 +63,7 @@ export function EditButton({
 }) {
   const router = useRouter();
   const trpc_utils = api.useUtils();
-  const all_authors = api.author.get_authors.useQuery();
+  const all_authors = api.author.get_all.useQuery();
 
   const article_create_draft = api.article.create_draft.useMutation({
     onSuccess: async (data) => {

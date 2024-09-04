@@ -4,7 +4,7 @@ import { Fragment, useMemo } from "react";
 import { api } from "~/trpc/react";
 
 export function Authors({ author_ids }: { author_ids: number[] }) {
-  const all_authors = api.author.get_authors.useQuery();
+  const all_authors = api.author.get_all.useQuery();
 
   const authors = useMemo(
     () => all_authors.data?.filter((author) => author_ids.includes(author.id)),

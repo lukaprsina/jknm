@@ -3,18 +3,12 @@
 import type EditorJS from "@editorjs/editorjs";
 import type { OutputBlockData } from "@editorjs/editorjs";
 import { parse as parseDate } from "date-format-parse";
-import dom_serialize from "dom-serializer";
-import { parseDocument } from "htmlparser2";
+// import dom_serialize from "dom-serializer";
+// import { parseDocument } from "htmlparser2";
 import { parse as html_parse, NodeType } from "node-html-parser";
-
-import type { RouterOutputs } from "@acme/api";
 
 import type { CSVType, TempArticleType } from "./converter-server";
 import type { AuthorType } from "./get-authors";
-import {
-  get_clean_url,
-  get_image_data_from_editor,
-} from "../uredi/[novica_ime]/editor-utils";
 import {
   get_authors_by_name,
   get_problematic_html,
@@ -22,6 +16,11 @@ import {
 } from "./converter-server";
 import { get_authors } from "./get-authors";
 import { parse_node } from "./parse-node";
+import type { RouterOutputs } from "~/trpc/react";
+import {
+  get_clean_url,
+  get_image_data_from_editor,
+} from "~/components/editor/editor-utils";
 
 export interface ImageToSave {
   objave_id: string;
@@ -51,7 +50,7 @@ export async function iterate_over_articles(
   do_update: boolean,
   first_article: number,
   last_article: number,
-  all_authors: RouterOutputs["article"]["google_users"],
+  all_authors: RouterOutputs["author"]["get_all"],
 ) {
   const problems = initial_problems;
 
@@ -101,10 +100,6 @@ export async function iterate_over_articles(
   let article_id = do_splice && first_index !== -1 ? first_index + 1 : 1;
   authors_by_name = await get_authors_by_name();
 
-  if (!all_authors) {
-    throw new Error("No authors");
-  }
-
   for (const csv_article of sliced_csv_articles) {
     const article = await parse_csv_article(
       csv_article,
@@ -144,7 +139,7 @@ async function parse_csv_article(
   csv_article: CSVType,
   editorJS: EditorJS | null,
   article_id: number,
-  all_authors: RouterOutputs["article"]["google_users"],
+  all_authors: RouterOutputs["author"]["get_all"],
   problems: Record<string, [string, string][]>,
   authors_by_name: AuthorType[],
 ) {
@@ -155,8 +150,8 @@ async function parse_csv_article(
     console.log("Getting article", csv_article.id, "from file");
     html = await get_problematic_html(csv_article.id, problematic_dir);
   }
-  const sanitized = fixHtml(html);
-  const root = html_parse(sanitized);
+  // const sanitized = fixHtml(html);
+  const root = html_parse(html);
 
   const csv_url = get_clean_url(csv_article.title);
 
@@ -253,7 +248,7 @@ async function parse_csv_article(
   } satisfies TempArticleType;
 }
 
-function fixHtml(htmlString: string) {
+/* function fixHtml(htmlString: string) {
   const document = parseDocument(htmlString, {
     decodeEntities: true,
     lowerCaseTags: false,
@@ -264,12 +259,12 @@ function fixHtml(htmlString: string) {
   const fixedHtml = dom_serialize(document);
 
   return fixedHtml;
-}
+} */
 
 // TODO: 33 isn't the only one. search for img in p.
 // 72, 578
 const PROBLEMATIC_CONSTANTS = [
-  33, 40, 43, 46, 47, 48, 49, 50, 51, 53, 54, 57, 59, 64, 66, 67, 68, 72, 80,
-  90, 92, 114, 164, 219, 225, 232, 235, 243, 280, 284, 333, 350, 355, 476, 492,
-  493, 538, 566, 571, 578, 615,
+  40, 43, 46, 47, 48, 49, 50, 51, 53, 54, 57, 59, 64, 66, 67, 68, 72, 80, 90,
+  92, 114, 164, 219, 225, 232, 235, 243, 280, 284, 333, 350, 355, 476, 492, 493,
+  538, 566, 571, 578, 615,
 ];

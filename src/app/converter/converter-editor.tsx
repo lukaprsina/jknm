@@ -20,6 +20,7 @@ import {
 } from "./converter-server";
 import { iterate_over_articles } from "./converter-spaghetti";
 import { cn } from "~/lib/utils";
+import { EDITOR_JS_PLUGINS } from "~/components/editor/plugins";
 
 export function ArticleConverter() {
   const editorJS = useRef<EditorJS | null>(null);
@@ -39,7 +40,7 @@ export function ArticleConverter() {
   const [doUpdate, setDoUpdate] = useState(true);
   const [firstArticle, setFirstArticle] = useState("0"); // 32
   const [lastArticle, setLastArticle] = useState("33");
-  const all_authors = api.author.get_authors.useQuery();
+  const all_authors = api.author.get_all.useQuery();
 
   return (
     <div className={cn(article_variants(), page_variants())}>
@@ -80,7 +81,7 @@ export function ArticleConverter() {
 
               author = author.trim();
               author.split(", ").forEach((split_author) => {
-                const author_obj = all_authors.data?.find(
+                const author_obj = all_authors.data.find(
                   (a) => a.name === split_author,
                 );
 
@@ -158,6 +159,11 @@ export function ArticleConverter() {
           </div>
           <Button
             onClick={async () => {
+              if (!all_authors.data) {
+                console.warn("Authors not loaded");
+                return;
+              }
+
               console.clear();
               const csv_articles = await read_articles();
 
@@ -188,7 +194,7 @@ export function ArticleConverter() {
 export function TempEditor({
   editorJS,
 }: {
-  editorJS: React.RefObject<EditorJS | null>;
+  editorJS: React.MutableRefObject<EditorJS | null>;
 }) {
   const editor_factory = useCallback(() => {
     const temp_editor = new EditorJS({
@@ -201,7 +207,7 @@ export function TempEditor({
   }, []);
 
   useEffect(() => {
-    if (editorJS.current != null) return;
+    if (editorJS.current) return;
 
     const temp_editor = editor_factory();
     editorJS.current = temp_editor;

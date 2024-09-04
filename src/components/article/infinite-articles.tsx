@@ -20,8 +20,8 @@ export function InfiniteArticles() {
       },
       {
         maxPages: 100,
-        getNextPageParam: (lastPage) => lastPage.last_token,
-        getPreviousPageParam: (firstPage) => firstPage.last_token,
+        getNextPageParam: (lastPage) => lastPage.next_cursor,
+        getPreviousPageParam: (firstPage) => firstPage.next_cursor,
       },
     );
 
@@ -33,8 +33,6 @@ export function InfiniteArticles() {
 
   const load_more_ref = useCallback(
     (index: number) => {
-      if (!articles) return;
-
       const test = articles.length - 1 - ARTICLE_LOAD_MORE_OFFSET;
       return index === Math.max(test, 0) ? ref : undefined;
     },
@@ -50,7 +48,7 @@ export function InfiniteArticles() {
   return (
     <>
       <Test />
-      {articles && articles.length !== 0 ? (
+      {articles.length !== 0 ? (
         /* prose-h3:my-0 prose-p:mt-0 lg:prose-xl prose-p:text-lg mx-auto   */
         <div
           className={cn(

@@ -6,10 +6,9 @@ export default async function HomePageServer() {
   await api.article.get_infinite_published.prefetchInfinite(
     {
       limit: 6 * 5,
-      cursor: null,
     },
     {
-      getNextPageParam: (lastPage) => lastPage.last_token,
+      getNextPageParam: (lastPage) => lastPage.next_cursor,
       pages: 1,
     },
   );

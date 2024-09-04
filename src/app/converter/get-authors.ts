@@ -2,9 +2,8 @@ import type { OutputBlockData } from "@editorjs/editorjs";
 import { decode } from "html-entities";
 import { parse as html_parse } from "node-html-parser";
 
-import type { RouterOutputs } from "@acme/api";
-
 import type { CSVType } from "./converter-server";
+import type { RouterOutputs } from "~/trpc/react";
 
 export interface AuthorType {
   name: string;
@@ -16,12 +15,8 @@ export function get_authors(
   csv_article: CSVType,
   all_blocks: OutputBlockData[],
   authors_by_name: AuthorType[],
-  all_authors: RouterOutputs["article"]["google_users"],
+  all_authors: RouterOutputs["author"]["get_all"],
 ) {
-  if (!all_authors) {
-    throw new Error("No authors");
-  }
-
   let number_of_paragraphs = 3;
 
   const last_paragraphs: string[] = [];
@@ -36,6 +31,7 @@ export function get_authors(
     const paragraph_data = block.data as { text: string };
     // console.log(paragraph_data.text);
     const trimmed = decode(paragraph_data.text).trim();
+    // const trimmed = paragraph_data.text.trim();
     if (trimmed === "") continue;
 
     last_paragraphs.push(trimmed);
@@ -51,7 +47,7 @@ export function get_authors(
     console.error("get authors -> no paragraphs: " + csv_article.id);
   }
 
-  const current_authors = new Set<string>();
+  const current_authors = new Set<number>();
   const not_found_authors = new Set<string>();
 
   for (const paragraph of last_paragraphs) {

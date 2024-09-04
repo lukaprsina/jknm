@@ -25,16 +25,12 @@ import type { DraftArticle } from "~/server/db/schema";
 import { get_image_data_from_editor } from "./editor-utils";
 import { editor_store } from "./editor-store";
 import { EDITOR_JS_PLUGINS } from "./plugins";
+import { Button } from "../ui/button";
 
 export interface EditorContextType {
   editor?: EditorJS;
   article?: typeof DraftArticle.$inferSelect;
   configure_article_before_publish: () => Promise<OutputData | undefined>;
-  update_settings_from_editor: (
-    editor_content: OutputData,
-    title?: string,
-    url?: string,
-  ) => void;
   savingText: string | undefined;
   setSavingText: (value: string | undefined) => void;
   dirty: boolean;
@@ -73,7 +69,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   const editorJS = useRef<EditorJS | null>(null);
   const [dirty, setDirty] = useState(false);
   const trpc_utils = api.useUtils();
-  const all_authors = api.author.get_authors.useQuery();
+  const all_authors = api.author.get_all.useQuery();
 
   useEffect(() => {
     if (dirty) {
@@ -134,7 +130,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         async function update_article() {
           const editor_content = await editorJS.current?.save();
           if (!editor_content) return;
-          editor_store.reset();
+          editor_store.set.reset();
 
           update_settings_from_editor(article, editor_content, article.title);
         }
@@ -153,7 +149,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     });
 
     return temp_editor;
-  }, [content, article, update_settings_from_editor]);
+  }, [content, article]);
 
   const save_draft = api.article.save_draft.useMutation({
     onMutate: () => {
@@ -165,10 +161,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       setSavingText("Shranjujem osnutek ...");
     },
     onSuccess: async () => {
-      if (!editorJS.current || !article) return;
+      if (!editorJS.current) return;
       const editor_content = await editorJS.current.save();
 
-      update_settings_from_editor(editor_content);
+      update_settings_from_editor(article, editor_content);
 
       setSavingText(undefined);
       setDirty(false);
@@ -187,19 +183,13 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       setSavingText("Brišem osnutek ...");
     },
     onSuccess: async (data) => {
-      const returned_data = data.at(0);
-      if (!editorJS.current || !returned_data || !article) return;
+      if (!editorJS.current) return;
 
       setSavingText(undefined);
 
       await trpc_utils.article.invalidate();
 
-      router.push(
-        `/novica/${generate_encoded_url({
-          id: returned_data.id,
-          url: returned_data.url,
-        })}`,
-      );
+      if (data.url) router.push(`/novica/${data.url}`);
     },
   });
 
@@ -297,17 +287,17 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
       setSavingText(undefined);
 
-      await update_algolia_article({
+      /* await update_algolia_article({
         objectID: returned_data.id.toString(),
         published: false,
         has_draft: true,
-      });
+      }); */
 
       await trpc_utils.article.invalidate();
     },
   });
 
-  const delete_by_id = api.article.delete.useMutation({
+  const delete_both = api.article.delete_both.useMutation({
     onMutate: () => {
       setSavingText("Brišem novičko ...");
     },
@@ -361,7 +351,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     editor_content = await editorJS.current.save();
     rename_files_in_editor(editor_content, new_article_url);
 
-    update_settings_from_editor(editor_content, new_title, new_url);
+    update_settings_from_editor(article, editor_content, new_title, new_url);
 
     const preview_image = editor_store.get.preview_image();
 
@@ -384,13 +374,12 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         setSavingText,
         setDirty,
         configure_article_before_publish,
-        update_settings_from_editor,
         mutations: {
           save_draft: save_draft.mutate,
           delete_draft: delete_draft.mutate,
           publish: publish.mutate,
           unpublish: unpublish.mutate,
-          delete_both: delete_by_id.mutate,
+          delete_both: delete_both.mutate,
         },
       }}
     >

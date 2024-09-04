@@ -3,74 +3,67 @@
 import "./editorjs-attaches.css";
 
 import type { RenderFn } from "editorjs-blocks-react-renderer";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Blocks from "editorjs-blocks-react-renderer";
 import HTMLReactParser from "html-react-parser";
 import { DotIcon } from "lucide-react";
 
-import type { Session } from "@acme/auth";
-import type { Article } from "@acme/db/schema";
-import { cn } from "@acme/ui";
-import { Card, CardContent, CardDescription, CardHeader } from "@acme/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from "~/components/ui/card";
 
-import type { EditorJSImageData } from "./plugins";
-import { useGalleryStore } from "~/app/novica/[novica_ime]/gallery-zustand";
+import { gallery_store } from "~/components/gallery-store";
+import { format_date } from "~/lib/format-date";
+import { human_file_size } from "~/lib/human-file-size";
+import type { PublishedArticle } from "~/server/db/schema";
+import type { Session } from "next-auth";
+import type { EditorJSImageData } from "./editor-utils";
 import {
   get_heading_from_editor,
   get_image_data_from_editor,
-} from "~/app/uredi/[novica_ime]/editor-utils";
-import { Authors, get_author_names } from "~/components/authors";
-import { format_date } from "~/lib/format-date";
-import { api } from "~/trpc/react";
-import { human_file_size } from "./../lib/human-file-size";
+} from "./editor-utils";
+import { cn } from "~/lib/utils";
 
 export function EditorToReact({
   article,
-  draft,
+  // draft, TODO
   session,
 }: {
-  article?: typeof Article.$inferSelect;
+  article: typeof PublishedArticle.$inferSelect;
   draft?: boolean;
-  session?: Session;
+  session: Session | null;
 }) {
   const [heading, setHeading] = useState<string | undefined>();
-  const gallery_set_images = useGalleryStore((state) => state.set_images);
-  const all_authors = api.article.google_users.useQuery();
 
   const editor_data = useMemo(() => {
-    const content = draft ? article?.draft_content : article?.content;
-    if (!content) return undefined;
+    if (!article.content) return;
 
-    const heading_info = get_heading_from_editor(content);
+    const heading_info = get_heading_from_editor(article.content);
 
-    if (heading_info.error || !heading_info.title) {
+    let title = heading_info.title;
+    if (heading_info.error || !title) {
       console.error("Invalid heading", heading_info);
-      return;
+      title = "Invalid heading";
     }
 
-    setHeading(heading_info.title);
+    setHeading(title);
 
-    const image_data = get_image_data_from_editor(content);
-    gallery_set_images(image_data);
+    const image_data = get_image_data_from_editor(article.content);
+    gallery_store.set.images(image_data);
 
     return {
-      version: content.version ?? "unknown version",
-      blocks: content.blocks.slice(1), // remove first heading
-      time: content.time ?? Date.now(),
+      version: article.content.version ?? "unknown version",
+      blocks: article.content.blocks.slice(1), // remove first heading
+      time: article.content.time ?? Date.now(),
     };
-  }, [article?.content, article?.draft_content, draft, gallery_set_images]);
+  }, [article.content]);
 
-  useEffect(() => {
-    console.log(
-      "editor-to-react author ids",
-      article?.author_ids,
-      article?.author_ids && article.author_ids.length !== 0,
-    );
-  }, [article?.author_ids]);
-
-  if (!editor_data || !article) return;
+  if (!editor_data) return;
 
   return (
     <Card className="pt-8">
@@ -78,11 +71,12 @@ export function EditorToReact({
         <h1>{heading}</h1>
         <CardDescription className="flex items-center text-base text-foreground">
           <span>
-            <Authors
-              author_names={get_author_names(article, all_authors.data)}
-            />
+            {/* <Authors
+            // TODO
+              author_names={article}
+            /> */}
           </span>
-          {article.author_ids && article.author_ids.length !== 0 && <DotIcon />}
+          {/* {article.author_ids && article.author_ids.length !== 0 && <DotIcon />} */}
           <span> {format_date(article.created_at)}</span>
           {session && article.old_id && (
             <>
@@ -111,8 +105,6 @@ export const NextImageRenderer: RenderFn<EditorJSImageData> = ({
   data,
   className,
 }) => {
-  const gallery = useGalleryStore();
-
   const image_props = useMemo(() => {
     if (!data.file.width || !data.file.height)
       return { width: 1500, height: 1000, dimensions_exist: false };
@@ -143,7 +135,7 @@ export const NextImageRenderer: RenderFn<EditorJSImageData> = ({
         onClick={() => {
           // router.push(`?image=${data.file.url}`);
           // gallery_store.set.default_image(data);
-          gallery.set_default_image(data);
+          gallery_store.set.default_image(data);
         }}
         /* onMouseDown={() => {
           gallery.set_default_image(data);

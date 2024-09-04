@@ -11,7 +11,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import { type AdapterAccount } from "next-auth/adapters";
+import type { AdapterAccount } from "next-auth/adapters";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { content_validator } from "../../lib/validators";
@@ -150,6 +150,20 @@ export const PublishedArticlesToAuthors = pgTable(
   }),
 );
 
+export const PublishedArticlesToAuthorsRelations = relations(
+  PublishedArticlesToAuthors,
+  ({ one }) => ({
+    article: one(PublishedArticle, {
+      fields: [PublishedArticlesToAuthors.article_id],
+      references: [PublishedArticle.id],
+    }),
+    author: one(Author, {
+      fields: [PublishedArticlesToAuthors.author_id],
+      references: [Author.id],
+    }),
+  }),
+);
+
 export const DraftArticlesToAuthors = pgTable(
   "d_articles_to_authors",
   {
@@ -166,6 +180,20 @@ export const DraftArticlesToAuthors = pgTable(
         draft_articles_to_authors.article_id,
         draft_articles_to_authors.author_id,
       ],
+    }),
+  }),
+);
+
+export const DraftArticlesToAuthorsRelations = relations(
+  DraftArticlesToAuthors,
+  ({ one }) => ({
+    article: one(DraftArticle, {
+      fields: [DraftArticlesToAuthors.article_id],
+      references: [DraftArticle.id],
+    }),
+    author: one(Author, {
+      fields: [DraftArticlesToAuthors.author_id],
+      references: [Author.id],
     }),
   }),
 );

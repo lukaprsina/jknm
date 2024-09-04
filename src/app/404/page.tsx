@@ -1,7 +1,6 @@
-import { cn } from "@acme/ui";
-
 import { Shell } from "~/components/shell";
 import { article_variants, page_variants } from "~/lib/page-variants";
+import { cn } from "~/lib/utils";
 
 export default function FourOFour() {
   return (

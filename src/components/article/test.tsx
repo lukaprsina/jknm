@@ -8,10 +8,7 @@ export function Test() {
     <div>
       <Button
         onClick={() => {
-          publish_article.mutate({
-            created_at: new Date(),
-            draft_id: 0,
-          });
+          publish_article.mutate(2);
         }}
       >
         Test

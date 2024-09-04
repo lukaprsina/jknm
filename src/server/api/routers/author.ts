@@ -5,7 +5,7 @@ import { google } from "googleapis";
 import type { Author } from "~/server/db/schema";
 
 export const author_router = createTRPCRouter({
-  get_authors: publicProcedure.query(async ({ ctx }) => {
+  get_all: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db.query.Author.findMany();
   }),
 

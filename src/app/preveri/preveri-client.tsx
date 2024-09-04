@@ -11,8 +11,9 @@ import { api } from "~/trpc/react";
 import { useToast } from "~/hooks/use-toast";
 import { cn } from "~/lib/utils";
 import { EditButton } from "~/components/shell/editing-buttons";
+import { EditorToReact } from "~/components/editor/editor-to-react";
 
-// import type { CSVType } from "../converter/converter-server";
+import { ErrorCard } from "~/components/error-card";
 
 export function PreveriClient({
   articles,
@@ -126,11 +127,17 @@ export function PreveriClient({
         </div>
       </form>
       <div className="grid h-full w-full grid-cols-2 gap-2">
-        <iframe
-          className="h-full w-full overflow-y-hidden rounded-xl"
-          src={iframe_src(page)}
-        />
-        <EditorToReact article={article.data} />
+        {article.data ? (
+          <>
+            <iframe
+              className="h-full w-full overflow-y-hidden rounded-xl"
+              src={iframe_src(page)}
+            />
+            <EditorToReact session={null} article={article.data} />
+          </>
+        ) : (
+          <ErrorCard title="Nekaj je narobe" description="Pokliči me" />
+        )}
       </div>
     </div>
   );
