@@ -136,7 +136,7 @@ function ArticleNotFound() {
       <div
         className={cn(
           page_variants(),
-          "flex min-h-screen items-center justify-center",
+          "prose flex min-h-screen items-center justify-center",
         )}
       >
         <Card>

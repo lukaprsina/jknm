@@ -9,5 +9,5 @@ export function format_date(date: Date) {
 }
 
 export function format_date_for_url(date: Date) {
-  return format(date, "DD-MM-YYYY");
+  return format(date, "dd-MM-yyyy");
 }

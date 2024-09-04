@@ -80,7 +80,7 @@ export async function upload_articles(
   articles: TempArticleType[],
   do_update: boolean,
 ) {
-  console.log("uploading articles", articles.length);
+  console.log("uploading articles", articles.length, { do_update });
   if (articles.length === 0) return;
   if (do_update) {
     for (const article of articles) {

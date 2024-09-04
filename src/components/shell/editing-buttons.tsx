@@ -66,10 +66,7 @@ export function EditButton({
   const all_authors = api.author.get_all.useQuery();
 
   const article_create_draft = api.article.create_draft.useMutation({
-    onSuccess: async (data) => {
-      const returned_data = data?.at(0);
-      if (!returned_data) return;
-
+    onSuccess: async (returned_data) => {
       // TODO
       /* await create_algolia_article({
         objectID: returned_data.id.toString(),

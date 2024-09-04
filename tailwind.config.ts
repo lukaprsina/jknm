@@ -25,6 +25,7 @@ export default {
             color: theme("colors.neutral.700"),
             "--card-foreground": theme("colors.neutral.700"),
             "--tw-prose-bullets": theme("colors.neutral[500]"),
+            "--tw-prose-links": theme("colors.blue.800"),
             p: {
               // fontWeight: "400",
               fontSize: "16px",

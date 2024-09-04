@@ -23,10 +23,7 @@ export default function NewArticleLoader({
   const all_authors = api.author.get_all.useQuery();
 
   const article_create = api.article.create_draft.useMutation({
-    onSuccess: async (data) => {
-      const returned_data = data.at(0);
-      if (!returned_data) return;
-
+    onSuccess: async (returned_data) => {
       console.log("new article loader", returned_data);
       const content_preview =
         content_to_text(returned_data.content ?? undefined) ?? "";

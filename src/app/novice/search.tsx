@@ -17,28 +17,14 @@ import {
 } from "./search-components";
 import type { Session } from "next-auth";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
-import { named_promise_all_settled } from "~/lib/named-promise";
-import { Button } from "~/components/ui/button";
 
 export function Search({ session }: { session: Session | null }) {
-  const a = async () => {
-    const b = new Promise<number>((resolve) =>
-      setTimeout(() => resolve(4), 1000),
-    );
-    const c = new Promise<number>((resolve) =>
-      setTimeout(() => resolve(8), 5000),
-    );
-    const result = await named_promise_all_settled({ b, c });
-    console.log(result);
-  };
-
   return (
     <InstantSearch
       future={{ preserveSharedStateOnUnmount: true }}
       indexName="novice_created_at_desc"
       searchClient={algolia.getClient()}
     >
-      <Button onClick={a}>Test</Button>
       <Tabs defaultValue="card" className="pb-6 pt-2">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">

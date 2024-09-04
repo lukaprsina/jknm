@@ -7,7 +7,7 @@ import {
   PublishedArticlesToAuthors,
   SaveDraftArticleSchema,
 } from "~/server/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { named_promise_all_settled } from "~/lib/named-promise";
 import { assert_at_most_one, assert_one } from "~/lib/assert-length";
 import { withCursorPagination } from "drizzle-pagination";
@@ -60,10 +60,14 @@ export const article_router = createTRPCRouter({
   create_draft: protectedProcedure
     .input(CreateDraftArticleSchema)
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db
+      const draft = await ctx.db
         .insert(DraftArticle)
         .values({ updated_at: new Date(), created_at: new Date(), ...input })
         .returning();
+
+      assert_one(draft);
+
+      return draft[0];
     }),
 
   save_draft: protectedProcedure
@@ -81,7 +85,9 @@ export const article_router = createTRPCRouter({
   publish: protectedProcedure
     .input(z.number())
     .mutation(async ({ ctx, input }) => {
+      console.log("1");
       return await ctx.db.transaction(async (tx) => {
+        console.log("2");
         const draft = await tx.query.DraftArticle.findFirst({
           where: eq(DraftArticle.id, input),
           with: {
@@ -92,6 +98,7 @@ export const article_router = createTRPCRouter({
             },
           },
         });
+        console.log("3");
 
         if (!draft) throw new Error("Draft not found");
 
@@ -99,15 +106,21 @@ export const article_router = createTRPCRouter({
         const new_date = format_date_for_url(draft.created_at);
         const url_with_date = `${new_url}-${new_date}`;
 
-        await tx.insert(PublishedArticle).values([
-          {
-            content: draft.content,
-            title: draft.title,
-            preview_image: draft.preview_image,
-            created_at: draft.created_at,
-            url: url_with_date,
-          },
-        ]);
+        console.log("before inserting");
+        const test2 = await tx
+          .insert(PublishedArticle)
+          .values([
+            {
+              content: draft.content,
+              title: draft.title,
+              preview_image: draft.preview_image,
+              created_at: draft.created_at,
+              url: url_with_date,
+            },
+          ])
+          .returning();
+
+        console.log("after inserting", test2);
 
         for (const author of draft.draft_articles_to_authors) {
           await tx.insert(PublishedArticlesToAuthors).values([

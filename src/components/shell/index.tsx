@@ -28,7 +28,9 @@ export async function Shell({
           <MobileHeader className="flex md:hidden" session={session} />
         </header>
       ) : undefined}
-      <main className="relative w-full">{children}</main>
+      <main className="relative w-full" id="main">
+        {children}
+      </main>
       {!without_footer ? (
         <footer className="bottom-0">
           <Footer />

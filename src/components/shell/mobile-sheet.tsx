@@ -1,5 +1,7 @@
+"use client";
+
 import type { LinkProps } from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
 import { Logo } from "./logo";
@@ -14,10 +16,16 @@ import { cn } from "~/lib/utils";
 import { MenuIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import EditingButtons from "./editing-buttons";
+import { Session } from "next-auth";
 
-export function MobileSheet() {
+export function MobileSheet({ session }: { session: Session | null }) {
   const [open, setOpen] = useState(false);
-
+  const main_ref = React.useRef<HTMLElement | undefined>();
+  useEffect(() => {
+    main_ref.current = document.getElementById("main") ?? undefined;
+    console.log(main_ref.current);
+  }, []);
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -25,7 +33,10 @@ export function MobileSheet() {
           <MenuIcon />
         </Button>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent
+        aria-describedby="mobile navigation"
+        container={main_ref.current}
+      >
         <SheetHeader>
           <Link href="/" className="flex flex-col gap-6">
             <div className="flex w-full items-center justify-center">
@@ -35,6 +46,7 @@ export function MobileSheet() {
               Jamarski klub Novo mesto
             </SheetTitle>
           </Link>
+          <EditingButtons session={session} />
           {/* <SheetDescription>
             
           </SheetDescription> */}

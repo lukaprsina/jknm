@@ -121,8 +121,7 @@ export function MobileHeader({
       <Link className="text-2xl font-bold" href="/">
         Jamarski klub Novo mesto
       </Link>
-      <EditingButtons session={session} />
-      <MobileSheet />
+      <MobileSheet session={session} />
     </div>
   );
 }

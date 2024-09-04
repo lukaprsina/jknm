@@ -3,7 +3,7 @@
 import type { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
-import { InfoCard } from "~/components/error-card";
+import { InfoCard } from "~/components/info-card";
 import { Shell } from "~/components/shell";
 import { Logo } from "~/components/shell/logo";
 import { Button } from "~/components/ui/button";

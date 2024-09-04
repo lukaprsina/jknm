@@ -6,7 +6,7 @@ import { useIntersectionObserver } from "usehooks-ts";
 import { cn } from "~/lib/utils";
 import { article_variants } from "~/lib/page-variants";
 import { ArticleDrizzleCard } from "./article-card-adapter";
-import { InfoCard } from "../error-card";
+import { InfoCard } from "../info-card";
 import { Test } from "./test";
 
 export type IntersectionRef = ReturnType<typeof useIntersectionObserver>["ref"];

@@ -13,7 +13,7 @@ import { cn } from "~/lib/utils";
 import { EditButton } from "~/components/shell/editing-buttons";
 import { EditorToReact } from "~/components/editor/editor-to-react";
 
-import { InfoCard } from "~/components/error-card";
+import { InfoCard } from "~/components/info-card";
 
 export function PreveriClient({
   articles,
