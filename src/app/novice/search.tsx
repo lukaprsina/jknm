@@ -35,7 +35,7 @@ export function Search({ session }: { session: Session | null }) {
   return (
     <InstantSearch
       future={{ preserveSharedStateOnUnmount: true }}
-      indexName="novice"
+      indexName="novice_created_at_desc"
       searchClient={algolia.getClient()}
     >
       <Button onClick={a}>Test</Button>

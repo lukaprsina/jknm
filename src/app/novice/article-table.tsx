@@ -83,14 +83,14 @@ export function ArticleTable({
               variant="ghost"
               onClick={() => {
                 sort_api.refine(
-                  sort_api.currentRefinement === "novice_date_asc"
+                  sort_api.currentRefinement === "novice_created_at_asc"
                     ? "novice"
-                    : "novice_date_asc",
+                    : "novice_created_at_asc",
                 );
               }}
             >
               Datum nastanka
-              {sort_api.currentRefinement === "novice_date_asc" && (
+              {sort_api.currentRefinement === "novice_created_at_asc" && (
                 <ChevronDownIcon />
               )}
               {sort_api.currentRefinement === "novice" && <ChevronUpIcon />}

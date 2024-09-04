@@ -9,7 +9,7 @@ import { api } from "~/trpc/react";
 import PublishedArticleContext from "../article/context";
 import type { Session } from "next-auth";
 import MakeDraftButton from "../article/make-draft-button";
-import { Button, ButtonProps } from "~/components/ui/button";
+import { Button, type ButtonProps } from "~/components/ui/button";
 import {
   Tooltip,
   TooltipTrigger,

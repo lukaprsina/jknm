@@ -193,7 +193,7 @@ export function CustomClearRefinements(props: ClearRefinementsProps) {
 
 export const SORT_BY_ITEMS = [
   { value: "novice", label: "Najnovejše" },
-  { value: "novice_date_asc", label: "Najstarejše" },
+  { value: "novice_created_at_asc", label: "Najstarejše" },
   { value: "novice_name_asc", label: "Ime naraščajoče" },
   { value: "novice_name_desc", label: "Ime padajoče" },
 ];

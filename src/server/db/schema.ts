@@ -89,7 +89,9 @@ export const DraftArticle = pgTable(
   "draft_article",
   {
     id: serial("id").primaryKey(),
-    published_id: integer("published_id").references(() => PublishedArticle.id),
+    published_id: integer("published_id")
+      .unique()
+      .references(() => PublishedArticle.id),
     title: varchar("title", { length: 255 }).notNull(),
     created_at: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
