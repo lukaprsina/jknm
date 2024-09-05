@@ -12,11 +12,14 @@ import type { ImageToSave } from "./converter-spaghetti";
 import type { AuthorType } from "./get-authors";
 import { content_to_text } from "~/lib/content-to-text";
 import { db } from "~/server/db";
-import { PublishedArticle } from "~/server/db/schema";
+import {
+  Author,
+  PublishedArticle,
+  PublishedArticlesToAuthors,
+} from "~/server/db/schema";
 import { algolia_protected } from "~/lib/algolia-server";
 import type { ArticleHit } from "~/lib/validators";
 import { api } from "~/trpc/server";
-import { RouterOutputs } from "~/trpc/react";
 
 export interface CSVType {
   id: string;
@@ -28,29 +31,68 @@ export interface CSVType {
 
 export async function delete_articles() {
   console.log("deleting articles");
-  await db.execute(sql`TRUNCATE TABLE ${PublishedArticle} CASCADE;`);
+  await db.execute(
+    sql`TRUNCATE TABLE ${PublishedArticle} RESTART IDENTITY CASCADE;`,
+  );
+  console.log("done");
+}
+
+export async function delete_authors() {
+  console.log("deleting authors");
+  await db.execute(sql`TRUNCATE TABLE ${Author} RESTART IDENTITY CASCADE;`);
   console.log("done");
 }
 
 export async function sync_authors() {
   const google_authors = await api.author.sync_with_google();
-  console.log(
-    google_authors,
-    google_authors?.map((a) => a.name),
-  );
+
+  if (!google_authors) {
+    throw new Error("No google authors");
+  }
 
   const read_file = true as boolean;
   if (!read_file) return;
 
-  const authors_by_name_path = path.join(
-    process.cwd(),
-    "src/app/converter/_info/authors_by_name.json",
+  const not_found_authors = new Set<string>();
+  const authors_by_name = await get_authors_by_name();
+
+  for (const author_by_name of authors_by_name) {
+    let author = author_by_name.name;
+
+    if (typeof author_by_name.change === "boolean") {
+      continue;
+    } else if (typeof author_by_name.change === "string") {
+      author = author_by_name.change;
+    }
+
+    author = author.trim();
+    author.split(", ").forEach((split_author) => {
+      const author_obj = google_authors.find((a) => a.name === split_author);
+
+      if (!author_obj) {
+        not_found_authors.add(split_author);
+      }
+    });
+  }
+
+  const guest_authors = Array.from(not_found_authors);
+  const mapped_guest_authors = guest_authors.map(
+    (guest) =>
+      ({
+        author_type: "guest",
+        name: guest,
+        google_id: null,
+      }) satisfies typeof Author.$inferInsert,
   );
+
+  await db.insert(Author).values(mapped_guest_authors).returning();
+  console.log("Inserted guest authors", mapped_guest_authors.length);
   // fs_promises.readFile()
 }
 
 export async function get_image_dimensions(src: string) {
   try {
+    console.log("Fetching image", src);
     const result = await fetch(src);
     if (!result.ok) {
       console.error("Image fetch error", src, result.status);
@@ -91,7 +133,6 @@ function convert_article(
     updated_at: article.updated_at,
     preview_image: article.preview_image,
     url: article.csv_url,
-    // TODO author_ids: article.author_ids,
   };
 }
 
@@ -99,32 +140,36 @@ export async function upload_articles(
   articles: TempArticleType[],
   do_update: boolean,
 ) {
-  console.log("uploading articles", articles.length, { do_update });
   if (articles.length === 0) return;
-  if (do_update) {
-    for (const article of articles) {
-      const test = await db
-        .update(PublishedArticle)
-        .set(convert_article(article))
-        .where(eq(PublishedArticle.id, article.serial_id))
-        .returning();
-
-      console.log("UPDATING", test);
+  await db.transaction(async (tx) => {
+    if (do_update) {
+      console.log("Updating articles", articles);
+      for (const article of articles) {
+        await tx
+          .update(PublishedArticle)
+          .set(convert_article(article))
+          .where(eq(PublishedArticle.id, article.serial_id));
+      }
+    } else {
+      console.log("Inserting articles", articles);
+      if (articles.length > 0)
+        await tx.insert(PublishedArticle).values(articles.map(convert_article));
     }
-  } else {
-    try {
-      await db
-        .insert(PublishedArticle)
-        .values(articles.map(convert_article))
-        .returning();
-    } catch (e: unknown) {
-      if (e instanceof Error) {
-        console.error("Error uploading articles", e.message);
-      } else {
-        console.error("Unknown", e);
+
+    const joins: (typeof PublishedArticlesToAuthors.$inferInsert)[] = [];
+    for (const article of articles) {
+      for (const author_id of article.author_ids) {
+        joins.push({
+          author_id: author_id,
+          article_id: article.serial_id,
+        });
       }
     }
-  }
+
+    console.log("Inserting joins", joins);
+    if (joins.length > 0)
+      await tx.insert(PublishedArticlesToAuthors).values(joins);
+  });
 
   console.log("done uploading articles");
 }
@@ -240,6 +285,10 @@ export async function get_article_count() {
 
 export async function save_images(images: ImageToSave[]) {
   const images_dir = path.join(process.cwd(), "src/app/converter/_image-data");
+  if (fs.existsSync(images_dir)) {
+    fs.rmSync(images_dir, { recursive: true });
+  }
+
   await fs_promises.mkdir(images_dir, { recursive: true });
 
   const promises = images.map(async (image) => {
@@ -251,64 +300,57 @@ export async function save_images(images: ImageToSave[]) {
   await Promise.all(promises);
 }
 
-export async function upload_images() {
-  const images_dir = `./pt-images`;
-  const all_dir = `./pt-all`;
-  /* {
-    serial_id: number;
-    objave_id: number;
-    json: ImageToSave;
-  } */
+export async function copy_and_rename_images() {
+  const original_images_dir = path.join(
+    process.cwd(),
+    "src/app/converter/_image-data",
+  );
+  const converted_images_dir = path.join(
+    process.cwd(),
+    "src/app/converter/_images",
+  );
+
+  if (fs.existsSync(converted_images_dir)) {
+    fs.rmSync(converted_images_dir, { recursive: true });
+  }
+
   const promises: Promise<void>[] = [];
-  await fs_promises.mkdir(images_dir, { recursive: true });
-  await fs_promises.mkdir(all_dir, { recursive: true });
+  await fs_promises.mkdir(original_images_dir, { recursive: true });
+  await fs_promises.mkdir(converted_images_dir, { recursive: true });
 
   // 625
   for (let objave_id = 1; objave_id <= 630; objave_id++) {
-    const filePath = `${images_dir}/${objave_id}.json`;
-    if (!fs.existsSync(filePath)) {
-      console.error("Folder with id doesn't exist", filePath);
-      continue;
+    const original_image_path = path.join(
+      original_images_dir,
+      `${objave_id}.json`,
+    );
+
+    if (!fs.existsSync(original_image_path)) {
+      console.error("JSON file for image doesn't exist", original_image_path);
+      break;
     }
 
     const callback = async () => {
-      const file = await fs_promises.readFile(filePath, "utf-8");
+      const file = await fs_promises.readFile(original_image_path, "utf-8");
       const json = JSON.parse(file) as ImageToSave;
 
-      const s3_dir = `${json.url}-${json.serial_id}`;
       const nested_promises = json.images.map(async (image) => {
-        const old_path = `${JKNM_SERVED_DIR}/${decodeURIComponent(image)}`;
-        const old_path_parts = old_path.split("/");
-        const old_file_name = old_path_parts.pop();
-        if (!old_file_name) {
-          throw new Error("Old file name doesn't exist: " + old_path);
-        }
+        const old_path = path.join(JKNM_SERVED_DIR, image);
+        const image_name = path.basename(old_path);
 
-        // return upload_from_path(old_path, s3_dir);
-        try {
-          await fs_promises.stat(old_path);
-        } catch (error) {
-          console.error("DANGER: MISSING FILE", old_path, error);
-          return;
-        }
-
-        const new_dir = `${all_dir}/${s3_dir}`;
+        const new_dir = path.join(converted_images_dir, json.url);
         await fs_promises.mkdir(new_dir, { recursive: true });
 
-        const new_path = `${new_dir}/${old_file_name}`;
-        // console.log("Copying file", old_path, new_path);
-        // console.log("Copying file", old_path, new_path);
-        return fs_promises.copyFile(old_path, new_path);
+        if (!fs.existsSync(new_dir)) {
+          throw new Error(`New dir doesn't exist: ${new_dir}`);
+        }
 
-        /* return {
-          old_path,
-          new_path: `${s3_dir}/${old_file_name}`,
-        }; */
+        const new_path = path.join(new_dir, image_name);
+        // console.log("Copying", old_path, new_path);
+        return fs_promises.copyFile(old_path, new_path);
       });
 
       await Promise.all(nested_promises);
-      /* const file_info =  */
-      // console.log(file_info);
     };
 
     promises.push(callback());
@@ -317,90 +359,8 @@ export async function upload_images() {
   await Promise.all(promises);
   console.log("Done");
 }
-/* export async function add_authors() {
-  const all_authors = AUTHORS.reduce((acc: Set<string>, author: AuthorType) => {
-    if (typeof author.change_to === "undefined") {
-      acc.add(author.name);
-    } else if (typeof author.change_to === "string") {
-      acc.add(author.change_to);
-    }
-
-    return acc;
-  }, new Set<string>());
-
-  console.log("adding authors", all_authors.size);
-  await db
-    .insert(CreditedPeople)
-    .values(Array.from(all_authors).map((name) => ({ name, email: "" })));
-  console.log("done");
-} */
-
-/* for (const image of json.images) {
-        const old_path = `${JKNM_SERVED_DIR}/${decodeURIComponent(image)}`
-        upload_from_path(old_path, s3_dir);
-
-        const old_path_parts = old_path.split("/");
-        const old_file_name = old_path_parts.pop();
-        if (!old_file_name) {
-          throw new Error("Old file name doesn't exist: " + old_path);
-        }
-
-
-        const file = new File([old_file_name], image.name, {
-          type: image.mime,
-        });
-
-        await upload_image_by_file(file, s3_dir);
-      } */
 
 const JKNM_SERVED_DIR = "D:/JKNM/served";
-/* export async function upload_images_to_s3() {
-  const articles = await db.query.Article.findMany({
-    limit: 10,
-    orderBy: (a, { asc }) => [asc(a.id)],
-  });
-
-  const promises = articles.map(async (article) => {
-    if (!article.preview_image) {
-      console.error("No preview image for article", article.id);
-      return;
-    }
-
-    const decoded_image = decodeURIComponent(article.preview_image);
-    const preview_image_parts = decoded_image.split("/");
-    const preview_image_name = preview_image_parts.pop();
-
-    const file_path = `${JKNM_SERVED_DIR}/${article.created_at.getFullYear()}/${preview_image_name}`;
-    if (!fs.existsSync(file_path)) {
-      throw new Error("File doesn't exist: " + file_path);
-    }
-
-    await upload_from_path(file_path, article.url);
-  });
-
-  await Promise.all(promises);
-} */
-
-/* async function upload_from_path(path: string, article_url: string) {
-  const buffer = await fs_promises.readFile(path);
-  const file_mime = mime.getType(path);
-  if (!file_mime?.includes("image")) {
-    throw new Error("Wrong MIME type: " + file_mime + " for file " + path);
-  }
-  const file_name = path.split("/").pop();
-  if (!file_name) {
-    throw new Error("Image doesn't have a title: " + path);
-  }
-
-  const file = new File([buffer], file_name, { type: file_mime });
-  console.log("Uploading image", {
-    article_url,
-    file_name,
-    file_mime,
-  });
-
-  await upload_image_by_file(file, article_url);
-} */
 
 export async function get_authors_by_name() {
   const authors_by_name_path = path.join(

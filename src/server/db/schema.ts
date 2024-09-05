@@ -9,6 +9,7 @@ import {
   serial,
   text,
   timestamp,
+  unique,
   varchar,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
@@ -126,9 +127,7 @@ export const Author = pgTable("author", {
   id: serial("id").primaryKey(),
   author_type: author_type_enum("author_type").notNull(),
   name: varchar("name", { length: 255 }).notNull(),
-  google_id: varchar("google_id", { length: 255 }).unique(undefined, {
-    nulls: "not distinct",
-  }),
+  google_id: varchar("google_id", { length: 255 }),
   email: text("email"),
   image: varchar("image", { length: 255 }),
 });
@@ -143,7 +142,9 @@ export const PublishedArticlesToAuthors = pgTable(
       }),
     author_id: integer("author_id")
       .notNull()
-      .references(() => Author.id),
+      .references(() => Author.id, {
+        onDelete: "cascade",
+      }),
   },
   (published_articles_to_authors) => ({
     compoundKey: primaryKey({
@@ -177,7 +178,9 @@ export const DraftArticlesToAuthors = pgTable(
       .references(() => DraftArticle.id, { onDelete: "cascade" }),
     author_id: integer("author_id")
       .notNull()
-      .references(() => Author.id),
+      .references(() => Author.id, {
+        onDelete: "cascade",
+      }),
   },
   (draft_articles_to_authors) => ({
     compoundKey: primaryKey({

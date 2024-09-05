@@ -12,12 +12,12 @@ import { article_variants, page_variants } from "~/lib/page-variants";
 import { api } from "~/trpc/react";
 import {
   delete_articles,
+  delete_authors,
   get_article_count,
-  get_authors_by_name,
   read_articles,
   sync_authors,
   sync_with_algolia,
-  upload_images,
+  copy_and_rename_images,
 } from "./converter-server";
 import { iterate_over_articles } from "./converter-spaghetti";
 import { cn } from "~/lib/utils";
@@ -48,51 +48,12 @@ export function ArticleConverter() {
       <h1>Article Converter: {article_count} novičk</h1>
       <div className="flex w-full flex-wrap gap-4">
         <Button onClick={() => delete_articles()}>Delete articles</Button>
+        <Button onClick={() => delete_authors()}>Delete authors</Button>
         <Button onClick={() => sync_authors()}>Sync authors</Button>
         <Button onClick={() => sync_with_algolia()}>Sync with Algolia</Button>
-        <Button
-          onClick={async () => {
-            if (!all_authors.data) {
-              console.warn("Authors not loaded");
-              return;
-            }
-
-            const not_found_authors = new Set<string>();
-            const authors_by_name = await get_authors_by_name();
-
-            for (const author_by_name of authors_by_name) {
-              let author = author_by_name.name;
-
-              if (typeof author_by_name.change === "boolean") {
-                continue;
-              } else if (typeof author_by_name.change === "string") {
-                author = author_by_name.change;
-              }
-
-              author = author.trim();
-              author.split(", ").forEach((split_author) => {
-                const author_obj = all_authors.data.find(
-                  (a) => a.name === split_author,
-                );
-
-                if (!author_obj) {
-                  console.log(split_author);
-                  not_found_authors.add(split_author);
-                }
-              });
-            }
-
-            const mapped_authors = all_authors.data.map((a) => a.name);
-            console.log(
-              "not_found_authors",
-              mapped_authors,
-              Array.from(not_found_authors),
-            );
-          }}
-        >
-          Check authors
+        <Button onClick={() => copy_and_rename_images()}>
+          Copy and rename images
         </Button>
-        <Button onClick={() => upload_images()}>Copy images to S3</Button>
         <div className="flex flex-shrink gap-2">
           <Input
             value={firstArticle}

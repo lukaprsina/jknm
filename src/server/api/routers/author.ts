@@ -10,12 +10,9 @@ export const author_router = createTRPCRouter({
   }),
 
   sync_with_google: protectedProcedure.query(async ({ ctx }) => {
-    console.log("GETTING GOOGLE USERS");
-
     const credentials = env.JKNM_SERVICE_ACCOUNT_CREDENTIALS;
     if (!credentials) {
-      console.error("No credentials found");
-      return;
+      throw new Error("No credentials for Google Admin found");
     }
 
     const credentials_text = atob(credentials);
@@ -35,39 +32,48 @@ export const author_router = createTRPCRouter({
     });
 
     if (!result.data.users) {
-      throw new Error("No users found");
+      throw new Error("No Google Admin users found");
     }
 
-    const mapped_users: (typeof Author.$inferInsert)[] = result.data.users
-      .map((user) => {
-        const name = user.name?.fullName;
+    const mapped_users: (typeof Author.$inferInsert)[] = [];
+    const uniqueGoogleIds = new Set<string>();
 
-        if (!name) {
-          console.error(`No full name for Google user ${user.id}`);
-          return;
-        }
+    result.data.users.forEach((user) => {
+      const name = user.name?.fullName;
 
-        return {
-          author_type: "member",
-          google_id: user.id ?? undefined,
-          email: user.primaryEmail ?? undefined,
-          name,
-          image: user.thumbnailPhotoUrl ?? undefined,
-        } satisfies typeof Author.$inferInsert;
-      })
-      .filter((user) => typeof user !== "undefined");
+      if (!name) {
+        throw new Error(`No full name for Google user ${user.id}`);
+        // console.error(`No full name for Google user ${user.id}`);
+        // return;
+      }
 
-    console.log("GOT GOOGLE USERS", mapped_users.length);
+      const googleId = user.id ?? undefined;
 
-    return await ctx.db
+      if (!googleId) {
+        throw new Error(`No Google ID for user ${name}`);
+      }
+      if (uniqueGoogleIds.has(googleId)) {
+        throw new Error(`Duplicate Google ID for user ${name}`);
+      }
+
+      uniqueGoogleIds.add(googleId);
+
+      mapped_users.push({
+        author_type: "member",
+        google_id: googleId,
+        email: user.primaryEmail ?? undefined,
+        name,
+        image: user.thumbnailPhotoUrl ?? undefined,
+      } satisfies typeof Author.$inferInsert);
+    });
+    // .filter((user) => typeof user !== "undefined");
+
+    const google_result = await ctx.db
       .insert(Author)
       .values(mapped_users)
-      .onConflictDoUpdate({
-        target: Author.google_id,
-        set: {
-          name: "ttttttttttttttttt",
-        },
-      })
       .returning();
+
+    console.log("Inserted google authors", google_result.length);
+    return google_result;
   }),
 });

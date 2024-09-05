@@ -265,8 +265,13 @@ export async function parse_node(
 
       // console.log({ src, caption });
       // TODO: get image dimensions
-      const dimensions = await get_image_dimensions(src);
-      if (!dimensions) {
+      const read_image = false as boolean;
+
+      const dimensions = read_image
+        ? await get_image_dimensions(src)
+        : undefined;
+
+      if (read_image && !dimensions) {
         console.error("No dimensions for image", csv_article.id, src);
         break;
       }
@@ -277,8 +282,8 @@ export async function parse_node(
         data: {
           file: {
             url: src,
-            width: dimensions.width,
-            height: dimensions.height,
+            width: dimensions?.width,
+            height: dimensions?.height,
           },
           caption,
         },

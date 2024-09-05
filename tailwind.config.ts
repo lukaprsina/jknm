@@ -1,6 +1,19 @@
 import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
-import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
+// import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
+
+import colors from "tailwindcss/colors";
+
+// @ts-expect-error - bun error
+delete colors["lightBlue"];
+// @ts-expect-error - bun error
+delete colors["warmGray"];
+// @ts-expect-error - bun error
+delete colors["trueGray"];
+// @ts-expect-error - bun error
+delete colors["coolGray"];
+// @ts-expect-error - bun error
+delete colors["blueGray"];
 
 export default {
   darkMode: ["class"],
@@ -141,12 +154,12 @@ export default {
   plugins: [
     require("tailwindcss-animate"),
     require("@tailwindcss/typography"),
-    addVariablesForColors,
+    // addVariablesForColors,
   ],
 } satisfies Config;
 
 // This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
-function addVariablesForColors({ addBase, theme }: any) {
+/* function addVariablesForColors({ addBase, theme }: any) {
   let allColors = flattenColorPalette(theme("colors"));
   let newVars = Object.fromEntries(
     Object.entries(allColors).map(([key, val]) => [`--${key}`, val]),
@@ -155,4 +168,4 @@ function addVariablesForColors({ addBase, theme }: any) {
   addBase({
     ":root": newVars,
   });
-}
+} */

@@ -12,7 +12,6 @@ import { named_promise_all_settled } from "~/lib/named-promise";
 import { assert_at_most_one, assert_one } from "~/lib/assert-length";
 import { withCursorPagination } from "drizzle-pagination";
 import { convert_title_to_url } from "~/components/editor/editor-utils";
-import { format_date_for_url, read_date_from_url } from "~/lib/format-date";
 
 export const article_router = createTRPCRouter({
   get_infinite_published: publicProcedure
@@ -57,34 +56,12 @@ export const article_router = createTRPCRouter({
       });
     }),
 
-  get_published_by_url_and_date: publicProcedure
+  get_published_by_url: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      const url_parts = decodeURIComponent(input).split("-");
-      const article_url = url_parts.slice(0, -3).join("-");
-      const article_date_string = url_parts.slice(-3).join("-");
-
-      if (!article_url || !article_date_string) {
-        throw new Error(`Can't create URL from ${input}`);
-      }
-
-      const url_date = read_date_from_url(article_date_string);
-      const next_day = new Date(url_date);
-      next_day.setDate(next_day.getDate() + 1);
-
-      const article = await ctx.db.query.PublishedArticle.findMany({
-        where: and(
-          eq(PublishedArticle.url, input),
-          and(
-            gte(PublishedArticle.created_at, url_date),
-            lt(PublishedArticle.created_at, next_day),
-          ),
-        ),
+      return await ctx.db.query.PublishedArticle.findFirst({
+        where: eq(PublishedArticle.url, input),
       });
-
-      assert_at_most_one(article);
-
-      return article[0];
     }),
 
   create_draft: protectedProcedure
@@ -226,9 +203,6 @@ export const article_router = createTRPCRouter({
         } satisfies typeof DraftArticle.$inferInsert;
 
         await tx.delete(PublishedArticle).where(eq(PublishedArticle.id, input));
-        /* await tx
-          .delete(PublishedArticlesToAuthors)
-          .where(eq(PublishedArticlesToAuthors.article_id, input)); */
 
         const draft_return = draft
           ? await tx
@@ -262,58 +236,3 @@ export const article_router = createTRPCRouter({
       });
     }),
 });
-
-/* get_infinite_published: publicProcedure
-    .input(
-      z.object({
-        limit: z.number().min(1).max(1000).default(50),
-        cursor: z.string().nullable(),
-        direction: z.enum(["forward", "backward"]).optional(),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      if (input.direction === "backward") {
-        console.error("backward is not supported");
-      }
-
-      const last_item = cursor_desc.parse(input.cursor);
-
-      const data = await ctx.db
-        .select()
-        .from(PublishedArticle)
-        .orderBy(...cursor_desc.orderBy)
-        .where(cursor_desc.where(last_item))
-        .limit(input.limit);
-
-      const last_token = cursor_desc.serialize(data.at(-1));
-
-      return {
-        data,
-        last_token,
-      };
-    }), */
-
-/* 
-// TODO
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const cursor_asc = generateCursor({
-  cursors: [
-    {
-      order: "ASC",
-      key: "created_at_asc",
-      schema: PublishedArticle.created_at,
-    },
-  ],
-  primaryCursor: { order: "ASC", key: "id_asc", schema: PublishedArticle.id },
-});
-
-const cursor_desc = generateCursor({
-  cursors: [
-    {
-      order: "DESC",
-      key: "created_at_desc",
-      schema: PublishedArticle.created_at,
-    },
-  ],
-  primaryCursor: { order: "DESC", key: "id_desc", schema: PublishedArticle.id },
-}); */

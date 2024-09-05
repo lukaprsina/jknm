@@ -3,14 +3,13 @@
 import type EditorJS from "@editorjs/editorjs";
 import type { OutputBlockData } from "@editorjs/editorjs";
 import { parse as parseDate } from "date-format-parse";
-// import dom_serialize from "dom-serializer";
-// import { parseDocument } from "htmlparser2";
+import dom_serialize from "dom-serializer";
+import { parseDocument } from "htmlparser2";
 import { parse as html_parse, NodeType } from "node-html-parser";
 
 import type { CSVType, TempArticleType } from "./converter-server";
 import type { AuthorType } from "./get-authors";
 import {
-  get_authors_by_name,
   get_problematic_html,
   save_images,
   upload_articles,
@@ -20,7 +19,6 @@ import { parse_node } from "./parse-node";
 import type { RouterOutputs } from "~/trpc/react";
 import {
   convert_title_to_url,
-  get_clean_url,
   get_image_data_from_editor,
 } from "~/components/editor/editor-utils";
 
@@ -100,7 +98,6 @@ export async function iterate_over_articles(
 
   const articles: TempArticleType[] = [];
   let article_id = do_splice && first_index !== -1 ? first_index + 1 : 1;
-  authors_by_name = await get_authors_by_name();
 
   for (const csv_article of sliced_csv_articles) {
     const article = await parse_csv_article(
@@ -109,7 +106,6 @@ export async function iterate_over_articles(
       article_id,
       all_authors,
       problems,
-      authors_by_name,
     );
     articles.push(article);
     article_id++;
@@ -120,6 +116,7 @@ export async function iterate_over_articles(
     await upload_articles(articles, do_update);
   }
 
+  // console.warn("Images to save", images_to_save);
   await save_images(images_to_save);
   // await write_article_html_to_file(problematic_articles);
   console.log(
@@ -143,7 +140,6 @@ async function parse_csv_article(
   article_id: number,
   all_authors: RouterOutputs["author"]["get_all"],
   problems: Record<string, [string, string][]>,
-  authors_by_name: AuthorType[],
 ) {
   const problematic_dir = "1723901265154";
 
@@ -152,7 +148,8 @@ async function parse_csv_article(
     console.log("Getting article", csv_article.id, "from file");
     html = await get_problematic_html(csv_article.id, problematic_dir);
   }
-  // const sanitized = fixHtml(html);
+
+  html = fixHtml(html);
   const root = html_parse(html);
 
   const format = "D/M/YYYY HH:mm:ss";
@@ -174,7 +171,7 @@ async function parse_csv_article(
     const src = image.getAttribute("src");
     if (!src) throw new Error("No src attribute in image");
 
-    image_urls.push(src);
+    image_urls.push(decodeURIComponent(src));
   }
 
   images_to_save.push({
@@ -196,16 +193,7 @@ async function parse_csv_article(
 
   // const new_authors = new Set<string>();
   // const not_found_authors = new Set<string>();
-  const { current_authors, not_found_authors } = get_authors(
-    csv_article,
-    blocks,
-    authors_by_name,
-    all_authors,
-  );
-
-  if (not_found_authors.size !== 0) {
-    console.error("Authors not found", csv_article.id, not_found_authors);
-  }
+  const current_authors = get_authors(csv_article, blocks, all_authors);
 
   await editorJS?.render({
     blocks,
@@ -234,7 +222,7 @@ async function parse_csv_article(
   } satisfies TempArticleType;
 }
 
-/* function fixHtml(htmlString: string) {
+function fixHtml(htmlString: string) {
   const document = parseDocument(htmlString, {
     decodeEntities: true,
     lowerCaseTags: false,
@@ -245,7 +233,7 @@ async function parse_csv_article(
   const fixedHtml = dom_serialize(document);
 
   return fixedHtml;
-} */
+}
 
 // TODO: 33 isn't the only one. search for img in p.
 // 72, 578
