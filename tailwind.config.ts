@@ -4,7 +4,7 @@ import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
 
 export default {
   darkMode: ["class"],
-  content: ["./src/**/*.tsx"],
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     container: {
       padding: "2rem",

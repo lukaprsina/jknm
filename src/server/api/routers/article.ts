@@ -11,7 +11,10 @@ import { eq, sql } from "drizzle-orm";
 import { named_promise_all_settled } from "~/lib/named-promise";
 import { assert_at_most_one, assert_one } from "~/lib/assert-length";
 import { withCursorPagination } from "drizzle-pagination";
-import { get_clean_url } from "~/components/editor/editor-utils";
+import {
+  convert_title_to_url,
+  get_clean_url,
+} from "~/components/editor/editor-utils";
 import { format_date_for_url } from "~/lib/format-date";
 
 export const article_router = createTRPCRouter({
@@ -85,9 +88,7 @@ export const article_router = createTRPCRouter({
   publish: protectedProcedure
     .input(z.number())
     .mutation(async ({ ctx, input }) => {
-      console.log("1");
       return await ctx.db.transaction(async (tx) => {
-        console.log("2");
         const draft = await tx.query.DraftArticle.findFirst({
           where: eq(DraftArticle.id, input),
           with: {
@@ -98,16 +99,14 @@ export const article_router = createTRPCRouter({
             },
           },
         });
-        console.log("3");
 
         if (!draft) throw new Error("Draft not found");
+        const url_with_date = convert_title_to_url(
+          draft.title,
+          draft.created_at,
+        );
 
-        const new_url = get_clean_url(draft.title);
-        const new_date = format_date_for_url(draft.created_at);
-        const url_with_date = `${new_url}-${new_date}`;
-
-        console.log("before inserting");
-        const test2 = await tx
+        await tx
           .insert(PublishedArticle)
           .values([
             {
@@ -120,8 +119,6 @@ export const article_router = createTRPCRouter({
           ])
           .returning();
 
-        console.log("after inserting", test2);
-
         for (const author of draft.draft_articles_to_authors) {
           await tx.insert(PublishedArticlesToAuthors).values([
             {
@@ -132,6 +129,7 @@ export const article_router = createTRPCRouter({
         }
 
         await tx.delete(DraftArticle).where(eq(DraftArticle.id, input));
+
         return tx.query.PublishedArticle.findFirst({
           where: eq(PublishedArticle.url, url_with_date),
           with: {

@@ -5,7 +5,7 @@ import type { PublishedArticle } from "~/server/db/schema";
 import type { ArticleHit } from "~/lib/validators";
 import type { IntersectionRef } from "./infinite-articles";
 import { content_to_text } from "~/lib/content-to-text";
-import { ArticleCard } from "./article-card";
+import { ArticleCard } from "./card";
 
 export const ArticleDrizzleCard = ({
   article,

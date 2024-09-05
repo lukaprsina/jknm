@@ -3,7 +3,7 @@
 import { LayoutDashboard, TableIcon } from "lucide-react";
 import { Hits, InstantSearch } from "react-instantsearch";
 
-import { ArticleAlgoliaCard } from "~/components/article/article-card-adapter";
+import { ArticleAlgoliaCard } from "~/components/article/card-adapter";
 import { algolia } from "~/lib/algolia";
 import { article_variants } from "~/lib/page-variants";
 import { ArticleTable } from "./article-table";
