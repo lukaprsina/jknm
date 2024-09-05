@@ -7,6 +7,7 @@ import { NodeType, HTMLElement as ParserHTMLElement } from "node-html-parser";
 
 import type { CSVType } from "./converter-server";
 import { get_image_dimensions } from "./converter-server";
+import { DimensionType } from "./converter-spaghetti";
 
 const p_allowed_tags = ["STRONG", "BR", "A", "IMG", "EM", "SUB", "SUP"];
 const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
@@ -17,6 +18,7 @@ export async function parse_node(
   csv_article: CSVType,
   csv_url: string,
   problems: Record<string, [string, string][]>,
+  ids_by_dimensions: DimensionType[],
 ): Promise<boolean> {
   if (!(node instanceof ParserHTMLElement))
     throw new Error("Not an HTMLElement");
@@ -147,12 +149,21 @@ export async function parse_node(
 
           const src_parts = trimmed.trim().split("/");
           const image_name = src_parts[src_parts.length - 1];
-          src = `${AWS_PREFIX}/${csv_url}/${image_name}`;
+          const encoded_url = `${AWS_PREFIX}/${csv_url}/${image_name}`;
+          console.log("Image", csv_article.id, encoded_url);
+          if (
+            encoded_url ===
+            "https://jknm.s3.eu-central-1.amazonaws.com/#$!%&-pa-dolenjske-jame!-25-10-2011/PA220010.JPG"
+          ) {
+            console.log("AAAAAAAAAAAAAAA");
+          }
+          src = decodeURIComponent(encoded_url);
           /* console.log("Image", csv_article.id, {
             src,
             src_parts,
             src_attr,
             already_set_src,
+            trimmed,
           }); */
           already_set_src = true;
         } else if (img_tag.nodeType == NodeType.TEXT_NODE) {
@@ -203,7 +214,7 @@ export async function parse_node(
                 throw new Error(
                   "Unexpected tag in caption element: " + p_child_child.tagName,
                 );
-                /* problems.tag_in_caption?.push([
+                /*problems.tag_in_caption?.push([
                   csv_article.id,
                   p_child_child.outerHTML,
                 ]);
@@ -265,13 +276,29 @@ export async function parse_node(
 
       // console.log({ src, caption });
       // TODO: get image dimensions
-      const read_image = false as boolean;
+      const do_dimensions = true as boolean;
 
-      const dimensions = read_image
+      const dimensions = do_dimensions
         ? await get_image_dimensions(src)
         : undefined;
 
-      if (read_image && !dimensions) {
+      if (do_dimensions && dimensions) {
+        const matchingDimension = ids_by_dimensions.find(
+          (ids) =>
+            ids.dimensions.width === dimensions?.width &&
+            ids.dimensions.height === dimensions?.height,
+        );
+
+        if (matchingDimension) {
+          matchingDimension.ids.push(csv_article.id);
+        } else {
+          ids_by_dimensions.push({ dimensions, ids: [csv_article.id] });
+        }
+
+        // console.log(csv_article.id, ids_by_dimensions);
+      }
+
+      if (do_dimensions && !dimensions) {
         console.error("No dimensions for image", csv_article.id, src);
         break;
       }
@@ -356,7 +383,6 @@ function youtube_url_to_id(url?: string) {
   return match && match[7]?.length == 11 ? match[7] : false;
 }
 
-const AWS_PREFIX =
-  "https://jamarski-klub-novo-mesto.s3.eu-central-1.amazonaws.com";
 /* const AWS_PREFIX =
-  "https://jknm.s3.eu-central-1.amazonaws.com"; */
+  "https://jamarski-klub-novo-mesto.s3.eu-central-1.amazonaws.com"; */
+const AWS_PREFIX = "https://jknm.s3.eu-central-1.amazonaws.com";

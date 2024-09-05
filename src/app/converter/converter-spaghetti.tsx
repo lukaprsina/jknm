@@ -30,6 +30,11 @@ export interface ImageToSave {
   images: string[];
 }
 
+export interface DimensionType {
+  dimensions: { width: number; height: number };
+  ids: string[];
+}
+
 const initial_problems: Record<string, [string, string][]> = {
   single_in_div: [],
   problematic_articles: [],
@@ -42,6 +47,7 @@ const images_to_save: ImageToSave[] = [];
 const articles_without_authors = new Set<number>();
 const authors_by_id: { id: string; names: string[] }[] = [];
 let authors_by_name: AuthorType[] = [];
+const ids_by_dimensions: DimensionType[] = [];
 
 export async function iterate_over_articles(
   csv_articles: CSVType[],
@@ -59,6 +65,7 @@ export async function iterate_over_articles(
   articles_without_authors.clear();
   authors_by_id.length = 0;
   authors_by_name.length = 0;
+  ids_by_dimensions.length = 0;
 
   /* const spliced_csv_articles = do_splice
     ? csv_articles.slice(first_article, last_article)
@@ -129,6 +136,7 @@ export async function iterate_over_articles(
     articles.length,
   );
   console.log("Problems:", problems);
+  console.log("Dimensions:", ids_by_dimensions);
 
   console.log(
     "Authors (articles without authors, by name, by id):",
@@ -188,7 +196,14 @@ async function parse_csv_article(
 
   for (const node of root.childNodes) {
     if (node.nodeType == NodeType.ELEMENT_NODE) {
-      await parse_node(node, blocks, csv_article, csv_url, problems);
+      await parse_node(
+        node,
+        blocks,
+        csv_article,
+        csv_url,
+        problems,
+        ids_by_dimensions,
+      );
     } else if (node.nodeType == NodeType.TEXT_NODE) {
       if (node.text.trim() !== "") throw new Error("Some text: " + node.text);
     } else {
@@ -198,7 +213,7 @@ async function parse_csv_article(
 
   // const new_authors = new Set<string>();
   // const not_found_authors = new Set<string>();
-  const current_authors = get_authors(
+  const current_authors = await get_authors(
     csv_article,
     blocks,
     authors_by_name,

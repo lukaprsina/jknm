@@ -9,7 +9,6 @@ import { Input } from "~/components/ui/input";
 import { ScrollArea } from "~/components/ui/scroll-area";
 
 import { article_variants, page_variants } from "~/lib/page-variants";
-import { api } from "~/trpc/react";
 import {
   delete_articles,
   delete_authors,
@@ -18,10 +17,12 @@ import {
   sync_authors,
   sync_with_algolia,
   copy_and_rename_images,
+  get_authors_server,
 } from "./converter-server";
 import { iterate_over_articles } from "./converter-spaghetti";
 import { cn } from "~/lib/utils";
 import { EDITOR_JS_PLUGINS } from "~/components/editor/plugins";
+import { AuthorType } from "./get-authors";
 
 export function ArticleConverter() {
   const editorJS = useRef<EditorJS | null>(null);
@@ -41,7 +42,6 @@ export function ArticleConverter() {
   const [doUpdate, setDoUpdate] = useState(false);
   const [firstArticle, setFirstArticle] = useState("1"); // 32
   const [lastArticle, setLastArticle] = useState("10");
-  const all_authors = api.author.get_all.useQuery();
 
   return (
     <div className={cn(article_variants(), page_variants())}>
@@ -104,11 +104,6 @@ export function ArticleConverter() {
           </div>
           <Button
             onClick={async () => {
-              if (!all_authors.data) {
-                console.warn("Authors not loaded");
-                return;
-              }
-
               console.clear();
               const csv_articles = await read_articles();
 
@@ -120,7 +115,7 @@ export function ArticleConverter() {
                 doUpdate,
                 parseInt(firstArticle),
                 parseInt(lastArticle),
-                all_authors.data,
+                await get_authors_server(),
               );
             }}
           >
@@ -128,9 +123,6 @@ export function ArticleConverter() {
           </Button>
         </div>
       </div>
-      <ScrollArea className="my-4 h-72 rounded-md">
-        <pre>{JSON.stringify(all_authors.data, null, 2)}</pre>
-      </ScrollArea>
       <TempEditor editorJS={editorJS} />
     </div>
   );

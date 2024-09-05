@@ -1,4 +1,5 @@
 "use server";
+
 import path from "node:path";
 import fs from "node:fs";
 import fs_promises from "node:fs/promises";
@@ -27,6 +28,11 @@ export interface CSVType {
   content: string;
   created_at: string;
   updated_at: string;
+}
+
+export async function get_authors_server() {
+  const authors = await db.query.Author.findMany();
+  return authors;
 }
 
 export async function delete_articles() {
@@ -91,22 +97,31 @@ export async function sync_authors() {
 }
 
 export async function get_image_dimensions(src: string) {
-  try {
-    console.log("Fetching image", src);
-    const result = await fetch(src);
-    if (!result.ok) {
-      console.error("Image fetch error", src, result.status);
-      return;
-    }
-
-    const buffer = await result.arrayBuffer(); // Convert the Response object to a Buffer
-    const sharp_result = sharp(buffer);
-    const metadata = await sharp_result.metadata();
-    return { width: metadata.width, height: metadata.height };
-  } catch (e: unknown) {
-    console.error("Sharp error", e);
-    return;
+  const src_parts = src.split("/");
+  const dir = src_parts.at(-2);
+  const name = src_parts.at(-1);
+  if (!dir || !name) {
+    throw new Error(`Image sharp error: ${src}`);
   }
+
+  const image_path = path.join(
+    process.cwd(),
+    "src/app/converter/_images",
+    dir,
+    name,
+  );
+
+  if (!fs.existsSync(image_path)) {
+    throw new Error(`Image doesn't exist: ${image_path}`);
+  }
+  const result = await fs_promises.readFile(image_path);
+
+  const sharp_result = sharp(result);
+  const metadata = await sharp_result.metadata();
+  const width = metadata.width;
+  const height = metadata.height;
+  if (!width || !height) return;
+  return { width, height, image_path };
 }
 
 export interface TempArticleType {
@@ -151,7 +166,7 @@ export async function upload_articles(
           .where(eq(PublishedArticle.id, article.serial_id));
       }
     } else {
-      console.log("Inserting articles", articles);
+      console.log("Inserting articles", articles.length);
       if (articles.length > 0)
         await tx.insert(PublishedArticle).values(articles.map(convert_article));
     }
@@ -166,7 +181,7 @@ export async function upload_articles(
       }
     }
 
-    console.log("Inserting joins", joins);
+    console.log("Inserting joins", joins.length);
     if (joins.length > 0)
       await tx.insert(PublishedArticlesToAuthors).values(joins);
   });
@@ -315,7 +330,7 @@ export async function copy_and_rename_images() {
     fs.rmSync(converted_images_dir, { recursive: true });
   }
 
-  const promises: Promise<void>[] = [];
+  const promises: Promise<PromiseSettledResult<string>[]>[] = [];
   await fs_promises.mkdir(original_images_dir, { recursive: true });
   await fs_promises.mkdir(converted_images_dir, { recursive: true });
 
@@ -352,17 +367,30 @@ export async function copy_and_rename_images() {
 
         const new_path = path.join(new_dir, image_name);
         // console.log("Copying", old_path, new_path);
-        return fs_promises.copyFile(old_path, new_path);
+        await fs_promises.copyFile(old_path, new_path);
+        return new_path;
       });
 
-      await Promise.all(nested_promises);
+      return await Promise.allSettled(nested_promises);
     };
 
     promises.push(callback());
   }
 
   console.log("Starting promises");
-  await Promise.all(promises);
+  const results = await Promise.allSettled(promises);
+  const rejectedPromises = results
+    .flatMap((result) => {
+      if (result.status === "rejected") {
+        return result;
+      }
+    })
+    .filter(
+      (result): result is PromiseRejectedResult =>
+        typeof result !== "undefined",
+    );
+  console.log("Rejected promises:", rejectedPromises);
+
   console.log("Done");
 }
 

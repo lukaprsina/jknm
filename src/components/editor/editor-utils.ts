@@ -5,7 +5,8 @@ import { format_date_for_url } from "~/lib/format-date";
 
 export function get_clean_url(dangerous_url: string) {
   const sanitized = sanitize_filename(dangerous_url, { replacement: "" });
-  const ws_replaced = sanitized.toLowerCase().replace(/\s/g, "-").trim();
+  const encoded = sanitized.replace(/[^a-zA-Z0-9čČžŽšŠ\s]/g, "").trim();
+  const ws_replaced = encoded.toLowerCase().replace(/\s/g, "-");
   if (ws_replaced === "") return uuid4();
   return ws_replaced;
 }

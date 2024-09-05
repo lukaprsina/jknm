@@ -1,0 +1,2 @@
+#aws s3 sync . s3://jknm/
+#aws s3 sync . s3://jamarski-klub-novo-mesto/ --acl public-read

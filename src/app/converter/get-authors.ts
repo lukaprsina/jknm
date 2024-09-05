@@ -1,9 +1,12 @@
+"use server";
+
 import type { OutputBlockData } from "@editorjs/editorjs";
 import { decode } from "html-entities";
 import { parse as html_parse } from "node-html-parser";
 
 import { type CSVType } from "./converter-server";
-import type { RouterOutputs } from "~/trpc/react";
+import { api } from "~/trpc/server";
+import { RouterOutputs } from "~/trpc/react";
 
 export interface AuthorType {
   name: string;
@@ -11,12 +14,13 @@ export interface AuthorType {
   change?: false | string;
 }
 
-export function get_authors(
+export async function get_authors(
   csv_article: CSVType,
   all_blocks: OutputBlockData[],
   authors_by_name: AuthorType[],
   all_authors: RouterOutputs["author"]["get_all"],
 ) {
+  // const all_authors = await api.author.get_all();
   let number_of_paragraphs = 3;
 
   const last_paragraphs: string[] = [];
@@ -84,7 +88,7 @@ export function get_authors(
           all_authors,
           not_found_authors,
           current_authors,
-          csv_article,
+          // csv_article,
         );
       }
     }
@@ -105,7 +109,7 @@ function process_author(
   all_authors: RouterOutputs["author"]["get_all"],
   not_found_authors: Set<string>,
   current_authors: Set<number>,
-  csv_article: CSVType,
+  // csv_article: CSVType,
 ) {
   let index: number | undefined = undefined;
 
@@ -127,7 +131,7 @@ function process_author(
   } else {
     const author = all_authors[index];
     if (!author) throw new Error("No author at index " + index);
-    console.log("adding author", csv_article.id, author);
+    // console.log("adding author", csv_article.id, author);
     current_authors.add(author.id);
   }
 }
