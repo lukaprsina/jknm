@@ -7,15 +7,12 @@ import {
   PublishedArticlesToAuthors,
   SaveDraftArticleSchema,
 } from "~/server/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { eq, and, gte, lt } from "drizzle-orm";
 import { named_promise_all_settled } from "~/lib/named-promise";
 import { assert_at_most_one, assert_one } from "~/lib/assert-length";
 import { withCursorPagination } from "drizzle-pagination";
-import {
-  convert_title_to_url,
-  get_clean_url,
-} from "~/components/editor/editor-utils";
-import { format_date_for_url } from "~/lib/format-date";
+import { convert_title_to_url } from "~/components/editor/editor-utils";
+import { format_date_for_url, read_date_from_url } from "~/lib/format-date";
 
 export const article_router = createTRPCRouter({
   get_infinite_published: publicProcedure
@@ -58,6 +55,36 @@ export const article_router = createTRPCRouter({
       return await ctx.db.query.PublishedArticle.findFirst({
         where: eq(PublishedArticle.id, input),
       });
+    }),
+
+  get_published_by_url_and_date: publicProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const url_parts = decodeURIComponent(input).split("-");
+      const article_url = url_parts.slice(0, -3).join("-");
+      const article_date_string = url_parts.slice(-3).join("-");
+
+      if (!article_url || !article_date_string) {
+        throw new Error(`Can't create URL from ${input}`);
+      }
+
+      const url_date = read_date_from_url(article_date_string);
+      const next_day = new Date(url_date);
+      next_day.setDate(next_day.getDate() + 1);
+
+      const article = await ctx.db.query.PublishedArticle.findMany({
+        where: and(
+          eq(PublishedArticle.url, input),
+          and(
+            gte(PublishedArticle.created_at, url_date),
+            lt(PublishedArticle.created_at, next_day),
+          ),
+        ),
+      });
+
+      assert_at_most_one(article);
+
+      return article[0];
     }),
 
   create_draft: protectedProcedure

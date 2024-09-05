@@ -21,54 +21,38 @@ import type { PublishedArticle } from "~/server/db/schema";
 
 interface NovicaProps {
   params: {
-    novica_ime: string;
+    url_with_date: string;
   };
 }
 
+// url_with_date: testing-04-09-2024
 export default async function NovicaPage({
-  params: { novica_ime },
+  params: { url_with_date },
 }: NovicaProps) {
   const session = await getServerAuthSession();
 
-  const novica_parts = decodeURIComponent(novica_ime).split("-");
-  const novica_id_string = novica_parts[novica_parts.length - 1];
-
-  if (!novica_id_string) {
-    console.error("No article ID found in URL", novica_ime);
-
-    return <ArticleNotFound />;
-  }
-
-  const novica_id = parseInt(novica_id_string);
-
-  if (isNaN(novica_id)) {
-    console.error("Invalid article ID", {
-      novica_ime,
-      novica_parts,
-      novica_id_string,
-      novica_id,
-    });
-
-    return <ArticleNotFound />;
-  }
-
-  const article_by_url = await api.article.get_published_by_id(novica_id);
+  const article_by_url =
+    await api.article.get_published_by_url_and_date(url_with_date);
 
   if (!article_by_url) {
-    return <ArticleNotFound />;
+    return (
+      <Shell>
+        <ArticleNotFound />
+      </Shell>
+    );
   }
 
   return (
-    <PublishedArticleProvider article={article_by_url}>
-      <Shell>
+    <Shell>
+      <PublishedArticleProvider article={article_by_url}>
         {session ? (
           <TabbedContent article={article_by_url} />
         ) : (
           <PublishedContent article={article_by_url} />
         )}
         <ImageGallery />
-      </Shell>
-    </PublishedArticleProvider>
+      </PublishedArticleProvider>
+    </Shell>
   );
 }
 
@@ -91,7 +75,6 @@ function PublishedContent({
   );
 }
 
-// TODO
 async function TabbedContent({
   article,
 }: {
@@ -101,7 +84,7 @@ async function TabbedContent({
 
   console.log("tabbed", article);
 
-  if (!article || (session && !article.content)) {
+  if (!article?.content) {
     return <ArticleNotFound />;
   }
 
@@ -132,27 +115,25 @@ async function TabbedContent({
 
 function ArticleNotFound() {
   return (
-    <Shell>
-      <div
-        className={cn(
-          page_variants(),
-          "prose flex min-h-screen items-center justify-center",
-        )}
-      >
-        <Card>
-          <CardHeader>
-            <CardTitle>Novica ne obstaja</CardTitle>
-            <CardDescription>
-              Prosim, preverite URL naslov in poskusite znova.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p>Če menite, da je prišlo do napake, nas kontaktirajte.</p>
-            <p>Naša e-pošta: </p>
-            <Link href="mailto:info@jknm.si">info@jknm.si</Link>
-          </CardContent>
-        </Card>
-      </div>
-    </Shell>
+    <div
+      className={cn(
+        page_variants(),
+        "prose flex min-h-screen items-center justify-center",
+      )}
+    >
+      <Card>
+        <CardHeader>
+          <CardTitle>Novica ne obstaja</CardTitle>
+          <CardDescription>
+            Prosim, preverite URL naslov in poskusite znova.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p>Če menite, da je prišlo do napake, nas kontaktirajte.</p>
+          <p>Naša e-pošta: </p>
+          <Link href="mailto:info@jknm.si">info@jknm.si</Link>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

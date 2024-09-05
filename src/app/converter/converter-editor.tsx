@@ -15,6 +15,7 @@ import {
   get_article_count,
   get_authors_by_name,
   read_articles,
+  sync_authors,
   sync_with_algolia,
   upload_images,
 } from "./converter-server";
@@ -46,20 +47,9 @@ export function ArticleConverter() {
     <div className={cn(article_variants(), page_variants())}>
       <h1>Article Converter: {article_count} novičk</h1>
       <div className="flex w-full flex-wrap gap-4">
-        <Button
-          onClick={async () => {
-            await sync_with_algolia();
-          }}
-        >
-          Sync with Algolia
-        </Button>
-        <Button
-          onClick={async () => {
-            await delete_articles();
-          }}
-        >
-          Delete articles
-        </Button>
+        <Button onClick={() => delete_articles()}>Delete articles</Button>
+        <Button onClick={() => sync_authors()}>Sync authors</Button>
+        <Button onClick={() => sync_with_algolia()}>Sync with Algolia</Button>
         <Button
           onClick={async () => {
             if (!all_authors.data) {
@@ -102,13 +92,7 @@ export function ArticleConverter() {
         >
           Check authors
         </Button>
-        <Button
-          onClick={async () => {
-            await upload_images();
-          }}
-        >
-          Copy images to S3
-        </Button>
+        <Button onClick={() => upload_images()}>Copy images to S3</Button>
         <div className="flex flex-shrink gap-2">
           <Input
             value={firstArticle}

@@ -16,7 +16,6 @@ export async function parse_node(
   blocks: OutputBlockData[],
   csv_article: CSVType,
   csv_url: string,
-  article_id: number,
   problems: Record<string, [string, string][]>,
 ): Promise<boolean> {
   if (!(node instanceof ParserHTMLElement))
@@ -148,7 +147,7 @@ export async function parse_node(
 
           const src_parts = trimmed.trim().split("/");
           const image_name = src_parts[src_parts.length - 1];
-          src = `${AWS_PREFIX}/${csv_url}-${article_id}/${image_name}`;
+          src = `${AWS_PREFIX}/${csv_url}/${image_name}`;
           /* console.log("Image", csv_article.id, {
             src,
             src_parts,

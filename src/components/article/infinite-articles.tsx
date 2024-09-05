@@ -47,7 +47,6 @@ export function InfiniteArticles() {
 
   return (
     <>
-      <Test />
       {articles.length !== 0 ? (
         /* prose-h3:my-0 prose-p:mt-0 lg:prose-xl prose-p:text-lg mx-auto   */
         <div

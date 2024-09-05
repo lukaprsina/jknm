@@ -12,12 +12,14 @@ import type { AuthorType } from "./get-authors";
 import {
   get_authors_by_name,
   get_problematic_html,
+  save_images,
   upload_articles,
 } from "./converter-server";
 import { get_authors } from "./get-authors";
 import { parse_node } from "./parse-node";
 import type { RouterOutputs } from "~/trpc/react";
 import {
+  convert_title_to_url,
   get_clean_url,
   get_image_data_from_editor,
 } from "~/components/editor/editor-utils";
@@ -118,7 +120,7 @@ export async function iterate_over_articles(
     await upload_articles(articles, do_update);
   }
 
-  // await save_images(images_to_save);
+  await save_images(images_to_save);
   // await write_article_html_to_file(problematic_articles);
   console.log(
     "Total articles (csv, uploaded):",
@@ -153,7 +155,11 @@ async function parse_csv_article(
   // const sanitized = fixHtml(html);
   const root = html_parse(html);
 
-  const csv_url = get_clean_url(csv_article.title);
+  const format = "D/M/YYYY HH:mm:ss";
+  const created_at = parseDate(csv_article.created_at, format);
+  const updated_at = parseDate(csv_article.updated_at, format);
+
+  const csv_url = convert_title_to_url(csv_article.title, created_at);
 
   const blocks: OutputBlockData[] = [
     {
@@ -180,23 +186,7 @@ async function parse_csv_article(
 
   for (const node of root.childNodes) {
     if (node.nodeType == NodeType.ELEMENT_NODE) {
-      // const is_problem =
-      await parse_node(
-        node,
-        blocks,
-        csv_article,
-        csv_url,
-        article_id,
-        problems,
-      );
-
-      /* if (is_problem) {
-        problematic_articles.push({
-          html: sanitized,
-          csv: csv_article,
-        });
-        break;
-      } */
+      await parse_node(node, blocks, csv_article, csv_url, problems);
     } else if (node.nodeType == NodeType.TEXT_NODE) {
       if (node.text.trim() !== "") throw new Error("Some text: " + node.text);
     } else {
@@ -220,10 +210,6 @@ async function parse_csv_article(
   await editorJS?.render({
     blocks,
   });
-
-  const format = "D/M/YYYY HH:mm:ss";
-  const created_at = parseDate(csv_article.created_at, format);
-  const updated_at = parseDate(csv_article.updated_at, format);
 
   const content = await editorJS?.save();
   if (!content) throw new Error("No content");

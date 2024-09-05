@@ -2,14 +2,14 @@ import { env } from "~/env";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import type { JWTInput } from "google-auth-library";
 import { google } from "googleapis";
-import type { Author } from "~/server/db/schema";
+import { Author } from "~/server/db/schema";
 
 export const author_router = createTRPCRouter({
   get_all: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db.query.Author.findMany();
   }),
 
-  sync_with_google: protectedProcedure.query(async () => {
+  sync_with_google: protectedProcedure.query(async ({ ctx }) => {
     console.log("GETTING GOOGLE USERS");
 
     const credentials = env.JKNM_SERVICE_ACCOUNT_CREDENTIALS;
@@ -58,5 +58,16 @@ export const author_router = createTRPCRouter({
       .filter((user) => typeof user !== "undefined");
 
     console.log("GOT GOOGLE USERS", mapped_users.length);
+
+    return await ctx.db
+      .insert(Author)
+      .values(mapped_users)
+      .onConflictDoUpdate({
+        target: Author.google_id,
+        set: {
+          name: "ttttttttttttttttt",
+        },
+      })
+      .returning();
   }),
 });

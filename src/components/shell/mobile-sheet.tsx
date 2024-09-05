@@ -1,7 +1,7 @@
 "use client";
 
 import type { LinkProps } from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 
 import { Logo } from "./logo";
@@ -11,6 +11,7 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
+  SheetDescription,
 } from "~/components/ui/sheet";
 import { cn } from "~/lib/utils";
 import { MenuIcon } from "lucide-react";
@@ -21,11 +22,7 @@ import { Session } from "next-auth";
 
 export function MobileSheet({ session }: { session: Session | null }) {
   const [open, setOpen] = useState(false);
-  const main_ref = React.useRef<HTMLElement | undefined>();
-  useEffect(() => {
-    main_ref.current = document.getElementById("main") ?? undefined;
-    console.log(main_ref.current);
-  }, []);
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -33,23 +30,17 @@ export function MobileSheet({ session }: { session: Session | null }) {
           <MenuIcon />
         </Button>
       </SheetTrigger>
-      <SheetContent
-        aria-describedby="mobile navigation"
-        container={main_ref.current}
-      >
+      <SheetContent>
         <SheetHeader>
           <Link href="/" className="flex flex-col gap-6">
-            <div className="flex w-full items-center justify-center">
-              <Logo className="w-32" />
-            </div>
             <SheetTitle className="text-2xl font-bold">
-              Jamarski klub Novo mesto
+              <div className="flex w-full items-center justify-center">
+                <Logo className="w-32" />
+              </div>
             </SheetTitle>
           </Link>
           <EditingButtons session={session} />
-          {/* <SheetDescription>
-            
-          </SheetDescription> */}
+          <SheetDescription>Jamarski klub Novo mesto</SheetDescription>
         </SheetHeader>
         <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-24 pl-6">
           <div className="flex flex-col space-y-3">

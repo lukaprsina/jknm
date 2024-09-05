@@ -15,6 +15,8 @@ import { db } from "~/server/db";
 import { PublishedArticle } from "~/server/db/schema";
 import { algolia_protected } from "~/lib/algolia-server";
 import type { ArticleHit } from "~/lib/validators";
+import { api } from "~/trpc/server";
+import { RouterOutputs } from "~/trpc/react";
 
 export interface CSVType {
   id: string;
@@ -28,6 +30,23 @@ export async function delete_articles() {
   console.log("deleting articles");
   await db.execute(sql`TRUNCATE TABLE ${PublishedArticle} CASCADE;`);
   console.log("done");
+}
+
+export async function sync_authors() {
+  const google_authors = await api.author.sync_with_google();
+  console.log(
+    google_authors,
+    google_authors?.map((a) => a.name),
+  );
+
+  const read_file = true as boolean;
+  if (!read_file) return;
+
+  const authors_by_name_path = path.join(
+    process.cwd(),
+    "src/app/converter/_info/authors_by_name.json",
+  );
+  // fs_promises.readFile()
 }
 
 export async function get_image_dimensions(src: string) {
@@ -111,10 +130,6 @@ export async function upload_articles(
 }
 
 export async function read_articles() {
-  /* await db.delete(Article);
-  db.insert(Article).values({}); */
-  // await db.execute(sql`TRUNCATE TABLE ${Article} CASCADE;`);
-
   const csv_articles: CSVType[] = [];
 
   const objave_path = path.join(process.cwd(), "src/assets/Objave.txt");
@@ -146,8 +161,11 @@ export async function read_articles() {
 export async function sync_with_algolia() {
   console.log("Syncing articles");
 
-  const articles = await db.query.PublishedArticle.findMany({
+  /* const articles = await db.query.PublishedArticle.findMany({
     // limit: 10,
+  }); */
+  const articles = await api.article.get_infinite_published({
+    limit: 1000,
   });
 
   const algolia = algolia_protected.getClient();
@@ -160,7 +178,7 @@ export async function sync_with_algolia() {
 
   index.deleteObjects(empty_query_results.hits.map((hit) => hit.objectID));
 
-  const objects: ArticleHit[] = articles
+  const objects: ArticleHit[] = articles.data
     .map((article) => {
       const content_preview = content_to_text(article.content ?? undefined);
       if (!content_preview) return;
@@ -174,7 +192,9 @@ export async function sync_with_algolia() {
         content_preview,
         is_draft: false,
         year: article.created_at.getFullYear().toString(),
-        author_ids: [], // TODO
+        author_ids: article.published_articles_to_authors.map(
+          (a) => a.author_id,
+        ),
       } satisfies ArticleHit;
     })
     .filter((article) => typeof article !== "undefined");
@@ -219,16 +239,15 @@ export async function get_article_count() {
 }
 
 export async function save_images(images: ImageToSave[]) {
-  const dir = `./pt-images`;
-  await fs_promises.mkdir(dir, { recursive: true });
+  const images_dir = path.join(process.cwd(), "src/app/converter/_image-data");
+  await fs_promises.mkdir(images_dir, { recursive: true });
 
   const promises = images.map(async (image) => {
-    return fs_promises.writeFile(
-      `${dir}/${image.objave_id}.json`,
-      JSON.stringify(image),
-    );
+    const image_path = path.join(images_dir, `${image.objave_id}.json`);
+
+    return fs_promises.writeFile(image_path, JSON.stringify(image));
   });
-  // fs_promises.writeFile(`${dir}/${id}.json`, JSON.stringify(images));
+
   await Promise.all(promises);
 }
 
@@ -393,6 +412,7 @@ export async function get_authors_by_name() {
     authors_by_name_path,
     "utf-8",
   );
+  // TODO
   const authors = JSON.parse(authors_by_name) as AuthorType[];
   return authors;
 }
