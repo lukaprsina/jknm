@@ -10,6 +10,7 @@ import { parse as html_parse, NodeType } from "node-html-parser";
 import type { CSVType, TempArticleType } from "./converter-server";
 import type { AuthorType } from "./get-authors";
 import {
+  get_authors_by_name,
   get_problematic_html,
   save_images,
   upload_articles,
@@ -99,12 +100,15 @@ export async function iterate_over_articles(
   const articles: TempArticleType[] = [];
   let article_id = do_splice && first_index !== -1 ? first_index + 1 : 1;
 
+  authors_by_name = await get_authors_by_name();
+
   for (const csv_article of sliced_csv_articles) {
     const article = await parse_csv_article(
       csv_article,
       editorJS,
       article_id,
       all_authors,
+      authors_by_name,
       problems,
     );
     articles.push(article);
@@ -139,6 +143,7 @@ async function parse_csv_article(
   editorJS: EditorJS | null,
   article_id: number,
   all_authors: RouterOutputs["author"]["get_all"],
+  authors_by_name: AuthorType[],
   problems: Record<string, [string, string][]>,
 ) {
   const problematic_dir = "1723901265154";
@@ -193,7 +198,12 @@ async function parse_csv_article(
 
   // const new_authors = new Set<string>();
   // const not_found_authors = new Set<string>();
-  const current_authors = get_authors(csv_article, blocks, all_authors);
+  const current_authors = get_authors(
+    csv_article,
+    blocks,
+    authors_by_name,
+    all_authors,
+  );
 
   await editorJS?.render({
     blocks,

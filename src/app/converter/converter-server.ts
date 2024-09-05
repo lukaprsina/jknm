@@ -301,6 +301,7 @@ export async function save_images(images: ImageToSave[]) {
 }
 
 export async function copy_and_rename_images() {
+  console.log("Copying images");
   const original_images_dir = path.join(
     process.cwd(),
     "src/app/converter/_image-data",
@@ -318,11 +319,15 @@ export async function copy_and_rename_images() {
   await fs_promises.mkdir(original_images_dir, { recursive: true });
   await fs_promises.mkdir(converted_images_dir, { recursive: true });
 
+  const files = await fs_promises.readdir(original_images_dir);
+
   // 625
-  for (let objave_id = 1; objave_id <= 630; objave_id++) {
+  // for (let objave_id = 1; objave_id <= 630; objave_id++) {
+  for (const file of files) {
     const original_image_path = path.join(
       original_images_dir,
-      `${objave_id}.json`,
+      file,
+      // `${objave_id}.json`,
     );
 
     if (!fs.existsSync(original_image_path)) {
@@ -356,6 +361,7 @@ export async function copy_and_rename_images() {
     promises.push(callback());
   }
 
+  console.log("Starting promises");
   await Promise.all(promises);
   console.log("Done");
 }

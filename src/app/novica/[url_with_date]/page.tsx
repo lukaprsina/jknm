@@ -31,8 +31,10 @@ export default async function NovicaPage({
 }: NovicaProps) {
   const session = await getServerAuthSession();
 
-  const article_by_url = await api.article.get_published_by_url(url_with_date);
+  const decoded = decodeURIComponent(url_with_date);
+  const article_by_url = await api.article.get_published_by_url(decoded);
 
+  console.log("page article", article_by_url);
   if (!article_by_url) {
     return (
       <Shell>

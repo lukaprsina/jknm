@@ -59,9 +59,11 @@ export const article_router = createTRPCRouter({
   get_published_by_url: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      return await ctx.db.query.PublishedArticle.findFirst({
+      const article = await ctx.db.query.PublishedArticle.findFirst({
         where: eq(PublishedArticle.url, input),
       });
+      console.log("get_published_by_url", input, article?.title);
+      return article;
     }),
 
   create_draft: protectedProcedure
