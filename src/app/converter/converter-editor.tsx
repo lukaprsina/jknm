@@ -6,7 +6,6 @@ import EditorJS from "@editorjs/editorjs";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
-import { ScrollArea } from "~/components/ui/scroll-area";
 
 import { article_variants, page_variants } from "~/lib/page-variants";
 import {
@@ -22,7 +21,7 @@ import {
 import { iterate_over_articles } from "./converter-spaghetti";
 import { cn } from "~/lib/utils";
 import { EDITOR_JS_PLUGINS } from "~/components/editor/plugins";
-import { AuthorType } from "./get-authors";
+import { test_xml } from "./xml-server";
 
 export function ArticleConverter() {
   const editorJS = useRef<EditorJS | null>(null);
@@ -54,6 +53,7 @@ export function ArticleConverter() {
         <Button onClick={() => copy_and_rename_images()}>
           Copy and rename images
         </Button>
+        <Button onClick={() => test_xml()}>XML</Button>
         <div className="flex flex-shrink gap-2">
           <Input
             value={firstArticle}

@@ -21,17 +21,17 @@ import type { PublishedArticle } from "~/server/db/schema";
 
 interface NovicaProps {
   params: {
-    url_with_date: string;
+    published_url: string;
   };
 }
 
 // url_with_date: testing-04-09-2024
 export default async function NovicaPage({
-  params: { url_with_date },
+  params: { published_url },
 }: NovicaProps) {
   const session = await getServerAuthSession();
 
-  const decoded = decodeURIComponent(url_with_date);
+  const decoded = decodeURIComponent(published_url);
   const article_by_url = await api.article.get_published_by_url(decoded);
 
   console.log("page article", article_by_url);
