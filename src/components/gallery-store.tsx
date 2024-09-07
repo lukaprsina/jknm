@@ -1,5 +1,5 @@
 import { createStore } from "zustand-x";
-import type { EditorJSImageData } from "~/components/editor/editor-utils";
+import type { EditorJSImageData } from "~/lib/editor-utils";
 
 export interface GalleryStoreType {
   images: EditorJSImageData[];

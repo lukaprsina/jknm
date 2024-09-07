@@ -16,13 +16,11 @@ import {
 import { get_authors } from "./get-authors";
 import { parse_node } from "./parse-node";
 import type { RouterOutputs } from "~/trpc/react";
-import {
-  convert_title_to_url,
-  get_image_data_from_editor,
-} from "~/components/editor/editor-utils";
+import { get_image_data_from_editor } from "~/lib/editor-utils";
 import { read_from_xml } from "./xml-server";
 import type { PublishedArticle } from "~/server/db/schema";
 import { PROBLEMATIC_CONSTANTS } from "./_info/problematic";
+import { convert_title_to_url } from "~/lib/article-utils";
 
 export interface ImageToSave {
   objave_id: number;

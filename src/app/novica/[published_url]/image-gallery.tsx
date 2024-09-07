@@ -16,7 +16,7 @@ import {
 } from "~/components/ui/carousel";
 import { gallery_store } from "~/components/gallery-store";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
-import type { EditorJSImageData } from "~/components/editor/editor-utils";
+import type { EditorJSImageData } from "~/lib/editor-utils";
 
 const GALLERY_CANCEL_KEYS: string[] = [
   "Escape",

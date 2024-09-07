@@ -9,7 +9,6 @@ import {
   serial,
   text,
   timestamp,
-  unique,
   varchar,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
@@ -86,6 +85,19 @@ export const PublishedArticleRelations = relations(
     published_articles_to_authors: many(PublishedArticlesToAuthors),
   }),
 );
+
+export const SluggedUrlArticles = pgTable("slugged_url_articles", {
+  article_id: integer("article_id")
+    .primaryKey()
+    .references(() => PublishedArticle.id, { onDelete: "cascade" }),
+});
+
+export const SluggedUrlRelations = relations(SluggedUrlArticles, ({ one }) => ({
+  article: one(PublishedArticle, {
+    fields: [SluggedUrlArticles.article_id],
+    references: [PublishedArticle.id],
+  }),
+}));
 
 export const DraftArticle = pgTable(
   "draft_article",

@@ -6,6 +6,9 @@ import { Author } from "~/server/db/schema";
 
 export const author_router = createTRPCRouter({
   get_all: publicProcedure.query(async ({ ctx }) => {
+    console.error(
+      "AAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBBBBBBBB: getting all authors",
+    );
     return await ctx.db.query.Author.findMany();
   }),
 

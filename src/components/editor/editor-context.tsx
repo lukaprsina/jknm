@@ -26,7 +26,7 @@ import {
   get_clean_url,
   get_heading_from_editor,
   get_image_data_from_editor,
-} from "./editor-utils";
+} from "../../lib/editor-utils";
 import { editor_store } from "./editor-store";
 import { EDITOR_JS_PLUGINS } from "./plugins";
 import { Button } from "../ui/button";

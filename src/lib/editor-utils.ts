@@ -1,22 +1,4 @@
 import type { OutputData } from "@editorjs/editorjs";
-import sanitize_filename from "sanitize-filename";
-import { v4 as uuid4 } from "uuid";
-import { format_date_for_url } from "~/lib/format-date";
-
-export function get_clean_url(dangerous_url: string) {
-  const sanitized = sanitize_filename(dangerous_url, { replacement: "" });
-  const encoded = sanitized.replace(/[^a-zA-Z0-9čČžŽšŠ\s]/g, "").trim();
-  const ws_replaced = encoded.toLowerCase().replace(/\s/g, "-");
-  if (ws_replaced === "") return uuid4();
-  return ws_replaced;
-}
-
-export function convert_title_to_url(title: string /* , created_at: Date */) {
-  const new_url = get_clean_url(title);
-  // const new_date = format_date_for_url(created_at);
-  // const url_with_date = `${new_url}-${new_date}`;
-  return new_url;
-}
 
 interface HeadingReturnType {
   title?: string;

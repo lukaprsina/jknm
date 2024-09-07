@@ -22,11 +22,11 @@ import { format_date } from "~/lib/format-date";
 import { human_file_size } from "~/lib/human-file-size";
 import type { PublishedArticle } from "~/server/db/schema";
 import type { Session } from "next-auth";
-import type { EditorJSImageData } from "./editor-utils";
+import type { EditorJSImageData } from "../../lib/editor-utils";
 import {
   get_heading_from_editor,
   get_image_data_from_editor,
-} from "./editor-utils";
+} from "../../lib/editor-utils";
 import { cn } from "~/lib/utils";
 
 export function EditorToReact({

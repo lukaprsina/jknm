@@ -11,7 +11,7 @@ import { eq } from "drizzle-orm";
 import { named_promise_all_settled } from "~/lib/named-promise";
 import { assert_at_most_one, assert_one } from "~/lib/assert-length";
 import { withCursorPagination } from "drizzle-pagination";
-import { convert_title_to_url } from "~/components/editor/editor-utils";
+import { convert_title_to_url } from "~/lib/article-utils";
 
 export const article_router = createTRPCRouter({
   get_infinite_published: publicProcedure

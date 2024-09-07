@@ -1,5 +1,5 @@
 import { createStore } from "zustand-x";
-import type { EditorJSImageData } from "./editor-utils";
+import type { EditorJSImageData } from "../../lib/editor-utils";
 
 interface EditorStoreType {
   id: number;
