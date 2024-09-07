@@ -7,7 +7,6 @@ import dom_serialize from "dom-serializer";
 import { parseDocument } from "htmlparser2";
 import { parse as html_parse, NodeType } from "node-html-parser";
 
-import type { (typeof PublishedArticle.$inferInsert) } from "./converter-server";
 import type { AuthorType } from "./get-authors";
 import {
   get_authors_by_name,
@@ -23,6 +22,7 @@ import {
   get_image_data_from_editor,
 } from "~/components/editor/editor-utils";
 import { read_from_xml } from "./xml-server";
+import { PublishedArticle } from "~/server/db/schema";
 
 export interface ImageToSave {
   objave_id: number;
@@ -116,7 +116,7 @@ export async function iterate_over_articles(
     imported_articles.length - 1,
   );
 
-  const articles: (typeof PublishedArticle.$inferInsert)[] = [];
+  const articles: PublishedArticleWithAuthors[] = [];
   let article_id = do_splice && first_index !== -1 ? first_index + 1 : 1;
 
   authors_by_name = await get_authors_by_name();
@@ -165,7 +165,7 @@ async function parse_csv_article(
   all_authors: RouterOutputs["author"]["get_all"],
   authors_by_name: AuthorType[],
   problems: Record<string, [string, string][]>,
-): Promise<(typeof PublishedArticle.$inferInsert)> {
+): Promise<typeof PublishedArticle.$inferInsert> {
   const problematic_dir = "1723901265154";
 
   let html = imported_article.content;
@@ -253,13 +253,13 @@ async function parse_csv_article(
     );
   }
 
-  const article: (typeof PublishedArticle.$inferInsert) = {
+  const article: typeof PublishedArticle.$inferInsert = {
     // serial_id: article_id,
-    objave_id: imported_article.objave_id,
+    old_id: imported_article.objave_id,
     title: imported_article.title,
     preview_image,
     content,
-    csv_url,
+    url: csv_url,
     created_at,
     updated_at,
     author_ids: Array.from(current_authors),

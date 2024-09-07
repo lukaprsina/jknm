@@ -5,7 +5,7 @@ import type { Node as ParserNode } from "node-html-parser";
 import { decode } from "html-entities";
 import { NodeType, HTMLElement as ParserHTMLElement } from "node-html-parser";
 
-import type { (typeof PublishedArticle.$inferInsert) } from "./converter-server";
+import type { PublishedArticleWithAuthors } from "./converter-server";
 import { get_image_dimensions } from "./converter-server";
 import { DimensionType } from "./converter-spaghetti";
 
@@ -15,7 +15,7 @@ const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
 export async function parse_node(
   node: ParserNode,
   blocks: OutputBlockData[],
-  csv_article: (typeof PublishedArticle.$inferInsert),
+  csv_article: PublishedArticleWithAuthors,
   csv_url: string,
   problems: Record<string, [string, string][]>,
   ids_by_dimensions: DimensionType[],

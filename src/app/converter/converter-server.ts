@@ -129,7 +129,7 @@ export interface TempArticleType {
 }
 
 export async function upload_articles(
-  articles: (typeof PublishedArticle.$inferInsert)[],
+  articles: PublishedArticleWithAuthors[],
   do_update: boolean,
 ) {
   if (articles.length === 0) return;
@@ -167,7 +167,7 @@ export async function upload_articles(
 }
 
 export async function read_articles() {
-  const csv_articles: (typeof PublishedArticle.$inferInsert)[] = [];
+  const csv_articles: PublishedArticleWithAuthors[] = [];
 
   const objave_path = path.join(process.cwd(), "src/assets/Objave.txt");
 

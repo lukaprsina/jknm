@@ -4,7 +4,7 @@ import type { OutputBlockData } from "@editorjs/editorjs";
 import { decode } from "html-entities";
 import { parse as html_parse } from "node-html-parser";
 
-import { type (typeof PublishedArticle.$inferInsert) } from "./converter-server";
+import { type PublishedArticleWithAuthors } from "./converter-server";
 import { RouterOutputs } from "~/trpc/react";
 
 export interface AuthorType {
@@ -14,7 +14,7 @@ export interface AuthorType {
 }
 
 export async function get_authors(
-  csv_article: (typeof PublishedArticle.$inferInsert),
+  csv_article: PublishedArticleWithAuthors,
   all_blocks: OutputBlockData[],
   authors_by_name: AuthorType[],
   all_authors: RouterOutputs["author"]["get_all"],
