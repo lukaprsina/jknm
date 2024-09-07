@@ -19,7 +19,7 @@ import type { RouterOutputs } from "~/trpc/react";
 import { get_image_data_from_editor } from "~/lib/editor-utils";
 import { read_from_xml } from "./xml-server";
 import type { PublishedArticle } from "~/server/db/schema";
-import { PROBLEMATIC_CONSTANTS } from "./_info/problematic";
+import { PROBLEMATIC_CONSTANTS } from "./info/problematic";
 import { convert_title_to_url } from "~/lib/article-utils";
 
 export interface ImageToSave {
