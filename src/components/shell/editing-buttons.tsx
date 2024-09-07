@@ -9,12 +9,14 @@ import { api } from "~/trpc/react";
 import PublishedArticleContext from "../article/context";
 import type { Session } from "next-auth";
 import MakeDraftButton from "../article/make-draft-button";
-import { Button, type ButtonProps } from "~/components/ui/button";
+import { Button } from "~/components/ui/button";
+import type { ButtonProps } from "~/components/ui/button";
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
 } from "@radix-ui/react-tooltip";
+import { useAllAuthors } from "../authors";
 
 export default function EditingButtons({
   session,
@@ -65,7 +67,7 @@ export function EditButton({
 }) {
   const router = useRouter();
   const trpc_utils = api.useUtils();
-  const all_authors = api.author.get_all.useQuery();
+  const all_authors = useAllAuthors();
 
   const article_create_draft = api.article.create_draft.useMutation({
     onSuccess: async (returned_data) => {

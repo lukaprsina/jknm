@@ -2,7 +2,6 @@
 
 import type { Hit as SearchHit } from "instantsearch.js";
 import type { UseHitsProps } from "react-instantsearch";
-import { useEffect } from "react";
 import Link from "next/link";
 import { ChevronDownIcon, ChevronUpIcon, TrashIcon } from "lucide-react";
 import { useHits, useSortBy } from "react-instantsearch";
@@ -42,6 +41,7 @@ import type { ArticleHit } from "~/lib/validators";
 import { Authors } from "~/components/authors";
 import { EditButton } from "~/components/shell/editing-buttons";
 import { get_link_from_article } from "~/lib/article-utils";
+import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 
 export function ArticleTable({
   session,
@@ -124,7 +124,7 @@ function ArticleTableRow({
   hit: SearchHit<ArticleHit>;
   session: Session | null;
 }) {
-  const duplicate_urls = api.article.get_duplicate_urls.useQuery();
+  const duplicate_urls = useDuplicatedUrls();
 
   return (
     <TableRow key={hit.objectID}>
@@ -135,7 +135,7 @@ function ArticleTableRow({
             href={get_link_from_article(
               hit.url,
               hit.created_at,
-              duplicate_urls.data,
+              duplicate_urls,
             )}
           >
             {hit.title}

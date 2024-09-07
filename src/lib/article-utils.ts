@@ -1,3 +1,5 @@
+"use client";
+
 import sanitize_filename from "sanitize-filename";
 import { v4 as uuid4 } from "uuid";
 import { format_date_for_url } from "./format-date";

@@ -27,11 +27,11 @@ import { PoweredBy } from "react-instantsearch";
 import { Separator } from "~/components/ui/separator";
 import type { ArticleHit } from "~/lib/validators";
 import { get_link_from_article } from "~/lib/article-utils";
-import { api } from "~/trpc/react";
+import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 
 export function NoviceAutocomplete({ detached }: { detached?: string }) {
   const searchClient = algolia.getClient();
-  const duplicate_urls = api.article.get_duplicate_urls.useQuery();
+  const duplicate_urls = useDuplicatedUrls();
 
   return (
     <Autocomplete
@@ -44,7 +44,7 @@ export function NoviceAutocomplete({ detached }: { detached?: string }) {
             return get_link_from_article(
               item.url,
               item.created_at,
-              duplicate_urls.data,
+              duplicate_urls,
             );
           },
           getItems() {
@@ -162,11 +162,11 @@ interface ProductItemProps {
 }
 
 function ProductItem({ hit, components }: ProductItemProps) {
-  const duplicate_urls = api.article.get_duplicate_urls.useQuery();
+  const duplicate_urls = useDuplicatedUrls();
 
   const href = useMemo(
-    () => get_link_from_article(hit.url, hit.created_at, duplicate_urls.data),
-    [duplicate_urls.data, hit.created_at, hit.url],
+    () => get_link_from_article(hit.url, hit.created_at, duplicate_urls),
+    [duplicate_urls, hit.created_at, hit.url],
   );
 
   return (

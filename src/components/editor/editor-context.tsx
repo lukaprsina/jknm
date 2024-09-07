@@ -34,6 +34,7 @@ import {
   get_heading_from_editor,
   get_image_data_from_editor,
 } from "~/lib/editor-utils";
+import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 
 export interface EditorContextType {
   editor?: EditorJS;
@@ -78,7 +79,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   const [dirty, setDirty] = useState(false);
   const trpc_utils = api.useUtils();
   const toast = useToast();
-  const duplicate_urls = api.article.get_duplicate_urls.useQuery();
+  const duplicate_urls = useDuplicatedUrls();
 
   useEffect(() => {
     if (dirty) {
@@ -203,7 +204,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           get_link_from_article(
             data.url,
             data.draft.created_at,
-            duplicate_urls.data,
+            duplicate_urls,
           ),
         );
       }
@@ -292,7 +293,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
       if (data.url) {
         router.push(
-          get_link_from_article(data.url, data.created_at, duplicate_urls.data),
+          get_link_from_article(data.url, data.created_at, duplicate_urls),
         );
       }
     },

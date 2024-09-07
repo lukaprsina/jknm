@@ -12,7 +12,7 @@ import { MagicCard } from "../magic-card";
 import Image from "next/image";
 import { Authors } from "../authors";
 import { get_link_from_article } from "~/lib/article-utils";
-import { api } from "~/trpc/react";
+import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 
 export function ArticleCard({
   featured,
@@ -34,11 +34,11 @@ export function ArticleCard({
   ref?: IntersectionRef;
 }) {
   const [hover, setHover] = useState(false);
-  const duplicate_urls = api.article.get_duplicate_urls.useQuery();
+  const duplicate_urls = useDuplicatedUrls();
 
   return (
     <Link
-      href={get_link_from_article(url, created_at, duplicate_urls.data)}
+      href={get_link_from_article(url, created_at, duplicate_urls)}
       // rounded-md bg-card
       className={cn(
         "overflow-hidden rounded-xl bg-transparent no-underline shadow-lg",

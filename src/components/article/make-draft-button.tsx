@@ -9,9 +9,11 @@ import {
 
 import { content_to_text } from "~/lib/content-to-text";
 import { api } from "~/trpc/react";
-import { Button, type ButtonProps } from "~/components/ui/button";
+import { Button } from "~/components/ui/button";
+import type { ButtonProps } from "~/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
+import { useAllAuthors } from "../authors";
 
 export default function MakeDraftButton({
   title,
@@ -20,13 +22,14 @@ export default function MakeDraftButton({
 }: ButtonProps & { title?: string; url?: string }) {
   const router = useRouter();
   const trpc_utils = api.useUtils();
-  const all_authors = api.author.get_all.useQuery();
+  const all_authors = useAllAuthors();
 
   const article_create = api.article.create_draft.useMutation({
     onSuccess: async (returned_data) => {
       console.log("new article loader", returned_data);
-      const content_preview =
-        content_to_text(returned_data.content?.blocks ?? undefined) ?? "";
+      const content_preview = content_to_text(
+        returned_data.content?.blocks ?? undefined,
+      );
       // if (!content_preview) return;
 
       // TODO
