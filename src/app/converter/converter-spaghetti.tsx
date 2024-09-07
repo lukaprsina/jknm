@@ -2,7 +2,6 @@
 
 import type EditorJS from "@editorjs/editorjs";
 import type { OutputBlockData } from "@editorjs/editorjs";
-import { parse as parseDate } from "date-format-parse";
 import dom_serialize from "dom-serializer";
 import { parseDocument } from "htmlparser2";
 import { parse as html_parse, NodeType } from "node-html-parser";
@@ -11,7 +10,7 @@ import type { AuthorType } from "./get-authors";
 import {
   get_authors_by_name,
   get_problematic_html,
-  save_images,
+  save_image_data,
   upload_articles,
 } from "./converter-server";
 import { get_authors } from "./get-authors";
@@ -22,7 +21,8 @@ import {
   get_image_data_from_editor,
 } from "~/components/editor/editor-utils";
 import { read_from_xml } from "./xml-server";
-import { PublishedArticle } from "~/server/db/schema";
+import type { PublishedArticle } from "~/server/db/schema";
+import { PROBLEMATIC_CONSTANTS } from "./_info/problematic";
 
 export interface ImageToSave {
   objave_id: number;
@@ -49,13 +49,24 @@ export interface PublishedArticleWithAuthors extends PublishedArticleInsert {
   author_ids: number[];
 }
 
-const initial_problems: Record<string, [string, string][]> = {
+export type InitialProblems = Record<ProblemKey, [number, string][]>;
+
+const initial_problems: InitialProblems = {
   single_in_div: [],
   problematic_articles: [],
   image_in_caption: [],
   videos: [],
+  videos_no_id: [],
   empty_captions: [],
 };
+
+export type ProblemKey =
+  | "single_in_div"
+  | "problematic_articles"
+  | "image_in_caption"
+  | "videos"
+  | "videos_no_id"
+  | "empty_captions";
 
 const images_to_save: ImageToSave[] = [];
 const articles_without_authors = new Set<number>();
@@ -67,7 +78,7 @@ export async function iterate_over_articles(
   editorJS: EditorJS | null,
   do_splice: boolean,
   do_dry_run: boolean,
-  do_update: boolean,
+  _do_update: boolean,
   first_article: number,
   last_article: number,
   all_authors: RouterOutputs["author"]["get_all"],
@@ -115,12 +126,6 @@ export async function iterate_over_articles(
     ? imported_articles.slice(first_index, last_index)
     : imported_articles;
 
-  console.log(
-    imported_articles[first_index]?.title,
-    imported_articles.at(last_index ?? -1)?.title,
-    imported_articles.length - 1,
-  );
-
   const articles: PublishedArticleWithAuthors[] = [];
   let article_id = do_splice && first_index !== -1 ? first_index + 1 : 1;
 
@@ -145,7 +150,7 @@ export async function iterate_over_articles(
   }
 
   // console.warn("Images to save", images_to_save);
-  await save_images(images_to_save);
+  await save_image_data(images_to_save);
   // await write_article_html_to_file(problematic_articles);
   console.log(
     "Total articles (csv, uploaded):",
@@ -169,7 +174,7 @@ async function parse_csv_article(
   article_id: number,
   all_authors: RouterOutputs["author"]["get_all"],
   authors_by_name: AuthorType[],
-  problems: Record<string, [string, string][]>,
+  problems: InitialProblems,
 ): Promise<PublishedArticleWithAuthors> {
   const problematic_dir = "1723901265154";
 
@@ -185,11 +190,10 @@ async function parse_csv_article(
   html = fixHtml(html);
   const root = html_parse(html);
 
-  const format = "D/M/YYYY HH:mm:ss";
-  const created_at = parseDate(imported_article.created_at, format);
-  const updated_at = parseDate(imported_article.updated_at, format);
+  const created_at = new Date(imported_article.created_at);
+  const updated_at = new Date(imported_article.updated_at);
 
-  const csv_url = convert_title_to_url(imported_article.title, created_at);
+  const csv_url = convert_title_to_url(imported_article.title);
 
   const blocks: OutputBlockData[] = [
     {
@@ -233,7 +237,7 @@ async function parse_csv_article(
 
   // const new_authors = new Set<string>();
   // const not_found_authors = new Set<string>();
-  const current_authors = await get_authors(
+  const current_authors = get_authors(
     imported_article,
     blocks,
     authors_by_name,
@@ -285,11 +289,3 @@ function fixHtml(htmlString: string) {
 
   return fixedHtml;
 }
-
-// TODO: 33 isn't the only one. search for img in p.
-// 72, 578
-const PROBLEMATIC_CONSTANTS = [
-  40, 43, 46, 47, 48, 49, 50, 51, 53, 54, 57, 59, 64, 66, 67, 68, 72, 80, 90,
-  92, 114, 164, 219, 225, 232, 235, 243, 280, 284, 333, 350, 355, 476, 492, 493,
-  538, 566, 571, 578, 615,
-];

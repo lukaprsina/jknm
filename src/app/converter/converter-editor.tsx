@@ -20,7 +20,6 @@ import {
 import { iterate_over_articles } from "./converter-spaghetti";
 import { cn } from "~/lib/utils";
 import { EDITOR_JS_PLUGINS } from "~/components/editor/plugins";
-import { read_from_xml } from "./xml-server";
 
 export function ArticleConverter() {
   const editorJS = useRef<EditorJS | null>(null);
@@ -38,8 +37,8 @@ export function ArticleConverter() {
   const [doSplice, setDoSplice] = useState(true);
   const [doDryRun, setDoDryRun] = useState(true);
   const [doUpdate, setDoUpdate] = useState(false);
-  const [firstArticle, setFirstArticle] = useState("1"); // 32
-  const [lastArticle, setLastArticle] = useState("10");
+  const [firstArticle, setFirstArticle] = useState("625"); // 32
+  const [lastArticle, setLastArticle] = useState("-1");
 
   return (
     <div className={cn(article_variants(), page_variants())}>

@@ -6,9 +6,10 @@ import { decode } from "html-entities";
 import { NodeType, HTMLElement as ParserHTMLElement } from "node-html-parser";
 
 import { get_image_dimensions } from "./converter-server";
-import {
+import type {
   DimensionType,
-  PublishedArticleWithAuthors,
+  ImportedArticle,
+  InitialProblems,
 } from "./converter-spaghetti";
 
 const p_allowed_tags = ["STRONG", "BR", "A", "IMG", "EM", "SUB", "SUP"];
@@ -17,12 +18,12 @@ const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
 export async function parse_node(
   node: ParserNode,
   blocks: OutputBlockData[],
-  articles_with_authors: PublishedArticleWithAuthors,
+  articles_with_authors: ImportedArticle,
   csv_url: string,
-  problems: Record<string, [number, string][]>,
+  problems: InitialProblems,
   ids_by_dimensions: DimensionType[],
-): Promise<boolean> {
-  const old_id = articles_with_authors.old_id;
+): Promise<void> {
+  const old_id = articles_with_authors.objave_id;
   if (!old_id) throw new Error("No old_id");
 
   if (!(node instanceof ParserHTMLElement))
@@ -68,7 +69,8 @@ export async function parse_node(
 
         if (!id) {
           console.error("No video id", old_id, src);
-          return false;
+          problems.videos_no_id.push([old_id, src ?? "NO SRC"]);
+          return;
         }
 
         blocks.push({
@@ -84,8 +86,8 @@ export async function parse_node(
 
         console.log("Video", old_id, src ?? "NO SRC");
 
-        problems.videos?.push([old_id, src ?? "NO SRC"]);
-        return false;
+        problems.videos.push([old_id, src ?? "NO SRC"]);
+        return;
       }
 
       const raw_children = node.childNodes;
@@ -110,7 +112,7 @@ export async function parse_node(
 
         if (child.nodeType === NodeType.TEXT_NODE) {
           console.error("Single text in div", old_id);
-          problems.single_in_div?.push([old_id, child.text]);
+          problems.single_in_div.push([old_id, child.text]);
           const text = decode(child.text).trim();
           blocks.push({ type: "paragraph", data: { text } });
           break;
@@ -120,14 +122,16 @@ export async function parse_node(
 
           if (child.tagName === "P" || child.tagName === "STRONG") {
             console.error("Single tag in div", old_id, child.outerHTML);
-            problems.single_in_div?.push([old_id, child.outerHTML]);
+            problems.single_in_div.push([old_id, child.outerHTML]);
             const text = decode(child.innerHTML).trim();
             blocks.push({ type: "paragraph", data: { text } });
             break;
           } else if (child.tagName !== "IMG") {
-            throw new Error(
-              "Unexpected element in div: " + old_id + ", " + child.outerHTML,
+            // TODO
+            console.error(
+              `Unexpected element in div: ${child.tagName} ${old_id}, ${child.outerHTML}`,
             );
+            // problems.
           }
         } else {
           throw new Error("Unexpected comment: " + node.text);
@@ -143,9 +147,7 @@ export async function parse_node(
             throw new Error("Not an HTMLElement");
 
           if (already_set_src)
-            throw new Error(
-              "Already set source once " + articles_with_authors.old_id,
-            );
+            throw new Error("Already set source once " + old_id);
 
           const src_attr = img_tag.attributes.src;
           const trimmed = decode(src_attr).trim();
@@ -154,13 +156,7 @@ export async function parse_node(
           const src_parts = trimmed.trim().split("/");
           const image_name = src_parts[src_parts.length - 1];
           const encoded_url = `${AWS_PREFIX}/${csv_url}/${image_name}`;
-          console.log("Image", old_id, encoded_url);
-          if (
-            encoded_url ===
-            "https://jknm.s3.eu-central-1.amazonaws.com/#$!%&-pa-dolenjske-jame!-25-10-2011/PA220010.JPG"
-          ) {
-            console.log("AAAAAAAAAAAAAAA");
-          }
+          // console.log("Image", old_id, encoded_url);
           src = decodeURIComponent(encoded_url);
           /* console.log("Image", csv_article.id, {
             src,
@@ -172,9 +168,7 @@ export async function parse_node(
           already_set_src = true;
         } else if (img_tag.nodeType == NodeType.TEXT_NODE) {
           // console.error("Image is just text: " + csv_article.id);
-          throw new Error(
-            "Image is just text: " + articles_with_authors.old_id,
-          );
+          throw new Error("Image is just text: " + old_id);
           // if (img_tag.text.trim() !== "")
         } else {
           throw new Error("Unexpected comment: " + node.text);
@@ -209,7 +203,7 @@ export async function parse_node(
                   old_id,
                   p_child_child.outerHTML,
                 );
-                problems.image_in_caption?.push([
+                problems.image_in_caption.push([
                   old_id,
                   p_child_child.outerHTML,
                 ]);
@@ -240,7 +234,7 @@ export async function parse_node(
           const trimmed = decode(p_child.innerHTML).trim();
           if (trimmed !== "") {
             if (already_set_caption) {
-              console.log({ previous: caption, current: trimmed });
+              console.error({ previous: caption, current: trimmed });
               throw new Error("Already set caption once " + old_id);
             }
 
@@ -272,15 +266,15 @@ export async function parse_node(
 
       if (!caption) {
         // throw new Error("No caption " + csv_article.id);
-        console.error("No image caption", old_id, node.outerHTML);
-        problems.empty_captions?.push([old_id, node.outerHTML]);
+        console.log("No image caption", old_id, node.outerHTML);
+        problems.empty_captions.push([old_id, node.outerHTML]);
         caption = "";
         // return false;
       }
 
       // console.log({ src, caption });
       // TODO: get image dimensions
-      const do_dimensions = true as boolean;
+      const do_dimensions = false as boolean;
 
       const dimensions = do_dimensions
         ? await get_image_dimensions(src)
@@ -289,8 +283,8 @@ export async function parse_node(
       if (do_dimensions && dimensions) {
         const matchingDimension = ids_by_dimensions.find(
           (ids) =>
-            ids.dimensions.width === dimensions?.width &&
-            ids.dimensions.height === dimensions?.height,
+            ids.dimensions.width === dimensions.width &&
+            ids.dimensions.height === dimensions.height,
         );
 
         if (matchingDimension) {
@@ -378,7 +372,7 @@ export async function parse_node(
   }
 
   // console.log(node.tagName, node.childNodes.length);
-  return false;
+  return;
 }
 
 function youtube_url_to_id(url?: string) {

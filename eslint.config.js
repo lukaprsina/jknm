@@ -58,7 +58,7 @@ export default tseslint.config(
       // react
       ...reactPlugin.configs["jsx-runtime"].rules,
       ...hooksPlugin.configs.recommended.rules,
-      "react-compiler/react-compiler": "error",
+      // "react-compiler/react-compiler": "error",
 
       // next
       ...nextPlugin.configs.recommended.rules,

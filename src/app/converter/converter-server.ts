@@ -3,15 +3,12 @@
 import path from "node:path";
 import fs from "node:fs";
 import fs_promises from "node:fs/promises";
-import { finished } from "node:stream/promises";
 import type { OutputData } from "@editorjs/editorjs";
-import { parse as csv_parse } from "csv-parse";
-import { count, eq, sql } from "drizzle-orm";
+import { count, sql } from "drizzle-orm";
 import sharp from "sharp";
 
 import type {
   ImageToSave,
-  ImportedArticle,
   PublishedArticleWithAuthors,
 } from "./converter-spaghetti";
 import type { AuthorType } from "./get-authors";
@@ -47,10 +44,6 @@ export async function delete_authors() {
 
 export async function sync_authors() {
   const google_authors = await api.author.sync_with_google();
-
-  if (!google_authors) {
-    throw new Error("No google authors");
-  }
 
   const read_file = true as boolean;
   if (!read_file) return;
@@ -241,7 +234,7 @@ export async function get_article_count() {
   return article_count.at(0)?.count;
 }
 
-export async function save_images(images: ImageToSave[]) {
+export async function save_image_data(images: ImageToSave[]) {
   const images_dir = path.join(process.cwd(), "src/app/converter/_image-data");
   if (fs.existsSync(images_dir)) {
     fs.rmSync(images_dir, { recursive: true });

@@ -11,11 +11,11 @@ export function get_clean_url(dangerous_url: string) {
   return ws_replaced;
 }
 
-export function convert_title_to_url(title: string, created_at: Date) {
+export function convert_title_to_url(title: string /* , created_at: Date */) {
   const new_url = get_clean_url(title);
-  const new_date = format_date_for_url(created_at);
-  const url_with_date = `${new_url}-${new_date}`;
-  return url_with_date;
+  // const new_date = format_date_for_url(created_at);
+  // const url_with_date = `${new_url}-${new_date}`;
+  return new_url;
 }
 
 interface HeadingReturnType {

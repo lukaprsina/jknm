@@ -1,11 +1,9 @@
-"use server";
-
 import type { OutputBlockData } from "@editorjs/editorjs";
 import { decode } from "html-entities";
 import { parse as html_parse } from "node-html-parser";
 
-import { type PublishedArticleWithAuthors } from "./converter-server";
-import { RouterOutputs } from "~/trpc/react";
+import type { RouterOutputs } from "~/trpc/react";
+import type { ImportedArticle } from "./converter-spaghetti";
 
 export interface AuthorType {
   name: string;
@@ -13,8 +11,8 @@ export interface AuthorType {
   change?: false | string;
 }
 
-export async function get_authors(
-  csv_article: PublishedArticleWithAuthors,
+export function get_authors(
+  imported_article: ImportedArticle,
   all_blocks: OutputBlockData[],
   authors_by_name: AuthorType[],
   all_authors: RouterOutputs["author"]["get_all"],
@@ -46,7 +44,9 @@ export async function get_authors(
   last_paragraphs.reverse();
 
   if (last_paragraphs.length === 0) {
-    console.error("get authors -> no paragraphs: " + csv_article.objave_id);
+    console.error(
+      "get authors -> no paragraphs: " + imported_article.objave_id,
+    );
   }
 
   const current_authors = new Set<number>();
@@ -96,7 +96,7 @@ export async function get_authors(
   if (not_found_authors.size !== 0) {
     console.log({ not_found_authors });
     throw new Error(
-      `Authors not found, id: ${csv_article.objave_id}, size: ${not_found_authors.size}`,
+      `Authors not found, id: ${imported_article.objave_id}, size: ${not_found_authors.size}`,
     );
   }
 
