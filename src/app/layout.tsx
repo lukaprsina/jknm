@@ -29,6 +29,7 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   await api.author.get_all.prefetch();
+  await api.article.get_duplicate_urls.prefetch();
 
   return (
     <StrictMode>

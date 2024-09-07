@@ -22,15 +22,18 @@ import Undo from "editorjs-undo";
 import { content_to_text } from "~/lib/content-to-text";
 import { api } from "~/trpc/react";
 import type { DraftArticle } from "~/server/db/schema";
-import {
-  get_clean_url,
-  get_heading_from_editor,
-  get_image_data_from_editor,
-} from "../../lib/editor-utils";
 import { editor_store } from "./editor-store";
 import { EDITOR_JS_PLUGINS } from "./plugins";
 import { Button } from "../ui/button";
 import { useToast } from "~/hooks/use-toast";
+import {
+  convert_title_to_url,
+  get_link_from_article,
+} from "~/lib/article-utils";
+import {
+  get_heading_from_editor,
+  get_image_data_from_editor,
+} from "~/lib/editor-utils";
 
 export interface EditorContextType {
   editor?: EditorJS;
@@ -75,6 +78,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   const [dirty, setDirty] = useState(false);
   const trpc_utils = api.useUtils();
   const toast = useToast();
+  const duplicate_urls = api.article.get_duplicate_urls.useQuery();
 
   useEffect(() => {
     if (dirty) {
@@ -194,7 +198,15 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
       await trpc_utils.article.invalidate();
 
-      if (data.url) router.push(`/novica/${data.url}`);
+      if (data.url) {
+        router.push(
+          get_link_from_article(
+            data.url,
+            data.draft.created_at,
+            duplicate_urls.data,
+          ),
+        );
+      }
     },
   });
 
@@ -278,7 +290,11 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
       await trpc_utils.article.invalidate();
 
-      router.replace(`/novica/${returned_data.url}`);
+      if (data.url) {
+        router.push(
+          get_link_from_article(data.url, data.created_at, duplicate_urls.data),
+        );
+      }
     },
   });
 
@@ -350,7 +366,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     }
 
     if (!new_title) return;
-    const new_url = get_clean_url(new_title);
+    const new_url = convert_title_to_url(new_title);
 
     const new_article_url = `${new_url}-${article.id}`;
 

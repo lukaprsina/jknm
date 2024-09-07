@@ -86,18 +86,9 @@ export const PublishedArticleRelations = relations(
   }),
 );
 
-export const SluggedUrlArticles = pgTable("slugged_url_articles", {
-  article_id: integer("article_id")
-    .primaryKey()
-    .references(() => PublishedArticle.id, { onDelete: "cascade" }),
+export const DuplicatedArticleUrls = pgTable("duplicate_article_urls", {
+  url: varchar("url", { length: 255 }).primaryKey(),
 });
-
-export const SluggedUrlRelations = relations(SluggedUrlArticles, ({ one }) => ({
-  article: one(PublishedArticle, {
-    fields: [SluggedUrlArticles.article_id],
-    references: [PublishedArticle.id],
-  }),
-}));
 
 export const DraftArticle = pgTable(
   "draft_article",

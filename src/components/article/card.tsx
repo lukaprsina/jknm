@@ -11,6 +11,8 @@ import type { IntersectionRef } from "./infinite-articles";
 import { MagicCard } from "../magic-card";
 import Image from "next/image";
 import { Authors } from "../authors";
+import { get_link_from_article } from "~/lib/article-utils";
+import { api } from "~/trpc/react";
 
 export function ArticleCard({
   featured,
@@ -32,10 +34,11 @@ export function ArticleCard({
   ref?: IntersectionRef;
 }) {
   const [hover, setHover] = useState(false);
+  const duplicate_urls = api.article.get_duplicate_urls.useQuery();
 
   return (
     <Link
-      href={`/novica/${url}`}
+      href={get_link_from_article(url, created_at, duplicate_urls.data)}
       // rounded-md bg-card
       className={cn(
         "overflow-hidden rounded-xl bg-transparent no-underline shadow-lg",

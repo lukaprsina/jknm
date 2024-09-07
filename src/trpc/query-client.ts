@@ -3,14 +3,9 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import SuperJSON from "superjson";
-import {
-  persistQueryClient,
-  removeOldestQuery,
-} from "@tanstack/react-query-persist-client";
-import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 
-export const createQueryClient = () => {
-  const queryClient = new QueryClient({
+export const createQueryClient = () =>
+  new QueryClient({
     defaultOptions: {
       queries: {
         // With SSR, we usually want to set some default staleTime
@@ -29,15 +24,3 @@ export const createQueryClient = () => {
       },
     },
   });
-
-  const localStoragePersister = createSyncStoragePersister({
-    storage: window.localStorage,
-    retry: removeOldestQuery,
-  });
-
-  return persistQueryClient({
-    // @ts-expect-error - what's going on here?
-    queryClient,
-    persister: localStoragePersister,
-  });
-};

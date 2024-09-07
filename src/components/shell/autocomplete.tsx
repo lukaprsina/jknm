@@ -26,9 +26,12 @@ import "./autocomplete.css";
 import { PoweredBy } from "react-instantsearch";
 import { Separator } from "~/components/ui/separator";
 import type { ArticleHit } from "~/lib/validators";
+import { get_link_from_article } from "~/lib/article-utils";
+import { api } from "~/trpc/react";
 
 export function NoviceAutocomplete({ detached }: { detached?: string }) {
   const searchClient = algolia.getClient();
+  const duplicate_urls = api.article.get_duplicate_urls.useQuery();
 
   return (
     <Autocomplete
@@ -38,7 +41,11 @@ export function NoviceAutocomplete({ detached }: { detached?: string }) {
         {
           sourceId: "novice",
           getItemUrl: ({ item }) => {
-            return `/novica/${item.url}`;
+            return get_link_from_article(
+              item.url,
+              item.created_at,
+              duplicate_urls.data,
+            );
           },
           getItems() {
             return getAlgoliaResults({
@@ -155,7 +162,12 @@ interface ProductItemProps {
 }
 
 function ProductItem({ hit, components }: ProductItemProps) {
-  const href = useMemo(() => `/novica/${hit.url}`, [hit]);
+  const duplicate_urls = api.article.get_duplicate_urls.useQuery();
+
+  const href = useMemo(
+    () => get_link_from_article(hit.url, hit.created_at, duplicate_urls.data),
+    [duplicate_urls.data, hit.created_at, hit.url],
+  );
 
   return (
     <Link href={href} className="aa-ItemLink text-inherit">

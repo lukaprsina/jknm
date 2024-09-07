@@ -18,23 +18,39 @@ import { PublishedArticleProvider } from "~/components/article/context";
 import { cn } from "~/lib/utils";
 import { EditorToReact } from "~/components/editor/editor-to-react";
 import type { PublishedArticle } from "~/server/db/schema";
+import { read_date_from_url } from "~/lib/format-date";
 
 interface NovicaProps {
   params: {
     published_url: string;
   };
+  searchParams: Record<string, string | string[] | undefined>;
 }
 
 // url_with_date: testing-04-09-2024
 export default async function NovicaPage({
   params: { published_url },
+  searchParams,
 }: NovicaProps) {
   const session = await getServerAuthSession();
 
   const decoded = decodeURIComponent(published_url);
-  const article_by_url = await api.article.get_published_by_url(decoded);
+  let day: string | undefined;
 
-  console.log("page article", article_by_url);
+  for (const key in searchParams) {
+    if (key !== "dan") continue;
+    const value = searchParams[key];
+    if (typeof value !== "string") continue;
+    day = value;
+    break;
+  }
+
+  console.log("novica/", { url: decoded, day });
+  const article_by_url = await api.article.get_published_by_url({
+    url: decoded,
+    created_at: day ? read_date_from_url(day) : undefined,
+  });
+
   if (!article_by_url) {
     return (
       <Shell>
@@ -83,15 +99,13 @@ async function TabbedContent({
 }) {
   const session = await getServerAuthSession();
 
-  console.log("tabbed", article);
-
   if (!article?.content) {
     return <ArticleNotFound />;
   }
 
   return (
     <Tabs
-      defaultValue={article.content ? "draft" : "published"}
+      defaultValue={"published"}
       /* lg:prose-xl prose-p:text-lg prose-h1:font-normal prose-h1:text-blue-800 prose-h1:text-[40px]  */
       // prose-figcaption:text-foreground
       className={cn(article_variants(), page_variants())}

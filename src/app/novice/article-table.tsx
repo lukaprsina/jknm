@@ -41,6 +41,7 @@ import type { Session } from "next-auth";
 import type { ArticleHit } from "~/lib/validators";
 import { Authors } from "~/components/authors";
 import { EditButton } from "~/components/shell/editing-buttons";
+import { get_link_from_article } from "~/lib/article-utils";
 
 export function ArticleTable({
   session,
@@ -123,12 +124,22 @@ function ArticleTableRow({
   hit: SearchHit<ArticleHit>;
   session: Session | null;
 }) {
+  const duplicate_urls = api.article.get_duplicate_urls.useQuery();
+
   return (
     <TableRow key={hit.objectID}>
       <TableCell>{hit.objectID}</TableCell>
       <TableCell className="font-medium">
         <Button variant="link" asChild>
-          <Link href={`/novica/${hit.url}`}>{hit.title}</Link>
+          <Link
+            href={get_link_from_article(
+              hit.url,
+              hit.created_at,
+              duplicate_urls.data,
+            )}
+          >
+            {hit.title}
+          </Link>
         </Button>
       </TableCell>
       <TableCell>

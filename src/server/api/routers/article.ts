@@ -7,7 +7,7 @@ import {
   PublishedArticlesToAuthors,
   SaveDraftArticleSchema,
 } from "~/server/db/schema";
-import { eq } from "drizzle-orm";
+import { and, between, eq } from "drizzle-orm";
 import { named_promise_all_settled } from "~/lib/named-promise";
 import { assert_at_most_one, assert_one } from "~/lib/assert-length";
 import { withCursorPagination } from "drizzle-pagination";
@@ -47,6 +47,14 @@ export const article_router = createTRPCRouter({
       };
     }),
 
+  get_duplicate_urls: publicProcedure.query(async ({ ctx }) => {
+    console.error(
+      "AAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBBBBBBBB: getting duplicate urls",
+    );
+    const urls = await ctx.db.query.DuplicatedArticleUrls.findMany();
+    return urls.map((data) => data.url);
+  }),
+
   get_published_by_id: publicProcedure
     .input(z.number())
     .query(async ({ ctx, input }) => {
@@ -57,13 +65,25 @@ export const article_router = createTRPCRouter({
     }),
 
   get_published_by_url: publicProcedure
-    .input(z.string())
+    .input(z.object({ url: z.string(), created_at: z.date().optional() }))
     .query(async ({ ctx, input }) => {
-      const article = await ctx.db.query.PublishedArticle.findFirst({
-        where: eq(PublishedArticle.url, input),
-      });
-      console.log("get_published_by_url", input, article?.title);
-      return article;
+      if (typeof input.created_at === "undefined") {
+        return await ctx.db.query.PublishedArticle.findFirst({
+          where: eq(PublishedArticle.url, input.url),
+        });
+      } else {
+        const beggining_of_day = new Date(input.created_at);
+        beggining_of_day.setHours(0, 0, 0, 0);
+        const end_of_day = new Date(input.created_at);
+        end_of_day.setHours(23, 59, 59, 999);
+
+        return await ctx.db.query.PublishedArticle.findFirst({
+          where: and(
+            eq(PublishedArticle.url, input.url),
+            between(PublishedArticle.created_at, beggining_of_day, end_of_day),
+          ),
+        });
+      }
     }),
 
   create_draft: protectedProcedure
