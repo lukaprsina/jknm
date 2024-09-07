@@ -12,7 +12,6 @@ import {
   delete_articles,
   delete_authors,
   get_article_count,
-  read_articles,
   sync_authors,
   sync_with_algolia,
   copy_and_rename_images,

@@ -9,7 +9,11 @@ import { parse as csv_parse } from "csv-parse";
 import { count, eq, sql } from "drizzle-orm";
 import sharp from "sharp";
 
-import type { ImageToSave, ImportedArticle } from "./converter-spaghetti";
+import type {
+  ImageToSave,
+  ImportedArticle,
+  PublishedArticleWithAuthors,
+} from "./converter-spaghetti";
 import type { AuthorType } from "./get-authors";
 import { content_to_text as convert_content_to_text } from "~/lib/content-to-text";
 import { db } from "~/server/db";
@@ -128,32 +132,22 @@ export interface TempArticleType {
   author_ids: number[];
 }
 
-export async function upload_articles(
-  articles: PublishedArticleWithAuthors[],
-  do_update: boolean,
-) {
+export async function upload_articles(articles: PublishedArticleWithAuthors[]) {
   if (articles.length === 0) return;
   await db.transaction(async (tx) => {
-    if (do_update) {
-      console.log("Updating articles", articles);
-      for (const article of articles) {
-        await tx
-          .update(PublishedArticle)
-          .set(convert_article(article))
-          .where(eq(PublishedArticle.id, article.serial_id));
-      }
-    } else {
-      console.log("Inserting articles", articles.length);
-      if (articles.length > 0)
-        await tx.insert(PublishedArticle).values(articles.map(convert_article));
+    console.log("Inserting articles", articles.length);
+    if (articles.length > 0) {
+      await tx.insert(PublishedArticle).values(articles);
     }
 
     const joins: (typeof PublishedArticlesToAuthors.$inferInsert)[] = [];
     for (const article of articles) {
       for (const author_id of article.author_ids) {
+        if (!article.id) throw new Error("Article ID is undefined");
+
         joins.push({
           author_id: author_id,
-          article_id: article.serial_id,
+          article_id: article.id,
         });
       }
     }
@@ -164,34 +158,6 @@ export async function upload_articles(
   });
 
   console.log("done uploading articles");
-}
-
-export async function read_articles() {
-  const csv_articles: PublishedArticleWithAuthors[] = [];
-
-  const objave_path = path.join(process.cwd(), "src/assets/Objave.txt");
-
-  await finished(
-    fs
-      .createReadStream(objave_path)
-      .pipe(csv_parse({ delimiter: "," }))
-      .on("data", function (csvrow: string[]) {
-        if (typeof csvrow[2] == "undefined" || parseInt(csvrow[2]) !== 1)
-          return;
-        if (!csvrow[0] || !csvrow[4] || !csvrow[6] || !csvrow[8] || !csvrow[15])
-          throw new Error("Missing data: " + JSON.stringify(csvrow, null, 2));
-
-        csv_articles.push({
-          objave_id: parseInt(csvrow[0]),
-          title: csvrow[4],
-          content: csvrow[6],
-          created_at: csvrow[8],
-          updated_at: csvrow[15],
-        });
-      }),
-  );
-
-  return csv_articles;
 }
 
 // sync just the published articles
@@ -217,9 +183,7 @@ export async function sync_with_algolia() {
 
   const objects: ArticleHit[] = articles.data
     .map((article) => {
-      const content_preview = convert_content_to_text(
-        article.content ?? undefined,
-      );
+      const content_preview = convert_content_to_text(article.content?.blocks);
       if (!content_preview) return;
 
       return {

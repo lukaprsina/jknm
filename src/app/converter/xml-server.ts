@@ -2,7 +2,6 @@
 import { XMLParser } from "fast-xml-parser";
 import path from "path";
 import fs_promises from "node:fs/promises";
-import { PublishedArticleWithAuthors } from "./converter-server";
 import { ImportedArticle } from "./converter-spaghetti";
 
 /* 

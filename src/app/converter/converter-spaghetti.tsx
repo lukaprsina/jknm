@@ -41,7 +41,12 @@ export interface ImportedArticle {
 
 export interface DimensionType {
   dimensions: { width: number; height: number };
-  ids: string[];
+  ids: number[];
+}
+
+type PublishedArticleInsert = typeof PublishedArticle.$inferInsert;
+export interface PublishedArticleWithAuthors extends PublishedArticleInsert {
+  author_ids: number[];
 }
 
 const initial_problems: Record<string, [string, string][]> = {
@@ -136,7 +141,7 @@ export async function iterate_over_articles(
 
   console.log("done", articles);
   if (!do_dry_run) {
-    await upload_articles(articles, do_update);
+    await upload_articles(articles);
   }
 
   // console.warn("Images to save", images_to_save);
@@ -165,7 +170,7 @@ async function parse_csv_article(
   all_authors: RouterOutputs["author"]["get_all"],
   authors_by_name: AuthorType[],
   problems: Record<string, [string, string][]>,
-): Promise<typeof PublishedArticle.$inferInsert> {
+): Promise<PublishedArticleWithAuthors> {
   const problematic_dir = "1723901265154";
 
   let html = imported_article.content;
@@ -253,7 +258,7 @@ async function parse_csv_article(
     );
   }
 
-  const article: typeof PublishedArticle.$inferInsert = {
+  const article: PublishedArticleWithAuthors = {
     // serial_id: article_id,
     old_id: imported_article.objave_id,
     title: imported_article.title,

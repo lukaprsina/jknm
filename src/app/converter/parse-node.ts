@@ -5,9 +5,11 @@ import type { Node as ParserNode } from "node-html-parser";
 import { decode } from "html-entities";
 import { NodeType, HTMLElement as ParserHTMLElement } from "node-html-parser";
 
-import type { PublishedArticleWithAuthors } from "./converter-server";
 import { get_image_dimensions } from "./converter-server";
-import { DimensionType } from "./converter-spaghetti";
+import {
+  DimensionType,
+  PublishedArticleWithAuthors,
+} from "./converter-spaghetti";
 
 const p_allowed_tags = ["STRONG", "BR", "A", "IMG", "EM", "SUB", "SUP"];
 const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
@@ -15,11 +17,14 @@ const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
 export async function parse_node(
   node: ParserNode,
   blocks: OutputBlockData[],
-  csv_article: PublishedArticleWithAuthors,
+  articles_with_authors: PublishedArticleWithAuthors,
   csv_url: string,
-  problems: Record<string, [string, string][]>,
+  problems: Record<string, [number, string][]>,
   ids_by_dimensions: DimensionType[],
 ): Promise<boolean> {
+  const old_id = articles_with_authors.old_id;
+  if (!old_id) throw new Error("No old_id");
+
   if (!(node instanceof ParserHTMLElement))
     throw new Error("Not an HTMLElement");
 
@@ -62,7 +67,7 @@ export async function parse_node(
         }
 
         if (!id) {
-          console.error("No video id", csv_article.objave_id, src);
+          console.error("No video id", old_id, src);
           return false;
         }
 
@@ -77,9 +82,9 @@ export async function parse_node(
           },
         });
 
-        console.log("Video", csv_article.objave_id, src ?? "NO SRC");
+        console.log("Video", old_id, src ?? "NO SRC");
 
-        problems.videos?.push([csv_article.objave_id, src ?? "NO SRC"]);
+        problems.videos?.push([old_id, src ?? "NO SRC"]);
         return false;
       }
 
@@ -96,7 +101,7 @@ export async function parse_node(
 
       if (children.length === 0) {
         // throw new Error("Empty div " + csv_article.id);
-        console.error("Empty div", csv_article.objave_id, node.outerHTML);
+        console.error("Empty div", old_id, node.outerHTML);
         // problems.empty_divs?.push([csv_article.id, node.outerHTML]);
         break;
       } else if (children.length === 1) {
@@ -104,8 +109,8 @@ export async function parse_node(
         if (!child) throw new Error("Child is undefined?");
 
         if (child.nodeType === NodeType.TEXT_NODE) {
-          console.error("Single text in div", csv_article.objave_id);
-          problems.single_in_div?.push([csv_article.objave_id, child.text]);
+          console.error("Single text in div", old_id);
+          problems.single_in_div?.push([old_id, child.text]);
           const text = decode(child.text).trim();
           blocks.push({ type: "paragraph", data: { text } });
           break;
@@ -114,24 +119,14 @@ export async function parse_node(
             throw new Error("Not an HTMLElement");
 
           if (child.tagName === "P" || child.tagName === "STRONG") {
-            console.error(
-              "Single tag in div",
-              csv_article.objave_id,
-              child.outerHTML,
-            );
-            problems.single_in_div?.push([
-              csv_article.objave_id,
-              child.outerHTML,
-            ]);
+            console.error("Single tag in div", old_id, child.outerHTML);
+            problems.single_in_div?.push([old_id, child.outerHTML]);
             const text = decode(child.innerHTML).trim();
             blocks.push({ type: "paragraph", data: { text } });
             break;
           } else if (child.tagName !== "IMG") {
             throw new Error(
-              "Unexpected element in div: " +
-                csv_article.objave_id +
-                ", " +
-                child.outerHTML,
+              "Unexpected element in div: " + old_id + ", " + child.outerHTML,
             );
           }
         } else {
@@ -148,17 +143,18 @@ export async function parse_node(
             throw new Error("Not an HTMLElement");
 
           if (already_set_src)
-            throw new Error("Already set source once " + csv_article.objave_id);
+            throw new Error(
+              "Already set source once " + articles_with_authors.old_id,
+            );
 
           const src_attr = img_tag.attributes.src;
           const trimmed = decode(src_attr).trim();
-          if (!trimmed)
-            throw new Error("No src attribute " + csv_article.objave_id);
+          if (!trimmed) throw new Error("No src attribute " + old_id);
 
           const src_parts = trimmed.trim().split("/");
           const image_name = src_parts[src_parts.length - 1];
           const encoded_url = `${AWS_PREFIX}/${csv_url}/${image_name}`;
-          console.log("Image", csv_article.objave_id, encoded_url);
+          console.log("Image", old_id, encoded_url);
           if (
             encoded_url ===
             "https://jknm.s3.eu-central-1.amazonaws.com/#$!%&-pa-dolenjske-jame!-25-10-2011/PA220010.JPG"
@@ -176,7 +172,9 @@ export async function parse_node(
           already_set_src = true;
         } else if (img_tag.nodeType == NodeType.TEXT_NODE) {
           // console.error("Image is just text: " + csv_article.id);
-          throw new Error("Image is just text: " + csv_article.objave_id);
+          throw new Error(
+            "Image is just text: " + articles_with_authors.old_id,
+          );
           // if (img_tag.text.trim() !== "")
         } else {
           throw new Error("Unexpected comment: " + node.text);
@@ -208,11 +206,11 @@ export async function parse_node(
                 is_wrong = true;
                 console.error(
                   "Image in caption",
-                  csv_article.objave_id,
+                  old_id,
                   p_child_child.outerHTML,
                 );
                 problems.image_in_caption?.push([
-                  csv_article.objave_id,
+                  old_id,
                   p_child_child.outerHTML,
                 ]);
                 continue;
@@ -243,9 +241,7 @@ export async function parse_node(
           if (trimmed !== "") {
             if (already_set_caption) {
               console.log({ previous: caption, current: trimmed });
-              throw new Error(
-                "Already set caption once " + csv_article.objave_id,
-              );
+              throw new Error("Already set caption once " + old_id);
             }
 
             caption = trimmed;
@@ -260,10 +256,7 @@ export async function parse_node(
           }
         } else if (p_child.nodeType == NodeType.TEXT_NODE) {
           throw new Error(
-            "Caption is just text" +
-              csv_article.objave_id +
-              ", " +
-              p_child.outerHTML,
+            "Caption is just text" + old_id + ", " + p_child.outerHTML,
           );
         } else {
           throw new Error("Unexpected comment: " + node.text);
@@ -272,21 +265,15 @@ export async function parse_node(
       // console.log("p children done");
 
       if (!src) {
-        throw new Error(
-          "No image src " + csv_article.objave_id + ", " + node.outerHTML,
-        );
+        throw new Error("No image src " + old_id + ", " + node.outerHTML);
         /* console.error("No image src", csv_article.id);
         return false; */
       }
 
       if (!caption) {
         // throw new Error("No caption " + csv_article.id);
-        console.error(
-          "No image caption",
-          csv_article.objave_id,
-          node.outerHTML,
-        );
-        problems.empty_captions?.push([csv_article.objave_id, node.outerHTML]);
+        console.error("No image caption", old_id, node.outerHTML);
+        problems.empty_captions?.push([old_id, node.outerHTML]);
         caption = "";
         // return false;
       }
@@ -307,16 +294,19 @@ export async function parse_node(
         );
 
         if (matchingDimension) {
-          matchingDimension.ids.push(csv_article.objave_id);
+          matchingDimension.ids.push(old_id);
         } else {
-          ids_by_dimensions.push({ dimensions, ids: [csv_article.objave_id] });
+          ids_by_dimensions.push({
+            dimensions,
+            ids: [old_id],
+          });
         }
 
         // console.log(csv_article.id, ids_by_dimensions);
       }
 
       if (do_dimensions && !dimensions) {
-        console.error("No dimensions for image", csv_article.objave_id, src);
+        console.error("No dimensions for image", old_id, src);
         break;
       }
 
