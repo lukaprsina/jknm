@@ -345,7 +345,7 @@ const JKNM_SERVED_DIR = "D:/JKNM/served";
 export async function get_authors_by_name() {
   const authors_by_name_path = path.join(
     process.cwd(),
-    "src/app/converter/_info/authors_by_name.json",
+    "src/app/converter/info/authors_by_name.json",
   );
 
   const authors_by_name = await fs_promises.readFile(
