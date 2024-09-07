@@ -23,7 +23,7 @@ export const ArticleDrizzleCard = ({
       title={article.title}
       url={article.url}
       preview_image={article.preview_image ?? undefined}
-      content_preview={content_to_text(article.content ?? undefined)}
+      content_preview={content_to_text(article.content?.blocks ?? undefined)}
       created_at={article.created_at}
       // TODO
       author_ids={[]}

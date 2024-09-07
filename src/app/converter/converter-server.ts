@@ -9,9 +9,9 @@ import { parse as csv_parse } from "csv-parse";
 import { count, eq, sql } from "drizzle-orm";
 import sharp from "sharp";
 
-import type { ImageToSave } from "./converter-spaghetti";
+import type { ImageToSave, ImportedArticle } from "./converter-spaghetti";
 import type { AuthorType } from "./get-authors";
-import { content_to_text } from "~/lib/content-to-text";
+import { content_to_text as convert_content_to_text } from "~/lib/content-to-text";
 import { db } from "~/server/db";
 import {
   Author,
@@ -21,14 +21,6 @@ import {
 import { algolia_protected } from "~/lib/algolia-server";
 import type { ArticleHit } from "~/lib/validators";
 import { api } from "~/trpc/server";
-
-export interface CSVType {
-  id: string;
-  title: string;
-  content: string;
-  created_at: string;
-  updated_at: string;
-}
 
 export async function get_authors_server() {
   const authors = await db.query.Author.findMany();
@@ -126,7 +118,7 @@ export async function get_image_dimensions(src: string) {
 
 export interface TempArticleType {
   serial_id: number;
-  objave_id: string;
+  objave_id: number;
   title: string;
   preview_image: string | undefined;
   content: OutputData;
@@ -136,23 +128,8 @@ export interface TempArticleType {
   author_ids: number[];
 }
 
-function convert_article(
-  article: TempArticleType,
-): typeof PublishedArticle.$inferInsert {
-  return {
-    id: article.serial_id,
-    old_id: parseInt(article.objave_id),
-    title: article.title,
-    content: article.content,
-    created_at: article.created_at,
-    updated_at: article.updated_at,
-    preview_image: article.preview_image,
-    url: article.csv_url,
-  };
-}
-
 export async function upload_articles(
-  articles: TempArticleType[],
+  articles: (typeof PublishedArticle.$inferInsert)[],
   do_update: boolean,
 ) {
   if (articles.length === 0) return;
@@ -190,7 +167,7 @@ export async function upload_articles(
 }
 
 export async function read_articles() {
-  const csv_articles: CSVType[] = [];
+  const csv_articles: (typeof PublishedArticle.$inferInsert)[] = [];
 
   const objave_path = path.join(process.cwd(), "src/assets/Objave.txt");
 
@@ -205,7 +182,7 @@ export async function read_articles() {
           throw new Error("Missing data: " + JSON.stringify(csvrow, null, 2));
 
         csv_articles.push({
-          id: csvrow[0],
+          objave_id: parseInt(csvrow[0]),
           title: csvrow[4],
           content: csvrow[6],
           created_at: csvrow[8],
@@ -240,7 +217,9 @@ export async function sync_with_algolia() {
 
   const objects: ArticleHit[] = articles.data
     .map((article) => {
-      const content_preview = content_to_text(article.content ?? undefined);
+      const content_preview = convert_content_to_text(
+        article.content ?? undefined,
+      );
       if (!content_preview) return;
 
       return {
@@ -279,7 +258,7 @@ export async function sync_with_algolia() {
 } */
 
 export async function get_problematic_html(
-  id: string,
+  id: number,
   problematic_dir: string,
 ) {
   const problematic_html = path.join(

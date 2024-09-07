@@ -213,7 +213,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       console.warn("published", returned_data);
 
       const content_preview = content_to_text(
-        returned_data.content ?? undefined,
+        returned_data.content?.blocks ?? undefined,
       );
 
       if (!content_preview) {

@@ -2,6 +2,8 @@
 import { XMLParser } from "fast-xml-parser";
 import path from "path";
 import fs_promises from "node:fs/promises";
+import { (typeof PublishedArticle.$inferInsert) } from "./converter-server";
+import { ImportedArticle } from "./converter-spaghetti";
 
 /* 
 {
@@ -47,14 +49,6 @@ type ObjaveType = {
   ZadnjaSprememba: string;
 };
 
-interface CSVType {
-  id: string;
-  title: string;
-  content: string;
-  created_at: string;
-  updated_at: string;
-}
-
 type XMLType = {
   "?xml": string;
   dataroot: {
@@ -62,8 +56,8 @@ type XMLType = {
   };
 };
 
-export async function test_xml() {
-  const csv_articles: CSVType[] = [];
+export async function read_from_xml() {
+  const imported_articles: ImportedArticle[] = [];
 
   const objave_path = path.join(process.cwd(), "src/assets/Objave.xml");
   const objave_string = await fs_promises.readFile(objave_path, "utf8");
@@ -71,8 +65,8 @@ export async function test_xml() {
   const objave = parser.parse(objave_string) as XMLType;
 
   for (const objava of objave.dataroot.Objave) {
-    csv_articles.push({
-      id: objava.ID,
+    imported_articles.push({
+      objave_id: parseInt(objava.ID),
       title: objava.Naslov,
       content: objava.Tekst,
       created_at: objava.Datum1,
@@ -80,7 +74,7 @@ export async function test_xml() {
     });
   }
 
-  console.log(csv_articles.find((a) => a.id == "40")?.content);
+  // console.log(csv_articles.find((a) => a.id == "40")?.content);
 
-  return csv_articles;
+  return imported_articles;
 }

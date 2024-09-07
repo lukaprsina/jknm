@@ -26,7 +26,7 @@ export default function MakeDraftButton({
     onSuccess: async (returned_data) => {
       console.log("new article loader", returned_data);
       const content_preview =
-        content_to_text(returned_data.content ?? undefined) ?? "";
+        content_to_text(returned_data.content?.blocks ?? undefined) ?? "";
       // if (!content_preview) return;
 
       // TODO

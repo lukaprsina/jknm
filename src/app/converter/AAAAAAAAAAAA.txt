@@ -1,0 +1,25 @@
+function test() {
+  return {
+    serial_id: article_id,
+    objave_id: csv_article.id,
+    title: csv_article.title,
+    preview_image,
+    content,
+    csv_url,
+    created_at,
+    updated_at,
+    author_ids: Array.from(current_authors),
+  } satisfies TempArticleType;
+}
+
+export interface TempArticleType {
+  serial_id: number;
+  objave_id: string;
+  title: string;
+  preview_image: string | undefined;
+  content: OutputData;
+  csv_url: string;
+  created_at: Date;
+  updated_at: Date;
+  author_ids: number[];
+}

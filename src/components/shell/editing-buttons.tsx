@@ -31,7 +31,9 @@ export default function EditingButtons({
         <EditButton
           id={article.id}
           url={article.url}
-          content_preview={content_to_text(article.content ?? undefined)}
+          content_preview={content_to_text(
+            article.content?.blocks ?? undefined,
+          )}
           // has_draft={!!article.draft_content}
         />
       )}

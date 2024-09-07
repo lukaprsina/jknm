@@ -21,7 +21,7 @@ import {
 import { iterate_over_articles } from "./converter-spaghetti";
 import { cn } from "~/lib/utils";
 import { EDITOR_JS_PLUGINS } from "~/components/editor/plugins";
-import { test_xml } from "./xml-server";
+import { read_from_xml } from "./xml-server";
 
 export function ArticleConverter() {
   const editorJS = useRef<EditorJS | null>(null);
@@ -53,7 +53,6 @@ export function ArticleConverter() {
         <Button onClick={() => copy_and_rename_images()}>
           Copy and rename images
         </Button>
-        <Button onClick={() => test_xml()}>XML</Button>
         <div className="flex flex-shrink gap-2">
           <Input
             value={firstArticle}
@@ -105,10 +104,7 @@ export function ArticleConverter() {
           <Button
             onClick={async () => {
               console.clear();
-              const csv_articles = await read_articles();
-
               await iterate_over_articles(
-                csv_articles,
                 editorJS.current,
                 doSplice,
                 doDryRun,

@@ -4,8 +4,7 @@ import type { OutputBlockData } from "@editorjs/editorjs";
 import { decode } from "html-entities";
 import { parse as html_parse } from "node-html-parser";
 
-import { type CSVType } from "./converter-server";
-import { api } from "~/trpc/server";
+import { type (typeof PublishedArticle.$inferInsert) } from "./converter-server";
 import { RouterOutputs } from "~/trpc/react";
 
 export interface AuthorType {
@@ -15,7 +14,7 @@ export interface AuthorType {
 }
 
 export async function get_authors(
-  csv_article: CSVType,
+  csv_article: (typeof PublishedArticle.$inferInsert),
   all_blocks: OutputBlockData[],
   authors_by_name: AuthorType[],
   all_authors: RouterOutputs["author"]["get_all"],
@@ -47,7 +46,7 @@ export async function get_authors(
   last_paragraphs.reverse();
 
   if (last_paragraphs.length === 0) {
-    console.error("get authors -> no paragraphs: " + csv_article.id);
+    console.error("get authors -> no paragraphs: " + csv_article.objave_id);
   }
 
   const current_authors = new Set<number>();
@@ -97,7 +96,7 @@ export async function get_authors(
   if (not_found_authors.size !== 0) {
     console.log({ not_found_authors });
     throw new Error(
-      `Authors not found, id: ${csv_article.id}, size: ${not_found_authors.size}`,
+      `Authors not found, id: ${csv_article.objave_id}, size: ${not_found_authors.size}`,
     );
   }
 

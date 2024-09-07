@@ -7,7 +7,7 @@ import dom_serialize from "dom-serializer";
 import { parseDocument } from "htmlparser2";
 import { parse as html_parse, NodeType } from "node-html-parser";
 
-import type { CSVType, TempArticleType } from "./converter-server";
+import type { (typeof PublishedArticle.$inferInsert) } from "./converter-server";
 import type { AuthorType } from "./get-authors";
 import {
   get_authors_by_name,
@@ -22,12 +22,21 @@ import {
   convert_title_to_url,
   get_image_data_from_editor,
 } from "~/components/editor/editor-utils";
+import { read_from_xml } from "./xml-server";
 
 export interface ImageToSave {
-  objave_id: string;
+  objave_id: number;
   serial_id: string;
   url: string;
   images: string[];
+}
+
+export interface ImportedArticle {
+  objave_id: number;
+  title: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface DimensionType {
@@ -50,7 +59,6 @@ let authors_by_name: AuthorType[] = [];
 const ids_by_dimensions: DimensionType[] = [];
 
 export async function iterate_over_articles(
-  csv_articles: CSVType[],
   editorJS: EditorJS | null,
   do_splice: boolean,
   do_dry_run: boolean,
@@ -70,41 +78,45 @@ export async function iterate_over_articles(
   /* const spliced_csv_articles = do_splice
     ? csv_articles.slice(first_article, last_article)
     : csv_articles; */
-  const first_index = csv_articles.findIndex(
-    (a) => a.id === first_article.toString(),
+  const imported_articles = await read_from_xml();
+  const first_index = imported_articles.findIndex(
+    (a) => a.objave_id === first_article,
   );
   const last_index =
     last_article === -1
       ? undefined
-      : csv_articles.findIndex((a) => a.id === last_article.toString());
+      : imported_articles.findIndex((a) => a.objave_id === last_article);
 
   /* if (first_index === -1) first_index = 0;
   if (last_index === -1) last_index = csv_articles.length - 1; */
   if (first_index === -1 || last_index === -1) {
-    console.error("Invalid index", csv_articles.length);
+    const first = imported_articles[0];
+
+    console.log("spliced_csv_articles", {
+      first_index,
+      last_index,
+      first_article,
+      last_article,
+      do_splice,
+      first,
+      csv_articles: imported_articles,
+    });
+
+    console.error("Invalid index", imported_articles);
     return;
   }
 
   const sliced_csv_articles = do_splice
-    ? csv_articles.slice(first_index, last_index)
-    : csv_articles;
-
-  console.log("spliced_csv_articles", {
-    first_index,
-    last_index,
-    first_article,
-    last_article,
-    do_splice,
-    csv_articles,
-  });
+    ? imported_articles.slice(first_index, last_index)
+    : imported_articles;
 
   console.log(
-    csv_articles[first_index]?.title,
-    csv_articles.at(last_index ?? -1)?.title,
-    csv_articles.length - 1,
+    imported_articles[first_index]?.title,
+    imported_articles.at(last_index ?? -1)?.title,
+    imported_articles.length - 1,
   );
 
-  const articles: TempArticleType[] = [];
+  const articles: (typeof PublishedArticle.$inferInsert)[] = [];
   let article_id = do_splice && first_index !== -1 ? first_index + 1 : 1;
 
   authors_by_name = await get_authors_by_name();
@@ -132,7 +144,7 @@ export async function iterate_over_articles(
   // await write_article_html_to_file(problematic_articles);
   console.log(
     "Total articles (csv, uploaded):",
-    csv_articles.length,
+    imported_articles.length,
     articles.length,
   );
   console.log("Problems:", problems);
@@ -147,34 +159,37 @@ export async function iterate_over_articles(
 }
 
 async function parse_csv_article(
-  csv_article: CSVType,
+  imported_article: ImportedArticle,
   editorJS: EditorJS | null,
   article_id: number,
   all_authors: RouterOutputs["author"]["get_all"],
   authors_by_name: AuthorType[],
   problems: Record<string, [string, string][]>,
-) {
+): Promise<(typeof PublishedArticle.$inferInsert)> {
   const problematic_dir = "1723901265154";
 
-  let html = csv_article.content;
-  if (PROBLEMATIC_CONSTANTS.includes(parseInt(csv_article.id))) {
-    console.log("Getting article", csv_article.id, "from file");
-    html = await get_problematic_html(csv_article.id, problematic_dir);
+  let html = imported_article.content;
+  if (PROBLEMATIC_CONSTANTS.includes(imported_article.objave_id)) {
+    console.log("Getting article", imported_article.objave_id, "from file");
+    html = await get_problematic_html(
+      imported_article.objave_id,
+      problematic_dir,
+    );
   }
 
   html = fixHtml(html);
   const root = html_parse(html);
 
   const format = "D/M/YYYY HH:mm:ss";
-  const created_at = parseDate(csv_article.created_at, format);
-  const updated_at = parseDate(csv_article.updated_at, format);
+  const created_at = parseDate(imported_article.created_at, format);
+  const updated_at = parseDate(imported_article.updated_at, format);
 
-  const csv_url = convert_title_to_url(csv_article.title, created_at);
+  const csv_url = convert_title_to_url(imported_article.title, created_at);
 
   const blocks: OutputBlockData[] = [
     {
       type: "header",
-      data: { text: csv_article.title, level: 1 },
+      data: { text: imported_article.title, level: 1 },
     },
   ];
 
@@ -188,7 +203,7 @@ async function parse_csv_article(
   }
 
   images_to_save.push({
-    objave_id: csv_article.id,
+    objave_id: imported_article.objave_id,
     serial_id: article_id.toString(),
     url: csv_url,
     images: image_urls,
@@ -199,7 +214,7 @@ async function parse_csv_article(
       await parse_node(
         node,
         blocks,
-        csv_article,
+        imported_article,
         csv_url,
         problems,
         ids_by_dimensions,
@@ -214,7 +229,7 @@ async function parse_csv_article(
   // const new_authors = new Set<string>();
   // const not_found_authors = new Set<string>();
   const current_authors = await get_authors(
-    csv_article,
+    imported_article,
     blocks,
     authors_by_name,
     all_authors,
@@ -231,20 +246,26 @@ async function parse_csv_article(
   const preview_image = images.length !== 0 ? images[0]?.file.url : undefined;
 
   if (typeof preview_image === "undefined") {
-    console.error("No images in article", csv_article.id, csv_article.title);
+    console.error(
+      "No images in article",
+      imported_article.objave_id,
+      imported_article.title,
+    );
   }
 
-  return {
-    serial_id: article_id,
-    objave_id: csv_article.id,
-    title: csv_article.title,
+  const article: (typeof PublishedArticle.$inferInsert) = {
+    // serial_id: article_id,
+    objave_id: imported_article.objave_id,
+    title: imported_article.title,
     preview_image,
     content,
     csv_url,
     created_at,
     updated_at,
     author_ids: Array.from(current_authors),
-  } satisfies TempArticleType;
+  };
+
+  return article;
 }
 
 function fixHtml(htmlString: string) {
