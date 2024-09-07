@@ -7,7 +7,7 @@ import {
   PublishedArticlesToAuthors,
   SaveDraftArticleSchema,
 } from "~/server/db/schema";
-import { eq, and, gte, lt } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { named_promise_all_settled } from "~/lib/named-promise";
 import { assert_at_most_one, assert_one } from "~/lib/assert-length";
 import { withCursorPagination } from "drizzle-pagination";
@@ -107,10 +107,7 @@ export const article_router = createTRPCRouter({
         });
 
         if (!draft) throw new Error("Draft not found");
-        const url_with_date = convert_title_to_url(
-          draft.title,
-          draft.created_at,
-        );
+        const url_with_date = convert_title_to_url(draft.title);
 
         await tx
           .insert(PublishedArticle)

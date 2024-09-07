@@ -129,15 +129,25 @@ export async function upload_articles(articles: PublishedArticleWithAuthors[]) {
   if (articles.length === 0) return;
   await db.transaction(async (tx) => {
     console.log("Inserting articles", articles.length);
-    if (articles.length > 0) {
-      await tx.insert(PublishedArticle).values(articles);
+    if (articles.length == 0) {
+      throw new Error("No articles to insert");
     }
 
-    const joins: (typeof PublishedArticlesToAuthors.$inferInsert)[] = [];
-    for (const article of articles) {
-      for (const author_id of article.author_ids) {
-        if (!article.id) throw new Error("Article ID is undefined");
+    const returned_articles = await tx
+      .insert(PublishedArticle)
+      .values(articles)
+      .returning();
 
+    const joins: (typeof PublishedArticlesToAuthors.$inferInsert)[] = [];
+    for (const article of returned_articles) {
+      const imported_article = articles.find(
+        (a) => a.old_id === article.old_id,
+      );
+      if (!imported_article) {
+        throw new Error(`Article not found: ${article.old_id}`);
+      }
+
+      for (const author_id of imported_article.author_ids) {
         joins.push({
           author_id: author_id,
           article_id: article.id,

@@ -37,8 +37,8 @@ export function ArticleConverter() {
   const [doSplice, setDoSplice] = useState(true);
   const [doDryRun, setDoDryRun] = useState(true);
   const [doUpdate, setDoUpdate] = useState(false);
-  const [firstArticle, setFirstArticle] = useState("625"); // 32
-  const [lastArticle, setLastArticle] = useState("-1");
+  const [firstArticle, setFirstArticle] = useState("1"); // 32
+  const [lastArticle, setLastArticle] = useState("15");
 
   return (
     <div className={cn(article_variants(), page_variants())}>

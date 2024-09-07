@@ -296,7 +296,7 @@ export async function parse_node(
           });
         }
 
-        // console.log(csv_article.id, ids_by_dimensions);
+        console.log(old_id, ids_by_dimensions);
       }
 
       if (do_dimensions && !dimensions) {
