@@ -1,17 +1,15 @@
-import type { DraftArticle } from "~/server/db/schema";
+import type { DraftArticleWithAuthors } from "./card-adapter";
+import { DraftArticleDrizzleCard } from "./card-adapter";
 
 export function DraftArticles({
   articles,
 }: {
-  articles: (typeof DraftArticle.$inferSelect)[];
+  articles: DraftArticleWithAuthors[];
 }) {
   return (
     <div>
       {articles.map((article) => (
-        <div key={article.id}>
-          <h3>{article.title}</h3>
-          <p>{article.id}</p>
-        </div>
+        <DraftArticleDrizzleCard key={article.id} article={article} />
       ))}
     </div>
   );

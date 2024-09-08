@@ -28,7 +28,7 @@ import { Button } from "../ui/button";
 import { useToast } from "~/hooks/use-toast";
 import {
   convert_title_to_url,
-  get_link_from_article,
+  get_published_article_link,
 } from "~/lib/article-utils";
 import {
   get_heading_from_editor,
@@ -201,7 +201,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
       if (data.url) {
         router.push(
-          get_link_from_article(
+          get_published_article_link(
             data.url,
             data.draft.created_at,
             duplicate_urls,
@@ -293,7 +293,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
       if (data.url) {
         router.push(
-          get_link_from_article(data.url, data.created_at, duplicate_urls),
+          get_published_article_link(data.url, data.created_at, duplicate_urls),
         );
       }
     },

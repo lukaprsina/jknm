@@ -48,7 +48,15 @@ export const article_router = createTRPCRouter({
     }),
 
   get_all_drafts: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.DraftArticle.findMany();
+    return await ctx.db.query.DraftArticle.findMany({
+      with: {
+        draft_articles_to_authors: {
+          with: {
+            author: true,
+          },
+        },
+      },
+    });
   }),
 
   get_duplicate_urls: publicProcedure.query(async ({ ctx }) => {

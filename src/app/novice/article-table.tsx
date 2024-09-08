@@ -40,7 +40,7 @@ import type { Session } from "next-auth";
 import type { ArticleHit } from "~/lib/validators";
 import { Authors } from "~/components/authors";
 import { EditButton } from "~/components/shell/editing-buttons";
-import { get_link_from_article } from "~/lib/article-utils";
+import { get_published_article_link } from "~/lib/article-utils";
 import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 
 export function ArticleTable({
@@ -132,7 +132,7 @@ function ArticleTableRow({
       <TableCell className="font-medium">
         <Button variant="link" asChild>
           <Link
-            href={get_link_from_article(
+            href={get_published_article_link(
               hit.url,
               hit.created_at,
               duplicate_urls,

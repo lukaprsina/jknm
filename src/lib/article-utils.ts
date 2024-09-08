@@ -12,7 +12,11 @@ export function convert_title_to_url(dangerous_url: string) {
   return ws_replaced;
 }
 
-export function get_link_from_article(
+export function get_draft_article_link(id: number) {
+  return `/uredi/${id}`;
+}
+
+export function get_published_article_link(
   url: string,
   created_at: Date | number,
   duplicate_article_urls: string[] | undefined,

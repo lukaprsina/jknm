@@ -39,12 +39,33 @@ export default async function HomePageServer() {
     );
   }
 
+  let sklon: string | undefined;
+  if (drafts) {
+    if (drafts.length === 1) {
+      sklon = "osnutek";
+    } else if (drafts.length === 2) {
+      sklon = "osnutka";
+    } else if (drafts.length > 3 && drafts.length <= 4) {
+      sklon = "osnutki";
+    } else {
+      sklon = "osnutkov";
+    }
+  }
+
   return (
     <Shell>
       <div className={cn(page_variants())}>
         <Accordion type="single" collapsible>
           <AccordionItem value="item-1">
-            <AccordionTrigger>Osnutki: {drafts?.length}</AccordionTrigger>
+            <AccordionTrigger>
+              {drafts?.length === 0 ? (
+                "Ni osnutkov"
+              ) : (
+                <span>
+                  <b>Osnutki</b> ({drafts?.length} {sklon})
+                </span>
+              )}
+            </AccordionTrigger>
             <AccordionContent className={article_variants({ variant: "card" })}>
               {drafts && drafts.length !== 0 ? (
                 <DraftArticles articles={drafts} />

@@ -26,7 +26,7 @@ import "./autocomplete.css";
 import { PoweredBy } from "react-instantsearch";
 import { Separator } from "~/components/ui/separator";
 import type { ArticleHit } from "~/lib/validators";
-import { get_link_from_article } from "~/lib/article-utils";
+import { get_published_article_link } from "~/lib/article-utils";
 import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 
 export function NoviceAutocomplete({ detached }: { detached?: string }) {
@@ -41,7 +41,7 @@ export function NoviceAutocomplete({ detached }: { detached?: string }) {
         {
           sourceId: "novice",
           getItemUrl: ({ item }) => {
-            return get_link_from_article(
+            return get_published_article_link(
               item.url,
               item.created_at,
               duplicate_urls,
@@ -165,7 +165,7 @@ function ProductItem({ hit, components }: ProductItemProps) {
   const duplicate_urls = useDuplicatedUrls();
 
   const href = useMemo(
-    () => get_link_from_article(hit.url, hit.created_at, duplicate_urls),
+    () => get_published_article_link(hit.url, hit.created_at, duplicate_urls),
     [duplicate_urls, hit.created_at, hit.url],
   );
 
