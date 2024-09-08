@@ -26,7 +26,7 @@ export function AuthorsDialog({
         if (!o) onClose();
       }}
     >
-      <DialogContent className="max-w-[min(1500px,_90vw)]">
+      <DialogContent /* className="max-w-[min(1500px,_90vw)]" */>
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
           <DialogDescription>
