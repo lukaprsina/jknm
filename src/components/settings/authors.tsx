@@ -10,8 +10,7 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 import React from "react";
-import { AuthorsTable } from "./authors-table";
-import { DataTableDemo } from "./authors-data-table";
+import { AuthorsDataTable } from "./authors-data-table";
 
 export function AuthorsDialog({
   open,
@@ -34,8 +33,7 @@ export function AuthorsDialog({
             Make changes to your profile here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
-        {/* <AuthorsTable /> */}
-        <DataTableDemo />
+        <AuthorsDataTable />
         <DialogFooter>
           <Button type="submit">Save changes</Button>
         </DialogFooter>
