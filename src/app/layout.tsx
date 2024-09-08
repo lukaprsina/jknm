@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { TRPCReactProvider } from "~/trpc/react";
-import { api, HydrateClient } from "~/trpc/server";
+import { HydrateClient } from "~/trpc/server";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { Toaster } from "~/components/ui/toaster";
 import { cn } from "~/lib/utils";

@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, SettingsIcon, Users } from "lucide-react";
+import { LogOut, SettingsIcon, UsersIcon } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -14,45 +14,50 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { AuthorsDialog } from "./authors";
+import { useState } from "react";
 
 export function SettingsDropdown() {
   const router = useRouter();
+  const [authorDialogOpen, setAuthorDialogOpen] = useState(false);
 
   return (
-    <DropdownMenu>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <SettingsIcon size={22} className="" />
-            </Button>
-          </DropdownMenuTrigger>
-        </TooltipTrigger>
-        <TooltipContent>Nastavitve</TooltipContent>
-      </Tooltip>
-      <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>Nastavitve</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => {
-            console.log("Avtorji");
-          }}
-        >
-          <Users className="mr-2 h-4 w-4" />
-          <span>Avtorji</span>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={async () => {
-            await signOut();
-            router.push("/");
-          }}
-        >
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>Odjava</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <SettingsIcon size={22} className="" />
+              </Button>
+            </DropdownMenuTrigger>
+          </TooltipTrigger>
+          <TooltipContent>Nastavitve</TooltipContent>
+        </Tooltip>
+        <DropdownMenuContent className="w-56">
+          <DropdownMenuLabel>Nastavitve</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => setAuthorDialogOpen(true)}>
+            <UsersIcon className="mr-2 h-4 w-4" />
+            <span>Avtorji</span>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={async () => {
+              await signOut();
+              router.push("/");
+            }}
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            <span>Odjava</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <AuthorsDialog
+        open={authorDialogOpen}
+        onClose={() => setAuthorDialogOpen(false)}
+      />
+    </>
   );
 }
 
