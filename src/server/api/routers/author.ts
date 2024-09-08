@@ -3,14 +3,52 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import type { JWTInput } from "google-auth-library";
 import { google } from "googleapis";
 import { Author } from "~/server/db/schema";
+import { z } from "zod";
+import { and, eq, inArray } from "drizzle-orm";
 
 export const author_router = createTRPCRouter({
-  get_all: publicProcedure.query(async ({ ctx }) => {
-    console.error(
-      "AAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBBBBBBBB: getting all authors",
-    );
-    return await ctx.db.query.Author.findMany();
-  }),
+  get_all: publicProcedure
+    .input(z.enum(["member", "guest"]).optional())
+    .query(async ({ ctx, input }) => {
+      return input
+        ? await ctx.db.query.Author.findMany({
+            where: eq(Author.author_type, input),
+          })
+        : await ctx.db.query.Author.findMany();
+    }),
+
+  insert_guest: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db
+        .insert(Author)
+        .values({
+          author_type: "guest",
+          name: input,
+        })
+        .returning();
+    }),
+
+  delete_guests: protectedProcedure
+    .input(z.object({ ids: z.array(z.number()) }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db
+        .delete(Author)
+        .where(
+          and(eq(Author.author_type, "guest"), inArray(Author.id, input.ids)),
+        )
+        .returning();
+    }),
+
+  rename_guest: protectedProcedure
+    .input(z.object({ id: z.number(), name: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db
+        .update(Author)
+        .set({ name: input.name })
+        .where(eq(Author.id, input.id))
+        .returning();
+    }),
 
   sync_with_google: protectedProcedure.query(async ({ ctx }) => {
     const credentials = env.JKNM_SERVICE_ACCOUNT_CREDENTIALS;

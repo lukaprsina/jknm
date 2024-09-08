@@ -14,12 +14,13 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { AuthorsDialog } from "./authors";
-import { useState } from "react";
+import Link from "next/link";
+// import { AuthorsDialog } from "./authors";
+// import { useState } from "react";
 
 export function SettingsDropdown() {
   const router = useRouter();
-  const [authorDialogOpen, setAuthorDialogOpen] = useState(false);
+  // const [authorDialogOpen, setAuthorDialogOpen] = useState(false);
 
   return (
     <>
@@ -37,9 +38,13 @@ export function SettingsDropdown() {
         <DropdownMenuContent className="w-56">
           <DropdownMenuLabel>Nastavitve</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setAuthorDialogOpen(true)}>
-            <UsersIcon className="mr-2 h-4 w-4" />
-            <span>Avtorji</span>
+          <DropdownMenuItem
+            asChild /* onClick={() => setAuthorDialogOpen(true)} */
+          >
+            <Link href="/avtorji">
+              <UsersIcon className="mr-2 h-4 w-4" />
+              <span>Avtorji</span>
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -53,10 +58,10 @@ export function SettingsDropdown() {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <AuthorsDialog
+      {/* <AuthorsDialog
         open={authorDialogOpen}
         onClose={() => setAuthorDialogOpen(false)}
-      />
+      /> */}
     </>
   );
 }

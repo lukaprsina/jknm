@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type {
   ColumnDef,
   PaginationState,
@@ -28,11 +28,11 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { useAllAuthors } from "../authors";
 import {
   AuthorsTableCellButtons,
   AuthorsTableHeaderButtons,
 } from "./authors-table-buttons";
+import { api } from "~/trpc/react";
 
 export interface GuestAuthor {
   id: number;
@@ -128,16 +128,10 @@ export function AuthorsDataTable() {
     pageSize: 8,
   });
 
-  const all_authors = useAllAuthors();
-
-  const data = useMemo(() => {
-    if (!all_authors) return [];
-
-    return all_authors.filter((author) => author.author_type === "guest");
-  }, [all_authors]);
+  const guest_authors = api.author.get_all.useQuery("guest");
 
   const table = useReactTable({
-    data,
+    data: guest_authors.data ?? [],
     columns,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
@@ -169,7 +163,7 @@ export function AuthorsDataTable() {
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
         />
-        <AuthorsTableHeaderButtons />
+        <AuthorsTableHeaderButtons rows={table.getSelectedRowModel().rows} />
       </div>
       <div className="rounded-md border">
         <Table>
@@ -237,7 +231,7 @@ export function AuthorsDataTable() {
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Prejšnja
+            Prejšnja stran
           </Button>
           <Button
             variant="outline"
@@ -245,7 +239,7 @@ export function AuthorsDataTable() {
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Naslednja
+            Naslednja stran
           </Button>
         </div>
       </div>

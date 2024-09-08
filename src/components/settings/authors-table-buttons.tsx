@@ -21,8 +21,14 @@ import {
 import type { GuestAuthor } from "./authors-table";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import type { Row } from "@tanstack/react-table";
+import { useMemo } from "react";
+import { api } from "~/trpc/react";
 
 export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
+  const rename_guest = api.author.rename_guest.useMutation();
+  const delete_guests = api.author.delete_guests.useMutation();
+
   return (
     <div className="flex gap-1">
       <Dialog>
@@ -60,11 +66,11 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Izbrišite avtorja</AlertDialogTitle>
-            <AlertDialogDescription>
-              Ste prepričani, da želite zbrisati avtorja z imenom{" "}
-              <strong>{author.name}</strong>?
-            </AlertDialogDescription>
           </AlertDialogHeader>
+          <span>
+            Ste prepričani, da želite izbrisati avtorja z imenom{" "}
+            <b>{author.name}</b>?
+          </span>
           <AlertDialogFooter>
             <AlertDialogCancel>Ne zbriši</AlertDialogCancel>
             <Button type="submit">Izbriši</Button>
@@ -75,7 +81,36 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
   );
 }
 
-export function AuthorsTableHeaderButtons() {
+export function AuthorsTableHeaderButtons({
+  rows,
+}: {
+  rows: Row<GuestAuthor>[];
+}) {
+  const message = useMemo(() => {
+    const length = rows.length;
+    console.log({ length });
+    if (length === 0)
+      return "Najprej izberite avtorje, ki jih želite izbrisati.";
+
+    let sklon: React.ReactNode | undefined = undefined;
+    if (length === 1) {
+      const name = rows[0]?.original.name;
+      sklon = (
+        <>
+          avtorja z imenom <b>{name}</b>
+        </>
+      );
+    } else if (length === 2) {
+      sklon = <b>{length} avtorja</b>;
+    } else if (length === 3 || length === 4) {
+      sklon = <b>{length} avtorje</b>;
+    } else {
+      sklon = <b>{length} avtorjev</b>;
+    }
+
+    return <span>Ste prepričani, da želite izbrisati {sklon}?</span>;
+  }, [rows]);
+
   return (
     <div className="flex flex-grow gap-1">
       <Dialog>
@@ -115,12 +150,12 @@ export function AuthorsTableHeaderButtons() {
             <AlertDialogTitle>Izbrišite izbrane avtorje</AlertDialogTitle>
             <AlertDialogDescription></AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogContent>
-            Ste prepričani, da želite izbrisati izbrane avtorje?
-          </AlertDialogContent>
+          {message}
           <AlertDialogFooter>
-            <AlertDialogCancel>Ne zbriši</AlertDialogCancel>
-            <Button type="submit">Izbriši</Button>
+            <AlertDialogCancel>
+              {rows.length === 0 ? "Nazaj" : "Ne izbriši"}
+            </AlertDialogCancel>
+            {rows.length !== 0 && <Button type="submit">Izbriši</Button>}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
