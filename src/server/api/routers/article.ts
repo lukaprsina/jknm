@@ -47,10 +47,11 @@ export const article_router = createTRPCRouter({
       };
     }),
 
+  get_all_drafts: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.DraftArticle.findMany();
+  }),
+
   get_duplicate_urls: publicProcedure.query(async ({ ctx }) => {
-    console.error(
-      "AAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBBBBBBBB: getting duplicate urls",
-    );
     const urls = await ctx.db.query.DuplicatedArticleUrls.findMany();
     return urls.map((data) => data.url);
   }),
@@ -84,6 +85,14 @@ export const article_router = createTRPCRouter({
           ),
         });
       }
+    }),
+
+  get_draft_by_id: publicProcedure
+    .input(z.number())
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.query.DraftArticle.findFirst({
+        where: eq(DraftArticle.id, input),
+      });
     }),
 
   create_draft: protectedProcedure

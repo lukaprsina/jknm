@@ -12,9 +12,13 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@acme/ui/alert-dialog";
-import { Button } from "@acme/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@acme/ui/tooltip";
+} from "~/components/ui/alert-dialog";
+import { Button } from "~/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 
 import { useEditor } from "~/components/editor-context";
 import { editor_store } from "./editor-store";

@@ -15,4 +15,8 @@ export const article_variants = cva(
   },
 );
 
+export const article_grid_variants = cva(
+  "grid grid-cols-1 gap-6 px-4 py-8 md:grid-cols-2 md:px-6 lg:grid-cols-3 lg:px-8",
+);
+
 export const page_variants = cva("container h-full w-full pb-6 pt-8");

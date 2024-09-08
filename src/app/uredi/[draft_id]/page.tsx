@@ -1,21 +1,17 @@
 import dynamic from "next/dynamic";
 
-import { cn } from "@acme/ui";
-import { Button } from "@acme/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@acme/ui/card";
+import { Button } from "~/components/ui/button";
+import { CardContent, CardFooter } from "~/components/ui/card";
 
 import NewArticleLoader from "~/components/new-article-loader";
 import { Shell } from "~/components/shell";
 import { article_variants, page_variants } from "~/lib/page-variants";
 import { api } from "~/trpc/server";
-import { get_clean_url } from "./editor-utils";
+import { InfoCard } from "~/components/info-card";
+import { cn } from "~/lib/utils";
+import { convert_title_to_url } from "~/lib/article-utils";
+import { getServerAuthSession } from "~/server/auth";
+import { notFound } from "next/navigation";
 
 const Editor = dynamic(() => import("./editor"), {
   ssr: false,
@@ -27,40 +23,24 @@ interface EditorPageProps {
   };
 }
 
-function ErrorCard({ title }: { title: string }) {
-  return (
-    <Shell>
-      <div className={cn(article_variants(), page_variants())}>
-        <Card>
-          <CardHeader>
-            <CardTitle>{title}</CardTitle>
-          </CardHeader>
-        </Card>
-      </div>
-    </Shell>
-  );
-}
-
 export default async function EditorPage({
-  params: { novica_ime: novica_ime_raw },
+  params: { novica_ime },
 }: EditorPageProps) {
-  const novica_parts = decodeURIComponent(novica_ime_raw).split("-");
-  const novica_id_string = novica_parts[novica_parts.length - 1];
-  const novica_ime = novica_parts.slice(0, -1).join("-");
+  const session = await getServerAuthSession();
+  if (!session) return notFound();
 
-  /* if (!users) {
-    return <ErrorCard title="Napaka pri pridobivanju uporabnikov" />;
-  } */
+  const decoded = decodeURIComponent(novica_ime);
 
-  if (!novica_id_string) {
-    return <ErrorCard title="Napaka pri pridobivanju ID-ja novičke" />;
+  const novica_id = parseInt(decoded);
+  if (isNaN(novica_id)) {
+    return (
+      <Shell>
+        <InfoCard title="Napaka" description="Neveljaven URL novičke." />
+      </Shell>
+    );
   }
 
-  const novica_id = parseInt(novica_id_string);
-
-  const article_by_url = await api.article.by_id({
-    id: novica_id,
-  });
+  const article_by_url = await api.article.get_draft_by_id(novica_id);
 
   return (
     <Shell>
@@ -77,33 +57,27 @@ export default async function EditorPage({
 
 function CreateNewArticle({ novica_ime }: { novica_ime: string }) {
   return (
-    <>
-      <div className="flex h-full w-full items-center justify-center">
-        <Card className="max-w-2xl">
-          <CardHeader>
-            <CardTitle>
-              Novička <strong>{novica_ime}</strong> ne obstaja.
-            </CardTitle>
-            <CardDescription>
-              Preverite, če ste vnesli pravilno ime novičke.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            Lahko pa ustvarite novo novičko z imenom{" "}
-            <strong>{novica_ime}</strong>.
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button asChild variant="secondary">
-              <a href="/">Domov</a>
-            </Button>
-            <NewArticleLoader
-              title={novica_ime}
-              url={get_clean_url(novica_ime)}
-              children="Ustvari novico"
-            />
-          </CardFooter>
-        </Card>
-      </div>
-    </>
+    <InfoCard
+      title={
+        <span>
+          Novička <strong>{novica_ime}</strong> ne obstaja.
+        </span>
+      }
+      description="Preverite, če ste vnesli pravilno ime novičke."
+    >
+      <CardContent>
+        Lahko pa ustvarite novo novičko z imenom <strong>{novica_ime}</strong>.
+      </CardContent>
+      <CardFooter className="flex justify-between">
+        <Button asChild variant="secondary">
+          <a href="/">Domov</a>
+        </Button>
+        <NewArticleLoader
+          title={novica_ime}
+          url={convert_title_to_url(novica_ime)}
+          children="Ustvari novico"
+        />
+      </CardFooter>
+    </InfoCard>
   );
 }

@@ -4,8 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Button } from "@acme/ui/button";
-import { DateTimePicker } from "@acme/ui/date-time-picker";
+import { Button } from "~/components/ui/button";
+import { DateTimePicker } from "~/components/ui/date-time-picker";
 import {
   Form,
   FormControl,
@@ -14,7 +14,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@acme/ui/form";
+} from "~/components/ui/form";
 
 import { useEditor } from "~/components/editor-context";
 import { revalidate_next_tag } from "~/server/revalidate-next-tag";

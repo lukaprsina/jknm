@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Settings2Icon } from "lucide-react";
 
-import { Button } from "@acme/ui/button";
+import { Button } from "~/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,8 +11,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@acme/ui/dialog";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@acme/ui/tooltip";
+} from "~/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 
 import { useEditor } from "~/components/editor-context";
 import { SettingsForm } from "./settings-form";

@@ -8,6 +8,7 @@ import mime from "mime/lite";
 import sharp from "sharp";
 
 import { env } from "~/env";
+import { getServerAuthSession } from "~/server/auth";
 
 export interface FileUploadResponse {
   success: 0 | 1;
@@ -30,6 +31,9 @@ export interface FileUploadJSON {
 }
 
 export async function POST(request: NextRequest) {
+  const session = await getServerAuthSession();
+  if (!session) return NextResponse.error();
+
   const form_data = await request.formData();
 
   const directory = form_data.get("directory");

@@ -3,15 +3,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { PlusIcon } from "@radix-ui/react-icons";
 
-import { cn } from "@acme/ui";
-import { Card, CardContent } from "@acme/ui/card";
+import { cn } from "~/components/ui";
+import { Card, CardContent } from "~/components/ui/card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@acme/ui/carousel";
+} from "~/components/ui/carousel";
 
 import type { ImageUploadJSON } from "~/app/api/upload_file_to_s3/route";
 import { editor_store } from "./editor-store";

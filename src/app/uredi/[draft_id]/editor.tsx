@@ -10,7 +10,7 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 
 import type { Article } from "@acme/db/schema";
-import { cn } from "@acme/ui";
+import { cn } from "~/components/ui";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,10 +21,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@acme/ui/alert-dialog";
-import { Button } from "@acme/ui/button";
-import { MultiSelect } from "@acme/ui/multi-select";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@acme/ui/tooltip";
+} from "~/components/ui/alert-dialog";
+import { Button } from "~/components/ui/button";
+import { MultiSelect } from "~/components/ui/multi-select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 
 import { EditorProvider, useEditor } from "~/components/editor-context";
 import { api } from "~/trpc/react";
