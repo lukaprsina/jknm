@@ -31,7 +31,7 @@ import {
 import {
   AuthorsTableCellButtons,
   AuthorsTableHeaderButtons,
-} from "./authors-table-buttons";
+} from "./table-buttons";
 import { api } from "~/trpc/react";
 
 export interface GuestAuthor {

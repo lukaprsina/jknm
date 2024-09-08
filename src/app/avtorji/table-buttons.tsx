@@ -1,13 +1,19 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+"use client";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 import { PencilIcon, PlusIcon, TrashIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
+} from "~/components/ui/dialog";
 import {
   AlertDialogHeader,
   AlertDialogFooter,
@@ -15,23 +21,25 @@ import {
   AlertDialogTrigger,
   AlertDialogContent,
   AlertDialogTitle,
-  AlertDialogDescription,
   AlertDialogCancel,
-} from "../ui/alert-dialog";
-import type { GuestAuthor } from "./authors-table";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+  AlertDialogAction,
+} from "~/components/ui/alert-dialog";
+import type { GuestAuthor } from "./table";
+import { Button } from "~/components/ui/button";
 import type { Row } from "@tanstack/react-table";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { api } from "~/trpc/react";
+import { EditAuthorNameForm, InsertAuthorForm } from "./table-forms";
 
 export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
-  const rename_guest = api.author.rename_guest.useMutation();
   const delete_guests = api.author.delete_guests.useMutation();
+  const trpc_utils = api.useUtils();
+
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   return (
     <div className="flex gap-1">
-      <Dialog>
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <Tooltip>
           <TooltipTrigger asChild>
             <DialogTrigger asChild>
@@ -40,16 +48,17 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
               </Button>
             </DialogTrigger>
           </TooltipTrigger>
-          <TooltipContent>Uredi ime avtorja</TooltipContent>
+          <TooltipContent>Uredi ime in priimek avtorja</TooltipContent>
         </Tooltip>
-        <DialogContent>
+        <DialogContent aria-describedby="Uredi ime in priimek avtorja">
           <DialogHeader>
-            <DialogTitle>Uredi ime avtorja</DialogTitle>
+            <DialogTitle>Uredi ime in priimek avtorja</DialogTitle>
           </DialogHeader>
-          <Input value={author.name} />
-          <DialogFooter>
-            <Button type="submit">Shrani spremembe</Button>
-          </DialogFooter>
+          {/* HERE */}
+          <EditAuthorNameForm
+            close_dialog={() => setDialogOpen(false)}
+            author={author}
+          />
         </DialogContent>
       </Dialog>
       <AlertDialog>
@@ -63,7 +72,7 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
           </TooltipTrigger>
           <TooltipContent>Izbrišite avtorja</TooltipContent>
         </Tooltip>
-        <AlertDialogContent>
+        <AlertDialogContent aria-describedby="Izbrišite avtorja">
           <AlertDialogHeader>
             <AlertDialogTitle>Izbrišite avtorja</AlertDialogTitle>
           </AlertDialogHeader>
@@ -73,7 +82,15 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
           </span>
           <AlertDialogFooter>
             <AlertDialogCancel>Ne zbriši</AlertDialogCancel>
-            <Button type="submit">Izbriši</Button>
+            <AlertDialogAction
+              onClick={async () => {
+                delete_guests.mutate({ ids: [author.id] });
+                await trpc_utils.author.invalidate();
+                setDialogOpen(false);
+              }}
+            >
+              Izbriši
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -86,6 +103,9 @@ export function AuthorsTableHeaderButtons({
 }: {
   rows: Row<GuestAuthor>[];
 }) {
+  const trpc_utils = api.useUtils();
+  const delete_guests = api.author.delete_guests.useMutation();
+
   const message = useMemo(() => {
     const length = rows.length;
     console.log({ length });
@@ -127,11 +147,12 @@ export function AuthorsTableHeaderButtons({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Dodajte avtorja</DialogTitle>
+            <DialogDescription>
+              Dodajte samo avtorje, ki niso člani in niso v bazi Google Admin.
+            </DialogDescription>
           </DialogHeader>
-          <Input />
-          <DialogFooter>
-            <Button type="submit">Shranite avtorja</Button>
-          </DialogFooter>
+          {/* HERE */}
+          <InsertAuthorForm />
         </DialogContent>
       </Dialog>
       <AlertDialog>
@@ -146,16 +167,26 @@ export function AuthorsTableHeaderButtons({
           <TooltipContent>Izbrišite izbrane avtorje</TooltipContent>
         </Tooltip>
         <AlertDialogContent>
-          <AlertDialogHeader>
+          <AlertDialogHeader aria-describedby="Izbrišite izbrane avtorje">
             <AlertDialogTitle>Izbrišite izbrane avtorje</AlertDialogTitle>
-            <AlertDialogDescription></AlertDialogDescription>
           </AlertDialogHeader>
           {message}
           <AlertDialogFooter>
             <AlertDialogCancel>
               {rows.length === 0 ? "Nazaj" : "Ne izbriši"}
             </AlertDialogCancel>
-            {rows.length !== 0 && <Button type="submit">Izbriši</Button>}
+            {rows.length !== 0 && (
+              <AlertDialogAction
+                onClick={async () => {
+                  delete_guests.mutate({
+                    ids: rows.map((row) => row.original.id),
+                  });
+                  await trpc_utils.author.invalidate();
+                }}
+              >
+                Izbriši
+              </AlertDialogAction>
+            )}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

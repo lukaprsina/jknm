@@ -1,0 +1,17 @@
+/* .ce-block__content,
+.ce-block__content {
+  max-width: 1280px;
+} */
+
+.ce-block__content,
+.ce-toolbar__content {
+  max-width: calc(100% - 180px) !important;
+}
+
+.cdx-block {
+  max-width: 100% !important;
+}
+
+.ce-block__content {
+  @apply prose;
+}

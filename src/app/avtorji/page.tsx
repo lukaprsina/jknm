@@ -6,10 +6,7 @@ import { cn } from "~/lib/utils";
 import { getServerAuthSession } from "~/server/auth";
 
 const AuthorsDataTableDynamic = dynamic(
-  () =>
-    import("~/components/settings/authors-table").then(
-      (mod) => mod.AuthorsDataTable,
-    ),
+  () => import("~/app/avtorji/table").then((mod) => mod.AuthorsDataTable),
   {
     ssr: false,
   },
