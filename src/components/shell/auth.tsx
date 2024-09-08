@@ -1,12 +1,20 @@
 "use client";
 
-import { signIn, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { Button } from "../ui/button";
-
-export function SignIn() {
-  return <Button onClick={async () => await signIn("google")}>Admin</Button>;
-}
+import { useRouter } from "next/navigation";
 
 export function SignOut() {
-  return <Button onClick={async () => await signOut()}>Odjava</Button>;
+  const router = useRouter();
+
+  return (
+    <Button
+      onClick={async () => {
+        await signOut();
+        router.push("/");
+      }}
+    >
+      Odjava
+    </Button>
+  );
 }

@@ -60,16 +60,16 @@ export default async function NovicaPage({
   }
 
   return (
-    <Shell>
-      <PublishedArticleProvider article={article_by_url}>
+    <PublishedArticleProvider article={article_by_url}>
+      <Shell>
         {session ? (
           <TabbedContent article={article_by_url} />
         ) : (
           <PublishedContent article={article_by_url} />
         )}
         <ImageGallery />
-      </PublishedArticleProvider>
-    </Shell>
+      </Shell>
+    </PublishedArticleProvider>
   );
 }
 

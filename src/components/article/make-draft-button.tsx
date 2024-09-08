@@ -14,6 +14,7 @@ import type { ButtonProps } from "~/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 import { useAllAuthors } from "../authors";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export default function MakeDraftButton({
   title,
@@ -54,35 +55,40 @@ export default function MakeDraftButton({
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          {...props}
-          onClick={() => {
-            const article_title = title ?? "Nova novica";
-            const article_url = url ?? `nova-novica`;
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <PopoverTrigger asChild>
+            <Button
+              {...props}
+              onClick={() => {
+                const article_title = title ?? "Nova novica";
+                const article_url = url ?? `nova-novica`;
 
-            const template = {
-              blocks: [
-                {
-                  id: "sheNwCUP5A",
-                  type: "header",
-                  data: {
-                    text: article_title,
-                    level: 1,
-                  },
-                },
-              ],
-            };
+                const template = {
+                  blocks: [
+                    {
+                      id: "sheNwCUP5A",
+                      type: "header",
+                      data: {
+                        text: article_title,
+                        level: 1,
+                      },
+                    },
+                  ],
+                };
 
-            article_create.mutate({
-              title: article_title,
-              preview_image: "",
-              content: template,
-              updated_at: new Date(),
-            });
-          }}
-        />
-      </PopoverTrigger>
+                article_create.mutate({
+                  title: article_title,
+                  preview_image: "",
+                  content: template,
+                  updated_at: new Date(),
+                });
+              }}
+            />
+          </PopoverTrigger>
+        </TooltipTrigger>
+        <TooltipContent>Ustvari novico</TooltipContent>
+      </Tooltip>
       <PopoverContent className="relative z-[150] mx-6 w-80">
         <Card>
           <CardHeader>

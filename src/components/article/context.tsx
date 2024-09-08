@@ -14,9 +14,9 @@ interface PublishedArticleProviderProps {
 
 export const PublishedArticleProvider: React.FC<
   PublishedArticleProviderProps
-> = ({ article: published_article, children }) => {
+> = ({ article, children }) => {
   return (
-    <PublishedArticleContext.Provider value={published_article}>
+    <PublishedArticleContext.Provider value={article}>
       {children}
     </PublishedArticleContext.Provider>
   );

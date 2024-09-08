@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { Button, buttonVariants } from "~/components/ui/button";
+import { buttonVariants } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { getServerAuthSession } from "~/server/auth";
-import { SignIn, SignOut } from "./auth";
+import { SignOut } from "./auth";
 
 export async function Footer() {
   const session = await getServerAuthSession();
@@ -21,9 +21,7 @@ export async function Footer() {
                 <SignOut />
               </>
             ) : (
-              // <Button onClick={async () => await signOut()}>Odjava</Button>
               <>
-                {/* <SignIn /> */}
                 <Link
                   href="/prijava"
                   className={buttonVariants({ variant: "link" })}

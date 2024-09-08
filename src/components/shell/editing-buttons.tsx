@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PencilIcon, PlusIcon } from "lucide-react";
 
@@ -15,8 +15,9 @@ import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from "@radix-ui/react-tooltip";
+} from "~/components/ui/tooltip";
 import { useAllAuthors } from "../authors";
+import { SettingsDropdown } from "../settings";
 
 export default function EditingButtons({
   session,
@@ -24,6 +25,10 @@ export default function EditingButtons({
   session: Session | null;
 }) {
   const article = useContext(PublishedArticleContext);
+
+  useEffect(() => {
+    console.log("EditingButtons", { article });
+  });
 
   if (!session) return null;
 
@@ -46,6 +51,7 @@ export default function EditingButtons({
       >
         <PlusIcon size={24} />
       </MakeDraftButton>
+      <SettingsDropdown />
     </>
   );
 }
