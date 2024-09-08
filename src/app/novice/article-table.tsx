@@ -184,7 +184,7 @@ function DeleteDialog({ article_id }: { article_id: number }) {
         <TooltipTrigger asChild>
           <AlertDialogTrigger asChild>
             <Button variant="outline" size="icon">
-              <TrashIcon size={20} />
+              <TrashIcon size={18} />
             </Button>
           </AlertDialogTrigger>
         </TooltipTrigger>

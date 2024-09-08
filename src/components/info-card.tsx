@@ -4,7 +4,7 @@ import {
   CardTitle,
   CardDescription,
 } from "~/components/ui/card";
-import { page_variants } from "~/lib/page-variants";
+import { article_variants, page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
 
 export function InfoCard({
@@ -20,6 +20,7 @@ export function InfoCard({
     <div
       className={cn(
         page_variants(),
+        article_variants(),
         "flex min-h-screen items-center justify-center",
       )}
     >

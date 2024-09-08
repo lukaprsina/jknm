@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 import React from "react";
-import { AuthorsDataTable } from "./authors-data-table";
+import { AuthorsDataTable } from "./authors-table";
 
 export function AuthorsDialog({
   open,
@@ -28,14 +28,14 @@ export function AuthorsDialog({
     >
       <DialogContent /* className="max-w-[min(1500px,_90vw)]" */>
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
+          <DialogTitle>Uredi avtorje</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+            Urejate lahko samo gostujoče avtorje, ki niso dodani v Google Admin.
           </DialogDescription>
         </DialogHeader>
         <AuthorsDataTable />
         <DialogFooter>
-          <Button type="submit">Save changes</Button>
+          <Button type="submit">Shrani spremembe</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

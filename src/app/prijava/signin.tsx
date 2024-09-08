@@ -4,10 +4,11 @@ import type { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import { InfoCard } from "~/components/info-card";
-import { Shell } from "~/components/shell";
 import { Logo } from "~/components/shell/logo";
-import { Button } from "~/components/ui/button";
-import { CardContent } from "~/components/ui/card";
+import { Button, buttonVariants } from "~/components/ui/button";
+import { CardFooter } from "~/components/ui/card";
+import { article_variants } from "~/lib/page-variants";
+import { cn } from "~/lib/utils";
 
 export default function SignIn({ session }: { session: Session | null }) {
   if (!session) {
@@ -19,7 +20,7 @@ export default function SignIn({ session }: { session: Session | null }) {
             <Logo />
           </div>
         </div>
-        <div className="lg:p-8">
+        <div className={cn("lg:p-8", article_variants())}>
           <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
             <div className="flex flex-col space-y-2 text-center">
               <h1 className="text-2xl font-semibold tracking-tight">Prijava</h1>
@@ -30,6 +31,11 @@ export default function SignIn({ session }: { session: Session | null }) {
             <div className="w-full text-center">
               <GoogleSignInButton />
             </div>
+            <div className="w-full text-center">
+              <Link href="/" className="text-sm">
+                Nazaj na domačo stran
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -38,19 +44,16 @@ export default function SignIn({ session }: { session: Session | null }) {
 
   return (
     <>
-      <InfoCard title="Prijavljeni ste">
-        <CardContent className="flex items-baseline gap-2">
-          Lahko se odjavite.
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={async () => await signOut()}
-          >
+      <InfoCard title="Prijavljeni ste" description="Lahko se odjavite.">
+        <CardFooter className="flex items-baseline gap-2 pt-4">
+          <Button variant="secondary" onClick={async () => await signOut()}>
             Odjava
           </Button>
-        </CardContent>
+          <Link href="/" className={cn(buttonVariants(), "no-underline")}>
+            Nazaj na domačo stran
+          </Link>
+        </CardFooter>
       </InfoCard>
-      <Button onClick={async () => await signOut()}>Odjava</Button>
     </>
   );
 }
@@ -60,7 +63,7 @@ function GoogleSignInButton() {
     <button
       className="gsi-material-button"
       onClick={async () => {
-        await signIn("google");
+        await signIn("google", { callbackUrl: "/" });
       }}
     >
       <div className="gsi-material-button-state"></div>
