@@ -1,3 +1,5 @@
 mobile visual bug
 26 custom avtorjev pred novimi novicami
 icon links: vercel accesibility, https://kittygiraudel.com/2020/12/10/accessible-icon-links/
+
+publish is field in save trpc api

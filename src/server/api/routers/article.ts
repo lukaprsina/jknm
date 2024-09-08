@@ -100,6 +100,13 @@ export const article_router = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await ctx.db.query.DraftArticle.findFirst({
         where: eq(DraftArticle.id, input),
+        with: {
+          draft_articles_to_authors: {
+            with: {
+              author: true,
+            },
+          },
+        },
       });
     }),
 

@@ -1,8 +1,9 @@
+// https://github.com/sersavan/shadcn-multi-select-component
 import * as React from "react";
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
+import type { VariantProps } from "class-variance-authority";
 import { CheckIcon, XCircle, ChevronDown, XIcon } from "lucide-react";
 
-import { cn } from "~/lib/utils";
 import { Separator } from "~/components/ui/separator";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
@@ -20,6 +21,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "~/components/ui/command";
+import { cn } from "~/lib/utils";
 
 /**
  * Variants for the multi-select component to handle different styles.
@@ -211,7 +213,7 @@ export const MultiSelect = React.forwardRef<
                       <Badge
                         key={value}
                         className={cn(
-                          //   isAnimating ? "animate-bounce" : "",
+                          // isAnimating ? "animate-bounce" : "",
                           multiSelectVariants({ variant }),
                         )}
                         style={{ animationDuration: `${animation}s` }}
@@ -237,7 +239,7 @@ export const MultiSelect = React.forwardRef<
                         // isAnimating ? "animate-bounce" : "",
                         multiSelectVariants({ variant }),
                       )}
-                      //   style={{ animationDuration: `${animation}s` }}
+                      style={{ animationDuration: `${animation}s` }}
                     >
                       {`+ ${selectedValues.length - maxCount} more`}
                       <XCircle

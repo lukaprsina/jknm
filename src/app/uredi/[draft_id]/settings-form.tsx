@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "~/components/ui/button";
-import { DateTimePicker } from "~/components/ui/date-time-picker";
 import {
   Form,
   FormControl,
@@ -16,10 +15,9 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 
-import { useEditor } from "~/components/editor-context";
-import { revalidate_next_tag } from "~/server/revalidate-next-tag";
-import { editor_store } from "./editor-store";
-import { ImageCarousel } from "./image-carousel";
+import { editor_store } from "~/components/editor/editor-store";
+import { useEditor } from "~/components/editor/editor-context";
+import { DateTimePicker } from "~/components/date-time-picker";
 
 export const form_schema = z.object({
   /* TODO: message to all zod fields
@@ -58,14 +56,15 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
                 Izberite naslovno sliko za novičko.
               </FormDescription>
               <FormControl>
-                <ImageCarousel
+                {/* TODO */}
+                {/* <ImageCarousel
                   onImageUrlChange={(value) => {
                     console.log("onImageUrlChange", value);
                     field.onChange(value);
                     editor_store.set.preview_image(value);
                   }}
                   imageUrl={field.value}
-                />
+                /> */}
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -102,7 +101,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
                   editor_store.get.custom_author_names(),
                 );
 
-                editor.mutations.publish({
+                /* editor.mutations.publish({
                   id: editor.article.id,
                   created_at: values.created_at,
                   title: editor_store.get.title(),
@@ -111,7 +110,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
                   content: editor_content,
                   author_ids: editor_store.get.google_ids(),
                   custom_author_names: editor_store.get.custom_author_names(),
-                });
+                }); */
 
                 closeDialog();
               },
@@ -119,12 +118,6 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
             variant="secondary"
           >
             Objavi spremembe
-          </Button>
-          <Button
-            onClick={async () => await revalidate_next_tag("get_users")}
-            variant="secondary"
-          >
-            Osveži seznam avtorjev
           </Button>
           {editor.article?.published ? (
             <Button
@@ -134,9 +127,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
                   return;
                 }
 
-                editor.mutations.unpublish({
-                  id: editor.article.id,
-                });
+                editor.mutations.unpublish(editor.article.id);
 
                 closeDialog();
               })}
@@ -152,7 +143,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
                 return;
               }
 
-              editor.mutations.delete_by_id(editor.article.id);
+              editor.mutations.delete_both(editor.article.id);
 
               closeDialog();
             })}
@@ -171,11 +162,11 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
 
                 const editor_content = await editor.editor?.save();
 
-                editor.mutations.save_draft({
+                /* editor.mutations.save_draft({
                   id: editor.article.id,
-                  draft_content: editor_content,
-                  draft_preview_image: values.preview_image ?? "",
-                });
+                  content: editor_content,
+                  preview_image: values.preview_image ?? "",
+                }); */
 
                 closeDialog();
               },

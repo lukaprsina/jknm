@@ -19,9 +19,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-
-import { useEditor } from "~/components/editor-context";
-import { editor_store } from "./editor-store";
+import { useEditor } from "~/components/editor/editor-context";
+import { update_settings_from_editor } from "~/components/editor/editor-lib";
+import { editor_store } from "~/components/editor/editor-store";
 
 export function UploadDialog() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -37,9 +37,9 @@ export function UploadDialog() {
           <Button
             onClick={async () => {
               const editor_content = await editor.editor?.save();
-              if (!editor_content) return;
+              if (!editor.article || !editor_content) return;
 
-              editor.update_settings_from_editor(editor_content);
+              update_settings_from_editor(editor.article, editor_content);
               setDialogOpen(true);
             }}
             size="icon"
@@ -74,7 +74,8 @@ export function UploadDialog() {
                 editor_store.get.google_ids(),
                 editor_store.get.custom_author_names(),
               );
-              editor.mutations.publish({
+              // TODO
+              /* editor.mutations.publish({
                 id: editor.article.id,
                 created_at: editor.article.created_at,
                 content: editor_content,
@@ -83,7 +84,7 @@ export function UploadDialog() {
                 preview_image: editor_store.get.preview_image() ?? "",
                 author_ids: editor_store.get.google_ids(),
                 custom_author_names: editor_store.get.custom_author_names(),
-              });
+              }); */
             }}
           >
             Objavi

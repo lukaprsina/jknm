@@ -18,8 +18,8 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 
-import { useEditor } from "~/components/editor-context";
 import { SettingsForm } from "./settings-form";
+import { useEditor } from "~/components/editor/editor-context";
 
 export function SettingsDialog() {
   const [dialogOpen, setDialogOpen] = useState(false);

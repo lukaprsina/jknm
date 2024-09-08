@@ -21,24 +21,27 @@ import Undo from "editorjs-undo";
 
 import { content_to_text } from "~/lib/content-to-text";
 import { api } from "~/trpc/react";
-import type { DraftArticle } from "~/server/db/schema";
 import { editor_store } from "./editor-store";
 import { EDITOR_JS_PLUGINS } from "./plugins";
-import { Button } from "../ui/button";
 import { useToast } from "~/hooks/use-toast";
 import {
   convert_title_to_url,
   get_published_article_link,
 } from "~/lib/article-utils";
-import {
-  get_heading_from_editor,
-  get_image_data_from_editor,
-} from "~/lib/editor-utils";
+import { get_heading_from_editor } from "~/lib/editor-utils";
 import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
+import type { DraftArticleWithAuthors } from "../article/card-adapter";
+import { NoHeadingButton, WrongHeadingButton } from "./editor-buttons";
+import {
+  NO_CONTENT_EDITOR_VALUE,
+  rename_file,
+  rename_files_in_editor,
+  update_settings_from_editor,
+} from "./editor-lib";
 
 export interface EditorContextType {
   editor?: EditorJS;
-  article?: typeof DraftArticle.$inferSelect;
+  article?: DraftArticleWithAuthors;
   configure_article_before_publish: () => Promise<OutputData | undefined>;
   savingText: string | undefined;
   setSavingText: (value: string | undefined) => void;
@@ -65,12 +68,12 @@ export const useEditor = () => {
 
 interface EditorProviderProps {
   children: ReactNode;
-  draft_article: typeof DraftArticle.$inferSelect;
+  article: DraftArticleWithAuthors;
 }
 
 export const EditorProvider: React.FC<EditorProviderProps> = ({
   children,
-  draft_article: article,
+  article,
 }: EditorProviderProps) => {
   const router = useRouter();
   const [savingText, setSavingText] = useState<string | undefined>();
@@ -107,18 +110,6 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       tools: EDITOR_JS_PLUGINS(),
       data: content,
       inlineToolbar: true,
-      /* inlineToolbar: [
-        // "convert-to",
-        // "separator",
-        "bold",
-        "italic",
-        "underline",
-        // "separator",
-        "link",
-        "inline-code",
-        "marker",
-      ], */
-      // inlineToolbar: ["convert-to", "bold", "italic", "underline"],
       autofocus: true,
       onReady: () => {
         setTimeout(() => {
@@ -232,59 +223,6 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       if (!content_preview) {
         console.error("No content preview", returned_data);
       }
-
-      /* await update_algolia_article({
-        objectID: returned_data.id.toString(),
-        title: returned_data.title,
-        url: returned_data.url,
-        created_at: returned_data.created_at.getTime(),
-        year: returned_data.created_at.getFullYear().toString(),
-        content_preview,
-        published: true,
-        image: returned_data.preview_image ?? undefined,
-        author_ids: get_author_names(returned_data, all_authors.data),
-      }); */
-
-      // TODO use the old id
-      /* const old_article_url = `${get_clean_url(article.url)}-${article.id}`;
-      const new_article_url = `${get_clean_url(returned_data.url)}-${returned_data.id}`;
-
-      console.log("Renaming S3 directory", {
-        old_article_url,
-        new_article_url,
-        article,
-        returned_data,
-      });
-
-      if (old_article_url !== new_article_url) {
-        await rename_s3_directory(old_article_url, new_article_url);
-      }
-
-      const editor_content = await editorJS.current.save();
-      const image_data = get_image_data_from_editor(editor_content);
-      const file_data = get_file_data_from_editor(editor_content);
-      const urls_to_keep = image_data.map((image) => image.file.url);
-      urls_to_keep.push(...file_data.map((file) => file.file.url));
-
-      if (returned_data.preview_image)
-        urls_to_keep.push(returned_data.preview_image);
-
-      if (returned_data.draft_preview_image)
-        urls_to_keep.push(returned_data.draft_preview_image);
-
-      const spliced_urls = urls_to_keep.map((image_url) => {
-        // get the last part of the url
-        const parts = image_url.split("/");
-        const filename = parts.slice(-1).join("/");
-        return decodeURIComponent(filename);
-      });
-
-      console.log("Cleaning S3 directory", {
-        new_article_url,
-        spliced_urls,
-      });
-
-      await clean_s3_directory(new_article_url, spliced_urls); */
 
       setSavingText(undefined);
       setDirty(false);
@@ -410,120 +348,4 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       {children}
     </EditorContext.Provider>
   );
-};
-
-function NoHeadingButton({ editor }: { editor: EditorJS }) {
-  return (
-    <Button
-      onClick={() => {
-        editor.blocks.insert(
-          "header",
-          { text: "Neimenovana novica", level: 1 },
-          undefined,
-          0,
-          true,
-          false,
-        );
-      }}
-    >
-      Dodaj naslov
-    </Button>
-  );
-}
-
-function WrongHeadingButton({
-  editor,
-  title,
-}: {
-  editor: EditorJS;
-  title?: string;
-}) {
-  return (
-    <Button
-      onClick={() => {
-        editor.blocks.insert(
-          "header",
-          { text: title ?? "Neimenovana novica", level: 1 },
-          undefined,
-          0,
-          true,
-          true,
-        );
-      }}
-    >
-      Popravi naslov
-    </Button>
-  );
-}
-
-/* url?: string */
-function update_settings_from_editor(
-  article: typeof DraftArticle.$inferSelect,
-  editor_content: OutputData,
-  title?: string,
-) {
-  const image_data = get_image_data_from_editor(editor_content);
-  const preview_image = editor_store.get.preview_image();
-
-  editor_store.set.state((draft) => {
-    if (!preview_image) {
-      if (article.preview_image) {
-        draft.preview_image = article.preview_image;
-      } else {
-        draft.preview_image = image_data.at(0)?.file.url;
-      }
-    }
-
-    draft.image_data = image_data;
-    draft.id = article.id;
-    draft.image_data = image_data;
-    if (typeof title !== "undefined") draft.title = title;
-    //  if (typeof url !== "undefined") draft.url = url;
-
-    // TODO
-    // draft.google_ids = article.author_ids ?? [];
-    // draft.custom_author_names = article.custom_author_names ?? [];
-  });
-}
-
-function rename_files_in_editor(editor_content: OutputData, new_dir: string) {
-  console.log("Renaming files in editor", { editor_content, new_dir });
-
-  for (const block of editor_content.blocks) {
-    if (!block.id || !["image", "attaches"].includes(block.type)) {
-      console.log("Skipping block", block.type);
-      continue;
-    }
-
-    const file_data = block.data as { file: { url: string } };
-    const new_url = rename_file(file_data.file.url, new_dir);
-    console.log("Renamed file", { old_url: file_data.file.url, new_url });
-    file_data.file.url = new_url;
-  }
-}
-
-function rename_file(old_url: string, new_dir: string) {
-  const url_parts = new URL(old_url);
-  const file_name = url_parts.pathname.split("/").pop();
-  if (!file_name) {
-    console.error("No name in URL", old_url);
-    return old_url;
-  }
-
-  const new_url = `${url_parts.protocol}//${url_parts.hostname}/${new_dir}/${file_name}`;
-  return new_url;
-}
-
-const NO_CONTENT_EDITOR_VALUE = {
-  time: Date.now(),
-  blocks: [
-    {
-      id: "sheNwCUP5A",
-      type: "header",
-      data: {
-        text: "Napaka: ne najdem vsebine",
-        level: 1,
-      },
-    },
-  ],
 };
