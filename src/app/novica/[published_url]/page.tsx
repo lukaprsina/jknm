@@ -14,11 +14,11 @@ import { article_variants, page_variants } from "~/lib/page-variants";
 import { api } from "~/trpc/server";
 import { ImageGallery } from "./image-gallery";
 import { getServerAuthSession } from "~/server/auth";
-import { PublishedArticleProvider } from "~/components/article/context";
 import { cn } from "~/lib/utils";
 import { EditorToReact } from "~/components/editor/editor-to-react";
 import type { PublishedArticle } from "~/server/db/schema";
 import { read_date_from_url } from "~/lib/format-date";
+import { PublishedArticleContext } from "~/components/article/context";
 
 interface NovicaProps {
   params: {
@@ -60,7 +60,7 @@ export default async function NovicaPage({
   }
 
   return (
-    <PublishedArticleProvider article={article_by_url}>
+    <PublishedArticleContext.Provider value={article_by_url}>
       <Shell>
         {session ? (
           <TabbedContent article={article_by_url} />
@@ -69,7 +69,7 @@ export default async function NovicaPage({
         )}
         <ImageGallery />
       </Shell>
-    </PublishedArticleProvider>
+    </PublishedArticleContext.Provider>
   );
 }
 

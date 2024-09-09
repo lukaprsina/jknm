@@ -80,6 +80,11 @@ export const article_router = createTRPCRouter({
       if (typeof input.created_at === "undefined") {
         return await ctx.db.query.PublishedArticle.findFirst({
           where: eq(PublishedArticle.url, input.url),
+          with: {
+            published_articles_to_authors: {
+              with: { author: true },
+            },
+          },
         });
       } else {
         const beggining_of_day = new Date(input.created_at);
@@ -92,6 +97,11 @@ export const article_router = createTRPCRouter({
             eq(PublishedArticle.url, input.url),
             between(PublishedArticle.created_at, beggining_of_day, end_of_day),
           ),
+          with: {
+            published_articles_to_authors: {
+              with: { author: true },
+            },
+          },
         });
       }
     }),

@@ -6,7 +6,6 @@ import { PencilIcon, PlusIcon } from "lucide-react";
 
 import { content_to_text } from "~/lib/content-to-text";
 import { api } from "~/trpc/react";
-import PublishedArticleContext from "../article/context";
 import type { Session } from "next-auth";
 import MakeDraftButton from "../article/make-draft-button";
 import { Button } from "~/components/ui/button";
@@ -18,6 +17,7 @@ import {
 } from "~/components/ui/tooltip";
 import { useAllAuthors } from "../authors";
 import { SettingsDropdown } from "../settings";
+import { PublishedArticleContext } from "../article/context";
 
 export default function EditingButtons({
   session,
