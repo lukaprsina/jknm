@@ -4,6 +4,7 @@ import type { Hit as SearchHit } from "instantsearch.js";
 import type {
   Author,
   DraftArticle,
+  DraftArticlesToAuthors,
   PublishedArticle,
   PublishedArticlesToAuthors,
 } from "~/server/db/schema";
@@ -20,7 +21,7 @@ import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 type SelectPublishedArticlesToAuthors =
   typeof PublishedArticlesToAuthors.$inferSelect & {
     author: typeof Author.$inferSelect;
-    article_id: number;
+    published_id: number;
     author_id: number;
   };
 
@@ -29,8 +30,15 @@ export type PublishedArticleWithAuthors =
     published_articles_to_authors: SelectPublishedArticlesToAuthors[];
   };
 
+type SelectDraftArticlesToAuthors =
+  typeof DraftArticlesToAuthors.$inferSelect & {
+    author: typeof Author.$inferSelect;
+    draft_id: number;
+    author_id: number;
+  };
+
 export type DraftArticleWithAuthors = typeof DraftArticle.$inferSelect & {
-  draft_articles_to_authors: SelectPublishedArticlesToAuthors[];
+  draft_articles_to_authors: SelectDraftArticlesToAuthors[];
 };
 
 export const DraftArticleDrizzleCard = ({

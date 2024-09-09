@@ -7,7 +7,7 @@ export function NoHeadingButton() {
   return (
     <Button
       onClick={() => {
-        editor.blocks.insert(
+        editor_context.blocks.insert(
           "header",
           { text: "Neimenovana novica", level: 1 },
           undefined,
@@ -26,7 +26,7 @@ export function WrongHeadingButton({ title }: { title?: string }) {
   return (
     <Button
       onClick={() => {
-        editor.blocks.insert(
+        editor_context.blocks.insert(
           "header",
           { text: title ?? "Neimenovana novica", level: 1 },
           undefined,

@@ -107,15 +107,15 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
           >
             Objavi spremembe
           </Button>
-          {/* {editor.article?.published ? (
+          {/* {editor_context.article?.published ? (
             <Button
               onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
-                if (!editor.article?.id) {
+                if (!editor_context.article?.id) {
                   console.error("Article ID is missing.");
                   return;
                 }
 
-                editor.mutations.unpublish(editor.article.id);
+                editor_context.mutations.unpublish(editor_context.article.id);
 
                 closeDialog();
               })}
@@ -126,12 +126,12 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
           ) : null} */}
           <Button
             onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
-              if (!editor.article?.id) {
+              if (!editor_context.article?.id) {
                 console.error("Article ID is missing.");
                 return;
               }
 
-              editor.mutations.delete_both(editor.article.id);
+              editor_context.mutations.delete_both(editor_context.article.id);
 
               closeDialog();
             })}
@@ -143,15 +143,15 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
           <Button
             onClick={form.handleSubmit(
               async (values: z.infer<typeof form_schema>) => {
-                if (!editor.article?.id) {
+                if (!editor_context.article?.id) {
                   console.error("Article ID is missing.");
                   return;
                 }
 
-                const editor_content = await editor.editor?.save();
+                const editor_content = await editor_context.editor?.save();
 
-                /* editor.mutations.save_draft({
-                  id: editor.article.id,
+                /* editor_context.mutations.save_draft({
+                  id: editor_context.article.id,
                   content: editor_content,
                   preview_image: values.preview_image ?? "",
                 }); */

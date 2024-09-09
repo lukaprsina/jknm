@@ -25,9 +25,9 @@ import { editor_store } from "~/components/editor/editor-store";
 
 export function UploadDialog() {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const editor = useContext(EditorContext);
+  const editor_context = useContext(EditorContext);
 
-  if (!editor) return null;
+  if (!editor_context) return null;
 
   return (
     <AlertDialog open={dialogOpen} onOpenChange={(open) => setDialogOpen(open)}>
@@ -36,10 +36,13 @@ export function UploadDialog() {
           {/* <AlertDialogTrigger asChild> */}
           <Button
             onClick={async () => {
-              const editor_content = await editor.editor?.save();
-              if (!editor.article || !editor_content) return;
+              const editor_content = await editor_context.editor?.save();
+              if (!editor_context.article || !editor_content) return;
 
-              update_settings_from_editor(editor.article, editor_content);
+              update_settings_from_editor(
+                editor_context.article,
+                editor_content,
+              );
               setDialogOpen(true);
             }}
             size="icon"
@@ -62,22 +65,22 @@ export function UploadDialog() {
           <AlertDialogCancel>Ne objavi</AlertDialogCancel>
           <AlertDialogAction
             onClick={async () => {
-              if (!editor.article?.id) {
+              if (!editor_context.article?.id) {
                 console.error("Article ID is missing.");
                 return;
               }
 
               const editor_content =
-                await editor.configure_article_before_publish();
+                await editor_context.configure_article_before_publish();
               console.log(
                 "ZZZZZZZZZZZZ",
                 editor_store.get.google_ids(),
                 editor_store.get.custom_author_names(),
               );
               // TODO
-              /* editor.mutations.publish({
-                id: editor.article.id,
-                created_at: editor.article.created_at,
+              /* editor_context.mutations.publish({
+                id: editor_context.article.id,
+                created_at: editor_context.article.created_at,
                 content: editor_content,
                 title: editor_store.get.title(),
                 url: editor_store.get.url(),

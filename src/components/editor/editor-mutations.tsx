@@ -29,7 +29,7 @@ export function useEditorMutations() {
     onSuccess: () => {
       //   TODO
       /* if (!editor_context.editor) return;
-      const editor_content = await editor_context.editor.save();
+      const editor_content = await editor_context.editor_context.save();
 
       update_settings_from_editor(draft_article, editor_content); */
 
@@ -161,6 +161,7 @@ export function useEditorMutations() {
         ),
       });
     },
+    // TODO
     delete_draft,
     unpublish,
     delete_both,

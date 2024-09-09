@@ -23,8 +23,8 @@ import { useEditor } from "~/components/editor/editor-context";
 
 export function SettingsDialog() {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const editor = useContext(EditorContext);
-  if (!editor) return null;
+  const editor_context = useContext(EditorContext);
+  if (!editor_context) return null;
 
   return (
     <Dialog open={dialogOpen} onOpenChange={(open) => setDialogOpen(open)}>
@@ -33,13 +33,13 @@ export function SettingsDialog() {
           <DialogTrigger asChild>
             <Button
               onClick={async () => {
-                /* if (!editor.editor || !editor.article) return;
-                const editor_content = await editor.editor.save();
+                /* if (!editor_context.editor || !editor_context.article) return;
+                const editor_content = await editor_context.editor_context.save();
 
-                editor.update_settings_from_editor(
+                editor_context.update_settings_from_editor(
                   editor_content,
-                  editor.article.title,
-                  editor.article.url,
+                  editor_context.article.title,
+                  editor_context.article.url,
                 ); */
               }}
               variant="ghost"

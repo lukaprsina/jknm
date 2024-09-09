@@ -58,7 +58,7 @@ export interface AuthorValueMultiSelectType {
 }
 
 function MyToolbar() {
-  const editor = useContext(EditorContext);
+  const editor_context = useContext(EditorContext);
   const all_authors = useAllAuthors();
 
   const authors = useMemo(() => {
@@ -93,7 +93,7 @@ function MyToolbar() {
     return google_authors;
   }, [all_authors]);
 
-  if (!editor) return null;
+  if (!editor_context) return null;
   return (
     <div className="flex flex-col justify-between gap-4">
       <div className="flex w-full items-center justify-between p-4">
@@ -123,7 +123,9 @@ function MyToolbar() {
             animation={2}
             maxCount={3}
           />
-          <span className="flex flex-shrink-0">{editor.savingText}</span>
+          <span className="flex flex-shrink-0">
+            {editor_context.savingText}
+          </span>
         </div>
         <EditorButtons />
       </div>

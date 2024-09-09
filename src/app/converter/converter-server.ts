@@ -152,7 +152,7 @@ export async function upload_articles(
       for (const author_id of imported_article.author_ids) {
         joins.push({
           author_id: author_id,
-          article_id: article.id,
+          published_id: article.id,
         });
       }
     }

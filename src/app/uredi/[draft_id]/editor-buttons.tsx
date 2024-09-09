@@ -5,7 +5,7 @@ import { DownloadIcon, SaveIcon, UploadIcon, XIcon } from "lucide-react";
 import "./editor.css";
 
 import type { OutputData } from "@editorjs/editorjs";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
 
 import {
   AlertDialog,
@@ -24,9 +24,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-import { useEditor } from "~/components/editor/editor-context";
 import { UploadDialog } from "./upload-dialog";
 import { SettingsDialog } from "./settings-dialog";
+import { EditorContext } from "~/components/editor/editor-context";
+import { DraftArticleContext } from "~/components/article/context";
+import { useEditorMutations } from "~/components/editor/editor-mutations";
 
 export function EditorButtons() {
   return (
@@ -42,9 +44,10 @@ export function EditorButtons() {
 }
 
 export function ExportButton() {
-  const editor = useContext(EditorContext);
+  const editor_context = useContext(EditorContext);
+  const draft_article = useContext(DraftArticleContext);
 
-  if (!editor) return null;
+  if (!editor_context || !draft_article) return null;
 
   return (
     <Tooltip>
@@ -53,14 +56,14 @@ export function ExportButton() {
           variant="ghost"
           size="icon"
           onClick={async () => {
-            const editor_content = await editor.editor?.save();
+            const editor_content = await editor_context.editor?.save();
             const blob = new Blob([JSON.stringify(editor_content, null, 2)], {
               type: "application/json",
             });
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = `${editor.article?.title ?? "novica"}.json`;
+            a.download = `${draft_article.title}.json`;
             a.click();
             URL.revokeObjectURL(url);
           }}
@@ -74,11 +77,11 @@ export function ExportButton() {
 }
 
 export function ImportButton() {
-  const editor = useContext(EditorContext);
+  const editor_context = useContext(EditorContext);
   const input_ref = useRef<HTMLInputElement>(null);
   const form_ref = useRef<HTMLFormElement>(null);
 
-  if (!editor) return null;
+  if (!editor_context) return null;
 
   return (
     <>
@@ -97,7 +100,7 @@ export function ImportButton() {
             const file_content = await file.text();
             const parsed_file = JSON.parse(file_content) as OutputData;
             console.log("file", file, parsed_file);
-            await editor.editor?.render(parsed_file);
+            await editor_context.editor?.render(parsed_file);
           }}
         />
       </form>
@@ -138,35 +141,16 @@ export function ImportButton() {
 }
 
 export function SaveButton() {
-  const editor = useContext(EditorContext);
-
-  const save_callback = useCallback(async () => {
-    if (!editor?.article?.id) {
-      console.error("Article ID is missing.");
-      return;
-    }
-
-    const editor_content = await editor.editor?.save();
-
-    // TODO
-    /* editor.mutations.save_draft({
-      id: editor.article.id,
-      content: editor_content,
-      preview_image: editor_store.get.preview_image() ?? "",
-    }); */
-  }, [editor]);
+  const editor_context = useContext(EditorContext);
+  const editor_mutations = useEditorMutations();
 
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
-      if (!editor?.article?.id) return;
-
       if (event.key !== "s" || !event.ctrlKey) return;
-
       event.preventDefault();
-
-      void save_callback();
+      void editor_mutations.save_draft();
     },
-    [editor?.article?.id, save_callback],
+    [editor_mutations],
   );
 
   useEffect(() => {
@@ -177,16 +161,22 @@ export function SaveButton() {
     };
   });
 
-  if (!editor) return null;
+  if (!editor_context) return null;
 
   return (
     <div className="not-prose flex gap-1 text-sm">
-      {typeof editor.savingText === "undefined" ? (
-        <p className="h-full pt-3">{editor.savingText}</p>
-      ) : null}
+      <span className="pt-3">
+        {typeof editor_context.savingText === "undefined"
+          ? editor_context.savingText
+          : null}
+      </span>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="ghost" size="icon" onClick={() => save_callback()}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => editor_mutations.save_draft()}
+          >
             <SaveIcon />
           </Button>
         </TooltipTrigger>
@@ -197,9 +187,10 @@ export function SaveButton() {
 }
 
 export function ClearButton() {
-  const editor = useContext(EditorContext);
+  const editor_context = useContext(EditorContext);
+  const editor_mutations = useEditorMutations();
 
-  if (!editor) return null;
+  if (!editor_context) return null;
 
   return (
     <AlertDialog>
@@ -224,12 +215,7 @@ export function ClearButton() {
         <AlertDialogFooter>
           <AlertDialogAction
             onClick={() => {
-              if (!editor.article?.id) {
-                console.error("Article ID is missing.");
-                return;
-              }
-
-              editor.mutations.delete_draft(editor.article.id);
+              editor_mutations.delete_draft();
             }}
           >
             Izbriši osnutek
