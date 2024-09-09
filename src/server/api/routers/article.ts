@@ -3,6 +3,7 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import {
   CreateDraftArticleSchema,
   DraftArticle,
+  PublishArticleSchema,
   PublishedArticle,
   PublishedArticlesToAuthors,
   SaveDraftArticleSchema,
@@ -95,10 +96,10 @@ export const article_router = createTRPCRouter({
       }
     }),
 
-  get_draft_by_id: publicProcedure
+  get_draft_and_published_by_id: publicProcedure
     .input(z.number())
     .query(async ({ ctx, input }) => {
-      return await ctx.db.query.DraftArticle.findFirst({
+      const draft = await ctx.db.query.DraftArticle.findFirst({
         where: eq(DraftArticle.id, input),
         with: {
           draft_articles_to_authors: {
@@ -108,6 +109,23 @@ export const article_router = createTRPCRouter({
           },
         },
       });
+
+      if (draft?.published_id) {
+        const published = await ctx.db.query.PublishedArticle.findFirst({
+          where: eq(PublishedArticle.id, draft.published_id),
+          with: {
+            published_articles_to_authors: {
+              with: {
+                author: true,
+              },
+            },
+          },
+        });
+
+        return { draft, published };
+      }
+
+      return { draft };
     }),
 
   create_draft: protectedProcedure
@@ -136,49 +154,55 @@ export const article_router = createTRPCRouter({
     }),
 
   publish: protectedProcedure
-    .input(z.number())
+    .input(
+      z.object({
+        article: PublishArticleSchema,
+        author_ids: z.array(z.number()),
+        draft_id: z.number().optional(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.transaction(async (tx) => {
-        const draft = await tx.query.DraftArticle.findFirst({
-          where: eq(DraftArticle.id, input),
-          with: {
-            draft_articles_to_authors: {
+        const value = { ...input.article };
+        if (value.title) value.url = convert_title_to_url(value.title);
+
+        const draft = input.draft_id
+          ? await tx.query.DraftArticle.findFirst({
+              where: eq(DraftArticle.published_id, input.draft_id),
               with: {
-                author: true,
+                draft_articles_to_authors: {
+                  with: {
+                    author: true,
+                  },
+                },
               },
-            },
-          },
-        });
+            })
+          : undefined;
 
-        if (!draft) throw new Error("Draft not found");
-        const url_with_date = convert_title_to_url(draft.title);
-
-        await tx
+        const inserted_published_articles = await tx
           .insert(PublishedArticle)
-          .values([
-            {
-              content: draft.content,
-              title: draft.title,
-              preview_image: draft.preview_image,
-              created_at: draft.created_at,
-              url: url_with_date,
-            },
-          ])
+          .values([value])
           .returning();
+        assert_one(inserted_published_articles);
+        const published_article = inserted_published_articles[0];
 
-        for (const author of draft.draft_articles_to_authors) {
+        for (const author_id of input.author_ids) {
           await tx.insert(PublishedArticlesToAuthors).values([
             {
-              author_id: author.author_id,
-              article_id: draft.id,
+              author_id: author_id,
+              article_id: published_article.id,
             },
           ]);
         }
 
-        await tx.delete(DraftArticle).where(eq(DraftArticle.id, input));
+        if (draft && input.draft_id) {
+          await tx
+            .delete(DraftArticle)
+            .where(eq(DraftArticle.id, input.draft_id));
+        }
 
         return tx.query.PublishedArticle.findFirst({
-          where: eq(PublishedArticle.url, url_with_date),
+          where: eq(PublishedArticle.id, published_article.id),
           with: {
             published_articles_to_authors: {
               with: { author: true },

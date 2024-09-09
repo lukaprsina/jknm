@@ -38,6 +38,7 @@ import {
   rename_files_in_editor,
   update_settings_from_editor,
 } from "./editor-lib";
+import { DraftArticleContext } from "../article/context";
 
 export interface EditorContextType {
   editor?: EditorJS;
@@ -68,13 +69,12 @@ export const useEditor = () => {
 
 interface EditorProviderProps {
   children: ReactNode;
-  article: DraftArticleWithAuthors;
 }
 
 export const EditorProvider: React.FC<EditorProviderProps> = ({
   children,
-  article,
 }: EditorProviderProps) => {
+  const article = useContext(DraftArticleContext);
   const router = useRouter();
   const [savingText, setSavingText] = useState<string | undefined>();
   const [, forceUpdate] = useReducer((x: number) => x + 1, 0);
@@ -95,7 +95,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   }, [dirty]);
 
   const content = useMemo(
-    () => article.content ?? NO_CONTENT_EDITOR_VALUE,
+    () => article?.content ?? NO_CONTENT_EDITOR_VALUE,
     [article],
   );
 
@@ -129,9 +129,9 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         }
 
         async function update_article() {
-          const editor_content = await editorJS.current?.save();
-          if (!editor_content) return;
           editor_store.set.reset();
+          const editor_content = await editorJS.current?.save();
+          if (!editor_content || !article) return;
 
           update_settings_from_editor(article, editor_content, article.title);
         }
@@ -151,6 +151,61 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
     return temp_editor;
   }, [content, article]);
+
+  useEffect(() => {
+    if (editorJS.current != null) return;
+
+    const temp_editor = editor_factory();
+    editorJS.current = temp_editor;
+  }, [editor_factory]);
+
+  const configure_article_before_publish = useCallback(async () => {
+    if (!article) return;
+    if (!editorJS.current) return;
+
+    let editor_content = await editorJS.current.save();
+
+    const { title: new_title, error } = get_heading_from_editor(editor_content);
+
+    if (error === "NO_HEADING") {
+      toast.toast({
+        title: "Naslov ni nastavljen",
+        description: "Prva vrstica mora biti H1 naslov.",
+        action: <NoHeadingButton editor={editorJS.current} />,
+      });
+    } else if (error === "WRONG_HEADING_LEVEL") {
+      toast.toast({
+        title: "Naslov ni pravilne ravni",
+        description: "Prva vrstica mora biti H1 naslov.",
+        action: (
+          <WrongHeadingButton editor={editorJS.current} title={new_title} />
+        ),
+      });
+    }
+
+    if (!new_title) return;
+    const new_url = convert_title_to_url(new_title);
+
+    const new_article_url = `${new_url}-${article.id}`;
+
+    editor_content = await editorJS.current.save();
+    rename_files_in_editor(editor_content, new_article_url);
+
+    // TODO
+    // update_settings_from_editor(article, editor_content, new_title, new_url);
+
+    const preview_image = editor_store.get.preview_image();
+
+    const new_preview_image = preview_image
+      ? rename_file(preview_image, new_article_url)
+      : undefined;
+
+    editor_store.set.preview_image(new_preview_image);
+
+    return editor_content;
+  }, [article, toast]);
+
+  if (!article) return null;
 
   const save_draft = api.article.save_draft.useMutation({
     onMutate: () => {
@@ -273,58 +328,6 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       router.replace(`/`);
     },
   });
-
-  useEffect(() => {
-    if (editorJS.current != null) return;
-
-    const temp_editor = editor_factory();
-    editorJS.current = temp_editor;
-  }, [editor_factory]);
-
-  const configure_article_before_publish = useCallback(async () => {
-    if (!editorJS.current) return;
-
-    let editor_content = await editorJS.current.save();
-
-    const { title: new_title, error } = get_heading_from_editor(editor_content);
-
-    if (error === "NO_HEADING") {
-      toast.toast({
-        title: "Naslov ni nastavljen",
-        description: "Prva vrstica mora biti H1 naslov.",
-        action: <NoHeadingButton editor={editorJS.current} />,
-      });
-    } else if (error === "WRONG_HEADING_LEVEL") {
-      toast.toast({
-        title: "Naslov ni pravilne ravni",
-        description: "Prva vrstica mora biti H1 naslov.",
-        action: (
-          <WrongHeadingButton editor={editorJS.current} title={new_title} />
-        ),
-      });
-    }
-
-    if (!new_title) return;
-    const new_url = convert_title_to_url(new_title);
-
-    const new_article_url = `${new_url}-${article.id}`;
-
-    editor_content = await editorJS.current.save();
-    rename_files_in_editor(editor_content, new_article_url);
-
-    // TODO
-    // update_settings_from_editor(article, editor_content, new_title, new_url);
-
-    const preview_image = editor_store.get.preview_image();
-
-    const new_preview_image = preview_image
-      ? rename_file(preview_image, new_article_url)
-      : undefined;
-
-    editor_store.set.preview_image(new_preview_image);
-
-    return editor_content;
-  }, [article, toast]);
 
   return (
     <EditorContext.Provider

@@ -15,14 +15,9 @@ import { useAllAuthors } from "~/components/authors";
 import { cn } from "~/lib/utils";
 import { EditorButtons } from "./editor-buttons";
 
-export default function MyEditor({
-  article,
-}: {
-  article?: DraftArticleWithAuthors;
-}) {
-  if (!article) return null;
+export default function MyEditor() {
   return (
-    <EditorProvider article={article}>
+    <EditorProvider>
       <div className="mx-auto w-full outline outline-1">
         <MyToolbar />
         <div id="editorjs" />

@@ -1,25 +1,15 @@
 "use client";
 
-import React, { createContext } from "react";
-import type { PublishedArticle } from "~/server/db/schema";
+import { createContext } from "react";
+import type {
+  DraftArticleWithAuthors,
+  PublishedArticleWithAuthors,
+} from "./card-adapter";
 
-const PublishedArticleContext = createContext<
-  typeof PublishedArticle.$inferSelect | undefined
+export const PublishedArticleContext = createContext<
+  PublishedArticleWithAuthors | undefined
 >(undefined);
 
-interface PublishedArticleProviderProps {
-  article: typeof PublishedArticle.$inferSelect;
-  children: React.ReactNode;
-}
-
-export const PublishedArticleProvider: React.FC<
-  PublishedArticleProviderProps
-> = ({ article, children }) => {
-  return (
-    <PublishedArticleContext.Provider value={article}>
-      {children}
-    </PublishedArticleContext.Provider>
-  );
-};
-
-export default PublishedArticleContext;
+export const DraftArticleContext = createContext<
+  DraftArticleWithAuthors | undefined
+>(undefined);

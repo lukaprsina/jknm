@@ -18,9 +18,16 @@ import { parse_node } from "./parse-node";
 import type { RouterOutputs } from "~/trpc/react";
 import { get_image_data_from_editor } from "~/lib/editor-utils";
 import { read_from_xml } from "./xml-server";
-import type { PublishedArticle } from "~/server/db/schema";
 import { PROBLEMATIC_CONSTANTS } from "./info/problematic";
 import { convert_title_to_url } from "~/lib/article-utils";
+import type { PublishArticleSchema } from "~/server/db/schema";
+import type { z } from "zod";
+
+export type ConverterArticleWithAuthorIds = z.infer<
+  typeof PublishArticleSchema
+> & {
+  author_ids: number[];
+};
 
 export interface ImageToSave {
   objave_id: number;
@@ -40,11 +47,6 @@ export interface ImportedArticle {
 export interface DimensionType {
   dimensions: { width: number; height: number };
   ids: number[];
-}
-
-type PublishedArticleInsert = typeof PublishedArticle.$inferInsert;
-export interface PublishedArticleWithAuthors extends PublishedArticleInsert {
-  author_ids: number[];
 }
 
 export type InitialProblems = Record<ProblemKey, [number, string][]>;
@@ -124,7 +126,7 @@ export async function iterate_over_articles(
     ? imported_articles.slice(first_index, last_index)
     : imported_articles;
 
-  const articles: PublishedArticleWithAuthors[] = [];
+  const articles: ConverterArticleWithAuthorIds[] = [];
   let article_id = do_splice && first_index !== -1 ? first_index + 1 : 1;
 
   authors_by_name = await get_authors_by_name();
@@ -173,7 +175,7 @@ async function parse_csv_article(
   all_authors: RouterOutputs["author"]["get_all"],
   authors_by_name: AuthorType[],
   problems: InitialProblems,
-): Promise<PublishedArticleWithAuthors> {
+): Promise<ConverterArticleWithAuthorIds> {
   const problematic_dir = "1723901265154";
 
   let html = imported_article.content;
@@ -250,9 +252,9 @@ async function parse_csv_article(
   if (!content) throw new Error("No content");
 
   const images = get_image_data_from_editor(content);
-  const preview_image = images.length !== 0 ? images[0]?.file.url : undefined;
+  const preview_image = images.length !== 0 ? images[0]?.file.url : null;
 
-  if (typeof preview_image === "undefined") {
+  if (!preview_image) {
     console.error(
       "No images in article",
       imported_article.objave_id,
@@ -260,11 +262,10 @@ async function parse_csv_article(
     );
   }
 
-  const article: PublishedArticleWithAuthors = {
-    // serial_id: article_id,
+  const article: ConverterArticleWithAuthorIds = {
     old_id: imported_article.objave_id,
     title: imported_article.title,
-    preview_image,
+    preview_image: preview_image ?? null,
     content,
     url: csv_url,
     created_at,

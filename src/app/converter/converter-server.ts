@@ -8,8 +8,8 @@ import { count, sql } from "drizzle-orm";
 import sharp from "sharp";
 
 import type {
+  ConverterArticleWithAuthorIds,
   ImageToSave,
-  PublishedArticleWithAuthors,
 } from "./converter-spaghetti";
 import type { AuthorType } from "./get-authors";
 import { content_to_text as convert_content_to_text } from "~/lib/content-to-text";
@@ -125,7 +125,9 @@ export interface TempArticleType {
   author_ids: number[];
 }
 
-export async function upload_articles(articles: PublishedArticleWithAuthors[]) {
+export async function upload_articles(
+  articles: ConverterArticleWithAuthorIds[],
+) {
   if (articles.length === 0) return;
   await db.transaction(async (tx) => {
     console.log("Inserting articles", articles.length);

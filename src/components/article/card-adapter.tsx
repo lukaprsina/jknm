@@ -20,6 +20,8 @@ import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 type SelectPublishedArticlesToAuthors =
   typeof PublishedArticlesToAuthors.$inferSelect & {
     author: typeof Author.$inferSelect;
+    article_id: number;
+    author_id: number;
   };
 
 export type PublishedArticleWithAuthors =

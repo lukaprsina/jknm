@@ -217,18 +217,18 @@ export const CreateDraftArticleSchema = createInsertSchema(DraftArticle, {
 });
 
 export const SaveDraftArticleSchema = createInsertSchema(DraftArticle, {
-  id: z.number(),
+  // id: z.number(),
   content: content_validator,
   updated_at: z.date(),
 }).omit({
-  created_at: true,
+  // created_at: true,
 });
 
-export const PublishArticleSchema = createInsertSchema(DraftArticle, {
+export const PublishArticleSchema = createInsertSchema(PublishedArticle, {
   content: content_validator,
   updated_at: z.date(),
 }).omit({
-  created_at: true,
+  // created_at: true,
 });
 
 export const users = pgTable("user", {
