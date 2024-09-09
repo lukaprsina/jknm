@@ -15,7 +15,7 @@ export function ArticleCard({
   featured,
   title,
   url,
-  preview_image,
+  image,
   content_preview,
   created_at,
   author_ids,
@@ -24,7 +24,7 @@ export function ArticleCard({
   featured?: boolean;
   title: string;
   url: string;
-  preview_image?: string;
+  image?: string;
   content_preview?: string;
   created_at: Date;
   author_ids: number[];
@@ -48,7 +48,7 @@ export function ArticleCard({
         innerClassName="h-full"
         gradientColor="#D9D9D955"
       >
-        {preview_image ? (
+        {image ? (
           <AspectRatio
             ratio={16 / 9}
             className={cn(
@@ -57,7 +57,7 @@ export function ArticleCard({
             )}
           >
             <Image
-              src={preview_image}
+              src={image}
               alt={title}
               fill
               priority={featured}
@@ -81,7 +81,7 @@ export function ArticleCard({
               <p
                 className={cn(
                   "relative line-clamp-3 items-end",
-                  !preview_image && "line-clamp-4",
+                  !image && "line-clamp-4",
                 )}
               >
                 {content_preview}

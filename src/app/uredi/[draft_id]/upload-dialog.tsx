@@ -84,7 +84,7 @@ export function UploadDialog() {
                 content: editor_content,
                 title: editor_store.get.title(),
                 url: editor_store.get.url(),
-                preview_image: editor_store.get.preview_image() ?? "",
+                image: editor_store.get.image() ?? "",
                 author_ids: editor_store.get.google_ids(),
                 custom_author_names: editor_store.get.custom_author_names(),
               }); */

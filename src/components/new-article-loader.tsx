@@ -71,7 +71,7 @@ export default function NewArticleLoader({
 
             article_create.mutate({
               title: article_title,
-              preview_image: "",
+              image: "",
               content: template,
               updated_at: new Date(),
             });

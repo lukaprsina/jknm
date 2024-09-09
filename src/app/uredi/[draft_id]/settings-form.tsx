@@ -34,7 +34,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
   const form = useForm<z.infer<typeof form_schema>>({
     resolver: zodResolver(form_schema),
     defaultValues: {
-      image: editor_store.get.preview_image() ?? undefined,
+      image: editor_store.get.image() ?? undefined,
       created_at: draft_article?.created_at,
     },
   });
@@ -44,7 +44,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
       <form className="space-y-4">
         <FormField
           control={form.control}
-          defaultValue={editor_store.get.preview_image()}
+          defaultValue={editor_store.get.image()}
           name="image"
           render={({ field }) => (
             <FormItem>
@@ -57,7 +57,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
                   image={field.value}
                   setImage={(value) => {
                     field.onChange(value);
-                    editor_store.set.preview_image(value);
+                    editor_store.set.image(value);
                   }}
                 />
               </FormControl>
@@ -140,7 +140,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
                 /* editor_context.mutations.save_draft({
                   id: editor_context.article.id,
                   content: editor_content,
-                  preview_image: values.preview_image ?? "",
+                  image: values.image ?? "",
                 }); */
 
                 closeDialog();

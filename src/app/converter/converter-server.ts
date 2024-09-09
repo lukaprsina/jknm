@@ -117,7 +117,7 @@ export interface TempArticleType {
   serial_id: number;
   objave_id: number;
   title: string;
-  preview_image: string | undefined;
+  image: string | undefined;
   content: OutputData;
   csv_url: string;
   created_at: Date;
@@ -196,7 +196,7 @@ export async function sync_with_algolia() {
         title: article.title,
         url: article.url,
         created_at: article.created_at.getTime(),
-        image: article.preview_image ?? undefined,
+        image: article.image ?? undefined,
         content_preview,
         is_draft: false,
         year: article.created_at.getFullYear().toString(),

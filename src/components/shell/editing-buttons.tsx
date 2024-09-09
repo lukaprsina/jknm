@@ -83,7 +83,7 @@ export function EditButton({
         title: returned_data.title,
         url: returned_data.url,
         content_preview: content_preview ?? "",
-        image: returned_data.preview_image ?? "",
+        image: returned_data.image ?? "",
         created_at: returned_data.created_at.getTime(),
         published: !!returned_data.published,
         has_draft: !!returned_data.draft_content,

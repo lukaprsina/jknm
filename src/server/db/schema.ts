@@ -70,7 +70,7 @@ export const PublishedArticle = pgTable(
       () => new Date(),
     ),
     content: json("content").$type<ArticleContentType>(),
-    preview_image: varchar("preview_image", { length: 255 }),
+    image: varchar("image", { length: 255 }),
   },
   (published_article) => ({
     created_at_index: index("p_created_at_idx").on(
@@ -105,7 +105,7 @@ export const DraftArticle = pgTable(
       () => new Date(),
     ),
     content: json("content").$type<ArticleContentType>(),
-    preview_image: varchar("preview_image", { length: 255 }),
+    image: varchar("image", { length: 255 }),
   },
   (draft_article) => ({
     created_at_index: index("d_created_at_idx").on(draft_article.created_at),

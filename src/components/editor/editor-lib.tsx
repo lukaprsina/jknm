@@ -16,14 +16,14 @@ export function update_settings_from_editor(
   title?: string,
 ) {
   const image_data = get_image_data_from_editor(editor_content);
-  const preview_image = editor_store.get.preview_image();
+  const image = editor_store.get.image();
 
   editor_store.set.state((draft) => {
-    if (!preview_image) {
-      if (article.preview_image) {
-        draft.preview_image = article.preview_image;
+    if (!image) {
+      if (article.image) {
+        draft.image = article.image;
       } else {
-        draft.preview_image = image_data.at(0)?.file.url;
+        draft.image = image_data.at(0)?.file.url;
       }
     }
 
@@ -36,7 +36,7 @@ export function update_settings_from_editor(
     }
 
     draft.author_ids = article.draft_articles_to_authors.map(
-      (a) => a.article_id,
+      (a) => a.author_id,
     );
   });
 }
@@ -92,13 +92,13 @@ function update_article(
 
   update_settings_from_editor(article, editor_content, updated_title);
 
-  const preview_image = editor_store.get.preview_image();
+  const image = editor_store.get.image();
 
-  const new_preview_image = preview_image
-    ? rename_url(hostname, preview_image, updated_url)
+  const new_image = image
+    ? rename_url(hostname, image, updated_url)
     : undefined;
 
-  editor_store.set.preview_image(new_preview_image);
+  editor_store.set.image(new_image);
 }
 
 export function rename_urls_in_editor(

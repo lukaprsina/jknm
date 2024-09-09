@@ -252,9 +252,9 @@ async function parse_csv_article(
   if (!content) throw new Error("No content");
 
   const images = get_image_data_from_editor(content);
-  const preview_image = images.length !== 0 ? images[0]?.file.url : null;
+  const image = images.length !== 0 ? images[0]?.file.url : null;
 
-  if (!preview_image) {
+  if (!image) {
     console.error(
       "No images in article",
       imported_article.objave_id,
@@ -265,7 +265,7 @@ async function parse_csv_article(
   const article: ConverterArticleWithAuthorIds = {
     old_id: imported_article.objave_id,
     title: imported_article.title,
-    preview_image: preview_image ?? null,
+    image: image ?? null,
     content,
     url: csv_url,
     created_at,

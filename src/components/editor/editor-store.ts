@@ -5,7 +5,7 @@ interface EditorStoreType {
   id: number;
   title: string;
   url: string;
-  preview_image: string | undefined;
+  image: string | undefined;
   image_data: EditorJSImageData[];
   author_ids: number[];
 }
@@ -14,7 +14,7 @@ const initial_data = {
   id: -1,
   title: "",
   url: "",
-  preview_image: undefined,
+  image: undefined,
   image_data: [],
   author_ids: [],
 } satisfies EditorStoreType;
@@ -27,7 +27,7 @@ export const editor_store = createStore("editor")<EditorStoreType>(
       draft.id = initial_data.id;
       draft.title = initial_data.title;
       draft.url = initial_data.url;
-      draft.preview_image = initial_data.preview_image;
+      draft.image = initial_data.image;
       draft.image_data = initial_data.image_data;
       draft.author_ids = initial_data.author_ids;
     }),
