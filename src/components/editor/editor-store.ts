@@ -7,8 +7,7 @@ interface EditorStoreType {
   url: string;
   preview_image: string | undefined;
   image_data: EditorJSImageData[];
-  google_ids: string[];
-  custom_author_names: string[];
+  author_ids: number[];
 }
 
 const initial_data = {
@@ -17,8 +16,7 @@ const initial_data = {
   url: "",
   preview_image: undefined,
   image_data: [],
-  google_ids: [],
-  custom_author_names: [],
+  author_ids: [],
 } satisfies EditorStoreType;
 
 export const editor_store = createStore("editor")<EditorStoreType>(
@@ -31,7 +29,6 @@ export const editor_store = createStore("editor")<EditorStoreType>(
       draft.url = initial_data.url;
       draft.preview_image = initial_data.preview_image;
       draft.image_data = initial_data.image_data;
-      draft.google_ids = initial_data.google_ids;
-      draft.custom_author_names = initial_data.custom_author_names;
+      draft.author_ids = initial_data.author_ids;
     }),
 }));

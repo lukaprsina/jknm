@@ -3,7 +3,7 @@
 import { Button } from "../ui/button";
 import type EditorJS from "@editorjs/editorjs";
 
-export function NoHeadingButton({ editor }: { editor: EditorJS }) {
+export function NoHeadingButton() {
   return (
     <Button
       onClick={() => {
@@ -22,13 +22,7 @@ export function NoHeadingButton({ editor }: { editor: EditorJS }) {
   );
 }
 
-export function WrongHeadingButton({
-  editor,
-  title,
-}: {
-  editor: EditorJS;
-  title?: string;
-}) {
+export function WrongHeadingButton({ title }: { title?: string }) {
   return (
     <Button
       onClick={() => {

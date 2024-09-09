@@ -23,7 +23,7 @@ import { useEditor } from "~/components/editor/editor-context";
 
 export function SettingsDialog() {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const editor = useEditor();
+  const editor = useContext(EditorContext);
   if (!editor) return null;
 
   return (

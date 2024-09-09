@@ -16,8 +16,11 @@ import {
 } from "~/components/ui/form";
 
 import { editor_store } from "~/components/editor/editor-store";
-import { useEditor } from "~/components/editor/editor-context";
 import { DateTimePicker } from "~/components/date-time-picker";
+import { ImageSelector } from "./image-selector";
+import { DraftArticleContext } from "~/components/article/context";
+import { useContext } from "react";
+import { useEditorMutations } from "~/components/editor/editor-mutations";
 
 export const form_schema = z.object({
   /* TODO: message to all zod fields
@@ -25,22 +28,20 @@ export const form_schema = z.object({
     message: "Username must be at least 2 characters.",
   }), */
   created_at: z.date(),
-  preview_image: z.string().optional(),
+  image: z.string().optional(),
 });
 
 export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
-  const editor = useEditor();
-  // const preview_image = editor_store.use.preview_image();
+  const draft_article = useContext(DraftArticleContext);
+  const editor_mutations = useEditorMutations();
 
   const form = useForm<z.infer<typeof form_schema>>({
     resolver: zodResolver(form_schema),
     defaultValues: {
-      preview_image: editor_store.get.preview_image() ?? undefined,
-      created_at: editor?.article?.created_at,
+      image: editor_store.get.preview_image() ?? undefined,
+      created_at: draft_article?.created_at,
     },
   });
-
-  if (!editor) return null;
 
   return (
     <Form {...form}>
@@ -48,7 +49,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
         <FormField
           control={form.control}
           defaultValue={editor_store.get.preview_image()}
-          name="preview_image"
+          name="image"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Naslovna slika</FormLabel>
@@ -65,6 +66,13 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
                   }}
                   imageUrl={field.value}
                 /> */}
+                <ImageSelector
+                  image={field.value}
+                  setImage={(value) => {
+                    field.onChange(value);
+                    editor_store.set.preview_image(value);
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -77,7 +85,10 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
             <FormItem className="flex flex-col">
               <FormLabel>Čas objave</FormLabel>
               <FormControl>
-                <DateTimePicker {...field} />
+                <DateTimePicker
+                  date={field.value}
+                  setDate={(date) => field.onChange(date)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -87,30 +98,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
           <Button
             onClick={form.handleSubmit(
               async (values: z.infer<typeof form_schema>) => {
-                if (!editor.article?.id) {
-                  console.error("Article ID is missing.");
-                  return;
-                }
-
-                const editor_content =
-                  await editor.configure_article_before_publish();
-
-                console.log(
-                  "WWWWWWWWWWWWWWW",
-                  editor_store.get.google_ids(),
-                  editor_store.get.custom_author_names(),
-                );
-
-                /* editor.mutations.publish({
-                  id: editor.article.id,
-                  created_at: values.created_at,
-                  title: editor_store.get.title(),
-                  url: editor_store.get.url(),
-                  preview_image: editor_store.get.preview_image() ?? "",
-                  content: editor_content,
-                  author_ids: editor_store.get.google_ids(),
-                  custom_author_names: editor_store.get.custom_author_names(),
-                }); */
+                editor_mutations.publish.mutate({});
 
                 closeDialog();
               },
@@ -119,7 +107,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
           >
             Objavi spremembe
           </Button>
-          {editor.article?.published ? (
+          {/* {editor.article?.published ? (
             <Button
               onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
                 if (!editor.article?.id) {
@@ -135,7 +123,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
             >
               Skrij novičko
             </Button>
-          ) : null}
+          ) : null} */}
           <Button
             onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
               if (!editor.article?.id) {

@@ -1,7 +1,13 @@
-import { get_image_data_from_editor } from "~/lib/editor-utils";
+import {
+  get_heading_from_editor,
+  get_image_data_from_editor,
+} from "~/lib/editor-utils";
 import type { DraftArticleWithAuthors } from "../article/card-adapter";
 import type { OutputData } from "@editorjs/editorjs";
 import { editor_store } from "./editor-store";
+import type { useToast } from "~/hooks/use-toast";
+import { NoHeadingButton, WrongHeadingButton } from "./editor-buttons";
+import { convert_title_to_url } from "~/lib/article-utils";
 
 export function update_settings_from_editor(
   article: DraftArticleWithAuthors,
@@ -23,13 +29,54 @@ export function update_settings_from_editor(
     draft.image_data = image_data;
     draft.id = article.id;
     draft.image_data = image_data;
-    if (typeof title !== "undefined") draft.title = title;
-    //  if (typeof url !== "undefined") draft.url = url;
+    if (typeof title !== "undefined") {
+      draft.title = title;
+      draft.url = convert_title_to_url(title);
+    }
 
-    // TODO
-    // draft.google_ids = article.author_ids ?? [];
-    // draft.custom_author_names = article.custom_author_names ?? [];
+    draft.author_ids = article.draft_articles_to_authors.map(
+      (a) => a.article_id,
+    );
   });
+}
+
+export function update_article_before_publish(
+  article: DraftArticleWithAuthors,
+  editor_content: OutputData,
+  toast: ReturnType<typeof useToast>,
+) {
+  const { title: new_title, error } = get_heading_from_editor(editor_content);
+
+  if (error === "NO_HEADING") {
+    toast.toast({
+      title: "Naslov ni nastavljen",
+      description: "Prva vrstica mora biti H1 naslov.",
+      action: <NoHeadingButton />,
+    });
+  } else if (error === "WRONG_HEADING_LEVEL") {
+    toast.toast({
+      title: "Naslov ni pravilne ravni",
+      description: "Prva vrstica mora biti H1 naslov.",
+      action: <WrongHeadingButton title={new_title} />,
+    });
+  }
+
+  if (!new_title) return;
+  const new_url = convert_title_to_url(new_title);
+
+  rename_files_in_editor(editor_content, new_url);
+
+  update_settings_from_editor(article, editor_content, new_title);
+
+  const preview_image = editor_store.get.preview_image();
+
+  const new_preview_image = preview_image
+    ? rename_file(preview_image, new_url)
+    : undefined;
+
+  editor_store.set.preview_image(new_preview_image);
+
+  return editor_content;
 }
 
 export function rename_files_in_editor(
@@ -62,17 +109,3 @@ export function rename_file(old_url: string, new_dir: string) {
   const new_url = `${url_parts.protocol}//${url_parts.hostname}/${new_dir}/${file_name}`;
   return new_url;
 }
-
-export const NO_CONTENT_EDITOR_VALUE = {
-  time: Date.now(),
-  blocks: [
-    {
-      id: "sheNwCUP5A",
-      type: "header",
-      data: {
-        text: "Napaka: ne najdem vsebine",
-        level: 1,
-      },
-    },
-  ],
-};

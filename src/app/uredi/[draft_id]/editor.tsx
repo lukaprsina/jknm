@@ -58,7 +58,7 @@ export interface AuthorValueMultiSelectType {
 }
 
 function MyToolbar() {
-  const editor = useEditor();
+  const editor = useContext(EditorContext);
   const all_authors = useAllAuthors();
 
   const authors = useMemo(() => {

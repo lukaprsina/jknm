@@ -42,7 +42,7 @@ export function EditorButtons() {
 }
 
 export function ExportButton() {
-  const editor = useEditor();
+  const editor = useContext(EditorContext);
 
   if (!editor) return null;
 
@@ -74,7 +74,7 @@ export function ExportButton() {
 }
 
 export function ImportButton() {
-  const editor = useEditor();
+  const editor = useContext(EditorContext);
   const input_ref = useRef<HTMLInputElement>(null);
   const form_ref = useRef<HTMLFormElement>(null);
 
@@ -138,7 +138,7 @@ export function ImportButton() {
 }
 
 export function SaveButton() {
-  const editor = useEditor();
+  const editor = useContext(EditorContext);
 
   const save_callback = useCallback(async () => {
     if (!editor?.article?.id) {
@@ -197,7 +197,7 @@ export function SaveButton() {
 }
 
 export function ClearButton() {
-  const editor = useEditor();
+  const editor = useContext(EditorContext);
 
   if (!editor) return null;
 

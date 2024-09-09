@@ -25,7 +25,7 @@ import { editor_store } from "~/components/editor/editor-store";
 
 export function UploadDialog() {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const editor = useEditor();
+  const editor = useContext(EditorContext);
 
   if (!editor) return null;
 

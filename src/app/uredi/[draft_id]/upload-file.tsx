@@ -3,17 +3,12 @@
 import mime from "mime/lite";
 
 import type { FileUploadResponse } from "~/app/api/upload_file_to_s3/route";
-import { editor_store } from "./editor-store";
+import { editor_store } from "~/components/editor/editor-store";
 
-export async function upload_file(
-  file: File,
-  novica_url?: string,
-): Promise<FileUploadResponse> {
-  novica_url = novica_url
-    ? novica_url
-    : `${editor_store.get.url()}-${editor_store.get.id()}`;
+export async function upload_file(file: File): Promise<FileUploadResponse> {
+  const article_url = editor_store.get.url();
 
-  if (!novica_url) {
+  if (!article_url) {
     return {
       success: 0,
     };
@@ -21,7 +16,7 @@ export async function upload_file(
 
   const form_data = new FormData();
   form_data.append("file", file);
-  form_data.append("directory", novica_url);
+  form_data.append("directory", article_url);
   form_data.append("type", "file");
 
   const file_data = await fetch("/api/upload_file_to_s3", {
@@ -32,20 +27,13 @@ export async function upload_file(
   return await parse_s3_response(file_data /* novica_url, file.name, toast */);
 }
 
+// toast: ReturnType<typeof useToast>,
 export async function upload_image_by_file(
   file: File,
-  novica_url?: string,
-  // toast: ReturnType<typeof useToast>,
 ): Promise<FileUploadResponse> {
-  novica_url = novica_url
-    ? novica_url
-    : `${editor_store.get.url()}-${editor_store.get.id()}`;
-  /* const novica_url = generate_encoded_url({
-    url: settings_store.get.url(),
-    id: settings_store.get.id(),
-  }); */
+  const article_url = editor_store.get.url();
 
-  if (!novica_url) {
+  if (!article_url) {
     return {
       success: 0,
     };
@@ -61,7 +49,7 @@ export async function upload_image_by_file(
 
   const form_data = new FormData();
   form_data.append("file", file);
-  form_data.append("directory", novica_url);
+  form_data.append("directory", article_url);
   form_data.append("type", "image");
 
   const file_data = await fetch("/api/upload_file_to_s3", {
@@ -72,18 +60,14 @@ export async function upload_image_by_file(
   return await parse_s3_response(file_data /* novica_url, file.name, toast */);
 }
 
+// toast: ReturnType<typeof useToast>,
 export async function upload_image_by_url(
   url: string,
-  // toast: ReturnType<typeof useToast>,
 ): Promise<FileUploadResponse> {
-  const novica_url = `${editor_store.get.url()}-${editor_store.get.id()}`;
-  /* const novica_url = generate_encoded_url({
-    url: settings_store.get.url(),
-    id: settings_store.get.id(),
-  }); */
-
+  const article_url = editor_store.get.url();
   const title = url.split("/").pop();
-  if (!title) {
+
+  if (!title || !article_url) {
     console.error("Image doesn't have a title", url);
     return {
       success: 0,
@@ -93,7 +77,7 @@ export async function upload_image_by_url(
   const form_data = new FormData();
   form_data.append("url", url);
   form_data.append("title", title);
-  form_data.append("directory", novica_url);
+  form_data.append("directory", article_url);
   form_data.append("type", "image");
 
   const file_data = await fetch("/api/upload_file_to_s3", {
