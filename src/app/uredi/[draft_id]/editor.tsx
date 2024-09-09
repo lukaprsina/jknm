@@ -2,14 +2,17 @@
 
 import "./editor.css";
 
-import type { ComponentType } from "react";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import Image from "next/image";
 
+import type { MultiSelectProps } from "~/components/multi-select";
 import { MultiSelect } from "~/components/multi-select";
 
 import type { DraftArticleWithAuthors } from "~/components/article/card-adapter";
-import { EditorProvider, useEditor } from "~/components/editor/editor-context";
+import {
+  EditorContext,
+  EditorProvider,
+} from "~/components/editor/editor-context";
 import { editor_store } from "~/components/editor/editor-store";
 import { useAllAuthors } from "~/components/authors";
 import { cn } from "~/lib/utils";
@@ -45,18 +48,6 @@ export interface SaveCallbackProps {
 
 export type SaveCallbackType = (props: SaveCallbackProps) => Promise<void>;
 
-interface AuthorMultiSelectType {
-  label: string;
-  value: string;
-  icon?: ComponentType<{ className?: string | undefined }>;
-}
-
-export interface AuthorValueMultiSelectType {
-  source: "google" | "custom";
-  id?: string;
-  name?: string;
-}
-
 function MyToolbar() {
   const editor_context = useContext(EditorContext);
   const all_authors = useAllAuthors();
@@ -69,7 +60,7 @@ function MyToolbar() {
         (user) =>
           ({
             label: user.name,
-            value: JSON.stringify({ source: "google", id: user.id }),
+            value: user.id.toString(),
             icon: ({ className }: { className?: string }) => {
               if (!user.image || !user.name) return;
 
@@ -84,7 +75,7 @@ function MyToolbar() {
                 />
               );
             },
-          }) satisfies AuthorMultiSelectType,
+          }) satisfies MultiSelectProps["options"]["0"],
       )
       .filter((mapped_user) => {
         return mapped_user.label && mapped_user.value;
@@ -100,22 +91,7 @@ function MyToolbar() {
         <div className="flex items-center gap-2">
           <MultiSelect
             onValueChange={(value) => {
-              const google_ids: string[] = [];
-              const custom_author_names: string[] = [];
-
-              for (const author_string of value) {
-                const author_value = JSON.parse(
-                  author_string,
-                ) as AuthorValueMultiSelectType;
-                if (author_value.source === "google") {
-                  google_ids.push(author_value.id ?? "");
-                } else {
-                  custom_author_names.push(author_value.name ?? "");
-                }
-              }
-
-              editor_store.set.google_ids(google_ids);
-              editor_store.set.custom_author_names(custom_author_names);
+              editor_store.set.author_ids(value.map((v) => parseInt(v)));
             }}
             defaultValue={[]}
             options={authors}

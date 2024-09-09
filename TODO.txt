@@ -3,3 +3,7 @@ mobile visual bug
 icon links: vercel accesibility, https://kittygiraudel.com/2020/12/10/accessible-icon-links/
 
 publish is field in save trpc api
+/* TODO: message to all zod fields
+  username: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }), */

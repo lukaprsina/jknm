@@ -1,6 +1,6 @@
 "use state";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Settings2Icon } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
@@ -19,7 +19,7 @@ import {
 } from "~/components/ui/tooltip";
 
 import { SettingsForm } from "./settings-form";
-import { useEditor } from "~/components/editor/editor-context";
+import { EditorContext } from "~/components/editor/editor-context";
 
 export function SettingsDialog() {
   const [dialogOpen, setDialogOpen] = useState(false);

@@ -68,12 +68,7 @@ export function useEditorMutations() {
   });
 
   const delete_draft = api.article.delete_draft.useMutation({
-    onMutate: () => {
-      editor_context.setSavingText("Brišem osnutek ...");
-    },
     onSuccess: (data) => {
-      if (!editor_context.editor) return;
-
       editor_context.setSavingText(undefined);
 
       //   await trpc_utils.article.invalidate();
@@ -96,8 +91,6 @@ export function useEditorMutations() {
     },
     onSuccess: () => {
       editor_context.setSavingText(undefined);
-
-      //   await trpc_utils.article.invalidate();
     },
   });
 
@@ -136,7 +129,13 @@ export function useEditorMutations() {
         ),
       });
     },
-    publish: async () => {
+    publish: async ({
+      created_at,
+      image,
+    }: {
+      created_at: Date;
+      image?: string | undefined;
+    }) => {
       editor_context.setSavingText("Objavljam spremembe ...");
       const editor_content = await editor_context.editor?.save();
       if (!editor_content) return;
@@ -155,15 +154,25 @@ export function useEditorMutations() {
           ...draft_article,
           ...updated,
           content: editor_content,
+          created_at,
+          image,
         },
         author_ids: draft_article.draft_articles_to_authors.map(
           (a) => a.author_id,
         ),
       });
     },
-    // TODO
-    delete_draft,
-    unpublish,
-    delete_both,
+    delete_draft: () => {
+      editor_context.setSavingText("Brišem osnutek...");
+      delete_draft.mutate(draft_article.id);
+    },
+    unpublish: () => {
+      editor_context.setSavingText("Skrivam novičko ...");
+      unpublish.mutate(draft_article.id);
+    },
+    delete_both: () => {
+      editor_context.setSavingText("Brišem novičko ...");
+      delete_both.mutate(draft_article.id);
+    },
   };
 }

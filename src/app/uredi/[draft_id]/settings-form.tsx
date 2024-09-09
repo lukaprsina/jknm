@@ -23,10 +23,6 @@ import { useContext } from "react";
 import { useEditorMutations } from "~/components/editor/editor-mutations";
 
 export const form_schema = z.object({
-  /* TODO: message to all zod fields
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }), */
   created_at: z.date(),
   image: z.string().optional(),
 });
@@ -57,15 +53,6 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
                 Izberite naslovno sliko za novičko.
               </FormDescription>
               <FormControl>
-                {/* TODO */}
-                {/* <ImageCarousel
-                  onImageUrlChange={(value) => {
-                    console.log("onImageUrlChange", value);
-                    field.onChange(value);
-                    editor_store.set.preview_image(value);
-                  }}
-                  imageUrl={field.value}
-                /> */}
                 <ImageSelector
                   image={field.value}
                   setImage={(value) => {
@@ -97,8 +84,8 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
         <div className="mt-6 flex flex-col gap-4">
           <Button
             onClick={form.handleSubmit(
-              (values: z.infer<typeof form_schema>) => {
-                editor_mutations.publish(values);
+              async (values: z.infer<typeof form_schema>) => {
+                await editor_mutations.publish(values);
 
                 closeDialog();
               },
