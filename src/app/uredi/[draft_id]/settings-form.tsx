@@ -18,7 +18,10 @@ import {
 import { editor_store } from "~/components/editor/editor-store";
 import { DateTimePicker } from "~/components/date-time-picker";
 import { ImageSelector } from "./image-selector";
-import { DraftArticleContext } from "~/components/article/context";
+import {
+  DraftArticleContext,
+  PublishedArticleContext,
+} from "~/components/article/context";
 import { useContext } from "react";
 import { useEditorMutations } from "~/components/editor/editor-mutations";
 
@@ -29,6 +32,7 @@ export const form_schema = z.object({
 
 export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
   const draft_article = useContext(DraftArticleContext);
+  const published_article = useContext(PublishedArticleContext);
   const editor_mutations = useEditorMutations();
 
   const form = useForm<z.infer<typeof form_schema>>({
@@ -85,8 +89,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
           <Button
             onClick={form.handleSubmit(
               async (values: z.infer<typeof form_schema>) => {
-                await editor_mutations.publish(values);
-
+                await editor_mutations.publish(values.created_at, values.image);
                 closeDialog();
               },
             )}
@@ -94,32 +97,20 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
           >
             Objavi spremembe
           </Button>
-          {/* {editor_context.article?.published ? (
+          {published_article ? (
             <Button
               onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
-                if (!editor_context.article?.id) {
-                  console.error("Article ID is missing.");
-                  return;
-                }
-
-                editor_context.mutations.unpublish(editor_context.article.id);
-
+                editor_mutations.unpublish();
                 closeDialog();
               })}
               variant="secondary"
             >
               Skrij novičko
             </Button>
-          ) : null} */}
+          ) : null}
           <Button
             onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
-              if (!editor_context.article?.id) {
-                console.error("Article ID is missing.");
-                return;
-              }
-
-              editor_context.mutations.delete_both(editor_context.article.id);
-
+              editor_mutations.delete_both();
               closeDialog();
             })}
             variant="destructive"
@@ -130,19 +121,10 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
           <Button
             onClick={form.handleSubmit(
               async (values: z.infer<typeof form_schema>) => {
-                if (!editor_context.article?.id) {
-                  console.error("Article ID is missing.");
-                  return;
-                }
-
-                const editor_content = await editor_context.editor?.save();
-
-                /* editor_context.mutations.save_draft({
-                  id: editor_context.article.id,
-                  content: editor_content,
-                  image: values.image ?? "",
-                }); */
-
+                await editor_mutations.save_draft(
+                  values.created_at,
+                  values.image,
+                );
                 closeDialog();
               },
             )}

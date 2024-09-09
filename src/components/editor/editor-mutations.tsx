@@ -12,6 +12,7 @@ import { DraftArticleContext } from "../article/context";
 import { EditorContext } from "./editor-context";
 import { useRouter } from "next/navigation";
 import { useToast } from "~/hooks/use-toast";
+import { merge_objects } from "~/lib/merge-objects";
 
 export function useEditorMutations() {
   const draft_article = useContext(DraftArticleContext);
@@ -111,31 +112,27 @@ export function useEditorMutations() {
   });
 
   return {
-    save_draft: async () => {
+    save_draft: async (created_at?: Date, image?: string | undefined) => {
       editor_context.setSavingText("Shranjujem osnutek ...");
       const editor_content = await editor_context.editor?.save();
       if (!editor_content) return;
 
       update_article_before_save(draft_article, editor_content);
 
+      const article = {
+        ...draft_article,
+        content: editor_content,
+      };
+
       save_draft.mutate({
         draft_id: draft_article.id,
-        article: {
-          ...draft_article,
-          content: editor_content,
-        },
+        article: merge_objects(article, { created_at, image }),
         author_ids: draft_article.draft_articles_to_authors.map(
           (a) => a.author_id,
         ),
       });
     },
-    publish: async ({
-      created_at,
-      image,
-    }: {
-      created_at: Date;
-      image?: string | undefined;
-    }) => {
+    publish: async (created_at?: Date, image?: string | undefined) => {
       editor_context.setSavingText("Objavljam spremembe ...");
       const editor_content = await editor_context.editor?.save();
       if (!editor_content) return;
@@ -148,15 +145,15 @@ export function useEditorMutations() {
 
       if (!updated) return;
 
+      const article = {
+        ...draft_article,
+        ...updated,
+        content: editor_content,
+      };
+
       publish.mutate({
         draft_id: draft_article.id,
-        article: {
-          ...draft_article,
-          ...updated,
-          content: editor_content,
-          created_at,
-          image,
-        },
+        article: merge_objects(article, { created_at, image }),
         author_ids: draft_article.draft_articles_to_authors.map(
           (a) => a.author_id,
         ),

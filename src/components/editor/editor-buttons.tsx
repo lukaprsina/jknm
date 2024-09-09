@@ -1,13 +1,18 @@
 "use client";
 
+import { useContext } from "react";
 import { Button } from "../ui/button";
-import type EditorJS from "@editorjs/editorjs";
+import { EditorContext } from "./editor-context";
 
 export function NoHeadingButton() {
+  const editor_context = useContext(EditorContext);
+  if (!editor_context) return null;
+
   return (
     <Button
       onClick={() => {
-        editor_context.blocks.insert(
+        if (!editor_context.editor) return;
+        editor_context.editor.blocks.insert(
           "header",
           { text: "Neimenovana novica", level: 1 },
           undefined,
@@ -23,10 +28,14 @@ export function NoHeadingButton() {
 }
 
 export function WrongHeadingButton({ title }: { title?: string }) {
+  const editor_context = useContext(EditorContext);
+  if (!editor_context) return null;
+
   return (
     <Button
       onClick={() => {
-        editor_context.blocks.insert(
+        if (!editor_context.editor) return;
+        editor_context.editor.blocks.insert(
           "header",
           { text: title ?? "Neimenovana novica", level: 1 },
           undefined,

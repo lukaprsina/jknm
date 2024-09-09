@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ArrowUpToLineIcon } from "lucide-react";
 
 import {
@@ -19,30 +19,30 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-import { useEditor } from "~/components/editor/editor-context";
 import { update_settings_from_editor } from "~/components/editor/editor-lib";
-import { editor_store } from "~/components/editor/editor-store";
+import { EditorContext } from "~/components/editor/editor-context";
+import { useEditorMutations } from "~/components/editor/editor-mutations";
+import { DraftArticleContext } from "~/components/article/context";
 
 export function UploadDialog() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const editor_context = useContext(EditorContext);
+  const editor_mutations = useEditorMutations();
+  const draft_article = useContext(DraftArticleContext);
 
-  if (!editor_context) return null;
+  if (!editor_context || !draft_article) return null;
 
   return (
     <AlertDialog open={dialogOpen} onOpenChange={(open) => setDialogOpen(open)}>
       <Tooltip>
         <TooltipTrigger asChild>
-          {/* <AlertDialogTrigger asChild> */}
           <Button
             onClick={async () => {
               const editor_content = await editor_context.editor?.save();
-              if (!editor_context.article || !editor_content) return;
+              if (!editor_content) return;
 
-              update_settings_from_editor(
-                editor_context.article,
-                editor_content,
-              );
+              update_settings_from_editor(draft_article, editor_content);
+
               setDialogOpen(true);
             }}
             size="icon"
@@ -50,7 +50,6 @@ export function UploadDialog() {
           >
             <ArrowUpToLineIcon />
           </Button>
-          {/* </AlertDialogTrigger> */}
         </TooltipTrigger>
         <TooltipContent>Shrani in objavi</TooltipContent>
       </Tooltip>
@@ -65,29 +64,8 @@ export function UploadDialog() {
           <AlertDialogCancel>Ne objavi</AlertDialogCancel>
           <AlertDialogAction
             onClick={async () => {
-              if (!editor_context.article?.id) {
-                console.error("Article ID is missing.");
-                return;
-              }
-
-              const editor_content =
-                await editor_context.configure_article_before_publish();
-              console.log(
-                "ZZZZZZZZZZZZ",
-                editor_store.get.google_ids(),
-                editor_store.get.custom_author_names(),
-              );
-              // TODO
-              /* editor_context.mutations.publish({
-                id: editor_context.article.id,
-                created_at: editor_context.article.created_at,
-                content: editor_content,
-                title: editor_store.get.title(),
-                url: editor_store.get.url(),
-                image: editor_store.get.image() ?? "",
-                author_ids: editor_store.get.google_ids(),
-                custom_author_names: editor_store.get.custom_author_names(),
-              }); */
+              await editor_mutations.publish();
+              setDialogOpen(false);
             }}
           >
             Objavi
