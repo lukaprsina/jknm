@@ -3,7 +3,7 @@
 import "./editorjs-attaches.css";
 
 import type { RenderFn } from "editorjs-blocks-react-renderer";
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Blocks from "editorjs-blocks-react-renderer";
@@ -28,20 +28,14 @@ import {
   get_image_data_from_editor,
 } from "../../lib/editor-utils";
 import { cn } from "~/lib/utils";
+import { PublishedArticleContext } from "../article/context";
 
-export function EditorToReact({
-  article,
-  // draft, TODO
-  session,
-}: {
-  article: typeof PublishedArticle.$inferSelect;
-  draft?: boolean;
-  session: Session | null;
-}) {
+export function EditorToReact({ session }: { session: Session | null }) {
   const [heading, setHeading] = useState<string | undefined>();
+  const article = useContext(PublishedArticleContext);
 
   const editor_data = useMemo(() => {
-    if (!article.content) return;
+    if (!article?.content) return;
 
     const heading_info = get_heading_from_editor(article.content);
 
@@ -61,9 +55,9 @@ export function EditorToReact({
       blocks: article.content.blocks.slice(1), // remove first heading
       time: article.content.time ?? Date.now(),
     };
-  }, [article.content]);
+  }, [article?.content]);
 
-  if (!editor_data) return;
+  if (!editor_data || !article) return;
 
   return (
     <Card className="pt-8">

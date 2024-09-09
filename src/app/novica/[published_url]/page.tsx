@@ -27,7 +27,6 @@ interface NovicaProps {
   searchParams: Record<string, string | string[] | undefined>;
 }
 
-// url_with_date: testing-04-09-2024
 export default async function NovicaPage({
   params: { published_url },
   searchParams,
@@ -45,7 +44,7 @@ export default async function NovicaPage({
     break;
   }
 
-  console.log("novica/", { url: decoded, day });
+  console.log("novica/ ", { url: decoded, day });
   const article_by_url = await api.article.get_published_by_url({
     url: decoded,
     created_at: day ? read_date_from_url(day) : undefined,
@@ -62,11 +61,7 @@ export default async function NovicaPage({
   return (
     <PublishedArticleContext.Provider value={article_by_url}>
       <Shell>
-        {session ? (
-          <TabbedContent article={article_by_url} />
-        ) : (
-          <PublishedContent article={article_by_url} />
-        )}
+        {session ? <TabbedContent /> : <PublishedContent />}
         <ImageGallery />
       </Shell>
     </PublishedArticleContext.Provider>
