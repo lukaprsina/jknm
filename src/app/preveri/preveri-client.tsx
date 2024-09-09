@@ -25,7 +25,7 @@ export function PreveriClient({
   }[];
   // csv_articles: CSVType[];
 }) {
-  const toast = useToast();
+  const toaster = useToast();
   const [page, setPage] = useState(1);
   const [inputPage, setInputPage] = useState(1);
   const router = useRouter();
@@ -85,7 +85,7 @@ export function PreveriClient({
           );
 
           if (article_index === -1) {
-            toast.toast({
+            toaster.toast({
               title: `Stran z ID ${inputPage} ne obstaja`,
             });
 

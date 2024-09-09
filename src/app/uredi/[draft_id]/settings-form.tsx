@@ -97,8 +97,8 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
         <div className="mt-6 flex flex-col gap-4">
           <Button
             onClick={form.handleSubmit(
-              async (values: z.infer<typeof form_schema>) => {
-                editor_mutations.publish.mutate({});
+              (values: z.infer<typeof form_schema>) => {
+                editor_mutations.publish(values);
 
                 closeDialog();
               },

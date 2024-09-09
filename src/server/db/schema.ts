@@ -138,7 +138,7 @@ export const Author = pgTable("author", {
 export const PublishedArticlesToAuthors = pgTable(
   "p_articles_to_authors",
   {
-    article_id: integer("article_id")
+    published_id: integer("published_id")
       .notNull()
       .references(() => PublishedArticle.id, {
         onDelete: "cascade",
@@ -152,7 +152,7 @@ export const PublishedArticlesToAuthors = pgTable(
   (published_articles_to_authors) => ({
     compoundKey: primaryKey({
       columns: [
-        published_articles_to_authors.article_id,
+        published_articles_to_authors.published_id,
         published_articles_to_authors.author_id,
       ],
     }),
@@ -163,7 +163,7 @@ export const PublishedArticlesToAuthorsRelations = relations(
   PublishedArticlesToAuthors,
   ({ one }) => ({
     article: one(PublishedArticle, {
-      fields: [PublishedArticlesToAuthors.article_id],
+      fields: [PublishedArticlesToAuthors.published_id],
       references: [PublishedArticle.id],
     }),
     author: one(Author, {
@@ -176,7 +176,7 @@ export const PublishedArticlesToAuthorsRelations = relations(
 export const DraftArticlesToAuthors = pgTable(
   "d_articles_to_authors",
   {
-    article_id: integer("article_id")
+    draft_id: integer("draft_id")
       .notNull()
       .references(() => DraftArticle.id, { onDelete: "cascade" }),
     author_id: integer("author_id")
@@ -188,7 +188,7 @@ export const DraftArticlesToAuthors = pgTable(
   (draft_articles_to_authors) => ({
     compoundKey: primaryKey({
       columns: [
-        draft_articles_to_authors.article_id,
+        draft_articles_to_authors.draft_id,
         draft_articles_to_authors.author_id,
       ],
     }),
@@ -199,7 +199,7 @@ export const DraftArticlesToAuthorsRelations = relations(
   DraftArticlesToAuthors,
   ({ one }) => ({
     article: one(DraftArticle, {
-      fields: [DraftArticlesToAuthors.article_id],
+      fields: [DraftArticlesToAuthors.draft_id],
       references: [DraftArticle.id],
     }),
     author: one(Author, {

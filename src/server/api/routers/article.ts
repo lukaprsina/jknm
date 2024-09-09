@@ -3,6 +3,7 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import {
   CreateDraftArticleSchema,
   DraftArticle,
+  DraftArticlesToAuthors,
   PublishArticleSchema,
   PublishedArticle,
   PublishedArticlesToAuthors,
@@ -152,15 +153,42 @@ export const article_router = createTRPCRouter({
     }),
 
   save_draft: protectedProcedure
-    .input(SaveDraftArticleSchema)
+    .input(
+      z.object({
+        article: SaveDraftArticleSchema,
+        author_ids: z.array(z.number()),
+        draft_id: z.number(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
-      if (!input.id) throw new Error("No id provided");
+      return await ctx.db.transaction(async (tx) => {
+        const draft = tx
+          .update(DraftArticle)
+          .set(input.article)
+          .where(eq(DraftArticle.id, input.draft_id))
+          .returning();
 
-      return await ctx.db
-        .update(DraftArticle)
-        .set(input)
-        .where(eq(DraftArticle.id, input.id))
-        .returning();
+        const authors = tx.insert(DraftArticlesToAuthors).values(
+          input.author_ids.map((author_id) => ({
+            author_id,
+            draft_id: input.draft_id,
+          })),
+        );
+
+        await named_promise_all_settled({
+          draft,
+          authors,
+        });
+
+        return await tx.query.PublishedArticle.findFirst({
+          where: eq(PublishedArticle.id, input.draft_id),
+          with: {
+            published_articles_to_authors: {
+              with: { author: true },
+            },
+          },
+        });
+      });
     }),
 
   publish: protectedProcedure
@@ -193,25 +221,27 @@ export const article_router = createTRPCRouter({
           .insert(PublishedArticle)
           .values([value])
           .returning();
+
         assert_one(inserted_published_articles);
         const published_article = inserted_published_articles[0];
 
-        for (const author_id of input.author_ids) {
-          await tx.insert(PublishedArticlesToAuthors).values([
-            {
-              author_id: author_id,
-              article_id: published_article.id,
-            },
-          ]);
+        await tx.insert(PublishedArticlesToAuthors).values(
+          input.author_ids.map((author_id) => ({
+            author_id,
+            published_id: published_article.id,
+          })),
+        );
+
+        // TODO
+        // update algolia published article in published index
+        // invalidate trpc
+
+        if (draft) {
+          await tx.delete(DraftArticle).where(eq(DraftArticle.id, draft.id));
+          // delete algolia draft article in draft index
         }
 
-        if (draft && input.draft_id) {
-          await tx
-            .delete(DraftArticle)
-            .where(eq(DraftArticle.id, input.draft_id));
-        }
-
-        return tx.query.PublishedArticle.findFirst({
+        return await tx.query.PublishedArticle.findFirst({
           where: eq(PublishedArticle.id, published_article.id),
           with: {
             published_articles_to_authors: {
@@ -233,10 +263,6 @@ export const article_router = createTRPCRouter({
 
         assert_one(draft_result);
         const draft = draft_result[0];
-
-        /* await tx
-          .delete(DraftArticlesToAuthors)
-          .where(eq(DraftArticlesToAuthors.article_id, input)); */
 
         if (!draft.published_id) return { draft };
 

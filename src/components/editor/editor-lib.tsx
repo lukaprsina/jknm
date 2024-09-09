@@ -8,6 +8,7 @@ import { editor_store } from "./editor-store";
 import type { useToast } from "~/hooks/use-toast";
 import { NoHeadingButton, WrongHeadingButton } from "./editor-buttons";
 import { convert_title_to_url } from "~/lib/article-utils";
+import { env } from "~/env";
 
 export function update_settings_from_editor(
   article: DraftArticleWithAuthors,
@@ -40,12 +41,20 @@ export function update_settings_from_editor(
   });
 }
 
+export function update_article_before_save(
+  article: DraftArticleWithAuthors,
+  editor_content: OutputData,
+) {
+  const new_url = article.id.toString();
+  update_article(true, article, editor_content, new_url);
+}
+
 export function update_article_before_publish(
   article: DraftArticleWithAuthors,
   editor_content: OutputData,
   toast: ReturnType<typeof useToast>,
 ) {
-  const { title: new_title, error } = get_heading_from_editor(editor_content);
+  const { title, error } = get_heading_from_editor(editor_content);
 
   if (error === "NO_HEADING") {
     toast.toast({
@@ -57,29 +66,43 @@ export function update_article_before_publish(
     toast.toast({
       title: "Naslov ni pravilne ravni",
       description: "Prva vrstica mora biti H1 naslov.",
-      action: <WrongHeadingButton title={new_title} />,
+      action: <WrongHeadingButton title={title} />,
     });
   }
 
-  if (!new_title) return;
-  const new_url = convert_title_to_url(new_title);
+  if (!title) return;
 
-  rename_files_in_editor(editor_content, new_url);
+  const url = convert_title_to_url(title);
+  update_article(false, article, editor_content, url, title);
 
-  update_settings_from_editor(article, editor_content, new_title);
+  return { title, url };
+}
+
+function update_article(
+  draft: boolean,
+  article: DraftArticleWithAuthors,
+  editor_content: OutputData,
+  updated_url: string,
+  updated_title?: string,
+) {
+  const hostname = draft
+    ? env.AWS_DRAFT_BUCKET_NAME
+    : env.AWS_PUBLISHED_BUCKET_NAME;
+  rename_urls_in_editor(hostname, editor_content, updated_url);
+
+  update_settings_from_editor(article, editor_content, updated_title);
 
   const preview_image = editor_store.get.preview_image();
 
   const new_preview_image = preview_image
-    ? rename_file(preview_image, new_url)
+    ? rename_url(hostname, preview_image, updated_url)
     : undefined;
 
   editor_store.set.preview_image(new_preview_image);
-
-  return editor_content;
 }
 
-export function rename_files_in_editor(
+export function rename_urls_in_editor(
+  hostname: string,
   editor_content: OutputData,
   new_dir: string,
 ) {
@@ -87,25 +110,25 @@ export function rename_files_in_editor(
 
   for (const block of editor_content.blocks) {
     if (!block.id || !["image", "attaches"].includes(block.type)) {
-      console.log("Skipping block", block.type);
       continue;
     }
 
     const file_data = block.data as { file: { url: string } };
-    const new_url = rename_file(file_data.file.url, new_dir);
+    const new_url = rename_url(hostname, file_data.file.url, new_dir);
     console.log("Renamed file", { old_url: file_data.file.url, new_url });
     file_data.file.url = new_url;
   }
 }
 
-export function rename_file(old_url: string, new_dir: string) {
+export function rename_url(hostname: string, old_url: string, new_dir: string) {
   const url_parts = new URL(old_url);
   const file_name = url_parts.pathname.split("/").pop();
+
   if (!file_name) {
     console.error("No name in URL", old_url);
     return old_url;
   }
 
-  const new_url = `${url_parts.protocol}//${url_parts.hostname}/${new_dir}/${file_name}`;
+  const new_url = `https://${hostname}/${new_dir}/${file_name}`;
   return new_url;
 }
