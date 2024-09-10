@@ -8,7 +8,7 @@ await import("./src/env.js");
 const config = {
   images: {
     loader: "custom",
-    loaderFile: "./src/lib/image-loader.ts",
+    loaderFile: "./image-loader.js",
     unoptimized: true,
     remotePatterns: [
       {

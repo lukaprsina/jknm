@@ -1,5 +1,5 @@
 export async function named_promise_all_settled<
-  T extends Record<string, Promise<unknown>>,
+  T extends Record<string, Promise<unknown> | undefined | null>,
 >(
   promise_object: T,
 ): Promise<{ [K in keyof T]: PromiseSettledResult<Awaited<T[K]>> }> {

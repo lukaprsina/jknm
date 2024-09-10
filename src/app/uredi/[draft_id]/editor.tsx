@@ -19,11 +19,13 @@ import { cn } from "~/lib/utils";
 import { EditorButtons } from "./toolbar-buttons";
 import { DraftArticleContext } from "~/components/article/context";
 
+// TODO: title not correct when saved
 export default function MyEditor({
   draft,
 }: {
   draft: DraftArticleWithAuthors;
 }) {
+  console.log("my editor draft", draft);
   return (
     <DraftArticleContext.Provider value={draft}>
       <EditorProvider>
@@ -62,7 +64,7 @@ function MyToolbar() {
   const authors = useMemo(() => {
     if (!all_authors) return [];
 
-    const google_authors = all_authors
+    const mapped_authors = all_authors
       .map(
         (user) =>
           ({
@@ -77,8 +79,7 @@ function MyToolbar() {
                   alt={user.name}
                   width={16}
                   height={16}
-                  loader={({ src }) => src}
-                  className={cn("rounded-full", className)}
+                  className={cn("m-0 rounded-full", className)}
                 />
               );
             },
@@ -88,7 +89,7 @@ function MyToolbar() {
         return mapped_user.label && mapped_user.value;
       });
 
-    return google_authors;
+    return mapped_authors;
   }, [all_authors]);
 
   if (!editor_context) return null;
@@ -98,7 +99,13 @@ function MyToolbar() {
         <div className="flex items-center gap-2">
           <MultiSelect
             onValueChange={(value) => {
-              editor_store.set.author_ids(value.map((v) => parseInt(v)));
+              const ids = value.map((v) => parseInt(v));
+              console.log(
+                "setting author_ids",
+                ids,
+                editor_store.get.author_ids(),
+              );
+              editor_store.set.author_ids(ids);
             }}
             defaultValue={[]}
             options={authors}

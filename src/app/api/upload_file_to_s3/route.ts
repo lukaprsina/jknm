@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
   try {
     await client.send(
       new HeadObjectCommand({
-        Bucket: env.AWS_DRAFT_BUCKET_NAME,
+        Bucket: env.NEXT_PUBLIC_S3_DRAFT_BUCKET_NAME,
         Key: key,
       }),
     );
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
   }
 
   const { url, fields } = await createPresignedPost(client, {
-    Bucket: env.AWS_DRAFT_BUCKET_NAME,
+    Bucket: env.NEXT_PUBLIC_S3_DRAFT_BUCKET_NAME,
     Key: key, //uuidv4(),
     Conditions: [
       ["content-length-range", 0, 5 * 10485760], // up to 10 MB

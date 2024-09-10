@@ -2,10 +2,7 @@
 
 import { get_published_article_link } from "~/lib/article-utils";
 import { api } from "~/trpc/react";
-import {
-  update_article_before_publish,
-  update_article_before_save,
-} from "../components/editor/editor-lib";
+import { update_article_before_publish } from "../components/editor/editor-lib";
 import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 import { useContext } from "react";
 import { DraftArticleContext } from "../components/article/context";
@@ -91,16 +88,29 @@ export function useEditorMutations() {
       const editor_content = await editor_context.editor?.save();
       if (!editor_content) return;
 
-      update_article_before_save(draft_article, editor_content);
+      const updated = update_article_before_publish(
+        draft_article,
+        editor_content,
+        toaster,
+      );
 
-      const article = {
+      const article2 = {
         ...draft_article,
+        ...updated,
         content: editor_content,
       };
 
+      const article3 = merge_objects(article2, { created_at, image });
+
+      console.log("editor mutation save_draft", {
+        draft_article,
+        article2,
+        article3,
+      });
+
       save_draft.mutate({
         draft_id: draft_article.id,
-        article: merge_objects(article, { created_at, image }),
+        article: article3,
         author_ids: draft_article.draft_articles_to_authors.map(
           (a) => a.author_id,
         ),

@@ -52,18 +52,18 @@ export function update_article_before_save(
 export function update_article_before_publish(
   article: DraftArticleWithAuthors,
   editor_content: OutputData,
-  toast: ReturnType<typeof useToast>,
+  toaster: ReturnType<typeof useToast>,
 ) {
   const { title, error } = get_heading_from_editor(editor_content);
 
   if (error === "NO_HEADING") {
-    toast.toast({
+    toaster.toast({
       title: "Naslov ni nastavljen",
       description: "Prva vrstica mora biti H1 naslov.",
       action: <NoHeadingButton />,
     });
   } else if (error === "WRONG_HEADING_LEVEL") {
-    toast.toast({
+    toaster.toast({
       title: "Naslov ni pravilne ravni",
       description: "Prva vrstica mora biti H1 naslov.",
       action: <WrongHeadingButton title={title} />,
@@ -86,8 +86,9 @@ function update_article(
   updated_title?: string,
 ) {
   const hostname = draft
-    ? env.AWS_DRAFT_BUCKET_NAME
-    : env.AWS_PUBLISHED_BUCKET_NAME;
+    ? env.NEXT_PUBLIC_S3_DRAFT_BUCKET_NAME
+    : env.NEXT_PUBLIC_S3_PUBLISHED_BUCKET_NAME;
+
   rename_urls_in_editor(hostname, editor_content, updated_url);
 
   update_settings_from_editor(article, editor_content, updated_title);

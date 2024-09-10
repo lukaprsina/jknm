@@ -7,3 +7,6 @@ publish is field in save trpc api
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }), */
+
+saving modifies published articles
+duplicate urls

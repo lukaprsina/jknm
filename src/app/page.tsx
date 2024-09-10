@@ -8,15 +8,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
-import { DraftArticles } from "~/components/article/draft-articles";
 import { cn } from "~/lib/utils";
 import { article_variants, page_variants } from "~/lib/page-variants";
+import { DraftArticleDrizzleCard } from "~/components/article/card-adapter";
 
 export default async function HomePageServer() {
   const session = await getServerAuthSession();
-
   const drafts = session ? await api.article.get_all_drafts() : undefined;
-
   await api.article.get_infinite_published.prefetchInfinite(
     {
       limit: 6 * 5,
@@ -51,6 +49,10 @@ export default async function HomePageServer() {
       sklon = "osnutkov";
     }
   }
+  console.log(
+    "drafts",
+    drafts?.map((draft) => draft.title),
+  );
 
   return (
     <Shell>
@@ -68,7 +70,14 @@ export default async function HomePageServer() {
             </AccordionTrigger>
             <AccordionContent className={article_variants({ variant: "card" })}>
               {drafts && drafts.length !== 0 ? (
-                <DraftArticles articles={drafts} />
+                <>
+                  {drafts.map((article) => (
+                    <DraftArticleDrizzleCard
+                      key={article.id}
+                      article={article}
+                    />
+                  ))}
+                </>
               ) : (
                 <span>Ni osnutkov</span>
               )}

@@ -31,6 +31,7 @@ import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
 } from "../article/card-adapter";
+import { Authors } from "../authors";
 
 export function EditorToReact({
   article,
@@ -64,6 +65,14 @@ export function EditorToReact({
     };
   }, [article?.content]);
 
+  const author_ids = useMemo(() => {
+    if (!article) return [];
+
+    return "old_id" in article
+      ? article.published_articles_to_authors.map((a) => a.author_id)
+      : article.draft_articles_to_authors.map((a) => a.author_id);
+  }, [article]);
+
   if (!editor_data || !article) return;
 
   return (
@@ -72,10 +81,7 @@ export function EditorToReact({
         <h1>{heading}</h1>
         <CardDescription className="flex items-center text-base text-foreground">
           <span>
-            {/* <Authors
-            // TODO
-              author_names={article}
-            /> */}
+            <Authors author_ids={author_ids} />
           </span>
           {/* {article.author_ids && article.author_ids.length !== 0 && <DotIcon />} */}
           <span> {format_date(article.created_at)}</span>
@@ -132,7 +138,6 @@ export const NextImageRenderer: RenderFn<EditorJSImageData> = ({
   return (
     <figure className="max-h-[1500] max-w-[1500]">
       <Image
-        loader={({ src }) => src}
         onClick={() => {
           // router.push(`?image=${data.file.url}`);
           // gallery_store.set.default_image(data);

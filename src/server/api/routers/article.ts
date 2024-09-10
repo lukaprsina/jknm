@@ -210,28 +210,32 @@ export const article_router = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.transaction(async (tx) => {
+        console.log("saving draft input", input);
         const draft = tx
           .update(DraftArticle)
           .set(input.article)
           .where(eq(DraftArticle.id, input.draft_id))
           .returning();
 
-        const authors = tx.insert(DraftArticlesToAuthors).values(
-          input.author_ids.map((author_id) => ({
-            author_id,
-            draft_id: input.draft_id,
-          })),
-        );
+        const authors =
+          input.author_ids.length !== 0
+            ? tx.insert(DraftArticlesToAuthors).values(
+                input.author_ids.map((author_id) => ({
+                  author_id,
+                  draft_id: input.draft_id,
+                })),
+              )
+            : undefined;
 
         await named_promise_all_settled({
           draft,
           authors,
         });
 
-        return await tx.query.PublishedArticle.findFirst({
-          where: eq(PublishedArticle.id, input.draft_id),
+        return await tx.query.DraftArticle.findFirst({
+          where: eq(DraftArticle.id, input.draft_id),
           with: {
-            published_articles_to_authors: {
+            draft_articles_to_authors: {
               with: { author: true },
             },
           },

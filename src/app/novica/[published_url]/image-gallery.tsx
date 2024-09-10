@@ -191,7 +191,6 @@ function GalleryImage({ image }: { image: EditorJSImageData }) {
           sizes="(max-width: 1500px) 100vw, 1500px"
           width={width}
           height={height}
-          loader={({ src }) => src}
         />
       </div>
       {image.caption && (
