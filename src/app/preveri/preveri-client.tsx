@@ -122,7 +122,7 @@ export function PreveriClient({
           />
           <Button type="submit">Pojdi</Button>
           {article.data && (
-            <EditButton id={article.data.id} url={article.data.url} new_tab />
+            <EditButton published_article_id={article.data.id} new_tab />
           )}
         </div>
       </form>

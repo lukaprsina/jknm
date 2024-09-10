@@ -1,17 +1,17 @@
 import dynamic from "next/dynamic";
 
-import { Button } from "~/components/ui/button";
+import { buttonVariants } from "~/components/ui/button";
 import { CardContent, CardFooter } from "~/components/ui/card";
 
-import NewArticleLoader from "~/components/new-article-loader";
 import { Shell } from "~/components/shell";
 import { article_variants, page_variants } from "~/lib/page-variants";
 import { api } from "~/trpc/server";
 import { InfoCard } from "~/components/info-card";
 import { cn } from "~/lib/utils";
-import { convert_title_to_url } from "~/lib/article-utils";
 import { getServerAuthSession } from "~/server/auth";
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import MakeNewDraftButton from "~/components/article/make-new-draft-button";
 
 const Editor = dynamic(() => import("./editor"), {
   ssr: false,
@@ -30,8 +30,8 @@ export default async function EditorPage({
   if (!session) return notFound();
 
   const decoded = decodeURIComponent(novica_ime);
-
   const novica_id = parseInt(decoded);
+
   if (isNaN(novica_id)) {
     return (
       <Shell>
@@ -69,14 +69,10 @@ function CreateNewArticle({ novica_ime }: { novica_ime: string }) {
         Lahko pa ustvarite novo novičko z imenom <strong>{novica_ime}</strong>.
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button asChild variant="secondary">
-          <a href="/">Domov</a>
-        </Button>
-        <NewArticleLoader
-          title={novica_ime}
-          url={convert_title_to_url(novica_ime)}
-          children="Ustvari novico"
-        />
+        <Link className={buttonVariants({ variant: "secondary" })} href="/">
+          Domov
+        </Link>
+        <MakeNewDraftButton title={novica_ime} children="Ustvari novico" />
       </CardFooter>
     </InfoCard>
   );

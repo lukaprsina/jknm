@@ -17,8 +17,9 @@ import { get_content_from_title } from "~/lib/content-from-title";
 
 export default function MakeNewDraftButton({
   title,
+  published_article_id,
   ...props
-}: ButtonProps & { title?: string; url?: string }) {
+}: ButtonProps & { title?: string; published_article_id?: number }) {
   const router = useRouter();
   const trpc_utils = api.useUtils();
 
@@ -38,8 +39,11 @@ export default function MakeNewDraftButton({
               {...props}
               onClick={() => {
                 create_draft.mutate({
-                  updated_at: new Date(),
-                  ...get_content_from_title(title),
+                  article: {
+                    updated_at: new Date(),
+                    ...get_content_from_title(title),
+                  },
+                  published_id: published_article_id,
                 });
               }}
             />

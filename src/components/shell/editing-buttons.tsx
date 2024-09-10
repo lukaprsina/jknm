@@ -38,9 +38,10 @@ export default function EditingButtons({
   return (
     <>
       {published_article && (
-        <EditButton published_article={published_article} />
+        <EditButton published_article_id={published_article.id} />
       )}
       <MakeNewDraftButton
+        published_article_id={published_article?.id}
         className="dark:bg-primary/80 dark:text-primary-foreground"
         variant="ghost"
         size="icon"
@@ -54,11 +55,11 @@ export default function EditingButtons({
 
 export function EditButton({
   new_tab,
-  published_article,
+  published_article_id,
   variant = "ghost",
 }: {
   new_tab?: boolean;
-  published_article: PublishedArticleWithAuthors;
+  published_article_id: number;
   variant?: ButtonProps["variant"];
 }) {
   const router = useRouter();
@@ -93,7 +94,7 @@ export function EditButton({
           size="icon"
           onClick={() => {
             get_or_create_draft.mutate({
-              published_id: published_article.id,
+              published_id: published_article_id,
               article: get_content_from_title(),
             });
           }}

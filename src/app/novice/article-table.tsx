@@ -149,8 +149,8 @@ function ArticleTableRow({
       {session && (
         <TableCell className="flex flex-grow justify-end gap-2">
           <EditButton
-            // TODO
-            // draft_id={hit.draft_id}
+            new_tab
+            published_article_id={hit.published_id}
             variant="outline"
           />
           <DeleteDialog article_id={parseInt(hit.objectID)} />

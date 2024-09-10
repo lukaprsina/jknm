@@ -192,13 +192,12 @@ export async function sync_with_algolia() {
       if (!content_preview) return;
 
       return {
-        objectID: article.id.toString(),
+        published_id: article.id,
         title: article.title,
         url: article.url,
         created_at: article.created_at.getTime(),
         image: article.image ?? undefined,
         content_preview,
-        is_draft: false,
         year: article.created_at.getFullYear().toString(),
         author_ids: article.published_articles_to_authors.map(
           (a) => a.author_id,

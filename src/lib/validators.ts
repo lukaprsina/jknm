@@ -15,7 +15,6 @@ export const content_validator = z
   .optional();
 
 export const published_article_hit_validator = z.object({
-  objectID: z.string(),
   published_id: z.number(),
   title: z.string(),
   url: z.string(),
@@ -31,7 +30,6 @@ export type PublishedArticleHit = z.infer<
 >;
 
 export const draft_article_hit_validator = z.object({
-  objectID: z.string(),
   draft_id: z.number(),
   title: z.string(),
   created_at: z.number(), // unix timestamp
