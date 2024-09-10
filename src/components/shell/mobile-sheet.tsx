@@ -46,7 +46,7 @@ export function MobileSheet({
               </div>
             </SheetTitle>
           </Link>
-          <EditingButtons article={article} session={session} />
+          <EditingButtons published_article={article} session={session} />
           <SheetDescription>Jamarski klub Novo mesto</SheetDescription>
         </SheetHeader>
         <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-24 pl-6">

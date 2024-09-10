@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PencilIcon, PlusIcon } from "lucide-react";
 
@@ -19,21 +19,21 @@ import type { PublishedArticleWithAuthors } from "../article/card-adapter";
 import { get_content_from_title } from "~/lib/content-from-title";
 
 export default function EditingButtons({
-  article,
+  published_article,
   session,
 }: {
-  article?: PublishedArticleWithAuthors;
+  published_article?: PublishedArticleWithAuthors;
   session: Session | null;
 }) {
   useEffect(() => {
-    console.log("EditingButtons", { article });
+    console.log("EditingButtons", { published_article });
   });
 
   if (!session) return null;
 
   return (
     <>
-      {article && <EditButton id={article.id} />}
+      {published_article && <EditButton draft_id={undefined} />}
       <MakeNewDraftButton
         className="dark:bg-primary/80 dark:text-primary-foreground"
         variant="ghost"
@@ -47,20 +47,19 @@ export default function EditingButtons({
 }
 
 export function EditButton({
-  id,
+  draft_id,
   new_tab,
   variant = "ghost",
 }: {
-  id: number;
+  draft_id?: number;
   new_tab?: boolean;
   variant?: ButtonProps["variant"];
 }) {
   const router = useRouter();
   const trpc_utils = api.useUtils();
 
-  const create_draft = api.article.create_draft.useMutation({
-    onSuccess: async () => {
-      await trpc_utils.article.invalidate();
+  const handle_navigation = useCallback(
+    (id: number) => {
       const new_url = `/uredi/${id}`;
 
       if (new_tab) {
@@ -68,6 +67,14 @@ export function EditButton({
       } else {
         router.push(new_url);
       }
+    },
+    [new_tab, router],
+  );
+
+  const create_draft = api.article.create_draft.useMutation({
+    onSuccess: async (data) => {
+      await trpc_utils.article.invalidate();
+      handle_navigation(data.id);
     },
   });
 
@@ -79,7 +86,11 @@ export function EditButton({
           variant={variant}
           size="icon"
           onClick={() => {
-            create_draft.mutate(get_content_from_title());
+            if (draft_id) {
+              handle_navigation(draft_id);
+            } else {
+              create_draft.mutate(get_content_from_title());
+            }
           }}
         >
           <PencilIcon size={20} />

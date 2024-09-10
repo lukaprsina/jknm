@@ -68,7 +68,7 @@ export function DesktopHeader({
         </Link>
         <div className="flex h-full flex-shrink-0 flex-col justify-between">
           <div className="flex justify-end">
-            <EditingButtons article={article} session={session} />
+            <EditingButtons published_article={article} session={session} />
           </div>
           <div className="flex items-center justify-between gap-2">
             <FacebookIcon />
