@@ -113,7 +113,6 @@ export function useEditorMutations() {
           url: updated?.url ?? "",
         },
         draft_article.id,
-        state.author_ids,
       );
 
       console.log("editor mutation save_draft", {
@@ -145,12 +144,7 @@ export function useEditorMutations() {
         image: image ?? state.image,
       } satisfies z.infer<typeof PublishArticleSchema>;
 
-      update_article_from_editor(
-        false,
-        article,
-        draft_article.id,
-        state.author_ids,
-      );
+      update_article_from_editor(false, article, draft_article.id);
 
       publish.mutate({
         draft_id: draft_article.id,

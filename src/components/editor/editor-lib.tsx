@@ -11,20 +11,28 @@ import { env } from "~/env";
 import type { PublishArticleSchema } from "~/server/db/schema";
 import type { z } from "zod";
 
-export function update_settings_from_editor(
-  article: z.infer<typeof PublishArticleSchema>,
-  article_id: number,
-  author_ids: number[],
-) {
-  if (!article.content) return;
-
-  const image_data = get_image_data_from_editor(article.content);
-  const image = editor_store.get.image();
+export function update_settings_from_editor({
+  title,
+  url,
+  image,
+  editor_content,
+  article_id,
+  author_ids,
+}: {
+  title: string;
+  url: string;
+  image: string | undefined;
+  editor_content: OutputData;
+  article_id: number;
+  author_ids?: number[];
+}) {
+  const image_data = get_image_data_from_editor(editor_content);
+  const store_image = editor_store.get.image();
 
   editor_store.set.state((draft) => {
-    if (!image) {
-      if (article.image) {
-        draft.image = article.image;
+    if (!store_image) {
+      if (image) {
+        draft.image = image;
       } else {
         draft.image = image_data.at(0)?.file.url;
       }
@@ -33,9 +41,9 @@ export function update_settings_from_editor(
     draft.image_data = image_data;
     draft.id = article_id;
     draft.image_data = image_data;
-    draft.title = article.title;
-    draft.url = article.url;
-    draft.author_ids = author_ids;
+    draft.title = title;
+    draft.url = url;
+    if (author_ids) draft.author_ids = author_ids;
   });
 }
 
@@ -71,7 +79,6 @@ export function update_article_from_editor(
   draft: boolean,
   article: z.infer<typeof PublishArticleSchema>,
   article_id: number,
-  author_ids: number[],
 ) {
   const hostname = draft
     ? env.NEXT_PUBLIC_S3_DRAFT_BUCKET_NAME
@@ -80,7 +87,13 @@ export function update_article_from_editor(
   if (!article.content) return;
   rename_urls_in_editor(hostname, article.content, article.url);
 
-  update_settings_from_editor(article, article_id, author_ids);
+  update_settings_from_editor({
+    title: article.title,
+    url: article.url,
+    image: article.image ?? undefined,
+    editor_content: article.content,
+    article_id,
+  });
 
   const image = editor_store.get.image();
 

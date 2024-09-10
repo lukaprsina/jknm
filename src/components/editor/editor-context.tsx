@@ -20,8 +20,9 @@ import Undo from "editorjs-undo";
 
 import { editor_store } from "./editor-store";
 import { EDITOR_JS_PLUGINS } from "./plugins";
-import { update_settings_from_editor } from "./editor-lib";
+import { update_settings_from_editor, validate_article } from "./editor-lib";
 import { DraftArticleContext } from "../article/context";
+import { useToast } from "~/hooks/use-toast";
 
 export interface EditorContextType {
   editor?: EditorJS;
@@ -41,6 +42,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
   const [, forceUpdate] = useReducer((x: number) => x + 1, 0);
   const editorJS = useRef<EditorJS | null>(null);
   const [dirty, setDirty] = useState(false);
+  const toaster = useToast();
 
   useEffect(() => {
     if (dirty) {
@@ -83,7 +85,18 @@ export function EditorProvider({ children }: { children: ReactNode }) {
           const editor_content = await editorJS.current?.save();
           if (!editor_content || !article) return;
 
-          update_settings_from_editor(article, editor_content, article.title);
+          const updated = validate_article(editor_content, toaster);
+
+          update_settings_from_editor({
+            title: updated?.title ?? "",
+            url: updated?.url ?? "",
+            image: article.image ?? undefined,
+            editor_content,
+            article_id: article.id,
+            author_ids: article.draft_articles_to_authors.map(
+              (a) => a.author_id,
+            ),
+          });
         }
 
         void update_article();
@@ -100,7 +113,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     });
 
     return temp_editor;
-  }, [content, article]);
+  }, [content, article, toaster]);
 
   useEffect(() => {
     if (editorJS.current != null) return;

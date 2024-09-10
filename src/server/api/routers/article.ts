@@ -173,7 +173,7 @@ export const article_router = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.transaction(async (tx) => {
+      const transaction = await ctx.db.transaction(async (tx) => {
         let published: PublishedArticleWithAuthors | undefined;
         console.log("get_or_create_draft input", input);
         if (input.published_id) {
@@ -253,6 +253,10 @@ export const article_router = createTRPCRouter({
         if (!created_draft) throw new Error("Created draft not found");
         return created_draft;
       });
+
+      console.log("get_or_create_draft transaction", transaction);
+
+      return transaction;
     }),
 
   save_draft: protectedProcedure

@@ -19,7 +19,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-import { update_settings_from_editor } from "~/components/editor/editor-lib";
 import { EditorContext } from "~/components/editor/editor-context";
 import { useEditorMutations } from "~/hooks/use-editor-mutations";
 import { DraftArticleContext } from "~/components/article/context";
@@ -41,7 +40,8 @@ export function UploadDialog() {
               const editor_content = await editor_context.editor?.save();
               if (!editor_content) return;
 
-              update_settings_from_editor(draft_article, editor_content);
+              // TODO
+              // update_settings_from_editor(draft_article, editor_content);
 
               setDialogOpen(true);
             }}

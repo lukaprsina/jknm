@@ -9,6 +9,7 @@ export async function upload_file(
   file: File,
   novica_url?: string,
 ): Promise<FileUploadResponse> {
+  console.log("upload_file", file, novica_url);
   const directory = novica_url ?? editor_store.get.url();
 
   if (!directory) {
@@ -35,6 +36,7 @@ export async function upload_image_by_file(
   novica_url?: string,
   // toast: ReturnType<typeof useToast>,
 ): Promise<FileUploadResponse> {
+  console.log("upload_image_by_file", file, novica_url);
   const directory = novica_url ?? editor_store.get.url();
 
   if (!novica_url) {
