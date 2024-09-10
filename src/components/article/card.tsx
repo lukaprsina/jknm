@@ -8,8 +8,15 @@ import { cn } from "~/lib/utils";
 import type { IntersectionRef } from "./infinite-articles";
 import { MagicCard } from "../magic-card";
 import Image from "next/image";
-import dynamic from "next/dynamic";
-import { Skeleton } from "../ui/skeleton";
+import ArticleCardDescription from "./description/card-description";
+
+/* const DynamicCardDescription = dynamic(
+  () => import("./description/card-description"),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-[1em] w-full bg-[hsl(0_0%_90%)]" />,
+  },
+); */
 
 export function ArticleCard({
   featured,
@@ -70,7 +77,7 @@ export function ArticleCard({
           <CardHeader>
             <h3 className="line-clamp-2 h-[56px]">{title}</h3>
             <div className="flex w-full justify-between gap-2">
-              <DynamicCardDescription
+              <ArticleCardDescription
                 author_ids={author_ids}
                 featured={featured}
                 created_at={created_at}
@@ -94,11 +101,3 @@ export function ArticleCard({
     </Link>
   );
 }
-
-const DynamicCardDescription = dynamic(
-  () => import("./card-description").then((mod) => mod.ArticleCardDescription),
-  {
-    ssr: false,
-    loading: () => <Skeleton className="h-[1em] w-full bg-[hsl(0_0%_90%)]" />,
-  },
-);

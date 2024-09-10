@@ -3,8 +3,10 @@ import { PreveriClient } from "./preveri-client";
 import { db } from "~/server/db";
 import { PublishedArticle } from "~/server/db/schema";
 import { asc } from "drizzle-orm";
+import { api } from "~/trpc/server";
 
 export default async function PreveriPage() {
+  await api.author.get_all.prefetch();
   const articles = await db.query.PublishedArticle.findMany({
     columns: {
       id: true,

@@ -8,17 +8,10 @@ import Image from "next/image";
 import Link from "next/link";
 import Blocks from "editorjs-blocks-react-renderer";
 import HTMLReactParser from "html-react-parser";
-import { DotIcon } from "lucide-react";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-} from "~/components/ui/card";
+import { Card, CardContent, CardHeader } from "~/components/ui/card";
 
 import { gallery_store } from "~/components/gallery-store";
-import { format_date } from "~/lib/format-date";
 import { human_file_size } from "~/lib/human-file-size";
 import type { Session } from "next-auth";
 import type { EditorJSImageData } from "../../lib/editor-utils";
@@ -31,7 +24,15 @@ import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
 } from "../article/card-adapter";
-import { Authors } from "../authors";
+
+import ArticlePageDescription from "~/components/article/description/page-description";
+/* const DynamicArticlePageDescription = dynamic(
+  import("~/components/article/description/page-description"),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-[1em] w-full bg-[hsl(0_0%_90%)]" />,
+  },
+); */
 
 export function EditorToReact({
   article,
@@ -79,19 +80,16 @@ export function EditorToReact({
     <Card className="pt-8">
       <CardHeader>
         <h1>{heading}</h1>
-        <CardDescription className="flex items-center text-base text-foreground">
-          <span>
-            <Authors author_ids={author_ids} />
-          </span>
-          {/* {article.author_ids && article.author_ids.length !== 0 && <DotIcon />} */}
-          <span> {format_date(article.created_at)}</span>
-          {session && "old_id" in article && article.old_id && (
-            <>
-              <DotIcon />
-              {article.old_id}
-            </>
-          )}
-        </CardDescription>
+        <ArticlePageDescription
+          author_ids={author_ids}
+          old_id={
+            session && "old_id" in article
+              ? article.old_id?.toString()
+              : undefined
+          }
+          created_at={article.created_at}
+          session={session}
+        />
       </CardHeader>
       <CardContent>
         <Blocks

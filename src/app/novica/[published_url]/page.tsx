@@ -33,6 +33,7 @@ export default async function NovicaPage({
   params: { published_url },
   searchParams,
 }: NovicaProps) {
+  await api.author.get_all.prefetch();
   const session = await getServerAuthSession();
 
   const decoded = decodeURIComponent(published_url);

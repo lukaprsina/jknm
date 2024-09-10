@@ -175,7 +175,7 @@ export const article_router = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.transaction(async (tx) => {
         let published: PublishedArticleWithAuthors | undefined;
-
+        console.log("get_or_create_draft input", input);
         if (input.published_id) {
           published = await tx.query.PublishedArticle.findFirst({
             where: eq(PublishedArticle.id, input.published_id),

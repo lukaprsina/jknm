@@ -16,17 +16,15 @@ import {
   get_published_article_link,
 } from "~/lib/article-utils";
 import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
-import dynamic from "next/dynamic";
-import { Skeleton } from "../ui/skeleton";
 
-// import { ArticleCard } from "./card";
-const ArticleCard = dynamic(
+import { ArticleCard } from "./card";
+/* const ArticleCard = dynamic(
   () => import("./card").then((mod) => mod.ArticleCard),
   {
     ssr: false,
     loading: () => <Skeleton className="h-96 w-full" />,
   },
-);
+); */
 
 type SelectPublishedArticlesToAuthors =
   typeof PublishedArticlesToAuthors.$inferSelect & {

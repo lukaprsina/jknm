@@ -25,11 +25,9 @@ const open_sans = Open_Sans({
   variable: "--font-opensans",
 });
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  // await api.author.get_all.prefetch();
   // await api.article.get_duplicate_urls.prefetch();
 
   return (

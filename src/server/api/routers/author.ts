@@ -10,6 +10,7 @@ export const author_router = createTRPCRouter({
   get_all: publicProcedure
     .input(z.enum(["member", "guest"]).optional())
     .query(async ({ ctx, input }) => {
+      // console.error("AAAAAAAAAAAAAAAAAAAAAAAAAAAA: get_all", input);
       return input
         ? await ctx.db.query.Author.findMany({
             where: eq(Author.author_type, input),
