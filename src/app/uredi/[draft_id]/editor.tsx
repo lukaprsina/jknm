@@ -16,7 +16,7 @@ import {
 import { editor_store } from "~/components/editor/editor-store";
 import { useAllAuthors } from "~/components/authors";
 import { cn } from "~/lib/utils";
-import { EditorButtons } from "./editor-buttons";
+import { EditorButtons } from "./toolbar-buttons";
 import { DraftArticleContext } from "~/components/article/context";
 
 export default function MyEditor({

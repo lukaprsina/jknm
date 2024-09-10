@@ -19,17 +19,17 @@ const Editor = dynamic(() => import("./editor"), {
 
 interface EditorPageProps {
   params: {
-    novica_ime: string;
+    draft_id: string;
   };
 }
 
 export default async function EditorPage({
-  params: { novica_ime },
+  params: { draft_id },
 }: EditorPageProps) {
   const session = await getServerAuthSession();
   if (!session) return notFound();
 
-  const decoded = decodeURIComponent(novica_ime);
+  const decoded = decodeURIComponent(draft_id);
   const novica_id = parseInt(decoded);
 
   if (isNaN(novica_id)) {
@@ -40,15 +40,16 @@ export default async function EditorPage({
     );
   }
 
-  const { draft } = await api.article.get_article_by_draft_id(novica_id);
+  const { draft, published } =
+    await api.article.get_article_by_draft_id(novica_id);
 
   return (
-    <Shell>
+    <Shell draft_article={draft} published_article={published}>
       <div className={cn(article_variants(), page_variants(), "min-h-screen")}>
         {draft ? (
           <Editor draft={draft} />
         ) : (
-          <CreateNewArticle novica_ime={novica_ime} />
+          <CreateNewArticle novica_ime={draft_id} />
         )}
       </div>
     </Shell>

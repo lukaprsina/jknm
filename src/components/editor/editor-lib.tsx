@@ -6,7 +6,7 @@ import type { DraftArticleWithAuthors } from "../article/card-adapter";
 import type { OutputData } from "@editorjs/editorjs";
 import { editor_store } from "./editor-store";
 import type { useToast } from "~/hooks/use-toast";
-import { NoHeadingButton, WrongHeadingButton } from "./editor-buttons";
+import { NoHeadingButton, WrongHeadingButton } from "./error-buttons";
 import { convert_title_to_url } from "~/lib/article-utils";
 import { env } from "~/env";
 

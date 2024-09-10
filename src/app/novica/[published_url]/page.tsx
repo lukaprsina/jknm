@@ -62,7 +62,7 @@ export default async function NovicaPage({
 
   return (
     // <PublishedArticleContext.Provider value={article_by_url}>
-    <Shell>
+    <Shell draft_article={draft} published_article={published}>
       {session ? (
         <TabbedContent draft={draft} published={published} />
       ) : (

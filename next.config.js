@@ -7,6 +7,8 @@ await import("./src/env.js");
 /** @type {import("next").NextConfig} */
 const config = {
   images: {
+    loader: "custom",
+    loaderFile: "./src/lib/image-loader.ts",
     unoptimized: true,
     remotePatterns: [
       {

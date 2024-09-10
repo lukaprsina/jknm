@@ -27,8 +27,6 @@ export const env = createEnv({
     AWS_ACCESS_KEY_ID: z.string(),
     AWS_SECRET_ACCESS_KEY: z.string(),
     AWS_REGION: z.string(),
-    AWS_DRAFT_BUCKET_NAME: z.string(),
-    AWS_PUBLISHED_BUCKET_NAME: z.string(),
     ALGOLIA_ADMIN_KEY: z.string(),
     JKNM_WORKSPACE_ID: z.string(),
     JKNM_SERVICE_ACCOUNT_CREDENTIALS: z.string(),
@@ -43,6 +41,8 @@ export const env = createEnv({
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
     NEXT_PUBLIC_ALGOLIA_ID: z.string(),
     NEXT_PUBLIC_ALGOLIA_SEARCH_KEY: z.string(),
+    NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME: z.string(),
+    NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME: z.string(),
   },
 
   /**
@@ -59,8 +59,10 @@ export const env = createEnv({
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     AWS_REGION: process.env.AWS_REGION,
-    AWS_DRAFT_BUCKET_NAME: process.env.AWS_DRAFT_BUCKET_NAME,
-    AWS_PUBLISHED_BUCKET_NAME: process.env.AWS_PUBLISHED_BUCKET_NAME,
+    NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME:
+      process.env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+    NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME:
+      process.env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
     ALGOLIA_ADMIN_KEY: process.env.ALGOLIA_ADMIN_KEY,
     JKNM_WORKSPACE_ID: process.env.JKNM_WORKSPACE_ID,
     JKNM_SERVICE_ACCOUNT_CREDENTIALS:
