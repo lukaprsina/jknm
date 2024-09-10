@@ -9,8 +9,12 @@ import { DraftArticleContext } from "../components/article/context";
 import { EditorContext } from "../components/editor/editor-context";
 import { useRouter } from "next/navigation";
 import { useToast } from "~/hooks/use-toast";
-import { merge_objects } from "~/lib/merge-objects";
 import { editor_store } from "~/components/editor/editor-store";
+import type {
+  PublishArticleSchema,
+  SaveDraftArticleSchema,
+} from "~/server/db/schema";
+import type { z } from "zod";
 
 export function useEditorMutations() {
   const draft_article = useContext(DraftArticleContext);
@@ -95,27 +99,24 @@ export function useEditorMutations() {
         toaster,
       );
 
-      const article2 = {
-        ...draft_article,
-        ...editor_store.get.state(),
-        ...updated,
+      const state = editor_store.get.state();
+      const article = {
+        title: updated?.title ?? state.title,
+        created_at: created_at ?? draft_article.created_at,
         content: editor_content,
-      };
-
-      const article3 = merge_objects(article2, { created_at, image });
+        image: image ?? state.image,
+      } satisfies z.infer<typeof SaveDraftArticleSchema>;
 
       console.log("editor mutation save_draft", {
         draft_article,
-        article2,
-        article3,
+        article,
+        state,
       });
 
       save_draft.mutate({
         draft_id: draft_article.id,
-        article: article3,
-        author_ids: draft_article.draft_articles_to_authors.map(
-          (a) => a.author_id,
-        ),
+        article,
+        author_ids: state.author_ids,
       });
     },
     publish: async (created_at?: Date, image?: string | undefined) => {
@@ -131,19 +132,19 @@ export function useEditorMutations() {
 
       if (!updated) return;
 
+      const state = editor_store.get.state();
       const article = {
-        ...draft_article,
-        ...editor_store.get.state(),
-        ...updated,
+        title: updated.title,
+        url: updated.url,
+        created_at: created_at ?? draft_article.created_at,
         content: editor_content,
-      };
+        image: image ?? state.image,
+      } satisfies z.infer<typeof PublishArticleSchema>;
 
       publish.mutate({
         draft_id: draft_article.id,
-        article: merge_objects(article, { created_at, image }),
-        author_ids: draft_article.draft_articles_to_authors.map(
-          (a) => a.author_id,
-        ),
+        article,
+        author_ids: state.author_ids,
       });
     },
     delete_draft: () => {

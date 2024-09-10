@@ -109,6 +109,7 @@
     "react-day-picker": "8.10.1",
     "react-dom": "^19.0.0-rc-4f604941-20240830",
     "react-hook-form": "^7.53.0",
+    "react-image-crop": "^11.0.7",
     "react-instantsearch": "^7.13.0",
     "sanitize-filename": "^1.6.3",
     "server-only": "^0.0.1",

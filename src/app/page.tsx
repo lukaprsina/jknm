@@ -18,6 +18,7 @@ import { DraftArticleDrizzleCard } from "~/components/article/card-adapter";
 
 export default async function HomePageServer() {
   const session = await getServerAuthSession();
+  await api.author.get_all.prefetch();
   const drafts = session ? await api.article.get_all_drafts() : undefined;
   await api.article.get_infinite_published.prefetchInfinite(
     {

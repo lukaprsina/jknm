@@ -18,6 +18,7 @@ import { useAllAuthors } from "~/components/authors";
 import { cn } from "~/lib/utils";
 import { EditorButtons } from "./toolbar-buttons";
 import { DraftArticleContext } from "~/components/article/context";
+import { Card, CardContent, CardHeader } from "~/components/ui/card";
 
 export default function MyEditor({
   draft,
@@ -28,10 +29,14 @@ export default function MyEditor({
   return (
     <DraftArticleContext.Provider value={draft}>
       <EditorProvider>
-        <div className="mx-auto w-full outline outline-1">
-          <MyToolbar />
-          <div id="editorjs" />
-        </div>
+        <Card className="mx-auto w-full">
+          <CardHeader>
+            <MyToolbar />
+          </CardHeader>
+          <CardContent>
+            <div id="editorjs" />
+          </CardContent>
+        </Card>
         <SettingsSummary />
       </EditorProvider>
     </DraftArticleContext.Provider>
