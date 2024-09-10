@@ -17,16 +17,23 @@ import { editor_store } from "~/components/editor/editor-store";
 import { useAllAuthors } from "~/components/authors";
 import { cn } from "~/lib/utils";
 import { EditorButtons } from "./editor-buttons";
+import { DraftArticleContext } from "~/components/article/context";
 
-export default function MyEditor() {
+export default function MyEditor({
+  draft,
+}: {
+  draft: DraftArticleWithAuthors;
+}) {
   return (
-    <EditorProvider>
-      <div className="mx-auto w-full outline outline-1">
-        <MyToolbar />
-        <div id="editorjs" />
-      </div>
-      <SettingsSummary />
-    </EditorProvider>
+    <DraftArticleContext.Provider value={draft}>
+      <EditorProvider>
+        <div className="mx-auto w-full outline outline-1">
+          <MyToolbar />
+          <div id="editorjs" />
+        </div>
+        <SettingsSummary />
+      </EditorProvider>
+    </DraftArticleContext.Provider>
   );
 }
 

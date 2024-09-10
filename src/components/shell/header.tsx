@@ -20,12 +20,17 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "~/components/ui/navigation-menu";
+import type { PublishedArticleWithAuthors } from "../article/card-adapter";
 
 export function DesktopHeader({
+  article,
   className,
   session,
   ...props
-}: React.ComponentProps<"div"> & { session: Session | null }) {
+}: React.ComponentProps<"div"> & {
+  article?: PublishedArticleWithAuthors;
+  session: Session | null;
+}) {
   const [sticky, setSticky] = useState(false);
   const sticky_navbar = useRef<HTMLDivElement | null>(null);
   const header_ref = useRef<HTMLDivElement | null>(null);
@@ -73,7 +78,7 @@ export function DesktopHeader({
         </Link>
         <div className="flex h-full flex-shrink-0 flex-col justify-between">
           <div className="flex justify-end">
-            <EditingButtons session={session} />
+            <EditingButtons article={article} session={session} />
           </div>
           <div className="flex items-center justify-between gap-2">
             <FacebookIcon />
@@ -103,10 +108,12 @@ export function DesktopHeader({
 }
 
 export function MobileHeader({
+  article,
   session,
   className,
   ...props
 }: React.ComponentProps<"div"> & {
+  article?: PublishedArticleWithAuthors;
   session: Session | null;
 }) {
   return (
@@ -121,7 +128,7 @@ export function MobileHeader({
       <Link className="text-2xl font-bold" href="/">
         Jamarski klub Novo mesto
       </Link>
-      <MobileSheet session={session} />
+      <MobileSheet article={article} session={session} />
     </div>
   );
 }

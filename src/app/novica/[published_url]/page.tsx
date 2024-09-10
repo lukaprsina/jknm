@@ -16,9 +16,11 @@ import { ImageGallery } from "./image-gallery";
 import { getServerAuthSession } from "~/server/auth";
 import { cn } from "~/lib/utils";
 import { EditorToReact } from "~/components/editor/editor-to-react";
-import type { PublishedArticle } from "~/server/db/schema";
 import { read_date_from_url } from "~/lib/format-date";
-import { PublishedArticleContext } from "~/components/article/context";
+import type {
+  DraftArticleWithAuthors,
+  PublishedArticleWithAuthors,
+} from "~/components/article/card-adapter";
 
 interface NovicaProps {
   params: {
@@ -45,12 +47,12 @@ export default async function NovicaPage({
   }
 
   console.log("novica/ ", { url: decoded, day });
-  const article_by_url = await api.article.get_published_by_url({
+  const { draft, published } = await api.article.get_article_by_published_url({
     url: decoded,
     created_at: day ? read_date_from_url(day) : undefined,
   });
 
-  if (!article_by_url) {
+  if (!published) {
     return (
       <Shell>
         <ArticleNotFound />
@@ -59,65 +61,66 @@ export default async function NovicaPage({
   }
 
   return (
-    <PublishedArticleContext.Provider value={article_by_url}>
-      <Shell>
-        {session ? <TabbedContent /> : <PublishedContent />}
-        <ImageGallery />
-      </Shell>
-    </PublishedArticleContext.Provider>
+    // <PublishedArticleContext.Provider value={article_by_url}>
+    <Shell>
+      {session ? (
+        <TabbedContent draft={draft} published={published} />
+      ) : (
+        <PublishedContent article={published} />
+      )}
+      <ImageGallery />
+    </Shell>
+    // </PublishedArticleContext.Provider>
   );
 }
 
 function PublishedContent({
   article,
 }: {
-  article?: typeof PublishedArticle.$inferSelect;
+  article?: PublishedArticleWithAuthors;
 }) {
   if (!article?.content) {
     return <ArticleNotFound />;
   }
 
   return (
-    // <div className="container h-full min-h-screen pt-8">
-    // {/* lg:prose-xl  */}
     <div className={cn(article_variants(), page_variants())}>
-      <EditorToReact session={null} article={article} />
+      <EditorToReact article={article} session={null} />
     </div>
-    // </div>
   );
 }
 
 async function TabbedContent({
-  article,
+  draft,
+  published,
 }: {
-  article?: typeof PublishedArticle.$inferSelect;
+  draft?: DraftArticleWithAuthors;
+  published?: PublishedArticleWithAuthors;
 }) {
   const session = await getServerAuthSession();
 
-  if (!article?.content) {
+  if (!draft?.content && !published?.content) {
     return <ArticleNotFound />;
   }
 
   return (
     <Tabs
       defaultValue={"published"}
-      /* lg:prose-xl prose-p:text-lg prose-h1:font-normal prose-h1:text-blue-800 prose-h1:text-[40px]  */
-      // prose-figcaption:text-foreground
       className={cn(article_variants(), page_variants())}
     >
       <TabsList className="not-prose">
-        <TabsTrigger disabled={!article.content} value="draft">
+        <TabsTrigger disabled={!draft?.content} value="draft">
           Osnutek
         </TabsTrigger>
-        <TabsTrigger disabled={!article.content} value="published">
+        <TabsTrigger disabled={!published?.content} value="published">
           Objavljeno
         </TabsTrigger>
       </TabsList>
       <TabsContent value="draft">
-        <EditorToReact draft article={article} session={session} />
+        <EditorToReact article={draft} session={session} />
       </TabsContent>
       <TabsContent value="published">
-        <EditorToReact article={article} session={session} />
+        <EditorToReact article={published} session={session} />
       </TabsContent>
     </Tabs>
   );

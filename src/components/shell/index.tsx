@@ -1,18 +1,19 @@
 import { cn } from "~/lib/utils";
-import type { PublishedArticle } from "~/server/db/schema";
 import { DesktopHeader, MobileHeader } from "./header";
 import { Footer } from "./footer";
 import { getServerAuthSession } from "~/server/auth";
+import type { PublishedArticleWithAuthors } from "../article/card-adapter";
 
 interface ShellProps {
   children: React.ReactNode;
-  published_article?: typeof PublishedArticle.$inferSelect;
+  article?: PublishedArticleWithAuthors;
   without_footer?: boolean;
   without_header?: boolean;
   className?: string;
 }
 
 export async function Shell({
+  article,
   children,
   without_footer,
   without_header,
@@ -24,8 +25,16 @@ export async function Shell({
     <div className={cn("w-full", className)}>
       {!without_header ? (
         <header className="h-28 w-full md:h-auto">
-          <DesktopHeader className="hidden md:flex" session={session} />
-          <MobileHeader className="flex md:hidden" session={session} />
+          <DesktopHeader
+            article={article}
+            className="hidden md:flex"
+            session={session}
+          />
+          <MobileHeader
+            article={article}
+            className="flex md:hidden"
+            session={session}
+          />
         </header>
       ) : undefined}
       <main className="relative w-full" id="main">

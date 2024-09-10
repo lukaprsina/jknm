@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import type { ButtonProps } from "~/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
@@ -10,7 +9,6 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 
-import { content_to_text } from "~/lib/content-to-text";
 import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
 
@@ -18,33 +16,11 @@ export default function NewArticleLoader({
   title,
   ...props
 }: ButtonProps & { title?: string; url?: string }) {
-  const router = useRouter();
   const trpc_utils = api.useUtils();
 
-  const article_create = api.article.create_draft.useMutation({
-    onSuccess: async (returned_data) => {
-      console.log("new article loader", returned_data);
-      const content_preview = content_to_text(
-        returned_data.content?.blocks ?? undefined,
-      );
-      // if (!content_preview) return;
-
-      /* await create_algolia_article({
-        objectID: returned_data.id.toString(),
-        title: returned_data.title,
-        url: returned_data.url,
-        content_preview,
-        created_at: returned_data.created_at.getTime(),
-        published: !!returned_data.published,
-        has_draft: !!returned_data.draft_content,
-        year: returned_data.created_at.getFullYear().toString(),
-        author_names: get_author_names(returned_data, all_authors.data),
-      }); */
-
+  const create_draft = api.article.create_draft.useMutation({
+    onSuccess: async () => {
       await trpc_utils.article.invalidate();
-
-      // console.log("/uredi", generate_encoded_url(returned_data));
-      router.push(`/uredi/${returned_data.id}`);
     },
   });
 
@@ -69,12 +45,7 @@ export default function NewArticleLoader({
               ],
             };
 
-            article_create.mutate({
-              title: article_title,
-              image: "",
-              content: template,
-              updated_at: new Date(),
-            });
+            create_draft.mutate({ title: article_title, content: template });
           }}
         />
       </PopoverTrigger>

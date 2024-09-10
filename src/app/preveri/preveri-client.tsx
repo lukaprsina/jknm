@@ -133,7 +133,7 @@ export function PreveriClient({
               className="h-full w-full overflow-y-hidden rounded-xl"
               src={iframe_src(page)}
             />
-            <EditorToReact session={null} article={article.data} />
+            <EditorToReact article={article.data} session={null} />
           </>
         ) : (
           <InfoCard title="Nekaj je narobe" description="Pokliči me" />

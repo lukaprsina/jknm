@@ -18,9 +18,16 @@ import { MenuIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import EditingButtons from "./editing-buttons";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
+import type { PublishedArticleWithAuthors } from "../article/card-adapter";
 
-export function MobileSheet({ session }: { session: Session | null }) {
+export function MobileSheet({
+  article,
+  session,
+}: {
+  article?: PublishedArticleWithAuthors;
+  session: Session | null;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -39,7 +46,7 @@ export function MobileSheet({ session }: { session: Session | null }) {
               </div>
             </SheetTitle>
           </Link>
-          <EditingButtons session={session} />
+          <EditingButtons article={article} session={session} />
           <SheetDescription>Jamarski klub Novo mesto</SheetDescription>
         </SheetHeader>
         <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-24 pl-6">

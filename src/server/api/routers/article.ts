@@ -9,6 +9,7 @@ import {
   PublishedArticlesToAuthors,
   SaveDraftArticleSchema,
 } from "~/server/db/schema";
+import type { SQL } from "drizzle-orm";
 import { and, between, eq } from "drizzle-orm";
 import { named_promise_all_settled } from "~/lib/named-promise";
 import { assert_at_most_one, assert_one } from "~/lib/assert-length";
@@ -72,42 +73,63 @@ export const article_router = createTRPCRouter({
       // TODO: when url doesn't match, send me an email
       return await ctx.db.query.PublishedArticle.findFirst({
         where: eq(PublishedArticle.id, input),
+        with: {
+          published_articles_to_authors: {
+            with: { author: true },
+          },
+        },
       });
     }),
 
-  get_published_by_url: publicProcedure
+  // get published and if logged in, also draft
+  get_article_by_published_url: publicProcedure
     .input(z.object({ url: z.string(), created_at: z.date().optional() }))
     .query(async ({ ctx, input }) => {
-      if (typeof input.created_at === "undefined") {
-        return await ctx.db.query.PublishedArticle.findFirst({
-          where: eq(PublishedArticle.url, input.url),
-          with: {
-            published_articles_to_authors: {
-              with: { author: true },
-            },
-          },
-        });
-      } else {
+      let filter: SQL | undefined = undefined;
+
+      if (input.created_at) {
         const beggining_of_day = new Date(input.created_at);
         beggining_of_day.setHours(0, 0, 0, 0);
         const end_of_day = new Date(input.created_at);
         end_of_day.setHours(23, 59, 59, 999);
 
-        return await ctx.db.query.PublishedArticle.findFirst({
-          where: and(
-            eq(PublishedArticle.url, input.url),
-            between(PublishedArticle.created_at, beggining_of_day, end_of_day),
-          ),
+        filter = between(
+          PublishedArticle.created_at,
+          beggining_of_day,
+          end_of_day,
+        );
+      }
+
+      const published = await ctx.db.query.PublishedArticle.findFirst({
+        where: and(eq(PublishedArticle.url, input.url), filter),
+        with: {
+          published_articles_to_authors: {
+            with: { author: true },
+          },
+        },
+      });
+
+      // only send draft when logged in
+      if (ctx.session && published?.id) {
+        const draft = await ctx.db.query.DraftArticle.findFirst({
+          where: eq(DraftArticle.published_id, published.id),
           with: {
-            published_articles_to_authors: {
-              with: { author: true },
+            draft_articles_to_authors: {
+              with: {
+                author: true,
+              },
             },
           },
         });
+
+        return { published, draft };
       }
+
+      return { published };
     }),
 
-  get_draft_and_published_by_id: publicProcedure
+  // if logged in, get published and draft
+  get_article_by_draft_id: publicProcedure
     .input(z.number())
     .query(async ({ ctx, input }) => {
       const draft = await ctx.db.query.DraftArticle.findFirst({

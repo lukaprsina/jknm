@@ -3,7 +3,7 @@
 import "./editorjs-attaches.css";
 
 import type { RenderFn } from "editorjs-blocks-react-renderer";
-import { useContext, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Blocks from "editorjs-blocks-react-renderer";
@@ -20,7 +20,6 @@ import {
 import { gallery_store } from "~/components/gallery-store";
 import { format_date } from "~/lib/format-date";
 import { human_file_size } from "~/lib/human-file-size";
-import type { PublishedArticle } from "~/server/db/schema";
 import type { Session } from "next-auth";
 import type { EditorJSImageData } from "../../lib/editor-utils";
 import {
@@ -28,11 +27,19 @@ import {
   get_image_data_from_editor,
 } from "../../lib/editor-utils";
 import { cn } from "~/lib/utils";
-import { PublishedArticleContext } from "../article/context";
+import type {
+  DraftArticleWithAuthors,
+  PublishedArticleWithAuthors,
+} from "../article/card-adapter";
 
-export function EditorToReact({ session }: { session: Session | null }) {
+export function EditorToReact({
+  article,
+  session,
+}: {
+  article: DraftArticleWithAuthors | PublishedArticleWithAuthors | undefined;
+  session: Session | null;
+}) {
   const [heading, setHeading] = useState<string | undefined>();
-  const article = useContext(PublishedArticleContext);
 
   const editor_data = useMemo(() => {
     if (!article?.content) return;
@@ -72,7 +79,7 @@ export function EditorToReact({ session }: { session: Session | null }) {
           </span>
           {/* {article.author_ids && article.author_ids.length !== 0 && <DotIcon />} */}
           <span> {format_date(article.created_at)}</span>
-          {session && article.old_id && (
+          {session && "old_id" in article && article.old_id && (
             <>
               <DotIcon />
               {article.old_id}

@@ -16,7 +16,7 @@ import { cn } from "~/lib/utils";
 import { useAllAuthors } from "../authors";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-export default function MakeDraftButton({
+export default function MakeNewDraftButton({
   title,
   url,
   ...props

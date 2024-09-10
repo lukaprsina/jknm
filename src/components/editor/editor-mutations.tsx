@@ -18,6 +18,7 @@ export function useEditorMutations() {
   const draft_article = useContext(DraftArticleContext);
   const editor_context = useContext(EditorContext);
   const duplicate_urls = useDuplicatedUrls();
+  const trpc_utils = api.useUtils();
 
   const toaster = useToast();
   const router = useRouter();
@@ -27,41 +28,22 @@ export function useEditorMutations() {
   }
 
   const save_draft = api.article.save_draft.useMutation({
-    onSuccess: () => {
-      //   TODO
-      /* if (!editor_context.editor) return;
-      const editor_content = await editor_context.editor_context.save();
-
-      update_settings_from_editor(draft_article, editor_content); */
-
+    onSuccess: async () => {
       editor_context.setSavingText(undefined);
       editor_context.setDirty(false);
-
-      //   await trpc_utils.article.invalidate();
+      await trpc_utils.article.invalidate();
     },
   });
 
   const publish = api.article.publish.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       // TODO: throw error
       if (!data) return;
-      /* const returned_data = data;
-      if (!editor_context.editor || !returned_data) return;
-      console.warn("published", returned_data);
-
-      const content_preview = content_to_text(
-        returned_data.content?.blocks ?? undefined,
-      );
-
-      if (!content_preview) {
-        console.error("No content preview", returned_data);
-      } */
 
       editor_context.setSavingText(undefined);
       editor_context.setDirty(false);
 
-      //   await trpc_utils.article.invalidate();
-
+      await trpc_utils.article.invalidate();
       router.push(
         get_published_article_link(data.url, data.created_at, duplicate_urls),
       );
@@ -69,11 +51,10 @@ export function useEditorMutations() {
   });
 
   const delete_draft = api.article.delete_draft.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       editor_context.setSavingText(undefined);
 
-      //   await trpc_utils.article.invalidate();
-
+      await trpc_utils.article.invalidate();
       if (data.url) {
         router.push(
           get_published_article_link(
@@ -87,19 +68,14 @@ export function useEditorMutations() {
   });
 
   const unpublish = api.article.unpublish.useMutation({
-    onMutate: () => {
-      editor_context.setSavingText("Skrivam novičko ...");
-    },
-    onSuccess: () => {
+    onSuccess: async () => {
+      await trpc_utils.article.invalidate();
       editor_context.setSavingText(undefined);
     },
   });
 
   const delete_both = api.article.delete_both.useMutation({
-    onMutate: () => {
-      editor_context.setSavingText("Brišem novičko ...");
-    },
-    onSuccess: (_data) => {
+    onSuccess: async (_data) => {
       /* const returned_data = data.at(0);
       if (!returned_data) return;
 
@@ -107,6 +83,7 @@ export function useEditorMutations() {
       await delete_s3_directory(`${returned_data.url}-${returned_data.id}`);
       await trpc_utils.article.invalidate(); */
 
+      await trpc_utils.article.invalidate();
       router.replace(`/`);
     },
   });

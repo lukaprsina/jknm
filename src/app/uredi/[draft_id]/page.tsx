@@ -12,10 +12,6 @@ import { cn } from "~/lib/utils";
 import { convert_title_to_url } from "~/lib/article-utils";
 import { getServerAuthSession } from "~/server/auth";
 import { notFound } from "next/navigation";
-import {
-  DraftArticleContext,
-  PublishedArticleContext,
-} from "~/components/article/context";
 
 const Editor = dynamic(() => import("./editor"), {
   ssr: false,
@@ -44,21 +40,18 @@ export default async function EditorPage({
     );
   }
 
-  const { draft, published } =
-    await api.article.get_draft_and_published_by_id(novica_id);
+  const { draft } = await api.article.get_article_by_draft_id(novica_id);
 
   return (
-    <PublishedArticleContext.Provider value={published}>
-      <DraftArticleContext.Provider value={draft}>
-        <Shell>
-          <div
-            className={cn(article_variants(), page_variants(), "min-h-screen")}
-          >
-            {draft ? <Editor /> : <CreateNewArticle novica_ime={novica_ime} />}
-          </div>
-        </Shell>
-      </DraftArticleContext.Provider>
-    </PublishedArticleContext.Provider>
+    <Shell>
+      <div className={cn(article_variants(), page_variants(), "min-h-screen")}>
+        {draft ? (
+          <Editor draft={draft} />
+        ) : (
+          <CreateNewArticle novica_ime={novica_ime} />
+        )}
+      </div>
+    </Shell>
   );
 }
 

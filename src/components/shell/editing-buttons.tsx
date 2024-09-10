@@ -1,13 +1,13 @@
 "use client";
 
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PencilIcon, PlusIcon } from "lucide-react";
 
 import { content_to_text } from "~/lib/content-to-text";
 import { api } from "~/trpc/react";
 import type { Session } from "next-auth";
-import MakeDraftButton from "../article/make-draft-button";
+import MakeNewDraftButton from "../article/make-new-draft-button";
 import { Button } from "~/components/ui/button";
 import type { ButtonProps } from "~/components/ui/button";
 import {
@@ -17,15 +17,15 @@ import {
 } from "~/components/ui/tooltip";
 import { useAllAuthors } from "../authors";
 import { SettingsDropdown } from "../settings";
-import { PublishedArticleContext } from "../article/context";
+import type { PublishedArticleWithAuthors } from "../article/card-adapter";
 
 export default function EditingButtons({
+  article,
   session,
 }: {
+  article?: PublishedArticleWithAuthors;
   session: Session | null;
 }) {
-  const article = useContext(PublishedArticleContext);
-
   useEffect(() => {
     console.log("EditingButtons", { article });
   });
@@ -44,13 +44,13 @@ export default function EditingButtons({
           // has_draft={!!article.draft_content}
         />
       )}
-      <MakeDraftButton
+      <MakeNewDraftButton
         className="dark:bg-primary/80 dark:text-primary-foreground"
         variant="ghost"
         size="icon"
       >
         <PlusIcon size={24} />
-      </MakeDraftButton>
+      </MakeNewDraftButton>
       <SettingsDropdown />
     </>
   );
