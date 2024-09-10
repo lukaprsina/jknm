@@ -21,7 +21,7 @@ import {
 } from "~/components/ui/tooltip";
 import { update_settings_from_editor } from "~/components/editor/editor-lib";
 import { EditorContext } from "~/components/editor/editor-context";
-import { useEditorMutations } from "~/components/editor/editor-mutations";
+import { useEditorMutations } from "~/hooks/use-editor-mutations";
 import { DraftArticleContext } from "~/components/article/context";
 
 export function UploadDialog() {

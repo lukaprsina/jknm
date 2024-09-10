@@ -7,49 +7,25 @@ import {
   PopoverTrigger,
 } from "@radix-ui/react-popover";
 
-import { content_to_text } from "~/lib/content-to-text";
 import { api } from "~/trpc/react";
 import { Button } from "~/components/ui/button";
 import type { ButtonProps } from "~/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
-import { useAllAuthors } from "../authors";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { get_content_from_title } from "~/lib/content-from-title";
 
 export default function MakeNewDraftButton({
   title,
-  url,
   ...props
 }: ButtonProps & { title?: string; url?: string }) {
   const router = useRouter();
   const trpc_utils = api.useUtils();
-  const all_authors = useAllAuthors();
 
-  const article_create = api.article.create_draft.useMutation({
-    onSuccess: async (returned_data) => {
-      console.log("new article loader", returned_data);
-      const content_preview = content_to_text(
-        returned_data.content?.blocks ?? undefined,
-      );
-      // if (!content_preview) return;
-
-      // TODO
-      /* await create_algolia_article({
-        objectID: returned_data.id.toString(),
-        title: returned_data.title,
-        url: returned_data.url,
-        content_preview,
-        created_at: returned_data.created_at.getTime(),
-        published: !!returned_data.published,
-        has_draft: !!returned_data.draft_content,
-        year: returned_data.created_at.getFullYear().toString(),
-        author_names: get_author_names(returned_data, all_authors.data),
-      }); */
-
+  const create_draft = api.article.get_or_create_draft.useMutation({
+    onSuccess: async (data) => {
       await trpc_utils.article.invalidate();
-
-      // console.log("/uredi", generate_encoded_url(returned_data));
-      router.push(`/uredi/${returned_data.id}`);
+      router.push(`/uredi/${data.id}`);
     },
   });
 
@@ -61,27 +37,9 @@ export default function MakeNewDraftButton({
             <Button
               {...props}
               onClick={() => {
-                const article_title = title ?? "Nova novica";
-                const article_url = url ?? `nova-novica`;
-
-                const template = {
-                  blocks: [
-                    {
-                      id: "sheNwCUP5A",
-                      type: "header",
-                      data: {
-                        text: article_title,
-                        level: 1,
-                      },
-                    },
-                  ],
-                };
-
-                article_create.mutate({
-                  title: article_title,
-                  image: "",
-                  content: template,
+                create_draft.mutate({
                   updated_at: new Date(),
+                  ...get_content_from_title(title),
                 });
               }}
             />

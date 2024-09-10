@@ -1,8 +1,9 @@
 import { cn } from "~/lib/utils";
-import { DesktopHeader, MobileHeader } from "./header";
+import { DesktopHeader } from "./desktop-header";
 import { Footer } from "./footer";
 import { getServerAuthSession } from "~/server/auth";
 import type { PublishedArticleWithAuthors } from "../article/card-adapter";
+import { MobileHeader } from "./header";
 
 interface ShellProps {
   children: React.ReactNode;

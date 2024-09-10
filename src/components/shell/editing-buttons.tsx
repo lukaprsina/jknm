@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PencilIcon, PlusIcon } from "lucide-react";
 
-import { content_to_text } from "~/lib/content-to-text";
 import { api } from "~/trpc/react";
 import type { Session } from "next-auth";
 import MakeNewDraftButton from "../article/make-new-draft-button";
@@ -15,9 +14,9 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "~/components/ui/tooltip";
-import { useAllAuthors } from "../authors";
 import { SettingsDropdown } from "../settings";
 import type { PublishedArticleWithAuthors } from "../article/card-adapter";
+import { get_content_from_title } from "~/lib/content-from-title";
 
 export default function EditingButtons({
   article,
@@ -34,16 +33,7 @@ export default function EditingButtons({
 
   return (
     <>
-      {article && (
-        <EditButton
-          id={article.id}
-          url={article.url}
-          content_preview={content_to_text(
-            article.content?.blocks ?? undefined,
-          )}
-          // has_draft={!!article.draft_content}
-        />
-      )}
+      {article && <EditButton id={article.id} />}
       <MakeNewDraftButton
         className="dark:bg-primary/80 dark:text-primary-foreground"
         variant="ghost"
@@ -58,43 +48,21 @@ export default function EditingButtons({
 
 export function EditButton({
   id,
-  url,
-  content_preview,
-  is_draft,
   new_tab,
   variant = "ghost",
 }: {
   id: number;
-  url: string;
-  content_preview?: string;
-  is_draft?: boolean;
   new_tab?: boolean;
   variant?: ButtonProps["variant"];
 }) {
   const router = useRouter();
   const trpc_utils = api.useUtils();
-  const all_authors = useAllAuthors();
 
-  const article_create_draft = api.article.create_draft.useMutation({
-    onSuccess: async (returned_data) => {
-      // TODO
-      /* await create_algolia_article({
-        objectID: returned_data.id.toString(),
-        title: returned_data.title,
-        url: returned_data.url,
-        content_preview: content_preview ?? "",
-        image: returned_data.image ?? "",
-        created_at: returned_data.created_at.getTime(),
-        published: !!returned_data.published,
-        has_draft: !!returned_data.draft_content,
-        year: returned_data.created_at.getFullYear().toString(),
-        author_names: get_author_names(returned_data, all_authors.data),
-      }); */
-
+  const create_draft = api.article.create_draft.useMutation({
+    onSuccess: async () => {
       await trpc_utils.article.invalidate();
+      const new_url = `/uredi/${id}`;
 
-      // console.log("/uredi", generate_encoded_url(returned_data));
-      const new_url = `/uredi/${returned_data.id}`;
       if (new_tab) {
         window.open(new_url, "_blank");
       } else {
@@ -111,21 +79,7 @@ export function EditButton({
           variant={variant}
           size="icon"
           onClick={() => {
-            // console.log({ has_draft });
-            const new_url = `/uredi/${id})}`;
-
-            if (is_draft) {
-              if (new_tab) {
-                window.open(new_url, "_blank");
-              } else {
-                router.push(new_url);
-              }
-            } else {
-              // TODO
-              /* article_create_draft.mutate({
-                id,
-              }); */
-            }
+            create_draft.mutate(get_content_from_title());
           }}
         >
           <PencilIcon size={20} />

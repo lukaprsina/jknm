@@ -28,7 +28,7 @@ import { UploadDialog } from "./upload-dialog";
 import { SettingsDialog } from "./settings-dialog";
 import { EditorContext } from "~/components/editor/editor-context";
 import { DraftArticleContext } from "~/components/article/context";
-import { useEditorMutations } from "~/components/editor/editor-mutations";
+import { useEditorMutations } from "~/hooks/use-editor-mutations";
 
 export function EditorButtons() {
   return (

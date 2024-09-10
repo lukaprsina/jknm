@@ -5,11 +5,11 @@ import { api } from "~/trpc/react";
 import {
   update_article_before_publish,
   update_article_before_save,
-} from "./editor-lib";
+} from "../components/editor/editor-lib";
 import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 import { useContext } from "react";
-import { DraftArticleContext } from "../article/context";
-import { EditorContext } from "./editor-context";
+import { DraftArticleContext } from "../components/article/context";
+import { EditorContext } from "../components/editor/editor-context";
 import { useRouter } from "next/navigation";
 import { useToast } from "~/hooks/use-toast";
 import { merge_objects } from "~/lib/merge-objects";
@@ -37,9 +37,6 @@ export function useEditorMutations() {
 
   const publish = api.article.publish.useMutation({
     onSuccess: async (data) => {
-      // TODO: throw error
-      if (!data) return;
-
       editor_context.setSavingText(undefined);
       editor_context.setDirty(false);
 
@@ -75,7 +72,7 @@ export function useEditorMutations() {
   });
 
   const delete_both = api.article.delete_both.useMutation({
-    onSuccess: async (_data) => {
+    onSuccess: async () => {
       /* const returned_data = data.at(0);
       if (!returned_data) return;
 

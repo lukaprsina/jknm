@@ -263,14 +263,19 @@ export const article_router = createTRPCRouter({
           // delete algolia draft article in draft index
         }
 
-        return await tx.query.PublishedArticle.findFirst({
-          where: eq(PublishedArticle.id, published_article.id),
-          with: {
-            published_articles_to_authors: {
-              with: { author: true },
+        const published_article_with_authors =
+          await tx.query.PublishedArticle.findFirst({
+            where: eq(PublishedArticle.id, published_article.id),
+            with: {
+              published_articles_to_authors: {
+                with: { author: true },
+              },
             },
-          },
-        });
+          });
+
+        if (!published_article_with_authors)
+          throw new Error("Published article not found");
+        return published_article_with_authors;
       });
     }),
 
@@ -296,7 +301,7 @@ export const article_router = createTRPCRouter({
       });
     }),
 
-  // TODO: warn user that draft will be ovewrriten
+  // TODO: warn user that the draft will be ovewrriten
   unpublish: protectedProcedure
     .input(z.number())
     .mutation(async ({ ctx, input }) => {

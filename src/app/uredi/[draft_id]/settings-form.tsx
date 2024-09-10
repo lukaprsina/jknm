@@ -23,7 +23,7 @@ import {
   PublishedArticleContext,
 } from "~/components/article/context";
 import { useContext } from "react";
-import { useEditorMutations } from "~/components/editor/editor-mutations";
+import { useEditorMutations } from "~/hooks/use-editor-mutations";
 
 export const form_schema = z.object({
   created_at: z.date(),

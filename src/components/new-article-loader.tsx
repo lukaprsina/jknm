@@ -18,7 +18,7 @@ export default function NewArticleLoader({
 }: ButtonProps & { title?: string; url?: string }) {
   const trpc_utils = api.useUtils();
 
-  const create_draft = api.article.create_draft.useMutation({
+  const create_draft = api.article.get_or_create_draft.useMutation({
     onSuccess: async () => {
       await trpc_utils.article.invalidate();
     },
