@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { api } from "~/trpc/react";
 import { useIntersectionObserver } from "usehooks-ts";
-import { cn } from "~/lib/utils";
 import { article_grid_variants } from "~/lib/page-variants";
 import { PublishedArticleDrizzleCard } from "./card-adapter";
 import { InfoCard } from "../info-card";
@@ -55,7 +54,7 @@ export function InfiniteArticles() {
 
   return (
     /* prose-h3:my-0 prose-p:mt-0 lg:prose-xl prose-p:text-lg mx-auto   */
-    <div className={cn(article_grid_variants({ padding: "none" }))}>
+    <div className={article_grid_variants({ padding: "none" })}>
       {articles.map((article, index) => (
         <PublishedArticleDrizzleCard
           key={article.id}

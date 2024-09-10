@@ -19,7 +19,6 @@ import { cn } from "~/lib/utils";
 import { EditorButtons } from "./toolbar-buttons";
 import { DraftArticleContext } from "~/components/article/context";
 
-// TODO: title not correct when saved
 export default function MyEditor({
   draft,
 }: {

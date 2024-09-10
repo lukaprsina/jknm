@@ -61,7 +61,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
                   image={field.value}
                   setImage={(value) => {
                     field.onChange(value);
-                    editor_store.set.image(value);
+                    // editor_store.set.image(value);
                   }}
                 />
               </FormControl>

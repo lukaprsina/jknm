@@ -15,6 +15,7 @@ import { named_promise_all_settled } from "~/lib/named-promise";
 import { assert_at_most_one, assert_one } from "~/lib/assert-length";
 import { withCursorPagination } from "drizzle-pagination";
 import { convert_title_to_url } from "~/lib/article-utils";
+import type { PublishedArticleWithAuthors } from "~/components/article/card-adapter";
 
 export const article_router = createTRPCRouter({
   get_infinite_published: publicProcedure
@@ -161,6 +162,9 @@ export const article_router = createTRPCRouter({
       return { draft };
     }),
 
+  /* if published_id is provided, clone published article to draft
+    if article is provided, create draft article
+    else throw error */
   get_or_create_draft: protectedProcedure
     .input(
       z.object({
@@ -170,22 +174,71 @@ export const article_router = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.transaction(async (tx) => {
-        const test = input.article
-          ? await tx
-              .insert(DraftArticle)
-              .values({
-                updated_at: new Date(),
-                created_at: new Date(),
-                ...input.article,
-              })
-              .returning()
-          : undefined;
+        let published: PublishedArticleWithAuthors | undefined;
 
-        const published_id = test?.at(0)?.published_id ?? input.published_id;
-        if (!published_id) throw new Error("Can't create draft");
+        if (input.published_id) {
+          published = await tx.query.PublishedArticle.findFirst({
+            where: eq(PublishedArticle.id, input.published_id),
+            with: {
+              published_articles_to_authors: {
+                with: {
+                  author: true,
+                },
+              },
+            },
+          });
 
-        const draft = await tx.query.DraftArticle.findFirst({
-          where: eq(DraftArticle.published_id, published_id),
+          if (!published) throw new Error("Published article not found");
+
+          const draft = await tx.query.DraftArticle.findFirst({
+            where: eq(DraftArticle.published_id, input.published_id),
+            with: {
+              draft_articles_to_authors: {
+                with: {
+                  author: true,
+                },
+              },
+            },
+          });
+
+          if (draft) return draft;
+        }
+
+        let draft_id: number | undefined;
+        if (input.article) {
+          const created_draft = await tx
+            .insert(DraftArticle)
+            .values(input.article)
+            .returning();
+
+          assert_one(created_draft);
+          draft_id = created_draft[0].id;
+        } else if (published) {
+          const created_draft = await tx
+            .insert(DraftArticle)
+            .values({
+              ...published,
+              published_id: published.id,
+            })
+            .returning();
+
+          assert_one(created_draft);
+          draft_id = created_draft[0].id;
+        } else {
+          throw new Error("Can't create draft");
+        }
+
+        if (published) {
+          await tx.insert(DraftArticlesToAuthors).values(
+            published.published_articles_to_authors.map((author) => ({
+              author_id: author.author_id,
+              draft_id: draft_id,
+            })),
+          );
+        }
+
+        const created_draft = await tx.query.DraftArticle.findFirst({
+          where: eq(DraftArticle.id, draft_id),
           with: {
             draft_articles_to_authors: {
               with: {
@@ -195,8 +248,10 @@ export const article_router = createTRPCRouter({
           },
         });
 
-        if (!draft) throw new Error("Draft not found");
-        return draft;
+        console.log("created draft", created_draft);
+
+        if (!created_draft) throw new Error("Created draft not found");
+        return created_draft;
       });
     }),
 

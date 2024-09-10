@@ -19,7 +19,6 @@ import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
 } from "../article/card-adapter";
-import { get_content_from_title } from "~/lib/content-from-title";
 
 export default function EditingButtons({
   published_article,
@@ -95,7 +94,6 @@ export function EditButton({
           onClick={() => {
             get_or_create_draft.mutate({
               published_id: published_article_id,
-              article: get_content_from_title(),
             });
           }}
         >

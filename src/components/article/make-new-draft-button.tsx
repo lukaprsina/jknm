@@ -39,10 +39,7 @@ export default function MakeNewDraftButton({
               {...props}
               onClick={() => {
                 create_draft.mutate({
-                  article: {
-                    updated_at: new Date(),
-                    ...get_content_from_title(title),
-                  },
+                  article: get_content_from_title(title),
                   published_id: published_article_id,
                 });
               }}

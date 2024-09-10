@@ -9,7 +9,11 @@ import {
   AccordionTrigger,
 } from "~/components/ui/accordion";
 import { cn } from "~/lib/utils";
-import { article_variants, page_variants } from "~/lib/page-variants";
+import {
+  article_grid_variants,
+  article_variants,
+  page_variants,
+} from "~/lib/page-variants";
 import { DraftArticleDrizzleCard } from "~/components/article/card-adapter";
 
 export default async function HomePageServer() {
@@ -70,14 +74,14 @@ export default async function HomePageServer() {
             </AccordionTrigger>
             <AccordionContent className={article_variants({ variant: "card" })}>
               {drafts && drafts.length !== 0 ? (
-                <>
+                <div className={article_grid_variants({ padding: "none" })}>
                   {drafts.map((article) => (
                     <DraftArticleDrizzleCard
                       key={article.id}
                       article={article}
                     />
                   ))}
-                </>
+                </div>
               ) : (
                 <span>Ni osnutkov</span>
               )}

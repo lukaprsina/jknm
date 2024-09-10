@@ -10,6 +10,7 @@ import { EditorContext } from "../components/editor/editor-context";
 import { useRouter } from "next/navigation";
 import { useToast } from "~/hooks/use-toast";
 import { merge_objects } from "~/lib/merge-objects";
+import { editor_store } from "~/components/editor/editor-store";
 
 export function useEditorMutations() {
   const draft_article = useContext(DraftArticleContext);
@@ -96,6 +97,7 @@ export function useEditorMutations() {
 
       const article2 = {
         ...draft_article,
+        ...editor_store.get.state(),
         ...updated,
         content: editor_content,
       };
@@ -131,6 +133,7 @@ export function useEditorMutations() {
 
       const article = {
         ...draft_article,
+        ...editor_store.get.state(),
         ...updated,
         content: editor_content,
       };
