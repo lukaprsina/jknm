@@ -10,3 +10,5 @@ publish is field in save trpc api
 
 saving modifies published articles
 duplicate urls
+
+ne dela article "created draft", se ne naredi lol

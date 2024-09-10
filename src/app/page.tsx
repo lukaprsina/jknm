@@ -56,7 +56,10 @@ export default async function HomePageServer() {
   }
   console.log(
     "drafts",
-    drafts?.map((draft) => draft.title),
+    drafts?.map((draft) => [
+      draft.title,
+      draft.draft_articles_to_authors.map((author) => author.author.name),
+    ]),
   );
 
   return (

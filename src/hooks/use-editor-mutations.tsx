@@ -2,7 +2,10 @@
 
 import { get_published_article_link } from "~/lib/article-utils";
 import { api } from "~/trpc/react";
-import { update_article_before_publish } from "../components/editor/editor-lib";
+import {
+  update_article_from_editor,
+  validate_article,
+} from "../components/editor/editor-lib";
 import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 import { useContext } from "react";
 import { DraftArticleContext } from "../components/article/context";
@@ -93,11 +96,7 @@ export function useEditorMutations() {
       const editor_content = await editor_context.editor?.save();
       if (!editor_content) return;
 
-      const updated = update_article_before_publish(
-        draft_article,
-        editor_content,
-        toaster,
-      );
+      const updated = validate_article(editor_content, toaster);
 
       const state = editor_store.get.state();
       const article = {
@@ -106,6 +105,16 @@ export function useEditorMutations() {
         content: editor_content,
         image: image ?? state.image,
       } satisfies z.infer<typeof SaveDraftArticleSchema>;
+
+      update_article_from_editor(
+        true,
+        {
+          ...article,
+          url: updated?.url ?? "",
+        },
+        draft_article.id,
+        state.author_ids,
+      );
 
       console.log("editor mutation save_draft", {
         draft_article,
@@ -124,12 +133,7 @@ export function useEditorMutations() {
       const editor_content = await editor_context.editor?.save();
       if (!editor_content) return;
 
-      const updated = update_article_before_publish(
-        draft_article,
-        editor_content,
-        toaster,
-      );
-
+      const updated = validate_article(editor_content, toaster);
       if (!updated) return;
 
       const state = editor_store.get.state();
@@ -140,6 +144,13 @@ export function useEditorMutations() {
         content: editor_content,
         image: image ?? state.image,
       } satisfies z.infer<typeof PublishArticleSchema>;
+
+      update_article_from_editor(
+        false,
+        article,
+        draft_article.id,
+        state.author_ids,
+      );
 
       publish.mutate({
         draft_id: draft_article.id,

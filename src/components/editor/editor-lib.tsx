@@ -2,20 +2,23 @@ import {
   get_heading_from_editor,
   get_image_data_from_editor,
 } from "~/lib/editor-utils";
-import type { DraftArticleWithAuthors } from "../article/card-adapter";
 import type { OutputData } from "@editorjs/editorjs";
 import { editor_store } from "./editor-store";
 import type { useToast } from "~/hooks/use-toast";
 import { NoHeadingButton, WrongHeadingButton } from "./error-buttons";
 import { convert_title_to_url } from "~/lib/article-utils";
 import { env } from "~/env";
+import type { PublishArticleSchema } from "~/server/db/schema";
+import type { z } from "zod";
 
 export function update_settings_from_editor(
-  article: DraftArticleWithAuthors,
-  editor_content: OutputData,
-  title?: string,
+  article: z.infer<typeof PublishArticleSchema>,
+  article_id: number,
+  author_ids: number[],
 ) {
-  const image_data = get_image_data_from_editor(editor_content);
+  if (!article.content) return;
+
+  const image_data = get_image_data_from_editor(article.content);
   const image = editor_store.get.image();
 
   editor_store.set.state((draft) => {
@@ -28,33 +31,20 @@ export function update_settings_from_editor(
     }
 
     draft.image_data = image_data;
-    draft.id = article.id;
+    draft.id = article_id;
     draft.image_data = image_data;
-    if (typeof title !== "undefined") {
-      draft.title = title;
-      draft.url = convert_title_to_url(title);
-    }
-
-    draft.author_ids = article.draft_articles_to_authors.map(
-      (a) => a.author_id,
-    );
+    draft.title = article.title;
+    draft.url = article.url;
+    draft.author_ids = author_ids;
   });
 }
 
-export function update_article_before_save(
-  article: DraftArticleWithAuthors,
-  editor_content: OutputData,
-) {
-  const new_url = article.id.toString();
-  update_article(true, article, editor_content, new_url);
-}
-
-export function update_article_before_publish(
-  article: DraftArticleWithAuthors,
+export function validate_article(
   editor_content: OutputData,
   toaster: ReturnType<typeof useToast>,
 ) {
-  const { title, error } = get_heading_from_editor(editor_content);
+  const { title: updated_title, error } =
+    get_heading_from_editor(editor_content);
 
   if (error === "NO_HEADING") {
     toaster.toast({
@@ -66,37 +56,36 @@ export function update_article_before_publish(
     toaster.toast({
       title: "Naslov ni pravilne ravni",
       description: "Prva vrstica mora biti H1 naslov.",
-      action: <WrongHeadingButton title={title} />,
+      action: <WrongHeadingButton title={updated_title} />,
     });
   }
 
-  if (!title) return;
+  if (!updated_title) return;
 
-  const url = convert_title_to_url(title);
-  update_article(false, article, editor_content, url, title);
+  const updated_url = convert_title_to_url(updated_title);
 
-  return { title, url };
+  return { title: updated_title, url: updated_url };
 }
 
-function update_article(
+export function update_article_from_editor(
   draft: boolean,
-  article: DraftArticleWithAuthors,
-  editor_content: OutputData,
-  updated_url: string,
-  updated_title?: string,
+  article: z.infer<typeof PublishArticleSchema>,
+  article_id: number,
+  author_ids: number[],
 ) {
   const hostname = draft
     ? env.NEXT_PUBLIC_S3_DRAFT_BUCKET_NAME
     : env.NEXT_PUBLIC_S3_PUBLISHED_BUCKET_NAME;
 
-  rename_urls_in_editor(hostname, editor_content, updated_url);
+  if (!article.content) return;
+  rename_urls_in_editor(hostname, article.content, article.url);
 
-  update_settings_from_editor(article, editor_content, updated_title);
+  update_settings_from_editor(article, article_id, author_ids);
 
   const image = editor_store.get.image();
 
   const new_image = image
-    ? rename_url(hostname, image, updated_url)
+    ? rename_url(hostname, image, article.url)
     : undefined;
 
   editor_store.set.image(new_image);
