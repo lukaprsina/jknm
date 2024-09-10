@@ -31,6 +31,7 @@ export interface FileUploadJSON {
 }
 
 export async function POST(request: NextRequest) {
+  console.log("upload_file_to_s3", request.body);
   const session = await getServerAuthSession();
   if (!session) return NextResponse.error();
 
@@ -67,8 +68,8 @@ export async function POST(request: NextRequest) {
       mime_type = mime.getType(title) ?? "image/*";
     }
 
-    const url_image_respinse = await fetch(external_url);
-    const blob = await url_image_respinse.blob();
+    const url_image_response = await fetch(external_url);
+    const blob = await url_image_response.blob();
     file = new File([blob], title, { type: mime_type });
   } else {
     return NextResponse.error();
@@ -85,6 +86,8 @@ export async function POST(request: NextRequest) {
       }),
     );
 
+    console.log("File exists, because it doesn't throw", key);
+
     return NextResponse.json({ success: 0, error: "File exists" });
   } catch (error: unknown) {
     if (!(error instanceof NotFound)) {
@@ -94,13 +97,13 @@ export async function POST(request: NextRequest) {
 
   const { url, fields } = await createPresignedPost(client, {
     Bucket: env.NEXT_PUBLIC_S3_DRAFT_BUCKET_NAME,
-    Key: key, //uuidv4(),
+    Key: key,
     Conditions: [
       ["content-length-range", 0, 5 * 10485760], // up to 10 MB
       ["starts-with", "$Content-Type", mime_type],
     ],
     Fields: {
-      acl: "public-read",
+      // acl: "public-read",
       "Content-Type": mime_type,
     },
     Expires: 600, // Seconds before the presigned post expires. 3600 by default.
@@ -112,10 +115,15 @@ export async function POST(request: NextRequest) {
   });
   formData.append("file", file);
 
-  const uploadResponse = await fetch(url, {
+  const upload_response = await fetch(url, {
     method: "POST",
     body: formData,
   });
+
+  if (!upload_response.ok) {
+    console.error("Failed to upload file", upload_response, fields, file);
+    return NextResponse.error();
+  }
 
   let file_data: ImageUploadJSON | FileUploadJSON | undefined = undefined;
 
@@ -141,12 +149,12 @@ export async function POST(request: NextRequest) {
     };
   }
 
-  console.log("upload_file_to_s3", file_data);
   const response_json = {
     success: 1,
     file: file_data,
   } satisfies FileUploadResponse;
-  return uploadResponse.ok
-    ? NextResponse.json(response_json)
-    : NextResponse.error();
+
+  console.log("upload_file_to_s3", response_json);
+
+  return NextResponse.json(response_json);
 }

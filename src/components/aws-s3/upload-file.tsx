@@ -33,13 +33,13 @@ export async function upload_file(
 
 export async function upload_image_by_file(
   file: File,
-  novica_url?: string,
   // toast: ReturnType<typeof useToast>,
 ): Promise<FileUploadResponse> {
-  console.log("upload_image_by_file", file, novica_url);
-  const directory = novica_url ?? editor_store.get.url();
+  console.log("upload_image_by_file", file);
+  const directory = editor_store.get.url();
 
-  if (!novica_url) {
+  if (!directory) {
+    console.error("No directory", directory);
     return {
       success: 0,
     };
@@ -47,7 +47,7 @@ export async function upload_image_by_file(
 
   const file_mime = mime.getType(file.name);
   if (!file_mime?.includes("image")) {
-    console.warn("Wrong MIME type", file_mime);
+    console.error("Wrong MIME type", file_mime);
     return {
       success: 0,
     };
@@ -63,15 +63,27 @@ export async function upload_image_by_file(
     body: form_data,
   });
 
-  return await parse_s3_response(file_data /* novica_url, file.name, toast */);
+  console.log("got file_data", file_data);
+
+  const response = await parse_s3_response(
+    file_data /* novica_url, file.name, toast */,
+  );
+  console.log("parsed s3 response", response);
+  return response;
 }
 
 export async function upload_image_by_url(
   url: string,
-  novica_url?: string,
   // toast: ReturnType<typeof useToast>,
 ): Promise<FileUploadResponse> {
-  const directory = novica_url ?? editor_store.get.url();
+  const directory = editor_store.get.url();
+
+  if (!directory) {
+    console.error("No directory", directory);
+    return {
+      success: 0,
+    };
+  }
 
   const title = url.split("/").pop();
   if (!title) {
@@ -104,8 +116,6 @@ export async function parse_s3_response(
   const error_response = {
     success: 0,
   } as const;
-
-  const file_json = (await file_data.json()) as FileUploadResponse;
 
   /* function InsertImageToast() {
     return (
@@ -141,6 +151,8 @@ export async function parse_s3_response(
   } */
 
   if (file_data.ok) {
+    const file_json = (await file_data.json()) as FileUploadResponse;
+
     if (file_json.error == "File exists") {
       console.log("File exists", file_json);
       /* toast.toast({
