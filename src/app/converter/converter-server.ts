@@ -20,7 +20,7 @@ import {
   PublishedArticlesToAuthors,
 } from "~/server/db/schema";
 import { algolia_protected } from "~/lib/algolia-server";
-import type { ArticleHit } from "~/lib/validators";
+import type { PublishedArticleHit } from "~/lib/validators";
 import { api } from "~/trpc/server";
 
 export async function get_authors_server() {
@@ -186,7 +186,7 @@ export async function sync_with_algolia() {
 
   index.deleteObjects(empty_query_results.hits.map((hit) => hit.objectID));
 
-  const objects: ArticleHit[] = articles.data
+  const objects: PublishedArticleHit[] = articles.data
     .map((article) => {
       const content_preview = convert_content_to_text(article.content?.blocks);
       if (!content_preview) return;
@@ -203,7 +203,7 @@ export async function sync_with_algolia() {
         author_ids: article.published_articles_to_authors.map(
           (a) => a.author_id,
         ),
-      } satisfies ArticleHit;
+      } satisfies PublishedArticleHit;
     })
     .filter((article) => typeof article !== "undefined");
 

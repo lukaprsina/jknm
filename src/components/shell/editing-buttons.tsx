@@ -15,7 +15,10 @@ import {
   TooltipContent,
 } from "~/components/ui/tooltip";
 import { SettingsDropdown } from "../settings";
-import type { PublishedArticleWithAuthors } from "../article/card-adapter";
+import type {
+  DraftArticleWithAuthors,
+  PublishedArticleWithAuthors,
+} from "../article/card-adapter";
 import { get_content_from_title } from "~/lib/content-from-title";
 
 export default function EditingButtons({
@@ -23,6 +26,7 @@ export default function EditingButtons({
   session,
 }: {
   published_article?: PublishedArticleWithAuthors;
+  draft_article?: DraftArticleWithAuthors;
   session: Session | null;
 }) {
   useEffect(() => {
@@ -33,7 +37,9 @@ export default function EditingButtons({
 
   return (
     <>
-      {published_article && <EditButton draft_id={undefined} />}
+      {published_article && (
+        <EditButton published_article={published_article} />
+      )}
       <MakeNewDraftButton
         className="dark:bg-primary/80 dark:text-primary-foreground"
         variant="ghost"
@@ -47,12 +53,12 @@ export default function EditingButtons({
 }
 
 export function EditButton({
-  draft_id,
   new_tab,
+  published_article,
   variant = "ghost",
 }: {
-  draft_id?: number;
   new_tab?: boolean;
+  published_article: PublishedArticleWithAuthors;
   variant?: ButtonProps["variant"];
 }) {
   const router = useRouter();
@@ -71,7 +77,7 @@ export function EditButton({
     [new_tab, router],
   );
 
-  const create_draft = api.article.create_draft.useMutation({
+  const get_or_create_draft = api.article.get_or_create_draft.useMutation({
     onSuccess: async (data) => {
       await trpc_utils.article.invalidate();
       handle_navigation(data.id);
@@ -86,11 +92,10 @@ export function EditButton({
           variant={variant}
           size="icon"
           onClick={() => {
-            if (draft_id) {
-              handle_navigation(draft_id);
-            } else {
-              create_draft.mutate(get_content_from_title());
-            }
+            get_or_create_draft.mutate({
+              published_id: published_article.id,
+              article: get_content_from_title(),
+            });
           }}
         >
           <PencilIcon size={20} />

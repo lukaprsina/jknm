@@ -8,7 +8,7 @@ import type {
   PublishedArticle,
   PublishedArticlesToAuthors,
 } from "~/server/db/schema";
-import type { ArticleHit } from "~/lib/validators";
+import type { PublishedArticleHit } from "~/lib/validators";
 import type { IntersectionRef } from "./infinite-articles";
 import { content_to_text } from "~/lib/content-to-text";
 import {
@@ -100,7 +100,11 @@ export const PublishedArticleDrizzleCard = ({
   );
 };
 
-export function ArticleAlgoliaCard({ hit }: { hit: SearchHit<ArticleHit> }) {
+export function ArticleAlgoliaCard({
+  hit,
+}: {
+  hit: SearchHit<PublishedArticleHit>;
+}) {
   const duplicate_urls = useDuplicatedUrls();
 
   return (

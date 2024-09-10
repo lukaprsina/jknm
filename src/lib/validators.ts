@@ -14,9 +14,9 @@ export const content_validator = z
   })
   .optional();
 
-export const article_hit_validator = z.object({
+export const published_article_hit_validator = z.object({
   objectID: z.string(),
-  is_draft: z.boolean(),
+  published_id: z.number(),
   title: z.string(),
   url: z.string(),
   created_at: z.number(), // unix timestamp
@@ -26,4 +26,19 @@ export const article_hit_validator = z.object({
   year: z.string(),
 });
 
-export type ArticleHit = z.infer<typeof article_hit_validator>;
+export type PublishedArticleHit = z.infer<
+  typeof published_article_hit_validator
+>;
+
+export const draft_article_hit_validator = z.object({
+  objectID: z.string(),
+  draft_id: z.number(),
+  title: z.string(),
+  created_at: z.number(), // unix timestamp
+  content_preview: z.string().max(1000), // maybe 600
+  author_ids: z.array(z.number()),
+  image: z.string().optional(),
+  year: z.string(),
+});
+
+export type DraftArticleHit = z.infer<typeof draft_article_hit_validator>;

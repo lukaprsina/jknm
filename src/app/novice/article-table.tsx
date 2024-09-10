@@ -37,7 +37,7 @@ import { format_date } from "~/lib/format-date";
 import { api } from "~/trpc/react";
 import { MyStats, SORT_BY_ITEMS } from "./search-components";
 import type { Session } from "next-auth";
-import type { ArticleHit } from "~/lib/validators";
+import type { PublishedArticleHit } from "~/lib/validators";
 import { Authors } from "~/components/authors";
 import { EditButton } from "~/components/shell/editing-buttons";
 import { get_published_article_link } from "~/lib/article-utils";
@@ -46,7 +46,7 @@ import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 export function ArticleTable({
   session,
   ...props
-}: { session: Session | null } & UseHitsProps<ArticleHit>) {
+}: { session: Session | null } & UseHitsProps<PublishedArticleHit>) {
   const { items } = useHits(props);
   const sort_api = useSortBy({
     items: SORT_BY_ITEMS,
@@ -121,7 +121,7 @@ function ArticleTableRow({
   hit,
   session,
 }: {
-  hit: SearchHit<ArticleHit>;
+  hit: SearchHit<PublishedArticleHit>;
   session: Session | null;
 }) {
   const duplicate_urls = useDuplicatedUrls();
@@ -149,11 +149,9 @@ function ArticleTableRow({
       {session && (
         <TableCell className="flex flex-grow justify-end gap-2">
           <EditButton
-            id={parseInt(hit.objectID)}
-            url={hit.url}
-            content_preview={hit.content_preview}
+            // TODO
+            // draft_id={hit.draft_id}
             variant="outline"
-            is_draft={hit.is_draft}
           />
           <DeleteDialog article_id={parseInt(hit.objectID)} />
         </TableCell>
@@ -166,15 +164,8 @@ function DeleteDialog({ article_id }: { article_id: number }) {
   const trpc_utils = api.useUtils();
 
   const article_delete = api.article.delete_both.useMutation({
-    onSuccess: async (data) => {
-      // TODO
-      /* const returned_data = data.at(0);
-      if (!returned_data) return;      
-
-      await delete_algolia_article(returned_data..toString());
-      await delete_s3_directory(returned_data.url);
-
-      await trpc_utils.article.invalidate(); */
+    onSuccess: async () => {
+      await trpc_utils.article.invalidate();
     },
   });
 

@@ -14,15 +14,20 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "~/components/ui/navigation-menu";
-import type { PublishedArticleWithAuthors } from "../article/card-adapter";
+import type {
+  DraftArticleWithAuthors,
+  PublishedArticleWithAuthors,
+} from "../article/card-adapter";
 
 export function MobileHeader({
-  article,
+  published_article,
+  draft_article,
   session,
   className,
   ...props
 }: React.ComponentProps<"div"> & {
-  article?: PublishedArticleWithAuthors;
+  published_article?: PublishedArticleWithAuthors;
+  draft_article?: DraftArticleWithAuthors;
   session: Session | null;
 }) {
   return (
@@ -37,7 +42,11 @@ export function MobileHeader({
       <Link className="text-2xl font-bold" href="/">
         Jamarski klub Novo mesto
       </Link>
-      <MobileSheet article={article} session={session} />
+      <MobileSheet
+        published_article={published_article}
+        draft_article={draft_article}
+        session={session}
+      />
     </div>
   );
 }

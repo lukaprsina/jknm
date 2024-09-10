@@ -9,16 +9,21 @@ import { Logo } from "./logo";
 import { cn } from "~/lib/utils";
 import { Separator } from "~/components/ui/separator";
 import type { Session } from "next-auth";
-import type { PublishedArticleWithAuthors } from "../article/card-adapter";
+import type {
+  DraftArticleWithAuthors,
+  PublishedArticleWithAuthors,
+} from "../article/card-adapter";
 import { FacebookIcon, LinksMenu, YoutubeIcon } from "./header";
 
 export function DesktopHeader({
-  article,
+  published_article,
+  draft_article,
   className,
   session,
   ...props
 }: React.ComponentProps<"div"> & {
-  article?: PublishedArticleWithAuthors;
+  published_article?: PublishedArticleWithAuthors;
+  draft_article?: DraftArticleWithAuthors;
   session: Session | null;
 }) {
   const [sticky, setSticky] = useState(false);
@@ -68,7 +73,11 @@ export function DesktopHeader({
         </Link>
         <div className="flex h-full flex-shrink-0 flex-col justify-between">
           <div className="flex justify-end">
-            <EditingButtons published_article={article} session={session} />
+            <EditingButtons
+              published_article={published_article}
+              draft_article={draft_article}
+              session={session}
+            />
           </div>
           <div className="flex items-center justify-between gap-2">
             <FacebookIcon />

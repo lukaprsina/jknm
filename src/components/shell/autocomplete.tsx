@@ -25,7 +25,7 @@ import "./autocomplete.css";
 
 import { PoweredBy } from "react-instantsearch";
 import { Separator } from "~/components/ui/separator";
-import type { ArticleHit } from "~/lib/validators";
+import type { PublishedArticleHit } from "~/lib/validators";
 import { get_published_article_link } from "~/lib/article-utils";
 import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 
@@ -97,7 +97,9 @@ export function NoviceAutocomplete({ detached }: { detached?: string }) {
 interface AutocompleteProps {
   detached?: string;
   openOnFocus: boolean;
-  getSources: (props: { query: string }) => AutocompleteSource<ArticleHit>[];
+  getSources: (props: {
+    query: string;
+  }) => AutocompleteSource<PublishedArticleHit>[];
 }
 
 // https://www.algolia.com/doc/ui-libraries/autocomplete/integrations/using-react/
@@ -157,7 +159,7 @@ export function Autocomplete({ detached, ...props }: AutocompleteProps) {
 }
 
 interface ProductItemProps {
-  hit: ArticleHit;
+  hit: PublishedArticleHit;
   components: AutocompleteComponents;
 }
 

@@ -2,19 +2,24 @@ import { cn } from "~/lib/utils";
 import { DesktopHeader } from "./desktop-header";
 import { Footer } from "./footer";
 import { getServerAuthSession } from "~/server/auth";
-import type { PublishedArticleWithAuthors } from "../article/card-adapter";
+import type {
+  DraftArticleWithAuthors,
+  PublishedArticleWithAuthors,
+} from "../article/card-adapter";
 import { MobileHeader } from "./header";
 
 interface ShellProps {
   children: React.ReactNode;
-  article?: PublishedArticleWithAuthors;
+  published_article?: PublishedArticleWithAuthors;
+  draft_article?: DraftArticleWithAuthors;
   without_footer?: boolean;
   without_header?: boolean;
   className?: string;
 }
 
 export async function Shell({
-  article,
+  published_article,
+  draft_article,
   children,
   without_footer,
   without_header,
@@ -27,12 +32,14 @@ export async function Shell({
       {!without_header ? (
         <header className="h-28 w-full md:h-auto">
           <DesktopHeader
-            article={article}
+            published_article={published_article}
+            draft_article={draft_article}
             className="hidden md:flex"
             session={session}
           />
           <MobileHeader
-            article={article}
+            published_article={published_article}
+            draft_article={draft_article}
             className="flex md:hidden"
             session={session}
           />

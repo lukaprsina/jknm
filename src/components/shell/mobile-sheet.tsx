@@ -19,13 +19,18 @@ import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import EditingButtons from "./editing-buttons";
 import type { Session } from "next-auth";
-import type { PublishedArticleWithAuthors } from "../article/card-adapter";
+import type {
+  DraftArticleWithAuthors,
+  PublishedArticleWithAuthors,
+} from "../article/card-adapter";
 
 export function MobileSheet({
-  article,
+  published_article,
+  draft_article,
   session,
 }: {
-  article?: PublishedArticleWithAuthors;
+  published_article?: PublishedArticleWithAuthors;
+  draft_article?: DraftArticleWithAuthors;
   session: Session | null;
 }) {
   const [open, setOpen] = useState(false);
@@ -46,7 +51,11 @@ export function MobileSheet({
               </div>
             </SheetTitle>
           </Link>
-          <EditingButtons published_article={article} session={session} />
+          <EditingButtons
+            published_article={published_article}
+            draft_article={draft_article}
+            session={session}
+          />
           <SheetDescription>Jamarski klub Novo mesto</SheetDescription>
         </SheetHeader>
         <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-24 pl-6">

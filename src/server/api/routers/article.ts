@@ -161,17 +161,43 @@ export const article_router = createTRPCRouter({
       return { draft };
     }),
 
-  create_draft: protectedProcedure
-    .input(CreateDraftArticleSchema)
+  get_or_create_draft: protectedProcedure
+    .input(
+      z.object({
+        published_id: z.number().optional(),
+        article: CreateDraftArticleSchema.optional(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
-      const draft = await ctx.db
-        .insert(DraftArticle)
-        .values({ updated_at: new Date(), created_at: new Date(), ...input })
-        .returning();
+      return await ctx.db.transaction(async (tx) => {
+        const test = input.article
+          ? await tx
+              .insert(DraftArticle)
+              .values({
+                updated_at: new Date(),
+                created_at: new Date(),
+                ...input.article,
+              })
+              .returning()
+          : undefined;
 
-      assert_one(draft);
+        const published_id = test?.at(0)?.published_id ?? input.published_id;
+        if (!published_id) throw new Error("Can't create draft");
 
-      return draft[0];
+        const draft = await tx.query.DraftArticle.findFirst({
+          where: eq(DraftArticle.published_id, published_id),
+          with: {
+            draft_articles_to_authors: {
+              with: {
+                author: true,
+              },
+            },
+          },
+        });
+
+        if (!draft) throw new Error("Draft not found");
+        return draft;
+      });
     }),
 
   save_draft: protectedProcedure
