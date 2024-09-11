@@ -16,8 +16,7 @@ import { withCursorPagination } from "drizzle-pagination";
 import { convert_title_to_url } from "~/lib/article-utils";
 import type { PublishedArticleWithAuthors } from "~/components/article/card-adapter";
 import {
-  content_to_draft,
-  content_to_published,
+  rename_s3_files_and_content,
   delete_s3_directory,
 } from "~/server/s3-utils";
 import { env } from "~/env";
@@ -237,16 +236,21 @@ export const article_router = createTRPCRouter({
         assert_one(created_drafts);
         const created_draft = created_drafts[0];
 
-        const renamed_content = content_to_draft(
-          created_draft.content ?? null,
-          created_draft.id,
-        );
+        const renamed_content = created_draft.content
+          ? await rename_s3_files_and_content(
+              created_draft.content,
+              created_draft.id.toString(),
+              true,
+            )
+          : undefined;
 
         // update content with renamed urls
-        await tx
-          .update(DraftArticle)
-          .set({ content: renamed_content })
-          .where(eq(DraftArticle.id, created_draft.id));
+        if (renamed_content) {
+          await tx
+            .update(DraftArticle)
+            .set({ content: renamed_content })
+            .where(eq(DraftArticle.id, created_draft.id));
+        }
 
         if (published) {
           // I don't think this is necessary, because we are creating a new draft
@@ -341,13 +345,13 @@ export const article_router = createTRPCRouter({
       const transaction = await ctx.db.transaction(async (tx) => {
         // rename urls and content
         const value = { ...input.article };
+        if (!value.created_at) throw new Error("created_at is required");
 
         const renamed_url = `${convert_title_to_url(value.title)}-${format_date_for_url(value.created_at)}`;
 
-        const renamed_content = content_to_published(
-          value.content,
-          renamed_url,
-        );
+        const renamed_content = value.content
+          ? await rename_s3_files_and_content(value.content, renamed_url, false)
+          : undefined;
 
         value.url = renamed_url;
         value.content = renamed_content;
