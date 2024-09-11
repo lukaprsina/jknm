@@ -284,7 +284,7 @@ export const article_router = createTRPCRouter({
           .where(eq(DraftArticle.id, input.draft_id))
           .returning();
 
-        if (updated_draft.length !== 0) throw new Error("Draft not found");
+        if (updated_draft.length !== 1) throw new Error("Draft not found");
 
         await tx
           .delete(DraftArticlesToAuthors)

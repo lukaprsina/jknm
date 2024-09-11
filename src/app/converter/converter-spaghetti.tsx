@@ -276,10 +276,8 @@ async function parse_csv_article(
     thumbnail_crop = centerCrop(
       makeAspectCrop(
         {
-          // You don't need to pass a complete crop into
-          // makeAspectCrop or centerCrop.
-          unit: "%",
-          width: 90,
+          unit: "px",
+          width,
         },
         16 / 9,
         width,

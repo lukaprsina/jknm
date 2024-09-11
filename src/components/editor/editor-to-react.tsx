@@ -24,12 +24,21 @@ import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
 } from "../article/card-adapter";
+/* import dynamic from "next/dynamic";
+import { Skeleton } from "../ui/skeleton"; */
 
 import ArticlePageDescription from "~/components/article/description/page-description";
-/* const DynamicArticlePageDescription = dynamic(
-  import("~/components/article/description/page-description"),
+/* const ArticleCardDescription = dynamic(
+  () => import("~/components/article/description/card-description"),
   {
     ssr: false,
+    loading: () => <Skeleton className="h-[1em] w-full bg-[hsl(0_0%_90%)]" />,
+  },
+); */
+/* const WTFFFFFFFFF = dynamic(
+  import("~/components/article/description/page-description"),
+  {
+    // ssr: false,
     loading: () => <Skeleton className="h-[1em] w-full bg-[hsl(0_0%_90%)]" />,
   },
 ); */
@@ -90,6 +99,11 @@ export function EditorToReact({
           created_at={article.created_at}
           session={session}
         />
+        {/* <ArticleCardDescription
+          author_ids={author_ids}
+          featured={false}
+          created_at={article.created_at}
+        /> */}
       </CardHeader>
       <CardContent>
         <Blocks

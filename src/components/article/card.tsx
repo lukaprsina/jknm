@@ -8,17 +8,19 @@ import { cn } from "~/lib/utils";
 import type { IntersectionRef } from "./infinite-articles";
 import { MagicCard } from "../magic-card";
 import Image from "next/image";
-import ArticleCardDescription from "./description/card-description";
+// import ArticleCardDescription from "./description/card-description";
 import path from "path";
 import { get_s3_url } from "~/lib/s3-utils";
+import dynamic from "next/dynamic";
+import { Skeleton } from "../ui/skeleton";
 
-/* const DynamicCardDescription = dynamic(
+const ArticleCardDescription = dynamic(
   () => import("./description/card-description"),
   {
     ssr: false,
     loading: () => <Skeleton className="h-[1em] w-full bg-[hsl(0_0%_90%)]" />,
   },
-); */
+);
 
 export function ArticleCard({
   featured,
