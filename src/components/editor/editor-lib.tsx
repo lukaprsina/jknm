@@ -10,13 +10,13 @@ import { convert_title_to_url } from "~/lib/article-utils";
 import type { PublishArticleSchema } from "~/server/db/schema";
 import type { z } from "zod";
 import type { CropType } from "~/lib/validators";
-import { get_s3_url } from "~/lib/s3-utils";
+import { get_s3_url } from "~/lib/get-s3-url";
 import { format_date_for_url } from "~/lib/format-date";
 
 export function update_settings_from_editor({
   title,
   url,
-  created_at,
+  s3_url,
   thumbnail_crop,
   editor_content,
   article_id,
@@ -24,7 +24,7 @@ export function update_settings_from_editor({
 }: {
   title: string;
   url: string;
-  created_at: Date;
+  s3_url: string;
   thumbnail_crop: CropType;
   editor_content: OutputData;
   article_id: number;
@@ -38,12 +38,11 @@ export function update_settings_from_editor({
       draft.thumbnail_crop = thumbnail_crop;
     }
 
-    draft.image_data = image_data;
     draft.draft_id = article_id;
     draft.image_data = image_data;
     draft.title = title;
     draft.url = url;
-    draft.s3_url = `${url}-${format_date_for_url(created_at)}`;
+    draft.s3_url = s3_url;
     if (author_ids) draft.author_ids = author_ids;
   });
 }
@@ -77,26 +76,40 @@ export function validate_article(
 }
 
 export function update_article_from_editor(
-  draft: boolean,
   article: z.infer<typeof PublishArticleSchema>,
-  article_id: number,
+  draft: boolean,
 ) {
   if (!article.content || !article.created_at) return;
-  rename_urls_in_editor(article.content, article.url, draft);
+
+  let s3_url: string | undefined = undefined;
+
+  const store_draft_id = editor_store.get.draft_id();
+  if (!store_draft_id) {
+    throw new Error("Article ID is missing");
+  }
+
+  if (draft) {
+    s3_url = store_draft_id.toString();
+  } else {
+    s3_url = `${article.url}-${format_date_for_url(article.created_at)}`;
+  }
+
+  rename_urls_in_editor(article.content, s3_url, draft);
 
   update_settings_from_editor({
     title: article.title,
     url: article.url,
-    created_at: article.created_at,
+    s3_url,
     thumbnail_crop: article.thumbnail_crop ?? null,
     editor_content: article.content,
-    article_id,
+    article_id: store_draft_id,
   });
 
   const thumbnail = editor_store.get.thumbnail_crop();
 
   if (thumbnail) {
-    rename_url(article.url, draft);
+    const fake_url = get_s3_url("thumbnail.png", draft);
+    rename_url(fake_url, s3_url, draft);
   }
 }
 
@@ -113,13 +126,17 @@ export function rename_urls_in_editor(
     }
 
     const file_data = block.data as { file: { url: string } };
-    const new_url = rename_url(file_data.file.url, draft);
+    const new_url = rename_url(file_data.file.url, article_url, draft);
     // console.log("Renamed file", { old_url: file_data.file.url, new_url });
     file_data.file.url = new_url;
   }
 }
 
-export function rename_url(old_url: string, draft: boolean) {
+export function rename_url(
+  old_url: string,
+  article_url: string,
+  draft: boolean,
+) {
   const url_parts = new URL(old_url);
   const file_name = url_parts.pathname.split("/").pop();
 
@@ -128,6 +145,6 @@ export function rename_url(old_url: string, draft: boolean) {
     return old_url;
   }
 
-  const new_url = get_s3_url(file_name, draft);
+  const new_url = get_s3_url(`${article_url}/${file_name}`, draft);
   return new_url;
 }

@@ -323,10 +323,12 @@ export const article_router = createTRPCRouter({
         const value = { ...input.article };
         if (value.title) value.url = convert_title_to_url(value.title);
 
+        console.log("publishing article", { value, input });
+
         let draft: typeof DraftArticle.$inferInsert | undefined;
         if (input.draft_id) {
           draft = await tx.query.DraftArticle.findFirst({
-            where: eq(DraftArticle.published_id, input.draft_id),
+            where: eq(DraftArticle.id, input.draft_id),
             with: {
               draft_articles_to_authors: {
                 with: {
@@ -336,6 +338,7 @@ export const article_router = createTRPCRouter({
             },
           });
 
+          console.log("publishing article has draft_id", { draft });
           if (!draft) throw new Error("Draft not found");
         }
 

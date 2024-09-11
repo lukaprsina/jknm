@@ -90,7 +90,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
           update_settings_from_editor({
             title: updated?.title ?? "",
             url: updated?.url ?? "",
-            created_at: article.created_at,
+            s3_url: article.id.toString(),
             thumbnail_crop: article.thumbnail_crop,
             editor_content,
             article_id: article.id,

@@ -9,8 +9,7 @@ import type { IntersectionRef } from "./infinite-articles";
 import { MagicCard } from "../magic-card";
 import Image from "next/image";
 // import ArticleCardDescription from "./description/card-description";
-import path from "path";
-import { get_s3_url } from "~/lib/s3-utils";
+import { get_s3_url } from "~/lib/get-s3-url";
 import dynamic from "next/dynamic";
 import { Skeleton } from "../ui/skeleton";
 
@@ -72,7 +71,7 @@ export function ArticleCard({
             <Image
               // https://jknm.s3.eu-central-1.amazonaws.com/potop-v-termalni-izvir-29-02-2008/1_gradbena%20jama.jpg
               // https://jknm.s3.eu-central-1.amazonaws.com/potop-v-termalni-izvir-29-02-2008/thumbnail.jpg
-              src={path.join(get_s3_url(url, draft), "thumbnail_src")}
+              src={get_s3_url(`${url}/thumbnail.png`, draft)}
               alt={title}
               fill
               // loader={({ src }) => src}
