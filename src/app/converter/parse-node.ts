@@ -5,9 +5,10 @@ import type { Node as ParserNode } from "node-html-parser";
 import { decode } from "html-entities";
 import { NodeType, HTMLElement as ParserHTMLElement } from "node-html-parser";
 
+import type { DimensionType } from "./converter-server";
 import { get_image_dimensions } from "./converter-server";
 import type {
-  DimensionType,
+  IdsByDimentionType,
   ImportedArticle,
   InitialProblems,
 } from "./converter-spaghetti";
@@ -21,7 +22,8 @@ export async function parse_node(
   articles_with_authors: ImportedArticle,
   csv_url: string,
   problems: InitialProblems,
-  ids_by_dimensions: DimensionType[],
+  ids_by_dimensions: IdsByDimentionType[],
+  all_images_dimensions: DimensionType[],
 ): Promise<void> {
   const old_id = articles_with_authors.objave_id;
   if (!old_id) throw new Error("No old_id");
@@ -299,9 +301,13 @@ export async function parse_node(
         console.log(old_id, ids_by_dimensions);
       }
 
-      if (do_dimensions && !dimensions) {
-        console.error("No dimensions for image", old_id, src);
-        break;
+      if (do_dimensions) {
+        if (dimensions) {
+          all_images_dimensions.push(dimensions);
+        } else {
+          console.error("No dimensions for image", old_id, src);
+          break;
+        }
       }
 
       // console.log("Image", csv_article.id, { src, caption });

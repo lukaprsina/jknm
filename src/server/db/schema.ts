@@ -14,8 +14,8 @@ import {
 import type { AdapterAccount } from "next-auth/adapters";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import type { CropType } from "../../lib/validators";
 import { content_validator, crop_validator } from "../../lib/validators";
-import type { Crop } from "react-image-crop";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -71,7 +71,7 @@ export const PublishedArticle = pgTable(
       () => new Date(),
     ),
     content: json("content").$type<ArticleContentType>(),
-    thumbnail_crop: json("thumbnail_crop").$type<Crop>(),
+    thumbnail_crop: json("thumbnail_crop").$type<CropType>(),
     // image: varchar("image", { length: 255 }),
   },
   (published_article) => ({
@@ -107,7 +107,7 @@ export const DraftArticle = pgTable(
       () => new Date(),
     ),
     content: json("content").$type<ArticleContentType>(),
-    thumbnail_crop: json("thumbnail_crop").$type<Crop>(),
+    thumbnail_crop: json("thumbnail_crop").$type<CropType>(),
     // image: varchar("image", { length: 255 }),
   },
   (draft_article) => ({

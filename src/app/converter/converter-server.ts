@@ -85,7 +85,15 @@ export async function sync_authors() {
   // fs_promises.readFile()
 }
 
-export async function get_image_dimensions(src: string) {
+export interface DimensionType {
+  width: number;
+  height: number;
+  image_path: string;
+}
+
+export async function get_image_dimensions(
+  src: string,
+): Promise<DimensionType | undefined> {
   const src_parts = src.split("/");
   const dir = src_parts.at(-2);
   const name = src_parts.at(-1);
@@ -201,7 +209,7 @@ export async function sync_with_algolia() {
         author_ids: article.published_articles_to_authors.map(
           (a) => a.author_id,
         ),
-        has_thumbnail: article.has_thumbnail,
+        has_thumbnail: Boolean(article.thumbnail_crop),
       } satisfies PublishedArticleHit;
     })
     .filter((article) => typeof article !== "undefined");

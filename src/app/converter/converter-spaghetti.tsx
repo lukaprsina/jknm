@@ -7,6 +7,7 @@ import { parseDocument } from "htmlparser2";
 import { parse as html_parse, NodeType } from "node-html-parser";
 
 import type { AuthorType } from "./get-authors";
+import type { DimensionType } from "./converter-server";
 import {
   get_authors_by_name,
   get_problematic_html,
@@ -22,6 +23,8 @@ import { PROBLEMATIC_CONSTANTS } from "./info/problematic";
 import { convert_title_to_url } from "~/lib/article-utils";
 import type { PublishArticleSchema } from "~/server/db/schema";
 import type { z } from "zod";
+import { centerCrop, makeAspectCrop } from "react-image-crop";
+import type { CropType } from "~/lib/validators";
 
 export type ConverterArticleWithAuthorIds = z.infer<
   typeof PublishArticleSchema
@@ -44,7 +47,7 @@ export interface ImportedArticle {
   updated_at: string;
 }
 
-export interface DimensionType {
+export interface IdsByDimentionType {
   dimensions: { width: number; height: number };
   ids: number[];
 }
@@ -72,7 +75,7 @@ const images_to_save: ImageToSave[] = [];
 const articles_without_authors = new Set<number>();
 const authors_by_id: { id: string; names: string[] }[] = [];
 let authors_by_name: AuthorType[] = [];
-const ids_by_dimensions: DimensionType[] = [];
+const ids_by_dimensions: IdsByDimentionType[] = [];
 
 export async function iterate_over_articles(
   editorJS: EditorJS | null,
@@ -218,6 +221,7 @@ async function parse_csv_article(
     images: image_urls,
   });
 
+  const all_images_dimensions: DimensionType[] = [];
   for (const node of root.childNodes) {
     if (node.nodeType == NodeType.ELEMENT_NODE) {
       await parse_node(
@@ -227,6 +231,7 @@ async function parse_csv_article(
         csv_url,
         problems,
         ids_by_dimensions,
+        all_images_dimensions,
       );
     } else if (node.nodeType == NodeType.TEXT_NODE) {
       if (node.text.trim() !== "") throw new Error("Some text: " + node.text);
@@ -262,6 +267,29 @@ async function parse_csv_article(
     );
   }
 
+  const first_image = all_images_dimensions[0];
+  let thumbnail_crop: CropType | undefined = undefined;
+  if (first_image) {
+    const width = first_image.width;
+    const height = first_image.width;
+
+    thumbnail_crop = centerCrop(
+      makeAspectCrop(
+        {
+          // You don't need to pass a complete crop into
+          // makeAspectCrop or centerCrop.
+          unit: "%",
+          width: 90,
+        },
+        16 / 9,
+        width,
+        height,
+      ),
+      width,
+      height,
+    );
+  }
+
   const article = {
     old_id: imported_article.objave_id,
     title: imported_article.title,
@@ -270,7 +298,7 @@ async function parse_csv_article(
     created_at,
     updated_at,
     author_ids: Array.from(current_authors),
-    has_thumbnail: !!image,
+    thumbnail_crop,
   } satisfies ConverterArticleWithAuthorIds;
 
   return article;

@@ -25,6 +25,8 @@ export const crop_validator = z
   })
   .optional();
 
+export type CropType = z.infer<typeof crop_validator>;
+
 export const published_article_hit_validator = z.object({
   published_id: z.number(),
   title: z.string(),
