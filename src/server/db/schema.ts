@@ -15,6 +15,7 @@ import type { AdapterAccount } from "next-auth/adapters";
 import { createInsertSchema } from "drizzle-zod";
 import type { CropType } from "../../lib/validators";
 import { content_validator, crop_validator } from "../../lib/validators";
+import { z } from "zod";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -220,19 +221,20 @@ export const CreateDraftArticleSchema = createInsertSchema(DraftArticle, {
 });
 
 export const SaveDraftArticleSchema = createInsertSchema(DraftArticle, {
-  // id: z.number(),
   content: content_validator,
   thumbnail_crop: crop_validator,
   // updated_at: z.date(),
 }).omit({
+  id: true,
   // created_at: true,
 });
 
 export const PublishArticleSchema = createInsertSchema(PublishedArticle, {
   content: content_validator,
   thumbnail_crop: crop_validator,
-  // updated_at: z.date(),
+  created_at: z.date(),
 }).omit({
+  id: true,
   // created_at: true,
 });
 

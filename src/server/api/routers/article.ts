@@ -15,7 +15,13 @@ import { assert_at_most_one, assert_one } from "~/lib/assert-length";
 import { withCursorPagination } from "drizzle-pagination";
 import { convert_title_to_url } from "~/lib/article-utils";
 import type { PublishedArticleWithAuthors } from "~/components/article/card-adapter";
-import { rename_content } from "~/server/s3-utils";
+import {
+  content_to_draft,
+  content_to_published,
+  delete_s3_directory,
+} from "~/server/s3-utils";
+import { env } from "~/env";
+import { format_date_for_url } from "~/lib/format-date";
 
 export const article_router = createTRPCRouter({
   get_infinite_published: publicProcedure
@@ -208,15 +214,14 @@ export const article_router = createTRPCRouter({
           if (draft) return draft;
         }
 
+        // if article is provided, create draft
         let values: typeof DraftArticle.$inferInsert | undefined = undefined;
         if (input.article) {
-          const renamed_content = rename_content(input.article.content ?? null);
-          values = { ...input.article, content: renamed_content };
+          values = input.article;
         } else if (published) {
-          const renamed_content = rename_content(published.content);
           values = {
             title: published.title,
-            content: renamed_content,
+            content: published.content,
             created_at: published.created_at,
             published_id: published.id,
           };
@@ -224,16 +229,27 @@ export const article_router = createTRPCRouter({
           throw new Error("Can't create draft");
         }
 
-        const created_draft = await tx
+        const created_drafts = await tx
           .insert(DraftArticle)
           .values(values)
           .returning();
 
-        assert_one(created_draft);
-        const draft_id = created_draft[0].id;
+        assert_one(created_drafts);
+        const created_draft = created_drafts[0];
+
+        const renamed_content = content_to_draft(
+          created_draft.content ?? null,
+          created_draft.id,
+        );
+
+        // update content with renamed urls
+        await tx
+          .update(DraftArticle)
+          .set({ content: renamed_content })
+          .where(eq(DraftArticle.id, created_draft.id));
 
         if (published) {
-          // I don't think this is necessary
+          // I don't think this is necessary, because we are creating a new draft
           /* await tx
             .delete(DraftArticlesToAuthors)
             .where(eq(DraftArticlesToAuthors.draft_id, draft_id)); */
@@ -241,13 +257,13 @@ export const article_router = createTRPCRouter({
           await tx.insert(DraftArticlesToAuthors).values(
             published.published_articles_to_authors.map((author) => ({
               author_id: author.author_id,
-              draft_id: draft_id,
+              draft_id: created_draft.id,
             })),
           );
         }
 
         const draft_returning = await tx.query.DraftArticle.findFirst({
-          where: eq(DraftArticle.id, draft_id),
+          where: eq(DraftArticle.id, created_draft.id),
           with: {
             draft_articles_to_authors: {
               with: {
@@ -266,6 +282,7 @@ export const article_router = createTRPCRouter({
       return transaction;
     }),
 
+  // don't need to change s3 urls, because id is the same
   save_draft: protectedProcedure
     .input(
       z.object({
@@ -275,7 +292,7 @@ export const article_router = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.transaction(async (tx) => {
+      const transaction = await ctx.db.transaction(async (tx) => {
         console.log("saving draft input", input);
 
         const updated_draft = await tx
@@ -308,6 +325,8 @@ export const article_router = createTRPCRouter({
           },
         });
       });
+
+      return transaction;
     }),
 
   publish: protectedProcedure
@@ -319,13 +338,24 @@ export const article_router = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.transaction(async (tx) => {
+      const transaction = await ctx.db.transaction(async (tx) => {
+        // rename urls and content
         const value = { ...input.article };
-        if (value.title) value.url = convert_title_to_url(value.title);
+
+        const renamed_url = `${convert_title_to_url(value.title)}-${format_date_for_url(value.created_at)}`;
+
+        const renamed_content = content_to_published(
+          value.content,
+          renamed_url,
+        );
+
+        value.url = renamed_url;
+        value.content = renamed_content;
 
         console.log("publishing article", { value, input });
 
         let draft: typeof DraftArticle.$inferInsert | undefined;
+        // check if draft exists
         if (input.draft_id) {
           draft = await tx.query.DraftArticle.findFirst({
             where: eq(DraftArticle.id, input.draft_id),
@@ -342,13 +372,13 @@ export const article_router = createTRPCRouter({
           if (!draft) throw new Error("Draft not found");
         }
 
-        const inserted_published_articles = await tx
+        const published_articles = await tx
           .insert(PublishedArticle)
           .values(value)
           .returning();
 
-        assert_one(inserted_published_articles);
-        const published_article = inserted_published_articles[0];
+        assert_one(published_articles);
+        const published_article = published_articles[0];
 
         await tx
           .delete(PublishedArticlesToAuthors)
@@ -365,13 +395,9 @@ export const article_router = createTRPCRouter({
           );
         }
 
-        // TODO
-        // update algolia published article in published index
-        // invalidate trpc
-
+        // if draft exists, delete it
         if (draft?.id) {
           await tx.delete(DraftArticle).where(eq(DraftArticle.id, draft.id));
-          // delete algolia draft article in draft index
         }
 
         const published_article_with_authors =
@@ -389,12 +415,14 @@ export const article_router = createTRPCRouter({
 
         return published_article_with_authors;
       });
+
+      return transaction;
     }),
 
   delete_draft: protectedProcedure
     .input(z.number())
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.transaction(async (tx) => {
+      const transaction = await ctx.db.transaction(async (tx) => {
         const draft_result = await tx
           .delete(DraftArticle)
           .where(eq(DraftArticle.id, input))
@@ -402,6 +430,11 @@ export const article_router = createTRPCRouter({
 
         assert_one(draft_result);
         const draft = draft_result[0];
+
+        await delete_s3_directory(
+          env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+          draft.id.toString(),
+        );
 
         if (!draft.published_id) return { draft };
 
@@ -413,13 +446,15 @@ export const article_router = createTRPCRouter({
 
         return { draft, url: published.url };
       });
+
+      return transaction;
     }),
 
   // TODO: warn user that the draft will be ovewritten
   unpublish: protectedProcedure
     .input(z.number())
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.transaction(async (tx) => {
+      const transaction = await ctx.db.transaction(async (tx) => {
         const all_published = await tx.query.PublishedArticle.findMany({
           where: eq(PublishedArticle.id, input),
           with: {
@@ -461,12 +496,14 @@ export const article_router = createTRPCRouter({
 
         return updated_or_created_draft;
       });
+
+      return transaction;
     }),
 
   delete_both: protectedProcedure
     .input(z.number())
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.transaction(async (tx) => {
+      const transaction = await ctx.db.transaction(async (tx) => {
         const published_article = tx
           .delete(PublishedArticle)
           .where(eq(PublishedArticle.id, input))
@@ -482,5 +519,7 @@ export const article_router = createTRPCRouter({
           draft_article,
         });
       });
+
+      return transaction;
     }),
 });

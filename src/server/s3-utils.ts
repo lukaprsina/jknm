@@ -12,13 +12,39 @@ import type { OutputData } from "@editorjs/editorjs";
 
 import { env } from "~/env";
 
-export function rename_content(editor_content: OutputData | null) {
+/* 
+https://jknm.s3.eu-central-1.amazonaws.com/potop-v-termalni-izvir-29-02-2008/1_gradbena%20jama.jpg
+
+draft:
+bucket: jknm-draft
+article_url: id
+title
+
+published:
+bucket: jknm
+article_url
+title
+*/
+
+export function content_to_draft(
+  editor_content: OutputData | null,
+  draft_id: number,
+) {
+  console.log("content_to_draft", { editor_content, draft_id });
+  return editor_content;
+}
+
+export function content_to_published(
+  editor_content: OutputData | undefined,
+  published_url: string,
+) {
+  console.log("content_to_published", { editor_content, published_url });
   return editor_content;
 }
 
 const ALLOWED_BLOCK_TYPES = ["image", "attaches"];
 
-export function rename_urls_in_editor(
+export function rename_urls_in_content(
   editor_content: OutputData,
   article_url: string,
   draft: boolean,
@@ -122,12 +148,13 @@ export async function rename_s3_directory(old_dir: string, new_dir: string) {
   console.log("renamed from ", old_dir, " to ", new_dir);
 }
 
-async function list_objects(prefix: string) {
+async function list_objects(bucket: string, prefix: string) {
   try {
     const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
     const response = await client.send(
       new ListObjectsV2Command({
-        Bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+        // Bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+        Bucket: bucket,
         Prefix: prefix,
       }),
     );
@@ -139,12 +166,13 @@ async function list_objects(prefix: string) {
   }
 }
 
-async function delete_objects(keys: string[]) {
+async function delete_objects(bucket: string, keys: string[]) {
   try {
     const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
     const response = await client.send(
       new DeleteObjectsCommand({
-        Bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+        // Bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+        Bucket: bucket,
         Delete: { Objects: keys.map((Key) => ({ Key })) },
       }),
     );
@@ -156,9 +184,9 @@ async function delete_objects(keys: string[]) {
   }
 }
 
-export async function delete_s3_directory(prefix: string) {
+export async function delete_s3_directory(bucket: string, prefix: string) {
   try {
-    const objects = await list_objects(prefix);
+    const objects = await list_objects(bucket, prefix);
     if (typeof objects === "undefined") return;
 
     const keys = objects.map((object) => {
@@ -170,18 +198,19 @@ export async function delete_s3_directory(prefix: string) {
     });
 
     console.log("delete_s3_directory", keys);
-    if (keys.length > 0) await delete_objects(keys);
+    if (keys.length > 0) await delete_objects(bucket, keys);
   } catch (error) {
     console.error("Error deleting directory:", error);
   }
 }
 
 export async function clean_s3_directory(
+  bucket: string,
   directory: string,
   filenames_to_keep: string[],
 ) {
   try {
-    const objects = await list_objects(directory);
+    const objects = await list_objects(bucket, directory);
     if (typeof objects === "undefined") {
       console.error(
         "clean_s3_directory: No objects found in directory",
@@ -215,7 +244,7 @@ export async function clean_s3_directory(
       objects,
     });
 
-    if (keys_to_delete.length > 0) await delete_objects(keys_to_delete);
+    if (keys_to_delete.length > 0) await delete_objects(bucket, keys_to_delete);
   } catch (error) {
     console.error("Error cleaning directory:", error);
   }
