@@ -75,13 +75,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.error();
   }
 
-  const client = new S3Client({ region: env.AWS_REGION });
+  const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
 
   // Check if the file already exists
   try {
     await client.send(
       new HeadObjectCommand({
-        Bucket: env.NEXT_PUBLIC_S3_DRAFT_BUCKET_NAME,
+        Bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
         Key: key,
       }),
     );
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
   }
 
   const { url, fields } = await createPresignedPost(client, {
-    Bucket: env.NEXT_PUBLIC_S3_DRAFT_BUCKET_NAME,
+    Bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
     Key: key,
     Conditions: [
       ["content-length-range", 0, 5 * 10485760], // up to 10 MB

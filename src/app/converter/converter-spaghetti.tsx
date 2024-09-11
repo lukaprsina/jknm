@@ -262,16 +262,16 @@ async function parse_csv_article(
     );
   }
 
-  const article: ConverterArticleWithAuthorIds = {
+  const article = {
     old_id: imported_article.objave_id,
     title: imported_article.title,
-    image: image ?? null,
     content,
     url: csv_url,
     created_at,
     updated_at,
     author_ids: Array.from(current_authors),
-  };
+    has_thumbnail: !!image,
+  } satisfies ConverterArticleWithAuthorIds;
 
   return article;
 }

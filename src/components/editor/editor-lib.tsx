@@ -80,12 +80,12 @@ export function update_article_from_editor(
   article: z.infer<typeof PublishArticleSchema>,
   article_id: number,
 ) {
-  const hostname = draft
-    ? env.NEXT_PUBLIC_S3_DRAFT_BUCKET_NAME
-    : env.NEXT_PUBLIC_S3_PUBLISHED_BUCKET_NAME;
+  const bucket = draft
+    ? env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME
+    : env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME;
 
   if (!article.content) return;
-  rename_urls_in_editor(hostname, article.content, article.url);
+  rename_urls_in_editor(bucket, article.content, article.url);
 
   update_settings_from_editor({
     title: article.title,
@@ -97,15 +97,13 @@ export function update_article_from_editor(
 
   const image = editor_store.get.image();
 
-  const new_image = image
-    ? rename_url(hostname, image, article.url)
-    : undefined;
+  const new_image = image ? rename_url(bucket, image, article.url) : undefined;
 
   editor_store.set.image(new_image);
 }
 
 export function rename_urls_in_editor(
-  hostname: string,
+  bucket: string,
   editor_content: OutputData,
   new_dir: string,
 ) {
@@ -117,7 +115,7 @@ export function rename_urls_in_editor(
     }
 
     const file_data = block.data as { file: { url: string } };
-    const new_url = rename_url(hostname, file_data.file.url, new_dir);
+    const new_url = rename_url(bucket, file_data.file.url, new_dir);
     console.log("Renamed file", { old_url: file_data.file.url, new_url });
     file_data.file.url = new_url;
   }

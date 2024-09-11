@@ -9,6 +9,8 @@ import type { IntersectionRef } from "./infinite-articles";
 import { MagicCard } from "../magic-card";
 import Image from "next/image";
 import ArticleCardDescription from "./description/card-description";
+import path from "path";
+import { get_s3_url } from "~/lib/s3-utils";
 
 /* const DynamicCardDescription = dynamic(
   () => import("./description/card-description"),
@@ -22,18 +24,20 @@ export function ArticleCard({
   featured,
   title,
   url,
-  image,
   content_preview,
   created_at,
+  has_thumbnail,
+  draft,
   author_ids,
   ref,
 }: {
   featured?: boolean;
   title: string;
   url: string;
-  image?: string;
   content_preview?: string;
   created_at: Date;
+  has_thumbnail: boolean;
+  draft: boolean;
   author_ids: number[];
   ref?: IntersectionRef;
 }) {
@@ -55,7 +59,7 @@ export function ArticleCard({
         innerClassName="h-full"
         gradientColor="#D9D9D955"
       >
-        {image ? (
+        {has_thumbnail ? (
           <AspectRatio
             ratio={16 / 9}
             className={cn(
@@ -64,7 +68,9 @@ export function ArticleCard({
             )}
           >
             <Image
-              src={image}
+              // https://jknm.s3.eu-central-1.amazonaws.com/potop-v-termalni-izvir-29-02-2008/1_gradbena%20jama.jpg
+              // https://jknm.s3.eu-central-1.amazonaws.com/potop-v-termalni-izvir-29-02-2008/thumbnail.jpg
+              src={path.join(get_s3_url(url, draft), "thumbnail_src")}
               alt={title}
               fill
               // loader={({ src }) => src}
@@ -89,7 +95,7 @@ export function ArticleCard({
               <p
                 className={cn(
                   "relative line-clamp-3 items-end",
-                  !image && "line-clamp-4",
+                  !has_thumbnail && "line-clamp-4",
                 )}
               >
                 {content_preview}

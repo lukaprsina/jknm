@@ -167,10 +167,11 @@ export const article_router = createTRPCRouter({
       z.object({
         published_id: z.number().optional(),
         article: CreateDraftArticleSchema.optional(),
+        images: z.array(z.string()).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.transaction(async (tx) => {
+      const transaction = await ctx.db.transaction(async (tx) => {
         if (!input.published_id && !input.article) {
           throw new Error("Either published_id or article must be provided");
         }
@@ -221,7 +222,6 @@ export const article_router = createTRPCRouter({
             .values({
               title: published.title,
               content: published.content,
-              image: published.image,
               created_at: published.created_at,
               published_id: published.id,
             })
@@ -262,6 +262,8 @@ export const article_router = createTRPCRouter({
         if (!created_draft) throw new Error("Created draft not found");
         return created_draft;
       });
+
+      return transaction;
     }),
 
   save_draft: protectedProcedure

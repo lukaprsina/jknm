@@ -1,5 +1,6 @@
 import { relations, sql } from "drizzle-orm";
 import {
+  boolean,
   index,
   integer,
   json,
@@ -15,6 +16,7 @@ import type { AdapterAccount } from "next-auth/adapters";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { content_validator } from "../../lib/validators";
+import type { Crop } from "react-image-crop";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -70,7 +72,8 @@ export const PublishedArticle = pgTable(
       () => new Date(),
     ),
     content: json("content").$type<ArticleContentType>(),
-    image: varchar("image", { length: 255 }),
+    thumbnail_crop: json("thumbnail_crop").$type<Crop>(),
+    // image: varchar("image", { length: 255 }),
   },
   (published_article) => ({
     created_at_index: index("p_created_at_idx").on(
@@ -105,7 +108,8 @@ export const DraftArticle = pgTable(
       () => new Date(),
     ),
     content: json("content").$type<ArticleContentType>(),
-    image: varchar("image", { length: 255 }),
+    thumbnail_crop: json("thumbnail_crop").$type<Crop>(),
+    // image: varchar("image", { length: 255 }),
   },
   (draft_article) => ({
     created_at_index: index("d_created_at_idx").on(draft_article.created_at),

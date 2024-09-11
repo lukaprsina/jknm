@@ -23,6 +23,7 @@ export const published_article_hit_validator = z.object({
   author_ids: z.array(z.number()),
   image: z.string().optional(),
   year: z.string(),
+  has_thumbnail: z.boolean(),
 });
 
 export type PublishedArticleHit = z.infer<
@@ -37,6 +38,7 @@ export const draft_article_hit_validator = z.object({
   author_ids: z.array(z.number()),
   image: z.string().optional(),
   year: z.string(),
+  has_thumbnail: z.boolean(),
 });
 
 export type DraftArticleHit = z.infer<typeof draft_article_hit_validator>;

@@ -196,12 +196,12 @@ export async function sync_with_algolia() {
         title: article.title,
         url: article.url,
         created_at: article.created_at.getTime(),
-        image: article.image ?? undefined,
         content_preview,
         year: article.created_at.getFullYear().toString(),
         author_ids: article.published_articles_to_authors.map(
           (a) => a.author_id,
         ),
+        has_thumbnail: article.has_thumbnail,
       } satisfies PublishedArticleHit;
     })
     .filter((article) => typeof article !== "undefined");
