@@ -15,6 +15,7 @@ import { assert_at_most_one, assert_one } from "~/lib/assert-length";
 import { withCursorPagination } from "drizzle-pagination";
 import { convert_title_to_url } from "~/lib/article-utils";
 import type { PublishedArticleWithAuthors } from "~/components/article/card-adapter";
+import { rename_content } from "~/server/s3-utils";
 
 export const article_router = createTRPCRouter({
   get_infinite_published: publicProcedure
@@ -207,36 +208,35 @@ export const article_router = createTRPCRouter({
           if (draft) return draft;
         }
 
-        let draft_id: number | undefined;
+        let values: typeof DraftArticle.$inferInsert | undefined = undefined;
         if (input.article) {
-          const created_draft = await tx
-            .insert(DraftArticle)
-            .values(input.article)
-            .returning();
-
-          assert_one(created_draft);
-          draft_id = created_draft[0].id;
+          const renamed_content = rename_content(input.article.content ?? null);
+          values = { ...input.article, content: renamed_content };
         } else if (published) {
-          const created_draft = await tx
-            .insert(DraftArticle)
-            .values({
-              title: published.title,
-              content: published.content,
-              created_at: published.created_at,
-              published_id: published.id,
-            })
-            .returning();
-
-          assert_one(created_draft);
-          draft_id = created_draft[0].id;
+          const renamed_content = rename_content(published.content);
+          values = {
+            title: published.title,
+            content: renamed_content,
+            created_at: published.created_at,
+            published_id: published.id,
+          };
         } else {
           throw new Error("Can't create draft");
         }
 
+        const created_draft = await tx
+          .insert(DraftArticle)
+          .values(values)
+          .returning();
+
+        assert_one(created_draft);
+        const draft_id = created_draft[0].id;
+
         if (published) {
-          await tx
-            .delete(PublishedArticle)
-            .where(eq(PublishedArticle.id, published.id));
+          // I don't think this is necessary
+          /* await tx
+            .delete(DraftArticlesToAuthors)
+            .where(eq(DraftArticlesToAuthors.draft_id, draft_id)); */
 
           await tx.insert(DraftArticlesToAuthors).values(
             published.published_articles_to_authors.map((author) => ({
@@ -246,7 +246,7 @@ export const article_router = createTRPCRouter({
           );
         }
 
-        const created_draft = await tx.query.DraftArticle.findFirst({
+        const draft_returning = await tx.query.DraftArticle.findFirst({
           where: eq(DraftArticle.id, draft_id),
           with: {
             draft_articles_to_authors: {
@@ -257,10 +257,10 @@ export const article_router = createTRPCRouter({
           },
         });
 
-        console.log("created draft", created_draft);
+        console.log("created draft", draft_returning);
 
-        if (!created_draft) throw new Error("Created draft not found");
-        return created_draft;
+        if (!draft_returning) throw new Error("Created draft not found");
+        return draft_returning;
       });
 
       return transaction;

@@ -3,7 +3,7 @@
 import { get_published_article_link } from "~/lib/article-utils";
 import { api } from "~/trpc/react";
 import {
-  update_article_from_editor,
+  // update_article_from_editor,
   validate_article,
 } from "../components/editor/editor-lib";
 import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
@@ -107,13 +107,13 @@ export function useEditorMutations() {
         thumbnail_crop: thumbnail_crop ?? state.thumbnail_crop,
       } satisfies z.infer<typeof SaveDraftArticleSchema>;
 
-      update_article_from_editor(
+      /* update_article_from_editor(
         {
           ...article,
           url: updated?.url ?? "",
         },
         true,
-      );
+      ); */
 
       console.log("editor mutation save_draft", {
         draft_article,
@@ -144,7 +144,7 @@ export function useEditorMutations() {
         thumbnail_crop: thumbnail_crop ?? state.thumbnail_crop,
       } satisfies z.infer<typeof PublishArticleSchema>;
 
-      update_article_from_editor(article, false);
+      // update_article_from_editor(article, false);
 
       publish.mutate({
         draft_id: draft_article.id,

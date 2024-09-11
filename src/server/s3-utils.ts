@@ -8,9 +8,61 @@ import {
   ListObjectsV2Command,
   S3Client,
 } from "@aws-sdk/client-s3";
+import type { OutputData } from "@editorjs/editorjs";
 
 import { env } from "~/env";
 
+export function rename_content(editor_content: OutputData | null) {
+  return editor_content;
+}
+
+const ALLOWED_BLOCK_TYPES = ["image", "attaches"];
+
+export function rename_urls_in_editor(
+  editor_content: OutputData,
+  article_url: string,
+  draft: boolean,
+) {
+  console.log("Renaming files in editor", { editor_content, article_url });
+
+  for (const block of editor_content.blocks) {
+    if (!block.id || !ALLOWED_BLOCK_TYPES.includes(block.type)) {
+      continue;
+    }
+
+    const file_data = block.data as { file: { url: string } };
+    const new_url = rename_url(file_data.file.url, article_url, draft);
+    // console.log("Renamed file", { old_url: file_data.file.url, new_url });
+    file_data.file.url = new_url;
+  }
+}
+
+export function rename_url(
+  old_url: string,
+  article_url: string,
+  draft: boolean,
+) {
+  const url_parts = new URL(old_url);
+  const file_name = url_parts.pathname.split("/").pop();
+
+  if (!file_name) {
+    console.error("No name in URL", old_url);
+    return old_url;
+  }
+
+  const new_url = get_s3_url(`${article_url}/${file_name}`, draft);
+  return new_url;
+}
+
+export function get_s3_url(url: string, draft?: boolean) {
+  const bucket = draft
+    ? env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME
+    : env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME;
+
+  return `https://${bucket}.s3.${env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${url}`;
+}
+
+// old
 export async function rename_s3_directory(old_dir: string, new_dir: string) {
   console.log("renaming from ", old_dir, " to ", new_dir);
   const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
