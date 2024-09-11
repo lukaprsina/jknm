@@ -1,7 +1,7 @@
 "use client";
 
 import { DotIcon } from "lucide-react";
-import { format_date } from "~/lib/format-date";
+import { format_date_for_human } from "~/lib/format-date";
 import type { Session } from "next-auth";
 import { Authors } from "~/components/authors";
 import { CardDescription } from "~/components/ui/card";
@@ -30,7 +30,7 @@ export default function ArticlePageDescription({
         <Authors author_ids={author_ids} />
       </span>
       {author_ids.length !== 0 && <DotIcon />}
-      <span> {format_date(created_at)}</span>
+      <span> {format_date_for_human(created_at)}</span>
       {old_id && (
         <>
           <DotIcon />

@@ -1,6 +1,6 @@
 import { format, parse } from "date-fns";
 
-export function format_date(date: Date) {
+export function format_date_for_human(date: Date) {
   return date.toLocaleDateString("sl-SI", {
     day: "numeric",
     month: "long",

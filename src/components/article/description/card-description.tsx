@@ -1,7 +1,7 @@
 "use client";
 
 import { DotIcon } from "lucide-react";
-import { format_date } from "~/lib/format-date";
+import { format_date_for_human } from "~/lib/format-date";
 import { cn } from "~/lib/utils";
 import { Authors } from "../../authors";
 import { CardDescription } from "../../ui/card";
@@ -28,7 +28,7 @@ export default function ArticleCardDescription({
       </span>
       {featured && author_ids.length !== 0 && <DotIcon size={20} />}
       <span className="flex flex-nowrap text-nowrap">
-        {format_date(created_at)}
+        {format_date_for_human(created_at)}
       </span>
     </CardDescription>
   );

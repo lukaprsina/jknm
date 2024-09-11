@@ -5,12 +5,9 @@ import mime from "mime/lite";
 import type { FileUploadResponse } from "~/app/api/upload_file_to_s3/route";
 import { editor_store } from "../editor/editor-store";
 
-export async function upload_file(
-  file: File,
-  novica_url?: string,
-): Promise<FileUploadResponse> {
-  console.log("upload_file", file, novica_url);
-  const directory = novica_url ?? editor_store.get.url();
+export async function upload_file(file: File): Promise<FileUploadResponse> {
+  console.log("upload_file", file);
+  const directory = editor_store.get.draft_id().toString();
 
   if (!directory) {
     return {
@@ -36,7 +33,7 @@ export async function upload_image_by_file(
   // toast: ReturnType<typeof useToast>,
 ): Promise<FileUploadResponse> {
   console.log("upload_image_by_file", file);
-  const directory = editor_store.get.url();
+  const directory = editor_store.get.draft_id().toString();
 
   if (!directory) {
     console.error("No directory", directory);
@@ -76,7 +73,7 @@ export async function upload_image_by_url(
   url: string,
   // toast: ReturnType<typeof useToast>,
 ): Promise<FileUploadResponse> {
-  const directory = editor_store.get.url();
+  const directory = editor_store.get.draft_id().toString();
 
   if (!directory) {
     console.error("No directory", directory);

@@ -33,7 +33,7 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 
-import { format_date } from "~/lib/format-date";
+import { format_date_for_human } from "~/lib/format-date";
 import { api } from "~/trpc/react";
 import { MyStats, SORT_BY_ITEMS } from "./search-components";
 import type { Session } from "next-auth";
@@ -145,7 +145,7 @@ function ArticleTableRow({
       <TableCell>
         <Authors author_ids={hit.author_ids} />
       </TableCell>
-      <TableCell>{format_date(new Date(hit.created_at))}</TableCell>
+      <TableCell>{format_date_for_human(new Date(hit.created_at))}</TableCell>
       {session && (
         <TableCell className="flex flex-grow justify-end gap-2">
           <EditButton

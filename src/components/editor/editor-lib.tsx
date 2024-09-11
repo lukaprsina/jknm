@@ -11,10 +11,12 @@ import type { PublishArticleSchema } from "~/server/db/schema";
 import type { z } from "zod";
 import type { CropType } from "~/lib/validators";
 import { get_s3_url } from "~/lib/s3-utils";
+import { format_date_for_url } from "~/lib/format-date";
 
 export function update_settings_from_editor({
   title,
   url,
+  created_at,
   thumbnail_crop,
   editor_content,
   article_id,
@@ -22,6 +24,7 @@ export function update_settings_from_editor({
 }: {
   title: string;
   url: string;
+  created_at: Date;
   thumbnail_crop: CropType;
   editor_content: OutputData;
   article_id: number;
@@ -36,10 +39,11 @@ export function update_settings_from_editor({
     }
 
     draft.image_data = image_data;
-    draft.id = article_id;
+    draft.draft_id = article_id;
     draft.image_data = image_data;
     draft.title = title;
     draft.url = url;
+    draft.s3_url = `${url}-${format_date_for_url(created_at)}`;
     if (author_ids) draft.author_ids = author_ids;
   });
 }
@@ -77,12 +81,13 @@ export function update_article_from_editor(
   article: z.infer<typeof PublishArticleSchema>,
   article_id: number,
 ) {
-  if (!article.content) return;
+  if (!article.content || !article.created_at) return;
   rename_urls_in_editor(article.content, article.url, draft);
 
   update_settings_from_editor({
     title: article.title,
     url: article.url,
+    created_at: article.created_at,
     thumbnail_crop: article.thumbnail_crop ?? null,
     editor_content: article.content,
     article_id,
