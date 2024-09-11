@@ -14,6 +14,17 @@ export const content_validator = z
   })
   .optional();
 
+// if there is no thumbnail, set this to undefined
+export const crop_validator = z
+  .object({
+    unit: z.enum(["%", "px"]),
+    x: z.number(),
+    y: z.number(),
+    width: z.number(),
+    height: z.number(),
+  })
+  .optional();
+
 export const published_article_hit_validator = z.object({
   published_id: z.number(),
   title: z.string(),

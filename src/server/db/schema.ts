@@ -1,6 +1,5 @@
 import { relations, sql } from "drizzle-orm";
 import {
-  boolean,
   index,
   integer,
   json,
@@ -15,7 +14,7 @@ import {
 import type { AdapterAccount } from "next-auth/adapters";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-import { content_validator } from "../../lib/validators";
+import { content_validator, crop_validator } from "../../lib/validators";
 import type { Crop } from "react-image-crop";
 
 /**
@@ -223,14 +222,16 @@ export const CreateDraftArticleSchema = createInsertSchema(DraftArticle, {
 export const SaveDraftArticleSchema = createInsertSchema(DraftArticle, {
   // id: z.number(),
   content: content_validator,
-  updated_at: z.date(),
+  thumbnail_crop: crop_validator,
+  // updated_at: z.date(),
 }).omit({
   // created_at: true,
 });
 
 export const PublishArticleSchema = createInsertSchema(PublishedArticle, {
   content: content_validator,
-  updated_at: z.date(),
+  thumbnail_crop: crop_validator,
+  // updated_at: z.date(),
 }).omit({
   // created_at: true,
 });
