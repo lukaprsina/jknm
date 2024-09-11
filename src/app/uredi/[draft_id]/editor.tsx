@@ -16,7 +16,7 @@ export default function MyEditor({
 }: {
   draft: DraftArticleWithAuthors;
 }) {
-  console.log("my editor draft", draft);
+  // console.log("my editor draft", draft);
   return (
     <DraftArticleContext.Provider value={draft}>
       <EditorProvider>

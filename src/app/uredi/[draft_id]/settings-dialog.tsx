@@ -51,7 +51,8 @@ export function SettingsDialog() {
         </TooltipTrigger>
         <TooltipContent>Nastavitve</TooltipContent>
       </Tooltip>
-      <DialogContent className="sm:max-w-[425px]">
+      {/* sm:max-w-[425px] */}
+      <DialogContent className="">
         <DialogHeader>
           <DialogTitle>Nastavitve</DialogTitle>
           <DialogDescription>
