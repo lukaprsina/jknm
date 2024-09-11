@@ -7,35 +7,32 @@ import { editor_store } from "./editor-store";
 import type { useToast } from "~/hooks/use-toast";
 import { NoHeadingButton, WrongHeadingButton } from "./error-buttons";
 import { convert_title_to_url } from "~/lib/article-utils";
-import { env } from "~/env";
 import type { PublishArticleSchema } from "~/server/db/schema";
 import type { z } from "zod";
+import type { CropType } from "~/lib/validators";
+import { get_s3_url } from "~/lib/s3-utils";
 
 export function update_settings_from_editor({
   title,
   url,
-  image,
+  thumbnail_crop,
   editor_content,
   article_id,
   author_ids,
 }: {
   title: string;
   url: string;
-  image: string | undefined;
+  thumbnail_crop: CropType;
   editor_content: OutputData;
   article_id: number;
   author_ids?: number[];
 }) {
   const image_data = get_image_data_from_editor(editor_content);
-  const store_image = editor_store.get.image();
+  const store_crop = editor_store.get.thumbnail_crop();
 
   editor_store.set.state((draft) => {
-    if (!store_image) {
-      if (image) {
-        draft.image = image;
-      } else {
-        draft.image = image_data.at(0)?.file.url;
-      }
+    if (!store_crop && thumbnail_crop) {
+      draft.thumbnail_crop = thumbnail_crop;
     }
 
     draft.image_data = image_data;
@@ -80,34 +77,30 @@ export function update_article_from_editor(
   article: z.infer<typeof PublishArticleSchema>,
   article_id: number,
 ) {
-  const bucket = draft
-    ? env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME
-    : env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME;
-
   if (!article.content) return;
-  rename_urls_in_editor(bucket, article.content, article.url);
+  rename_urls_in_editor(article.content, article.url, draft);
 
   update_settings_from_editor({
     title: article.title,
     url: article.url,
-    image: article.image ?? undefined,
+    thumbnail_crop: article.thumbnail_crop ?? null,
     editor_content: article.content,
     article_id,
   });
 
-  const image = editor_store.get.image();
+  const thumbnail = editor_store.get.thumbnail_crop();
 
-  const new_image = image ? rename_url(bucket, image, article.url) : undefined;
-
-  editor_store.set.image(new_image);
+  if (thumbnail) {
+    rename_url(article.url, draft);
+  }
 }
 
 export function rename_urls_in_editor(
-  bucket: string,
   editor_content: OutputData,
-  new_dir: string,
+  article_url: string,
+  draft: boolean,
 ) {
-  console.log("Renaming files in editor", { editor_content, new_dir });
+  console.log("Renaming files in editor", { editor_content, article_url });
 
   for (const block of editor_content.blocks) {
     if (!block.id || !["image", "attaches"].includes(block.type)) {
@@ -115,13 +108,13 @@ export function rename_urls_in_editor(
     }
 
     const file_data = block.data as { file: { url: string } };
-    const new_url = rename_url(bucket, file_data.file.url, new_dir);
-    console.log("Renamed file", { old_url: file_data.file.url, new_url });
+    const new_url = rename_url(file_data.file.url, draft);
+    // console.log("Renamed file", { old_url: file_data.file.url, new_url });
     file_data.file.url = new_url;
   }
 }
 
-export function rename_url(hostname: string, old_url: string, new_dir: string) {
+export function rename_url(old_url: string, draft: boolean) {
   const url_parts = new URL(old_url);
   const file_name = url_parts.pathname.split("/").pop();
 
@@ -130,6 +123,6 @@ export function rename_url(hostname: string, old_url: string, new_dir: string) {
     return old_url;
   }
 
-  const new_url = `https://${hostname}/${new_dir}/${file_name}`;
+  const new_url = get_s3_url(file_name, draft);
   return new_url;
 }

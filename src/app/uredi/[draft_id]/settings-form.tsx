@@ -24,10 +24,11 @@ import {
 } from "~/components/article/context";
 import { useContext } from "react";
 import { useEditorMutations } from "~/hooks/use-editor-mutations";
+import { crop_validator } from "~/lib/validators";
 
 export const form_schema = z.object({
   created_at: z.date(),
-  image: z.string().optional(),
+  thumbnail_crop: crop_validator,
 });
 
 export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
@@ -38,7 +39,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
   const form = useForm<z.infer<typeof form_schema>>({
     resolver: zodResolver(form_schema),
     defaultValues: {
-      image: editor_store.get.image() ?? undefined,
+      thumbnail_crop: editor_store.get.thumbnail_crop(),
       created_at: draft_article?.created_at,
     },
   });
@@ -48,8 +49,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
       <form className="space-y-4">
         <FormField
           control={form.control}
-          defaultValue={editor_store.get.image()}
-          name="image"
+          name="thumbnail_crop"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Naslovna slika</FormLabel>
@@ -61,7 +61,6 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
                   image={field.value}
                   setImage={(value) => {
                     field.onChange(value);
-                    // editor_store.set.image(value);
                   }}
                 />
               </FormControl>
@@ -89,7 +88,10 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
           <Button
             onClick={form.handleSubmit(
               async (values: z.infer<typeof form_schema>) => {
-                await editor_mutations.publish(values.created_at, values.image);
+                await editor_mutations.publish(
+                  values.created_at,
+                  values.thumbnail_crop,
+                );
                 closeDialog();
               },
             )}
@@ -123,7 +125,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
               async (values: z.infer<typeof form_schema>) => {
                 await editor_mutations.save_draft(
                   values.created_at,
-                  values.image,
+                  values.thumbnail_crop,
                 );
                 closeDialog();
               },

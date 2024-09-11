@@ -12,7 +12,7 @@ export const content_validator = z
     ),
     version: z.string().optional(),
   })
-  .optional();
+  .nullable();
 
 // if there is no thumbnail, set this to undefined
 export const crop_validator = z
@@ -23,7 +23,7 @@ export const crop_validator = z
     width: z.number(),
     height: z.number(),
   })
-  .optional();
+  .nullable();
 
 export type CropType = z.infer<typeof crop_validator>;
 

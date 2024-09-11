@@ -138,12 +138,7 @@ export function MyCarousel({ first_image }: { first_image?: string }) {
         align: "center",
         duration: 0,
       }}
-      // max-h-[90vh] max-w-[90vw]  p-10
       className="flex h-full w-full max-w-[80%] items-center justify-center"
-      // max-w-xs h-full w-full
-      // fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%]
-      // className="fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] rounded-md border-4 bg-white/90"
-      // className="flex h-full w-full items-center justify-center"
     >
       <CarouselContent ref={carousel_ref}>
         {images.map((image, index) => (
@@ -151,14 +146,7 @@ export function MyCarousel({ first_image }: { first_image?: string }) {
             className="flex items-center justify-center"
             key={index}
           >
-            {/* <div className="p-1"> */}
-            {/* <Card> */}
-            {/*  className="flex aspect-square items-center justify-center p-6" */}
-            {/* <CardContent> */}
             <GalleryImage image={image} />
-            {/* </CardContent> */}
-            {/* </Card> */}
-            {/* </div> */}
           </CarouselItem>
         ))}
       </CarouselContent>

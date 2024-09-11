@@ -18,6 +18,7 @@ import type {
   SaveDraftArticleSchema,
 } from "~/server/db/schema";
 import type { z } from "zod";
+import type { CropType } from "~/lib/validators";
 
 export function useEditorMutations() {
   const draft_article = useContext(DraftArticleContext);
@@ -91,7 +92,7 @@ export function useEditorMutations() {
   });
 
   return {
-    save_draft: async (created_at?: Date, image?: string | undefined) => {
+    save_draft: async (created_at?: Date, thumbnail_crop?: CropType) => {
       editor_context.setSavingText("Shranjujem osnutek ...");
       const editor_content = await editor_context.editor?.save();
       if (!editor_content) return;
@@ -103,7 +104,7 @@ export function useEditorMutations() {
         title: updated?.title ?? state.title,
         created_at: created_at ?? draft_article.created_at,
         content: editor_content,
-        image: image ?? state.image,
+        thumbnail_crop: thumbnail_crop ?? state.thumbnail_crop,
       } satisfies z.infer<typeof SaveDraftArticleSchema>;
 
       update_article_from_editor(
@@ -127,7 +128,7 @@ export function useEditorMutations() {
         author_ids: state.author_ids,
       });
     },
-    publish: async (created_at?: Date, image?: string | undefined) => {
+    publish: async (created_at?: Date, thumbnail_crop?: CropType) => {
       editor_context.setSavingText("Objavljam spremembe ...");
       const editor_content = await editor_context.editor?.save();
       if (!editor_content) return;
@@ -141,7 +142,7 @@ export function useEditorMutations() {
         url: updated.url,
         created_at: created_at ?? draft_article.created_at,
         content: editor_content,
-        image: image ?? state.image,
+        thumbnail_crop: thumbnail_crop ?? state.thumbnail_crop,
       } satisfies z.infer<typeof PublishArticleSchema>;
 
       update_article_from_editor(false, article, draft_article.id);

@@ -1,11 +1,13 @@
 "use client";
 
+import type { CropType } from "~/lib/validators";
+
 export function ImageSelector({
   image,
   setImage,
 }: {
-  image: string | undefined;
-  setImage: (date: string | undefined) => void;
+  image: CropType | undefined;
+  setImage: (date: CropType | undefined) => void;
 }) {
   return <></>;
 }

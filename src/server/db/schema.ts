@@ -13,7 +13,6 @@ import {
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
 import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
 import type { CropType } from "../../lib/validators";
 import { content_validator, crop_validator } from "../../lib/validators";
 
@@ -214,7 +213,8 @@ export const DraftArticlesToAuthorsRelations = relations(
 
 export const CreateDraftArticleSchema = createInsertSchema(DraftArticle, {
   content: content_validator,
-  updated_at: z.date(),
+  thumbnail_crop: crop_validator,
+  // updated_at: z.date(),
 }).omit({
   created_at: true,
 });

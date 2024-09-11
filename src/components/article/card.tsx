@@ -37,7 +37,7 @@ export function ArticleCard({
   content_preview?: string;
   created_at: Date;
   has_thumbnail: boolean;
-  draft: boolean;
+  draft?: boolean;
   author_ids: number[];
   ref?: IntersectionRef;
 }) {

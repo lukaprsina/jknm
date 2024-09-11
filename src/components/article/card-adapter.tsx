@@ -63,7 +63,8 @@ export const DraftArticleDrizzleCard = ({
       url={get_draft_article_link(article.id)}
       content_preview={content_to_text(article.content?.blocks ?? undefined)}
       created_at={article.created_at}
-      has_thumbnail={article.has_thumbnail}
+      draft
+      has_thumbnail={Boolean(article.thumbnail_crop)}
       author_ids={article.draft_articles_to_authors.map((a) => a.author.id)}
     />
   );
@@ -92,7 +93,7 @@ export const PublishedArticleDrizzleCard = ({
       )}
       content_preview={content_to_text(article.content?.blocks ?? undefined)}
       created_at={article.created_at}
-      has_thumbnail={article.has_thumbnail}
+      has_thumbnail={Boolean(article.thumbnail_crop)}
       author_ids={article.published_articles_to_authors.map((a) => a.author.id)}
     />
   );
@@ -109,9 +110,9 @@ export function ArticleAlgoliaCard({
     <ArticleCard
       title={hit.title}
       url={get_published_article_link(hit.url, hit.created_at, duplicate_urls)}
-      has_thumbnail={hit.image ?? undefined}
       content_preview={hit.content_preview}
       created_at={new Date(hit.created_at)}
+      has_thumbnail={hit.has_thumbnail}
       author_ids={hit.author_ids}
     />
   );

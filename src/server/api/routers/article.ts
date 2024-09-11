@@ -440,7 +440,7 @@ export const article_router = createTRPCRouter({
           content: published.content,
           title: published.title,
           created_at: published.created_at,
-          image: published.image,
+          thumbnail_crop: published.thumbnail_crop,
         } satisfies typeof DraftArticle.$inferInsert;
 
         await tx.delete(PublishedArticle).where(eq(PublishedArticle.id, input));
