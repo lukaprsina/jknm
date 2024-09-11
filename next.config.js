@@ -13,6 +13,12 @@ const config = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "unsplash.com",
+        port: "",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
         hostname: "images.unsplash.com",
         port: "",
         pathname: "**",
@@ -50,6 +56,12 @@ const config = {
       {
         protocol: "https",
         hostname: "jknm-turborepo.vercel.app",
+        port: "",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "jknm-si.vercel.app",
         port: "",
         pathname: "**",
       },

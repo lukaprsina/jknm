@@ -84,8 +84,6 @@ export function ImageGallery() {
         }}
       >
         <div className="h-full w-full">
-          {/* "flex h-full w-full items-center justify-center" */}
-          {/* p-16 */}
           <div className="flex h-full min-h-[350px] w-full items-center justify-around p-10">
             <MyCarousel />
           </div>
@@ -124,8 +122,6 @@ export function MyCarousel({ first_image }: { first_image?: string }) {
 
     if (first_image) {
       const index = images.findIndex((image) => image.file.url === first_image);
-
-      // console.log("scrolling to", index, first_image);
 
       api.scrollTo(index);
     }
@@ -169,25 +165,19 @@ function GalleryImage({ image }: { image: EditorJSImageData }) {
     [image.file.width, image.file.height],
   );
   return (
-    <figure>
+    <figure className="max-h-[90vh] max-w-[90vw]">
       <div className="flex h-full max-h-[90vh] w-full max-w-[90vw] items-center justify-center">
         <Image
-          /* max-h-[1500px] max-w-[1500px] */
           className="rounded-xl object-scale-down"
           src={image.file.url}
           alt={image.caption}
-          sizes="(max-width: 1500px) 100vw, 1500px"
+          // sizes="(max-width: 1500px) 100vw, 1500px"
           width={width}
           height={height}
         />
       </div>
       {image.caption && (
-        <figcaption
-          className="mt-2 w-full rounded-xl text-white"
-          /* style={{
-            width: `${image.file.width}px`,
-          }} */
-        >
+        <figcaption className="mt-2 w-full rounded-xl text-white">
           {image.caption}
         </figcaption>
       )}
