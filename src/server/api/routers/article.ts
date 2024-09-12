@@ -5,6 +5,7 @@ import {
   CreateDraftArticleSchema,
   DraftArticle,
   DraftArticlesToAuthors,
+  DuplicatedArticleUrls,
   PublishArticleSchema,
   PublishedArticle,
   PublishedArticlesToAuthors,
@@ -226,6 +227,7 @@ export const article_router = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       console.log("get_or_create_draft input", input);
+
       try {
         const transaction = await ctx.db.transaction(async (tx) => {
           if (!input.published_id && !input.article) {
@@ -351,6 +353,7 @@ export const article_router = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       console.log("publish input", input);
+
       try {
         const transaction = await ctx.db.transaction(async (tx) => {
           // rename urls and content
@@ -387,13 +390,30 @@ export const article_router = createTRPCRouter({
             if (!draft) throw new Error("Draft not found");
           }
 
-          const published_articles = await tx
-            .insert(PublishedArticle)
-            .values(value)
-            .returning();
+          let published_article:
+            | typeof PublishedArticle.$inferSelect
+            | undefined = undefined;
 
-          assert_one(published_articles);
-          const published_article = published_articles[0];
+          if (draft?.published_id) {
+            // update if draft had published_id
+            const published_articles = await tx
+              .update(PublishedArticle)
+              .set(value)
+              .where(eq(PublishedArticle.id, draft.published_id))
+              .returning();
+
+            assert_one(published_articles);
+            published_article = published_articles[0];
+          } else {
+            // insert new published article
+            const published_articles = await tx
+              .insert(PublishedArticle)
+              .values(value)
+              .returning();
+
+            assert_one(published_articles);
+            published_article = published_articles[0];
+          }
 
           await tx
             .delete(PublishedArticlesToAuthors)
@@ -427,6 +447,31 @@ export const article_router = createTRPCRouter({
 
           if (!published_article_with_authors)
             throw new Error("Published article not found");
+
+          {
+            // update duplicate_urls
+            const old_duplicate_urls = (
+              await tx.query.DuplicatedArticleUrls.findMany()
+            ).map((data) => data.url);
+            const articles = await tx.query.PublishedArticle.findMany({
+              where: eq(PublishedArticle.url, published_article.url),
+            });
+
+            if (
+              old_duplicate_urls.includes(published_article.url) &&
+              articles.length === 1
+            ) {
+              console.log("deleting duplicate url", published_article.url);
+              await tx
+                .delete(DuplicatedArticleUrls)
+                .where(eq(DuplicatedArticleUrls.url, published_article.url));
+            } else if (articles.length > 1) {
+              console.log("inserting duplicate url", published_article.url);
+              await tx
+                .insert(DuplicatedArticleUrls)
+                .values({ url: published_article.url });
+            }
+          }
 
           return published_article_with_authors;
         });
