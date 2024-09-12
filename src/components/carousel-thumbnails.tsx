@@ -6,6 +6,8 @@ import type { CarouselApi } from "./ui/carousel";
 import { Carousel, CarouselContent, CarouselItem } from "./ui/carousel";
 import Image from "next/image";
 import type { ThumbnailType } from "~/lib/validators";
+import ReactCrop, { Crop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 
 interface GalleryProps {
   images: ThumbnailType[];
@@ -19,24 +21,33 @@ export function CarouselWithThumbnails({
   const [mainApi, setMainApi] = useState<CarouselApi>();
   const [thumbnailApi, setThumbnailApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+  const [crop, setCrop] = useState<Crop>();
 
   useEffect(() => {
     onImageChange(current);
   }, [current, onImageChange]);
 
-  const mainImage = useMemo(
+  const mainImages = useMemo(
     () =>
       images.map((image, index) => (
         <CarouselItem key={index} className="relative aspect-square w-full">
-          <Image
-            src={image.image_url}
-            alt={`Carousel Main Image ${index + 1}`}
-            fill
-            style={{ objectFit: "cover" }}
-          />
+          <ReactCrop
+            crop={crop}
+            onChange={(pixelCrop, percentCrop) => {
+              console.log("crop", pixelCrop, percentCrop);
+              setCrop(pixelCrop);
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={image.image_url}
+              alt={`Carousel Main Image ${index + 1}`}
+              style={{ objectFit: "cover" }}
+            />
+          </ReactCrop>
         </CarouselItem>
       )),
-    [images],
+    [crop, images],
   );
 
   const handleClick = useCallback(
@@ -100,7 +111,7 @@ export function CarouselWithThumbnails({
   return (
     <div className="w-96 max-w-xl sm:w-auto">
       <Carousel setApi={setMainApi}>
-        <CarouselContent className="m-1">{mainImage}</CarouselContent>
+        <CarouselContent className="m-1">{mainImages}</CarouselContent>
       </Carousel>
       <Carousel setApi={setThumbnailApi}>
         <CarouselContent className="m-1">{thumbnailImages}</CarouselContent>
