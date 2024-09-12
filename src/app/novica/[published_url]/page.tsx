@@ -47,11 +47,11 @@ export default async function NovicaPage({
     break;
   }
 
-  console.log("novica/ ", { url: decoded, day });
   const { draft, published } = await api.article.get_article_by_published_url({
     url: decoded,
     created_at: day ? read_date_from_url(day) : undefined,
   });
+  console.log("novica/ ", { url: decoded, day, draft, published });
 
   if (!published) {
     return (

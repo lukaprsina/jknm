@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { PencilIcon, PlusIcon } from "lucide-react";
 
@@ -28,9 +28,9 @@ export default function EditingButtons({
   draft_article?: DraftArticleWithAuthors;
   session: Session | null;
 }) {
-  useEffect(() => {
+  /* useEffect(() => {
     console.log("EditingButtons", { published_article });
-  });
+  }); */
 
   if (!session) return null;
 
