@@ -1,21 +1,14 @@
-"use client";
+import { Shell } from "~/components/shell";
+import { TestCrop } from "./test-crop";
+import { page_variants } from "~/lib/page-variants";
 
-import type { ThumbnailType } from "~/lib/validators";
-import { ImageSelector } from "../uredi/[draft_id]/image-selector";
-import { useState } from "react";
-
-export default function Page() {
-  const [image, setImage] = useState<ThumbnailType | undefined>(undefined);
-
+export default function Crop() {
   return (
-    <>
-      <p>Image selector</p>
-      <ImageSelector
-        image={image}
-        setImage={(current) => {
-          setImage(current);
-        }}
-      />
-    </>
+    <Shell>
+      <div className={page_variants()}>
+        <p>Image selector</p>
+        <TestCrop />
+      </div>
+    </Shell>
   );
 }

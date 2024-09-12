@@ -28,11 +28,13 @@ export function ImageSelector({
 
     const crop = centerCrop(
       makeAspectCrop(
-        {
-          // You don't need to pass a complete crop into
-          // makeAspectCrop or centerCrop.
+        /* {
           unit: "px",
           width,
+        }, */
+        {
+          unit: "%",
+          width: 90,
         },
         16 / 9,
         width,
@@ -76,22 +78,22 @@ export function ImageSelector({
         ))}
       </div>
       {typeof imageIndex !== "undefined" && images[imageIndex]?.file.url && (
-        // TODO
-        <div style={{ width: `${images[imageIndex].file.width}px` }}>
+        <div
+          className="max-w-[500px]"
+          style={{ width: `${images[imageIndex].file.width}px` }}
+        >
           <ReactCrop
             crop={selected_image}
             onChange={(pixelCrop) => {
               if (!images[imageIndex]?.file.url) return;
 
               console.log("ImageSelector -> crop", pixelCrop);
-              // setCrop(pixelCrop);
               setImage({
                 image_url: images[imageIndex].file.url,
                 ...pixelCrop,
               });
             }}
             aspect={16 / 9}
-            //   minWidth={400}
             ruleOfThirds
             minHeight={100}
           >
@@ -99,8 +101,11 @@ export function ImageSelector({
             <img
               src={images[imageIndex].file.url}
               onLoad={(event) => onImageLoad(event)}
-              width={images[imageIndex].file.width}
-              height={images[imageIndex].file.height}
+              className="w-full"
+              style={{ transform: "scale(1) rotate(0deg)" }}
+              //   width={images[imageIndex].file.width}
+              //   height={images[imageIndex].file.height}
+              //   className="!max-h-[500px] !max-w-[500px]"
             />
           </ReactCrop>
         </div>
