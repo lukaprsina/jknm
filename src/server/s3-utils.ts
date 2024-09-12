@@ -212,7 +212,6 @@ export async function clean_s3_directory(
       );
       return;
     }
-    return;
 
     const object_names = objects.map((object) => {
       const parts = object.Key?.split("/");
