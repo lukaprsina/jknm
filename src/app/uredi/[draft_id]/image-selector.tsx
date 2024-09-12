@@ -1,8 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
-import type { Crop } from "react-image-crop";
+import { useEffect, useState } from "react";
 import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
 import { editor_store } from "~/components/editor/editor-store";
 import { Card } from "~/components/ui/card";
@@ -15,53 +14,17 @@ export function ImageSelector({
   setImage,
 }: {
   image: ThumbnailType | undefined;
-  setImage: (image: ThumbnailType) => void;
+  setImage: (image: ThumbnailType | undefined) => void;
 }) {
   const images = editor_store.use.image_data();
-  const [crop, setCrop] = useState<Crop>();
-
-  const crops = useMemo(() => {
-    const crops_maybe = images.map((image) => {
-      const width = image.file.width;
-      const height = image.file.height;
-      if (!width || !height) return;
-
-      const center = centerCrop(
-        makeAspectCrop(
-          {
-            unit: "px",
-            width,
-          },
-          16 / 9,
-          width,
-          height,
-        ),
-        width,
-        height,
-      );
-
-      const crop = {
-        image_url: image.file.url,
-        ...center,
-      } as ThumbnailType;
-
-      return crop;
-    });
-
-    return crops_maybe.filter((crop): crop is ThumbnailType => !!crop);
-  }, [images]);
-
-  const current_crop = useMemo(
-    () => crops.find((crop) => crop.image_url === selected_image?.image_url),
-    [crops, selected_image],
-  );
+  const [imageIndex, setImageIndex] = useState<number | undefined>(undefined);
 
   useEffect(() => {
-    setCrop(current_crop);
-  }, [current_crop]);
+    console.log("ImageSelector -> selected_image", selected_image);
+  }, [selected_image]);
 
-  function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
-    const { naturalWidth: width, naturalHeight: height } = e.currentTarget;
+  function onImageLoad(event: React.SyntheticEvent<HTMLImageElement>) {
+    const { naturalWidth: width, naturalHeight: height } = event.currentTarget;
 
     const crop = centerCrop(
       makeAspectCrop(
@@ -78,49 +41,69 @@ export function ImageSelector({
       width,
       height,
     );
+    if (typeof imageIndex === "undefined" || !images[imageIndex]?.file.url)
+      return;
 
-    setCrop(crop);
+    setImage({
+      image_url: images[imageIndex].file.url,
+      ...crop,
+    });
   }
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap gap-2">
-        {crops.map((crop, index) => (
+        {images.map((image, index) => (
           <Card
-            key={crop.image_url}
+            key={image.file.url}
             onClick={() => {
-              setImage(crop);
+              setImageIndex(index);
+              setImage(undefined);
             }}
             className={cn(
               "box-border flex cursor-pointer items-center justify-center border-2 p-2",
-              selected_image?.image_url === crop.image_url && "border-blue-500",
+              selected_image?.image_url === image.file.url && "border-blue-500",
             )}
           >
             <Image
-              src={crop.image_url}
+              src={image.file.url}
               alt={`Izbira slike #${index}`}
-              width={crop.width}
-              height={crop.height}
+              width={image.file.width}
+              height={image.file.height}
               className="max-h-[300px] max-w-[300px]"
             />
           </Card>
         ))}
       </div>
-      {selected_image?.image_url && (
-        <ReactCrop
-          crop={crop}
-          onChange={(pixelCrop) => {
-            console.log("ImageSelector -> crop", pixelCrop);
-            setCrop(pixelCrop);
-            // setImage(pixelCrop);
-          }}
-          aspect={16 / 9}
-          minWidth={400}
-          minHeight={100}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={selected_image.image_url} onLoad={onImageLoad} />
-        </ReactCrop>
+      {typeof imageIndex !== "undefined" && images[imageIndex]?.file.url && (
+        // TODO
+        <div style={{ width: `${images[imageIndex].file.width}px` }}>
+          <ReactCrop
+            crop={selected_image}
+            onChange={(pixelCrop) => {
+              if (!images[imageIndex]?.file.url) return;
+
+              console.log("ImageSelector -> crop", pixelCrop);
+              // setCrop(pixelCrop);
+              setImage({
+                image_url: images[imageIndex].file.url,
+                ...pixelCrop,
+              });
+            }}
+            aspect={16 / 9}
+            //   minWidth={400}
+            ruleOfThirds
+            minHeight={100}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={images[imageIndex].file.url}
+              onLoad={(event) => onImageLoad(event)}
+              width={images[imageIndex].file.width}
+              height={images[imageIndex].file.height}
+            />
+          </ReactCrop>
+        </div>
       )}
     </div>
   );
