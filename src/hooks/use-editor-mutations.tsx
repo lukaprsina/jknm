@@ -34,27 +34,23 @@ export function useEditorMutations() {
   }
 
   const save_draft = api.article.save_draft.useMutation({
-    onSuccess: () => {
+    onSuccess: () => {},
+    onSettled: async () => {
       editor_context.setSavingText(undefined);
       editor_context.setDirty(false);
-    },
-    onSettled: async () => {
       await trpc_utils.article.invalidate();
     },
   });
 
   const publish = api.article.publish.useMutation({
     onSuccess: (data) => {
-      console.log("publish mutation onSucccess", data);
-      editor_context.setSavingText(undefined);
-      editor_context.setDirty(false);
-
       router.push(
         get_published_article_link(data.url, data.created_at, duplicate_urls),
       );
     },
-    onSettled: async (data) => {
-      console.log("publish mutation onSettled", data);
+    onSettled: async () => {
+      editor_context.setSavingText(undefined);
+      editor_context.setDirty(false);
       await trpc_utils.article.invalidate();
     },
     onError: (error) => {
@@ -64,8 +60,6 @@ export function useEditorMutations() {
 
   const delete_draft = api.article.delete_draft.useMutation({
     onSuccess: (data) => {
-      editor_context.setSavingText(undefined);
-
       if (data.url) {
         router.push(
           get_published_article_link(
@@ -77,31 +71,21 @@ export function useEditorMutations() {
       }
     },
     onSettled: async () => {
+      editor_context.setSavingText(undefined);
       await trpc_utils.article.invalidate();
     },
   });
 
   const unpublish = api.article.unpublish.useMutation({
-    onSuccess: () => {
-      editor_context.setSavingText(undefined);
-    },
     onSettled: async () => {
+      editor_context.setSavingText(undefined);
       await trpc_utils.article.invalidate();
     },
   });
 
   const delete_both = api.article.delete_both.useMutation({
-    onSuccess: () => {
-      /* const returned_data = data.at(0);
-      if (!returned_data) return;
-
-      await delete_algolia_article(returned_data.id.toString());
-      await delete_s3_directory(`${returned_data.url}-${returned_data.id}`);
-      await trpc_utils.article.invalidate(); */
-
-      router.replace(`/`);
-    },
     onSettled: async () => {
+      router.replace(`/`);
       await trpc_utils.article.invalidate();
     },
   });
@@ -121,14 +105,6 @@ export function useEditorMutations() {
         content: editor_content,
         thumbnail_crop: thumbnail_crop ?? state.thumbnail_crop,
       } satisfies z.infer<typeof SaveDraftArticleSchema>;
-
-      /* update_article_from_editor(
-        {
-          ...article,
-          url: updated?.url ?? "",
-        },
-        true,
-      ); */
 
       console.log("editor mutation save_draft", {
         draft_article,
@@ -158,8 +134,6 @@ export function useEditorMutations() {
         content: editor_content,
         thumbnail_crop: thumbnail_crop ?? state.thumbnail_crop,
       } satisfies z.infer<typeof PublishArticleSchema>;
-
-      // update_article_from_editor(article, false);
 
       publish.mutate({
         draft_id: draft_article.id,

@@ -47,6 +47,7 @@ export async function POST(request: NextRequest) {
   let mime_type = "";
   let key = "";
 
+  // TODO: encode with convert_title_to_url
   if ((file_type === "image" || file_type === "file") && file instanceof File) {
     // Upload from a file.
     key = `${directory}/${file.name}`;
