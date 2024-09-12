@@ -24,6 +24,11 @@ const initial_data = {
 
 export const editor_store = createStore("editor")<EditorStoreType>(
   initial_data,
+  {
+    persist: {
+      enabled: true,
+    },
+  },
 ).extendActions((set) => ({
   reset: () =>
     set.state((draft) => {

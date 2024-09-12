@@ -49,6 +49,22 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
       <form className="space-y-4">
         <FormField
           control={form.control}
+          name="created_at"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Čas objave</FormLabel>
+              <FormControl>
+                <DateTimePicker
+                  date={field.value}
+                  setDate={(date) => field.onChange(date)}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="thumbnail_crop"
           render={({ field }) => (
             <FormItem>
@@ -62,22 +78,6 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
                   setImage={(value) => {
                     field.onChange(value);
                   }}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="created_at"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Čas objave</FormLabel>
-              <FormControl>
-                <DateTimePicker
-                  date={field.value}
-                  setDate={(date) => field.onChange(date)}
                 />
               </FormControl>
               <FormMessage />
