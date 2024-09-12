@@ -40,6 +40,7 @@ export function useEditorMutations() {
       editor_context.setSavingText(undefined);
       editor_context.setDirty(false);
       await trpc_utils.article.invalidate();
+      await trpc_utils.article.get_infinite_published.invalidate();
     },
     onError: (error) => {
       toaster.toast({
@@ -59,6 +60,7 @@ export function useEditorMutations() {
       editor_context.setSavingText(undefined);
       editor_context.setDirty(false);
       await trpc_utils.article.invalidate();
+      await trpc_utils.article.get_infinite_published.invalidate();
     },
     onError: (error) => {
       toaster.toast({
@@ -83,6 +85,7 @@ export function useEditorMutations() {
     onSettled: async () => {
       editor_context.setSavingText(undefined);
       await trpc_utils.article.invalidate();
+      await trpc_utils.article.get_infinite_published.invalidate();
     },
     onError: (error) => {
       toaster.toast({
@@ -96,6 +99,7 @@ export function useEditorMutations() {
     onSettled: async () => {
       editor_context.setSavingText(undefined);
       await trpc_utils.article.invalidate();
+      await trpc_utils.article.get_infinite_published.invalidate();
     },
     onError: (error) => {
       toaster.toast({
@@ -109,6 +113,7 @@ export function useEditorMutations() {
     onSettled: async () => {
       router.replace(`/`);
       await trpc_utils.article.invalidate();
+      await trpc_utils.article.get_infinite_published.invalidate();
     },
     onError: (error) => {
       toaster.toast({
@@ -129,6 +134,7 @@ export function useEditorMutations() {
           thumbnail_crop.image_url,
           "thumbnail.png",
           thumbnail_crop,
+          "allow_overwrite",
         );
       }
 

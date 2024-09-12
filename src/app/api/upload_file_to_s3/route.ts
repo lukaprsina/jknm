@@ -10,7 +10,7 @@ import sharp from "sharp";
 import { env } from "~/env";
 import { getServerAuthSession } from "~/server/auth";
 import { convert_title_to_url } from "~/lib/article-utils";
-import type { PixelCrop } from "react-image-crop";
+import type { PercentCrop, PixelCrop } from "react-image-crop";
 import { thumbnail_validator } from "~/lib/validators";
 
 export interface FileUploadResponse {
@@ -47,6 +47,7 @@ export async function POST(request: NextRequest) {
   const file_type = form_data.get("type");
   const external_url = form_data.get("url");
   const crop_entry = form_data.get("crop");
+  const allow_overwrite = form_data.get("allow_overwrite");
   let title = form_data.get("title");
   let mime_type = "";
   let key = "";
@@ -89,20 +90,22 @@ export async function POST(request: NextRequest) {
   const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
 
   // Check if the file already exists
-  try {
-    await client.send(
-      new HeadObjectCommand({
-        Bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
-        Key: key,
-      }),
-    );
+  if (allow_overwrite !== "allow_overwrite") {
+    try {
+      await client.send(
+        new HeadObjectCommand({
+          Bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+          Key: key,
+        }),
+      );
 
-    console.log("File exists, because it doesn't throw", key);
+      console.log("File exists, because it doesn't throw", key);
 
-    return NextResponse.json({ success: 0, error: "File exists" });
-  } catch (error: unknown) {
-    if (!(error instanceof NotFound)) {
-      return NextResponse.error();
+      return NextResponse.json({ success: 0, error: "File exists" });
+    } catch (error: unknown) {
+      if (!(error instanceof NotFound)) {
+        return NextResponse.error();
+      }
     }
   }
 
@@ -170,16 +173,33 @@ export async function POST(request: NextRequest) {
   return NextResponse.json(response_json);
 }
 
-async function crop_image(file: File, crop: PixelCrop): Promise<File> {
+async function crop_image(file: File, crop: PercentCrop): Promise<File> {
   console.log("crop image", crop);
+
   const image_buffer = await file.arrayBuffer();
   const sharp_image = sharp(image_buffer);
+  const metadata = await sharp_image.metadata();
+
+  if (!metadata.width || !metadata.height) {
+    throw new Error("Unable to retrieve image dimensions");
+  }
+
+  const originalWidth = metadata.width;
+  const originalHeight = metadata.height;
+
+  // Convert percentage crop values to pixels
+  const cropX = Math.round((crop.x / 100) * originalWidth);
+  const cropY = Math.round((crop.y / 100) * originalHeight);
+  const cropWidth = Math.round((crop.width / 100) * originalWidth);
+  const cropHeight = Math.round((crop.height / 100) * originalHeight);
+
+  console.log("crop image", { cropX, cropY, cropWidth, cropHeight });
   const cropped_buffer = await sharp_image
     .extract({
-      left: Math.round(crop.x),
-      top: Math.round(crop.y),
-      width: Math.round(crop.width),
-      height: Math.round(crop.height),
+      left: cropX,
+      top: cropY,
+      width: cropWidth,
+      height: cropHeight,
     })
     .toBuffer();
 

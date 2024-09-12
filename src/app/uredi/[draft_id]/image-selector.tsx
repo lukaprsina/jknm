@@ -150,11 +150,11 @@ export function ImageSelector({
             style={{ width: `${images[imageIndex].file.width}px` }}
           >
             <ReactCrop
-              onComplete={(c) => {
+              onComplete={(c, d) => {
                 if (!images[imageIndex]) return;
                 setFormImage({
                   image_url: images[imageIndex].file.url,
-                  ...c,
+                  ...d,
                 });
               }}
               crop={crop}

@@ -163,6 +163,7 @@ function ArticleTableRow({
 function DeleteDialog({ article_id }: { article_id: number }) {
   const trpc_utils = api.useUtils();
 
+  // TODO
   const article_delete = api.article.delete_both.useMutation({
     onSuccess: async () => {
       await trpc_utils.article.invalidate();

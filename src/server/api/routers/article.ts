@@ -93,6 +93,7 @@ export const article_router = createTRPCRouter({
   get_article_by_published_url: publicProcedure
     .input(z.object({ url: z.string(), created_at: z.date().optional() }))
     .query(async ({ ctx, input }) => {
+      console.log("get_article_by_published_url input", input);
       const conditions = [eq(PublishedArticle.url, input.url)];
 
       if (input.created_at) {
@@ -115,6 +116,10 @@ export const article_router = createTRPCRouter({
         },
       });
 
+      console.log("get_article_by_published_url published", {
+        published,
+        conditions,
+      });
       // only send draft when logged in
       if (ctx.session && published?.id) {
         const draft = await ctx.db.query.DraftArticle.findFirst({
@@ -450,6 +455,7 @@ export const article_router = createTRPCRouter({
 
           {
             // update duplicate_urls
+            // TODO: iterate over all duplicate_urls, check them also
             const old_duplicate_urls = (
               await tx.query.DuplicatedArticleUrls.findMany()
             ).map((data) => data.url);

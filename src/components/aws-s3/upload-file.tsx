@@ -4,7 +4,7 @@ import mime from "mime/lite";
 
 import type { FileUploadResponse } from "~/app/api/upload_file_to_s3/route";
 import { editor_store } from "../editor/editor-store";
-import type { PixelCrop } from "react-image-crop";
+import type { PercentCrop } from "react-image-crop";
 
 export async function upload_file(file: File): Promise<FileUploadResponse> {
   console.log("upload_file", file);
@@ -73,7 +73,8 @@ export async function upload_image_by_file(
 export async function upload_image_by_url(
   url: string,
   custom_title?: string,
-  crop?: PixelCrop,
+  crop?: PercentCrop,
+  allow_overwrite?: "allow_overwrite",
   // toast: ReturnType<typeof useToast>,
 ): Promise<FileUploadResponse> {
   const directory = editor_store.get.draft_id().toString();
@@ -102,6 +103,7 @@ export async function upload_image_by_url(
   form_data.append("title", title);
   form_data.append("directory", directory);
   form_data.append("type", "image");
+  form_data.append("allow_overwrite", allow_overwrite ?? "");
 
   if (crop) {
     form_data.append("crop", JSON.stringify(crop));

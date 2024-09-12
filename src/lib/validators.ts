@@ -18,7 +18,7 @@ export const content_validator = z
 export const thumbnail_validator = z.object({
   image_url: z.string(),
   // unit: z.enum(["%", "px"]),
-  unit: z.enum(["px"]),
+  unit: z.enum(["%"]),
   x: z.number(),
   y: z.number(),
   width: z.number(),
