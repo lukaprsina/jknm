@@ -20,6 +20,7 @@ import {
 
 import { SettingsForm } from "./settings-form";
 import { EditorContext } from "~/components/editor/editor-context";
+import { ScrollArea } from "~/components/ui/scroll-area";
 
 export function SettingsDialog() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -52,15 +53,16 @@ export function SettingsDialog() {
         <TooltipContent>Nastavitve</TooltipContent>
       </Tooltip>
       {/* sm:max-w-[425px] */}
-      <DialogContent className="">
+      <DialogContent className="max-h-[90vh] max-w-[70vw]">
         <DialogHeader>
           <DialogTitle>Nastavitve</DialogTitle>
           <DialogDescription>
-            Spremeni naslov, določi naslovno slike, objavi ali shrani kot
-            osnutek.
+            Določi naslovno sliko in čas objave.
           </DialogDescription>
         </DialogHeader>
-        <SettingsForm closeDialog={() => setDialogOpen(false)} />
+        <ScrollArea className="max-h-[50vh]">
+          <SettingsForm closeDialog={() => setDialogOpen(false)} />
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );

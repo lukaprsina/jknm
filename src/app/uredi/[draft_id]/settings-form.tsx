@@ -28,7 +28,7 @@ import { thumbnail_validator } from "~/lib/validators";
 
 export const form_schema = z.object({
   created_at: z.date(),
-  thumbnail_crop: thumbnail_validator,
+  thumbnail_crop: thumbnail_validator.optional(),
 });
 
 export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
@@ -39,7 +39,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
   const form = useForm<z.infer<typeof form_schema>>({
     resolver: zodResolver(form_schema),
     defaultValues: {
-      thumbnail_crop: editor_store.get.thumbnail_crop(),
+      thumbnail_crop: editor_store.get.thumbnail_crop() ?? undefined,
       created_at: draft_article?.created_at,
     },
   });

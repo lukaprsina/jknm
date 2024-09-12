@@ -3,6 +3,7 @@
 import { get_published_article_link } from "~/lib/article-utils";
 import { api } from "~/trpc/react";
 import {
+  update_settings_from_editor,
   // update_article_from_editor,
   validate_article,
 } from "../components/editor/editor-lib";
@@ -132,6 +133,18 @@ export function useEditorMutations() {
         thumbnail_crop: thumbnail_crop ?? state.thumbnail_crop,
       } satisfies z.infer<typeof SaveDraftArticleSchema>;
 
+      update_settings_from_editor({
+        title: updated?.title ?? "",
+        url: updated?.url ?? "",
+        s3_url: draft_article.id.toString(),
+        thumbnail_crop: article.thumbnail_crop,
+        editor_content,
+        article_id: draft_article.id,
+        author_ids: draft_article.draft_articles_to_authors.map(
+          (a) => a.author_id,
+        ),
+      });
+
       console.log("editor mutation save_draft", {
         draft_article,
         article,
@@ -160,6 +173,18 @@ export function useEditorMutations() {
         content: editor_content,
         thumbnail_crop: thumbnail_crop ?? state.thumbnail_crop,
       } satisfies z.infer<typeof PublishArticleSchema>;
+
+      update_settings_from_editor({
+        title: updated.title,
+        url: updated.url,
+        s3_url: draft_article.id.toString(),
+        thumbnail_crop: article.thumbnail_crop,
+        editor_content,
+        article_id: draft_article.id,
+        author_ids: draft_article.draft_articles_to_authors.map(
+          (a) => a.author_id,
+        ),
+      });
 
       publish.mutate({
         draft_id: draft_article.id,

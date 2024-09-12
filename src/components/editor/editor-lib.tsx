@@ -21,7 +21,7 @@ export function update_settings_from_editor({
   title: string;
   url: string;
   s3_url: string;
-  thumbnail_crop: ThumbnailType;
+  thumbnail_crop: ThumbnailType | null;
   editor_content: OutputData;
   article_id: number;
   author_ids?: number[];

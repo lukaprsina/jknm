@@ -15,16 +15,15 @@ export const content_validator = z
   .nullable();
 
 // if there is no thumbnail, set this to undefined
-export const thumbnail_validator = z
-  .object({
-    image_name: z.string(),
-    unit: z.enum(["%", "px"]),
-    x: z.number(),
-    y: z.number(),
-    width: z.number(),
-    height: z.number(),
-  })
-  .nullable();
+export const thumbnail_validator = z.object({
+  image_url: z.string(),
+  // unit: z.enum(["%", "px"]),
+  unit: z.enum(["px"]),
+  x: z.number(),
+  y: z.number(),
+  width: z.number(),
+  height: z.number(),
+});
 
 export type ThumbnailType = z.infer<typeof thumbnail_validator>;
 

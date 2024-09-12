@@ -5,23 +5,31 @@ import { useEffect, useState, useMemo, useCallback } from "react";
 import type { CarouselApi } from "./ui/carousel";
 import { Carousel, CarouselContent, CarouselItem } from "./ui/carousel";
 import Image from "next/image";
-import type { EditorJSImageData } from "~/lib/editor-utils";
+import type { ThumbnailType } from "~/lib/validators";
 
 interface GalleryProps {
-  images: EditorJSImageData[];
+  images: ThumbnailType[];
+  onImageChange: (index: number) => void;
 }
 
-export function CarouselWithThumbnails({ images }: GalleryProps) {
+export function CarouselWithThumbnails({
+  images,
+  onImageChange,
+}: GalleryProps) {
   const [mainApi, setMainApi] = useState<CarouselApi>();
   const [thumbnailApi, setThumbnailApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    onImageChange(current);
+  }, [current, onImageChange]);
 
   const mainImage = useMemo(
     () =>
       images.map((image, index) => (
         <CarouselItem key={index} className="relative aspect-square w-full">
           <Image
-            src={image.file.url}
+            src={image.image_url}
             alt={`Carousel Main Image ${index + 1}`}
             fill
             style={{ objectFit: "cover" }}
@@ -53,7 +61,7 @@ export function CarouselWithThumbnails({ images }: GalleryProps) {
         >
           <Image
             className={`${index === current ? "border-2" : ""}`}
-            src={image.file.url}
+            src={image.image_url}
             fill
             alt={`Carousel Thumbnail Image ${index + 1}`}
             style={{ objectFit: "cover" }}

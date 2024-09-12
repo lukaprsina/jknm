@@ -277,7 +277,7 @@ async function parse_csv_article(
     if (!image_name) throw new Error("No image name");
 
     thumbnail_crop = {
-      image_name: convert_title_to_url(image_name),
+      image_url: convert_title_to_url(image_name),
       ...centerCrop(
         makeAspectCrop(
           {

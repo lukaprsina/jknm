@@ -7,7 +7,7 @@ interface EditorStoreType {
   title: string;
   url: string;
   s3_url: string;
-  thumbnail_crop: ThumbnailType;
+  thumbnail_crop: ThumbnailType | null;
   image_data: EditorJSImageData[];
   author_ids: number[];
 }
