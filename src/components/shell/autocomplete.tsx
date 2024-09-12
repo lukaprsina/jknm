@@ -57,8 +57,8 @@ export function NoviceAutocomplete({ detached }: { detached?: string }) {
               queries: [
                 {
                   indexName: "novice",
-                  // query,
                   params: {
+                    query,
                     hitsPerPage: 8,
                   },
                 },

@@ -4,7 +4,6 @@ import { LayoutDashboard, TableIcon } from "lucide-react";
 import { Hits, InstantSearch } from "react-instantsearch";
 
 import { ArticleAlgoliaCard } from "~/components/article/card-adapter";
-import { algolia } from "~/lib/algolia";
 import { article_variants } from "~/lib/page-variants";
 import { ArticleTable } from "./article-table";
 import { MyPagination } from "./pagination";
@@ -17,13 +16,20 @@ import {
 } from "./search-components";
 import type { Session } from "next-auth";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
+import { liteClient as algoliasearch } from "algoliasearch/lite";
+import { env } from "~/env";
+
+const searchClient = algoliasearch(
+  env.NEXT_PUBLIC_ALGOLIA_ID,
+  env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY,
+);
 
 export function Search({ session }: { session: Session | null }) {
   return (
     <InstantSearch
       future={{ preserveSharedStateOnUnmount: true }}
       indexName="novice_created_at_desc"
-      searchClient={algolia.getClient()}
+      searchClient={searchClient}
     >
       <Tabs defaultValue="card" className="pb-6 pt-2">
         <div className="flex flex-col gap-4">

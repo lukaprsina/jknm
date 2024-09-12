@@ -19,7 +19,6 @@ import {
   PublishedArticle,
   PublishedArticlesToAuthors,
 } from "~/server/db/schema";
-import { algolia_protected } from "~/lib/algolia-server";
 import type { PublishedArticleHit } from "~/lib/validators";
 import { api } from "~/trpc/server";
 
@@ -184,7 +183,7 @@ export async function sync_with_algolia() {
     limit: 1000,
   });
 
-  const algolia = algolia_protected.getClient();
+  /* const algolia = algolia_protected.getClient();
   const index = algolia.initIndex("novice");
 
   const empty_query_results = await index.search("", {
@@ -192,7 +191,7 @@ export async function sync_with_algolia() {
     hitsPerPage: 1000,
   });
 
-  index.deleteObjects(empty_query_results.hits.map((hit) => hit.objectID));
+  index.deleteObjects(empty_query_results.hits.map((hit) => hit.objectID)); */
 
   const objects: PublishedArticleHit[] = articles.data
     .map((article) => {
@@ -214,7 +213,7 @@ export async function sync_with_algolia() {
     })
     .filter((article) => typeof article !== "undefined");
 
-  await index.saveObjects(objects);
+  // await index.saveObjects(objects);
 
   console.log("Done", objects.length);
 }

@@ -281,8 +281,8 @@ async function parse_csv_article(
       ...centerCrop(
         makeAspectCrop(
           {
-            unit: "px",
-            width,
+            unit: "%",
+            width: 100,
           },
           16 / 9,
           width,
