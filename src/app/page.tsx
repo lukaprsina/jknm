@@ -16,6 +16,8 @@ import {
 } from "~/lib/page-variants";
 import { DraftArticleDrizzleCard } from "~/components/article/card-adapter";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePageServer() {
   const session = await getServerAuthSession();
   await api.author.get_all.prefetch();

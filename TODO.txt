@@ -14,3 +14,11 @@ duplicate urls
 error, avtorji se seštevajo, ker rabiš brisat tiste prejšnje
 image data se ne shrani (verjetno zaradi join tablov)
 image kopiraj iz draft v published
+
+fetch faila za URL
+- itak uploadaš original, tako da ga najprej nalož
+- sharp ne obreže pravilno
+- extensions na s3 zgubijo piko
+
+override flag za image upload na sploh.
+invalidate ne dela

@@ -20,6 +20,7 @@ import type {
 } from "~/server/db/schema";
 import type { z } from "zod";
 import type { ThumbnailType } from "~/lib/validators";
+import { upload_image_by_url } from "~/components/aws-s3/upload-file";
 
 export function useEditorMutations() {
   const draft_article = useContext(DraftArticleContext);
@@ -122,6 +123,14 @@ export function useEditorMutations() {
       editor_context.setSavingText("Shranjujem osnutek ...");
       const editor_content = await editor_context.editor?.save();
       if (!editor_content) return;
+
+      if (thumbnail_crop) {
+        await upload_image_by_url(
+          thumbnail_crop.image_url,
+          "thumbnail.png",
+          thumbnail_crop,
+        );
+      }
 
       const updated = validate_article(editor_content, toaster);
 

@@ -17,8 +17,8 @@ export const content_validator = z
 // if there is no thumbnail, set this to undefined
 export const thumbnail_validator = z.object({
   image_url: z.string(),
-  unit: z.enum(["%", "px"]),
-  // unit: z.enum(["px"]),
+  // unit: z.enum(["%", "px"]),
+  unit: z.enum(["px"]),
   x: z.number(),
   y: z.number(),
   width: z.number(),

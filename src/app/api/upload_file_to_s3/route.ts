@@ -10,6 +10,8 @@ import sharp from "sharp";
 import { env } from "~/env";
 import { getServerAuthSession } from "~/server/auth";
 import { convert_title_to_url } from "~/lib/article-utils";
+import type { PixelCrop } from "react-image-crop";
+import { thumbnail_validator } from "~/lib/validators";
 
 export interface FileUploadResponse {
   success: 0 | 1;
@@ -44,6 +46,7 @@ export async function POST(request: NextRequest) {
   let file = form_data.get("file");
   const file_type = form_data.get("type");
   const external_url = form_data.get("url");
+  const crop_entry = form_data.get("crop");
   let title = form_data.get("title");
   let mime_type = "";
   let key = "";
@@ -73,6 +76,12 @@ export async function POST(request: NextRequest) {
     const url_image_response = await fetch(external_url);
     const blob = await url_image_response.blob();
     file = new File([blob], title, { type: mime_type });
+
+    if (typeof crop_entry === "string") {
+      const crop = JSON.parse(crop_entry) as PixelCrop;
+      const validated_crop = thumbnail_validator.parse(crop);
+      file = await crop_image(file, validated_crop);
+    }
   } else {
     return NextResponse.error();
   }
@@ -159,4 +168,20 @@ export async function POST(request: NextRequest) {
   console.log("upload_file_to_s3", response_json);
 
   return NextResponse.json(response_json);
+}
+
+async function crop_image(file: File, crop: PixelCrop): Promise<File> {
+  console.log("crop image", crop);
+  const image_buffer = await file.arrayBuffer();
+  const sharp_image = sharp(image_buffer);
+  const cropped_buffer = await sharp_image
+    .extract({
+      left: Math.round(crop.x),
+      top: Math.round(crop.y),
+      width: Math.round(crop.width),
+      height: Math.round(crop.height),
+    })
+    .toBuffer();
+
+  return new File([cropped_buffer], file.name, { type: file.type });
 }
