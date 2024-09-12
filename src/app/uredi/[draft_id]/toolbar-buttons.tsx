@@ -128,7 +128,6 @@ export function ImportButton() {
               onClick={() => {
                 form_ref.current?.reset();
                 input_ref.current?.click();
-                console.log("input_ref", input_ref);
               }}
             >
               Uvozi novico
