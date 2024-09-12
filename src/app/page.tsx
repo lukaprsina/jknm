@@ -31,7 +31,11 @@ export default async function HomePageServer() {
     ]),
   );
 
-  /* await api.article.get_infinite_published.prefetchInfinite(
+  await api.article.get_infinite_published.prefetch({
+    limit: 6 * 5,
+  });
+
+  await api.article.get_infinite_published.prefetchInfinite(
     {
       limit: 6 * 5,
     },
@@ -39,7 +43,7 @@ export default async function HomePageServer() {
       getNextPageParam: (lastPage) => lastPage.next_cursor,
       pages: 1,
     },
-  ); */
+  );
   console.log("page.tsx, before preloading infinite_articles");
   const infinite_articles = await api.article.get_infinite_published({
     limit: 6 * 5,

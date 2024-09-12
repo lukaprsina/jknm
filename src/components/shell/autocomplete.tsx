@@ -15,8 +15,6 @@ import React, {
 import { autocomplete, getAlgoliaResults } from "@algolia/autocomplete-js";
 import { createRoot } from "react-dom/client";
 
-import { algolia } from "~/lib/algolia";
-
 import "@algolia/autocomplete-theme-classic";
 
 import Link from "next/link";
@@ -28,9 +26,15 @@ import { Separator } from "~/components/ui/separator";
 import type { PublishedArticleHit } from "~/lib/validators";
 import { get_published_article_link } from "~/lib/article-utils";
 import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
+import { liteClient as algoliasearch } from "algoliasearch/lite";
+import { env } from "~/env";
+
+const searchClient = algoliasearch(
+  env.NEXT_PUBLIC_ALGOLIA_ID,
+  env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY,
+);
 
 export function NoviceAutocomplete({ detached }: { detached?: string }) {
-  const searchClient = algolia.getClient();
   const duplicate_urls = useDuplicatedUrls();
 
   return (
@@ -53,7 +57,7 @@ export function NoviceAutocomplete({ detached }: { detached?: string }) {
               queries: [
                 {
                   indexName: "novice",
-                  query,
+                  // query,
                   params: {
                     hitsPerPage: 8,
                   },
