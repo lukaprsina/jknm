@@ -61,13 +61,13 @@ function CreateNewArticle({ novica_ime }: { novica_ime: string }) {
     <InfoCard
       title={
         <span>
-          Novička <strong>{novica_ime}</strong> ne obstaja.
+          Osnutek z ID <strong>{novica_ime}</strong> ne obstaja.
         </span>
       }
-      description="Preverite, če ste vnesli pravilno ime novičke."
+      description="Preverite, če je ID pravilen."
     >
       <CardContent>
-        Lahko pa ustvarite novo novičko z imenom <strong>{novica_ime}</strong>.
+        Lahko pa ustvarite novo novičko z ID <strong>{novica_ime}</strong>.
       </CardContent>
       <CardFooter className="flex justify-between">
         <Link className={buttonVariants({ variant: "secondary" })} href="/">

@@ -9,9 +9,10 @@ import type { IntersectionRef } from "./infinite-articles";
 import { MagicCard } from "../magic-card";
 import Image from "next/image";
 // import ArticleCardDescription from "./description/card-description";
-import { get_s3_url } from "~/lib/get-s3-url";
 import dynamic from "next/dynamic";
 import { Skeleton } from "../ui/skeleton";
+import { env } from "~/env";
+import { get_s3_url } from "~/lib/s3-publish";
 
 const ArticleCardDescription = dynamic(
   () => import("./description/card-description"),
@@ -44,6 +45,10 @@ export function ArticleCard({
 }) {
   const [hover, setHover] = useState(false);
 
+  const bucket = draft
+    ? env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME
+    : env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME;
+
   return (
     <Link
       href={url}
@@ -71,7 +76,7 @@ export function ArticleCard({
             <Image
               // https://jknm.s3.eu-central-1.amazonaws.com/potop-v-termalni-izvir-29-02-2008/1_gradbena%20jama.jpg
               // https://jknm.s3.eu-central-1.amazonaws.com/potop-v-termalni-izvir-29-02-2008/thumbnail.jpg
-              src={get_s3_url(`${url}/thumbnail.png`, draft)}
+              src={get_s3_url(`${url}/thumbnail.png`, bucket)}
               alt={title}
               fill
               // loader={({ src }) => src}

@@ -34,30 +34,38 @@ export function useEditorMutations() {
   }
 
   const save_draft = api.article.save_draft.useMutation({
-    onSuccess: async () => {
+    onSuccess: () => {
       editor_context.setSavingText(undefined);
       editor_context.setDirty(false);
+    },
+    onSettled: async () => {
       await trpc_utils.article.invalidate();
     },
   });
 
   const publish = api.article.publish.useMutation({
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
+      console.log("publish mutation onSucccess", data);
       editor_context.setSavingText(undefined);
       editor_context.setDirty(false);
 
-      await trpc_utils.article.invalidate();
       router.push(
         get_published_article_link(data.url, data.created_at, duplicate_urls),
       );
     },
+    onSettled: async (data) => {
+      console.log("publish mutation onSettled", data);
+      await trpc_utils.article.invalidate();
+    },
+    onError: (error) => {
+      console.error("publish mutation error", error);
+    },
   });
 
   const delete_draft = api.article.delete_draft.useMutation({
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       editor_context.setSavingText(undefined);
 
-      await trpc_utils.article.invalidate();
       if (data.url) {
         router.push(
           get_published_article_link(
@@ -68,17 +76,22 @@ export function useEditorMutations() {
         );
       }
     },
+    onSettled: async () => {
+      await trpc_utils.article.invalidate();
+    },
   });
 
   const unpublish = api.article.unpublish.useMutation({
-    onSuccess: async () => {
-      await trpc_utils.article.invalidate();
+    onSuccess: () => {
       editor_context.setSavingText(undefined);
+    },
+    onSettled: async () => {
+      await trpc_utils.article.invalidate();
     },
   });
 
   const delete_both = api.article.delete_both.useMutation({
-    onSuccess: async () => {
+    onSuccess: () => {
       /* const returned_data = data.at(0);
       if (!returned_data) return;
 
@@ -86,8 +99,10 @@ export function useEditorMutations() {
       await delete_s3_directory(`${returned_data.url}-${returned_data.id}`);
       await trpc_utils.article.invalidate(); */
 
-      await trpc_utils.article.invalidate();
       router.replace(`/`);
+    },
+    onSettled: async () => {
+      await trpc_utils.article.invalidate();
     },
   });
 

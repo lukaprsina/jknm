@@ -11,6 +11,7 @@
     "db:pull": "drizzle-kit pull",
     "db:studio": "drizzle-kit studio",
     "dev": "next dev --turbo",
+    "devn": "next dev",
     "lint": "next lint",
     "start": "next start"
   },
@@ -99,6 +100,7 @@
     "instantsearch.css": "^8.5.0",
     "instantsearch.js": "^4.74.0",
     "isomorphic-dompurify": "^2.15.0",
+    "klona": "^2.0.6",
     "lucide-react": "^0.438.0",
     "mime": "^4.0.4",
     "next": "^15.0.0-rc.0",

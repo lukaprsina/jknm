@@ -5,7 +5,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@radix-ui/react-popover";
+} from "~/components/ui/popover";
 
 import { api } from "~/trpc/react";
 import { Button } from "~/components/ui/button";

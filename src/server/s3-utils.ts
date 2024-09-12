@@ -11,165 +11,79 @@ import {
 import type { OutputData } from "@editorjs/editorjs";
 
 import { env } from "~/env";
-
-/* 
-https://jknm.s3.eu-central-1.amazonaws.com/potop-v-termalni-izvir-29-02-2008/1_gradbena%20jama.jpg
-
-draft:
-bucket: jknm-draft
-article_url: id
-title
-
-published:
-bucket: jknm
-article_url
-title
-*/
-interface CopySourceInfo {
-  bucket: string;
-  file_name: string;
-}
-
-const ALLOWED_BLOCK_TYPES = ["image", "attaches"];
-const ALLOWERD_BUCKETS = [
-  env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
-  env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
-];
+import type { S3CopySourceInfo } from "~/lib/s3-publish";
+import { rename_urls_in_content, s3_copy_file } from "~/lib/s3-publish";
 
 export async function rename_s3_files_and_content(
   editor_content: OutputData,
-  updated_url: string,
+  destination_url: string,
   draft: boolean,
 ) {
-  const bucket = draft
+  const destination_bucket = draft
     ? env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME
     : env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME;
 
-  console.log("rename_s3_files", {
+  console.log("rename_s3_files_and_content", {
     editor_content,
-    published_url: updated_url,
+    destination_url,
+    destination_bucket,
   });
 
-  const sources = rename_urls_in_content(editor_content, updated_url, bucket);
+  const { sources, new_content } = rename_urls_in_content(
+    editor_content,
+    destination_url,
+    destination_bucket,
+  );
 
-  await s3_copy_between_buckets(sources, updated_url);
-  return editor_content;
-}
+  // draft_sources means that the files are in draft bucket
+  const draft_sources = sources.filter(
+    (source) => source.source_bucket === env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+  );
+  const published_sources = sources.filter(
+    (source) =>
+      source.source_bucket === env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+  );
 
-export function rename_urls_in_content(
-  editor_content: OutputData,
-  article_url: string,
-  bucket: string,
-): CopySourceInfo[] {
-  // console.log("Renaming files in editor", { editor_content, article_url });
-  const sources: CopySourceInfo[] = [];
+  /* if (draft) {
+    await clean_s3_directory(
+      env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+      destination_url,
+      draft_sources.map((source) => source.file_name),
+    );
+  } else {
+    await clean_s3_directory(
+      env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+      destination_url,
+      published_sources.map((source) => source.file_name),
+    );
+  } */
 
-  for (const block of editor_content.blocks) {
-    if (!block.id || !ALLOWED_BLOCK_TYPES.includes(block.type)) {
-      continue;
-    }
-
-    const file_data = block.data as { file: { url: string } };
-    const renamed_info = rename_url(file_data.file.url, article_url, bucket);
-    if (!renamed_info) continue;
-    // console.log("Renamed file", { old_url: file_data.file.url, url });
-    file_data.file.url = renamed_info.url;
-    sources.push({
-      file_name: renamed_info.file_name,
-      bucket: renamed_info.bucket,
-    });
+  for (const sources of [draft_sources, published_sources]) {
+    await s3_copy_between_buckets(sources, destination_bucket, destination_url);
   }
 
-  return sources;
-}
-
-export function rename_url(
-  old_url: string,
-  article_url: string,
-  new_bucket: string,
-) {
-  const url_parts = new URL(old_url);
-  const file_name = url_parts.pathname.split("/").pop();
-
-  if (!file_name) {
-    console.error("No name in URL", old_url);
-    return;
-  }
-
-  const new_url = get_s3_url(`${article_url}/${file_name}`, new_bucket);
-  const domain_parts = url_parts.hostname.split(".");
-  const old_bucket = domain_parts[0];
-
-  if (!old_bucket) {
-    console.error("No bucket in URL", old_url);
-    return;
-  }
-
-  if (!ALLOWERD_BUCKETS.includes(old_bucket)) {
-    console.error("Invalid bucket", old_bucket);
-    return;
-  }
-
-  return { url: new_url, file_name, bucket: old_bucket };
-}
-
-export function get_s3_url(url: string, bucket: string) {
-  return `https://${bucket}.s3.${env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${url}`;
+  return new_content;
 }
 
 export async function s3_copy_between_buckets(
-  sources: CopySourceInfo[],
-  article_url: string,
+  sources: S3CopySourceInfo[],
+  destination_bucket: string,
+  destination_url: string,
 ) {
-  const draft_sources = sources.filter(
-    (source) => source.bucket === env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
-  );
-  const published_sources = sources.filter(
-    (source) => source.bucket === env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
-  );
+  console.log("s3_copy_between_buckets", {
+    sources,
+    destination_bucket,
+    destination_url,
+  });
 
-  // TODO: article_url wrong
-  await clean_s3_directory(
-    env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
-    article_url,
-    draft_sources.map((source) => source.file_name),
-  );
-  await clean_s3_directory(
-    env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
-    article_url,
-    published_sources.map((source) => source.file_name),
-  );
-
-  for (const sources of [draft_sources, published_sources]) {
-    for (const source of sources) {
-      await s3_copy_file(source, article_url);
-    }
+  for (const source of sources) {
+    await s3_copy_file(source, destination_bucket, destination_url);
   }
-}
-
-function s3_copy_file(source: CopySourceInfo, article_url: string) {
-  const old_url = get_s3_url(source.file_name, source.bucket);
-  const new_url = get_s3_url(
-    `${article_url}/${source.file_name}`,
-    source.bucket,
-  );
-
-  console.log("Copying file", { old_url, new_url });
-
-  const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
-  return client.send(
-    new CopyObjectCommand({
-      Bucket: source.bucket,
-      CopySource: `${source.bucket}/${source.file_name}`,
-      Key: `${article_url}/${source.file_name}`,
-      // ACL: "public-read",
-    }),
-  );
 }
 
 // old
 export async function rename_s3_directory(old_dir: string, new_dir: string) {
-  console.log("renaming from ", old_dir, " to ", new_dir);
+  console.log("rename_s3_directory", { old_dir, new_dir });
   const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
   let objects: _Object[] | undefined;
 
@@ -223,11 +137,9 @@ export async function rename_s3_directory(old_dir: string, new_dir: string) {
   } catch (error) {
     console.error("Error deleting object:", error);
   }
-
-  console.log("renamed from ", old_dir, " to ", new_dir);
 }
 
-async function list_objects(bucket: string, prefix: string) {
+export async function list_objects(bucket: string, prefix: string) {
   try {
     const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
     const response = await client.send(
@@ -245,7 +157,8 @@ async function list_objects(bucket: string, prefix: string) {
   }
 }
 
-async function delete_objects(bucket: string, keys: string[]) {
+export async function delete_objects(bucket: string, keys: string[]) {
+  console.log("delete_objects", { bucket, keys });
   try {
     const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
     const response = await client.send(
@@ -264,6 +177,7 @@ async function delete_objects(bucket: string, keys: string[]) {
 }
 
 export async function delete_s3_directory(bucket: string, prefix: string) {
+  console.log("delete_s3_directory", { bucket, prefix });
   try {
     const objects = await list_objects(bucket, prefix);
     if (typeof objects === "undefined") return;
@@ -288,15 +202,17 @@ export async function clean_s3_directory(
   directory: string,
   filenames_to_keep: string[],
 ) {
+  console.log("clean_s3_directory", { bucket, directory, filenames_to_keep });
+
   try {
     const objects = await list_objects(bucket, directory);
     if (typeof objects === "undefined") {
-      console.error(
-        "clean_s3_directory: No objects found in directory",
-        directory,
+      console.warn(
+        "clean_s3_directory: No objects found in directory, returning",
       );
       return;
     }
+    return;
 
     const object_names = objects.map((object) => {
       const parts = object.Key?.split("/");

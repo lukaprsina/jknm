@@ -1,3 +1,4 @@
+import { klona } from "klona";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import {
@@ -165,127 +166,6 @@ export const article_router = createTRPCRouter({
       return { draft };
     }),
 
-  /* if published_id is provided, clone published article to draft
-    if article is provided, create draft article
-    else throw error */
-  get_or_create_draft: protectedProcedure
-    .input(
-      z.object({
-        published_id: z.number().optional(),
-        article: CreateDraftArticleSchema.optional(),
-        images: z.array(z.string()).optional(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const transaction = await ctx.db.transaction(async (tx) => {
-        if (!input.published_id && !input.article) {
-          throw new Error("Either published_id or article must be provided");
-        }
-
-        let published: PublishedArticleWithAuthors | undefined;
-        console.log("get_or_create_draft input", input);
-
-        if (input.published_id) {
-          published = await tx.query.PublishedArticle.findFirst({
-            where: eq(PublishedArticle.id, input.published_id),
-            with: {
-              published_articles_to_authors: {
-                with: {
-                  author: true,
-                },
-              },
-            },
-          });
-
-          if (!published) throw new Error("Published article not found");
-
-          const draft = await tx.query.DraftArticle.findFirst({
-            where: eq(DraftArticle.published_id, input.published_id),
-            with: {
-              draft_articles_to_authors: {
-                with: {
-                  author: true,
-                },
-              },
-            },
-          });
-
-          if (draft) return draft;
-        }
-
-        // if article is provided, create draft
-        let values: typeof DraftArticle.$inferInsert | undefined = undefined;
-        if (input.article) {
-          values = input.article;
-        } else if (published) {
-          values = {
-            title: published.title,
-            content: published.content,
-            created_at: published.created_at,
-            published_id: published.id,
-          };
-        } else {
-          throw new Error("Can't create draft");
-        }
-
-        const created_drafts = await tx
-          .insert(DraftArticle)
-          .values(values)
-          .returning();
-
-        assert_one(created_drafts);
-        const created_draft = created_drafts[0];
-
-        const renamed_content = created_draft.content
-          ? await rename_s3_files_and_content(
-              created_draft.content,
-              created_draft.id.toString(),
-              true,
-            )
-          : undefined;
-
-        // update content with renamed urls
-        if (renamed_content) {
-          await tx
-            .update(DraftArticle)
-            .set({ content: renamed_content })
-            .where(eq(DraftArticle.id, created_draft.id));
-        }
-
-        if (published) {
-          // I don't think this is necessary, because we are creating a new draft
-          /* await tx
-            .delete(DraftArticlesToAuthors)
-            .where(eq(DraftArticlesToAuthors.draft_id, draft_id)); */
-
-          await tx.insert(DraftArticlesToAuthors).values(
-            published.published_articles_to_authors.map((author) => ({
-              author_id: author.author_id,
-              draft_id: created_draft.id,
-            })),
-          );
-        }
-
-        const draft_returning = await tx.query.DraftArticle.findFirst({
-          where: eq(DraftArticle.id, created_draft.id),
-          with: {
-            draft_articles_to_authors: {
-              with: {
-                author: true,
-              },
-            },
-          },
-        });
-
-        console.log("created draft", draft_returning);
-
-        if (!draft_returning) throw new Error("Created draft not found");
-        return draft_returning;
-      });
-
-      return transaction;
-    }),
-
   // don't need to change s3 urls, because id is the same
   save_draft: protectedProcedure
     .input(
@@ -333,36 +213,110 @@ export const article_router = createTRPCRouter({
       return transaction;
     }),
 
-  publish: protectedProcedure
+  /* if published_id is provided, clone published article to draft
+    if article is provided, create draft article
+    else throw error */
+  get_or_create_draft: protectedProcedure
     .input(
       z.object({
-        article: PublishArticleSchema,
-        author_ids: z.array(z.number()),
-        draft_id: z.number().optional(),
+        published_id: z.number().optional(),
+        article: CreateDraftArticleSchema.optional(),
+        images: z.array(z.string()).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const transaction = await ctx.db.transaction(async (tx) => {
-        // rename urls and content
-        const value = { ...input.article };
-        if (!value.created_at) throw new Error("created_at is required");
+      console.log("get_or_create_draft input", input);
+      try {
+        const transaction = await ctx.db.transaction(async (tx) => {
+          if (!input.published_id && !input.article) {
+            throw new Error("Either published_id or article must be provided");
+          }
 
-        const renamed_url = `${convert_title_to_url(value.title)}-${format_date_for_url(value.created_at)}`;
+          let published: PublishedArticleWithAuthors | undefined;
 
-        const renamed_content = value.content
-          ? await rename_s3_files_and_content(value.content, renamed_url, false)
-          : undefined;
+          if (input.published_id) {
+            published = await tx.query.PublishedArticle.findFirst({
+              where: eq(PublishedArticle.id, input.published_id),
+              with: {
+                published_articles_to_authors: {
+                  with: {
+                    author: true,
+                  },
+                },
+              },
+            });
 
-        value.url = renamed_url;
-        value.content = renamed_content;
+            if (!published) throw new Error("Published article not found");
 
-        console.log("publishing article", { value, input });
+            const draft = await tx.query.DraftArticle.findFirst({
+              where: eq(DraftArticle.published_id, input.published_id),
+              with: {
+                draft_articles_to_authors: {
+                  with: {
+                    author: true,
+                  },
+                },
+              },
+            });
 
-        let draft: typeof DraftArticle.$inferInsert | undefined;
-        // check if draft exists
-        if (input.draft_id) {
-          draft = await tx.query.DraftArticle.findFirst({
-            where: eq(DraftArticle.id, input.draft_id),
+            if (draft) return draft;
+          }
+
+          // if article is provided, create draft
+          let values: typeof DraftArticle.$inferInsert | undefined = undefined;
+          if (input.article) {
+            values = input.article;
+          } else if (published) {
+            values = {
+              title: published.title,
+              content: published.content,
+              created_at: published.created_at,
+              published_id: published.id,
+            };
+          } else {
+            throw new Error("Can't create draft");
+          }
+
+          const created_drafts = await tx
+            .insert(DraftArticle)
+            .values(values)
+            .returning();
+
+          assert_one(created_drafts);
+          const created_draft = created_drafts[0];
+
+          const renamed_content = created_draft.content
+            ? await rename_s3_files_and_content(
+                created_draft.content,
+                created_draft.id.toString(),
+                true,
+              )
+            : undefined;
+
+          // update content with renamed urls
+          if (renamed_content) {
+            await tx
+              .update(DraftArticle)
+              .set({ content: renamed_content })
+              .where(eq(DraftArticle.id, created_draft.id));
+          }
+
+          if (published && published.published_articles_to_authors.length > 0) {
+            // I don't think this is necessary, because we are creating a new draft
+            /* await tx
+            .delete(DraftArticlesToAuthors)
+            .where(eq(DraftArticlesToAuthors.draft_id, draft_id)); */
+
+            await tx.insert(DraftArticlesToAuthors).values(
+              published.published_articles_to_authors.map((author) => ({
+                author_id: author.author_id,
+                draft_id: created_draft.id,
+              })),
+            );
+          }
+
+          const draft_returning = await tx.query.DraftArticle.findFirst({
+            where: eq(DraftArticle.id, created_draft.id),
             with: {
               draft_articles_to_authors: {
                 with: {
@@ -372,55 +326,118 @@ export const article_router = createTRPCRouter({
             },
           });
 
-          console.log("publishing article has draft_id", { draft });
-          if (!draft) throw new Error("Draft not found");
-        }
+          console.log("created draft", draft_returning);
 
-        const published_articles = await tx
-          .insert(PublishedArticle)
-          .values(value)
-          .returning();
+          if (!draft_returning) throw new Error("Created draft not found");
+          return draft_returning;
+        });
 
-        assert_one(published_articles);
-        const published_article = published_articles[0];
+        console.log("get_or_create_draft transaction", transaction);
 
-        await tx
-          .delete(PublishedArticlesToAuthors)
-          .where(
-            eq(PublishedArticlesToAuthors.published_id, published_article.id),
-          );
+        return transaction;
+      } catch (error) {
+        console.error("draft error", error);
+        throw error;
+      }
+    }),
 
-        if (input.author_ids.length !== 0) {
-          await tx.insert(PublishedArticlesToAuthors).values(
-            input.author_ids.map((author_id) => ({
-              author_id,
-              published_id: published_article.id,
-            })),
-          );
-        }
+  publish: protectedProcedure
+    .input(
+      z.object({
+        article: PublishArticleSchema,
+        author_ids: z.array(z.number()),
+        draft_id: z.number().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      console.log("publish input", input);
+      try {
+        const transaction = await ctx.db.transaction(async (tx) => {
+          // rename urls and content
+          const value = klona(input.article);
+          if (!value.created_at) throw new Error("created_at is required");
 
-        // if draft exists, delete it
-        if (draft?.id) {
-          await tx.delete(DraftArticle).where(eq(DraftArticle.id, draft.id));
-        }
+          const renamed_url = convert_title_to_url(value.title);
+          const s3_url = `${renamed_url}-${format_date_for_url(value.created_at)}`;
 
-        const published_article_with_authors =
-          await tx.query.PublishedArticle.findFirst({
-            where: eq(PublishedArticle.id, published_article.id),
-            with: {
-              published_articles_to_authors: {
-                with: { author: true },
+          const renamed_content = value.content
+            ? await rename_s3_files_and_content(value.content, s3_url, false)
+            : undefined;
+
+          value.url = renamed_url;
+          value.content = renamed_content;
+
+          console.log("publishing article", { value, input });
+
+          let draft: typeof DraftArticle.$inferInsert | undefined;
+          // check if draft exists
+          if (input.draft_id) {
+            draft = await tx.query.DraftArticle.findFirst({
+              where: eq(DraftArticle.id, input.draft_id),
+              with: {
+                draft_articles_to_authors: {
+                  with: {
+                    author: true,
+                  },
+                },
               },
-            },
-          });
+            });
 
-        if (!published_article_with_authors)
-          throw new Error("Published article not found");
+            console.log("publishing article has draft_id", { draft });
+            if (!draft) throw new Error("Draft not found");
+          }
 
-        return published_article_with_authors;
-      });
+          const published_articles = await tx
+            .insert(PublishedArticle)
+            .values(value)
+            .returning();
 
-      return transaction;
+          assert_one(published_articles);
+          const published_article = published_articles[0];
+
+          await tx
+            .delete(PublishedArticlesToAuthors)
+            .where(
+              eq(PublishedArticlesToAuthors.published_id, published_article.id),
+            );
+
+          if (input.author_ids.length !== 0) {
+            await tx.insert(PublishedArticlesToAuthors).values(
+              input.author_ids.map((author_id) => ({
+                author_id,
+                published_id: published_article.id,
+              })),
+            );
+          }
+
+          // if draft exists, delete it
+          if (draft?.id) {
+            await tx.delete(DraftArticle).where(eq(DraftArticle.id, draft.id));
+          }
+
+          const published_article_with_authors =
+            await tx.query.PublishedArticle.findFirst({
+              where: eq(PublishedArticle.id, published_article.id),
+              with: {
+                published_articles_to_authors: {
+                  with: { author: true },
+                },
+              },
+            });
+
+          if (!published_article_with_authors)
+            throw new Error("Published article not found");
+
+          return published_article_with_authors;
+        });
+
+        console.log("publish transaction", transaction);
+
+        return transaction;
+      } catch (error) {
+        console.error("publish error", error);
+        throw error;
+      }
     }),
 
   delete_draft: protectedProcedure
