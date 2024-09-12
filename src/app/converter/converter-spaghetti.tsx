@@ -24,7 +24,7 @@ import { convert_title_to_url } from "~/lib/article-utils";
 import type { PublishArticleSchema } from "~/server/db/schema";
 import type { z } from "zod";
 import { centerCrop, makeAspectCrop } from "react-image-crop";
-import type { CropType } from "~/lib/validators";
+import type { ThumbnailType } from "~/lib/validators";
 
 export type ConverterArticleWithAuthorIds = z.infer<
   typeof PublishArticleSchema
@@ -268,24 +268,30 @@ async function parse_csv_article(
   }
 
   const first_image = all_images_dimensions[0];
-  let thumbnail_crop: CropType | undefined = undefined;
+  let thumbnail_crop: ThumbnailType | undefined = undefined;
   if (first_image) {
     const width = first_image.width;
     const height = first_image.width;
 
-    thumbnail_crop = centerCrop(
-      makeAspectCrop(
-        {
-          unit: "px",
+    const image_name = first_image.image_path.split("/").pop();
+    if (!image_name) throw new Error("No image name");
+
+    thumbnail_crop = {
+      image_name: convert_title_to_url(image_name),
+      ...centerCrop(
+        makeAspectCrop(
+          {
+            unit: "px",
+            width,
+          },
+          16 / 9,
           width,
-        },
-        16 / 9,
+          height,
+        ),
         width,
         height,
       ),
-      width,
-      height,
-    );
+    };
   }
 
   const article = {

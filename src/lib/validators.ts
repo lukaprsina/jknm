@@ -15,8 +15,9 @@ export const content_validator = z
   .nullable();
 
 // if there is no thumbnail, set this to undefined
-export const crop_validator = z
+export const thumbnail_validator = z
   .object({
+    image_name: z.string(),
     unit: z.enum(["%", "px"]),
     x: z.number(),
     y: z.number(),
@@ -25,7 +26,7 @@ export const crop_validator = z
   })
   .nullable();
 
-export type CropType = z.infer<typeof crop_validator>;
+export type ThumbnailType = z.infer<typeof thumbnail_validator>;
 
 export const published_article_hit_validator = z.object({
   published_id: z.number(),

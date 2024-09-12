@@ -4,10 +4,18 @@ import { format_date_for_url } from "./format-date";
 
 export function convert_title_to_url(dangerous_url: string) {
   const sanitized = sanitize_filename(dangerous_url, { replacement: "" });
-  const encoded = sanitized.replace(/[^a-zA-Z0-9čČžŽšŠ\s]/g, "").trim();
-  const ws_replaced = encoded.toLowerCase().replace(/\s/g, "-");
-  if (ws_replaced === "") return uuid4();
-  return ws_replaced;
+  const replaced = sanitized
+    .replace(/[^a-zA-Z0-9čČžŽšŠ\s]/g, "")
+    .trim()
+    .toLowerCase();
+
+  const replaced_split = replaced
+    .split(/\s+/)
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0);
+
+  if (replaced_split.length === 0) return uuid4();
+  return replaced_split.join("-");
 }
 
 export function get_draft_article_link(id: number) {

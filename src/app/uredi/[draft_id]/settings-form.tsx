@@ -24,11 +24,11 @@ import {
 } from "~/components/article/context";
 import { useContext } from "react";
 import { useEditorMutations } from "~/hooks/use-editor-mutations";
-import { crop_validator } from "~/lib/validators";
+import { thumbnail_validator } from "~/lib/validators";
 
 export const form_schema = z.object({
   created_at: z.date(),
-  thumbnail_crop: crop_validator,
+  thumbnail_crop: thumbnail_validator,
 });
 
 export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {

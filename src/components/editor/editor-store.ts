@@ -1,13 +1,13 @@
 import { createStore } from "zustand-x";
 import type { EditorJSImageData } from "../../lib/editor-utils";
-import type { CropType } from "~/lib/validators";
+import type { ThumbnailType } from "~/lib/validators";
 
 interface EditorStoreType {
   draft_id: number;
   title: string;
   url: string;
   s3_url: string;
-  thumbnail_crop: CropType;
+  thumbnail_crop: ThumbnailType;
   image_data: EditorJSImageData[];
   author_ids: number[];
 }

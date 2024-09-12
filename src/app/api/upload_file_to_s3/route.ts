@@ -9,6 +9,7 @@ import sharp from "sharp";
 
 import { env } from "~/env";
 import { getServerAuthSession } from "~/server/auth";
+import { convert_title_to_url } from "~/lib/article-utils";
 
 export interface FileUploadResponse {
   success: 0 | 1;
@@ -50,7 +51,7 @@ export async function POST(request: NextRequest) {
   // TODO: encode with convert_title_to_url
   if ((file_type === "image" || file_type === "file") && file instanceof File) {
     // Upload from a file.
-    key = `${directory}/${file.name}`;
+    key = `${directory}/${convert_title_to_url(file.name)}`;
     mime_type = file.type;
   } else if (
     file_type === "image" &&
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
     typeof title === "string"
   ) {
     // Upload from an URL.
-    key = `${directory}/${title}`;
+    key = `${directory}/${convert_title_to_url(title)}`;
 
     let mime_type: string;
     if (!title) {

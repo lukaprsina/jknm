@@ -13,8 +13,8 @@ import {
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
 import { createInsertSchema } from "drizzle-zod";
-import type { CropType } from "../../lib/validators";
-import { content_validator, crop_validator } from "../../lib/validators";
+import type { ThumbnailType } from "../../lib/validators";
+import { content_validator, thumbnail_validator } from "../../lib/validators";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -70,7 +70,7 @@ export const PublishedArticle = pgTable(
       () => new Date(),
     ),
     content: json("content").$type<ArticleContentType>(),
-    thumbnail_crop: json("thumbnail_crop").$type<CropType>(),
+    thumbnail_crop: json("thumbnail_crop").$type<ThumbnailType>(),
     // image: varchar("image", { length: 255 }),
   },
   (published_article) => ({
@@ -106,7 +106,7 @@ export const DraftArticle = pgTable(
       () => new Date(),
     ),
     content: json("content").$type<ArticleContentType>(),
-    thumbnail_crop: json("thumbnail_crop").$type<CropType>(),
+    thumbnail_crop: json("thumbnail_crop").$type<ThumbnailType>(),
     // image: varchar("image", { length: 255 }),
   },
   (draft_article) => ({
@@ -213,7 +213,7 @@ export const DraftArticlesToAuthorsRelations = relations(
 
 export const CreateDraftArticleSchema = createInsertSchema(DraftArticle, {
   content: content_validator,
-  thumbnail_crop: crop_validator,
+  thumbnail_crop: thumbnail_validator,
   // updated_at: z.date(),
 }).omit({
   id: true,
@@ -222,7 +222,7 @@ export const CreateDraftArticleSchema = createInsertSchema(DraftArticle, {
 
 export const SaveDraftArticleSchema = createInsertSchema(DraftArticle, {
   content: content_validator,
-  thumbnail_crop: crop_validator,
+  thumbnail_crop: thumbnail_validator,
   // updated_at: z.date(),
 }).omit({
   id: true,
@@ -231,7 +231,7 @@ export const SaveDraftArticleSchema = createInsertSchema(DraftArticle, {
 
 export const PublishArticleSchema = createInsertSchema(PublishedArticle, {
   content: content_validator,
-  thumbnail_crop: crop_validator,
+  thumbnail_crop: thumbnail_validator,
   // created_at: z.date(),
 }).omit({
   id: true,

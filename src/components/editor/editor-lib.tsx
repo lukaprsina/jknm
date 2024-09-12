@@ -7,7 +7,7 @@ import { editor_store } from "./editor-store";
 import type { useToast } from "~/hooks/use-toast";
 import { NoHeadingButton, WrongHeadingButton } from "./error-buttons";
 import { convert_title_to_url } from "~/lib/article-utils";
-import type { CropType } from "~/lib/validators";
+import type { ThumbnailType } from "~/lib/validators";
 
 export function update_settings_from_editor({
   title,
@@ -21,7 +21,7 @@ export function update_settings_from_editor({
   title: string;
   url: string;
   s3_url: string;
-  thumbnail_crop: CropType;
+  thumbnail_crop: ThumbnailType;
   editor_content: OutputData;
   article_id: number;
   author_ids?: number[];

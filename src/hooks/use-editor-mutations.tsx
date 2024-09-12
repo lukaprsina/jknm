@@ -18,7 +18,7 @@ import type {
   SaveDraftArticleSchema,
 } from "~/server/db/schema";
 import type { z } from "zod";
-import type { CropType } from "~/lib/validators";
+import type { ThumbnailType } from "~/lib/validators";
 
 export function useEditorMutations() {
   const draft_article = useContext(DraftArticleContext);
@@ -34,11 +34,16 @@ export function useEditorMutations() {
   }
 
   const save_draft = api.article.save_draft.useMutation({
-    onSuccess: () => {},
     onSettled: async () => {
       editor_context.setSavingText(undefined);
       editor_context.setDirty(false);
       await trpc_utils.article.invalidate();
+    },
+    onError: (error) => {
+      toaster.toast({
+        title: "Napaka pri shranjevanju osnutka",
+        description: error.message,
+      });
     },
   });
 
@@ -54,7 +59,10 @@ export function useEditorMutations() {
       await trpc_utils.article.invalidate();
     },
     onError: (error) => {
-      console.error("publish mutation error", error);
+      toaster.toast({
+        title: "Napaka pri objavljanju novičke",
+        description: error.message,
+      });
     },
   });
 
@@ -74,12 +82,24 @@ export function useEditorMutations() {
       editor_context.setSavingText(undefined);
       await trpc_utils.article.invalidate();
     },
+    onError: (error) => {
+      toaster.toast({
+        title: "Napaka pri brisanju osnutka",
+        description: error.message,
+      });
+    },
   });
 
   const unpublish = api.article.unpublish.useMutation({
     onSettled: async () => {
       editor_context.setSavingText(undefined);
       await trpc_utils.article.invalidate();
+    },
+    onError: (error) => {
+      toaster.toast({
+        title: "Napaka pri skrivanju novičke",
+        description: error.message,
+      });
     },
   });
 
@@ -88,10 +108,16 @@ export function useEditorMutations() {
       router.replace(`/`);
       await trpc_utils.article.invalidate();
     },
+    onError: (error) => {
+      toaster.toast({
+        title: "Napaka pri brisanju novičke",
+        description: error.message,
+      });
+    },
   });
 
   return {
-    save_draft: async (created_at?: Date, thumbnail_crop?: CropType) => {
+    save_draft: async (created_at?: Date, thumbnail_crop?: ThumbnailType) => {
       editor_context.setSavingText("Shranjujem osnutek ...");
       const editor_content = await editor_context.editor?.save();
       if (!editor_content) return;
@@ -118,7 +144,7 @@ export function useEditorMutations() {
         author_ids: state.author_ids,
       });
     },
-    publish: async (created_at?: Date, thumbnail_crop?: CropType) => {
+    publish: async (created_at?: Date, thumbnail_crop?: ThumbnailType) => {
       editor_context.setSavingText("Objavljam spremembe ...");
       const editor_content = await editor_context.editor?.save();
       if (!editor_content) return;

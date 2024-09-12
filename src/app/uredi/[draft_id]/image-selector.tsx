@@ -3,14 +3,14 @@
 import { useEffect } from "react";
 import { CarouselWithThumbnails } from "~/components/carousel-thumbnails";
 import { editor_store } from "~/components/editor/editor-store";
-import type { CropType } from "~/lib/validators";
+import type { ThumbnailType } from "~/lib/validators";
 
 export function ImageSelector({
   image,
   setImage,
 }: {
-  image: CropType | undefined;
-  setImage: (date: CropType | undefined) => void;
+  image: ThumbnailType | undefined;
+  setImage: (date: ThumbnailType | undefined) => void;
 }) {
   const images = editor_store.use.image_data();
 
