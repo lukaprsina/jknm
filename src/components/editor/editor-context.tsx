@@ -23,6 +23,7 @@ import { EDITOR_JS_PLUGINS } from "./plugins";
 import { update_settings_from_editor, validate_article } from "./editor-lib";
 import { DraftArticleContext } from "../article/context";
 import { useToast } from "~/hooks/use-toast";
+import { get_s3_draft_directory } from "~/lib/article-utils";
 
 export interface EditorContextType {
   editor?: EditorJS;
@@ -90,7 +91,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
           update_settings_from_editor({
             title: updated?.title ?? "",
             url: updated?.url ?? "",
-            s3_url: article.id.toString(),
+            s3_url: get_s3_draft_directory(article.id),
             thumbnail_crop: article.thumbnail_crop,
             editor_content,
             article_id: article.id,

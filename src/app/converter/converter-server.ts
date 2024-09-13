@@ -1,6 +1,6 @@
 "use server";
 
-import path from "node:path";
+import path from "path";
 import fs from "node:fs";
 import fs_promises from "node:fs/promises";
 import type { OutputData } from "@editorjs/editorjs";

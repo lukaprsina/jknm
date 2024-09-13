@@ -12,7 +12,8 @@ import { getServerAuthSession } from "~/server/auth";
 import { convert_filename_to_url } from "~/lib/article-utils";
 import type { PercentCrop, PixelCrop } from "react-image-crop";
 import { thumbnail_validator } from "~/lib/validators";
-
+import { v4 as uuid } from "uuid";
+import path from "path/posix";
 export interface FileUploadResponse {
   success: 0 | 1;
   file?: FileUploadJSON | ImageUploadJSON;
@@ -119,8 +120,12 @@ export async function POST(request: NextRequest) {
       );
 
       console.log("File exists, because it doesn't throw", key);
+      const key_path = path.parse(key);
+      const new_name = `${key_path.name}-${uuid()}${key_path.ext}`;
+      key = path.join(key_path.dir, new_name).replace(/\\/g, "/");
+      console.log("New key", key);
 
-      return NextResponse.json({ success: 0, error: "File exists" });
+      // return NextResponse.json({ success: 0, error: "File exists" });
     } catch (error: unknown) {
       if (!(error instanceof NotFound)) {
         return NextResponse.error();
