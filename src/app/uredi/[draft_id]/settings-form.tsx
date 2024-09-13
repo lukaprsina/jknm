@@ -25,6 +25,7 @@ import {
 import { useContext } from "react";
 import { useEditorMutations } from "~/hooks/use-editor-mutations";
 import { thumbnail_validator } from "~/lib/validators";
+import { Separator } from "~/components/ui/separator";
 
 export const form_schema = z.object({
   created_at: z.date(),
@@ -84,7 +85,21 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
             </FormItem>
           )}
         />
+        <Separator />
         <div className="mt-6 flex flex-col gap-4">
+          <Button
+            onClick={form.handleSubmit(
+              async (values: z.infer<typeof form_schema>) => {
+                await editor_mutations.save_draft(
+                  values.created_at,
+                  values.thumbnail_crop,
+                );
+                closeDialog();
+              },
+            )}
+          >
+            Shrani osnutek
+          </Button>
           <Button
             onClick={form.handleSubmit(
               async (values: z.infer<typeof form_schema>) => {
@@ -99,6 +114,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
           >
             Objavi spremembe
           </Button>
+          <Separator />
           {published_article ? (
             <Button
               onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
@@ -118,20 +134,6 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
             variant="destructive"
           >
             Zbriši novičko
-          </Button>
-          <hr />
-          <Button
-            onClick={form.handleSubmit(
-              async (values: z.infer<typeof form_schema>) => {
-                await editor_mutations.save_draft(
-                  values.created_at,
-                  values.thumbnail_crop,
-                );
-                closeDialog();
-              },
-            )}
-          >
-            Shrani osnutek
           </Button>
         </div>
       </form>

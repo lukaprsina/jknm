@@ -158,7 +158,7 @@ export function useEditorMutations() {
         title: updated?.title ?? "",
         url: updated?.url ?? "",
         s3_url: get_s3_draft_directory(draft_article.id),
-        thumbnail_crop: article.thumbnail_crop,
+        thumbnail_crop: thumbnail_crop ?? state.thumbnail_crop,
         editor_content,
         article_id: draft_article.id,
         author_ids: draft_article.draft_articles_to_authors.map(

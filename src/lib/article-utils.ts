@@ -13,7 +13,7 @@ export function convert_filename_to_url(dangerous_url: string) {
 export function convert_title_to_url(dangerous_url: string) {
   const sanitized = sanitize_filename(dangerous_url, { replacement: "" });
   const replaced = sanitized
-    .replace(/[^a-zA-Z0-9čČžŽšŠ\s]/g, "")
+    .replace(/[^a-zA-Z0-9čČžŽšŠ-\s]/g, "")
     .trim()
     .toLowerCase();
 

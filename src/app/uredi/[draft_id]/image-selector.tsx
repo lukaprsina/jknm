@@ -15,6 +15,19 @@ import { AspectRatio } from "~/components/ui/aspect-ratio";
 import { upload_image_by_file } from "~/components/aws-s3/upload-file";
 import { get_s3_draft_directory } from "~/lib/article-utils";
 
+/* 
+const images = useMemo(() => {
+    const temp = [...store_images];
+    if (uploadedImage) temp.push(uploadedImage);
+    console.log("a", {
+      store_images,
+      uploadedImage,
+      temp,
+    });
+    return temp;
+  }, [store_images, uploadedImage]);
+*/
+
 export function ImageSelector({
   image: formImage,
   setImage: setFormImage,
@@ -33,10 +46,37 @@ export function ImageSelector({
   const images = useMemo(() => {
     const temp = [...store_images];
     if (uploadedImage) temp.push(uploadedImage);
+    console.log("a", {
+      store_images,
+      uploadedImage,
+      temp,
+    });
     return temp;
   }, [store_images, uploadedImage]);
 
   const [imageIndex, setImageIndex] = useState<number | undefined>(undefined);
+
+  /* useEffect(() => {
+    const possible_index = images.findIndex(
+      (image) => image.file.url === formImage?.image_url,
+    );
+
+    if (possible_index === -1) {
+      if (!uploadedImage && formImage?.image_url) {
+        setUploadedImage({
+          file: {
+            url: formImage.image_url,
+            width: formImage.width,
+            height: formImage.height,
+          },
+          caption: "",
+        });
+        setImageIndex(images.length);
+      }
+    } else {
+      setImageIndex(possible_index);
+    }
+  }, [formImage, images, uploadedImage]); */
 
   const handle_image_load = useCallback(
     (event: React.SyntheticEvent<HTMLImageElement>) => {
@@ -74,8 +114,14 @@ export function ImageSelector({
         onChange={async (event) => {
           const files = event.target.files;
           const file = files?.item(0);
-          // console.log("input onChange event", file);
+          console.log("input onChange event", file);
           if (!file) return;
+
+          setUploadedImage(undefined);
+          setFormImage(undefined);
+          setCrop(undefined);
+          setImageIndex(undefined);
+          // return;
 
           const response = await upload_image_by_file({
             file,
@@ -85,6 +131,8 @@ export function ImageSelector({
             draft: true,
             directory: get_s3_draft_directory(editor_store.get.draft_id()),
           });
+
+          console.log("ImageSelector -> response", response);
 
           if (
             typeof response.file === "undefined" ||
@@ -102,58 +150,51 @@ export function ImageSelector({
           } satisfies EditorJSImageData;
 
           setUploadedImage(editor_image);
-
-          /* const reader = new FileReader();
-          reader.onload = (e) => {
-            const img = new window.Image();
-            img.onload = () => {
-              const { width, height } = img;
-              setUploadedImage({
-                file: {
-                  url: URL.createObjectURL(file),
-                  width,
-                  height,
-                },
-                caption: "",
-              });
-            };
-            img.src = e.target?.result as string;
-          };
-          reader.readAsDataURL(file); */
-
-          /* setUploadedImage({
-            file: {
-              url: URL.createObjectURL(file),
-              width: 1500,
-              height: 1000,
-            },
-            caption: "",
-          }); */
         }}
       />
       <div className="flex flex-col gap-4">
         <div className="flex flex-wrap gap-2">
-          {images.map((image, index) => (
-            <Card
-              key={image.file.url}
-              onClick={() => {
-                setImageIndex(index);
-                setCrop(undefined);
-              }}
-              className={cn(
-                "box-border flex cursor-pointer items-center justify-center border-2 p-2",
-                formImage?.image_url === image.file.url && "border-blue-500",
-              )}
-            >
-              <Image
-                src={image.file.url}
-                alt={`Izbira slike #${index}`}
-                width={image.file.width}
-                height={image.file.height}
-                className="max-h-[300px] max-w-[300px]"
-              />
-            </Card>
-          ))}
+          {images.map((image, index) => {
+            console.log("b", index, image);
+
+            let width = image.file.width;
+            let height = image.file.height;
+            if (!image.file.url) {
+              width = 0;
+              height = 0;
+              // return { image_width: 0, image_height: 0 };
+            } else if (image.file.url === uploadedImage?.file.url) {
+              width = 1600;
+              height = 900;
+              // return { image_width: 1600, image_height: 900 };
+            }
+
+            // const { width, height } = images[imageIndex].file;
+            // return { image_width: width, image_height: height };
+
+            return (
+              <Card
+                key={image.file.url}
+                onClick={() => {
+                  setImageIndex(index);
+                  setCrop(undefined);
+                }}
+                className={cn(
+                  "box-border flex cursor-pointer items-center justify-center border-2 p-2",
+                  formImage?.image_url === image.file.url && "border-blue-500",
+                )}
+              >
+                {`${image.file.url.split("/").pop()} ${new Date().toTimeString()}`}
+                <Image
+                  src={image.file.url}
+                  alt={`Izbira slike #${index}`}
+                  width={width}
+                  height={height}
+                  className="max-h-[300px] max-w-[300px]"
+                />
+              </Card>
+            );
+          })}
           <Card
             onClick={() => {
               if (!input_ref.current) return;
@@ -175,7 +216,7 @@ export function ImageSelector({
         {typeof imageIndex !== "undefined" && images[imageIndex]?.file.url && (
           <div
             className="max-w-[500px]"
-            style={{ width: `${images[imageIndex].file.width}px` }}
+            // style={{ width: `${images[imageIndex].file.width}px` }}
           >
             <ReactCrop
               onComplete={(c, d) => {

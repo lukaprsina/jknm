@@ -66,7 +66,11 @@ export async function POST(request: NextRequest) {
   // TODO: encode with convert_title_to_url
   if ((file_type === "image" || file_type === "file") && file instanceof File) {
     // Upload from a file.
-    key = `${directory}/${convert_filename_to_url(file.name)}`;
+    // key = `${directory}/${convert_filename_to_url(file.name)}`;
+    if (typeof title !== "string") {
+      title = file.name;
+    }
+
     mime_type = file.type;
   } else if (
     file_type === "image" &&
@@ -74,8 +78,6 @@ export async function POST(request: NextRequest) {
     typeof title === "string"
   ) {
     // Upload from an URL.
-    key = `${directory}/${convert_filename_to_url(title)}`;
-
     let mime_type: string;
     if (!title) {
       console.error("Image doesn't have a title", external_url);
@@ -98,6 +100,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.error();
   }
 
+  key = `${directory}/${convert_filename_to_url(title)}`;
   console.log("upload_file_to_s3", {
     directory,
     file_type,
