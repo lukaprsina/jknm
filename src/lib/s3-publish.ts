@@ -2,6 +2,7 @@ import { CopyObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import type { OutputData } from "@editorjs/editorjs";
 import { klona } from "klona";
 import { env } from "~/env";
+import { list_objects, s3_copy_between_buckets } from "~/server/s3-utils";
 
 export function get_s3_url(url: string, bucket: string) {
   return `https://${bucket}.s3.${env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${url}`;
@@ -47,7 +48,7 @@ export function rename_urls_in_content(
     sources.push(renamed_info);
   }
 
-  console.log("rename_urls_in_content", sources);
+  // console.log("rename_urls_in_content", sources);
   return { sources, new_content };
 }
 
@@ -100,7 +101,7 @@ export async function s3_copy_file(
   const CopySource = `${source.source_bucket}/${source.source_path}/${source.file_name}`;
   const Key = `${destination_url}/${source.file_name}`;
 
-  console.log("Copying file", {
+  console.log("s3_copy_file", {
     source,
     Key,
     CopySource,
@@ -117,4 +118,50 @@ export async function s3_copy_file(
       // ACL: "public-read",
     }),
   );
+}
+
+export async function s3_copy({
+  source_bucket,
+  source_url,
+  destination_bucket,
+  destination_url,
+}: {
+  source_bucket: string;
+  source_url: string;
+  destination_bucket: string;
+  destination_url: string;
+}) {
+  const source_files = await list_objects(source_bucket, source_url);
+
+  if (!source_files) {
+    return;
+  }
+  const sources = source_files.map((object) => {
+    if (typeof object.Key === "undefined") {
+      throw new Error("Invalid key");
+    }
+
+    const file_name = object.Key.split("/").at(-1);
+    if (!file_name) throw new Error("Invalid file name");
+
+    const source = {
+      destination_url,
+      source_bucket,
+      source_path: object.Key,
+      file_name,
+    } satisfies S3CopySourceInfo;
+
+    return source;
+  });
+
+  console.log("s3_copy", {
+    source_bucket,
+    source_url,
+    destination_bucket,
+    destination_url,
+    source_files,
+    sources,
+  });
+
+  await s3_copy_between_buckets(sources, destination_bucket, destination_url);
 }

@@ -74,7 +74,7 @@ export function ImageSelector({
         onChange={async (event) => {
           const files = event.target.files;
           const file = files?.item(0);
-          console.log("input onChange event", file);
+          // console.log("input onChange event", file);
           if (!file) return;
 
           const response = await upload_image_by_file({

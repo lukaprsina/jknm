@@ -166,11 +166,11 @@ export function useEditorMutations() {
         ),
       });
 
-      console.log("editor mutation save_draft", {
+      /* console.log("editor mutation save_draft", {
         draft_article,
         article,
         state,
-      });
+      }); */
 
       save_draft.mutate({
         draft_id: draft_article.id,

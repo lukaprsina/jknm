@@ -16,6 +16,7 @@ import { content_to_text as convert_content_to_text } from "~/lib/content-to-tex
 import { db } from "~/server/db";
 import {
   Author,
+  DraftArticle,
   PublishedArticle,
   PublishedArticlesToAuthors,
 } from "~/server/db/schema";
@@ -31,6 +32,9 @@ export async function delete_articles() {
   console.log("deleting articles");
   await db.execute(
     sql`TRUNCATE TABLE ${PublishedArticle} RESTART IDENTITY CASCADE;`,
+  );
+  await db.execute(
+    sql`TRUNCATE TABLE ${DraftArticle} RESTART IDENTITY CASCADE;`,
   );
   console.log("done");
 }

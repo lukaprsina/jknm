@@ -18,7 +18,7 @@ export default function MyToolbar() {
   const author_ids = editor_store.use.author_ids();
 
   const selected_author_ids = useMemo(() => {
-    console.log("toolbar -> author_ids", author_ids, typeof author_ids);
+    // console.log("toolbar -> author_ids", author_ids, typeof author_ids);
     return author_ids.map((id) => id.toString());
   }, [author_ids]);
 
@@ -61,7 +61,7 @@ export default function MyToolbar() {
           <MultiSelect
             onValueChange={(value) => {
               const ids = value.map((v) => parseInt(v));
-              console.log("toolbar -> onValueChange", ids);
+              // console.log("toolbar -> onValueChange", ids);
               editor_store.set.author_ids(ids);
             }}
             defaultValue={selected_author_ids}

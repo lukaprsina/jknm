@@ -177,7 +177,7 @@ export async function delete_objects(bucket: string, keys: string[]) {
 }
 
 export async function delete_s3_directory(bucket: string, prefix: string) {
-  console.log("delete_s3_directory", { bucket, prefix });
+  // console.log("delete_s3_directory", { bucket, prefix });
   try {
     const objects = await list_objects(bucket, prefix);
     if (typeof objects === "undefined") return;
@@ -190,7 +190,7 @@ export async function delete_s3_directory(bucket: string, prefix: string) {
       return object.Key;
     });
 
-    console.log("delete_s3_directory", keys);
+    console.log("delete_s3_directory", { keys, bucket, prefix });
     if (keys.length > 0) await delete_objects(bucket, keys);
   } catch (error) {
     console.error("Error deleting directory:", error);

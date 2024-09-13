@@ -33,8 +33,8 @@ export function CarouselWithThumbnails({
         <CarouselItem key={index} className="relative aspect-square w-full">
           <ReactCrop
             crop={crop}
-            onChange={(pixelCrop, percentCrop) => {
-              console.log("crop", pixelCrop, percentCrop);
+            onChange={(pixelCrop) => {
+              // console.log("crop", pixelCrop, percentCrop);
               setCrop(pixelCrop);
             }}
           >

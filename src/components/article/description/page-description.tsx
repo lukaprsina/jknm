@@ -10,19 +10,19 @@ export default function ArticlePageDescription({
   author_ids,
   old_id,
   created_at,
-  session,
+  // session,
 }: {
   author_ids: number[];
   old_id?: string;
   created_at: Date;
   session: Session | null;
 }) {
-  console.log("ArticlePageDescription", {
+  /* console.log("ArticlePageDescription", {
     author_ids,
     old_id,
     created_at,
     session,
-  });
+  }); */
 
   return (
     <CardDescription className="flex items-center text-base text-foreground">

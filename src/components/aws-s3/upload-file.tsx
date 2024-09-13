@@ -16,7 +16,7 @@ export async function upload_file({
   draft: boolean;
   directory: string;
 }): Promise<FileUploadResponse> {
-  console.log("upload_file", file);
+  // console.log("upload_file", file);
   // const directory = editor_store.get.draft_id().toString();
 
   if (!directory) {
@@ -60,7 +60,7 @@ export async function upload_image_by_file({
   directory: string;
   // toast: ReturnType<typeof useToast>,
 }): Promise<FileUploadResponse> {
-  console.log("upload_image_by_file", file);
+  // console.log("upload_image_by_file", file);
   /* const directory = draft
     ? editor_store.get.draft_id().toString()
     : editor_store.get.url(); */
@@ -101,12 +101,12 @@ export async function upload_image_by_file({
     body: form_data,
   });
 
-  console.log("got file_data", file_data);
+  // console.log("got file_data", file_data);
 
   const response = await parse_s3_response(
     file_data /* novica_url, file.name, toast */,
   );
-  console.log("parsed s3 response", response);
+  // console.log("parsed s3 response", response);
   return response;
 }
 
@@ -216,7 +216,7 @@ export async function parse_s3_response(
     const file_json = (await file_data.json()) as FileUploadResponse;
 
     if (file_json.error == "File exists") {
-      console.log("File exists", file_json);
+      // console.log("File exists", file_json);
       /* toast.toast({
         title: "Slika s takim imenom že obstaja",
         description: `Novica: ${novica_url}, ime: ${filename}`,

@@ -108,7 +108,7 @@ export function AuthorsTableHeaderButtons({
 
   const message = useMemo(() => {
     const length = rows.length;
-    console.log({ length });
+    // console.log({ length });
     if (length === 0)
       return "Najprej izberite avtorje, ki jih želite izbrisati.";
 

@@ -17,6 +17,7 @@ import { assert_at_most_one, assert_one } from "~/lib/assert-length";
 import { withCursorPagination } from "drizzle-pagination";
 import {
   convert_title_to_url,
+  get_s3_draft_directory,
   get_s3_published_directory,
 } from "~/lib/article-utils";
 import type { PublishedArticleWithAuthors } from "~/components/article/card-adapter";
@@ -25,6 +26,7 @@ import {
   delete_s3_directory,
 } from "~/server/s3-utils";
 import { env } from "~/env";
+import { s3_copy } from "~/lib/s3-publish";
 
 export const article_router = createTRPCRouter({
   get_infinite_published: publicProcedure
@@ -95,7 +97,7 @@ export const article_router = createTRPCRouter({
   get_article_by_published_url: publicProcedure
     .input(z.object({ url: z.string(), created_at: z.date().optional() }))
     .query(async ({ ctx, input }) => {
-      console.log("get_article_by_published_url input", input);
+      // console.log("get_article_by_published_url input", input);
       const conditions = [eq(PublishedArticle.url, input.url)];
 
       if (input.created_at) {
@@ -118,10 +120,10 @@ export const article_router = createTRPCRouter({
         },
       });
 
-      console.log("get_article_by_published_url published", {
+      /* console.log("get_article_by_published_url published", {
         published,
         conditions,
-      });
+      }); */
       // only send draft when logged in
       if (ctx.session && published?.id) {
         const draft = await ctx.db.query.DraftArticle.findFirst({
@@ -335,7 +337,7 @@ export const article_router = createTRPCRouter({
             },
           });
 
-          console.log("created draft", draft_returning);
+          // console.log("created draft", draft_returning);
 
           if (!draft_returning) throw new Error("Created draft not found");
           return draft_returning;
@@ -361,140 +363,148 @@ export const article_router = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       console.log("publish input", input);
 
-      try {
-        const transaction = await ctx.db.transaction(async (tx) => {
-          // rename urls and content
-          const value = klona(input.article);
-          if (!value.created_at) throw new Error("created_at is required");
+      const transaction = await ctx.db.transaction(async (tx) => {
+        // rename urls and content
+        const value = klona(input.article);
+        if (!value.created_at) throw new Error("created_at is required");
 
-          const renamed_url = convert_title_to_url(value.title);
+        const renamed_url = convert_title_to_url(value.title);
 
-          const renamed_content = value.content
-            ? await rename_s3_files_and_content(
-                value.content,
-                get_s3_published_directory(renamed_url, value.created_at),
-                false,
-              )
-            : undefined;
+        const renamed_content = value.content
+          ? await rename_s3_files_and_content(
+              value.content,
+              get_s3_published_directory(renamed_url, value.created_at),
+              false,
+            )
+          : undefined;
 
-          value.url = renamed_url;
-          value.content = renamed_content;
+        value.url = renamed_url;
+        value.content = renamed_content;
 
-          console.log("publishing article", { value, input });
+        console.log("publishing article", { value, input });
 
-          let draft: typeof DraftArticle.$inferInsert | undefined;
-          // check if draft exists
-          if (input.draft_id) {
-            draft = await tx.query.DraftArticle.findFirst({
-              where: eq(DraftArticle.id, input.draft_id),
-              with: {
-                draft_articles_to_authors: {
-                  with: {
-                    author: true,
-                  },
+        let draft: typeof DraftArticle.$inferInsert | undefined;
+        // check if draft exists
+        if (input.draft_id) {
+          draft = await tx.query.DraftArticle.findFirst({
+            where: eq(DraftArticle.id, input.draft_id),
+            with: {
+              draft_articles_to_authors: {
+                with: {
+                  author: true,
                 },
               },
-            });
+            },
+          });
 
-            console.log("publishing article has draft_id", { draft });
-            if (!draft) throw new Error("Draft not found");
-          }
+          // console.log("publishing article has draft_id", { draft });
+          if (!draft) throw new Error("Draft not found");
+        }
 
-          let published_article:
-            | typeof PublishedArticle.$inferSelect
-            | undefined = undefined;
+        let published_article:
+          | typeof PublishedArticle.$inferSelect
+          | undefined = undefined;
 
-          if (draft?.published_id) {
-            // update if draft had published_id
-            const published_articles = await tx
-              .update(PublishedArticle)
-              .set(value)
-              .where(eq(PublishedArticle.id, draft.published_id))
-              .returning();
+        if (draft?.published_id) {
+          // update if draft had published_id
+          const published_articles = await tx
+            .update(PublishedArticle)
+            .set(value)
+            .where(eq(PublishedArticle.id, draft.published_id))
+            .returning();
 
-            assert_one(published_articles);
-            published_article = published_articles[0];
-          } else {
-            // insert new published article
-            const published_articles = await tx
-              .insert(PublishedArticle)
-              .values(value)
-              .returning();
+          assert_one(published_articles);
+          published_article = published_articles[0];
+        } else {
+          // insert new published article
+          const published_articles = await tx
+            .insert(PublishedArticle)
+            .values(value)
+            .returning();
 
-            assert_one(published_articles);
-            published_article = published_articles[0];
-          }
+          assert_one(published_articles);
+          published_article = published_articles[0];
+        }
 
-          await tx
-            .delete(PublishedArticlesToAuthors)
-            .where(
-              eq(PublishedArticlesToAuthors.published_id, published_article.id),
-            );
+        await tx
+          .delete(PublishedArticlesToAuthors)
+          .where(
+            eq(PublishedArticlesToAuthors.published_id, published_article.id),
+          );
 
-          if (input.author_ids.length !== 0) {
-            await tx.insert(PublishedArticlesToAuthors).values(
-              input.author_ids.map((author_id) => ({
-                author_id,
-                published_id: published_article.id,
-              })),
-            );
-          }
+        if (input.author_ids.length !== 0) {
+          await tx.insert(PublishedArticlesToAuthors).values(
+            input.author_ids.map((author_id) => ({
+              author_id,
+              published_id: published_article.id,
+            })),
+          );
+        }
 
-          // if draft exists, delete it
-          if (draft?.id) {
-            await tx.delete(DraftArticle).where(eq(DraftArticle.id, draft.id));
-          }
+        // if draft exists, delete it
+        if (draft?.id) {
+          await tx.delete(DraftArticle).where(eq(DraftArticle.id, draft.id));
+          await s3_copy({
+            source_bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+            source_url: get_s3_draft_directory(draft.id),
+            destination_bucket: env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+            destination_url: get_s3_published_directory(
+              published_article.url,
+              published_article.created_at,
+            ),
+          });
+          await delete_s3_directory(
+            env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+            draft.id.toString(),
+          );
+        }
 
-          const published_article_with_authors =
-            await tx.query.PublishedArticle.findFirst({
-              where: eq(PublishedArticle.id, published_article.id),
-              with: {
-                published_articles_to_authors: {
-                  with: { author: true },
-                },
+        const published_article_with_authors =
+          await tx.query.PublishedArticle.findFirst({
+            where: eq(PublishedArticle.id, published_article.id),
+            with: {
+              published_articles_to_authors: {
+                with: { author: true },
               },
-            });
+            },
+          });
 
-          if (!published_article_with_authors)
-            throw new Error("Published article not found");
+        if (!published_article_with_authors)
+          throw new Error("Published article not found");
 
-          {
-            // update duplicate_urls
-            // TODO: iterate over all duplicate_urls, check them also
-            const old_duplicate_urls = (
-              await tx.query.DuplicatedArticleUrls.findMany()
-            ).map((data) => data.url);
+        {
+          // update duplicate_urls
+          // TODO: iterate over all duplicate_urls, check them also
+          const old_duplicate_urls = (
+            await tx.query.DuplicatedArticleUrls.findMany()
+          ).map((data) => data.url);
 
-            const articles = await tx.query.PublishedArticle.findMany({
-              where: eq(PublishedArticle.url, published_article.url),
-            });
+          const articles = await tx.query.PublishedArticle.findMany({
+            where: eq(PublishedArticle.url, published_article.url),
+          });
 
-            if (
-              old_duplicate_urls.includes(published_article.url) &&
-              articles.length === 1
-            ) {
-              console.log("deleting duplicate url", published_article.url);
-              await tx
-                .delete(DuplicatedArticleUrls)
-                .where(eq(DuplicatedArticleUrls.url, published_article.url));
-            } else if (articles.length > 1) {
-              console.log("inserting duplicate url", published_article.url);
-              await tx
-                .insert(DuplicatedArticleUrls)
-                .values({ url: published_article.url });
-            }
+          if (
+            old_duplicate_urls.includes(published_article.url) &&
+            articles.length === 1
+          ) {
+            console.log("deleting duplicate url", published_article.url);
+            await tx
+              .delete(DuplicatedArticleUrls)
+              .where(eq(DuplicatedArticleUrls.url, published_article.url));
+          } else if (articles.length > 1) {
+            console.log("inserting duplicate url", published_article.url);
+            await tx
+              .insert(DuplicatedArticleUrls)
+              .values({ url: published_article.url });
           }
+        }
 
-          return published_article_with_authors;
-        });
+        return published_article_with_authors;
+      });
 
-        console.log("publish transaction", transaction);
+      console.log("publish transaction", transaction);
 
-        return transaction;
-      } catch (error) {
-        console.error("publish error", error);
-        throw error;
-      }
+      return transaction;
     }),
 
   delete_draft: protectedProcedure
@@ -552,6 +562,18 @@ export const article_router = createTRPCRouter({
         assert_at_most_one(all_drafts);
         const draft = all_drafts[0];
 
+        if (draft) {
+          await delete_s3_directory(
+            env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+            draft.id.toString(),
+          );
+        }
+
+        const s3_url = get_s3_published_directory(
+          published.url,
+          published.created_at,
+        );
+
         const draft_fields = {
           content: published.content,
           title: published.title,
@@ -571,6 +593,18 @@ export const article_router = createTRPCRouter({
 
         assert_one(draft_return);
         const updated_or_created_draft = draft_return[0];
+
+        await s3_copy({
+          source_bucket: env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+          source_url: s3_url,
+          destination_bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+          destination_url: get_s3_draft_directory(updated_or_created_draft.id),
+        });
+
+        await delete_s3_directory(
+          env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+          s3_url,
+        );
 
         return updated_or_created_draft;
       });
@@ -592,10 +626,30 @@ export const article_router = createTRPCRouter({
           .where(eq(DraftArticle.published_id, input))
           .returning();
 
-        return await named_promise_all_settled({
+        const result = await named_promise_all_settled({
           published_article,
           draft_article,
         });
+
+        if (result.draft_article.status === "fulfilled") {
+          assert_one(result.draft_article.value);
+          const draft = result.draft_article.value[0];
+          await delete_s3_directory(
+            env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+            draft.id.toString(),
+          );
+        }
+
+        if (result.published_article.status === "fulfilled") {
+          assert_one(result.published_article.value);
+          const published = result.published_article.value[0];
+          await delete_s3_directory(
+            env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+            published.id.toString(),
+          );
+        }
+
+        return result;
       });
 
       return transaction;

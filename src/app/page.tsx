@@ -23,19 +23,19 @@ export default async function HomePageServer() {
   await api.author.get_all.prefetch();
   const drafts = session ? await api.article.get_all_drafts() : undefined;
 
-  console.log(
+  /* console.log(
     "drafts",
     drafts?.map((draft) => [
       draft.title,
       draft.draft_articles_to_authors.map((author) => author.author.name),
     ]),
-  );
+  ); */
 
   await api.article.get_infinite_published.prefetch({
     limit: 6 * 5,
   });
 
-  await api.article.get_infinite_published.prefetchInfinite(
+  /* await api.article.get_infinite_published.prefetchInfinite(
     {
       limit: 6 * 5,
     },
@@ -43,16 +43,16 @@ export default async function HomePageServer() {
       getNextPageParam: (lastPage) => lastPage.next_cursor,
       pages: 1,
     },
-  );
-  console.log("page.tsx, before preloading infinite_articles");
-  const infinite_articles = await api.article.get_infinite_published({
+  ); */
+  // console.log("page.tsx, before preloading infinite_articles");
+  /* const infinite_articles = await api.article.get_infinite_published({
     limit: 6 * 5,
-  });
+  }); */
 
-  console.log(
+  /* console.log(
     "page.tsx",
     infinite_articles.data.map((article) => article.title),
-  );
+  ); */
 
   if (!session) {
     return (

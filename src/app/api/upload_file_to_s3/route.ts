@@ -35,7 +35,7 @@ export interface FileUploadJSON {
 }
 
 export async function POST(request: NextRequest) {
-  console.log("upload_file_to_s3 begins");
+  // console.log("upload_file_to_s3 begins");
   const session = await getServerAuthSession();
   if (!session) return NextResponse.error();
 
@@ -119,11 +119,11 @@ export async function POST(request: NextRequest) {
         }),
       );
 
-      console.log("File exists, because it doesn't throw", key);
+      // console.log("File exists, because it doesn't throw", key);
       const key_path = path.parse(key);
       const new_name = `${key_path.name}-${uuid()}${key_path.ext}`;
       key = path.join(key_path.dir, new_name).replace(/\\/g, "/");
-      console.log("New key", key);
+      // console.log("New key", key);
 
       // return NextResponse.json({ success: 0, error: "File exists" });
     } catch (error: unknown) {
@@ -153,11 +153,11 @@ export async function POST(request: NextRequest) {
   });
   formData.append("file", file);
 
-  console.log("upload_file_to_s3 before uploading to presigned url", {
+  /* console.log("upload_file_to_s3 before uploading to presigned url", {
     url,
     fields,
     file,
-  });
+  }); */
   const upload_response = await fetch(url, {
     method: "POST",
     body: formData,
@@ -197,13 +197,13 @@ export async function POST(request: NextRequest) {
     file: file_data,
   } satisfies FileUploadResponse;
 
-  console.log("upload_file_to_s3", response_json);
+  // console.log("upload_file_to_s3", response_json);
 
   return NextResponse.json(response_json);
 }
 
 async function crop_image(file: File, crop: PercentCrop): Promise<File> {
-  console.log("crop image", crop);
+  // console.log("crop image", crop);
 
   const image_buffer = await file.arrayBuffer();
   const sharp_image = sharp(image_buffer);
@@ -222,7 +222,7 @@ async function crop_image(file: File, crop: PercentCrop): Promise<File> {
   const cropWidth = Math.round((crop.width / 100) * originalWidth);
   const cropHeight = Math.round((crop.height / 100) * originalHeight);
 
-  console.log("crop image", { cropX, cropY, cropWidth, cropHeight });
+  // console.log("crop image", { cropX, cropY, cropWidth, cropHeight });
   const cropped_buffer = await sharp_image
     .extract({
       left: cropX,

@@ -94,12 +94,12 @@ export function ImportButton() {
           onChange={async (event) => {
             const files = event.target.files;
             const file = files?.item(0);
-            console.log("input onChange event", file);
+            // console.log("input onChange event", file);
             if (!file) return;
 
             const file_content = await file.text();
             const parsed_file = JSON.parse(file_content) as OutputData;
-            console.log("file", file, parsed_file);
+            // console.log("file", file, parsed_file);
             await editor_context.editor?.render(parsed_file);
           }}
         />
