@@ -13,7 +13,6 @@ import type { ButtonProps } from "~/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { get_content_from_title } from "~/lib/content-from-title";
 
 export default function MakeNewDraftButton({
   title,
@@ -80,4 +79,26 @@ function LoadingSpinner({ className }: { className?: string }) {
       <path d="M21 12a9 9 0 1 1-6.219-8.56" />
     </svg>
   );
+}
+
+function get_content_from_title(title?: string) {
+  const new_title = title ?? "Nova novica";
+
+  const content = {
+    blocks: [
+      {
+        id: "sheNwCUP5A",
+        type: "header",
+        data: {
+          text: new_title,
+          level: 1,
+        },
+      },
+    ],
+  };
+
+  return {
+    title: new_title,
+    content,
+  };
 }

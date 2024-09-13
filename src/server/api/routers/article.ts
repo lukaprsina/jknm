@@ -15,14 +15,16 @@ import { and, between, eq } from "drizzle-orm";
 import { named_promise_all_settled } from "~/lib/named-promise";
 import { assert_at_most_one, assert_one } from "~/lib/assert-length";
 import { withCursorPagination } from "drizzle-pagination";
-import { convert_title_to_url } from "~/lib/article-utils";
+import {
+  convert_title_to_url,
+  get_s3_published_directory,
+} from "~/lib/article-utils";
 import type { PublishedArticleWithAuthors } from "~/components/article/card-adapter";
 import {
   rename_s3_files_and_content,
   delete_s3_directory,
 } from "~/server/s3-utils";
 import { env } from "~/env";
-import { format_date_for_url } from "~/lib/format-date";
 
 export const article_router = createTRPCRouter({
   get_infinite_published: publicProcedure
@@ -366,10 +368,13 @@ export const article_router = createTRPCRouter({
           if (!value.created_at) throw new Error("created_at is required");
 
           const renamed_url = convert_title_to_url(value.title);
-          const s3_url = `${renamed_url}-${format_date_for_url(value.created_at)}`;
 
           const renamed_content = value.content
-            ? await rename_s3_files_and_content(value.content, s3_url, false)
+            ? await rename_s3_files_and_content(
+                value.content,
+                get_s3_published_directory(renamed_url, value.created_at),
+                false,
+              )
             : undefined;
 
           value.url = renamed_url;
@@ -459,6 +464,7 @@ export const article_router = createTRPCRouter({
             const old_duplicate_urls = (
               await tx.query.DuplicatedArticleUrls.findMany()
             ).map((data) => data.url);
+
             const articles = await tx.query.PublishedArticle.findMany({
               where: eq(PublishedArticle.url, published_article.url),
             });

@@ -12,6 +12,8 @@ import "react-image-crop/dist/ReactCrop.css";
 import type { EditorJSImageData } from "~/lib/editor-utils";
 import { PlusIcon } from "lucide-react";
 import { AspectRatio } from "~/components/ui/aspect-ratio";
+import { upload_image_by_file } from "~/components/aws-s3/upload-file";
+import { get_s3_draft_directory } from "~/lib/article-utils";
 
 export function ImageSelector({
   image: formImage,
@@ -69,13 +71,39 @@ export function ImageSelector({
         className="hidden"
         accept="image/*"
         ref={input_ref}
-        onChange={(event) => {
+        onChange={async (event) => {
           const files = event.target.files;
           const file = files?.item(0);
           console.log("input onChange event", file);
           if (!file) return;
 
-          const reader = new FileReader();
+          const response = await upload_image_by_file({
+            file,
+            custom_title: "thumbnail-uploaded.jpg",
+            crop: formImage,
+            allow_overwrite: "allow_overwrite",
+            draft: true,
+            directory: get_s3_draft_directory(editor_store.get.draft_id()),
+          });
+
+          if (
+            typeof response.file === "undefined" ||
+            !("width" in response.file)
+          )
+            return;
+
+          const editor_image = {
+            file: {
+              url: response.file.url,
+              width: response.file.width,
+              height: response.file.height,
+            },
+            caption: "",
+          } satisfies EditorJSImageData;
+
+          setUploadedImage(editor_image);
+
+          /* const reader = new FileReader();
           reader.onload = (e) => {
             const img = new window.Image();
             img.onload = () => {
@@ -91,7 +119,7 @@ export function ImageSelector({
             };
             img.src = e.target?.result as string;
           };
-          reader.readAsDataURL(file);
+          reader.readAsDataURL(file); */
 
           /* setUploadedImage({
             file: {

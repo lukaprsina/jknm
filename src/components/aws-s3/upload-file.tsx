@@ -3,12 +3,21 @@
 import mime from "mime/lite";
 
 import type { FileUploadResponse } from "~/app/api/upload_file_to_s3/route";
-import { editor_store } from "../editor/editor-store";
 import type { PercentCrop } from "react-image-crop";
 
-export async function upload_file(file: File): Promise<FileUploadResponse> {
+export async function upload_file({
+  file,
+  allow_overwrite,
+  draft,
+  directory,
+}: {
+  file: File;
+  allow_overwrite?: "allow_overwrite";
+  draft: boolean;
+  directory: string;
+}): Promise<FileUploadResponse> {
   console.log("upload_file", file);
-  const directory = editor_store.get.draft_id().toString();
+  // const directory = editor_store.get.draft_id().toString();
 
   if (!directory) {
     return {
@@ -20,6 +29,11 @@ export async function upload_file(file: File): Promise<FileUploadResponse> {
   form_data.append("file", file);
   form_data.append("directory", directory);
   form_data.append("type", "file");
+  form_data.append("bucket", draft ? "draft" : "published");
+
+  if (allow_overwrite === "allow_overwrite") {
+    form_data.append("allow_overwrite", allow_overwrite);
+  }
 
   const file_data = await fetch("/api/upload_file_to_s3", {
     method: "POST",
@@ -29,12 +43,27 @@ export async function upload_file(file: File): Promise<FileUploadResponse> {
   return await parse_s3_response(file_data /* novica_url, file.name, toast */);
 }
 
-export async function upload_image_by_file(
-  file: File,
+export async function upload_image_by_file({
+  file,
+  custom_title,
+  crop,
+  allow_overwrite,
+  draft,
+  directory,
+  // toast,
+}: {
+  file: File;
+  custom_title?: string;
+  crop?: PercentCrop;
+  allow_overwrite?: "allow_overwrite";
+  draft: boolean;
+  directory: string;
   // toast: ReturnType<typeof useToast>,
-): Promise<FileUploadResponse> {
+}): Promise<FileUploadResponse> {
   console.log("upload_image_by_file", file);
-  const directory = editor_store.get.draft_id().toString();
+  /* const directory = draft
+    ? editor_store.get.draft_id().toString()
+    : editor_store.get.url(); */
 
   if (!directory) {
     console.error("No directory", directory);
@@ -55,6 +84,17 @@ export async function upload_image_by_file(
   form_data.append("file", file);
   form_data.append("directory", directory);
   form_data.append("type", "image");
+  form_data.append("bucket", draft ? "draft" : "published");
+
+  if (allow_overwrite === "allow_overwrite") {
+    form_data.append("allow_overwrite", allow_overwrite);
+  }
+  if (custom_title) {
+    form_data.append("title", custom_title);
+  }
+  if (crop) {
+    form_data.append("crop", JSON.stringify(crop));
+  }
 
   const file_data = await fetch("/api/upload_file_to_s3", {
     method: "POST",
@@ -70,14 +110,23 @@ export async function upload_image_by_file(
   return response;
 }
 
-export async function upload_image_by_url(
-  url: string,
-  custom_title?: string,
-  crop?: PercentCrop,
-  allow_overwrite?: "allow_overwrite",
+export async function upload_image_by_url({
+  url,
+  custom_title,
+  crop,
+  allow_overwrite,
+  draft,
+  directory,
+}: {
+  url: string;
+  custom_title?: string;
+  crop?: PercentCrop;
+  allow_overwrite?: "allow_overwrite";
+  draft: boolean;
+  directory: string;
+}): Promise<FileUploadResponse> {
   // toast: ReturnType<typeof useToast>,
-): Promise<FileUploadResponse> {
-  const directory = editor_store.get.draft_id().toString();
+  // const directory = editor_store.get.draft_id().toString();
 
   if (!directory) {
     console.error("No directory", directory);
@@ -103,8 +152,11 @@ export async function upload_image_by_url(
   form_data.append("title", title);
   form_data.append("directory", directory);
   form_data.append("type", "image");
-  form_data.append("allow_overwrite", allow_overwrite ?? "");
+  form_data.append("bucket", draft ? "draft" : "published");
 
+  if (allow_overwrite === "allow_overwrite") {
+    form_data.append("allow_overwrite", allow_overwrite);
+  }
   if (crop) {
     form_data.append("crop", JSON.stringify(crop));
   }

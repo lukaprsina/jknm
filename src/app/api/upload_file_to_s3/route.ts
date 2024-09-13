@@ -9,7 +9,7 @@ import sharp from "sharp";
 
 import { env } from "~/env";
 import { getServerAuthSession } from "~/server/auth";
-import { convert_title_to_url } from "~/lib/article-utils";
+import { convert_filename_to_url } from "~/lib/article-utils";
 import type { PercentCrop, PixelCrop } from "react-image-crop";
 import { thumbnail_validator } from "~/lib/validators";
 
@@ -34,7 +34,7 @@ export interface FileUploadJSON {
 }
 
 export async function POST(request: NextRequest) {
-  console.log("upload_file_to_s3", request.body);
+  console.log("upload_file_to_s3 begins");
   const session = await getServerAuthSession();
   if (!session) return NextResponse.error();
 
@@ -48,14 +48,24 @@ export async function POST(request: NextRequest) {
   const external_url = form_data.get("url");
   const crop_entry = form_data.get("crop");
   const allow_overwrite = form_data.get("allow_overwrite");
+  const bucket_string = form_data.get("bucket");
   let title = form_data.get("title");
   let mime_type = "";
   let key = "";
 
+  let bucket: string | undefined = undefined;
+  if (bucket_string === "draft") {
+    bucket = env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME;
+  } else if (bucket_string === "published") {
+    bucket = env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME;
+  } else {
+    return NextResponse.error();
+  }
+
   // TODO: encode with convert_title_to_url
   if ((file_type === "image" || file_type === "file") && file instanceof File) {
     // Upload from a file.
-    key = `${directory}/${convert_title_to_url(file.name)}`;
+    key = `${directory}/${convert_filename_to_url(file.name)}`;
     mime_type = file.type;
   } else if (
     file_type === "image" &&
@@ -63,7 +73,7 @@ export async function POST(request: NextRequest) {
     typeof title === "string"
   ) {
     // Upload from an URL.
-    key = `${directory}/${convert_title_to_url(title)}`;
+    key = `${directory}/${convert_filename_to_url(title)}`;
 
     let mime_type: string;
     if (!title) {
@@ -87,6 +97,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.error();
   }
 
+  console.log("upload_file_to_s3", {
+    directory,
+    file_type,
+    external_url,
+    title,
+    mime_type,
+    key,
+    bucket,
+  });
   const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
 
   // Check if the file already exists
@@ -94,7 +113,7 @@ export async function POST(request: NextRequest) {
     try {
       await client.send(
         new HeadObjectCommand({
-          Bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+          Bucket: bucket,
           Key: key,
         }),
       );
@@ -110,7 +129,7 @@ export async function POST(request: NextRequest) {
   }
 
   const { url, fields } = await createPresignedPost(client, {
-    Bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+    Bucket: bucket,
     Key: key,
     Conditions: [
       ["content-length-range", 0, 5 * 10485760], // up to 10 MB
@@ -129,6 +148,11 @@ export async function POST(request: NextRequest) {
   });
   formData.append("file", file);
 
+  console.log("upload_file_to_s3 before uploading to presigned url", {
+    url,
+    fields,
+    file,
+  });
   const upload_response = await fetch(url, {
     method: "POST",
     body: formData,

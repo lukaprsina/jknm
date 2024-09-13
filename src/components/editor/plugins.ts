@@ -27,6 +27,8 @@ import {
   upload_image_by_file,
   upload_image_by_url,
 } from "../aws-s3/upload-file";
+import { get_s3_draft_directory } from "~/lib/article-utils";
+import { editor_store } from "./editor-store";
 
 export function EDITOR_JS_PLUGINS(): Record<
   // toast: ReturnType<typeof useToast>,
@@ -41,8 +43,18 @@ export function EDITOR_JS_PLUGINS(): Record<
       inlineToolbar: true,
       config: {
         uploader: {
-          uploadByFile: (file: File) => upload_image_by_file(file),
-          uploadByUrl: (url: string) => upload_image_by_url(url),
+          uploadByFile: (file: File) =>
+            upload_image_by_file({
+              file,
+              draft: true,
+              directory: get_s3_draft_directory(editor_store.get.draft_id()),
+            }),
+          uploadByUrl: (url: string) =>
+            upload_image_by_url({
+              url,
+              draft: true,
+              directory: get_s3_draft_directory(editor_store.get.draft_id()),
+            }),
         },
       },
     },
@@ -50,7 +62,12 @@ export function EDITOR_JS_PLUGINS(): Record<
       class: AttachesTool,
       config: {
         uploader: {
-          uploadByFile: (file: File) => upload_file(file),
+          uploadByFile: (file: File) =>
+            upload_file({
+              file,
+              draft: true,
+              directory: get_s3_draft_directory(editor_store.get.draft_id()),
+            }),
         },
       },
     },

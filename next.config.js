@@ -37,6 +37,12 @@ const config = {
       },
       {
         protocol: "https",
+        hostname: "jknm-draft.s3.eu-central-1.amazonaws.com",
+        port: "",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
         hostname: "www.jknm.si",
         port: "",
         pathname: "**",

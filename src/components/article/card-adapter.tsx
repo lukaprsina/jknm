@@ -14,10 +14,13 @@ import { content_to_text } from "~/lib/content-to-text";
 import {
   get_draft_article_link,
   get_published_article_link,
+  get_s3_published_directory,
 } from "~/lib/article-utils";
 import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 
 import { ArticleCard } from "./card";
+import { get_s3_url } from "~/lib/s3-publish";
+import { env } from "~/env";
 /* const ArticleCard = dynamic(
   () => import("./card").then((mod) => mod.ArticleCard),
   {
@@ -63,7 +66,10 @@ export const DraftArticleDrizzleCard = ({
       url={get_draft_article_link(article.id)}
       content_preview={content_to_text(article.content?.blocks ?? undefined)}
       created_at={article.created_at}
-      draft
+      image_url={get_s3_url(
+        `${article.id}/thumbnail.png`,
+        env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+      )}
       has_thumbnail={Boolean(article.thumbnail_crop)}
       author_ids={article.draft_articles_to_authors.map((a) => a.author.id)}
     />
@@ -91,6 +97,10 @@ export const PublishedArticleDrizzleCard = ({
         article.created_at,
         duplicate_urls,
       )}
+      image_url={get_s3_url(
+        `${get_s3_published_directory(article.url, article.created_at)}/thumbnail.png`,
+        env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+      )}
       content_preview={content_to_text(article.content?.blocks ?? undefined)}
       created_at={article.created_at}
       has_thumbnail={Boolean(article.thumbnail_crop)}
@@ -114,6 +124,10 @@ export function ArticleAlgoliaCard({
       created_at={new Date(hit.created_at)}
       has_thumbnail={hit.has_thumbnail}
       author_ids={hit.author_ids}
+      image_url={get_s3_url(
+        `${get_s3_published_directory(hit.url, hit.created_at)}/thumbnail.png`,
+        env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+      )}
     />
   );
 }

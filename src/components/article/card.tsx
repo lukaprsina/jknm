@@ -11,8 +11,6 @@ import Image from "next/image";
 // import ArticleCardDescription from "./description/card-description";
 import dynamic from "next/dynamic";
 import { Skeleton } from "../ui/skeleton";
-import { env } from "~/env";
-import { get_s3_url } from "~/lib/s3-publish";
 
 const ArticleCardDescription = dynamic(
   () => import("./description/card-description"),
@@ -29,7 +27,7 @@ export function ArticleCard({
   content_preview,
   created_at,
   has_thumbnail,
-  draft,
+  image_url,
   author_ids,
   ref,
 }: {
@@ -39,15 +37,11 @@ export function ArticleCard({
   content_preview?: string;
   created_at: Date;
   has_thumbnail: boolean;
-  draft?: boolean;
+  image_url?: string;
   author_ids: number[];
   ref?: IntersectionRef;
 }) {
   const [hover, setHover] = useState(false);
-
-  const bucket = draft
-    ? env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME
-    : env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME;
 
   return (
     <Link
@@ -65,7 +59,7 @@ export function ArticleCard({
         innerClassName="h-full"
         gradientColor="#D9D9D955"
       >
-        {has_thumbnail ? (
+        {has_thumbnail && image_url ? (
           <AspectRatio
             ratio={16 / 9}
             className={cn(
@@ -76,7 +70,8 @@ export function ArticleCard({
             <Image
               // https://jknm.s3.eu-central-1.amazonaws.com/potop-v-termalni-izvir-29-02-2008/1_gradbena%20jama.jpg
               // https://jknm.s3.eu-central-1.amazonaws.com/potop-v-termalni-izvir-29-02-2008/thumbnail.jpg
-              src={get_s3_url(`${url}/thumbnail.png`, bucket)}
+              // https://jknm-draft.s3.eu-central-1.amazonaws.com//uredi/41/thumbnail.png
+              src={image_url}
               alt={title}
               fill
               // loader={({ src }) => src}

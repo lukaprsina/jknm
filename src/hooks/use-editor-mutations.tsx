@@ -1,6 +1,10 @@
 "use client";
 
-import { get_published_article_link } from "~/lib/article-utils";
+import {
+  get_published_article_link,
+  get_s3_draft_directory,
+  get_s3_published_directory,
+} from "~/lib/article-utils";
 import { api } from "~/trpc/react";
 import {
   update_settings_from_editor,
@@ -130,12 +134,14 @@ export function useEditorMutations() {
       if (!editor_content) return;
 
       if (thumbnail_crop) {
-        await upload_image_by_url(
-          thumbnail_crop.image_url,
-          "thumbnail.png",
-          thumbnail_crop,
-          "allow_overwrite",
-        );
+        await upload_image_by_url({
+          url: thumbnail_crop.image_url,
+          custom_title: "thumbnail.png",
+          crop: thumbnail_crop,
+          allow_overwrite: "allow_overwrite",
+          draft: true,
+          directory: get_s3_draft_directory(draft_article.id),
+        });
       }
 
       const updated = validate_article(editor_content, toaster);
@@ -172,7 +178,7 @@ export function useEditorMutations() {
         author_ids: state.author_ids,
       });
     },
-    publish: async (created_at?: Date, thumbnail_crop?: ThumbnailType) => {
+    publish: async (fake_created_at?: Date, thumbnail_crop?: ThumbnailType) => {
       editor_context.setSavingText("Objavljam spremembe ...");
       const editor_content = await editor_context.editor?.save();
       if (!editor_content) return;
@@ -180,11 +186,24 @@ export function useEditorMutations() {
       const updated = validate_article(editor_content, toaster);
       if (!updated) return;
 
+      const created_at = fake_created_at ?? draft_article.created_at;
+
+      if (thumbnail_crop) {
+        await upload_image_by_url({
+          url: thumbnail_crop.image_url,
+          custom_title: "thumbnail.png",
+          crop: thumbnail_crop,
+          allow_overwrite: "allow_overwrite",
+          draft: false,
+          directory: get_s3_published_directory(updated.url, created_at),
+        });
+      }
+
       const state = editor_store.get.state();
       const article = {
         title: updated.title,
         url: updated.url,
-        created_at: created_at ?? draft_article.created_at,
+        created_at,
         content: editor_content,
         thumbnail_crop: thumbnail_crop ?? state.thumbnail_crop,
       } satisfies z.infer<typeof PublishArticleSchema>;
