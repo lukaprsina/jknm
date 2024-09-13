@@ -103,6 +103,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
           <Button
             onClick={form.handleSubmit(
               async (values: z.infer<typeof form_schema>) => {
+                console.log("PUBLISGGGGGGGGGGGGGG", values);
                 await editor_mutations.publish(
                   values.created_at,
                   values.thumbnail_crop,

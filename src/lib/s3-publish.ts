@@ -37,8 +37,19 @@ export function rename_urls_in_content(
     }
 
     const file_data = block.data as { file: { url: string } };
+    const url_parts = new URL(file_data.file.url);
+
+    const domain_parts = url_parts.hostname.split(".");
+    const source_bucket = domain_parts[0];
+
+    if (!source_bucket) {
+      console.error("No bucket in URL");
+      continue;
+    }
+
     const renamed_info = rename_url(
-      file_data.file.url,
+      url_parts.pathname,
+      source_bucket,
       destination_url,
       bucket,
     );
@@ -55,11 +66,20 @@ export function rename_urls_in_content(
 // TODO: rename thumbnail
 export function rename_url(
   old_url: string,
+  source_bucket: string,
   destination_url: string,
   destination_bucket: string,
 ): S3CopySourceInfo | undefined {
-  const url_parts = new URL(old_url);
-  const pathname_parts = url_parts.pathname.split("/").filter(Boolean);
+  const pathname_parts = old_url.split("/").filter(Boolean);
+
+  console.log("rename_url", {
+    old_url,
+    source_bucket,
+    destination_url,
+    destination_bucket,
+    pathname_parts,
+  });
+
   if (pathname_parts.length !== 2) {
     console.error("Invalid URL", old_url, pathname_parts);
     return;
@@ -77,13 +97,6 @@ export function rename_url(
     `${destination_url}/${file_name}`,
     destination_bucket,
   );
-  const domain_parts = url_parts.hostname.split(".");
-  const source_bucket = domain_parts[0];
-
-  if (!source_bucket) {
-    console.error("No bucket in URL", old_url);
-    return;
-  }
 
   if (!ALLOWERD_BUCKETS.includes(source_bucket)) {
     console.error("Invalid bucket", source_bucket);
@@ -110,14 +123,18 @@ export async function s3_copy_file(
   });
 
   const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
-  return await client.send(
-    new CopyObjectCommand({
-      CopySource,
-      Bucket: destination_bucket,
-      Key,
-      // ACL: "public-read",
-    }),
-  );
+  try {
+    return await client.send(
+      new CopyObjectCommand({
+        CopySource,
+        Bucket: destination_bucket,
+        Key,
+        // ACL: "public-read",
+      }),
+    );
+  } catch (error) {
+    console.error("Error copying file", error);
+  }
 }
 
 export async function s3_copy({
@@ -136,11 +153,13 @@ export async function s3_copy({
   if (!source_files) {
     return;
   }
+
   const sources: S3CopySourceInfo[] = [];
   for (const file of source_files) {
     if (!file.Key) continue;
     const renamed_info = rename_url(
       file.Key,
+      source_bucket,
       destination_url,
       destination_bucket,
     );

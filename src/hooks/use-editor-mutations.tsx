@@ -8,12 +8,14 @@ import {
 import { api } from "~/trpc/react";
 import {
   update_settings_from_editor,
-  // update_article_from_editor,
   validate_article,
 } from "../components/editor/editor-lib";
 import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 import { useContext } from "react";
-import { DraftArticleContext } from "../components/article/context";
+import {
+  DraftArticleContext,
+  PublishedArticleContext,
+} from "../components/article/context";
 import { EditorContext } from "../components/editor/editor-context";
 import { useRouter } from "next/navigation";
 import { useToast } from "~/hooks/use-toast";
@@ -28,6 +30,7 @@ import { upload_image_by_url } from "~/components/aws-s3/upload-file";
 
 export function useEditorMutations() {
   const draft_article = useContext(DraftArticleContext);
+  const publish_article = useContext(PublishedArticleContext);
   const editor_context = useContext(EditorContext);
   const duplicate_urls = useDuplicatedUrls();
   const trpc_utils = api.useUtils();
@@ -64,6 +67,7 @@ export function useEditorMutations() {
       editor_context.setSavingText(undefined);
       editor_context.setDirty(false);
       await trpc_utils.article.invalidate();
+      await trpc_utils.article.get_duplicate_urls.invalidate();
       await trpc_utils.article.get_infinite_published.invalidate();
     },
     onError: (error) => {
@@ -104,6 +108,7 @@ export function useEditorMutations() {
       editor_context.setSavingText(undefined);
       await trpc_utils.article.invalidate();
       await trpc_utils.article.get_infinite_published.invalidate();
+      router.refresh();
     },
     onError: (error) => {
       toaster.toast({
@@ -115,9 +120,9 @@ export function useEditorMutations() {
 
   const delete_both = api.article.delete_both.useMutation({
     onSettled: async () => {
-      router.replace(`/`);
       await trpc_utils.article.invalidate();
       await trpc_utils.article.get_infinite_published.invalidate();
+      router.replace(`/`);
     },
     onError: (error) => {
       toaster.toast({
@@ -231,8 +236,12 @@ export function useEditorMutations() {
       delete_draft.mutate(draft_article.id);
     },
     unpublish: () => {
+      if (!publish_article) {
+        return;
+      }
+
       editor_context.setSavingText("Skrivam novičko ...");
-      unpublish.mutate(draft_article.id);
+      unpublish.mutate(publish_article.id);
     },
     delete_both: () => {
       editor_context.setSavingText("Brišem novičko ...");

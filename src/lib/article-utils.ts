@@ -13,7 +13,7 @@ export function convert_filename_to_url(dangerous_url: string) {
 export function convert_title_to_url(dangerous_url: string) {
   const sanitized = sanitize_filename(dangerous_url, { replacement: "" });
   const replaced = sanitized
-    .replace(/[^a-zA-Z0-9čČžŽšŠ-\s]/g, "")
+    .replace(/[^a-zA-Z0-9čČžŽšŠ\-_\s]/g, "")
     .trim()
     .toLowerCase();
 
@@ -52,6 +52,13 @@ export function get_published_article_link(
   const name = duplicate_article_urls?.includes(url)
     ? `${url}?dan=${format_date_for_url(date)}`
     : url;
+
+  console.log("get_published_article_link", {
+    url,
+    date,
+    duplicate_article_urls,
+    name,
+  });
 
   return `/novica/${name}`;
 }

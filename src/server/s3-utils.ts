@@ -44,20 +44,6 @@ export async function rename_s3_files_and_content(
       source.source_bucket === env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
   );
 
-  /* if (draft) {
-    await clean_s3_directory(
-      env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
-      destination_url,
-      draft_sources.map((source) => source.file_name),
-    );
-  } else {
-    await clean_s3_directory(
-      env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
-      destination_url,
-      published_sources.map((source) => source.file_name),
-    );
-  } */
-
   for (const sources of [draft_sources, published_sources]) {
     await s3_copy_between_buckets(sources, destination_bucket, destination_url);
   }

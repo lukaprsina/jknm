@@ -125,7 +125,7 @@ export function ImageSelector({
 
           const response = await upload_image_by_file({
             file,
-            custom_title: "thumbnail-uploaded.jpg",
+            custom_title: "thumbnail-uploaded.png",
             crop: formImage,
             allow_overwrite: "allow_overwrite",
             draft: true,

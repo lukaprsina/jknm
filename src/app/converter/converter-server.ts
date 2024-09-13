@@ -24,6 +24,10 @@ import type { PublishedArticleHit } from "~/lib/validators";
 import { api } from "~/trpc/server";
 import { delete_s3_directory } from "~/server/s3-utils";
 import { env } from "~/env";
+import {
+  convert_filename_to_url,
+  convert_title_to_url,
+} from "~/lib/article-utils";
 
 export async function get_authors_server() {
   const authors = await db.query.Author.findMany();
@@ -319,9 +323,12 @@ export async function copy_and_rename_images() {
 
       const nested_promises = json.images.map(async (image) => {
         const old_path = path.join(JKNM_SERVED_DIR, image);
-        const image_name = path.basename(old_path);
+        const image_name = convert_filename_to_url(path.basename(old_path));
 
-        const new_dir = path.join(converted_images_dir, json.url);
+        const new_dir = path.join(
+          converted_images_dir,
+          convert_title_to_url(json.url),
+        );
         await fs_promises.mkdir(new_dir, { recursive: true });
 
         if (!fs.existsSync(new_dir)) {
