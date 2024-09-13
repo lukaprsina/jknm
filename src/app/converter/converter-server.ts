@@ -22,6 +22,8 @@ import {
 } from "~/server/db/schema";
 import type { PublishedArticleHit } from "~/lib/validators";
 import { api } from "~/trpc/server";
+import { delete_s3_directory } from "~/server/s3-utils";
+import { env } from "~/env";
 
 export async function get_authors_server() {
   const authors = await db.query.Author.findMany();
@@ -33,9 +35,12 @@ export async function delete_articles() {
   await db.execute(
     sql`TRUNCATE TABLE ${PublishedArticle} RESTART IDENTITY CASCADE;`,
   );
+
   await db.execute(
     sql`TRUNCATE TABLE ${DraftArticle} RESTART IDENTITY CASCADE;`,
   );
+
+  await delete_s3_directory(env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME, "");
   console.log("done");
 }
 

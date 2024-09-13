@@ -4,7 +4,7 @@ import { klona } from "klona";
 import { env } from "~/env";
 import { list_objects, s3_copy_between_buckets } from "~/server/s3-utils";
 
-export function get_s3_url(url: string, bucket: string) {
+export function get_s3_prefix(url: string, bucket: string) {
   return `https://${bucket}.s3.${env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${url}`;
 }
 
@@ -73,7 +73,7 @@ export function rename_url(
     return;
   }
 
-  const new_url = get_s3_url(
+  const new_url = get_s3_prefix(
     `${destination_url}/${file_name}`,
     destination_bucket,
   );

@@ -19,7 +19,7 @@ import {
 import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 
 import { ArticleCard } from "./card";
-import { get_s3_url } from "~/lib/s3-publish";
+import { get_s3_prefix } from "~/lib/s3-publish";
 import { env } from "~/env";
 /* const ArticleCard = dynamic(
   () => import("./card").then((mod) => mod.ArticleCard),
@@ -66,7 +66,7 @@ export const DraftArticleDrizzleCard = ({
       url={get_draft_article_link(article.id)}
       content_preview={content_to_text(article.content?.blocks ?? undefined)}
       created_at={article.created_at}
-      image_url={get_s3_url(
+      image_url={get_s3_prefix(
         `${article.id}/thumbnail.png`,
         env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
       )}
@@ -97,7 +97,7 @@ export const PublishedArticleDrizzleCard = ({
         article.created_at,
         duplicate_urls,
       )}
-      image_url={get_s3_url(
+      image_url={get_s3_prefix(
         `${get_s3_published_directory(article.url, article.created_at)}/thumbnail.png`,
         env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
       )}
@@ -124,7 +124,7 @@ export function ArticleAlgoliaCard({
       created_at={new Date(hit.created_at)}
       has_thumbnail={hit.has_thumbnail}
       author_ids={hit.author_ids}
-      image_url={get_s3_url(
+      image_url={get_s3_prefix(
         `${get_s3_published_directory(hit.url, hit.created_at)}/thumbnail.png`,
         env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
       )}

@@ -196,7 +196,7 @@ async function parse_csv_article(
   const created_at = new Date(imported_article.created_at);
   const updated_at = new Date(imported_article.updated_at);
 
-  const csv_url = convert_title_to_url(imported_article.title);
+  const converted_url = convert_title_to_url(imported_article.title);
 
   const blocks: OutputBlockData[] = [
     {
@@ -217,7 +217,7 @@ async function parse_csv_article(
   images_to_save.push({
     objave_id: imported_article.objave_id,
     serial_id: article_id.toString(),
-    url: csv_url,
+    url: converted_url,
     images: image_urls,
   });
 
@@ -227,8 +227,9 @@ async function parse_csv_article(
       await parse_node(
         node,
         blocks,
+        created_at,
         imported_article,
-        csv_url,
+        converted_url,
         problems,
         ids_by_dimensions,
         all_images_dimensions,
@@ -273,11 +274,8 @@ async function parse_csv_article(
     const width = first_image.width;
     const height = first_image.width;
 
-    const image_name = first_image.image_path.split("/").pop();
-    if (!image_name) throw new Error("No image name");
-
     thumbnail_crop = {
-      image_url: convert_title_to_url(image_name),
+      image_url: first_image.image_path,
       ...centerCrop(
         makeAspectCrop(
           {
@@ -298,7 +296,7 @@ async function parse_csv_article(
     old_id: imported_article.objave_id,
     title: imported_article.title,
     content,
-    url: csv_url,
+    url: converted_url,
     created_at,
     updated_at,
     author_ids: Array.from(current_authors),

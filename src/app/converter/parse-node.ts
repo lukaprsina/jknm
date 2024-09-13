@@ -12,6 +12,9 @@ import type {
   ImportedArticle,
   InitialProblems,
 } from "./converter-spaghetti";
+import { get_s3_published_directory } from "~/lib/article-utils";
+import { get_s3_prefix } from "~/lib/s3-publish";
+import { env } from "~/env";
 
 const p_allowed_tags = ["STRONG", "BR", "A", "IMG", "EM", "SUB", "SUP"];
 const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
@@ -19,6 +22,7 @@ const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
 export async function parse_node(
   node: ParserNode,
   blocks: OutputBlockData[],
+  created_at: Date,
   articles_with_authors: ImportedArticle,
   csv_url: string,
   problems: InitialProblems,
@@ -157,7 +161,12 @@ export async function parse_node(
 
           const src_parts = trimmed.trim().split("/");
           const image_name = src_parts[src_parts.length - 1];
-          const encoded_url = `${AWS_PREFIX}/${csv_url}/${image_name}`;
+          if (!image_name) throw new Error("No image name " + old_id);
+          const test = `${get_s3_published_directory(csv_url, created_at)}/${image_name}`;
+          const encoded_url = get_s3_prefix(
+            test,
+            env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+          );
           // console.log("Image", old_id, encoded_url);
           src = decodeURIComponent(encoded_url);
           /* console.log("Image", csv_article.id, {
@@ -389,7 +398,3 @@ function youtube_url_to_id(url?: string) {
 
   return match && match[7]?.length == 11 ? match[7] : false;
 }
-
-/* const AWS_PREFIX =
-  "https://jamarski-klub-novo-mesto.s3.eu-central-1.amazonaws.com"; */
-const AWS_PREFIX = "https://jknm.s3.eu-central-1.amazonaws.com";
