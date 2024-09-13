@@ -10,9 +10,9 @@ import {
 import { api } from "~/trpc/react";
 import { Button } from "~/components/ui/button";
 import type { ButtonProps } from "~/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { article_variants } from "~/lib/page-variants";
 
 export default function MakeNewDraftButton({
   title,
@@ -48,15 +48,22 @@ export default function MakeNewDraftButton({
         </TooltipTrigger>
         <TooltipContent>Ustvari novico</TooltipContent>
       </Tooltip>
-      <PopoverContent className="relative z-[150] mx-6 w-80">
-        <Card>
+      <PopoverContent
+        className={cn(
+          "relative z-[150] mx-6 w-80",
+          article_variants({ variant: "card" }),
+        )}
+      >
+        <h3>Ustvarjamo novo novico.</h3>
+        <LoadingSpinner /> Prosimo, da malo počakate.
+        {/* <Card>
           <CardHeader>
             <CardTitle>Ustvarjamo novo novico.</CardTitle>
           </CardHeader>
           <CardContent className="flex justify-between gap-4">
             <LoadingSpinner /> Prosimo, da malo počakate.
           </CardContent>
-        </Card>
+        </Card> */}
       </PopoverContent>
     </Popover>
   );

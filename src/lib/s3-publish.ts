@@ -136,23 +136,18 @@ export async function s3_copy({
   if (!source_files) {
     return;
   }
-  const sources = source_files.map((object) => {
-    if (typeof object.Key === "undefined") {
-      throw new Error("Invalid key");
-    }
-
-    const file_name = object.Key.split("/").at(-1);
-    if (!file_name) throw new Error("Invalid file name");
-
-    const source = {
+  const sources: S3CopySourceInfo[] = [];
+  for (const file of source_files) {
+    if (!file.Key) continue;
+    const renamed_info = rename_url(
+      file.Key,
       destination_url,
-      source_bucket,
-      source_path: object.Key,
-      file_name,
-    } satisfies S3CopySourceInfo;
+      destination_bucket,
+    );
 
-    return source;
-  });
+    if (!renamed_info) continue;
+    sources.push(renamed_info);
+  }
 
   console.log("s3_copy", {
     source_bucket,

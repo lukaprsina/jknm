@@ -444,7 +444,7 @@ export const article_router = createTRPCRouter({
         // if draft exists, delete it
         if (draft?.id) {
           await tx.delete(DraftArticle).where(eq(DraftArticle.id, draft.id));
-          await s3_copy({
+          /* await s3_copy({
             source_bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
             source_url: get_s3_draft_directory(draft.id),
             destination_bucket: env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
@@ -452,7 +452,7 @@ export const article_router = createTRPCRouter({
               published_article.url,
               published_article.created_at,
             ),
-          });
+          }); */
           await delete_s3_directory(
             env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
             draft.id.toString(),

@@ -184,7 +184,7 @@ export function ImageSelector({
                   formImage?.image_url === image.file.url && "border-blue-500",
                 )}
               >
-                {`${image.file.url.split("/").pop()} ${new Date().toTimeString()}`}
+                {/* {`${image.file.url.split("/").pop()} ${new Date().toTimeString()}`} */}
                 <Image
                   src={image.file.url}
                   alt={`Izbira slike #${index}`}

@@ -47,7 +47,7 @@ export default async function EditorPage({
     <Shell draft_article={draft} published_article={published}>
       <div className={cn(article_variants(), page_variants(), "min-h-screen")}>
         {draft ? (
-          <Editor draft={draft} />
+          <Editor draft={draft} published={published} />
         ) : (
           <CreateNewArticle novica_ime={draft_id} />
         )}

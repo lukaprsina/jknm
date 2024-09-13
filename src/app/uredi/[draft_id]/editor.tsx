@@ -2,34 +2,44 @@
 
 import "./editor.css";
 
-import type { DraftArticleWithAuthors } from "~/components/article/card-adapter";
+import type {
+  DraftArticleWithAuthors,
+  PublishedArticleWithAuthors,
+} from "~/components/article/card-adapter";
 import { EditorProvider } from "~/components/editor/editor-context";
 import { editor_store } from "~/components/editor/editor-store";
-import { DraftArticleContext } from "~/components/article/context";
+import {
+  DraftArticleContext,
+  PublishedArticleContext,
+} from "~/components/article/context";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
-import dynamic from "next/dynamic";
+import { MyToolbar } from "./toolbar";
 
-const Toolbar = dynamic(() => import("./toolbar"), { ssr: false });
+// const Toolbar = dynamic(() => import("./toolbar"), { ssr: false });
 
 export default function MyEditor({
   draft,
+  published,
 }: {
   draft: DraftArticleWithAuthors;
+  published?: PublishedArticleWithAuthors;
 }) {
   // console.log("my editor draft", draft);
   return (
     <DraftArticleContext.Provider value={draft}>
-      <EditorProvider>
-        <Card className="mx-auto w-full">
-          <CardHeader>
-            <Toolbar />
-          </CardHeader>
-          <CardContent>
-            <div id="editorjs" />
-          </CardContent>
-        </Card>
-        <SettingsSummary />
-      </EditorProvider>
+      <PublishedArticleContext.Provider value={published}>
+        <EditorProvider>
+          <Card className="mx-auto w-full">
+            <CardHeader>
+              <MyToolbar />
+            </CardHeader>
+            <CardContent>
+              <div id="editorjs" />
+            </CardContent>
+          </Card>
+          <SettingsSummary />
+        </EditorProvider>
+      </PublishedArticleContext.Provider>
     </DraftArticleContext.Provider>
   );
 }

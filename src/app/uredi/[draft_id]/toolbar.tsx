@@ -12,7 +12,7 @@ import { useAllAuthors } from "~/components/authors";
 import { cn } from "~/lib/utils";
 import { EditorButtons } from "./toolbar-buttons";
 
-export default function MyToolbar() {
+export function MyToolbar() {
   const editor_context = useContext(EditorContext);
   const all_authors = useAllAuthors();
   const author_ids = editor_store.use.author_ids();
