@@ -4,6 +4,7 @@ import type { DefaultSession, NextAuthOptions } from "next-auth";
 import type { Adapter } from "next-auth/adapters";
 import GoogleProvider from "next-auth/providers/google";
 import type { GoogleProfile } from "next-auth/providers/google";
+// import CredentialsProvider from "next-auth/providers/credentials";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
@@ -50,6 +51,7 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     signIn: ({ account, profile }) => {
+      // if (account?.provider == "credentials") return true;
       if (account?.provider != "google") return false;
       if (!(profile as GoogleProfile).email_verified) return false;
       // TODO: info@jknm.si
@@ -64,6 +66,25 @@ export const authOptions: NextAuthOptions = {
     verificationTokensTable: verificationTokens,
   }) as Adapter,
   providers: [
+    /* CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        username: { label: "Username", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
+      authorize(credentials) {
+        console.log("credentials", credentials);
+        if (
+          credentials?.username === "admin" &&
+          credentials.password === env.ADMIN_PASSWORD
+        ) {
+          return { id: "100" };
+        }
+        console.log("returning null", env.ADMIN_PASSWORD);
+
+        return null;
+      },
+    }), */
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,

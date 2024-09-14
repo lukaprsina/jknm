@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Crop } from "react-image-crop";
 import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
 import { editor_store } from "~/components/editor/editor-store";
@@ -14,19 +14,6 @@ import { PlusIcon } from "lucide-react";
 import { AspectRatio } from "~/components/ui/aspect-ratio";
 import { upload_image_by_file } from "~/components/aws-s3/upload-file";
 import { get_s3_draft_directory } from "~/lib/article-utils";
-
-/* 
-const images = useMemo(() => {
-    const temp = [...store_images];
-    if (uploadedImage) temp.push(uploadedImage);
-    console.log("a", {
-      store_images,
-      uploadedImage,
-      temp,
-    });
-    return temp;
-  }, [store_images, uploadedImage]);
-*/
 
 export function ImageSelector({
   image: formImage,
@@ -42,66 +29,91 @@ export function ImageSelector({
   const [uploadedImage, setUploadedImage] = useState<
     EditorJSImageData | undefined
   >(undefined);
+  const [imageIndex, setImageIndex] = useState<number | undefined>(undefined);
 
   const images = useMemo(() => {
     const temp = [...store_images];
-    if (uploadedImage) temp.push(uploadedImage);
-    console.log("a", {
-      store_images,
-      uploadedImage,
-      temp,
-    });
+
+    if (uploadedImage) {
+      temp.push(uploadedImage);
+    }
+
     return temp;
   }, [store_images, uploadedImage]);
 
-  const [imageIndex, setImageIndex] = useState<number | undefined>(undefined);
+  useEffect(() => {
+    console.log("imageIndex", imageIndex);
+  }, [imageIndex]);
 
-  /* useEffect(() => {
-    const possible_index = images.findIndex(
-      (image) => image.file.url === formImage?.image_url,
-    );
-
-    if (possible_index === -1) {
-      if (!uploadedImage && formImage?.image_url) {
-        setUploadedImage({
+  useEffect(() => {
+    if (typeof imageIndex === "undefined") {
+      if (formImage?.uploaded_custom_thumbnail) {
+        console.log("formImage custom", { formImage, imageIndex });
+        // TODO store actual width, height
+        const editor_image = {
           file: {
             url: formImage.image_url,
-            width: formImage.width,
-            height: formImage.height,
           },
           caption: "",
-        });
+        } satisfies EditorJSImageData;
+
+        setUploadedImage(editor_image);
         setImageIndex(images.length);
+      } else {
+        const selected_image_index = images.findIndex(
+          (image) => image.file.url === formImage?.image_url,
+        );
+
+        console.log("formImage from article", {
+          formImage,
+          imageIndex,
+          selected_image_index,
+        });
+        if (selected_image_index === -1) return;
+
+        setImageIndex(selected_image_index);
       }
-    } else {
-      setImageIndex(possible_index);
+
+      setCrop(formImage);
     }
-  }, [formImage, images, uploadedImage]); */
+  }, [formImage, imageIndex, images]);
 
   const handle_image_load = useCallback(
     (event: React.SyntheticEvent<HTMLImageElement>) => {
       const { naturalWidth: width, naturalHeight: height } =
         event.currentTarget;
 
-      const current_crop = centerCrop(
-        makeAspectCrop(
-          {
-            unit: "%",
-            width: 100,
-          },
-          16 / 9,
-          width,
-          height,
-        ),
+      console.log("handle_image_load", {
         width,
         height,
-      );
+        imageIndex,
+        formImage,
+      });
+
       if (typeof imageIndex === "undefined" || !images[imageIndex]?.file.url)
         return;
 
+      let current_crop: Crop | undefined = crop;
+
+      if (!current_crop) {
+        current_crop = centerCrop(
+          makeAspectCrop(
+            {
+              unit: "%",
+              width: 100,
+            },
+            16 / 9,
+            width,
+            height,
+          ),
+          width,
+          height,
+        );
+      }
+
       setCrop(current_crop);
     },
-    [imageIndex, images, setCrop],
+    [crop, formImage, imageIndex, images],
   );
 
   return (
@@ -121,7 +133,6 @@ export function ImageSelector({
           setFormImage(undefined);
           setCrop(undefined);
           setImageIndex(undefined);
-          // return;
 
           const response = await upload_image_by_file({
             file,
@@ -155,7 +166,7 @@ export function ImageSelector({
       <div className="flex flex-col gap-4">
         <div className="flex flex-wrap gap-2">
           {images.map((image, index) => {
-            console.log("b", index, image);
+            // console.log("b", index, image);
 
             let width = image.file.width;
             let height = image.file.height;
@@ -174,14 +185,14 @@ export function ImageSelector({
 
             return (
               <Card
-                key={image.file.url}
+                key={`${image.file.url}-${index}`}
                 onClick={() => {
-                  setImageIndex(index);
                   setCrop(undefined);
+                  setImageIndex(index);
                 }}
                 className={cn(
                   "box-border flex cursor-pointer items-center justify-center border-2 p-2",
-                  formImage?.image_url === image.file.url && "border-blue-500",
+                  imageIndex === index && "border-blue-500",
                 )}
               >
                 {/* {`${image.file.url.split("/").pop()} ${new Date().toTimeString()}`} */}
@@ -223,6 +234,7 @@ export function ImageSelector({
                 if (!images[imageIndex]) return;
                 setFormImage({
                   image_url: images[imageIndex].file.url,
+                  uploaded_custom_thumbnail: Boolean(uploadedImage),
                   ...d,
                 });
               }}

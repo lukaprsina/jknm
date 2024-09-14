@@ -3,6 +3,7 @@
 import type { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
+import { useEffect } from "react";
 import { InfoCard } from "~/components/info-card";
 import { Logo } from "~/components/shell/logo";
 import { Button, buttonVariants } from "~/components/ui/button";
@@ -10,7 +11,23 @@ import { CardFooter } from "~/components/ui/card";
 import { article_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
 
+declare global {
+  interface Window {
+    admin?: () => void;
+  }
+}
+
 export default function SignIn({ session }: { session: Session | null }) {
+  useEffect(() => {
+    window.admin = function () {
+      void signIn("credentials", {});
+    };
+
+    return () => {
+      delete window.admin;
+    };
+  }, []);
+
   if (!session) {
     return (
       <div className="relative hidden h-full min-h-full flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">

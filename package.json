@@ -11,7 +11,7 @@
     "db:pull": "drizzle-kit pull",
     "db:studio": "drizzle-kit studio",
     "dev": "next dev --turbo",
-    "devn": "next dev",
+    "devd": "cross-env NODE_OPTIONS='--inspect' next dev --turbo",
     "lint": "next lint",
     "start": "next start"
   },
@@ -136,6 +136,7 @@
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.1.0",
     "@typescript-eslint/parser": "^8.1.0",
+    "cross-env": "^7.0.3",
     "date-format-parse": "^0.2.7",
     "dom-serializer": "^2.0.0",
     "dotenv-cli": "^7.4.2",

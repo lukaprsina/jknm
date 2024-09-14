@@ -55,7 +55,9 @@ export default function MakeNewDraftButton({
         )}
       >
         <h3>Ustvarjamo novo novico.</h3>
-        <LoadingSpinner /> Prosimo, da malo počakate.
+        <span>
+          <LoadingSpinner /> Prosimo, da malo počakate.
+        </span>
         {/* <Card>
           <CardHeader>
             <CardTitle>Ustvarjamo novo novico.</CardTitle>
