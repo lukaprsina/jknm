@@ -4,7 +4,7 @@ import path from "path";
 import fs from "node:fs";
 import fs_promises from "node:fs/promises";
 import type { OutputData } from "@editorjs/editorjs";
-import { count, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import sharp from "sharp";
 
 import type {
@@ -273,13 +273,6 @@ export async function get_problematic_html(
     `${id}.html`,
   );
   return fs_promises.readFile(problematic_html, "utf-8");
-}
-
-export async function get_article_count() {
-  const article_count = await db
-    .select({ count: count() })
-    .from(PublishedArticle);
-  return article_count.at(0)?.count;
 }
 
 export async function save_image_data(images: ImageToSave[]) {

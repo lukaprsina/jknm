@@ -11,7 +11,6 @@ import { article_variants, page_variants } from "~/lib/page-variants";
 import {
   delete_articles,
   delete_authors,
-  get_article_count,
   sync_authors,
   sync_with_algolia,
   copy_and_rename_images,
@@ -23,16 +22,6 @@ import { EDITOR_JS_PLUGINS } from "~/components/editor/plugins";
 
 export function ArticleConverter() {
   const editorJS = useRef<EditorJS | null>(null);
-  const [article_count, setArticleCount] = useState<number | undefined>(
-    undefined,
-  );
-
-  useEffect(() => {
-    void (async () => {
-      const article_count = await get_article_count();
-      setArticleCount(article_count);
-    })();
-  }, []);
 
   const [doSplice, setDoSplice] = useState(true);
   const [doDryRun, setDoDryRun] = useState(true);
@@ -42,7 +31,6 @@ export function ArticleConverter() {
 
   return (
     <div className={cn(article_variants(), page_variants())}>
-      <h1>Article Converter: {article_count} novičk</h1>
       <div className="flex w-full flex-wrap gap-4">
         <Button onClick={() => delete_articles()}>Delete articles</Button>
         <Button onClick={() => delete_authors()}>Delete authors</Button>
