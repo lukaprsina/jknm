@@ -12,13 +12,13 @@ import type {
   ImageToSave,
 } from "./converter-spaghetti";
 import type { AuthorType } from "./get-authors";
-import { content_to_text as convert_content_to_text } from "~/lib/content-to-text";
+import { content_to_text } from "~/lib/content-to-text";
 import { db } from "~/server/db";
 import {
   Author,
+  DraftArticle,
   PublishedArticle,
   PublishedArticlesToAuthors,
-  DraftArticle,
 } from "~/server/db/schema";
 import type { PublishedArticleHit } from "~/lib/validators";
 import { api } from "~/trpc/server";
@@ -40,8 +40,7 @@ export async function delete_articles() {
 }
 
 export async function get_authors_server() {
-  const authors = await db.query.Author.findMany();
-  return authors;
+  return db.query.Author.findMany();
 }
 
 export async function delete_authors() {
@@ -137,15 +136,13 @@ export async function get_image_dimensions({
     throw new Error(`Image sharp error, no dimensions: ${fs_image_path}`);
   }
 
-  const dimensions = {
+  return {
     width,
     height,
     s3_url,
     old_path,
     image_name,
   } satisfies DimensionType;
-
-  return dimensions;
 }
 
 export async function upload_articles(
@@ -211,7 +208,7 @@ export async function sync_with_algolia() {
 
   const objects: PublishedArticleHit[] = articles.data
     .map((article) => {
-      const content_preview = convert_content_to_text(article.content?.blocks);
+      const content_preview = content_to_text(article.content?.blocks);
       if (!content_preview) return;
 
       return {
@@ -415,6 +412,5 @@ export async function get_authors_by_name() {
     "utf-8",
   );
   // TODO
-  const authors = JSON.parse(authors_by_name) as AuthorType[];
-  return authors;
+  return JSON.parse(authors_by_name) as AuthorType[];
 }

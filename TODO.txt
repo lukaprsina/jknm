@@ -24,4 +24,5 @@ override flag za image upload na sploh.
 invalidate ne dela
 
 -------------------
-kopiranje thumbnailov je inverzno
+dodaj entity decode in algolia
+m3: v 101

@@ -3,20 +3,19 @@
 import {
   get_published_article_link,
   get_s3_draft_directory,
-  get_s3_published_directory,
 } from "~/lib/article-utils";
 import { api } from "~/trpc/react";
 import {
   update_settings_from_editor,
   validate_article,
-} from "../components/editor/editor-lib";
+} from "~/components/editor/editor-lib";
 import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 import { useContext } from "react";
 import {
   DraftArticleContext,
   PublishedArticleContext,
-} from "../components/article/context";
-import { EditorContext } from "../components/editor/editor-context";
+} from "~/components/article/context";
+import { EditorContext } from "~/components/editor/editor-context";
 import { useRouter } from "next/navigation";
 import { useToast } from "~/hooks/use-toast";
 import { editor_store } from "~/components/editor/editor-store";
@@ -151,7 +150,7 @@ export function useEditorMutations() {
       const editor_content = await editor_context.editor?.save();
       if (!editor_content) return;
 
-      /* if (thumbnail_crop) {
+      if (thumbnail_crop) {
         await upload_image_by_url({
           url: thumbnail_crop.image_url,
           custom_title: "thumbnail.png",
@@ -160,21 +159,10 @@ export function useEditorMutations() {
           draft: true,
           directory: get_s3_draft_directory(draft_article.id),
         });
-      } */
+      }
 
       const updated = validate_article(editor_content, toaster);
       const created_at = fake_created_at ?? draft_article.created_at;
-
-      if (thumbnail_crop && updated) {
-        await upload_image_by_url({
-          url: thumbnail_crop.image_url,
-          custom_title: "thumbnail.png",
-          crop: thumbnail_crop,
-          allow_overwrite: "allow_overwrite",
-          draft: false,
-          directory: get_s3_published_directory(updated.url, created_at),
-        });
-      }
 
       const state = editor_store.get.state();
       const article = {
@@ -218,7 +206,7 @@ export function useEditorMutations() {
 
       const created_at = fake_created_at ?? draft_article.created_at;
 
-      if (thumbnail_crop) {
+      /* if (thumbnail_crop) {
         await upload_image_by_url({
           url: thumbnail_crop.image_url,
           custom_title: "thumbnail.png",
@@ -226,6 +214,17 @@ export function useEditorMutations() {
           allow_overwrite: "allow_overwrite",
           draft: false,
           directory: get_s3_published_directory(updated.url, created_at),
+        });
+      } */
+
+      if (thumbnail_crop) {
+        await upload_image_by_url({
+          url: thumbnail_crop.image_url,
+          custom_title: "thumbnail.png",
+          crop: thumbnail_crop,
+          allow_overwrite: "allow_overwrite",
+          draft: true,
+          directory: get_s3_draft_directory(draft_article.id),
         });
       }
 

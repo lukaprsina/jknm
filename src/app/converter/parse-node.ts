@@ -20,6 +20,7 @@ import { get_s3_prefix } from "~/lib/s3-publish";
 
 const p_allowed_tags = ["STRONG", "BR", "A", "IMG", "EM", "SUB", "SUP"];
 const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
+
 // const do_dimensions = true as boolean;
 
 export async function parse_node(
@@ -57,9 +58,17 @@ export async function parse_node(
 
       const text = decode(node.innerHTML).trim();
 
-      if (text.toLowerCase().includes("m2")) {
+      const lower = text.toLowerCase();
+      // console.log({ lower });
+      if (lower.includes("m2")) {
         console.log("M2", old_id);
         throw new Error("M2");
+      } else if (lower.includes("m3")) {
+        console.log("M3", old_id);
+        // throw new Error("M3");
+      } else if (lower.includes("&nbsp")) {
+        console.log("nbsp", old_id);
+        throw new Error("nbsp");
       }
 
       blocks.push({ type: "paragraph", data: { text } });
@@ -164,9 +173,6 @@ export async function parse_node(
 
       for (const img_tag of node.querySelectorAll("img")) {
         if (img_tag.nodeType == NodeType.ELEMENT_NODE) {
-          if (!(img_tag instanceof ParserHTMLElement))
-            throw new Error("Not an HTMLElement");
-
           if (already_set_src)
             throw new Error("Already set source once " + old_id);
 
@@ -197,9 +203,6 @@ export async function parse_node(
       let already_set_caption = false;
       for (const p_child of node.querySelectorAll("p")) {
         if (p_child.nodeType == NodeType.ELEMENT_NODE) {
-          if (!(p_child instanceof ParserHTMLElement))
-            throw new Error("Not an HTMLElement");
-
           /* console.log(
             "p_child",
             p_child.tagName,
@@ -263,7 +266,6 @@ export async function parse_node(
               csv_article.id,
               div_child.outerHTML,
             ); */
-            continue;
           }
         } else if (p_child.nodeType == NodeType.TEXT_NODE) {
           throw new Error(

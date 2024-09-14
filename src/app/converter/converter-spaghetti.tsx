@@ -10,7 +10,6 @@ import type { AuthorType } from "./get-authors";
 import {
   get_authors_by_name,
   get_problematic_html,
-  save_image_data,
   upload_articles,
 } from "./converter-server";
 import { get_authors } from "./get-authors";
@@ -174,7 +173,7 @@ export async function iterate_over_articles(
   }
 
   // console.warn("Images to save", images_to_save);
-  await save_image_data(images_to_save);
+  // await save_image_data(images_to_save);
   // await write_article_html_to_file(problematic_articles);
   console.log(
     "Total articles (csv, uploaded):",
@@ -282,7 +281,7 @@ async function parse_csv_article(
     }
   }
 
-  console.log("image_info", image_info);
+  // console.log("image_info", image_info);
   images_to_save.push({
     objave_id: imported_article.objave_id,
     serial_id: article_id.toString(),
@@ -308,7 +307,7 @@ async function parse_csv_article(
   const content = await editorJS?.save();
   if (!content) throw new Error("No content");
 
-  const article = {
+  return {
     old_id: imported_article.objave_id,
     title: imported_article.title,
     content,
@@ -318,8 +317,6 @@ async function parse_csv_article(
     author_ids: Array.from(current_authors),
     thumbnail_crop: image_info.thumbnail_crop,
   } satisfies ConverterArticleWithAuthorIds;
-
-  return article;
 }
 
 function fixHtml(htmlString: string) {
@@ -330,7 +327,5 @@ function fixHtml(htmlString: string) {
     recognizeSelfClosing: true,
   });
 
-  const fixedHtml = dom_serialize(document);
-
-  return fixedHtml;
+  return dom_serialize(document);
 }

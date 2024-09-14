@@ -1,5 +1,6 @@
-import { OutputBlockData } from "@editorjs/editorjs";
+import type { OutputBlockData } from "@editorjs/editorjs";
 import DOMPurify from "isomorphic-dompurify";
+import { decode } from "html-entities";
 
 const ALLOWED_BLOCKS = ["paragraph", "list", "quote"];
 
@@ -19,7 +20,7 @@ export function content_to_text(blocks?: OutputBlockData[]) {
         ALLOWED_TAGS: [],
       });
 
-      return clean;
+      return decode(clean);
     })
     .filter((text) => typeof text !== "undefined")
     .join("\n");
