@@ -9,6 +9,7 @@ import sharp from "sharp";
 
 import type {
   ConverterArticleWithAuthorIds,
+  DimensionType,
   ImageToSave,
 } from "./converter-spaghetti";
 import type { AuthorType } from "./get-authors";
@@ -24,11 +25,6 @@ import type { PublishedArticleHit } from "~/lib/validators";
 import { api } from "~/trpc/server";
 import { delete_s3_directory } from "~/server/s3-utils";
 import { env } from "~/env";
-import {
-  convert_filename_to_url,
-  convert_title_to_url,
-} from "~/lib/article-utils";
-import { format_date_for_url } from "~/lib/format-date";
 
 export async function get_authors_server() {
   const authors = await db.query.Author.findMany();
@@ -98,40 +94,59 @@ export async function sync_authors() {
   // fs_promises.readFile()
 }
 
-export interface DimensionType {
-  width: number;
-  height: number;
-  image_path: string;
-}
+export async function get_image_dimensions({
+  s3_url,
+  old_path,
+  image_name,
+  do_dimensions,
+}: {
+  s3_url: string;
+  old_path: string;
+  image_name: string;
+  do_dimensions: boolean;
+}): Promise<DimensionType | undefined> {
+  // console.log("Getting image dimensions", { s3_url, old_path, image_name });
 
-export async function get_image_dimensions(
-  src: string,
-): Promise<DimensionType | undefined> {
-  const src_parts = src.split("/");
-  const dir = src_parts.at(-2);
-  const name = src_parts.at(-1);
-  if (!dir || !name) {
-    throw new Error(`Image sharp error: ${src}`);
-  }
-
-  const image_path = path.join(
+  const fs_image_path = path.join(
     process.cwd(),
     "src/app/converter/_images",
-    dir,
-    name,
+    s3_url,
   );
 
-  if (!fs.existsSync(image_path)) {
-    throw new Error(`Image doesn't exist: ${image_path}`);
+  if (!do_dimensions) {
+    return {
+      width: 0,
+      height: 0,
+      s3_url,
+      old_path,
+      image_name,
+    };
   }
-  const result = await fs_promises.readFile(image_path);
+
+  if (!fs.existsSync(fs_image_path)) {
+    throw new Error(`Image doesn't exist: ${fs_image_path}`);
+  }
+
+  const result = await fs_promises.readFile(fs_image_path);
 
   const sharp_result = sharp(result);
   const metadata = await sharp_result.metadata();
   const width = metadata.width;
   const height = metadata.height;
-  if (!width || !height) return;
-  return { width, height, image_path };
+
+  if (!width || !height) {
+    throw new Error(`Image sharp error, no dimensions: ${fs_image_path}`);
+  }
+
+  const dimensions = {
+    width,
+    height,
+    s3_url,
+    old_path,
+    image_name,
+  } satisfies DimensionType;
+
+  return dimensions;
 }
 
 export interface TempArticleType {
@@ -298,7 +313,7 @@ export async function copy_and_rename_images() {
     fs.rmSync(converted_images_dir, { recursive: true });
   }
 
-  const promises: Promise<PromiseSettledResult<string>[]>[] = [];
+  const promises: Promise<PromiseSettledResult<void>[]>[] = [];
   await fs_promises.mkdir(original_images_dir, { recursive: true });
   await fs_promises.mkdir(converted_images_dir, { recursive: true });
 
@@ -312,18 +327,17 @@ export async function copy_and_rename_images() {
       break;
     }
 
-    const promise = new Promise<PromiseSettledResult<string>[]>((resolve) => {
+    const promise = new Promise<PromiseSettledResult<void>[]>((resolve) => {
       const file = fs.readFileSync(original_image_path, "utf-8");
       const json = JSON.parse(file) as ImageToSave;
 
       const nested_promises = json.images.map(async (image) => {
-        const old_path = path.join(JKNM_SERVED_DIR, image);
-        const image_name = convert_filename_to_url(path.basename(old_path));
+        console.log("Copying image", image, json);
+        const old_path = path.join(JKNM_SERVED_DIR, image.old_path);
 
-        const article_url = `${json.url}-${format_date_for_url(json.created_at)}`;
         const new_dir = path.join(
           converted_images_dir,
-          convert_title_to_url(article_url),
+          path.dirname(image.s3_url),
         );
 
         await fs_promises.mkdir(new_dir, { recursive: true });
@@ -332,10 +346,9 @@ export async function copy_and_rename_images() {
           throw new Error(`New dir doesn't exist: ${new_dir}`);
         }
 
-        const new_path = path.join(new_dir, image_name);
-        // console.log("Copying", old_path, new_path);
+        const new_path = path.join(converted_images_dir, image.s3_url);
+        // console.log("Copying", { old_path, new_path });
         await fs_promises.copyFile(old_path, new_path);
-        return new_path;
       });
 
       resolve(Promise.allSettled(nested_promises));

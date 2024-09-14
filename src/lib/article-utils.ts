@@ -13,13 +13,15 @@ export function convert_filename_to_url(dangerous_url: string) {
 export function convert_title_to_url(dangerous_url: string) {
   const sanitized = sanitize_filename(dangerous_url, { replacement: "" });
   const replaced = sanitized
+    .replace(/–/g, "-")
     .replace(/[^a-zA-Z0-9čČžŽšŠ\-_\s]/g, "")
     .trim()
     .toLowerCase();
 
+  // remove leading and trailing dashes and underscores
   const replaced_split = replaced
-    .split(/\s+/)
-    .map((s) => s.trim())
+    .split(/[\s+]/g)
+    .map((s) => s.trim().replace(/(^[-_]+|[-_]+$)/g, ""))
     .filter((s) => s.length > 0);
 
   if (replaced_split.length === 0) return uuid4();

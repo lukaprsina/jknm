@@ -5,16 +5,16 @@ import type { Node as ParserNode } from "node-html-parser";
 import { decode } from "html-entities";
 import { NodeType, HTMLElement as ParserHTMLElement } from "node-html-parser";
 
-import type { DimensionType } from "./converter-server";
 import { get_image_dimensions } from "./converter-server";
 import type {
+  DimensionType,
   IdsByDimentionType,
   ImportedArticle,
   InitialProblems,
 } from "./converter-spaghetti";
-import { get_s3_published_directory } from "~/lib/article-utils";
-import { get_s3_prefix } from "~/lib/s3-publish";
-import { env } from "~/env";
+import { convert_filename_to_url } from "~/lib/article-utils";
+import path from "path";
+import { format_date_for_url } from "~/lib/format-date";
 
 const p_allowed_tags = ["STRONG", "BR", "A", "IMG", "EM", "SUB", "SUP"];
 const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
@@ -28,8 +28,10 @@ export async function parse_node(
   csv_url: string,
   problems: InitialProblems,
   ids_by_dimensions: IdsByDimentionType[],
-  all_images_dimensions: DimensionType[],
+  article_image_dimensions: DimensionType[],
 ): Promise<void> {
+  const article_url = `${csv_url}-${format_date_for_url(created_at)}`;
+
   const old_id = articles_with_authors.objave_id;
   if (!old_id) throw new Error("No old_id");
 
@@ -145,7 +147,9 @@ export async function parse_node(
         }
       }
 
-      let src: string | undefined;
+      let s3_url: string | undefined;
+      let image_name: string | undefined;
+      let old_path: string | undefined;
       let already_set_src = false;
 
       for (const img_tag of node.querySelectorAll("img")) {
@@ -160,23 +164,10 @@ export async function parse_node(
           const trimmed = decode(src_attr).trim();
           if (!trimmed) throw new Error("No src attribute " + old_id);
 
-          const src_parts = trimmed.trim().split("/");
-          const image_name = src_parts[src_parts.length - 1];
-          if (!image_name) throw new Error("No image name " + old_id);
-          const test = `${get_s3_published_directory(csv_url, created_at)}/${image_name}`;
-          const encoded_url = get_s3_prefix(
-            test,
-            env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
-          );
-          // console.log("Image", old_id, encoded_url);
-          src = decodeURIComponent(encoded_url);
-          /* console.log("Image", csv_article.id, {
-            src,
-            src_parts,
-            src_attr,
-            already_set_src,
-            trimmed,
-          }); */
+          old_path = decodeURIComponent(trimmed.toLowerCase());
+          const old_path_parts = path.parse(old_path);
+          image_name = convert_filename_to_url(old_path_parts.base);
+          s3_url = `${article_url}/${image_name}`;
           already_set_src = true;
         } else if (img_tag.nodeType == NodeType.TEXT_NODE) {
           // console.error("Image is just text: " + csv_article.id);
@@ -270,7 +261,8 @@ export async function parse_node(
       }
       // console.log("p children done");
 
-      if (!src) {
+      if (!s3_url || !old_path || !image_name) {
+        console.log("No image src", { old_id, s3_url, old_path, image_name });
         throw new Error("No image src " + old_id + ", " + node.outerHTML);
         /* console.error("No image src", csv_article.id);
         return false; */
@@ -284,12 +276,12 @@ export async function parse_node(
         // return false;
       }
 
-      // console.log({ src, caption });
-      // TODO: get image dimensions
-
-      const dimensions = do_dimensions
-        ? await get_image_dimensions(src)
-        : undefined;
+      const dimensions = await get_image_dimensions({
+        s3_url,
+        old_path,
+        image_name,
+        do_dimensions,
+      });
 
       if (do_dimensions && dimensions) {
         const matchingDimension = ids_by_dimensions.find(
@@ -310,13 +302,11 @@ export async function parse_node(
         console.log(old_id, ids_by_dimensions);
       }
 
-      if (do_dimensions) {
-        if (dimensions) {
-          all_images_dimensions.push(dimensions);
-        } else {
-          console.error("No dimensions for image", old_id, src);
-          break;
-        }
+      if (dimensions) {
+        article_image_dimensions.push(dimensions);
+      } else {
+        console.error("No dimensions for image", old_id, s3_url);
+        break;
       }
 
       // console.log("Image", csv_article.id, { src, caption });
@@ -324,9 +314,9 @@ export async function parse_node(
         type: "image",
         data: {
           file: {
-            url: src,
-            width: dimensions?.width,
-            height: dimensions?.height,
+            url: s3_url,
+            width: dimensions.width,
+            height: dimensions.height,
           },
           caption,
         },

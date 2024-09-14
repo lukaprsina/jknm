@@ -7,7 +7,6 @@ import { parseDocument } from "htmlparser2";
 import { parse as html_parse, NodeType } from "node-html-parser";
 
 import type { AuthorType } from "./get-authors";
-import type { DimensionType } from "./converter-server";
 import {
   get_authors_by_name,
   get_problematic_html,
@@ -17,7 +16,6 @@ import {
 import { get_authors } from "./get-authors";
 import { parse_node } from "./parse-node";
 import type { RouterOutputs } from "~/trpc/react";
-import { get_image_data_from_editor } from "~/lib/editor-utils";
 import { read_from_xml } from "./xml-server";
 import { PROBLEMATIC_CONSTANTS } from "./info/problematic";
 import { convert_title_to_url } from "~/lib/article-utils";
@@ -36,7 +34,7 @@ export interface ImageToSave {
   objave_id: number;
   serial_id: string;
   url: string;
-  images: string[];
+  images: DimensionType[];
   created_at: Date;
 }
 
@@ -46,6 +44,14 @@ export interface ImportedArticle {
   content: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface DimensionType {
+  width: number;
+  height: number;
+  s3_url: string;
+  image_name: string;
+  old_path: string;
 }
 
 export interface IdsByDimentionType {
@@ -206,24 +212,7 @@ async function parse_csv_article(
     },
   ];
 
-  const image_urls: string[] = [];
-
-  for (const image of root.querySelectorAll("img")) {
-    const src = image.getAttribute("src");
-    if (!src) throw new Error("No src attribute in image");
-
-    image_urls.push(decodeURIComponent(src));
-  }
-
-  images_to_save.push({
-    objave_id: imported_article.objave_id,
-    serial_id: article_id.toString(),
-    url: converted_url,
-    images: image_urls,
-    created_at,
-  });
-
-  const all_images_dimensions: DimensionType[] = [];
+  const article_image_dimensions: DimensionType[] = [];
   for (const node of root.childNodes) {
     if (node.nodeType == NodeType.ELEMENT_NODE) {
       await parse_node(
@@ -234,7 +223,7 @@ async function parse_csv_article(
         converted_url,
         problems,
         ids_by_dimensions,
-        all_images_dimensions,
+        article_image_dimensions,
       );
     } else if (node.nodeType == NodeType.TEXT_NODE) {
       if (node.text.trim() !== "") throw new Error("Some text: " + node.text);
@@ -242,6 +231,15 @@ async function parse_csv_article(
       throw new Error("Unexpected comment: " + node.text);
     }
   }
+
+  console.log("Article image dimensions", article_image_dimensions);
+  images_to_save.push({
+    objave_id: imported_article.objave_id,
+    serial_id: article_id.toString(),
+    url: converted_url,
+    images: article_image_dimensions,
+    created_at,
+  });
 
   // const new_authors = new Set<string>();
   // const not_found_authors = new Set<string>();
@@ -259,25 +257,14 @@ async function parse_csv_article(
   const content = await editorJS?.save();
   if (!content) throw new Error("No content");
 
-  const images = get_image_data_from_editor(content);
-  const image = images.length !== 0 ? images[0]?.file.url : null;
-
-  if (!image) {
-    console.error(
-      "No images in article",
-      imported_article.objave_id,
-      imported_article.title,
-    );
-  }
-
-  const first_image = all_images_dimensions[0];
+  const first_image = article_image_dimensions[0];
   let thumbnail_crop: ThumbnailType | undefined = undefined;
   if (first_image) {
     const width = first_image.width;
     const height = first_image.width;
 
     thumbnail_crop = {
-      image_url: first_image.image_path,
+      image_url: first_image.s3_url,
       ...centerCrop(
         makeAspectCrop(
           {
