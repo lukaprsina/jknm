@@ -3,7 +3,6 @@
 import path from "path";
 import fs from "node:fs";
 import fs_promises from "node:fs/promises";
-import type { OutputData } from "@editorjs/editorjs";
 import { sql } from "drizzle-orm";
 import sharp from "sharp";
 
@@ -17,33 +16,17 @@ import { content_to_text as convert_content_to_text } from "~/lib/content-to-tex
 import { db } from "~/server/db";
 import {
   Author,
-  DraftArticle,
   PublishedArticle,
   PublishedArticlesToAuthors,
 } from "~/server/db/schema";
 import type { PublishedArticleHit } from "~/lib/validators";
 import { api } from "~/trpc/server";
-import { crop_image, delete_s3_directory } from "~/server/s3-utils";
-import { env } from "~/env";
+import { crop_image } from "~/server/s3-utils";
 import { centerCrop, makeAspectCrop } from "react-image-crop";
 
 export async function get_authors_server() {
   const authors = await db.query.Author.findMany();
   return authors;
-}
-
-export async function delete_articles() {
-  console.log("deleting articles");
-  await db.execute(
-    sql`TRUNCATE TABLE ${PublishedArticle} RESTART IDENTITY CASCADE;`,
-  );
-
-  await db.execute(
-    sql`TRUNCATE TABLE ${DraftArticle} RESTART IDENTITY CASCADE;`,
-  );
-
-  await delete_s3_directory(env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME, "");
-  console.log("done");
 }
 
 export async function delete_authors() {
@@ -148,18 +131,6 @@ export async function get_image_dimensions({
   } satisfies DimensionType;
 
   return dimensions;
-}
-
-export interface TempArticleType {
-  serial_id: number;
-  objave_id: number;
-  title: string;
-  image: string | undefined;
-  content: OutputData;
-  csv_url: string;
-  created_at: Date;
-  updated_at: Date;
-  author_ids: number[];
 }
 
 export async function upload_articles(

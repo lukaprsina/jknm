@@ -9,16 +9,16 @@ import { Input } from "~/components/ui/input";
 
 import { article_variants, page_variants } from "~/lib/page-variants";
 import {
-  delete_articles,
   delete_authors,
   sync_authors,
   sync_with_algolia,
   copy_and_rename_images,
   get_authors_server,
-} from "./converter-server";
+} from "./converter-server-wtf";
 import { iterate_over_articles } from "./converter-spaghetti";
 import { cn } from "~/lib/utils";
 import { EDITOR_JS_PLUGINS } from "~/components/editor/plugins";
+import { delete_articles } from "./server2";
 
 export function ArticleConverter() {
   const editorJS = useRef<EditorJS | null>(null);

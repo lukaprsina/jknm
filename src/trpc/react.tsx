@@ -34,7 +34,6 @@ const getQueryClient = () => {
     clientQueryClientSingleton = createQueryClient();
 
     void persistQueryClient({
-      // @ts-expect-error - what's going on here?
       queryClient: clientQueryClientSingleton,
       persister: localStoragePersister,
     });

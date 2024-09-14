@@ -5,7 +5,7 @@ import type { Node as ParserNode } from "node-html-parser";
 import { decode } from "html-entities";
 import { NodeType, HTMLElement as ParserHTMLElement } from "node-html-parser";
 
-import { get_image_dimensions } from "./converter-server";
+import { get_image_dimensions } from "./converter-server-wtf";
 import type {
   IdsByDimentionType,
   ImageInfo,

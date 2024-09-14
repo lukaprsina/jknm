@@ -37,7 +37,6 @@ export function EDITOR_JS_PLUGINS(): Record<
 > {
   return {
     image: {
-      // @ts-expect-error no types
       class: Image,
       // inlineToolbar: ["link"],
       inlineToolbar: true,
