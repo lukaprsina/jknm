@@ -53,7 +53,7 @@ export async function rename_s3_files_and_content(
 
     if (source_bucket) {
       const thumb_source = rename_url(
-        thumbnail_crop.image_url,
+        url_parts.pathname,
         source_bucket,
         destination_url,
         destination_bucket,

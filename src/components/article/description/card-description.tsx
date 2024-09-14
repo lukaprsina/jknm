@@ -26,7 +26,7 @@ export default function ArticleCardDescription({
       <span className="relative line-clamp-1 flex flex-grow-0 flex-nowrap items-center justify-start text-ellipsis text-nowrap">
         <Authors author_ids={author_ids} />
       </span>
-      {featured && author_ids.length !== 0 && <DotIcon size={20} />}
+      {featured && author_ids.length !== 0 && <DotIcon />}
       <span className="flex flex-nowrap text-nowrap">
         {format_date_for_human(created_at)}
       </span>

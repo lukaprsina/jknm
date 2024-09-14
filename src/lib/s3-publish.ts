@@ -85,7 +85,7 @@ export function rename_url(
   });
 
   if (pathname_parts.length !== 2) {
-    console.error("Invalid URL", old_url, pathname_parts);
+    console.error("Renaming invalid URL (2 parts)", old_url, pathname_parts);
     return;
   }
 
