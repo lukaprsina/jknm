@@ -1,6 +1,6 @@
 import { api } from "~/trpc/server";
-import { Shell } from "../components/shell";
-import { InfiniteArticles } from "../components/article/infinite-articles";
+import { Shell } from "~/components/shell";
+import { InfiniteArticles } from "~/components/article/infinite-articles";
 import { getServerAuthSession } from "~/server/auth";
 import {
   Accordion,
