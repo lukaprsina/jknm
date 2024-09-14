@@ -1,7 +1,13 @@
-"use client";
+// "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { Crop } from "react-image-crop";
 import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
 import { editor_store } from "~/components/editor/editor-store";
@@ -29,7 +35,9 @@ export function ImageSelector({
   const [uploadedImage, setUploadedImage] = useState<
     EditorJSImageData | undefined
   >(undefined);
-  const [imageIndex, setImageIndex] = useState<number | undefined>(undefined);
+  const [imageIndex, setImageIndex] = useState<number | undefined | "loading">(
+    undefined,
+  );
 
   const images = useMemo(() => {
     const temp = [...store_images];
@@ -46,37 +54,39 @@ export function ImageSelector({
   }, [imageIndex]);
 
   useEffect(() => {
-    if (typeof imageIndex === "undefined") {
-      if (formImage?.uploaded_custom_thumbnail) {
-        console.log("formImage custom", { formImage, imageIndex });
-        // TODO store actual width, height
-        const editor_image = {
-          file: {
-            url: formImage.image_url,
-          },
-          caption: "",
-        } satisfies EditorJSImageData;
-
-        setUploadedImage(editor_image);
-        setImageIndex(images.length);
-      } else {
-        const selected_image_index = images.findIndex(
-          (image) => image.file.url === formImage?.image_url,
-        );
-
-        console.log("formImage from article", {
-          formImage,
-          imageIndex,
-          images,
-          selected_image_index,
-        });
-        if (selected_image_index === -1) return;
-
-        setImageIndex(selected_image_index);
-      }
-
-      setCrop(formImage);
+    if (typeof imageIndex !== "undefined") {
+      return;
     }
+
+    if (formImage?.uploaded_custom_thumbnail) {
+      console.log("formImage custom", { formImage, imageIndex });
+      // TODO store actual width, height
+      const editor_image = {
+        file: {
+          url: formImage.image_url,
+        },
+        caption: "",
+      } satisfies EditorJSImageData;
+
+      setUploadedImage(editor_image);
+      setImageIndex(images.length);
+    } else {
+      const selected_image_index = images.findIndex(
+        (image) => image.file.url === formImage?.image_url,
+      );
+
+      console.log("formImage from article", {
+        formImage,
+        imageIndex,
+        images,
+        selected_image_index,
+      });
+      if (selected_image_index === -1) return;
+
+      setImageIndex(selected_image_index);
+    }
+
+    setCrop(formImage);
   }, [formImage, imageIndex, images]);
 
   const handle_image_load = useCallback(
@@ -89,9 +99,10 @@ export function ImageSelector({
         height,
         imageIndex,
         formImage,
+        crop
       });
 
-      if (typeof imageIndex === "undefined" || !images[imageIndex]?.file.url)
+      if (typeof imageIndex === "number" && !images[imageIndex]?.file.url)
         return;
 
       let current_crop: Crop | undefined = crop;
@@ -133,7 +144,9 @@ export function ImageSelector({
           setUploadedImage(undefined);
           setFormImage(undefined);
           setCrop(undefined);
-          setImageIndex(undefined);
+          setImageIndex("loading");
+
+          // await sleep(5000);
 
           const response = await upload_image_by_file({
             file,
@@ -225,13 +238,13 @@ export function ImageSelector({
             </div>
           </Card>
         </div>
-        {typeof imageIndex !== "undefined" && images[imageIndex]?.file.url && (
+        {typeof imageIndex === "number" && images[imageIndex]?.file.url && (
           <div
             className="max-w-[500px]"
             // style={{ width: `${images[imageIndex].file.width}px` }}
           >
             <ReactCrop
-              onComplete={(c, d) => {
+              onComplete={(_, d) => {
                 if (!images[imageIndex]) return;
                 setFormImage({
                   image_url: images[imageIndex].file.url,
@@ -254,6 +267,7 @@ export function ImageSelector({
               <img
                 // ref={image_ref}
                 src={images[imageIndex].file.url}
+                alt="Cropped image"
                 onLoad={(event) => handle_image_load(event)}
               />
             </ReactCrop>
