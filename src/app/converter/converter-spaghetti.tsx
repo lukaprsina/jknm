@@ -12,7 +12,7 @@ import {
   get_problematic_html,
   save_image_data,
   upload_articles,
-} from "./converter-server-wtf";
+} from "./converter-server";
 import { get_authors } from "./get-authors";
 import { parse_node } from "./parse-node";
 import type { RouterOutputs } from "~/trpc/react";
@@ -22,6 +22,9 @@ import { convert_title_to_url } from "~/lib/article-utils";
 import type { PublishArticleSchema } from "~/server/db/schema";
 import type { z } from "zod";
 import type { ThumbnailType } from "~/lib/validators";
+import { centerCrop, makeAspectCrop } from "react-image-crop";
+import { get_s3_prefix } from "~/lib/s3-publish";
+import { env } from "~/env";
 
 export type ConverterArticleWithAuthorIds = z.infer<
   typeof PublishArticleSchema
@@ -35,6 +38,7 @@ export interface ImageToSave {
   url: string;
   images: DimensionType[];
   created_at: Date;
+  thumbnail_crop: ThumbnailType | undefined;
 }
 
 export interface ImportedArticle {
@@ -97,6 +101,10 @@ export async function iterate_over_articles(
   last_article: number,
   all_authors: RouterOutputs["author"]["get_all"],
 ) {
+  if (false as boolean) {
+    return;
+  }
+
   const problems = initial_problems;
 
   images_to_save.length = 0;
@@ -240,6 +248,36 @@ async function parse_csv_article(
     }
   }
 
+  {
+    const first_image = image_info.images[0];
+
+    const width = first_image?.width;
+    const height = first_image?.height;
+
+    if (width && height) {
+      const image_url = get_s3_prefix(
+        first_image.s3_url,
+        env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+      );
+      image_info.thumbnail_crop = {
+        image_url,
+        ...centerCrop(
+          makeAspectCrop(
+            {
+              unit: "%",
+              width: 100,
+            },
+            16 / 9,
+            width,
+            height,
+          ),
+          width,
+          height,
+        ),
+      } satisfies ThumbnailType;
+    }
+  }
+
   console.log("image_info", image_info);
   images_to_save.push({
     objave_id: imported_article.objave_id,
@@ -247,6 +285,7 @@ async function parse_csv_article(
     url: converted_url,
     images: image_info.images,
     created_at,
+    thumbnail_crop: image_info.thumbnail_crop,
   });
 
   // const new_authors = new Set<string>();
@@ -264,32 +303,6 @@ async function parse_csv_article(
 
   const content = await editorJS?.save();
   if (!content) throw new Error("No content");
-
-  /* const first_image = article_image_dimensions.images[0];
-  if (first_image) {
-    const width = first_image.width;
-    const height = first_image.width;
-
-    const converted_images_dir = path.join(
-      process.cwd(),
-      "src/app/converter/_images",
-    );
-
-    const article_dir = path.join(
-      converted_images_dir,
-      path.dirname(first_image.s3_url),
-    );
-
-    const image_article_path = path.join(
-      converted_images_dir,
-      path.dirname(first_image.s3_url),
-    );
-
-    const image_source = get_s3_prefix(
-      first_image.s3_url,
-      env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
-    );
-  } */
 
   const article = {
     old_id: imported_article.objave_id,

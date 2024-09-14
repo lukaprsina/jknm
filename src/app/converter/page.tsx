@@ -18,11 +18,11 @@ const DynamicArticleConverter = dynamic(
 );
 
 export default async function Page() {
-  const session = await getServerAuthSession();
+  /* const session = await getServerAuthSession();
 
   if (!session) {
     redirect("/");
-  }
+  } */
 
   const article_count = await db
     .select({ count: count() })

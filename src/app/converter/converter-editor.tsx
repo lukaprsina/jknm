@@ -14,7 +14,7 @@ import {
   sync_with_algolia,
   copy_and_rename_images,
   get_authors_server,
-} from "./converter-server-wtf";
+} from "./converter-server";
 import { iterate_over_articles } from "./converter-spaghetti";
 import { cn } from "~/lib/utils";
 import { EDITOR_JS_PLUGINS } from "~/components/editor/plugins";

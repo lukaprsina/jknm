@@ -22,7 +22,6 @@ import {
 import type { PublishedArticleHit } from "~/lib/validators";
 import { api } from "~/trpc/server";
 import { crop_image } from "~/server/s3-utils";
-import { centerCrop, makeAspectCrop } from "react-image-crop";
 
 export async function get_authors_server() {
   const authors = await db.query.Author.findMany();
@@ -297,7 +296,7 @@ export async function copy_and_rename_images() {
       const json = JSON.parse(file) as ImageToSave;
 
       const nested_promises = json.images.map(async (image) => {
-        console.log("Copying image", image, json);
+        // console.log("Copying image", image, json);
         const old_path = path.join(JKNM_SERVED_DIR, image.old_path);
 
         const new_dir = path.join(
@@ -318,7 +317,7 @@ export async function copy_and_rename_images() {
 
       // thumbnail
       const first_image = json.images[0];
-      if (first_image) {
+      if (first_image && json.thumbnail_crop) {
         const old_path = path.join(JKNM_SERVED_DIR, first_image.old_path);
 
         const new_dir = path.join(
@@ -341,27 +340,7 @@ export async function copy_and_rename_images() {
           type: "image/png",
         });
 
-        const width = first_image.width;
-        const height = first_image.height;
-
-        const thumbnail_crop = {
-          image_url: first_image.s3_url,
-          ...centerCrop(
-            makeAspectCrop(
-              {
-                unit: "%",
-                width: 100,
-              },
-              16 / 9,
-              width,
-              height,
-            ),
-            width,
-            height,
-          ),
-        };
-
-        const promise = crop_image(thumb_file, thumbnail_crop).then(
+        const promise = crop_image(thumb_file, json.thumbnail_crop).then(
           async (file) => {
             const buffer = await file.arrayBuffer();
             return fs.writeFileSync(new_path, Buffer.from(buffer));

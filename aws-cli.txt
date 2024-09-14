@@ -1,5 +1,5 @@
 cd .\src\app\converter\_images\
-#aws s3 sync . s3://jknm/
+aws s3 sync . s3://jknm/
 #aws s3 sync . s3://jamarski-klub-novo-mesto/ --acl public-read
 
 https://jknm.s3.eu-central-1.amazonaws.com/novi-jami-na-kunču-26-08-2008/thumbnail.png

@@ -5,7 +5,7 @@ import type { Node as ParserNode } from "node-html-parser";
 import { decode } from "html-entities";
 import { NodeType, HTMLElement as ParserHTMLElement } from "node-html-parser";
 
-import { get_image_dimensions } from "./converter-server-wtf";
+import { get_image_dimensions } from "./converter-server";
 import type {
   IdsByDimentionType,
   ImageInfo,
@@ -20,7 +20,7 @@ import { get_s3_prefix } from "~/lib/s3-publish";
 
 const p_allowed_tags = ["STRONG", "BR", "A", "IMG", "EM", "SUB", "SUP"];
 const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
-const do_dimensions = false as boolean;
+const do_dimensions = true as boolean;
 
 export async function parse_node(
   node: ParserNode,
