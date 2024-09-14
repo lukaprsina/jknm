@@ -37,6 +37,7 @@ export interface ImageToSave {
   serial_id: string;
   url: string;
   images: string[];
+  created_at: Date;
 }
 
 export interface ImportedArticle {
@@ -219,6 +220,7 @@ async function parse_csv_article(
     serial_id: article_id.toString(),
     url: converted_url,
     images: image_urls,
+    created_at,
   });
 
   const all_images_dimensions: DimensionType[] = [];

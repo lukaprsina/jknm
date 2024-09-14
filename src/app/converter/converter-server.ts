@@ -28,6 +28,7 @@ import {
   convert_filename_to_url,
   convert_title_to_url,
 } from "~/lib/article-utils";
+import { format_date_for_url } from "~/lib/format-date";
 
 export async function get_authors_server() {
   const authors = await db.query.Author.findMany();
@@ -303,32 +304,28 @@ export async function copy_and_rename_images() {
 
   const files = await fs_promises.readdir(original_images_dir);
 
-  // 625
-  // for (let objave_id = 1; objave_id <= 630; objave_id++) {
   for (const file of files) {
-    const original_image_path = path.join(
-      original_images_dir,
-      file,
-      // `${objave_id}.json`,
-    );
+    const original_image_path = path.join(original_images_dir, file);
 
     if (!fs.existsSync(original_image_path)) {
       console.error("JSON file for image doesn't exist", original_image_path);
       break;
     }
 
-    const callback = async () => {
-      const file = await fs_promises.readFile(original_image_path, "utf-8");
+    const promise = new Promise<PromiseSettledResult<string>[]>((resolve) => {
+      const file = fs.readFileSync(original_image_path, "utf-8");
       const json = JSON.parse(file) as ImageToSave;
 
       const nested_promises = json.images.map(async (image) => {
         const old_path = path.join(JKNM_SERVED_DIR, image);
         const image_name = convert_filename_to_url(path.basename(old_path));
 
+        const article_url = `${json.url}-${format_date_for_url(json.created_at)}`;
         const new_dir = path.join(
           converted_images_dir,
-          convert_title_to_url(json.url),
+          convert_title_to_url(article_url),
         );
+
         await fs_promises.mkdir(new_dir, { recursive: true });
 
         if (!fs.existsSync(new_dir)) {
@@ -341,25 +338,26 @@ export async function copy_and_rename_images() {
         return new_path;
       });
 
-      return await Promise.allSettled(nested_promises);
-    };
+      resolve(Promise.allSettled(nested_promises));
+    });
 
-    promises.push(callback());
+    promises.push(promise);
   }
 
   console.log("Starting promises");
   const results = await Promise.allSettled(promises);
-  const rejectedPromises = results
-    .flatMap((result) => {
-      if (result.status === "rejected") {
-        return result;
+
+  for (const dir_result of results) {
+    if (dir_result.status === "rejected") {
+      console.error("Rejected promise", dir_result.reason);
+    } else {
+      for (const file_result of dir_result.value) {
+        if (file_result.status === "rejected") {
+          console.error("Rejected file promise", file_result.reason);
+        }
       }
-    })
-    .filter(
-      (result): result is PromiseRejectedResult =>
-        typeof result !== "undefined",
-    );
-  console.log("Rejected promises:", rejectedPromises);
+    }
+  }
 
   console.log("Done");
 }

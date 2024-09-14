@@ -133,7 +133,10 @@ export function useEditorMutations() {
   });
 
   return {
-    save_draft: async (created_at?: Date, thumbnail_crop?: ThumbnailType) => {
+    save_draft: async (
+      fake_created_at?: Date,
+      thumbnail_crop?: ThumbnailType,
+    ) => {
       editor_context.setSavingText("Shranjujem osnutek ...");
       const editor_content = await editor_context.editor?.save();
       if (!editor_content) return;
@@ -154,7 +157,7 @@ export function useEditorMutations() {
       const state = editor_store.get.state();
       const article = {
         title: updated?.title ?? state.title,
-        created_at: created_at ?? draft_article.created_at,
+        created_at: fake_created_at ?? draft_article.created_at,
         content: editor_content,
         thumbnail_crop: thumbnail_crop ?? state.thumbnail_crop,
       } satisfies z.infer<typeof SaveDraftArticleSchema>;

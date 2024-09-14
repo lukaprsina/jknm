@@ -18,6 +18,7 @@ import { env } from "~/env";
 
 const p_allowed_tags = ["STRONG", "BR", "A", "IMG", "EM", "SUB", "SUP"];
 const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
+const do_dimensions = true as boolean;
 
 export async function parse_node(
   node: ParserNode,
@@ -285,7 +286,6 @@ export async function parse_node(
 
       // console.log({ src, caption });
       // TODO: get image dimensions
-      const do_dimensions = false as boolean;
 
       const dimensions = do_dimensions
         ? await get_image_dimensions(src)
