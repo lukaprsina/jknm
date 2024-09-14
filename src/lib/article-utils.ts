@@ -13,10 +13,22 @@ export function convert_filename_to_url(dangerous_url: string) {
 export function convert_title_to_url(dangerous_url: string) {
   const sanitized = sanitize_filename(dangerous_url, { replacement: "" });
   const replaced = sanitized
+    .toLowerCase()
     .replace(/–/g, "-")
-    .replace(/[^a-zA-Z0-9čČžŽšŠ\-_\s]/g, "")
-    .trim()
-    .toLowerCase();
+    .replace(/[čšž]/g, (match) => {
+      switch (match) {
+        case "č":
+          return "c";
+        case "š":
+          return "s";
+        case "ž":
+          return "z";
+        default:
+          return match;
+      }
+    })
+    .replace(/[^a-zA-Z0-9\-_\s]/g, "")
+    .trim();
 
   // remove leading and trailing dashes and underscores
   const replaced_split = replaced

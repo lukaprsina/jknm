@@ -67,6 +67,7 @@ export function ImageSelector({
         console.log("formImage from article", {
           formImage,
           imageIndex,
+          images,
           selected_image_index,
         });
         if (selected_image_index === -1) return;

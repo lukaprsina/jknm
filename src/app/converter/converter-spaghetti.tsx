@@ -97,6 +97,7 @@ export async function iterate_over_articles(
   do_splice: boolean,
   do_dry_run: boolean,
   _do_update: boolean,
+  do_dimensions: boolean,
   first_article: number,
   last_article: number,
   all_authors: RouterOutputs["author"]["get_all"],
@@ -160,6 +161,7 @@ export async function iterate_over_articles(
       article_id,
       all_authors,
       authors_by_name,
+      do_dimensions,
       problems,
     );
     articles.push(article);
@@ -196,6 +198,7 @@ async function parse_csv_article(
   article_id: number,
   all_authors: RouterOutputs["author"]["get_all"],
   authors_by_name: AuthorType[],
+  do_dimensions: boolean,
   problems: InitialProblems,
 ): Promise<ConverterArticleWithAuthorIds> {
   const problematic_dir = "1723901265154";
@@ -238,6 +241,7 @@ async function parse_csv_article(
         imported_article,
         converted_url,
         problems,
+        do_dimensions,
         ids_by_dimensions,
         image_info,
       );

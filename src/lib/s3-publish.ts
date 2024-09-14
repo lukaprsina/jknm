@@ -38,10 +38,7 @@ export function rename_urls_in_content(
 
     const file_data = block.data as { file: { url: string } };
     const url_parts = new URL(file_data.file.url);
-
-    const domain_parts = url_parts.hostname.split(".");
-    const source_bucket = domain_parts[0];
-
+    const source_bucket = get_source_bucket(url_parts);
     if (!source_bucket) {
       console.error("No bucket in URL");
       continue;
@@ -61,6 +58,13 @@ export function rename_urls_in_content(
 
   // console.log("rename_urls_in_content", sources);
   return { sources, new_content };
+}
+
+export function get_source_bucket(url_parts: URL) {
+  const domain_parts = url_parts.hostname.split(".");
+  const source_bucket = domain_parts[0];
+
+  return source_bucket;
 }
 
 // TODO: rename thumbnail

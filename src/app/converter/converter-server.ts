@@ -293,7 +293,8 @@ export async function copy_and_rename_images() {
     fs.rmSync(converted_images_dir, { recursive: true });
   }
 
-  const promises: Promise<PromiseSettledResult<void>[]>[] = [];
+  const image_promises: Promise<PromiseSettledResult<void>[]>[] = [];
+  const thumbnail_promises: Promise<void>[] = [];
   await fs_promises.mkdir(original_images_dir, { recursive: true });
   await fs_promises.mkdir(converted_images_dir, { recursive: true });
 
@@ -331,49 +332,60 @@ export async function copy_and_rename_images() {
         await fs_promises.copyFile(old_path, new_path);
       });
 
-      // thumbnail
-      const first_image = json.images[0];
-      if (first_image && json.thumbnail_crop) {
-        const old_path = path.join(JKNM_SERVED_DIR, first_image.old_path);
+      const all_image_promises = Promise.allSettled(nested_promises);
 
-        const new_dir = path.join(
-          converted_images_dir,
-          path.dirname(first_image.s3_url),
-        );
+      all_image_promises
+        .then((imageResults) => {
+          // Wait for all thumbnail promises after image promises have settled
 
-        if (!fs.existsSync(new_dir)) {
-          throw new Error(`New dir doesn't exist: ${new_dir}`);
-        }
+          // thumbnail
+          const first_image = json.images[0];
+          if (first_image && json.thumbnail_crop) {
+            const old_path = path.join(JKNM_SERVED_DIR, first_image.old_path);
 
-        const new_path = path.join(
-          converted_images_dir,
-          path.dirname(first_image.s3_url),
-          "thumbnail.png",
-        );
+            const new_dir = path.join(
+              converted_images_dir,
+              path.dirname(first_image.s3_url),
+            );
 
-        const thumb_buffer = fs.readFileSync(old_path);
-        const thumb_file = new File([thumb_buffer], "thumbnail.png", {
-          type: "image/png",
+            if (!fs.existsSync(new_dir)) {
+              console.log("to", fs.readdirSync(converted_images_dir));
+              throw new Error(`New dir doesn't exist: ${new_dir}`);
+            }
+
+            const new_path = path.join(
+              converted_images_dir,
+              path.dirname(first_image.s3_url),
+              "thumbnail.png",
+            );
+
+            const thumb_buffer = fs.readFileSync(old_path);
+            const thumb_file = new File([thumb_buffer], "thumbnail.png", {
+              type: "image/png",
+            });
+
+            const promise = crop_image(thumb_file, json.thumbnail_crop).then(
+              async (file) => {
+                const buffer = await file.arrayBuffer();
+                return fs.writeFileSync(new_path, Buffer.from(buffer));
+              },
+            );
+            thumbnail_promises.push(promise);
+          }
+          resolve(imageResults);
+          return imageResults;
+        })
+        .catch((error) => {
+          // Handle any potential errors (although Promise.allSettled resolves everything)
+          console.error("Error when copying images:", error);
         });
-
-        const promise = crop_image(thumb_file, json.thumbnail_crop).then(
-          async (file) => {
-            const buffer = await file.arrayBuffer();
-            return fs.writeFileSync(new_path, Buffer.from(buffer));
-          },
-        );
-
-        nested_promises.push(promise);
-      }
-
-      resolve(Promise.allSettled(nested_promises));
     });
 
-    promises.push(promise);
+    image_promises.push(promise);
   }
 
   console.log("Starting promises");
-  const results = await Promise.allSettled(promises);
+  const results = await Promise.allSettled(image_promises);
 
   for (const dir_result of results) {
     if (dir_result.status === "rejected") {

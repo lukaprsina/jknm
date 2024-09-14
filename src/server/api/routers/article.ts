@@ -284,6 +284,7 @@ export const article_router = createTRPCRouter({
               content: published.content,
               created_at: published.created_at,
               published_id: published.id,
+              thumbnail_crop: published.thumbnail_crop,
             };
           } else {
             throw new Error("Can't create draft");
@@ -297,19 +298,23 @@ export const article_router = createTRPCRouter({
           assert_one(created_drafts);
           const created_draft = created_drafts[0];
 
-          const renamed_content = created_draft.content
+          const renamed = created_draft.content
             ? await rename_s3_files_and_content(
                 created_draft.content,
+                created_draft.thumbnail_crop,
                 created_draft.id.toString(),
                 true,
               )
             : undefined;
 
           // update content with renamed urls
-          if (renamed_content) {
+          if (renamed) {
             await tx
               .update(DraftArticle)
-              .set({ content: renamed_content })
+              .set({
+                content: renamed.new_content,
+                thumbnail_crop: renamed.new_thumbnail,
+              })
               .where(eq(DraftArticle.id, created_draft.id));
           }
 
@@ -408,8 +413,13 @@ export const article_router = createTRPCRouter({
         );
 
         // rename urls and content
-        const renamed_content = value.content
-          ? await rename_s3_files_and_content(value.content, s3_url, false)
+        const renamed = value.content
+          ? await rename_s3_files_and_content(
+              value.content,
+              value.thumbnail_crop,
+              s3_url,
+              false,
+            )
           : undefined;
 
         if (draft_article?.id) {
@@ -434,7 +444,8 @@ export const article_router = createTRPCRouter({
         }
 
         value.url = renamed_url;
-        value.content = renamed_content;
+        value.content = renamed?.new_content;
+        value.thumbnail_crop = renamed?.new_thumbnail;
 
         if (published_article?.id) {
           // update if draft had published_id

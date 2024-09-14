@@ -20,7 +20,7 @@ import { get_s3_prefix } from "~/lib/s3-publish";
 
 const p_allowed_tags = ["STRONG", "BR", "A", "IMG", "EM", "SUB", "SUP"];
 const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
-const do_dimensions = true as boolean;
+// const do_dimensions = true as boolean;
 
 export async function parse_node(
   node: ParserNode,
@@ -29,6 +29,7 @@ export async function parse_node(
   articles_with_authors: ImportedArticle,
   csv_url: string,
   problems: InitialProblems,
+  do_dimensions: boolean,
   ids_by_dimensions: IdsByDimentionType[],
   image_info: ImageInfo,
 ): Promise<void> {
@@ -55,6 +56,12 @@ export async function parse_node(
       }
 
       const text = decode(node.innerHTML).trim();
+
+      if (text.toLowerCase().includes("m2")) {
+        console.log("M2", old_id);
+        throw new Error("M2");
+      }
+
       blocks.push({ type: "paragraph", data: { text } });
       break;
     }

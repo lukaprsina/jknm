@@ -27,8 +27,9 @@ export function ArticleConverter() {
   const [doSplice, setDoSplice] = useState(true);
   const [doDryRun, setDoDryRun] = useState(true);
   const [doUpdate, setDoUpdate] = useState(false);
+  const [doDimensions, setDoDimensions] = useState(false);
   const [firstArticle, setFirstArticle] = useState("1"); // 32
-  const [lastArticle, setLastArticle] = useState("10");
+  const [lastArticle, setLastArticle] = useState("30");
   const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation();
 
   return (
@@ -53,44 +54,57 @@ export function ArticleConverter() {
             value={lastArticle}
             onChange={(event) => setLastArticle(event.target.value)}
           />
-          <div className="flex items-center space-x-2">
+          <div className="flex flex-grow items-center gap-2">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                checked={doSplice}
+                onCheckedChange={(checked) => setDoSplice(checked === true)}
+                id="do_splice"
+              />
+              <label
+                htmlFor="do_splice"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Splice?
+              </label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                checked={doDryRun}
+                onCheckedChange={(checked) => setDoDryRun(checked === true)}
+                id="do_dry"
+              />
+              <label
+                htmlFor="do_dry"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Dry run?
+              </label>
+            </div>
             <Checkbox
-              checked={doSplice}
-              onCheckedChange={(checked) => setDoSplice(checked === true)}
-              id="do_splice"
+              checked={doDimensions}
+              onCheckedChange={(checked) => setDoDimensions(checked === true)}
+              id="do_dimensions"
             />
             <label
-              htmlFor="do_splice"
+              htmlFor="do_dimensions"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              Splice?
+              Do dimensions?
             </label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              checked={doDryRun}
-              onCheckedChange={(checked) => setDoDryRun(checked === true)}
-              id="do_dry"
-            />
-            <label
-              htmlFor="do_dry"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Dry run?
-            </label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              checked={doUpdate}
-              onCheckedChange={(checked) => setDoUpdate(checked === true)}
-              id="do_update"
-            />
-            <label
-              htmlFor="do_update"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Update?
-            </label>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                checked={doUpdate}
+                onCheckedChange={(checked) => setDoUpdate(checked === true)}
+                id="do_update"
+              />
+              <label
+                htmlFor="do_update"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Update?
+              </label>
+            </div>
           </div>
           <Button
             onClick={async () => {
@@ -102,6 +116,7 @@ export function ArticleConverter() {
                 doSplice,
                 doDryRun,
                 doUpdate,
+                doDimensions,
                 parseInt(firstArticle),
                 parseInt(lastArticle),
                 authors,
