@@ -22,3 +22,6 @@ fetch faila za URL
 
 override flag za image upload na sploh.
 invalidate ne dela
+
+-------------------
+kopiranje thumbnailov je inverzno

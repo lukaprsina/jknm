@@ -151,7 +151,7 @@ export function useEditorMutations() {
       const editor_content = await editor_context.editor?.save();
       if (!editor_content) return;
 
-      if (thumbnail_crop) {
+      /* if (thumbnail_crop) {
         await upload_image_by_url({
           url: thumbnail_crop.image_url,
           custom_title: "thumbnail.png",
@@ -160,14 +160,26 @@ export function useEditorMutations() {
           draft: true,
           directory: get_s3_draft_directory(draft_article.id),
         });
-      }
+      } */
 
       const updated = validate_article(editor_content, toaster);
+      const created_at = fake_created_at ?? draft_article.created_at;
+
+      if (thumbnail_crop && updated) {
+        await upload_image_by_url({
+          url: thumbnail_crop.image_url,
+          custom_title: "thumbnail.png",
+          crop: thumbnail_crop,
+          allow_overwrite: "allow_overwrite",
+          draft: false,
+          directory: get_s3_published_directory(updated.url, created_at),
+        });
+      }
 
       const state = editor_store.get.state();
       const article = {
         title: updated?.title ?? state.title,
-        created_at: fake_created_at ?? draft_article.created_at,
+        created_at,
         content: editor_content,
         thumbnail_crop: thumbnail_crop ?? state.thumbnail_crop,
       } satisfies z.infer<typeof SaveDraftArticleSchema>;
