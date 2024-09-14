@@ -14,11 +14,12 @@ import {
   sync_with_algolia,
   copy_and_rename_images,
   get_authors_server,
+  delete_articles,
 } from "./converter-server";
 import { iterate_over_articles } from "./converter-spaghetti";
 import { cn } from "~/lib/utils";
 import { EDITOR_JS_PLUGINS } from "~/components/editor/plugins";
-import { delete_articles } from "./server2";
+import { api } from "~/trpc/react";
 
 export function ArticleConverter() {
   const editorJS = useRef<EditorJS | null>(null);
@@ -28,6 +29,7 @@ export function ArticleConverter() {
   const [doUpdate, setDoUpdate] = useState(false);
   const [firstArticle, setFirstArticle] = useState("1"); // 32
   const [lastArticle, setLastArticle] = useState("10");
+  const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation();
 
   return (
     <div className={cn(article_variants(), page_variants())}>
@@ -35,6 +37,9 @@ export function ArticleConverter() {
         <Button onClick={() => delete_articles()}>Delete articles</Button>
         <Button onClick={() => delete_authors()}>Delete authors</Button>
         <Button onClick={() => sync_authors()}>Sync authors</Button>
+        <Button onClick={() => sync_duplicate_urls.mutate()}>
+          Sync duplicate urls
+        </Button>
         <Button onClick={() => sync_with_algolia()}>Sync with Algolia</Button>
         <Button onClick={() => copy_and_rename_images()}>
           Copy and rename images

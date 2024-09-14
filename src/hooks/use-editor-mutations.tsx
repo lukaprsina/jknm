@@ -42,6 +42,15 @@ export function useEditorMutations() {
     throw new Error("Missing context");
   }
 
+  const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation({
+    onError: (error) => {
+      toaster.toast({
+        title: "Napaka pri sinhronizaciji URL-jev",
+        description: error.message,
+      });
+    },
+  });
+
   const save_draft = api.article.save_draft.useMutation({
     onSettled: async () => {
       editor_context.setSavingText(undefined);
@@ -59,6 +68,7 @@ export function useEditorMutations() {
 
   const publish = api.article.publish.useMutation({
     onSuccess: (data) => {
+      sync_duplicate_urls.mutate();
       router.push(
         get_published_article_link(data.url, data.created_at, duplicate_urls),
       );

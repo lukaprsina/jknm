@@ -496,34 +496,6 @@ export const article_router = createTRPCRouter({
         if (!published_article_with_authors)
           throw new Error("Published article not found");
 
-        {
-          // update duplicate_urls
-          // TODO: iterate over all duplicate_urls, check them also
-          await tx.delete(DuplicatedArticleUrls);
-          const all_urls = await tx.query.PublishedArticle.findMany({
-            columns: {
-              url: true,
-            },
-          });
-
-          const url_set = new Map<string, number>();
-          for (const article_url of all_urls) {
-            const count = url_set.get(article_url.url) ?? 0;
-            url_set.set(article_url.url, count + 1);
-          }
-
-          const duplicate_urls = Array.from(url_set.entries()).reduce<
-            (typeof DuplicatedArticleUrls.$inferInsert)[]
-          >((acc, [url, count]) => {
-            if (count > 1) acc.push({ url });
-            return acc;
-          }, []);
-
-          if (duplicate_urls.length > 0) {
-            await tx.insert(DuplicatedArticleUrls).values(duplicate_urls);
-          }
-        }
-
         return published_article_with_authors;
       });
 
@@ -531,6 +503,40 @@ export const article_router = createTRPCRouter({
 
       return transaction;
     }),
+
+  sync_duplicate_urls: protectedProcedure.mutation(async ({ ctx }) => {
+    const transaction = await ctx.db.transaction(async (tx) => {
+      // update duplicate_urls
+      // TODO: iterate over all duplicate_urls, check them also
+      await tx.delete(DuplicatedArticleUrls);
+      const all_urls = await tx.query.PublishedArticle.findMany({
+        columns: {
+          url: true,
+        },
+      });
+
+      const url_set = new Map<string, number>();
+      for (const article_url of all_urls) {
+        const count = url_set.get(article_url.url) ?? 0;
+        url_set.set(article_url.url, count + 1);
+      }
+
+      const duplicate_urls = Array.from(url_set.entries()).reduce<
+        (typeof DuplicatedArticleUrls.$inferInsert)[]
+      >((acc, [url, count]) => {
+        if (count > 1) acc.push({ url });
+        return acc;
+      }, []);
+
+      console.log("duplicate_urls", duplicate_urls);
+
+      if (duplicate_urls.length > 0) {
+        await tx.insert(DuplicatedArticleUrls).values(duplicate_urls);
+      }
+    });
+
+    return transaction;
+  }),
 
   delete_draft: protectedProcedure
     .input(z.number())
