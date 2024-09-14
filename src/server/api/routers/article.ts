@@ -318,6 +318,32 @@ export const article_router = createTRPCRouter({
               .where(eq(DraftArticle.id, created_draft.id));
           }
 
+          // copy thumbnails from published to draft
+          if (published?.id) {
+            const s3_url = get_s3_draft_directory(created_draft.id);
+            const names = ["thumbnail.png", "thumbnail-uploaded.png"];
+            const thumbnail_sources = names.map(
+              (name) =>
+                ({
+                  file_name: name,
+                  source_bucket: env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+                  source_path: get_s3_published_directory(
+                    published.url,
+                    published.created_at,
+                  ),
+                  destination_url: `${s3_url}/thumbnail.png`,
+                }) satisfies S3CopySourceInfo,
+            );
+
+            for (const source of thumbnail_sources) {
+              await s3_copy_file(
+                source,
+                env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+                s3_url,
+              );
+            }
+          }
+
           if (published && published.published_articles_to_authors.length > 0) {
             // I don't think this is necessary, because we are creating a new draft
             /* await tx

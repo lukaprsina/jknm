@@ -67,12 +67,12 @@ export function get_published_article_link(
     ? `${url}?dan=${format_date_for_url(date)}`
     : url;
 
-  console.log("get_published_article_link", {
+  /* console.log("get_published_article_link", {
     url,
     date,
     duplicate_article_urls,
     name,
-  });
+  }); */
 
   return `/novica/${name}`;
 }
