@@ -7,18 +7,20 @@ import { NodeType, HTMLElement as ParserHTMLElement } from "node-html-parser";
 
 import { get_image_dimensions } from "./converter-server";
 import type {
-  DimensionType,
   IdsByDimentionType,
+  ImageInfo,
   ImportedArticle,
   InitialProblems,
 } from "./converter-spaghetti";
 import { convert_filename_to_url } from "~/lib/article-utils";
 import path from "path";
 import { format_date_for_url } from "~/lib/format-date";
+import { env } from "~/env";
+import { get_s3_prefix } from "~/lib/s3-publish";
 
 const p_allowed_tags = ["STRONG", "BR", "A", "IMG", "EM", "SUB", "SUP"];
 const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
-const do_dimensions = true as boolean;
+const do_dimensions = false as boolean;
 
 export async function parse_node(
   node: ParserNode,
@@ -28,7 +30,7 @@ export async function parse_node(
   csv_url: string,
   problems: InitialProblems,
   ids_by_dimensions: IdsByDimentionType[],
-  article_image_dimensions: DimensionType[],
+  image_info: ImageInfo,
 ): Promise<void> {
   const article_url = `${csv_url}-${format_date_for_url(created_at)}`;
 
@@ -148,6 +150,7 @@ export async function parse_node(
       }
 
       let s3_url: string | undefined;
+      let image_source: string | undefined;
       let image_name: string | undefined;
       let old_path: string | undefined;
       let already_set_src = false;
@@ -168,6 +171,10 @@ export async function parse_node(
           const old_path_parts = path.parse(old_path);
           image_name = convert_filename_to_url(old_path_parts.base);
           s3_url = `${article_url}/${image_name}`;
+          image_source = get_s3_prefix(
+            s3_url,
+            env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+          );
           already_set_src = true;
         } else if (img_tag.nodeType == NodeType.TEXT_NODE) {
           // console.error("Image is just text: " + csv_article.id);
@@ -179,7 +186,7 @@ export async function parse_node(
       }
 
       // console.log("p children");
-      let caption: string | undefined;
+      let image_caption: string | undefined;
       let already_set_caption = false;
       for (const p_child of node.querySelectorAll("p")) {
         if (p_child.nodeType == NodeType.ELEMENT_NODE) {
@@ -237,11 +244,11 @@ export async function parse_node(
           const trimmed = decode(p_child.innerHTML).trim();
           if (trimmed !== "") {
             if (already_set_caption) {
-              console.error({ previous: caption, current: trimmed });
+              console.error({ previous: image_caption, current: trimmed });
               throw new Error("Already set caption once " + old_id);
             }
 
-            caption = trimmed;
+            image_caption = trimmed;
             already_set_caption = true;
           } else {
             /* console.error(
@@ -261,18 +268,24 @@ export async function parse_node(
       }
       // console.log("p children done");
 
-      if (!s3_url || !old_path || !image_name) {
-        console.log("No image src", { old_id, s3_url, old_path, image_name });
+      if (!s3_url || !old_path || !image_name || !image_source) {
+        console.log("No image src", {
+          old_id,
+          s3_url,
+          old_path,
+          image_name,
+          image_source,
+        });
         throw new Error("No image src " + old_id + ", " + node.outerHTML);
         /* console.error("No image src", csv_article.id);
         return false; */
       }
 
-      if (!caption) {
+      if (!image_caption) {
         // throw new Error("No caption " + csv_article.id);
         console.log("No image caption", old_id, node.outerHTML);
         problems.empty_captions.push([old_id, node.outerHTML]);
-        caption = "";
+        image_caption = "";
         // return false;
       }
 
@@ -303,7 +316,7 @@ export async function parse_node(
       }
 
       if (dimensions) {
-        article_image_dimensions.push(dimensions);
+        image_info.images.push(dimensions);
       } else {
         console.error("No dimensions for image", old_id, s3_url);
         break;
@@ -314,11 +327,11 @@ export async function parse_node(
         type: "image",
         data: {
           file: {
-            url: s3_url,
+            url: image_source,
             width: dimensions.width,
             height: dimensions.height,
           },
-          caption,
+          caption: image_caption,
         },
       });
       break;

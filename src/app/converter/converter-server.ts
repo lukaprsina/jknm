@@ -23,8 +23,9 @@ import {
 } from "~/server/db/schema";
 import type { PublishedArticleHit } from "~/lib/validators";
 import { api } from "~/trpc/server";
-import { delete_s3_directory } from "~/server/s3-utils";
+import { crop_image, delete_s3_directory } from "~/server/s3-utils";
 import { env } from "~/env";
+import { centerCrop, makeAspectCrop } from "react-image-crop";
 
 export async function get_authors_server() {
   const authors = await db.query.Author.findMany();
@@ -350,6 +351,61 @@ export async function copy_and_rename_images() {
         // console.log("Copying", { old_path, new_path });
         await fs_promises.copyFile(old_path, new_path);
       });
+
+      // thumbnail
+      const first_image = json.images[0];
+      if (first_image) {
+        const old_path = path.join(JKNM_SERVED_DIR, first_image.old_path);
+
+        const new_dir = path.join(
+          converted_images_dir,
+          path.dirname(first_image.s3_url),
+        );
+
+        if (!fs.existsSync(new_dir)) {
+          throw new Error(`New dir doesn't exist: ${new_dir}`);
+        }
+
+        const new_path = path.join(
+          converted_images_dir,
+          path.dirname(first_image.s3_url),
+          "thumbnail.png",
+        );
+
+        const thumb_buffer = fs.readFileSync(old_path);
+        const thumb_file = new File([thumb_buffer], "thumbnail.png", {
+          type: "image/png",
+        });
+
+        const width = first_image.width;
+        const height = first_image.height;
+
+        const thumbnail_crop = {
+          image_url: first_image.s3_url,
+          ...centerCrop(
+            makeAspectCrop(
+              {
+                unit: "%",
+                width: 100,
+              },
+              16 / 9,
+              width,
+              height,
+            ),
+            width,
+            height,
+          ),
+        };
+
+        const promise = crop_image(thumb_file, thumbnail_crop).then(
+          async (file) => {
+            const buffer = await file.arrayBuffer();
+            return fs.writeFileSync(new_path, Buffer.from(buffer));
+          },
+        );
+
+        nested_promises.push(promise);
+      }
 
       resolve(Promise.allSettled(nested_promises));
     });

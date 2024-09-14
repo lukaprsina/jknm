@@ -21,7 +21,6 @@ import { PROBLEMATIC_CONSTANTS } from "./info/problematic";
 import { convert_title_to_url } from "~/lib/article-utils";
 import type { PublishArticleSchema } from "~/server/db/schema";
 import type { z } from "zod";
-import { centerCrop, makeAspectCrop } from "react-image-crop";
 import type { ThumbnailType } from "~/lib/validators";
 
 export type ConverterArticleWithAuthorIds = z.infer<
@@ -52,6 +51,11 @@ export interface DimensionType {
   s3_url: string;
   image_name: string;
   old_path: string;
+}
+
+export interface ImageInfo {
+  thumbnail_crop: ThumbnailType | undefined;
+  images: DimensionType[];
 }
 
 export interface IdsByDimentionType {
@@ -212,7 +216,11 @@ async function parse_csv_article(
     },
   ];
 
-  const article_image_dimensions: DimensionType[] = [];
+  const image_info: ImageInfo = {
+    thumbnail_crop: undefined,
+    images: [],
+  };
+
   for (const node of root.childNodes) {
     if (node.nodeType == NodeType.ELEMENT_NODE) {
       await parse_node(
@@ -223,7 +231,7 @@ async function parse_csv_article(
         converted_url,
         problems,
         ids_by_dimensions,
-        article_image_dimensions,
+        image_info,
       );
     } else if (node.nodeType == NodeType.TEXT_NODE) {
       if (node.text.trim() !== "") throw new Error("Some text: " + node.text);
@@ -232,12 +240,12 @@ async function parse_csv_article(
     }
   }
 
-  console.log("Article image dimensions", article_image_dimensions);
+  console.log("image_info", image_info);
   images_to_save.push({
     objave_id: imported_article.objave_id,
     serial_id: article_id.toString(),
     url: converted_url,
-    images: article_image_dimensions,
+    images: image_info.images,
     created_at,
   });
 
@@ -257,29 +265,31 @@ async function parse_csv_article(
   const content = await editorJS?.save();
   if (!content) throw new Error("No content");
 
-  const first_image = article_image_dimensions[0];
-  let thumbnail_crop: ThumbnailType | undefined = undefined;
+  /* const first_image = article_image_dimensions.images[0];
   if (first_image) {
     const width = first_image.width;
     const height = first_image.width;
 
-    thumbnail_crop = {
-      image_url: first_image.s3_url,
-      ...centerCrop(
-        makeAspectCrop(
-          {
-            unit: "%",
-            width: 100,
-          },
-          16 / 9,
-          width,
-          height,
-        ),
-        width,
-        height,
-      ),
-    };
-  }
+    const converted_images_dir = path.join(
+      process.cwd(),
+      "src/app/converter/_images",
+    );
+
+    const article_dir = path.join(
+      converted_images_dir,
+      path.dirname(first_image.s3_url),
+    );
+
+    const image_article_path = path.join(
+      converted_images_dir,
+      path.dirname(first_image.s3_url),
+    );
+
+    const image_source = get_s3_prefix(
+      first_image.s3_url,
+      env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+    );
+  } */
 
   const article = {
     old_id: imported_article.objave_id,
@@ -289,7 +299,7 @@ async function parse_csv_article(
     created_at,
     updated_at,
     author_ids: Array.from(current_authors),
-    thumbnail_crop,
+    thumbnail_crop: image_info.thumbnail_crop,
   } satisfies ConverterArticleWithAuthorIds;
 
   return article;

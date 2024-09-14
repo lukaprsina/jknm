@@ -9,6 +9,8 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import type { OutputData } from "@editorjs/editorjs";
+import type { PercentCrop } from "react-image-crop";
+import sharp from "sharp";
 
 import { env } from "~/env";
 import type { S3CopySourceInfo } from "~/lib/s3-publish";
@@ -228,4 +230,37 @@ export async function clean_s3_directory(
   } catch (error) {
     console.error("Error cleaning directory:", error);
   }
+}
+
+export async function crop_image(file: File, crop: PercentCrop): Promise<File> {
+  // console.log("crop image", crop);
+
+  const image_buffer = await file.arrayBuffer();
+  const sharp_image = sharp(image_buffer);
+  const metadata = await sharp_image.metadata();
+
+  if (!metadata.width || !metadata.height) {
+    throw new Error("Unable to retrieve image dimensions");
+  }
+
+  const originalWidth = metadata.width;
+  const originalHeight = metadata.height;
+
+  // Convert percentage crop values to pixels
+  const cropX = Math.round((crop.x / 100) * originalWidth);
+  const cropY = Math.round((crop.y / 100) * originalHeight);
+  const cropWidth = Math.round((crop.width / 100) * originalWidth);
+  const cropHeight = Math.round((crop.height / 100) * originalHeight);
+
+  // console.log("crop image", { cropX, cropY, cropWidth, cropHeight });
+  const cropped_buffer = await sharp_image
+    .extract({
+      left: cropX,
+      top: cropY,
+      width: cropWidth,
+      height: cropHeight,
+    })
+    .toBuffer();
+
+  return new File([cropped_buffer], file.name, { type: file.type });
 }

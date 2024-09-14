@@ -10,10 +10,10 @@ import sharp from "sharp";
 import { env } from "~/env";
 import { getServerAuthSession } from "~/server/auth";
 import { convert_filename_to_url } from "~/lib/article-utils";
-import type { PercentCrop, PixelCrop } from "react-image-crop";
 import { thumbnail_validator } from "~/lib/validators";
 import { v4 as uuid } from "uuid";
 import path from "path/posix";
+import { crop_image } from "~/server/s3-utils";
 export interface FileUploadResponse {
   success: 0 | 1;
   file?: FileUploadJSON | ImageUploadJSON;
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
     file = new File([blob], title, { type: mime_type });
 
     if (typeof crop_entry === "string") {
-      const crop = JSON.parse(crop_entry) as PixelCrop;
+      const crop = JSON.parse(crop_entry) as unknown;
       const validated_crop = thumbnail_validator.parse(crop);
       file = await crop_image(file, validated_crop);
     }
@@ -203,37 +203,4 @@ export async function POST(request: NextRequest) {
   // console.log("upload_file_to_s3", response_json);
 
   return NextResponse.json(response_json);
-}
-
-async function crop_image(file: File, crop: PercentCrop): Promise<File> {
-  // console.log("crop image", crop);
-
-  const image_buffer = await file.arrayBuffer();
-  const sharp_image = sharp(image_buffer);
-  const metadata = await sharp_image.metadata();
-
-  if (!metadata.width || !metadata.height) {
-    throw new Error("Unable to retrieve image dimensions");
-  }
-
-  const originalWidth = metadata.width;
-  const originalHeight = metadata.height;
-
-  // Convert percentage crop values to pixels
-  const cropX = Math.round((crop.x / 100) * originalWidth);
-  const cropY = Math.round((crop.y / 100) * originalHeight);
-  const cropWidth = Math.round((crop.width / 100) * originalWidth);
-  const cropHeight = Math.round((crop.height / 100) * originalHeight);
-
-  // console.log("crop image", { cropX, cropY, cropWidth, cropHeight });
-  const cropped_buffer = await sharp_image
-    .extract({
-      left: cropX,
-      top: cropY,
-      width: cropWidth,
-      height: cropHeight,
-    })
-    .toBuffer();
-
-  return new File([cropped_buffer], file.name, { type: file.type });
 }
