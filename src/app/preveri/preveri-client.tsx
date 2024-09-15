@@ -145,6 +145,7 @@ export function PreveriClient({
           <Button type="submit">Pojdi</Button>
           {article.data && (
             <EditButton
+              type="button"
               variant="outline"
               published_article_id={article.data.id}
               new_tab

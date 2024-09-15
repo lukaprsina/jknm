@@ -212,14 +212,14 @@ export function ClearButton() {
           novičke?
         </AlertDialogDescription>
         <AlertDialogFooter>
+          <AlertDialogCancel>Prekliči</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
               editor_mutations.delete_draft();
             }}
           >
-            Izbriši osnutek
+            OK
           </AlertDialogAction>
-          <AlertDialogCancel>Prekliči</AlertDialogCancel>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

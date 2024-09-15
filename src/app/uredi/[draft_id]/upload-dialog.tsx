@@ -61,14 +61,14 @@ export function UploadDialog() {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Ne objavi</AlertDialogCancel>
+          <AlertDialogCancel>Prekliči</AlertDialogCancel>
           <AlertDialogAction
             onClick={async () => {
               await editor_mutations.publish();
               setDialogOpen(false);
             }}
           >
-            Objavi
+            OK
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

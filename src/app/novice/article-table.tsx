@@ -190,13 +190,13 @@ function DeleteDialog({ article_id }: { article_id: number }) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Ne zbriši</AlertDialogCancel>
+          <AlertDialogCancel>Prekliči</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
               article_delete.mutate(article_id);
             }}
           >
-            Zbriši
+            OK
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -81,7 +81,7 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
             <b>{author.name}</b>?
           </span>
           <AlertDialogFooter>
-            <AlertDialogCancel>Ne zbriši</AlertDialogCancel>
+            <AlertDialogCancel>Prekliči</AlertDialogCancel>
             <AlertDialogAction
               onClick={async () => {
                 delete_guests.mutate({ ids: [author.id] });
@@ -89,7 +89,7 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
                 setDialogOpen(false);
               }}
             >
-              Izbriši
+              OK
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -112,7 +112,7 @@ export function AuthorsTableHeaderButtons({
     if (length === 0)
       return "Najprej izberite avtorje, ki jih želite izbrisati.";
 
-    let sklon: React.ReactNode | undefined = undefined;
+    let sklon: React.ReactNode | undefined;
     if (length === 1) {
       const name = rows[0]?.original.name;
       sklon = (

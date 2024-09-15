@@ -55,11 +55,10 @@ export default function EditingButtons({
 export function EditButton({
   new_tab,
   published_article_id,
-  variant = "ghost",
-}: {
+  ...props
+}: ButtonProps & {
   new_tab?: boolean;
   published_article_id: number;
-  variant?: ButtonProps["variant"];
 }) {
   const router = useRouter();
   const trpc_utils = api.useUtils();
@@ -90,13 +89,13 @@ export function EditButton({
       <TooltipTrigger asChild>
         <Button
           className="flex flex-shrink-0 dark:bg-primary/80 dark:text-primary-foreground"
-          variant={variant}
           size="icon"
           onClick={() => {
             get_or_create_draft.mutate({
               published_id: published_article_id,
             });
           }}
+          {...props}
         >
           <PencilIcon size={20} />
         </Button>
