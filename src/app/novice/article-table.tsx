@@ -39,7 +39,6 @@ import { MyStats, SORT_BY_ITEMS } from "./search-components";
 import type { Session } from "next-auth";
 import type { PublishedArticleHit } from "~/lib/validators";
 import { Authors } from "~/components/authors";
-import { EditButton } from "~/components/shell/editing-buttons";
 import { get_published_article_link } from "~/lib/article-utils";
 import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 
@@ -63,17 +62,17 @@ export function ArticleTable({
               variant="ghost"
               onClick={() => {
                 sort_api.refine(
-                  sort_api.currentRefinement === "novice_name_asc"
-                    ? "novice_name_desc"
-                    : "novice_name_asc",
+                  sort_api.currentRefinement === "published_article_title_desc"
+                    ? "published_article_title_asc"
+                    : "published_article_title_desc",
                 );
               }}
             >
               Naslov
-              {sort_api.currentRefinement === "novice_name_asc" && (
+              {sort_api.currentRefinement === "published_article_title_desc" && (
                 <ChevronDownIcon />
               )}
-              {sort_api.currentRefinement === "novice_name_desc" && (
+              {sort_api.currentRefinement === "published_article_title_asc" && (
                 <ChevronUpIcon />
               )}
             </Button>
@@ -84,20 +83,38 @@ export function ArticleTable({
               variant="ghost"
               onClick={() => {
                 sort_api.refine(
-                  sort_api.currentRefinement === "novice_created_at_asc"
-                    ? "novice"
-                    : "novice_created_at_asc",
+                  sort_api.currentRefinement === "published_article_created_at_desc"
+                    ? "published_article_created_at_asc"
+                    : "published_article_created_at_desc",
                 );
               }}
             >
               Datum nastanka
-              {sort_api.currentRefinement === "novice_created_at_asc" && (
+              {sort_api.currentRefinement === "published_article_created_at_desc" && (
                 <ChevronDownIcon />
               )}
-              {sort_api.currentRefinement === "novice" && <ChevronUpIcon />}
+              {sort_api.currentRefinement === "published_article_created_at_asc" && <ChevronUpIcon />}
             </Button>
           </TableHead>
-          {session && <TableHead className="text-right">Admin</TableHead>}
+          <TableHead>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                sort_api.refine(
+                  sort_api.currentRefinement === "published_article_updated_at_desc"
+                    ? "published_article_updated_at_asc"
+                    : "published_article_updated_at_desc",
+                );
+              }}
+            >
+              Zadnje posodobljeno
+              {sort_api.currentRefinement === "published_article_created_at_desc" && (
+                <ChevronDownIcon />
+              )}
+              {sort_api.currentRefinement === "published_article_created_at_asc" && <ChevronUpIcon />}
+            </Button>
+          </TableHead>
+          {/* session && <TableHead className="text-right">Admin</TableHead> */}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -119,7 +136,7 @@ export function ArticleTable({
 
 function ArticleTableRow({
   hit,
-  session,
+  session: _,
 }: {
   hit: SearchHit<PublishedArticleHit>;
   session: Session | null;
@@ -128,7 +145,7 @@ function ArticleTableRow({
 
   return (
     <TableRow key={hit.objectID}>
-      <TableCell>{hit.objectID}</TableCell>
+      <TableCell>{hit.published_id}</TableCell>
       <TableCell className="font-medium">
         <Button variant="link" asChild>
           <Link
@@ -146,7 +163,8 @@ function ArticleTableRow({
         <Authors author_ids={hit.author_ids} />
       </TableCell>
       <TableCell>{format_date_for_human(new Date(hit.created_at))}</TableCell>
-      {session && (
+      <TableCell>{format_date_for_human(new Date(hit.updated_at))}</TableCell>
+      {/* session && (
         <TableCell className="flex flex-grow justify-end gap-2">
           <EditButton
             new_tab
@@ -155,11 +173,12 @@ function ArticleTableRow({
           />
           <DeleteDialog article_id={parseInt(hit.objectID)} />
         </TableCell>
-      )}
+      ) */}
     </TableRow>
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function DeleteDialog({ article_id }: { article_id: number }) {
   const trpc_utils = api.useUtils();
 

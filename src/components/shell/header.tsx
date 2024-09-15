@@ -59,7 +59,7 @@ export function FacebookIcon() {
       target="_blank"
       className={cn(
         buttonVariants({ variant: "ghost", size: "icon" }),
-        "h-9 w-9 p-0 text-center",
+        "h-9 w-9 rounded-full p-0 text-center",
       )}
     >
       <svg
@@ -83,7 +83,7 @@ export function YoutubeIcon() {
       target="_blank"
       className={cn(
         buttonVariants({ variant: "ghost", size: "icon" }),
-        "h-9 w-9 p-0 text-center",
+        "h-9 w-9 rounded-full p-0 text-center",
       )}
     >
       <svg

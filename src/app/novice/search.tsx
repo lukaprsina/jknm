@@ -28,7 +28,7 @@ export function Search({ session }: { session: Session | null }) {
   return (
     <InstantSearch
       future={{ preserveSharedStateOnUnmount: true }}
-      indexName="novice_created_at_desc"
+      indexName="published_article_created_at_desc"
       searchClient={searchClient}
     >
       <Tabs defaultValue="card" className="pb-6 pt-2">

@@ -13,8 +13,8 @@ import {
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
 import { createInsertSchema } from "drizzle-zod";
-import type { ThumbnailType } from "../../lib/validators";
-import { content_validator, thumbnail_validator } from "../../lib/validators";
+import type { ThumbnailType } from "~/lib/validators";
+import { content_validator, thumbnail_validator } from "~/lib/validators";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -68,8 +68,9 @@ export const PublishedArticle = pgTable(
       .notNull(),
     updated_at: timestamp("updated_at", { withTimezone: true }).$onUpdate(
       () => new Date(),
-    ),
+    ).notNull(),
     content: json("content").$type<ArticleContentType>(),
+    content_preview: text("content_preview").default(""),
     thumbnail_crop: json("thumbnail_crop").$type<ThumbnailType>(),
     // image: varchar("image", { length: 255 }),
   },
@@ -104,8 +105,9 @@ export const DraftArticle = pgTable(
       .notNull(),
     updated_at: timestamp("updated_at", { withTimezone: true }).$onUpdate(
       () => new Date(),
-    ),
+    ).notNull(),
     content: json("content").$type<ArticleContentType>(),
+    content_preview: text("content_preview").default(""),
     thumbnail_crop: json("thumbnail_crop").$type<ThumbnailType>(),
     // image: varchar("image", { length: 255 }),
   },

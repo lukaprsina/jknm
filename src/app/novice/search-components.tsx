@@ -183,7 +183,7 @@ export function CustomClearRefinements(props: ClearRefinementsProps) {
       onClick={() => {
         clear_refinements();
         clear();
-        sort_refine("novice");
+        sort_refine("published_article_created_at_desc");
       }}
     >
       Počisti filtre
@@ -192,8 +192,8 @@ export function CustomClearRefinements(props: ClearRefinementsProps) {
 }
 
 export const SORT_BY_ITEMS = [
-  { value: "novice", label: "Najnovejše" },
-  { value: "novice_created_at_asc", label: "Najstarejše" },
-  { value: "novice_name_asc", label: "Ime naraščajoče" },
-  { value: "novice_name_desc", label: "Ime padajoče" },
+  { value: "published_article_created_at_desc", label: "Najnovejše" },
+  { value: "published_article_created_at_asc", label: "Najstarejše" },
+  { value: "published_article_title_asc", label: "Ime naraščajoče" },
+  { value: "published_article_title_desc", label: "Ime padajoče" },
 ];

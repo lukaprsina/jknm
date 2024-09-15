@@ -33,6 +33,7 @@ export const published_article_hit_validator = z.object({
   title: z.string(),
   url: z.string(),
   created_at: z.number(), // unix timestamp
+  updated_at: z.number(), // unix timestamp
   content_preview: z.string().max(1000), // maybe 600
   author_ids: z.array(z.number()),
   image: z.string().optional(),

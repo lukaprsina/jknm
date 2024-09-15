@@ -40,10 +40,10 @@ export function NoviceAutocomplete({ detached }: { detached?: string }) {
   return (
     <Autocomplete
       detached={detached}
-      openOnFocus
+      openOnFocus={true}
       getSources={({ query }) => [
         {
-          sourceId: "novice",
+          sourceId: "published_article_created_at_desc",
           getItemUrl: ({ item }) => {
             return get_published_article_link(
               item.url,
@@ -56,7 +56,7 @@ export function NoviceAutocomplete({ detached }: { detached?: string }) {
               searchClient,
               queries: [
                 {
-                  indexName: "novice",
+                  indexName: "published_article_created_at_desc",
                   params: {
                     query,
                     hitsPerPage: 8,
@@ -94,7 +94,7 @@ export function NoviceAutocomplete({ detached }: { detached?: string }) {
           },
         },
       ]}
-    />
+     />
   );
 }
 

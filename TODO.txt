@@ -25,4 +25,4 @@ invalidate ne dela
 
 -------------------
 dodaj entity decode in algolia
-m3: v 101
+updated_at se ne posodablja

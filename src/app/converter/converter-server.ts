@@ -24,6 +24,7 @@ import type { PublishedArticleHit } from "~/lib/validators";
 import { api } from "~/trpc/server";
 import { crop_image, delete_s3_directory } from "~/server/s3-utils";
 import { env } from "~/env";
+import { algoliasearch } from "algoliasearch";
 
 export async function delete_articles() {
   console.log("deleting articles");
@@ -197,17 +198,22 @@ export async function sync_with_algolia() {
     limit: 1000,
   });
 
-  /* const algolia = algolia_protected.getClient();
-  const index = algolia.initIndex("novice");
+  const indexName = "published_article_created_at_desc"
+  const client = algoliasearch(env.NEXT_PUBLIC_ALGOLIA_ID, env.ALGOLIA_ADMIN_KEY);
+  const all_record_ids: string[] = []
+  await client.browseObjects({
+    indexName,
+    aggregator: (response) => {
+      all_record_ids.push(...response.hits.map(hit => hit.objectID))
+    }
+  })
 
-  const empty_query_results = await index.search("", {
-    attributesToRetrieve: ["objectID"],
-    hitsPerPage: 1000,
-  });
+  await client.deleteObjects({
+    indexName,
+    objectIDs: all_record_ids,
+  })
 
-  index.deleteObjects(empty_query_results.hits.map((hit) => hit.objectID)); */
-
-  const objects: PublishedArticleHit[] = articles.data
+  const objects = articles.data
     .map((article) => {
       const content_preview = content_to_text(article.content?.blocks);
       if (!content_preview) return;
@@ -217,6 +223,7 @@ export async function sync_with_algolia() {
         title: article.title,
         url: article.url,
         created_at: article.created_at.getTime(),
+        updated_at: article.updated_at.getTime(),
         content_preview,
         year: article.created_at.getFullYear().toString(),
         author_ids: article.published_articles_to_authors.map(
@@ -227,7 +234,10 @@ export async function sync_with_algolia() {
     })
     .filter((article) => typeof article !== "undefined");
 
-  // await index.saveObjects(objects);
+  await client.saveObjects({
+    indexName,
+    objects
+  })
 
   console.log("Done", objects.length);
 }
