@@ -62,6 +62,10 @@ export function PreveriClient({
     page_info.current_id,
   );
 
+  useEffect(() => {
+    console.log("useEffect", page, page_info)
+  }, [page, page_info]);
+
   const iframe_src = useCallback(
     (id: number) => `https://www.jknm.si/si/?id=${id}`,
     [],
@@ -79,7 +83,7 @@ export function PreveriClient({
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          // console.log("form onsubmit");
+          console.log("form onsubmit");
           const article_index = articles.findIndex(
             (article) => article.old_id === inputPage,
           );
@@ -98,14 +102,19 @@ export function PreveriClient({
       >
         <div className="flex gap-2">
           <Button
+            type="button"
             disabled={isNaN(page_info.previous)}
             onClick={() => setPage(page_info.previous)}
           >
             Prejšnja: {page_info.previous}
           </Button>
           <Button
+            type="button"
             disabled={isNaN(page_info.next)}
-            onClick={() => setPage(page_info.next)}
+            onClick={() => {
+              console.log("next", {page_info})
+              setPage(page_info.next)
+            }}
           >
             Naslednja: {page_info.next}
           </Button>
@@ -122,7 +131,7 @@ export function PreveriClient({
           />
           <Button type="submit">Pojdi</Button>
           {article.data && (
-            <EditButton published_article_id={article.data.id} new_tab />
+            <EditButton variant="outline" published_article_id={article.data.id} new_tab />
           )}
         </div>
       </form>
