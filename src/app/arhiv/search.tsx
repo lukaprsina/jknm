@@ -18,6 +18,7 @@ import type { Session } from "next-auth";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 import { liteClient as algoliasearch } from "algoliasearch/lite";
 import { env } from "~/env";
+import { MyInfiniteHits } from "~/app/arhiv/infinite-hits";
 
 const searchClient = algoliasearch(
   env.NEXT_PUBLIC_ALGOLIA_ID,
@@ -61,14 +62,14 @@ export function Search({ session }: { session: Session | null }) {
           value="card"
           className="flex flex-col justify-between gap-4"
         >
-          <Hits
+          {/* <Hits
             hitComponent={ArticleAlgoliaCard}
             classNames={{
               list: "container grid w-full grid-cols-1 gap-6 px-0 py-8 md:grid-cols-2 lg:grid-cols-3",
               item: article_variants({ variant: "card" }),
-              // list: "grid grid-cols-1 gap-4 sm:grid-cols-2",
             }}
-          />
+          /> */}
+          <MyInfiniteHits />
         </TabsContent>
         <TabsContent value="table">
           <ArticleTable session={session} />

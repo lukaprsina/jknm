@@ -31,8 +31,8 @@ export function InfiniteArticles() {
 
   const load_more_ref = useCallback(
     (index: number) => {
-      const test = articles.length - 1 - ARTICLE_LOAD_MORE_OFFSET;
-      return index === Math.max(test, 0) ? ref : undefined;
+      const ref_index = articles.length - 1 - ARTICLE_LOAD_MORE_OFFSET;
+      return index === Math.max(ref_index, 0) ? ref : undefined;
     },
     [articles, ref],
   );

@@ -111,13 +111,17 @@ export const PublishedArticleDrizzleCard = ({
 
 export function ArticleAlgoliaCard({
   hit,
+  ref
 }: {
   hit: SearchHit<PublishedArticleHit>;
+  ref?: IntersectionRef
 }) {
   const duplicate_urls = useDuplicatedUrls();
 
   return (
     <ArticleCard
+      ref={ref}
+      featured={false}
       title={hit.title}
       url={get_published_article_link(hit.url, hit.created_at, duplicate_urls)}
       content_preview={hit.content_preview}

@@ -103,7 +103,7 @@ export function LinksMenu() {
   return (
     <NavigationMenu className="z-50">
       <NavigationMenuList>
-        <DesktopHeaderLink href="/novice">Novice</DesktopHeaderLink>
+        <DesktopHeaderLink href="/arhiv">Arhiv</DesktopHeaderLink>
         <DesktopHeaderLink href="/zgodovina">Zgodovina</DesktopHeaderLink>
         <DesktopHeaderLink href="/raziskovanje">Raziskovanje</DesktopHeaderLink>
         <DesktopHeaderLink href="/publiciranje">Publiciranje</DesktopHeaderLink>
