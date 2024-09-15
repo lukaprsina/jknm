@@ -9,8 +9,8 @@ import { parse as html_parse, NodeType } from "node-html-parser";
 import type { AuthorType } from "./get-authors";
 import {
   get_authors_by_name,
-  get_problematic_html,
-  upload_articles,
+  get_problematic_html, save_image_data,
+  upload_articles
 } from "./converter-server";
 import { get_authors } from "./get-authors";
 import { parse_node } from "./parse-node";
@@ -24,6 +24,7 @@ import type { ThumbnailType } from "~/lib/validators";
 import { centerCrop, makeAspectCrop } from "react-image-crop";
 import { get_s3_prefix } from "~/lib/s3-publish";
 import { env } from "~/env";
+import { parseISO, subMinutes } from "date-fns";
 
 export type ConverterArticleWithAuthorIds = z.infer<
   typeof PublishArticleSchema
@@ -172,8 +173,9 @@ export async function iterate_over_articles(
     await upload_articles(articles);
   }
 
+  await save_image_data(images_to_save);
   // console.warn("Images to save", images_to_save);
-  // await save_image_data(images_to_save);
+
   // await write_article_html_to_file(problematic_articles);
   console.log(
     "Total articles (csv, uploaded):",
@@ -214,8 +216,9 @@ async function parse_csv_article(
   html = fixHtml(html);
   const root = html_parse(html);
 
-  const created_at = new Date(imported_article.created_at);
-  const updated_at = new Date(imported_article.updated_at);
+  const currentLocalDate = new Date();
+  const created_at = subMinutes(imported_article.created_at, currentLocalDate.getTimezoneOffset());
+  const updated_at = subMinutes(imported_article.updated_at, currentLocalDate.getTimezoneOffset());
 
   const converted_url = convert_title_to_url(imported_article.title);
 
@@ -329,3 +332,9 @@ function fixHtml(htmlString: string) {
 
   return dom_serialize(document);
 }
+
+/* function parseWithTimeZone(dateStr, formatStr, referenceDate, timeZone) {
+  const zonedDate = utcToZonedTime(referenceDate, timeZone);
+  const parsedDate = parse(dateStr, formatStr, zonedDate);
+  return zonedTimeToUtc(parsedDate, timeZone);
+} */

@@ -122,7 +122,8 @@ export async function get_image_dimensions({
   }
 
   if (!fs.existsSync(fs_image_path)) {
-    throw new Error(`Image doesn't exist: ${fs_image_path}`);
+    console.error(`Image doesn't exist: ${fs_image_path}`);
+    return
   }
 
   const result = await fs_promises.readFile(fs_image_path);

@@ -2,7 +2,7 @@
 
 import type { OutputBlockData } from "@editorjs/editorjs";
 import type { Node as ParserNode } from "node-html-parser";
-import { decode } from "html-entities";
+import { decode as html_decode } from "html-entities";
 import { NodeType, HTMLElement as ParserHTMLElement } from "node-html-parser";
 
 import { get_image_dimensions } from "./converter-server";
@@ -21,8 +21,6 @@ import { get_s3_prefix } from "~/lib/s3-publish";
 const p_allowed_tags = ["STRONG", "BR", "A", "IMG", "EM", "SUB", "SUP"];
 const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
 
-// const do_dimensions = true as boolean;
-
 export async function parse_node(
   node: ParserNode,
   blocks: OutputBlockData[],
@@ -34,6 +32,24 @@ export async function parse_node(
   ids_by_dimensions: IdsByDimentionType[],
   image_info: ImageInfo,
 ): Promise<void> {
+  function decode(text: string | undefined): string {
+    const decoded = html_decode(text)
+    const lower = decoded.toLowerCase();
+
+    function test(filter: string) {
+      if (lower.includes(filter)) {
+        console.warn(filter, old_id);
+      }
+    }
+
+    test("m2")
+    test("m3")
+    test("cm2")
+    test("cm3")
+
+    return decoded;
+  }
+
   const article_url = `${csv_url}-${format_date_for_url(created_at)}`;
 
   const old_id = articles_with_authors.objave_id;
@@ -57,19 +73,6 @@ export async function parse_node(
       }
 
       const text = decode(node.innerHTML).trim();
-
-      const lower = text.toLowerCase();
-      // console.log({ lower });
-      if (lower.includes("m2")) {
-        console.log("M2", old_id);
-        throw new Error("M2");
-      } else if (lower.includes("m3")) {
-        console.log("M3", old_id);
-        // throw new Error("M3");
-      } else if (lower.includes("&nbsp")) {
-        console.log("nbsp", old_id);
-        throw new Error("nbsp");
-      }
 
       blocks.push({ type: "paragraph", data: { text } });
       break;
@@ -321,7 +324,7 @@ export async function parse_node(
           });
         }
 
-        console.log(old_id, ids_by_dimensions);
+        // console.log(old_id, ids_by_dimensions);
       }
 
       if (dimensions) {
