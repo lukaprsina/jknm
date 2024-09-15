@@ -33,11 +33,11 @@ export async function rename_s3_files_and_content(
     ? env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME
     : env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME;
 
-  console.log("rename_s3_files_and_content", {
+  /* console.log("rename_s3_files_and_content", {
     editor_content,
     destination_url,
     destination_bucket,
-  });
+  }); */
 
   const { sources, new_content } = rename_urls_in_content(
     editor_content,
@@ -89,11 +89,11 @@ export async function s3_copy_between_buckets(
   destination_bucket: string,
   destination_url: string,
 ) {
-  console.log("s3_copy_between_buckets", {
+  /* console.log("s3_copy_between_buckets", {
     sources,
     destination_bucket,
     destination_url,
-  });
+  }); */
 
   for (const source of sources) {
     await s3_copy_file(source, destination_bucket, destination_url);
@@ -102,7 +102,7 @@ export async function s3_copy_between_buckets(
 
 // old
 export async function rename_s3_directory(old_dir: string, new_dir: string) {
-  console.log("rename_s3_directory", { old_dir, new_dir });
+  // console.log("rename_s3_directory", { old_dir, new_dir });
   const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
   let objects: _Object[] | undefined;
 
@@ -177,7 +177,7 @@ export async function list_objects(bucket: string, prefix: string) {
 }
 
 export async function delete_objects(bucket: string, keys: string[]) {
-  console.log("delete_objects", { bucket, keys });
+  // console.log("delete_objects", { bucket, keys });
   try {
     const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
     const response = await client.send(
@@ -209,7 +209,7 @@ export async function delete_s3_directory(bucket: string, prefix: string) {
       return object.Key;
     });
 
-    console.log("delete_s3_directory", { keys, bucket, prefix });
+    // console.log("delete_s3_directory", { keys, bucket, prefix });
     if (keys.length > 0) await delete_objects(bucket, keys);
   } catch (error) {
     console.error("Error deleting directory:", error);
@@ -221,7 +221,7 @@ export async function clean_s3_directory(
   directory: string,
   filenames_to_keep: string[],
 ) {
-  console.log("clean_s3_directory", { bucket, directory, filenames_to_keep });
+  // console.log("clean_s3_directory", { bucket, directory, filenames_to_keep });
 
   try {
     const objects = await list_objects(bucket, directory);
@@ -250,12 +250,12 @@ export async function clean_s3_directory(
       .filter((key) => key !== undefined)
       .map((key) => `${directory}/${key}`);
 
-    console.log("keys_to_delete", keys_to_delete, {
+    /* console.log("keys_to_delete", keys_to_delete, {
       directory,
       object_names,
       filenames_to_keep,
       objects,
-    });
+    }); */
 
     if (keys_to_delete.length > 0) await delete_objects(bucket, keys_to_delete);
   } catch (error) {

@@ -15,6 +15,7 @@ import hooksPlugin from "eslint-plugin-react-hooks";
 export const restrictEnvAccess = tseslint.config({
   files: ["**/*.js", "**/*.ts", "**/*.tsx"],
   rules: {
+    "no-console": "error",
     "no-restricted-properties": [
       "error",
       {

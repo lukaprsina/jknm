@@ -6,14 +6,30 @@ import { useRouter } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 
-import { article_variants, page_variants } from "~/lib/page-variants";
 import { api } from "~/trpc/react";
 import { useToast } from "~/hooks/use-toast";
-import { cn } from "~/lib/utils";
 import { EditButton } from "~/components/shell/editing-buttons";
 import { EditorToReact } from "~/components/editor/editor-to-react";
 
 import { InfoCard } from "~/components/info-card";
+import { createStore } from "zustand-x";
+
+export interface PreveriStoreType {
+  index: number;
+}
+
+const initial_data = {
+  index: 1,
+} satisfies PreveriStoreType;
+
+export const preveri_store = createStore("preveri")<PreveriStoreType>(
+  initial_data,
+  {
+    persist: {
+      enabled: true,
+    },
+  },
+);
 
 export function PreveriClient({
   articles,
@@ -26,13 +42,13 @@ export function PreveriClient({
   // csv_articles: CSVType[];
 }) {
   const toaster = useToast();
-  const [page, setPage] = useState(1);
   const [inputPage, setInputPage] = useState(1);
   const router = useRouter();
+  const preveri_store_index = preveri_store.use.index();
 
   const page_info = useMemo(() => {
     const article_index = articles.findIndex(
-      (article) => article.old_id === page,
+      (article) => article.old_id === preveri_store_index,
     );
 
     if (article_index === -1) {
@@ -56,15 +72,15 @@ export function PreveriClient({
       previous: articles[article_index - 1]?.old_id ?? NaN,
       current_id: articles[article_index]?.id,
     };
-  }, [articles, page]);
+  }, [articles, preveri_store_index]);
 
   const article = api.article.get_published_by_id.useQuery(
     page_info.current_id,
   );
 
   useEffect(() => {
-    console.log("useEffect", page, page_info)
-  }, [page, page_info]);
+    console.log("useEffect", preveri_store_index, page_info);
+  }, [preveri_store_index, page_info]);
 
   const iframe_src = useCallback(
     (id: number) => `https://www.jknm.si/si/?id=${id}`,
@@ -77,9 +93,9 @@ export function PreveriClient({
   }, [iframe_src, page_info.next, page_info.previous, router]);
 
   return (
-    <div className={cn(article_variants(), page_variants(), "max-w-none px-6")}>
+    <>
       <h2>Preveri</h2>
-      <p>Stran {page}</p>
+      <p>Stran {preveri_store_index}</p>
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -96,7 +112,7 @@ export function PreveriClient({
             return;
           }
 
-          setPage(inputPage);
+          preveri_store.set.index(inputPage);
         }}
         className="my-8 flex items-center gap-4"
       >
@@ -104,17 +120,14 @@ export function PreveriClient({
           <Button
             type="button"
             disabled={isNaN(page_info.previous)}
-            onClick={() => setPage(page_info.previous)}
+            onClick={() => preveri_store.set.index(page_info.previous)}
           >
             Prejšnja: {page_info.previous}
           </Button>
           <Button
             type="button"
             disabled={isNaN(page_info.next)}
-            onClick={() => {
-              console.log("next", {page_info})
-              setPage(page_info.next)
-            }}
+            onClick={() => preveri_store.set.index(page_info.next)}
           >
             Naslednja: {page_info.next}
           </Button>
@@ -131,7 +144,11 @@ export function PreveriClient({
           />
           <Button type="submit">Pojdi</Button>
           {article.data && (
-            <EditButton variant="outline" published_article_id={article.data.id} new_tab />
+            <EditButton
+              variant="outline"
+              published_article_id={article.data.id}
+              new_tab
+            />
           )}
         </div>
       </form>
@@ -140,7 +157,7 @@ export function PreveriClient({
           <>
             <iframe
               className="h-full w-full overflow-y-hidden rounded-xl"
-              src={iframe_src(page)}
+              src={iframe_src(preveri_store_index)}
             />
             <EditorToReact article={article.data} session={null} />
           </>
@@ -148,6 +165,6 @@ export function PreveriClient({
           <InfoCard title="Nekaj je narobe" description="Pokliči me" />
         )}
       </div>
-    </div>
+    </>
   );
 }

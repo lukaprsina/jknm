@@ -76,13 +76,13 @@ export function rename_url(
 ): S3CopySourceInfo | undefined {
   const pathname_parts = old_url.split("/").filter(Boolean);
 
-  console.log("rename_url", {
+  /* console.log("rename_url", {
     old_url,
     source_bucket,
     destination_url,
     destination_bucket,
     pathname_parts,
-  });
+  }); */
 
   if (pathname_parts.length !== 2) {
     console.error("Renaming invalid URL (2 parts)", old_url, pathname_parts);
@@ -118,13 +118,13 @@ export async function s3_copy_file(
   const CopySource = `${source.source_bucket}/${source.source_path}/${source.file_name}`;
   const Key = `${destination_url}/${source.file_name}`;
 
-  console.log("s3_copy_file", {
+  /* console.log("s3_copy_file", {
     source,
     Key,
     CopySource,
     destination_url,
     destination_bucket,
-  });
+  }); */
 
   const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
   try {
@@ -172,14 +172,14 @@ export async function s3_copy({
     sources.push(renamed_info);
   }
 
-  console.log("s3_copy", {
+  /* console.log("s3_copy", {
     source_bucket,
     source_url,
     destination_bucket,
     destination_url,
     source_files,
     sources,
-  });
+  }); */
 
   await s3_copy_between_buckets(sources, destination_bucket, destination_url);
 }

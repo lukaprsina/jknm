@@ -188,7 +188,7 @@ export const article_router = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const transaction = await ctx.db.transaction(async (tx) => {
-        console.log("saving draft input", input);
+        // console.log("saving draft input", input);
 
         const updated_draft = await tx
           .update(DraftArticle)
@@ -236,7 +236,7 @@ export const article_router = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      console.log("get_or_create_draft input", input);
+      // console.log("get_or_create_draft input", input);
 
       try {
         const transaction = await ctx.db.transaction(async (tx) => {
@@ -375,7 +375,7 @@ export const article_router = createTRPCRouter({
           return draft_returning;
         });
 
-        console.log("get_or_create_draft transaction", transaction);
+        // console.log("get_or_create_draft transaction", transaction);
 
         return transaction;
       } catch (error) {
@@ -393,7 +393,7 @@ export const article_router = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      console.log("publish input", input);
+      // console.log("publish input", input);
 
       const transaction = await ctx.db.transaction(async (tx) => {
         let draft_article: typeof DraftArticle.$inferSelect | undefined;
@@ -536,7 +536,7 @@ export const article_router = createTRPCRouter({
         return published_article_with_authors;
       });
 
-      console.log("publish transaction", transaction);
+      // console.log("publish transaction", transaction);
 
       return transaction;
     }),
@@ -565,7 +565,7 @@ export const article_router = createTRPCRouter({
         return acc;
       }, []);
 
-      console.log("duplicate_urls", duplicate_urls);
+      // console.log("duplicate_urls", duplicate_urls);
 
       if (duplicate_urls.length > 0) {
         await tx.insert(DuplicatedArticleUrls).values(duplicate_urls);
