@@ -13,7 +13,7 @@ export function content_to_text(blocks?: OutputBlockData[]) {
 
   const sanitized_text = filtered_blocks
     .map((block) => {
-      if (block.type !== "paragraph") return undefined;
+      // if (block.type !== "paragraph") return undefined;
       const paragraph_data = block.data as { text: string };
 
       const clean = DOMPurify.sanitize(paragraph_data.text, {

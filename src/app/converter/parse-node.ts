@@ -2,7 +2,7 @@
 
 import type { OutputBlockData } from "@editorjs/editorjs";
 import type { Node as ParserNode } from "node-html-parser";
-import { decode as html_decode } from "html-entities";
+import { decode as html_decode_entities } from "html-entities";
 import { NodeType, HTMLElement as ParserHTMLElement } from "node-html-parser";
 
 import { get_image_dimensions } from "./converter-server";
@@ -33,7 +33,7 @@ export async function parse_node(
   image_info: ImageInfo,
 ): Promise<void> {
   function decode(text: string | undefined): string {
-    const decoded = html_decode(text)
+    const decoded = html_decode_entities(text)
     const lower = decoded.toLowerCase();
 
     function test(filter: string) {
@@ -43,11 +43,23 @@ export async function parse_node(
     }
 
     test("m2")
+    test("m 2")
     test("m3")
+    test("m 3")
     test("cm2")
+    test("cm 2")
     test("cm3")
+    test("cm 3")
+    test("mm2")
+    test("mm 2")
+    test("mm3")
+    test("mm 3")
 
-    return decoded;
+    const replaced = decoded.replaceAll(/NM(\d+)/g, "NM $1").replaceAll("strong>", "b>");
+
+    console.log("replaced", replaced);
+
+    return replaced;
   }
 
   const article_url = `${csv_url}-${format_date_for_url(created_at)}`;

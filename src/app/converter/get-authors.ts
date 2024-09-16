@@ -59,9 +59,9 @@ export function get_authors(
     for (const strong of strongs) {
       const trimmed = strong.text
         .trim()
-        .replace(/\s+/g, " ")
-        .replace(":", "")
-        .replace(".", "");
+        .replaceAll(/\s+/g, " ")
+        .replaceAll(":", "")
+        .replaceAll(".", "");
 
       if (trimmed === "") continue;
 

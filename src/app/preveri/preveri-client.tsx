@@ -78,9 +78,9 @@ export function PreveriClient({
     page_info.current_id,
   );
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("useEffect", preveri_store_index, page_info);
-  }, [preveri_store_index, page_info]);
+  }, [preveri_store_index, page_info]);*/
 
   const iframe_src = useCallback(
     (id: number) => `https://www.jknm.si/si/?id=${id}`,
@@ -99,7 +99,7 @@ export function PreveriClient({
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          console.log("form onsubmit");
+          // console.log("form onsubmit");
           const article_index = articles.findIndex(
             (article) => article.old_id === inputPage,
           );

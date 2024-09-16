@@ -64,7 +64,7 @@ export const article_router = createTRPCRouter({
     }),
 
   get_all_drafts: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.DraftArticle.findMany({
+    return ctx.db.query.DraftArticle.findMany({
       with: {
         draft_articles_to_authors: {
           with: {
@@ -84,7 +84,7 @@ export const article_router = createTRPCRouter({
     .input(z.number())
     .query(async ({ ctx, input }) => {
       // TODO: when url doesn't match, send me an email
-      return await ctx.db.query.PublishedArticle.findFirst({
+      return ctx.db.query.PublishedArticle.findFirst({
         where: eq(PublishedArticle.id, input),
         with: {
           published_articles_to_authors: {
@@ -211,7 +211,7 @@ export const article_router = createTRPCRouter({
           );
         }
 
-        return await tx.query.DraftArticle.findFirst({
+        return tx.query.DraftArticle.findFirst({
           where: eq(DraftArticle.id, input.draft_id),
           with: {
             draft_articles_to_authors: {

@@ -35,7 +35,8 @@ export default {
           css: {
             maxWidth: "1280px",
             lineHeight: "1.5",
-            color: theme("colors.neutral.700"),
+            color: "black",
+            // color: theme("colors.neutral.700"),
             "--card-foreground": theme("colors.neutral.700"),
             "--tw-prose-bullets": theme("colors.neutral[500]"),
             "--tw-prose-links": theme("colors.blue.800"),

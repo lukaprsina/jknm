@@ -60,12 +60,13 @@ export function FacebookIcon() {
       className={cn(
         buttonVariants({ variant: "ghost", size: "icon" }),
         "h-9 w-9 rounded-full p-0 text-center",
+        "hover:text-[#4267B2] transition-colors"
       )}
     >
       <svg
         role="img"
         viewBox="0 0 24 24"
-        className="h-6 w-6"
+        className="h-6 w-6 fill-current"
         xmlns="http://www.w3.org/2000/svg"
       >
         <title>Facebook</title>
@@ -84,12 +85,13 @@ export function YoutubeIcon() {
       className={cn(
         buttonVariants({ variant: "ghost", size: "icon" }),
         "h-9 w-9 rounded-full p-0 text-center",
+        "hover:text-[#FF0000] transition-colors",
       )}
     >
       <svg
         role="img"
         viewBox="0 0 24 24"
-        className="h-6 w-6"
+        className="h-6 w-6 fill-current"
         xmlns="http://www.w3.org/2000/svg"
       >
         <title>YouTube</title>

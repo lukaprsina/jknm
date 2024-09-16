@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import type { InfiniteHitsProps } from "react-instantsearch";
-import { Highlight, useInfiniteHits, Snippet } from "react-instantsearch";
+import { useInfiniteHits } from "react-instantsearch";
 import type { PublishedArticleHit } from "~/lib/validators";
 import { useIntersectionObserver } from "usehooks-ts";
 import { ArticleAlgoliaCard } from "~/components/article/card-adapter";

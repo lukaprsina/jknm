@@ -24,7 +24,7 @@ import type { ThumbnailType } from "~/lib/validators";
 import { centerCrop, makeAspectCrop } from "react-image-crop";
 import { get_s3_prefix } from "~/lib/s3-publish";
 import { env } from "~/env";
-import { parseISO, subMinutes } from "date-fns";
+import { subMinutes } from "date-fns";
 
 export type ConverterArticleWithAuthorIds = z.infer<
   typeof PublishArticleSchema
@@ -164,6 +164,7 @@ export async function iterate_over_articles(
       do_dimensions,
       problems,
     );
+    console.log("article in looop", article)
     articles.push(article);
     article_id++;
   }

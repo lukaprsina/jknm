@@ -37,7 +37,7 @@ export default function EditingButtons({
   return (
     <>
       {published_article && (
-        <EditButton published_article_id={published_article.id} />
+        <EditButton variant="ghost" published_article_id={published_article.id} />
       )}
       <MakeNewDraftButton
         published_article_id={published_article?.id}
