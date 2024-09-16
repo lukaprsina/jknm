@@ -78,6 +78,7 @@ export type InitialProblems = Record<ProblemKey, [number, string][]>;
 
 const initial_problems: InitialProblems = {
   single_in_div: [],
+  just_text_in_div: [],
   nm: [],
   m3: [],
   empty_divs: [],
@@ -95,6 +96,7 @@ const initial_problems: InitialProblems = {
 
 export type ProblemKey =
   | "single_in_div"
+  | "just_text_in_div"
   | "nm"
   | "m3"
   | "empty_divs"

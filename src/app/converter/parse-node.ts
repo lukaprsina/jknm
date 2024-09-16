@@ -11,7 +11,7 @@ import {
   IdsByDimentionType,
   ImageInfo,
   ImportedArticle,
-  InitialProblems
+  InitialProblems,
 } from "./converter-spaghetti";
 import { convert_filename_to_url } from "~/lib/article-utils";
 import path from "path";
@@ -23,7 +23,7 @@ const p_allowed_tags = ["STRONG", "BR", "A", "IMG", "EM", "SUB", "SUP"];
 const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
 
 const LINK_REGEX = /[\s\p{P}]$/u;
-const NM_REGEX = /NM(\d+)/g
+const NM_REGEX = /NM(\d+)/g;
 
 export async function parse_node(
   node: ParserNode,
@@ -36,7 +36,7 @@ export async function parse_node(
   do_dimensions: boolean,
   ids_by_dimensions: IdsByDimentionType[],
   image_info: ImageInfo,
-  file_info: FileInfo[]
+  file_info: FileInfo[],
 ): Promise<void> {
   function decode(text: string | undefined): string {
     const decoded = html_decode_entities(text);
@@ -66,12 +66,12 @@ export async function parse_node(
 
     // console.log("replaced", replaced);
 
-    if(NM_REGEX.test(decoded)) {
+    if (NM_REGEX.test(decoded)) {
       problems.nm.push([old_id, decoded]);
     }
 
     return decoded
-      .replaceAll(NM_REGEX, "NM $1")
+      // .replaceAll(NM_REGEX, "NM $1")
       .replaceAll("<strong>", "<b>")
       .replaceAll("</strong>", "</b>");
   }
@@ -113,41 +113,16 @@ export async function parse_node(
             const link_attr = p_child.attributes;
             if ("href" in link_attr) {
               const href = html_decode_entities(link_attr.href);
+              let url: URL | undefined;
 
-              try {
-                const url = new URL(href);
-                if (url.hostname.includes("jknm.si")) {
-                  console.error("jknmsi link", old_id, href);
-                  problems.link_jknmsi.push([old_id, href]);
-                  const id_string = url.searchParams.get("id");
-                  if(typeof id_string !== "string") {
-                    throw new Error(`No id in jknmsi link ${href}, ${old_id}`);
-                  }
+              const replace_relative_link = (relative_href: string) => {
+                console.error("internal link", old_id, relative_href);
+                problems.link_internal.push([old_id, relative_href]);
 
-                  let id_num = parseInt(id_string)
-
-                  if(isNaN(id_num)) {
-                    throw new Error(`NaN ID in jknmsi link ${href}, ${old_id}`);
-                  }
-
-                  id_num++ // 1-indexed
-
-                  const new_index = csv_ids.findIndex((id) => id === id_num);
-                  const article_link = `/novica?id=${new_index}`
-                  console.warn("Replaced", href, article_link);
-                  text = text.replaceAll(href, article_link);
-                } else {
-                  console.error("external link", old_id, href);
-                  problems.link_external.push([old_id, href]);
-                }
-              } catch (error) {
-                console.error("internal link", old_id, href);
-                problems.link_internal.push([old_id, href]);
-
-                const decoded_href = html_decode_entities(href);
-                if(decoded_href.startsWith("/si/")) {
+                const decoded_href = html_decode_entities(relative_href);
+                if (decoded_href.startsWith("/si/")) {
                   // TODO: ročno popravi 10, 56, 75
-                  continue;
+                  return;
                 }
 
                 const old_path = decodeURIComponent(decoded_href.toLowerCase());
@@ -159,8 +134,45 @@ export async function parse_node(
                   env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
                 );
 
-                text = text.replaceAll(href, file_href);
-                file_info.push({ old_path: href, fs_name });
+                text = text.replaceAll(relative_href, file_href);
+                file_info.push({ old_path: relative_href, fs_name });
+              };
+
+              try {
+                url = new URL(href);
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              } catch (error) {
+                replace_relative_link(href);
+              }
+
+              if (url) {
+                if (url.hostname.includes("jknm.si")) {
+                  console.error("jknmsi link", old_id, href);
+                  problems.link_jknmsi.push([old_id, href]);
+                  const id_string = url.searchParams.get("id");
+
+                  if (typeof id_string !== "string") {
+                    replace_relative_link(url.pathname);
+                    continue;
+                    // throw new Error(`No id in jknmsi link ${href}, ${old_id}`);
+                  }
+
+                  let id_num = parseInt(id_string);
+
+                  if (isNaN(id_num)) {
+                    throw new Error(`NaN ID in jknmsi link ${href}, ${old_id}`);
+                  }
+
+                  id_num++; // 1-indexed
+
+                  const new_index = csv_ids.findIndex((id) => id === id_num);
+                  const article_link = `/novica?id=${new_index}`;
+                  // console.warn("Replaced", href, article_link);
+                  text = text.replaceAll(href, article_link);
+                } else {
+                  console.error("external link", old_id, href);
+                  problems.link_external.push([old_id, href]);
+                }
               }
             }
           }
@@ -236,8 +248,8 @@ export async function parse_node(
         if (!child) throw new Error("Child is undefined?");
 
         if (child.nodeType === NodeType.TEXT_NODE) {
-          console.error("Single text in div", old_id);
-          problems.single_in_div.push([old_id, child.text]);
+          console.error("Just text in div", old_id);
+          problems.just_text_in_div.push([old_id, child.text]);
           const text = decode(child.text).trim();
           blocks.push({ type: "paragraph", data: { text } });
           break;
@@ -251,12 +263,18 @@ export async function parse_node(
             const text = decode(child.innerHTML).trim();
             blocks.push({ type: "paragraph", data: { text } });
             break;
-          } else if (child.tagName !== "IMG") {
-            // TODO
-            console.error(
-              `Unexpected element in div: ${child.tagName} ${old_id}, ${child.outerHTML}`,
-            );
-            problems.unexpected_in_div.push([old_id, child.outerHTML]);
+          } else {
+            const possible_image = child.querySelector("img");
+            if (child.tagName !== "IMG" && !possible_image) {
+              console.log(
+                "Unexpected tag in div element, no image",
+                child.outerHTML,
+                possible_image,
+              );
+              throw new Error(
+                `Unexpected tag in div element, not image: ${child.tagName} ${old_id}`,
+              );
+            }
           }
         } else {
           throw new Error("Unexpected comment: " + node.text);
