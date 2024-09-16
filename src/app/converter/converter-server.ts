@@ -401,12 +401,12 @@ export async function copy_and_rename_images() {
                 type: "image/png",
               });
 
-              await crop_image(thumb_file, json.thumbnail_crop).then(
-                async (file) => {
-                  const buffer = await file.arrayBuffer();
-                  return fs.writeFileSync(new_path, Buffer.from(buffer));
-                },
+              const cropped_file = await crop_image(
+                thumb_file,
+                json.thumbnail_crop,
               );
+              const cropped_buffer = await cropped_file.arrayBuffer();
+              fs.writeFileSync(new_path, Buffer.from(cropped_buffer));
             }
 
             const file_results = await all_file_promises;

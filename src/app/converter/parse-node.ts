@@ -6,7 +6,7 @@ import { HTMLElement as ParserHTMLElement, NodeType } from "node-html-parser";
 import { decode as html_decode_entities } from "html-entities";
 
 import { get_image_dimensions } from "./converter-server";
-import {
+import type {
   FileInfo,
   IdsByDimentionType,
   ImageInfo,
@@ -24,6 +24,20 @@ const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
 
 const LINK_REGEX = /[\s\p{P}]$/u;
 const NM_REGEX = /NM(\d+)/g;
+
+function filter_children(raw_children: ParserHTMLElement[]) {
+  return raw_children.filter((raw_child) => {
+    if (raw_child.nodeType === NodeType.TEXT_NODE) {
+      return raw_child.text.trim() !== "";
+    } else if (raw_child.nodeType === NodeType.ELEMENT_NODE) {
+      return true;
+    } else {
+      throw new Error(
+        "Unexpected comment: " + raw_children.map((c) => c.text).join(", "),
+      );
+    }
+  });
+}
 
 export async function parse_node(
   node: ParserNode,
@@ -70,10 +84,12 @@ export async function parse_node(
       problems.nm.push([old_id, decoded]);
     }
 
-    return decoded
-      // .replaceAll(NM_REGEX, "NM $1")
-      .replaceAll("<strong>", "<b>")
-      .replaceAll("</strong>", "</b>");
+    return (
+      decoded
+        // .replaceAll(NM_REGEX, "NM $1")
+        .replaceAll("<strong>", "<b>")
+        .replaceAll("</strong>", "</b>")
+    );
   }
 
   const article_url = `${csv_url}-${format_date_for_url(created_at)}`;
@@ -228,23 +244,17 @@ export async function parse_node(
       }
 
       const raw_children = node.childNodes;
-      const children = raw_children.filter((raw_child) => {
-        if (raw_child.nodeType === NodeType.TEXT_NODE) {
-          return raw_child.text.trim() !== "";
-        } else if (raw_child.nodeType === NodeType.ELEMENT_NODE) {
-          return true;
-        } else {
-          throw new Error("Unexpected comment: " + node.text);
-        }
-      });
+      const div_childeren = filter_children(
+        raw_children as ParserHTMLElement[],
+      );
 
-      if (children.length === 0) {
+      if (div_childeren.length === 0) {
         // throw new Error("Empty div " + csv_article.id);
         console.error("Empty div", old_id, node.outerHTML);
         problems.empty_divs.push([old_id, node.outerHTML]);
         break;
-      } else if (children.length === 1) {
-        const child = children[0];
+      } else if (div_childeren.length === 1) {
+        const child = div_childeren[0];
         if (!child) throw new Error("Child is undefined?");
 
         if (child.nodeType === NodeType.TEXT_NODE) {
@@ -254,15 +264,32 @@ export async function parse_node(
           blocks.push({ type: "paragraph", data: { text } });
           break;
         } else if (child.nodeType === NodeType.ELEMENT_NODE) {
-          if (!(child instanceof ParserHTMLElement))
-            throw new Error("Not an HTMLElement");
-
           if (child.tagName === "P" || child.tagName === "STRONG") {
             console.error("Single tag in div", old_id, child.outerHTML);
             problems.single_in_div.push([old_id, child.outerHTML]);
             const text = decode(child.innerHTML).trim();
-            blocks.push({ type: "paragraph", data: { text } });
-            break;
+
+            const filtered_nested_childeren = filter_children(
+              child.childNodes as ParserHTMLElement[],
+            );
+            console.log("filtered_nested_childeren", filtered_nested_childeren);
+            if (filtered_nested_childeren.length === 1) {
+              blocks.push({ type: "paragraph", data: { text } });
+            } else if (filtered_nested_childeren.length === 2) {
+              //   console.log("p children");
+            } else {
+              /*console.log(
+                "child.outerHTML",
+                child.outerHTML,
+                child.childNodes.map((c) => c.text),
+              );*/
+              throw new Error(
+                "More then 3 children in image: " +
+                  child.tagName +
+                  " " +
+                  old_id,
+              );
+            }
           } else {
             const possible_image = child.querySelector("img");
             if (child.tagName !== "IMG" && !possible_image) {
@@ -315,83 +342,68 @@ export async function parse_node(
       }
 
       // console.log("p children");
-      let image_caption: string | undefined;
+      let image_caption = "";
       let already_set_caption = false;
       for (const p_child of node.querySelectorAll("p")) {
-        if (p_child.nodeType == NodeType.ELEMENT_NODE) {
-          /* console.log(
-            "p_child",
-            p_child.tagName,
-            p_child.innerHTML,
-            p_child.childNodes,
-          ); */
-
-          let is_wrong = false;
-          for (const p_child_child of p_child.childNodes) {
-            if (p_child_child.nodeType == NodeType.ELEMENT_NODE) {
-              if (!(p_child_child instanceof ParserHTMLElement))
-                throw new Error("Not an HTMLElement");
-
-              if (p_child_child.tagName === "IMG") {
-                is_wrong = true;
-                console.error(
-                  "Image in caption",
-                  old_id,
-                  p_child_child.outerHTML,
-                );
-                problems.image_in_caption.push([
-                  old_id,
-                  p_child_child.outerHTML,
-                ]);
-                continue;
-              }
-
-              if (!caption_allowed_tags.includes(p_child_child.tagName)) {
-                throw new Error(
-                  "Unexpected tag in caption element: " + p_child_child.tagName,
-                );
-                /*problems.tag_in_caption?.push([
-                  csv_article.id,
-                  p_child_child.outerHTML,
-                ]);
-                console.error(
-                  "Unexpected tag in caption element",
-                  csv_article.id,
-                  p_child_child.outerHTML,
-                );
-                is_wrong = true; */
-              }
-            } else if (p_child_child.nodeType === NodeType.COMMENT_NODE) {
-              throw new Error("Unexpected comment: " + node.text);
-            }
-          }
-          if (is_wrong) continue;
-
-          const trimmed = decode(p_child.innerHTML).trim();
-          if (trimmed !== "") {
-            if (already_set_caption) {
-              console.error({ previous: image_caption, current: trimmed });
-              throw new Error("Already set caption once " + old_id);
-            }
-
-            image_caption = trimmed;
-            already_set_caption = true;
-          } else {
-            /* console.error(
-              "Empty caption: ",
-              csv_article.id,
-              div_child.outerHTML,
-            ); */
-          }
-        } else if (p_child.nodeType == NodeType.TEXT_NODE) {
+        if (p_child.nodeType !== NodeType.ELEMENT_NODE) {
           throw new Error(
-            "Caption is just text" + old_id + ", " + p_child.outerHTML,
+            "Not an HTMLElement " + p_child.nodeType + " " + old_id,
           );
+        }
+
+        let current_caption = "";
+        for (const p_child_child of p_child.childNodes) {
+          if (p_child_child.nodeType == NodeType.TEXT_NODE) {
+            if (p_child_child.text.trim() !== "")
+              current_caption += decode(p_child_child.text);
+          } else if (p_child_child.nodeType == NodeType.ELEMENT_NODE) {
+            if (!(p_child_child instanceof ParserHTMLElement))
+              throw new Error("Not an HTMLElement");
+
+            if (p_child_child.tagName === "IMG") {
+              console.error(
+                "Image in caption",
+                old_id,
+                p_child_child.outerHTML,
+              );
+              problems.image_in_caption.push([old_id, p_child_child.outerHTML]);
+              continue;
+            }
+
+            if (!caption_allowed_tags.includes(p_child_child.tagName)) {
+              throw new Error(
+                "Unexpected tag in caption element: " + p_child_child.tagName,
+              );
+            }
+
+            current_caption += decode(p_child_child.outerHTML);
+          } else {
+            throw new Error("Unexpected comment: " + node.text);
+          }
+        }
+
+        const trimmed = current_caption.trim();
+        if (trimmed !== "") {
+          if (already_set_caption) {
+            console.error({ previous: image_caption, current: trimmed });
+            throw new Error("Already set caption once " + old_id);
+          }
+
+          image_caption = trimmed;
+          already_set_caption = true;
         } else {
-          throw new Error("Unexpected comment: " + node.text);
+          /* console.error(
+            "Empty caption: ",
+            csv_article.id,
+            div_child.outerHTML,
+          ); */
         }
       }
       // console.log("p children done");
+      /*console.log("IMAGE", {
+        image_source,
+        image_caption,
+      });*/
 
       if (!fs_name || !old_path || !image_name || !image_source) {
         console.log("No image src", {
@@ -510,7 +522,7 @@ export async function parse_node(
       break;
     }
     default: {
-      throw new Error("Unexpected element: " + node.tagName);
+      throw new Error("Unexpected element: " + node.tagName + " " + old_id + " " + node.outerHTML);
     }
   }
 

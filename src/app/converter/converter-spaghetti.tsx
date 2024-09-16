@@ -199,7 +199,7 @@ export async function iterate_over_articles(
     await upload_articles(articles);
   }
 
-  await save_file_data(files_to_save);
+  // await save_file_data(files_to_save);
   // console.warn("Images to save", images_to_save);
 
   // await write_article_html_to_file(problematic_articles);
@@ -241,6 +241,7 @@ async function parse_csv_article(
 
   html = fixHtml(html);
   const root = html_parse(html);
+  // console.log("Parsing article", imported_article.objave_id, root.structure);
 
   const currentLocalDate = new Date();
   const created_at = subMinutes(

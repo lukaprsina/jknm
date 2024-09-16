@@ -20,8 +20,6 @@ import { iterate_over_articles } from "./converter-spaghetti";
 import { cn } from "~/lib/utils";
 import { EDITOR_JS_PLUGINS } from "~/components/editor/plugins";
 import { api } from "~/trpc/react";
-import { delete_s3_directory } from "~/server/s3-utils";
-import { env } from "~/env";
 
 export function ArticleConverter() {
   const editorJS = useRef<EditorJS | null>(null);
@@ -30,8 +28,8 @@ export function ArticleConverter() {
   const [doDryRun, setDoDryRun] = useState(true);
   const [doUpdate, setDoUpdate] = useState(false);
   const [doDimensions, setDoDimensions] = useState(false);
-  const [firstArticle, setFirstArticle] = useState("10"); // 32
-  const [lastArticle, setLastArticle] = useState("11");
+  const [firstArticle, setFirstArticle] = useState("33"); // 32
+  const [lastArticle, setLastArticle] = useState("34");
   const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation();
 
   return (

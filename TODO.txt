@@ -1,3 +1,36 @@
+const filtered_nested_childeren = filter_children(
+            child.childNodes as ParserHTMLElement[],
+          );
+
+          if (filtered_nested_childeren.length === 0) {
+            console.error("Empty text in div", old_id);
+            // TODO
+            // problems.empty_text_in_div.push([old_id, child.text]);
+            break;
+          } else if (filtered_nested_childeren.length === 1) {
+            const first = filtered_nested_childeren[0];
+            if (!first) throw new Error("First is undefined: " + old_id);
+
+            if (first.nodeType === NodeType.TEXT_NODE) {
+              const text = decode(first.text).trim();
+              blocks.push({ type: "paragraph", data: { text } });
+            } else if (first.nodeType === NodeType.ELEMENT_NODE) {
+              if (first.tagName !== "IMG") {
+                throw new Error(
+                  "DIV one child, not text: " + first.tagName + " " + old_id,
+                );
+              }
+            }
+          } else {
+            console.error("More then 2 in div", old_id);
+            throw new Error(
+              "More then 3 children in image: " + child.tagName + " " + old_id,
+            );
+          }
+
+-------
+
+
 mobile visual bug
 26 custom avtorjev pred novimi novicami
 icon links: vercel accesibility, https://kittygiraudel.com/2020/12/10/accessible-icon-links/
