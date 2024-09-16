@@ -26,6 +26,12 @@ import { crop_image, delete_s3_directory } from "~/server/s3-utils";
 import { env } from "~/env";
 import { algoliasearch } from "algoliasearch";
 
+export async function delete_s3_published_bucket() {
+  console.log("deleting s3 published bucket");
+  await delete_s3_directory(env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME, "");
+  console.log("done");
+}
+
 export async function delete_articles() {
   console.log("deleting articles");
   await db.execute(

@@ -14,12 +14,14 @@ import {
   sync_with_algolia,
   copy_and_rename_images,
   get_authors_server,
-  delete_articles,
+  delete_articles, delete_s3_published_bucket
 } from "./converter-server";
 import { iterate_over_articles } from "./converter-spaghetti";
 import { cn } from "~/lib/utils";
 import { EDITOR_JS_PLUGINS } from "~/components/editor/plugins";
 import { api } from "~/trpc/react";
+import { delete_s3_directory } from "~/server/s3-utils";
+import { env } from "~/env";
 
 export function ArticleConverter() {
   const editorJS = useRef<EditorJS | null>(null);
@@ -36,6 +38,7 @@ export function ArticleConverter() {
     <div className={cn(article_variants(), page_variants())}>
       <div className="flex w-full flex-wrap gap-4">
         <Button onClick={() => delete_articles()}>Delete articles</Button>
+        <Button variant="destructive" onClick={() => delete_s3_published_bucket()}>Delete s3 published bucket</Button>
         <Button onClick={() => delete_authors()}>Delete authors</Button>
         <Button onClick={() => sync_authors()}>Sync authors</Button>
         <Button onClick={() => sync_duplicate_urls.mutate()}>
