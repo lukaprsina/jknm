@@ -97,6 +97,8 @@ export function useEditorMutations() {
             duplicate_urls,
           ),
         );
+      } else {
+        router.push(`/`);
       }
     },
     onSettled: async () => {

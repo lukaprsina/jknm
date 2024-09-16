@@ -5,7 +5,7 @@ import type { OutputBlockData } from "@editorjs/editorjs";
 import dom_serialize from "dom-serializer";
 import { parseDocument } from "htmlparser2";
 import { parse as html_parse, NodeType } from "node-html-parser";
-
+import { decode as html_decode_entities } from "html-entities";
 import type { AuthorType } from "./get-authors";
 import {
   get_authors_by_name,
@@ -78,6 +78,9 @@ export type InitialProblems = Record<ProblemKey, [number, string][]>;
 
 const initial_problems: InitialProblems = {
   single_in_div: [],
+  nm: [],
+  m3: [],
+  empty_divs: [],
   problematic_articles: [],
   image_in_caption: [],
   videos: [],
@@ -92,6 +95,9 @@ const initial_problems: InitialProblems = {
 
 export type ProblemKey =
   | "single_in_div"
+  | "nm"
+  | "m3"
+  | "empty_divs"
   | "problematic_articles"
   | "image_in_caption"
   | "videos"
@@ -245,11 +251,12 @@ async function parse_csv_article(
   );
 
   const converted_url = convert_title_to_url(imported_article.title);
+  const converted_title = html_decode_entities(imported_article.title);
 
   const blocks: OutputBlockData[] = [
     {
       type: "header",
-      data: { text: imported_article.title, level: 1 },
+      data: { text: converted_title, level: 1 },
     },
   ];
 
@@ -340,7 +347,7 @@ async function parse_csv_article(
 
   return {
     old_id: imported_article.objave_id,
-    title: imported_article.title,
+    title: converted_title,
     content,
     url: converted_url,
     created_at,
@@ -360,9 +367,3 @@ function fixHtml(htmlString: string) {
 
   return dom_serialize(document);
 }
-
-/* function parseWithTimeZone(dateStr, formatStr, referenceDate, timeZone) {
-  const zonedDate = utcToZonedTime(referenceDate, timeZone);
-  const parsedDate = parse(dateStr, formatStr, zonedDate);
-  return zonedTimeToUtc(parsedDate, timeZone);
-} */

@@ -78,10 +78,6 @@ export function PreveriClient({
     page_info.current_id,
   );
 
-  /*useEffect(() => {
-    console.log("useEffect", preveri_store_index, page_info);
-  }, [preveri_store_index, page_info]);*/
-
   const iframe_src = useCallback(
     (id: number) => `https://www.jknm.si/si/?id=${id}`,
     [],
@@ -94,8 +90,7 @@ export function PreveriClient({
 
   return (
     <>
-      <h2>Preveri</h2>
-      <p>Stran {preveri_store_index}</p>
+      <h1>Preveri: ID {preveri_store_index}</h1>
       <form
         onSubmit={(event) => {
           event.preventDefault();

@@ -339,8 +339,6 @@ export async function copy_and_rename_images() {
         await fs_promises.copyFile(old_path, new_path);
       });
 
-      const all_image_promises = Promise.allSettled(image_promises);
-
       const file_promises = json.files.map(async (file) => {
         const old_path = path.join(JKNM_SERVED_DIR, file.old_path);
 
@@ -349,15 +347,16 @@ export async function copy_and_rename_images() {
           file.fs_name
         );
 
-        console.log("Copying file", { old_path, new_path });
+        // console.log("Copying file", { old_path, new_path });
         await fs_promises.copyFile(old_path, new_path);
-        console.log("Copied file", { old_path, new_path });
+        // console.log("Copied file", { old_path, new_path });
       })
 
-      all_image_promises
-        .then(async (imageResults) => {
-          // Wait for all thumbnail promises after image promises have settled
+      const all_image_promises = Promise.allSettled(image_promises);
+      const all_file_promises = Promise.allSettled(file_promises);
 
+      all_image_promises
+        .then(async (image_results) => {
           // thumbnail
           const first_image = json.images[0];
           if (first_image && json.thumbnail_crop) {
@@ -392,9 +391,9 @@ export async function copy_and_rename_images() {
             );
           }
 
-          await Promise.all(file_promises);
+          const file_results = await all_file_promises;
 
-          resolve(imageResults);
+          resolve([...image_results, ...file_results]);
         })
         .catch((error) => {
           // Handle any potential errors (although Promise.allSettled resolves everything)

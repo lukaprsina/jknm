@@ -54,10 +54,10 @@ export function get_authors(
 
   for (const paragraph of last_paragraphs) {
     const root = html_parse(paragraph);
-    const strongs = root.querySelectorAll("strong");
+    const bold_elements = root.querySelectorAll("b");
 
-    for (const strong of strongs) {
-      const trimmed = strong.text
+    for (const bold_element of bold_elements) {
+      const trimmed = bold_element.text
         .trim()
         .replaceAll(/\s+/g, " ")
         .replaceAll(":", "")
@@ -87,7 +87,6 @@ export function get_authors(
           all_authors,
           not_found_authors,
           current_authors,
-          // csv_article,
         );
       }
     }

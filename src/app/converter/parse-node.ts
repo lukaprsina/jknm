@@ -21,7 +21,9 @@ import { get_s3_prefix } from "~/lib/s3-publish";
 
 const p_allowed_tags = ["STRONG", "BR", "A", "IMG", "EM", "SUB", "SUP"];
 const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
+
 const LINK_REGEX = /[\s\p{P}]$/u;
+const NM_REGEX = /NM(\d+)/g
 
 export async function parse_node(
   node: ParserNode,
@@ -42,6 +44,7 @@ export async function parse_node(
 
     function test(filter: string) {
       if (lower.includes(filter)) {
+        problems.m3.push([old_id, decoded]);
         console.warn(filter, old_id);
       }
     }
@@ -63,8 +66,12 @@ export async function parse_node(
 
     // console.log("replaced", replaced);
 
+    if(NM_REGEX.test(decoded)) {
+      problems.nm.push([old_id, decoded]);
+    }
+
     return decoded
-      .replaceAll(/NM(\d+)/g, "NM $1")
+      .replaceAll(NM_REGEX, "NM $1")
       .replaceAll("<strong>", "<b>")
       .replaceAll("</strong>", "</b>");
   }
@@ -112,15 +119,28 @@ export async function parse_node(
                 if (url.hostname.includes("jknm.si")) {
                   console.error("jknmsi link", old_id, href);
                   problems.link_jknmsi.push([old_id, href]);
+                  const id_string = url.searchParams.get("id");
+                  if(typeof id_string !== "string") {
+                    throw new Error(`No id in jknmsi link ${href}, ${old_id}`);
+                  }
 
-                  const new_index = csv_ids.findIndex((id) => id === old_id);
+                  let id_num = parseInt(id_string)
+
+                  if(isNaN(id_num)) {
+                    throw new Error(`NaN ID in jknmsi link ${href}, ${old_id}`);
+                  }
+
+                  id_num++ // 1-indexed
+
+                  const new_index = csv_ids.findIndex((id) => id === id_num);
                   const article_link = `/novica?id=${new_index}`
+                  console.warn("Replaced", href, article_link);
                   text = text.replaceAll(href, article_link);
                 } else {
                   console.error("external link", old_id, href);
                   problems.link_external.push([old_id, href]);
                 }
-              } catch (_) {
+              } catch (error) {
                 console.error("internal link", old_id, href);
                 problems.link_internal.push([old_id, href]);
 
@@ -209,7 +229,7 @@ export async function parse_node(
       if (children.length === 0) {
         // throw new Error("Empty div " + csv_article.id);
         console.error("Empty div", old_id, node.outerHTML);
-        // problems.empty_divs?.push([csv_article.id, node.outerHTML]);
+        problems.empty_divs.push([old_id, node.outerHTML]);
         break;
       } else if (children.length === 1) {
         const child = children[0];

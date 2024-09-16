@@ -28,12 +28,18 @@ export function convert_title_to_url(dangerous_url: string) {
       }
     })
     .replace(/[^a-zA-Z0-9\-_\s]/g, "")
+    // Replace spaces or sequences of spaces, underscores, or hyphens with a single hyphen
+    .replace(/[\s-]+/g, '-')
+    .replace(/_+/g, '_')
+    // Remove leading or trailing hyphens
+    .replace(/^-+|-+$/g, '')
+    .replace(/^_+|_+$/g, '')
     .trim();
 
   // remove leading and trailing dashes and underscores
   const replaced_split = replaced
     .split(/[\s+]/g)
-    .map((s) => s.trim().replace(/(^[-_]+|[-_]+$)/g, ""))
+    .map((s) => s.trim())
     .filter((s) => s.length > 0);
 
   if (replaced_split.length === 0) return uuid4();
