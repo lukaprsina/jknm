@@ -9,8 +9,9 @@ import { parse as html_parse, NodeType } from "node-html-parser";
 import type { AuthorType } from "./get-authors";
 import {
   get_authors_by_name,
-  get_problematic_html, save_image_data,
-  upload_articles
+  get_problematic_html,
+  save_file_data,
+  upload_articles,
 } from "./converter-server";
 import { get_authors } from "./get-authors";
 import { parse_node } from "./parse-node";
@@ -32,11 +33,12 @@ export type ConverterArticleWithAuthorIds = z.infer<
   author_ids: number[];
 };
 
-export interface ImageToSave {
+export interface FilesToSave {
   objave_id: number;
-  serial_id: string;
+  // serial_id: string;
   url: string;
   images: DimensionType[];
+  files: FileInfo[]
   created_at: Date;
   thumbnail_crop: ThumbnailType | undefined;
 }
@@ -52,7 +54,7 @@ export interface ImportedArticle {
 export interface DimensionType {
   width: number;
   height: number;
-  s3_url: string;
+  fs_name: string;
   image_name: string;
   old_path: string;
 }
@@ -60,6 +62,11 @@ export interface DimensionType {
 export interface ImageInfo {
   thumbnail_crop: ThumbnailType | undefined;
   images: DimensionType[];
+}
+
+export interface FileInfo {
+  old_path: string;
+  fs_name: string;
 }
 
 export interface IdsByDimentionType {
@@ -76,6 +83,11 @@ const initial_problems: InitialProblems = {
   videos: [],
   videos_no_id: [],
   empty_captions: [],
+  unexpected_in_div: [],
+  link_ends_punct_or_ws: [],
+  link_internal: [],
+  link_jknmsi: [],
+  link_external: [],
 };
 
 export type ProblemKey =
@@ -84,9 +96,14 @@ export type ProblemKey =
   | "image_in_caption"
   | "videos"
   | "videos_no_id"
-  | "empty_captions";
+  | "empty_captions"
+  | "unexpected_in_div"
+  | "link_ends_punct_or_ws"
+  | "link_internal"
+  | "link_jknmsi"
+  | "link_external";
 
-const images_to_save: ImageToSave[] = [];
+const files_to_save: FilesToSave[] = [];
 const articles_without_authors = new Set<number>();
 const authors_by_id: { id: string; names: string[] }[] = [];
 let authors_by_name: AuthorType[] = [];
@@ -108,7 +125,7 @@ export async function iterate_over_articles(
 
   const problems = initial_problems;
 
-  images_to_save.length = 0;
+  files_to_save.length = 0;
   articles_without_authors.clear();
   authors_by_id.length = 0;
   authors_by_name.length = 0;
@@ -150,23 +167,23 @@ export async function iterate_over_articles(
     : imported_articles;
 
   const articles: ConverterArticleWithAuthorIds[] = [];
-  let article_id = do_splice && first_index !== -1 ? first_index + 1 : 1;
+  // let article_id = do_splice && first_index !== -1 ? first_index + 1 : 1;
 
   authors_by_name = await get_authors_by_name();
+
+  const csv_ids = imported_articles.map((a) => a.objave_id);
 
   for (const csv_article of sliced_csv_articles) {
     const article = await parse_csv_article(
       csv_article,
       editorJS,
-      article_id,
+      csv_ids,
       all_authors,
       authors_by_name,
       do_dimensions,
       problems,
     );
-    console.log("article in looop", article)
     articles.push(article);
-    article_id++;
   }
 
   console.log("done", articles);
@@ -174,7 +191,7 @@ export async function iterate_over_articles(
     await upload_articles(articles);
   }
 
-  await save_image_data(images_to_save);
+  await save_file_data(files_to_save);
   // console.warn("Images to save", images_to_save);
 
   // await write_article_html_to_file(problematic_articles);
@@ -197,7 +214,7 @@ export async function iterate_over_articles(
 async function parse_csv_article(
   imported_article: ImportedArticle,
   editorJS: EditorJS | null,
-  article_id: number,
+  csv_ids: number[],
   all_authors: RouterOutputs["author"]["get_all"],
   authors_by_name: AuthorType[],
   do_dimensions: boolean,
@@ -218,8 +235,14 @@ async function parse_csv_article(
   const root = html_parse(html);
 
   const currentLocalDate = new Date();
-  const created_at = subMinutes(imported_article.created_at, currentLocalDate.getTimezoneOffset());
-  const updated_at = subMinutes(imported_article.updated_at, currentLocalDate.getTimezoneOffset());
+  const created_at = subMinutes(
+    imported_article.created_at,
+    currentLocalDate.getTimezoneOffset(),
+  );
+  const updated_at = subMinutes(
+    imported_article.updated_at,
+    currentLocalDate.getTimezoneOffset(),
+  );
 
   const converted_url = convert_title_to_url(imported_article.title);
 
@@ -235,6 +258,8 @@ async function parse_csv_article(
     images: [],
   };
 
+  const file_info: FileInfo[] = []
+
   for (const node of root.childNodes) {
     if (node.nodeType == NodeType.ELEMENT_NODE) {
       await parse_node(
@@ -243,10 +268,12 @@ async function parse_csv_article(
         created_at,
         imported_article,
         converted_url,
+        csv_ids,
         problems,
         do_dimensions,
         ids_by_dimensions,
         image_info,
+        file_info
       );
     } else if (node.nodeType == NodeType.TEXT_NODE) {
       if (node.text.trim() !== "") throw new Error("Some text: " + node.text);
@@ -263,7 +290,7 @@ async function parse_csv_article(
 
     if (width && height) {
       const image_url = get_s3_prefix(
-        first_image.s3_url,
+        first_image.fs_name,
         env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
       );
       image_info.thumbnail_crop = {
@@ -286,11 +313,11 @@ async function parse_csv_article(
   }
 
   // console.log("image_info", image_info);
-  images_to_save.push({
+  files_to_save.push({
     objave_id: imported_article.objave_id,
-    serial_id: article_id.toString(),
     url: converted_url,
     images: image_info.images,
+    files: file_info,
     created_at,
     thumbnail_crop: image_info.thumbnail_crop,
   });

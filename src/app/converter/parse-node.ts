@@ -2,15 +2,16 @@
 
 import type { OutputBlockData } from "@editorjs/editorjs";
 import type { Node as ParserNode } from "node-html-parser";
+import { HTMLElement as ParserHTMLElement, NodeType } from "node-html-parser";
 import { decode as html_decode_entities } from "html-entities";
-import { NodeType, HTMLElement as ParserHTMLElement } from "node-html-parser";
 
 import { get_image_dimensions } from "./converter-server";
-import type {
+import {
+  FileInfo,
   IdsByDimentionType,
   ImageInfo,
   ImportedArticle,
-  InitialProblems,
+  InitialProblems
 } from "./converter-spaghetti";
 import { convert_filename_to_url } from "~/lib/article-utils";
 import path from "path";
@@ -20,6 +21,7 @@ import { get_s3_prefix } from "~/lib/s3-publish";
 
 const p_allowed_tags = ["STRONG", "BR", "A", "IMG", "EM", "SUB", "SUP"];
 const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
+const LINK_REGEX = /[\s\p{P}]$/u;
 
 export async function parse_node(
   node: ParserNode,
@@ -27,13 +29,15 @@ export async function parse_node(
   created_at: Date,
   articles_with_authors: ImportedArticle,
   csv_url: string,
+  csv_ids: number[],
   problems: InitialProblems,
   do_dimensions: boolean,
   ids_by_dimensions: IdsByDimentionType[],
   image_info: ImageInfo,
+  file_info: FileInfo[]
 ): Promise<void> {
   function decode(text: string | undefined): string {
-    const decoded = html_decode_entities(text)
+    const decoded = html_decode_entities(text);
     const lower = decoded.toLowerCase();
 
     function test(filter: string) {
@@ -42,24 +46,27 @@ export async function parse_node(
       }
     }
 
-    test("m2")
-    test("m 2")
-    test("m3")
-    test("m 3")
-    test("cm2")
-    test("cm 2")
-    test("cm3")
-    test("cm 3")
-    test("mm2")
-    test("mm 2")
-    test("mm3")
-    test("mm 3")
+    test("m2");
+    test("m 2");
+    test("m3");
+    test("m 3");
+    test("cm2");
+    test("cm 2");
+    test("cm3");
+    test("cm 3");
+    test("mm2");
+    test("mm 2");
+    test("mm3");
+    test("mm 3");
+    test("km2");
+    test("km 2");
 
-    const replaced = decoded.replaceAll(/NM(\d+)/g, "NM $1").replaceAll("strong>", "b>");
+    // console.log("replaced", replaced);
 
-    console.log("replaced", replaced);
-
-    return replaced;
+    return decoded
+      .replaceAll(/NM(\d+)/g, "NM $1")
+      .replaceAll("<strong>", "<b>")
+      .replaceAll("</strong>", "</b>");
   }
 
   const article_url = `${csv_url}-${format_date_for_url(created_at)}`;
@@ -72,6 +79,8 @@ export async function parse_node(
 
   switch (node.tagName) {
     case "P": {
+      let text = decode(node.innerHTML).trim();
+
       for (const p_child of node.childNodes) {
         if (p_child.nodeType == NodeType.ELEMENT_NODE) {
           if (!(p_child instanceof ParserHTMLElement))
@@ -79,12 +88,66 @@ export async function parse_node(
 
           if (!p_allowed_tags.includes(p_child.tagName))
             throw new Error("Unexpected tag in p element: " + p_child.tagName);
+
+          // handle links
+          if (p_child.tagName === "A") {
+            const result = LINK_REGEX.test(text);
+            //text.replace(LINK_REGEX, "");
+            if (result) {
+              console.error(
+                "Link ends with whitespace or punctuation",
+                old_id,
+                p_child.innerHTML,
+              );
+
+              problems.link_ends_punct_or_ws.push([old_id, p_child.innerHTML]);
+            }
+
+            const link_attr = p_child.attributes;
+            if ("href" in link_attr) {
+              const href = html_decode_entities(link_attr.href);
+
+              try {
+                const url = new URL(href);
+                if (url.hostname.includes("jknm.si")) {
+                  console.error("jknmsi link", old_id, href);
+                  problems.link_jknmsi.push([old_id, href]);
+
+                  const new_index = csv_ids.findIndex((id) => id === old_id);
+                  const article_link = `/novica?id=${new_index}`
+                  text = text.replaceAll(href, article_link);
+                } else {
+                  console.error("external link", old_id, href);
+                  problems.link_external.push([old_id, href]);
+                }
+              } catch (_) {
+                console.error("internal link", old_id, href);
+                problems.link_internal.push([old_id, href]);
+
+                const decoded_href = html_decode_entities(href);
+                if(decoded_href.startsWith("/si/")) {
+                  // TODO: ročno popravi 10, 56, 75
+                  continue;
+                }
+
+                const old_path = decodeURIComponent(decoded_href.toLowerCase());
+                const old_path_parts = path.parse(old_path);
+                const file_name = convert_filename_to_url(old_path_parts.base);
+                const fs_name = `${article_url}/${file_name}`;
+                const file_href = get_s3_prefix(
+                  fs_name,
+                  env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+                );
+
+                text = text.replaceAll(href, file_href);
+                file_info.push({ old_path: href, fs_name });
+              }
+            }
+          }
         } else if (p_child.nodeType === NodeType.COMMENT_NODE) {
           throw new Error("Unexpected comment: " + node.text);
         }
       }
-
-      const text = decode(node.innerHTML).trim();
 
       blocks.push({ type: "paragraph", data: { text } });
       break;
@@ -173,14 +236,14 @@ export async function parse_node(
             console.error(
               `Unexpected element in div: ${child.tagName} ${old_id}, ${child.outerHTML}`,
             );
-            // problems.
+            problems.unexpected_in_div.push([old_id, child.outerHTML]);
           }
         } else {
           throw new Error("Unexpected comment: " + node.text);
         }
       }
 
-      let s3_url: string | undefined;
+      let fs_name: string | undefined;
       let image_source: string | undefined;
       let image_name: string | undefined;
       let old_path: string | undefined;
@@ -198,9 +261,9 @@ export async function parse_node(
           old_path = decodeURIComponent(trimmed.toLowerCase());
           const old_path_parts = path.parse(old_path);
           image_name = convert_filename_to_url(old_path_parts.base);
-          s3_url = `${article_url}/${image_name}`;
+          fs_name = `${article_url}/${image_name}`;
           image_source = get_s3_prefix(
-            s3_url,
+            fs_name,
             env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
           );
           already_set_src = true;
@@ -292,10 +355,10 @@ export async function parse_node(
       }
       // console.log("p children done");
 
-      if (!s3_url || !old_path || !image_name || !image_source) {
+      if (!fs_name || !old_path || !image_name || !image_source) {
         console.log("No image src", {
           old_id,
-          s3_url,
+          fs_name,
           old_path,
           image_name,
           image_source,
@@ -314,7 +377,7 @@ export async function parse_node(
       }
 
       const dimensions = await get_image_dimensions({
-        s3_url,
+        fs_name,
         old_path,
         image_name,
         do_dimensions,
@@ -342,7 +405,7 @@ export async function parse_node(
       if (dimensions) {
         image_info.images.push(dimensions);
       } else {
-        console.error("No dimensions for image", old_id, s3_url);
+        console.error("No dimensions for image", old_id, fs_name);
         break;
       }
 
