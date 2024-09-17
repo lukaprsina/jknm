@@ -38,7 +38,7 @@ export interface FilesToSave {
   // serial_id: string;
   url: string;
   images: DimensionType[];
-  files: FileInfo[]
+  files: FileInfo[];
   created_at: Date;
   thumbnail_crop: ThumbnailType | undefined;
 }
@@ -77,6 +77,7 @@ export interface IdsByDimentionType {
 export type InitialProblems = Record<ProblemKey, [number, string][]>;
 
 const initial_problems: InitialProblems = {
+  images_no_div: [],
   single_in_div: [],
   just_text_in_div: [],
   nm: [],
@@ -96,6 +97,7 @@ const initial_problems: InitialProblems = {
 };
 
 export type ProblemKey =
+  | "images_no_div"
   | "single_in_div"
   | "just_text_in_div"
   | "nm"
@@ -153,8 +155,6 @@ export async function iterate_over_articles(
       ? undefined
       : imported_articles.findIndex((a) => a.objave_id === last_article);
 
-  /* if (first_index === -1) first_index = 0;
-  if (last_index === -1) last_index = csv_articles.length - 1; */
   if (first_index === -1 || last_index === -1) {
     const first = imported_articles[0];
 
@@ -201,7 +201,7 @@ export async function iterate_over_articles(
     await upload_articles(articles);
   }
 
-  // await save_file_data(files_to_save);
+  await save_file_data(files_to_save);
   // console.warn("Images to save", images_to_save);
 
   // await write_article_html_to_file(problematic_articles);
@@ -243,7 +243,29 @@ async function parse_csv_article(
 
   html = fixHtml(html);
   const root = html_parse(html);
-  // console.log("Parsing article", imported_article.objave_id, root.structure);
+
+  // is image in div
+  {
+    const images = root.querySelectorAll("img");
+    for(const image of images) {
+      const possible_div_1 = image?.parentNode;
+      const possible_div_2 = possible_div_1?.parentNode;
+      const valid =
+        possible_div_1?.tagName === "DIV" || possible_div_2?.tagName === "DIV";
+
+      if (!valid) {
+        console.log("Parsing article", imported_article.objave_id, root.structure);
+        console.warn(
+          "Images isn't in div",
+          imported_article.objave_id,
+          image.outerHTML,
+          {first: possible_div_1?.tagName, second: possible_div_2?.tagName},
+        );
+        problems.images_no_div.push([imported_article.objave_id, image.outerHTML]);
+        // throw new Error("Images in p");
+      }
+    }
+  }
 
   const currentLocalDate = new Date();
   const created_at = subMinutes(
@@ -270,7 +292,7 @@ async function parse_csv_article(
     images: [],
   };
 
-  const file_info: FileInfo[] = []
+  const file_info: FileInfo[] = [];
 
   for (const node of root.childNodes) {
     if (node.nodeType == NodeType.ELEMENT_NODE) {
@@ -285,7 +307,7 @@ async function parse_csv_article(
         do_dimensions,
         ids_by_dimensions,
         image_info,
-        file_info
+        file_info,
       );
     } else if (node.nodeType == NodeType.TEXT_NODE) {
       if (node.text.trim() !== "") throw new Error("Some text: " + node.text);

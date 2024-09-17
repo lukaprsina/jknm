@@ -94,6 +94,38 @@ export const article_router = createTRPCRouter({
       });
     }),
 
+  get_article_by_published_id: publicProcedure
+    .input(z.number().optional())
+    .query(async ({ ctx, input }) => {
+      if(!input) return { published: undefined };
+
+      const published = await ctx.db.query.PublishedArticle.findFirst({
+        where: eq(PublishedArticle.id, input),
+        with: {
+          published_articles_to_authors: {
+            with: { author: true },
+          },
+        },
+      });
+
+      if (!published) return { published };
+
+      if(ctx.session) {
+        const draft = await ctx.db.query.DraftArticle.findFirst({
+          where: eq(DraftArticle.published_id, input),
+          with: {
+            draft_articles_to_authors: {
+              with: { author: true },
+            },
+          },
+        });
+
+        return { published, draft };
+      }
+
+      return { published };
+    }),
+
   // get published and if logged in, also draft
   get_article_by_published_url: publicProcedure
     .input(z.object({ url: z.string(), created_at: z.date().optional() }))

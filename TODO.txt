@@ -1,3 +1,5 @@
+dodaj article adapter za draft pa published table
+
 const filtered_nested_childeren = filter_children(
             child.childNodes as ParserHTMLElement[],
           );

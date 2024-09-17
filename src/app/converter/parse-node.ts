@@ -59,14 +59,14 @@ export async function parse_node(
     function test(filter: string) {
       if (lower.includes(filter)) {
         problems.superscript.push([old_id, decoded]);
-        console.warn(filter, old_id);
+        // console.warn(filter, old_id);
       }
     }
 
     function test_ws(filter: string) {
       if (lower.includes(filter)) {
         problems.superscript_ws.push([old_id, decoded]);
-        console.warn(filter, old_id);
+        // console.warn(filter, old_id);
       }
     }
 
@@ -124,11 +124,11 @@ export async function parse_node(
             const result = LINK_REGEX.test(text);
             //text.replace(LINK_REGEX, "");
             if (result) {
-              console.error(
+              /* console.error(
                 "Link ends with whitespace or punctuation",
                 old_id,
                 p_child.innerHTML,
-              );
+              ); */
 
               problems.link_ends_punct_or_ws.push([old_id, p_child.innerHTML]);
             }
@@ -139,7 +139,7 @@ export async function parse_node(
               let url: URL | undefined;
 
               const replace_relative_link = (relative_href: string) => {
-                console.error("internal link", old_id, relative_href);
+                // console.error("internal link", old_id, relative_href);
                 problems.link_internal.push([old_id, relative_href]);
 
                 const decoded_href = html_decode_entities(relative_href);
@@ -170,7 +170,7 @@ export async function parse_node(
 
               if (url) {
                 if (url.hostname.includes("jknm.si")) {
-                  console.error("jknmsi link", old_id, href);
+                  // console.error("jknmsi link", old_id, href);
                   problems.link_jknmsi.push([old_id, href]);
                   const id_string = url.searchParams.get("id");
 
@@ -193,7 +193,7 @@ export async function parse_node(
                   // console.warn("Replaced", href, article_link);
                   text = text.replaceAll(href, article_link);
                 } else {
-                  console.error("external link", old_id, href);
+                  // console.error("external link", old_id, href);
                   problems.link_external.push([old_id, href]);
                 }
               }

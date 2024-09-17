@@ -28,8 +28,8 @@ export function ArticleConverter() {
   const [doDryRun, setDoDryRun] = useState(true);
   const [doUpdate, setDoUpdate] = useState(false);
   const [doDimensions, setDoDimensions] = useState(false);
-  const [firstArticle, setFirstArticle] = useState("33"); // 32
-  const [lastArticle, setLastArticle] = useState("34");
+  const [firstArticle, setFirstArticle] = useState("23");
+  const [lastArticle, setLastArticle] = useState("24");
   const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation();
 
   return (

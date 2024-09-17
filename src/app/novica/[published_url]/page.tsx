@@ -1,12 +1,3 @@
-import Link from "next/link";
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
 import { Shell } from "~/components/shell";
@@ -21,6 +12,8 @@ import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
 } from "~/components/article/card-adapter";
+import { ArticleNotFound } from "~/components/component-not-found";
+import { PublishedContent, TabbedContent } from "~/components/content";
 
 interface NovicaProps {
   params: {
@@ -62,7 +55,6 @@ export default async function NovicaPage({
   }
 
   return (
-    // <PublishedArticleContext.Provider value={article_by_url}>
     <Shell draft_article={draft} published_article={published}>
       {session ? (
         <TabbedContent draft={draft} published={published} />
@@ -71,83 +63,5 @@ export default async function NovicaPage({
       )}
       <ImageGallery />
     </Shell>
-    // </PublishedArticleContext.Provider>
-  );
-}
-
-function PublishedContent({
-  article,
-}: {
-  article?: PublishedArticleWithAuthors;
-}) {
-  if (!article?.content) {
-    return <ArticleNotFound />;
-  }
-
-  return (
-    <div className={cn(article_variants(), page_variants())}>
-      <EditorToReact article={article} session={null} />
-    </div>
-  );
-}
-
-async function TabbedContent({
-  draft,
-  published,
-}: {
-  draft?: DraftArticleWithAuthors;
-  published?: PublishedArticleWithAuthors;
-}) {
-  const session = await getServerAuthSession();
-
-  if (!draft?.content && !published?.content) {
-    return <ArticleNotFound />;
-  }
-
-  return (
-    <Tabs
-      defaultValue={"published"}
-      className={cn(article_variants(), page_variants())}
-    >
-      <TabsList className="not-prose">
-        <TabsTrigger disabled={!draft?.content} value="draft">
-          Osnutek
-        </TabsTrigger>
-        <TabsTrigger disabled={!published?.content} value="published">
-          Objavljeno
-        </TabsTrigger>
-      </TabsList>
-      <TabsContent value="draft">
-        <EditorToReact article={draft} session={session} />
-      </TabsContent>
-      <TabsContent value="published">
-        <EditorToReact article={published} session={session} />
-      </TabsContent>
-    </Tabs>
-  );
-}
-
-function ArticleNotFound() {
-  return (
-    <div
-      className={cn(
-        page_variants(),
-        "prose flex min-h-screen items-center justify-center",
-      )}
-    >
-      <Card>
-        <CardHeader>
-          <CardTitle>Novica ne obstaja</CardTitle>
-          <CardDescription>
-            Prosim, preverite URL naslov in poskusite znova.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>Če menite, da je prišlo do napake, nas kontaktirajte.</p>
-          <p>Naša e-pošta: </p>
-          <Link href="mailto:info@jknm.si">info@jknm.si</Link>
-        </CardContent>
-      </Card>
-    </div>
   );
 }
