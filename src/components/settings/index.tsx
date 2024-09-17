@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, SettingsIcon, UsersIcon } from "lucide-react";
+import { LogOut, RefreshCcw, SettingsIcon, UsersIcon } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -15,11 +15,30 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import Link from "next/link";
+import { api } from "~/trpc/react";
+import { useToast } from "~/hooks/use-toast";
 // import { AuthorsDialog } from "./authors";
 // import { useState } from "react";
 
 export function SettingsDropdown() {
   const router = useRouter();
+  const toaster = useToast()
+
+  // TODO: to bi moral biti dialog.
+  const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation({
+    onSuccess: (data) => {
+      toaster.toast({
+        title: "Uspeh",
+        description: `Obstaja ${data.length} podvojenih URL-jev`,
+      })
+    },
+    onError: (error) => {
+      toaster.toast({
+        title: "Napaka",
+        description: error.message,
+      })
+    }
+  })
   // const [authorDialogOpen, setAuthorDialogOpen] = useState(false);
 
   return (
@@ -45,6 +64,14 @@ export function SettingsDropdown() {
               <UsersIcon className="mr-2 h-4 w-4" />
               <span>Avtorji</span>
             </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={async () => {
+              sync_duplicate_urls.mutate()
+            }}
+          >
+            <RefreshCcw className="mr-2 h-4 w-4"  size={18} />
+            <span>Popravi</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem

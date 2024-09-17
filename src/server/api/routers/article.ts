@@ -602,6 +602,8 @@ export const article_router = createTRPCRouter({
       if (duplicate_urls.length > 0) {
         await tx.insert(DuplicatedArticleUrls).values(duplicate_urls);
       }
+
+      return duplicate_urls;
     });
 
     return transaction;
