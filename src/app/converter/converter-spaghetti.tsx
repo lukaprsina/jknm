@@ -80,7 +80,8 @@ const initial_problems: InitialProblems = {
   single_in_div: [],
   just_text_in_div: [],
   nm: [],
-  m3: [],
+  superscript: [],
+  superscript_ws: [],
   empty_divs: [],
   problematic_articles: [],
   image_in_caption: [],
@@ -98,7 +99,8 @@ export type ProblemKey =
   | "single_in_div"
   | "just_text_in_div"
   | "nm"
-  | "m3"
+  | "superscript"
+  | "superscript_ws"
   | "empty_divs"
   | "problematic_articles"
   | "image_in_caption"

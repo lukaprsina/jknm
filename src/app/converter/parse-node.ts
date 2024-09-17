@@ -23,7 +23,7 @@ const p_allowed_tags = ["STRONG", "BR", "A", "IMG", "EM", "SUB", "SUP"];
 const caption_allowed_tags = ["STRONG", "EM", "A", "SUB", "SUP"];
 
 const LINK_REGEX = /[\s\p{P}]$/u;
-const NM_REGEX = /NM(\d+)/g;
+const NM_REGEX = /\sNM(\d+)/g;
 
 function filter_children(raw_children: ParserHTMLElement[]) {
   return raw_children.filter((raw_child) => {
@@ -58,25 +58,32 @@ export async function parse_node(
 
     function test(filter: string) {
       if (lower.includes(filter)) {
-        problems.m3.push([old_id, decoded]);
+        problems.superscript.push([old_id, decoded]);
+        console.warn(filter, old_id);
+      }
+    }
+
+    function test_ws(filter: string) {
+      if (lower.includes(filter)) {
+        problems.superscript_ws.push([old_id, decoded]);
         console.warn(filter, old_id);
       }
     }
 
     test("m2");
-    test("m 2");
+    test_ws("m 2");
     test("m3");
-    test("m 3");
+    test_ws("m 3");
     test("cm2");
-    test("cm 2");
+    test_ws("cm 2");
     test("cm3");
-    test("cm 3");
+    test_ws("cm 3");
     test("mm2");
-    test("mm 2");
+    test_ws("mm 2");
     test("mm3");
-    test("mm 3");
+    test_ws("mm 3");
     test("km2");
-    test("km 2");
+    test_ws("km 2");
 
     // console.log("replaced", replaced);
 
@@ -272,17 +279,20 @@ export async function parse_node(
             const filtered_nested_childeren = filter_children(
               child.childNodes as ParserHTMLElement[],
             );
-            console.log("filtered_nested_childeren", filtered_nested_childeren);
-            if (filtered_nested_childeren.length === 1) {
+            // console.log("filtered_nested_childeren", filtered_nested_childeren);
+            if(filtered_nested_childeren.length === 0) {
+              console.log("child.outerHTML no children", child.outerHTML)
+              break;
+            }
+            else if (filtered_nested_childeren.length === 1) {
               blocks.push({ type: "paragraph", data: { text } });
             } else if (filtered_nested_childeren.length === 2) {
               //   console.log("p children");
             } else {
               /*console.log(
-                "child.outerHTML",
-                child.outerHTML,
-                child.childNodes.map((c) => c.text),
-              );*/
+                "filtered_nested_childeren",
+                filtered_nested_childeren.map((c) => c.text),
+              )*/
               throw new Error(
                 "More then 3 children in image: " +
                   child.tagName +
