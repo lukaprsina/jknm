@@ -221,7 +221,7 @@ export function ImageSelector({
 
           console.warn("start");
           setCustomThumbnailExists(true);
-          setImageIndex(images.length);
+          // setImageIndex(images.length);
           setUploadedVersion(Date.now());
         }}
       />

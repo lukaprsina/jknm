@@ -69,9 +69,8 @@ export function ArticleTable({
               }}
             >
               Naslov
-              {sort_api.currentRefinement === "published_article_title_desc" && (
-                <ChevronDownIcon />
-              )}
+              {sort_api.currentRefinement ===
+                "published_article_title_desc" && <ChevronDownIcon />}
               {sort_api.currentRefinement === "published_article_title_asc" && (
                 <ChevronUpIcon />
               )}
@@ -83,17 +82,18 @@ export function ArticleTable({
               variant="ghost"
               onClick={() => {
                 sort_api.refine(
-                  sort_api.currentRefinement === "published_article_created_at_desc"
+                  sort_api.currentRefinement ===
+                    "published_article_created_at_desc"
                     ? "published_article_created_at_asc"
                     : "published_article_created_at_desc",
                 );
               }}
             >
               Datum nastanka
-              {sort_api.currentRefinement === "published_article_created_at_desc" && (
-                <ChevronDownIcon />
-              )}
-              {sort_api.currentRefinement === "published_article_created_at_asc" && <ChevronUpIcon />}
+              {sort_api.currentRefinement ===
+                "published_article_created_at_desc" && <ChevronDownIcon />}
+              {sort_api.currentRefinement ===
+                "published_article_created_at_asc" && <ChevronUpIcon />}
             </Button>
           </TableHead>
           <TableHead>
@@ -101,17 +101,18 @@ export function ArticleTable({
               variant="ghost"
               onClick={() => {
                 sort_api.refine(
-                  sort_api.currentRefinement === "published_article_updated_at_desc"
+                  sort_api.currentRefinement ===
+                    "published_article_updated_at_desc"
                     ? "published_article_updated_at_asc"
                     : "published_article_updated_at_desc",
                 );
               }}
             >
               Zadnje posodobljeno
-              {sort_api.currentRefinement === "published_article_created_at_desc" && (
-                <ChevronDownIcon />
-              )}
-              {sort_api.currentRefinement === "published_article_created_at_asc" && <ChevronUpIcon />}
+              {sort_api.currentRefinement ===
+                "published_article_created_at_desc" && <ChevronDownIcon />}
+              {sort_api.currentRefinement ===
+                "published_article_created_at_asc" && <ChevronUpIcon />}
             </Button>
           </TableHead>
         </TableRow>
@@ -201,7 +202,7 @@ function DeleteDialog({ article_id }: { article_id: number }) {
           <AlertDialogCancel>Prekliči</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
-              article_delete.mutate(article_id);
+              article_delete.mutate({ draft_id: article_id });
             }}
           >
             OK

@@ -271,7 +271,7 @@ export function useEditorMutations() {
     },
     delete_both: () => {
       editor_context.setSavingText("Brišem novičko ...");
-      delete_both.mutate(draft_article.id);
+      delete_both.mutate({ draft_id: draft_article.id });
     },
   };
 }

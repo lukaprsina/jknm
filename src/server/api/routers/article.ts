@@ -12,7 +12,6 @@ import {
   SaveDraftArticleSchema,
 } from "~/server/db/schema";
 import { and, between, eq } from "drizzle-orm";
-import { named_promise_all_settled } from "~/lib/named-promise";
 import { assert_at_most_one, assert_one } from "~/lib/assert-length";
 import { withCursorPagination } from "drizzle-pagination";
 import {
@@ -97,7 +96,7 @@ export const article_router = createTRPCRouter({
   get_article_by_published_id: publicProcedure
     .input(z.number().optional())
     .query(async ({ ctx, input }) => {
-      if(!input) return { published: undefined };
+      if (!input) return { published: undefined };
 
       const published = await ctx.db.query.PublishedArticle.findFirst({
         where: eq(PublishedArticle.id, input),
@@ -110,7 +109,7 @@ export const article_router = createTRPCRouter({
 
       if (!published) return { published };
 
-      if(ctx.session) {
+      if (ctx.session) {
         const draft = await ctx.db.query.DraftArticle.findFirst({
           where: eq(DraftArticle.published_id, input),
           with: {
@@ -609,6 +608,7 @@ export const article_router = createTRPCRouter({
     return transaction;
   }),
 
+  // input is draft_id
   delete_draft: protectedProcedure
     .input(z.number())
     .mutation(async ({ ctx, input }) => {
@@ -641,6 +641,7 @@ export const article_router = createTRPCRouter({
     }),
 
   // TODO: warn user that the draft will be ovewritten
+  // input is published_id
   unpublish: protectedProcedure
     .input(z.number())
     .mutation(async ({ ctx, input }) => {
@@ -716,43 +717,40 @@ export const article_router = createTRPCRouter({
     }),
 
   delete_both: protectedProcedure
-    .input(z.number())
+    .input(z.object({ draft_id: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const transaction = await ctx.db.transaction(async (tx) => {
-        const published_article = tx
-          .delete(PublishedArticle)
-          .where(eq(PublishedArticle.id, input))
-          .returning();
-
-        const draft_article = tx
+        const draft_article = await tx
           .delete(DraftArticle)
-          .where(eq(DraftArticle.published_id, input))
+          .where(eq(DraftArticle.id, input.draft_id))
           .returning();
 
-        const result = await named_promise_all_settled({
-          published_article,
-          draft_article,
-        });
+        assert_one(draft_article);
 
-        if (result.draft_article.status === "fulfilled") {
-          assert_one(result.draft_article.value);
-          const draft = result.draft_article.value[0];
-          await delete_s3_directory(
-            env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
-            draft.id.toString(),
-          );
-        }
+        const draft = draft_article[0];
 
-        if (result.published_article.status === "fulfilled") {
-          assert_one(result.published_article.value);
-          const published = result.published_article.value[0];
+        await delete_s3_directory(
+          env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+          draft.id.toString(),
+        );
+
+        if (draft.published_id) {
+          const published_article = await tx
+            .delete(PublishedArticle)
+            .where(eq(PublishedArticle.id, draft.published_id))
+            .returning();
+
+          assert_one(published_article);
+          const published = published_article[0];
           await delete_s3_directory(
             env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
-            published.id.toString(),
+            get_s3_published_directory(published.url, published.created_at),
           );
+
+          return { draft, published };
         }
 
-        return result;
+        return { draft };
       });
 
       return transaction;
