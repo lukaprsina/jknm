@@ -14,11 +14,11 @@ import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { gallery_store } from "~/components/gallery-store";
 import { human_file_size } from "~/lib/human-file-size";
 import type { Session } from "next-auth";
-import type { EditorJSImageData } from "../../lib/editor-utils";
+import type { EditorJSImageData } from "~/lib/editor-utils";
 import {
   get_heading_from_editor,
   get_image_data_from_editor,
-} from "../../lib/editor-utils";
+} from "~/lib/editor-utils";
 import { cn } from "~/lib/utils";
 import type {
   DraftArticleWithAuthors,

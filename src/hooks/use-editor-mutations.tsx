@@ -208,17 +208,6 @@ export function useEditorMutations() {
 
       const created_at = fake_created_at ?? draft_article.created_at;
 
-      /* if (thumbnail_crop) {
-        await upload_image_by_url({
-          url: thumbnail_crop.image_url,
-          custom_title: "thumbnail.png",
-          crop: thumbnail_crop,
-          allow_overwrite: "allow_overwrite",
-          draft: false,
-          directory: get_s3_published_directory(updated.url, created_at),
-        });
-      } */
-
       if (thumbnail_crop) {
         await upload_image_by_url({
           url: thumbnail_crop.image_url,

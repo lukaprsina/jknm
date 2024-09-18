@@ -48,47 +48,61 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
       <Form {...form}>
         <form className="space-y-4">
           <ScrollArea className="max-h-[50vh] overflow-y-auto">
-          <FormField
-            control={form.control}
-            name="created_at"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Čas objave</FormLabel>
-                <FormControl>
-                  <DateTimePicker
-                    date={field.value}
-                    setDate={(date) => field.onChange(date)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="thumbnail_crop"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Naslovna slika</FormLabel>
-                <FormDescription>
-                  Izberite naslovno sliko za novičko.
-                </FormDescription>
-                <FormControl>
-                  <ImageSelector
-                    image={field.value}
-                    setImage={(value) => {
-                      console.log("settings-form -> setImage", value)
-                      field.onChange(value);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="created_at"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Čas objave</FormLabel>
+                  <FormControl>
+                    <DateTimePicker
+                      date={field.value}
+                      setDate={(date) => field.onChange(date)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="thumbnail_crop"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Naslovna slika</FormLabel>
+                  <FormDescription>
+                    Izberite naslovno sliko za novičko.
+                  </FormDescription>
+                  <FormControl>
+                    <ImageSelector
+                      image={field.value}
+                      setImage={(value) => {
+                        console.log("settings-form -> setImage", value)
+                        field.onChange(value);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </ScrollArea>
           <Separator />
           <div className="mt-6 flex flex-col gap-4">
+            {published_article ? (
+              <>
+              <Button
+                onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
+                  editor_mutations.unpublish();
+                  closeDialog();
+                })}
+                variant="secondary"
+              >
+                Skrij novičko
+              </Button>
+              <Separator />
+              </>
+            ) : null}
             <Button
               onClick={form.handleSubmit(
                 async (values: z.infer<typeof form_schema>) => {
@@ -99,6 +113,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
                   closeDialog();
                 },
               )}
+              variant="secondary"
             >
               Shrani osnutek
             </Button>
@@ -112,22 +127,9 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
                   closeDialog();
                 },
               )}
-              variant="secondary"
             >
               Objavi spremembe
             </Button>
-            <Separator />
-            {published_article ? (
-              <Button
-                onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
-                  editor_mutations.unpublish();
-                  closeDialog();
-                })}
-                variant="secondary"
-              >
-                Skrij novičko
-              </Button>
-            ) : null}
             <Button
               onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
                 editor_mutations.delete_both();

@@ -2,8 +2,10 @@
 
 import "./editor.css";
 
-import type {
+import {
+  DraftArticleDrizzleCard,
   DraftArticleWithAuthors,
+  PublishedArticleDrizzleCard,
   PublishedArticleWithAuthors,
 } from "~/components/article/card-adapter";
 import { EditorProvider } from "~/components/editor/editor-context";
@@ -14,6 +16,10 @@ import {
 } from "~/components/article/context";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { MyToolbar } from "./toolbar";
+import { cn } from "~/lib/utils";
+import { article_variants } from "~/lib/page-variants";
+import { format_date_for_human } from "~/lib/format-date";
+import { PublishedArticlePreviewCard } from "~/components/article/preview-card";
 
 // const Toolbar = dynamic(() => import("./toolbar"), { ssr: false });
 
@@ -29,15 +35,18 @@ export default function MyEditor({
     <DraftArticleContext.Provider value={draft}>
       <PublishedArticleContext.Provider value={published}>
         <EditorProvider>
-          <Card className="mx-auto w-full">
-            <CardHeader>
-              <MyToolbar />
-            </CardHeader>
-            <CardContent className="prose-img:!my-0 prose-h1:!mb-6">
-              <div id="editorjs" />
-            </CardContent>
-          </Card>
-          <SettingsSummary />
+          <div className={cn("flex flex-col gap-6", article_variants())}>
+            <PublishedArticlePreviewCard article={published} />
+            <Card className="mx-auto w-full">
+              <CardHeader>
+                <MyToolbar />
+              </CardHeader>
+              <CardContent className="prose-h1:!mb-6 prose-img:!my-0">
+                <div id="editorjs" />
+              </CardContent>
+            </Card>
+            <SettingsSummary />
+          </div>
         </EditorProvider>
       </PublishedArticleContext.Provider>
     </DraftArticleContext.Provider>

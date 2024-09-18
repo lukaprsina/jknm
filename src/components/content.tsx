@@ -1,15 +1,18 @@
-import type { DraftArticleWithAuthors, PublishedArticleWithAuthors } from "~/components/article/card-adapter";
+import type {
+  DraftArticleWithAuthors,
+  PublishedArticleWithAuthors,
+} from "~/components/article/card-adapter";
 import { ArticleNotFound } from "~/components/component-not-found";
 import { cn } from "~/lib/utils";
 import { article_variants, page_variants } from "~/lib/page-variants";
 import { EditorToReact } from "~/components/editor/editor-to-react";
 import { getServerAuthSession } from "~/server/auth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-
+import { DraftArticlePreviewCard, PublishedArticlePreviewCard } from "~/components/article/preview-card";
 
 export function PublishedContent({
-                            article,
-                          }: {
+  article,
+}: {
   article?: PublishedArticleWithAuthors;
 }) {
   if (!article?.content) {
@@ -24,9 +27,9 @@ export function PublishedContent({
 }
 
 export async function TabbedContent({
-                               draft,
-                               published,
-                             }: {
+  draft,
+  published,
+}: {
   draft?: DraftArticleWithAuthors;
   published?: PublishedArticleWithAuthors;
 }) {
@@ -50,11 +53,17 @@ export async function TabbedContent({
         </TabsTrigger>
       </TabsList>
       <TabsContent value="draft">
-        <EditorToReact article={draft} session={session} />
+        <div className={cn("flex flex-col gap-6", article_variants())}>
+          <DraftArticlePreviewCard article={draft} />
+          <EditorToReact article={draft} session={session} />
+        </div>
       </TabsContent>
       <TabsContent value="published">
-        <EditorToReact article={published} session={session} />
+        <div className={cn("flex flex-col gap-6", article_variants())}>
+          <PublishedArticlePreviewCard article={published} />
+          <EditorToReact article={published} session={session} />
+        </div>
       </TabsContent>
     </Tabs>
-  );
+);
 }

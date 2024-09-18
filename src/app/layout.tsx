@@ -35,11 +35,11 @@ export default function RootLayout({
       <html lang="en" className={`${GeistSans.variable}`}>
         <body
           className={cn(
-            "font-sans antialiased transition-all",
+            "font-sans antialiased",
             open_sans.variable,
             GeistMono.variable,
           )}
-          style={{scrollbarGutter: "stable"}}
+          // style={{scrollbarGutter: "stable"}}
         >
           <TRPCReactProvider>
             <HydrateClient>
