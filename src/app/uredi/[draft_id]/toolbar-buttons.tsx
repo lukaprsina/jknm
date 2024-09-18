@@ -143,10 +143,10 @@ export function SaveButton() {
 
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
-      if (event.key === "s" && event.ctrlKey && event.shiftKey) {
+      if (event.key.toLowerCase() === "s" && event.ctrlKey && event.shiftKey) {
         event.preventDefault();
         void editor_mutations.publish();
-      } else if (event.key === "s" && event.ctrlKey) {
+      } else if (event.key.toLowerCase() === "s" && event.ctrlKey) {
         event.preventDefault();
         void editor_mutations.save_draft();
       }
