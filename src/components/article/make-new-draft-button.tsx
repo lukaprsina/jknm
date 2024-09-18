@@ -13,6 +13,7 @@ import type { ButtonProps } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { article_variants } from "~/lib/page-variants";
+import { get_draft_article_link } from "~/lib/article-utils";
 
 export default function MakeNewDraftButton({
   title,
@@ -26,7 +27,7 @@ export default function MakeNewDraftButton({
   const create_draft = api.article.get_or_create_draft.useMutation({
     onSuccess: async (data) => {
       await trpc_utils.article.invalidate();
-      router.push(`/uredi/${data.id}`);
+      router.push(get_draft_article_link(data.id));
     },
   });
 
@@ -55,17 +56,9 @@ export default function MakeNewDraftButton({
         )}
       >
         <h3>Ustvarjamo novo novico.</h3>
-        <span>
+        <span className="flex items-center gap-2">
           <LoadingSpinner /> Prosimo, da malo počakate.
         </span>
-        {/* <Card>
-          <CardHeader>
-            <CardTitle>Ustvarjamo novo novico.</CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-between gap-4">
-            <LoadingSpinner /> Prosimo, da malo počakate.
-          </CardContent>
-        </Card> */}
       </PopoverContent>
     </Popover>
   );

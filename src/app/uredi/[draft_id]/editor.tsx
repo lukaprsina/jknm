@@ -28,14 +28,13 @@ export default function MyEditor({
   draft: DraftArticleWithAuthors;
   published?: PublishedArticleWithAuthors;
 }) {
-  const duplicated_urls = useDuplicatedUrls();
+  const duplicated_urls = useDuplicatedUrls() ?? [];
   // console.log("my editor draft", draft);
   return (
     <DraftArticleContext.Provider value={draft}>
       <PublishedArticleContext.Provider value={published}>
         <EditorProvider>
           <div className={cn("flex flex-col gap-6", article_variants())}>
-            <DraftArticlePreviewCard draft_article={draft} published_article={published} duplicated_urls={duplicated_urls} />
             <Card className="mx-auto w-full">
               <CardHeader>
                 <MyToolbar />
@@ -44,6 +43,7 @@ export default function MyEditor({
                 <div id="editorjs" />
               </CardContent>
             </Card>
+            <DraftArticlePreviewCard draft_article={draft} published_article={published} duplicated_urls={duplicated_urls} />
             <SettingsSummary />
           </div>
         </EditorProvider>

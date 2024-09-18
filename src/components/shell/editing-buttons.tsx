@@ -19,6 +19,7 @@ import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
 } from "../article/card-adapter";
+import { get_draft_article_link } from "~/lib/article-utils";
 
 export default function EditingButtons({
   published_article,
@@ -65,7 +66,7 @@ export function EditButton({
 
   const handle_navigation = useCallback(
     (id: number) => {
-      const new_url = `/uredi/${id}`;
+      const new_url = get_draft_article_link(id);
 
       if (new_tab) {
         window.open(new_url, "_blank");

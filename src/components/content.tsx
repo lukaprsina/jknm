@@ -63,14 +63,14 @@ export async function TabbedContent({
       </TabsList>
       <TabsContent value="draft">
         <div className={cn("flex flex-col gap-6", article_variants())}>
-          <DraftArticlePreviewCard draft_article={draft} published_article={published} duplicated_urls={duplicated_urls.value}/>
           <EditorToReact article={draft} session={session.value} />
+          <DraftArticlePreviewCard draft_article={draft} published_article={published} duplicated_urls={duplicated_urls.value}/>
         </div>
       </TabsContent>
       <TabsContent value="published">
         <div className={cn("flex flex-col gap-6", article_variants())}>
-          <PublishedArticlePreviewCard article={published} />
           <EditorToReact article={published} session={session.value} />
+          <PublishedArticlePreviewCard article={published} />
         </div>
       </TabsContent>
     </Tabs>
