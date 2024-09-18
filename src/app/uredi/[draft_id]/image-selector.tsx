@@ -36,8 +36,11 @@ export function ImageSelector({
   const store_images = editor_store.use.image_data();
   const input_ref = useRef<HTMLInputElement>(null);
   const [crop, setCrop] = useState<Crop>();
-  const [uploadedVersion, setUploadedVersion] = useState<number>(Date.now())
-
+  const [uploadedVersion, setUploadedVersion] = useState<number>(Date.now());
+  const [customThumbnailExists, setCustomThumbnailExists] = useState<boolean>(
+    formImage?.uploaded_custom_thumbnail ?? false,
+  );
+  const [doCenterCrop, setDoCenterCrop] = useState<boolean>(false);
   const [imageIndex, setImageIndex] = useState<number | undefined>(undefined);
 
   const images = useMemo(() => {
@@ -45,7 +48,7 @@ export function ImageSelector({
 
     console.log("useMemo adding form image", formImage);
 
-    if (formImage?.uploaded_custom_thumbnail && draft_article) {
+    if (customThumbnailExists && draft_article) {
       const editor_image = {
         file: {
           url: get_s3_prefix(
@@ -61,7 +64,7 @@ export function ImageSelector({
         draft_article,
         temp,
         editor_image,
-        imageIndex
+        imageIndex,
       });
 
       temp.push(editor_image);
@@ -69,18 +72,27 @@ export function ImageSelector({
 
     console.log("images", { temp, formImage, store_images });
     return temp;
-  }, [draft_article, formImage, store_images]);
+  }, [
+    customThumbnailExists,
+    draft_article,
+    formImage,
+    imageIndex,
+    store_images,
+  ]);
 
   useEffect(() => {
-    console.log("setting crop", formImage);
+    console.log("%c setting crop", "color: #90C0A0;");
+    console.log({ formImage, imageIndex });
     setCrop(formImage);
-  }, [formImage]);
+  }, [formImage, imageIndex]);
 
   useEffect(() => {
+    if (!formImage || typeof imageIndex === "number") return;
+
     console.log("useEffect", { imageIndex, formImage });
 
     const selected_image_index = images.findIndex(
-      (image) => image.file.url === formImage?.image_url,
+      (image) => image.file.url === formImage.image_url,
     );
 
     console.log("formImage from article", {
@@ -89,7 +101,11 @@ export function ImageSelector({
       images,
       selected_image_index,
     });
-    if (selected_image_index === -1) return;
+
+    if (selected_image_index === -1) {
+      setImageIndex(undefined);
+      return;
+    }
 
     setImageIndex(selected_image_index);
   }, [formImage, imageIndex, images]);
@@ -109,12 +125,14 @@ export function ImageSelector({
       });
 
       if (typeof imageIndex !== "number") return;
-
       const image_url = images[imageIndex]?.file.url;
 
       if (typeof image_url === "undefined") return;
-
-      let current_crop: Crop | undefined = crop;
+      let current_crop: Crop | undefined;
+      if (!doCenterCrop) {
+        current_crop = crop;
+      }
+      // let current_crop: Crop | undefined = undefined as Crop | undefined;
 
       if (!current_crop) {
         current_crop = centerCrop(
@@ -132,20 +150,32 @@ export function ImageSelector({
         );
       }
 
+      const thumbnail = {
+        ...current_crop,
+        uploaded_custom_thumbnail: customThumbnailExists,
+        image_url,
+        unit: "%",
+      } satisfies ThumbnailType;
+
       console.warn("handle_image_load done", {
+        thumbnail,
         formImage,
         current_crop,
         image_url,
       });
 
-      setFormImage({
-        ...formImage,
-        ...current_crop,
-        image_url,
-        unit: "%",
-      });
+      setDoCenterCrop(false);
+      setFormImage(thumbnail);
     },
-    [crop, formImage, imageIndex, images, setFormImage],
+    [
+      crop,
+      customThumbnailExists,
+      doCenterCrop,
+      formImage,
+      imageIndex,
+      images,
+      setFormImage,
+    ],
   );
 
   return (
@@ -162,7 +192,8 @@ export function ImageSelector({
           if (!file) return;
 
           setFormImage(undefined);
-          setImageIndex(undefined);
+          setCustomThumbnailExists(false);
+          // setImageIndex(undefined);
 
           console.log("ImageSelector -> uploading image");
 
@@ -184,30 +215,19 @@ export function ImageSelector({
             console.log("ImageSelector -> invalid response, returning", {
               response,
             });
+
             return;
           }
 
-          console.warn("start")
-          setFormImage({
-            image_url: response.file.url,
-            // width: response.file.width ?? 0,
-            // height: response.file.height ?? 0
-            width: 0,
-            height: 0,
-            unit: "%",
-            x: 0,
-            y: 0,
-            uploaded_custom_thumbnail: true,
-          });
+          console.warn("start");
+          setCustomThumbnailExists(true);
           setImageIndex(images.length);
-          setUploadedVersion(Date.now())
+          setUploadedVersion(Date.now());
         }}
       />
       <div className="flex flex-col gap-4">
         <div className="flex flex-wrap gap-2">
           {images.map((image, index) => {
-            // console.log("b", index, image);
-
             let width = image.file.width;
             let height = image.file.height;
             if (!image.file.url) {
@@ -225,7 +245,9 @@ export function ImageSelector({
                 key={`${image.file.url}-${index}`}
                 onClick={() => {
                   setFormImage(undefined);
+                  setUploadedVersion(Date.now());
                   setImageIndex(index);
+                  setDoCenterCrop(true);
                 }}
                 className={cn(
                   "box-border flex cursor-pointer items-center justify-center border-2 p-2",
@@ -267,20 +289,19 @@ export function ImageSelector({
                 if (!images[imageIndex]) return;
 
                 setFormImage({
-                  ...formImage,
                   ...percent_crop,
                   image_url: images[imageIndex].file.url,
+                  uploaded_custom_thumbnail: customThumbnailExists,
                 });
               }}
               crop={crop}
               onChange={(pixelCrop) => {
-                if (!images[imageIndex]?.file.url) return;
-
                 setCrop(pixelCrop);
               }}
               aspect={16 / 9}
               ruleOfThirds
-              minHeight={100}
+              minHeight={50}
+              minWidth={50}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img

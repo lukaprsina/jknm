@@ -27,10 +27,11 @@ export function update_settings_from_editor({
   author_ids?: number[];
 }) {
   const image_data = get_image_data_from_editor(editor_content);
-  const store_crop = editor_store.get.thumbnail_crop();
+  // const store_crop = editor_store.get.thumbnail_crop();
 
   editor_store.set.state((draft) => {
-    if (!store_crop && thumbnail_crop) {
+    // TODO: !store_crop &&
+    if (thumbnail_crop) {
       draft.thumbnail_crop = thumbnail_crop;
     }
 
