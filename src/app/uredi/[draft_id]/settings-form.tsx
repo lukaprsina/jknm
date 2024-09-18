@@ -77,6 +77,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
                   <ImageSelector
                     image={field.value}
                     setImage={(value) => {
+                      console.log("settings-form -> setImage", value)
                       field.onChange(value);
                     }}
                   />

@@ -45,6 +45,8 @@ export function ImageSelector({
   const images = useMemo(() => {
     const temp = [...store_images];
 
+    console.log("useMemo adding form image", formImage)
+
     if (formImage?.uploaded_custom_thumbnail && draft_article) {
             // TODO store actual width, height
       const editor_image = {
@@ -95,6 +97,7 @@ export function ImageSelector({
       setImageIndex(selected_image_index);
     }
 
+    setFormImage(formImage);
     setCrop(formImage);
   }, [formImage, imageIndex, images]);
 
@@ -112,7 +115,12 @@ export function ImageSelector({
         crop,
       });
 
-      if (typeof imageIndex === "number" && !images[imageIndex]?.file.url)
+      if (typeof imageIndex !== "number")
+        return;
+
+      const image_url = images[imageIndex]?.file.url
+
+      if (typeof image_url === "undefined")
         return;
 
       let current_crop: Crop | undefined = crop;
@@ -133,6 +141,21 @@ export function ImageSelector({
         );
       }
 
+      console.log("handle_image_load", {
+        width,
+        height,
+        images,
+        imageIndex,
+        formImage,
+        crop,
+        current_crop,
+      });
+      setFormImage({
+        ...formImage,
+        ...current_crop,
+        image_url,
+        unit: "%",
+      })
       setCrop(current_crop);
     },
     [crop, formImage, imageIndex, images],
@@ -155,13 +178,6 @@ export function ImageSelector({
           setCrop(undefined);
           setImageIndex("loading");
 
-          if (formImage) {
-            setFormImage({
-              ...formImage,
-              uploaded_custom_thumbnail: false,
-            });
-          }
-
           const response = await upload_image_by_file({
             file,
             custom_title: "thumbnail-uploaded.png",
@@ -178,22 +194,22 @@ export function ImageSelector({
           console.log("ImageSelector -> done sleeping");
 
           if (
-            !formImage ||
             typeof response.file === "undefined" ||
             !("width" in response.file)
           ) {
+            console.log("ImageSelector -> invalid response, returning", {
+              response,
+            })
             return;
           }
 
-          /*if(response.file.width && response.file.height) {
-            setUploadedImageDimensions({
-              width: response.file.width,
-              height: response.file.height
-            })
-          }*/
-
           setFormImage({
-            ...formImage,
+            image_url: response.file.url,
+            width: response.file.width ?? 0,
+            height: response.file.height ?? 0,
+            unit: "%",
+            x: 0,
+            y: 0,
             uploaded_custom_thumbnail: true,
           });
         }}
@@ -211,7 +227,7 @@ export function ImageSelector({
             }
 
             if (image.file.url.endsWith("thumbnail-uploaded.png")) {
-              console.log("AAAAAA", image.file.url);
+              // console.log("AAAAAA", image.file.url);
               width = 300;
               height = (300 * 9) / 16;
             }
