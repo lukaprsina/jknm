@@ -7,6 +7,7 @@ import type {
   PublishedArticleWithAuthors,
 } from "../article/card-adapter";
 import { MobileHeader } from "./header";
+import React from "react";
 
 interface ShellProps {
   children: React.ReactNode;

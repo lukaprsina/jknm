@@ -46,7 +46,7 @@ export function ImageSelector({
     const temp = [...store_images];
 
     if (formImage?.uploaded_custom_thumbnail && draft_article) {
-      // TODO store actual width, height
+            // TODO store actual width, height
       const editor_image = {
         file: {
           url: get_s3_prefix(
@@ -56,6 +56,12 @@ export function ImageSelector({
         },
         caption: "",
       } satisfies EditorJSImageData;
+
+      console.log("useMemo adding form image custom thumbnail", {
+        formImage,
+        draft_article,
+        temp, editor_image
+      })
 
       temp.push(editor_image);
     }
@@ -168,6 +174,8 @@ export function ImageSelector({
           console.log("ImageSelector -> response", response);
 
           await sleep(5000)
+
+          console.log("ImageSelector -> done sleeping");
 
           if (
             !formImage ||

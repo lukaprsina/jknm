@@ -68,7 +68,7 @@ export default async function HomePageServer() {
             </AccordionTrigger>
             <AccordionContent className={article_variants({ variant: "card" })}>
               {drafts && drafts.length !== 0 ? (
-                <div className={article_grid_variants({ padding: "none" })}>
+                <div className={article_grid_variants()}>
                   {drafts.map((article) => (
                     <DraftArticleDrizzleCard
                       key={article.id}

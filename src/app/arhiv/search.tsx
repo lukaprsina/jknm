@@ -1,10 +1,8 @@
 "use client";
 
 import { LayoutDashboard, TableIcon } from "lucide-react";
-import { Hits, InstantSearch } from "react-instantsearch";
+import { InstantSearch } from "react-instantsearch";
 
-import { ArticleAlgoliaCard } from "~/components/article/card-adapter";
-import { article_variants } from "~/lib/page-variants";
 import { ArticleTable } from "./article-table";
 import { MyPagination } from "./pagination";
 import {
@@ -36,8 +34,6 @@ export function Search({ session }: { session: Session | null }) {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
             <MySearchBox />
-            {/* <div className="flex items-center justify-between space-x-2">
-            </div> */}
             <div className="flex flex-col items-center justify-between gap-6 text-nowrap sm:flex-row">
               <MySortBy />
               <TabsList>
@@ -62,13 +58,6 @@ export function Search({ session }: { session: Session | null }) {
           value="card"
           className="flex flex-col justify-between gap-4"
         >
-          {/* <Hits
-            hitComponent={ArticleAlgoliaCard}
-            classNames={{
-              list: "container grid w-full grid-cols-1 gap-6 px-0 py-8 md:grid-cols-2 lg:grid-cols-3",
-              item: article_variants({ variant: "card" }),
-            }}
-          /> */}
           <MyInfiniteHits />
         </TabsContent>
         <TabsContent value="table">

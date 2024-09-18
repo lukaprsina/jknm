@@ -33,7 +33,7 @@ export default function MyEditor({
             <CardHeader>
               <MyToolbar />
             </CardHeader>
-            <CardContent>
+            <CardContent className="prose-img:!my-0 prose-h1:!mb-6">
               <div id="editorjs" />
             </CardContent>
           </Card>

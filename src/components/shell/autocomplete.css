@@ -2,7 +2,7 @@ body {
   --aa-search-input-height: 36px;
   --aa-base-z-index: 101;
   --aa-panel-border-color-alpha: 0;
-  --aa-input-border-color-alpha: 0;
+  /*--aa-input-border-color-alpha: 0;*/
   --aa-icon-size: 40px;
 }
 
@@ -15,18 +15,19 @@ body {
 }
 
 .aa-Form {
-  border: 0px;
+  border: 0;
   border-radius: 6px;
 }
 
 .aa-DetachedSearchButton {
-  border: 0px;
+  border: 0;
   border-radius: 6px;
-  padding-right: 20px;
+  padding-right: 20px!important;
+  /*padding-left: 20px!important;*/
 }
 
 .aa-Autocomplete {
-  border: 0px;
+  border: 0;
   box-sizing: border-box;
   border-radius: 6px; /* calc(var(--radius) - 2px) */
   height: 36px;

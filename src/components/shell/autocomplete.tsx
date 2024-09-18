@@ -25,9 +25,10 @@ import { PoweredBy } from "react-instantsearch";
 import { Separator } from "~/components/ui/separator";
 import type { PublishedArticleHit } from "~/lib/validators";
 import { get_published_article_link } from "~/lib/article-utils";
-import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 import { liteClient as algoliasearch } from "algoliasearch/lite";
 import { env } from "~/env";
+import { article_variants } from "~/lib/page-variants";
+import { cn } from "~/lib/utils";
 
 const searchClient = algoliasearch(
   env.NEXT_PUBLIC_ALGOLIA_ID,
@@ -35,15 +36,16 @@ const searchClient = algoliasearch(
 );
 
 export function NoviceAutocomplete({ detached }: { detached?: string }) {
-  const duplicate_urls = useDuplicatedUrls();
-
+  // TODO: broken
+  // const duplicate_urls = useDuplicatedUrls();
+  const duplicate_urls: string[] = [];
   return (
     <Autocomplete
       detached={detached}
       openOnFocus={true}
       getSources={({ query }) => [
         {
-          sourceId: "published_article_created_at_desc",
+          sourceId: "autocomplete",
           getItemUrl: ({ item }) => {
             return get_published_article_link(
               item.url,
@@ -75,14 +77,21 @@ export function NoviceAutocomplete({ detached }: { detached?: string }) {
               );
             },
             item({ item, components }) {
-              return <ProductItem hit={item} components={components} />;
+              return (
+                <ArticleAutocompleteItem hit={item} components={components} />
+              );
             },
             footer() {
               return (
                 <div className="w-full">
                   <Separator className="w-full" />
-                  <div className="flex items-center justify-between px-6 py-8">
-                    <Link href="/novice">Vse novice</Link>
+                  <div
+                    className={cn(
+                      "flex items-end justify-between px-6 py-8",
+                      article_variants(),
+                    )}
+                  >
+                    <Link href="/arhiv">Arhiv novic</Link>
                     <PoweredBy className="w-40" />
                   </div>
                 </div>
@@ -94,7 +103,7 @@ export function NoviceAutocomplete({ detached }: { detached?: string }) {
           },
         },
       ]}
-     />
+    />
   );
 }
 
@@ -118,10 +127,15 @@ export function Autocomplete({ detached, ...props }: AutocompleteProps) {
     }
 
     const search_api = autocomplete({
+      placeholder: "Išči po strani",
       container: containerRef.current,
       detachedMediaQuery: detached ?? "(max-width: 1024px)",
+      renderer: {
+        createElement,
+        Fragment,
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      renderer: { createElement, Fragment, render: () => {} },
+        render: () => {},
+      },
       render({ children }, root) {
         if (!panelRootRef.current || rootRef.current !== root) {
           rootRef.current = root;
@@ -162,13 +176,17 @@ export function Autocomplete({ detached, ...props }: AutocompleteProps) {
   return <div className="box-border flex-grow border-0" ref={containerRef} />;
 }
 
-interface ProductItemProps {
+interface ArticleAutocompleteItemProps {
   hit: PublishedArticleHit;
   components: AutocompleteComponents;
 }
 
-function ProductItem({ hit, components }: ProductItemProps) {
-  const duplicate_urls = useDuplicatedUrls();
+function ArticleAutocompleteItem({
+  hit,
+  components,
+}: ArticleAutocompleteItemProps) {
+  // const duplicate_urls = useDuplicatedUrls();
+  const duplicate_urls: string[] = [];
 
   const href = useMemo(
     () => get_published_article_link(hit.url, hit.created_at, duplicate_urls),
@@ -178,18 +196,11 @@ function ProductItem({ hit, components }: ProductItemProps) {
   return (
     <Link href={href} className="aa-ItemLink text-inherit">
       <div className="aa-ItemContent h-12 overflow-hidden">
-        {/* {hit.image && (
-          <div className="aa-ItemIcon aa-ItemIcon--noBorder">
-            <img src={hit.image}/>
-          </div>
-        )} */}
         <div className="aa-ItemContentBody">
           <div className="aa-ItemContentTitle">
             <components.Highlight hit={hit} attribute="title" />
           </div>
-          <div className="aa-ItemContentDescription">
-            {/* <components.Snippet hit={hit} attribute="content" /> */}
-          </div>
+          <div className="aa-ItemContentDescription" />
         </div>
       </div>
     </Link>

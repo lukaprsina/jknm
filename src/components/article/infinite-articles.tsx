@@ -54,7 +54,7 @@ export function InfiniteArticles() {
 
   return (
     /* prose-h3:my-0 prose-p:mt-0 lg:prose-xl prose-p:text-lg mx-auto   */
-    <div className={article_grid_variants({ padding: "none" })}>
+    <div className={article_grid_variants()}>
       {articles.map((article, index) => (
         <PublishedArticleDrizzleCard
           key={article.id}

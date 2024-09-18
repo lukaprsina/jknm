@@ -25,7 +25,7 @@ export const article_grid_variants = cva(
       },
     },
     defaultVariants: {
-      padding: "normal",
+      padding: "none",
     },
   },
 );

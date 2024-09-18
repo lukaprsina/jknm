@@ -2,8 +2,6 @@
 
 import { DownloadIcon, SaveIcon, UploadIcon, XIcon } from "lucide-react";
 
-import "./editor.css";
-
 import type { OutputData } from "@editorjs/editorjs";
 import { useCallback, useContext, useEffect, useRef } from "react";
 
@@ -145,9 +143,13 @@ export function SaveButton() {
 
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
-      if (event.key !== "s" || !event.ctrlKey) return;
-      event.preventDefault();
-      void editor_mutations.save_draft();
+      if (event.key === "s" && event.ctrlKey && event.shiftKey) {
+        event.preventDefault();
+        void editor_mutations.publish();
+      } else if (event.key === "s" && event.ctrlKey) {
+        event.preventDefault();
+        void editor_mutations.save_draft();
+      }
     },
     [editor_mutations],
   );

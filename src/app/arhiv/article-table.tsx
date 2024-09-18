@@ -114,7 +114,6 @@ export function ArticleTable({
               {sort_api.currentRefinement === "published_article_created_at_asc" && <ChevronUpIcon />}
             </Button>
           </TableHead>
-          {/* session && <TableHead className="text-right">Admin</TableHead> */}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -164,16 +163,6 @@ function ArticleTableRow({
       </TableCell>
       <TableCell>{format_date_for_human(new Date(hit.created_at))}</TableCell>
       <TableCell>{format_date_for_human(new Date(hit.updated_at))}</TableCell>
-      {/* session && (
-        <TableCell className="flex flex-grow justify-end gap-2">
-          <EditButton
-            new_tab
-            published_article_id={hit.published_id}
-            variant="outline"
-          />
-          <DeleteDialog article_id={parseInt(hit.objectID)} />
-        </TableCell>
-      ) */}
     </TableRow>
   );
 }

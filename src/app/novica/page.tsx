@@ -2,8 +2,9 @@ import { api } from "~/trpc/server";
 import { getServerAuthSession } from "~/server/auth";
 import { Shell } from "~/components/shell";
 import { ArticleNotFound } from "~/components/component-not-found";
-import { PublishedContent, TabbedContent } from "~/components/content";
-import { ImageGallery } from "~/app/novica/[published_url]/image-gallery";
+import { redirect } from "next/navigation";
+import { get_published_article_link } from "~/lib/article-utils";
+import { named_promise_all_settled } from "~/lib/named-promise";
 
 export default async function Page({
   searchParams,
@@ -28,24 +29,18 @@ export default async function Page({
     }
   }
 
-  const {published,draft} = await api.article.get_article_by_published_id(id)
+  const {article, duplicate_urls} = await named_promise_all_settled({
+    article: api.article.get_article_by_published_id(id),
+    duplicate_urls: api.article.get_duplicate_urls(),
+  })
 
-  if (!published) {
+  if (article.status === "fulfilled" && article.value.published && duplicate_urls.status === "fulfilled") {
+    redirect(get_published_article_link(article.value.published.url, article.value.published.created_at, duplicate_urls.value));
+  } else {
     return (
       <Shell>
         <ArticleNotFound />
       </Shell>
     );
   }
-
-  return (
-    <Shell draft_article={draft} published_article={published}>
-      {session ? (
-        <TabbedContent draft={draft} published={published} />
-      ) : (
-        <PublishedContent article={published} />
-      )}
-      <ImageGallery />
-    </Shell>
-  );
 }

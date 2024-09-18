@@ -31,6 +31,9 @@ export default {
     },
     extend: {
       typography: (theme: (variable: string) => string) => ({
+        sm: {
+          lineHeight: "1.5",
+        },
         DEFAULT: {
           css: {
             maxWidth: "1280px",

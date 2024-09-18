@@ -25,6 +25,7 @@ import type { RefinementListItem } from "instantsearch.js/es/connectors/refineme
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { Input } from "~/components/ui/input";
+import React from "react";
 
 export function MySortBy() {
   const { currentRefinement, options, refine } = useSortBy({
