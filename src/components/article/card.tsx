@@ -80,9 +80,10 @@ export function ArticleCard({
             />
           </AspectRatio>
         ) : null}
-        <div className="h-full prose-h3:text-xl prose-h3:font-semibold">
+        {/* TODO: prose-h3:text-xl prose-h3:font-semibold*/}
+        <div className="h-full">
           <CardHeader>
-            <h3 className="line-clamp-2 h-[56px]">{title}</h3>
+            <h3 className="line-clamp-2 h-[3em]">{title}</h3>
             <div className="flex w-full justify-between gap-2">
               <ArticleCardDescription
                 author_ids={author_ids}

@@ -48,19 +48,19 @@ export default {
               fontSize: "16px",
             },
             h1: {
-              fontWeight: "500", // 500
+              fontWeight: "700", // 500
               color: theme("colors.blue.800"),
               // fontSize: "36px",
             },
             h2: {
-              fontWeight: "400",
+              fontWeight: "700", // 400
               color: theme("colors.blue.800"),
               // fontSize: "24px",
             },
             h3: {
-              fontWeight: "400",
+              fontWeight: "700", // 400
               color: theme("colors.blue.800"),
-              fontSize: "18px",
+              fontSize: "20px",
             },
             li: {
               marginTop: "0em",
