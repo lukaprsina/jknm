@@ -234,7 +234,7 @@ async function parse_csv_article(
 
   let html = imported_article.content;
   if (PROBLEMATIC_CONSTANTS.includes(imported_article.objave_id)) {
-    console.log("Getting article", imported_article.objave_id, "from file");
+    console.log("Getting draft_article", imported_article.objave_id, "from file");
     html = await get_problematic_html(
       imported_article.objave_id,
       problematic_dir,
@@ -254,7 +254,7 @@ async function parse_csv_article(
         possible_div_1?.tagName === "DIV" || possible_div_2?.tagName === "DIV";
 
       if (!valid) {
-        console.log("Parsing article", imported_article.objave_id, root.structure);
+        console.log("Parsing draft_article", imported_article.objave_id, root.structure);
         console.warn(
           "Images isn't in div",
           imported_article.objave_id,

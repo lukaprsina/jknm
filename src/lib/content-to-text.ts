@@ -4,16 +4,15 @@ import { decode } from "html-entities";
 
 const ALLOWED_BLOCKS = ["paragraph", "list", "quote"];
 
-export function content_to_text(blocks?: OutputBlockData[]) {
+export function convert_content_to_text(blocks?: OutputBlockData[], only_allowed = true) {
   if (!blocks) return "";
 
-  const filtered_blocks = blocks.filter((block) =>
+  const filtered_blocks = only_allowed ? blocks.filter((block) =>
     ALLOWED_BLOCKS.includes(block.type),
-  );
+  ) : blocks;
 
-  const sanitized_text = filtered_blocks
+  return filtered_blocks
     .map((block) => {
-      // if (block.type !== "paragraph") return undefined;
       const paragraph_data = block.data as { text: string };
 
       const clean = DOMPurify.sanitize(paragraph_data.text, {
@@ -24,6 +23,4 @@ export function content_to_text(blocks?: OutputBlockData[]) {
     })
     .filter((text) => typeof text !== "undefined")
     .join("\n");
-
-  return sanitized_text.slice(0, 1000);
 }

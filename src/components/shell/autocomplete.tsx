@@ -37,7 +37,7 @@ const searchClient = algoliasearch(
 
 export function NoviceAutocomplete({ detached }: { detached?: string }) {
   // TODO: broken
-  // const duplicate_urls = useDuplicatedUrls();
+  // const duplicated_urls = useDuplicatedUrls();
   const duplicate_urls: string[] = [];
   return (
     <Autocomplete
@@ -185,7 +185,7 @@ function ArticleAutocompleteItem({
   hit,
   components,
 }: ArticleAutocompleteItemProps) {
-  // const duplicate_urls = useDuplicatedUrls();
+  // const duplicated_urls = useDuplicatedUrls();
   const duplicate_urls: string[] = [];
 
   const href = useMemo(

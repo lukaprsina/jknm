@@ -12,7 +12,7 @@ import type {
   FilesToSave,
 } from "./converter-spaghetti";
 import type { AuthorType } from "./get-authors";
-import { content_to_text } from "~/lib/content-to-text";
+import { convert_content_to_text } from "~/lib/content-to-text";
 import { db } from "~/server/db";
 import {
   Author,
@@ -25,6 +25,7 @@ import { api } from "~/trpc/server";
 import { crop_image, delete_s3_directory } from "~/server/s3-utils";
 import { env } from "~/env";
 import { algoliasearch } from "algoliasearch";
+import { convert_article_to_algolia_object } from "~/lib/algoliasearch";
 
 export async function delete_s3_published_bucket() {
   console.log("deleting s3 published bucket");
@@ -222,31 +223,19 @@ export async function sync_with_algolia() {
     objectIDs: all_record_ids,
   });
 
+  const chunkSize = 50;
   const objects = articles.data
-    .map((article) => {
-      const content_preview = content_to_text(article.content?.blocks);
-      if (!content_preview) return;
-
-      return {
-        published_id: article.id,
-        title: article.title,
-        url: article.url,
-        created_at: article.created_at.getTime(),
-        updated_at: article.updated_at.getTime(),
-        content_preview,
-        year: article.created_at.getFullYear().toString(),
-        author_ids: article.published_articles_to_authors.map(
-          (a) => a.author_id,
-        ),
-        has_thumbnail: Boolean(article.thumbnail_crop),
-      } satisfies PublishedArticleHit;
-    })
+    .map(convert_article_to_algolia_object)
     .filter((article) => typeof article !== "undefined");
 
-  await client.saveObjects({
-    indexName,
-    objects,
-  });
+  for (let i = 0; i < objects.length; i += chunkSize) {
+    const chunk = objects.slice(i, i + chunkSize);
+    console.log("Saving chunk", i, chunk.length);
+    await client.saveObjects({
+      indexName,
+      objects: chunk,
+    });
+  }
 
   console.log("Done", objects.length);
 }

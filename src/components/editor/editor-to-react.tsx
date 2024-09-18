@@ -29,14 +29,14 @@ import { Skeleton } from "../ui/skeleton"; */
 
 import ArticlePageDescription from "~/components/article/description/page-description";
 /* const ArticleCardDescription = dynamic(
-  () => import("~/components/article/description/card-description"),
+  () => import("~/components/draft_article/description/card-description"),
   {
     ssr: false,
     loading: () => <Skeleton className="h-[1em] w-full bg-[hsl(0_0%_90%)]" />,
   },
 ); */
 /* const WTFFFFFFFFF = dynamic(
-  import("~/components/article/description/page-description"),
+  import("~/components/draft_article/description/page-description"),
   {
     // ssr: false,
     loading: () => <Skeleton className="h-[1em] w-full bg-[hsl(0_0%_90%)]" />,
@@ -102,7 +102,7 @@ export function EditorToReact({
         {/* <ArticleCardDescription
           author_ids={author_ids}
           featured={false}
-          created_at={article.created_at}
+          created_at={draft_article.created_at}
         /> */}
       </CardHeader>
       <CardContent>

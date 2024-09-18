@@ -188,7 +188,7 @@ export function useEditorMutations() {
 
       /* console.log("editor mutation save_draft", {
         draft_article,
-        article,
+        draft_article,
         state,
       }); */
 

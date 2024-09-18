@@ -95,7 +95,7 @@ export function ImageSelector({
       (image) => image.file.url === formImage.image_url,
     );
 
-    console.log("formImage from article", {
+    console.log("formImage from draft_article", {
       formImage,
       imageIndex,
       images,

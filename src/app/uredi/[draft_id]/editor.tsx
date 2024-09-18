@@ -3,9 +3,7 @@
 import "./editor.css";
 
 import {
-  DraftArticleDrizzleCard,
   DraftArticleWithAuthors,
-  PublishedArticleDrizzleCard,
   PublishedArticleWithAuthors,
 } from "~/components/article/card-adapter";
 import { EditorProvider } from "~/components/editor/editor-context";
@@ -18,8 +16,8 @@ import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { MyToolbar } from "./toolbar";
 import { cn } from "~/lib/utils";
 import { article_variants } from "~/lib/page-variants";
-import { format_date_for_human } from "~/lib/format-date";
-import { PublishedArticlePreviewCard } from "~/components/article/preview-card";
+import { DraftArticlePreviewCard } from "~/components/article/preview-card";
+import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 
 // const Toolbar = dynamic(() => import("./toolbar"), { ssr: false });
 
@@ -30,13 +28,14 @@ export default function MyEditor({
   draft: DraftArticleWithAuthors;
   published?: PublishedArticleWithAuthors;
 }) {
+  const duplicated_urls = useDuplicatedUrls();
   // console.log("my editor draft", draft);
   return (
     <DraftArticleContext.Provider value={draft}>
       <PublishedArticleContext.Provider value={published}>
         <EditorProvider>
           <div className={cn("flex flex-col gap-6", article_variants())}>
-            <PublishedArticlePreviewCard article={published} />
+            <DraftArticlePreviewCard draft_article={draft} published_article={published} duplicated_urls={duplicated_urls} />
             <Card className="mx-auto w-full">
               <CardHeader>
                 <MyToolbar />

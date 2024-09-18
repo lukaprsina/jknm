@@ -4,7 +4,6 @@ import { LayoutDashboard, TableIcon } from "lucide-react";
 import { InstantSearch } from "react-instantsearch";
 
 import { ArticleTable } from "./article-table";
-import { MyPagination } from "./pagination";
 import {
   CustomClearRefinements,
   MySearchBox,
@@ -17,6 +16,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 import { liteClient as algoliasearch } from "algoliasearch/lite";
 import { env } from "~/env";
 import { MyInfiniteHits } from "~/app/arhiv/infinite-hits";
+import { useState } from "react";
 
 const searchClient = algoliasearch(
   env.NEXT_PUBLIC_ALGOLIA_ID,
@@ -24,18 +24,20 @@ const searchClient = algoliasearch(
 );
 
 export function Search({ session }: { session: Session | null }) {
+  const [activeTab, setActiveTab] = useState<string>("card");
+
   return (
     <InstantSearch
       future={{ preserveSharedStateOnUnmount: true }}
       indexName="published_article_created_at_asc"
       searchClient={searchClient}
     >
-      <Tabs defaultValue="card" className="pb-6 pt-2">
+      <Tabs value={activeTab} onValueChange={(new_value) =>setActiveTab(new_value)} defaultValue="card" className="pb-6 pt-2">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
             <MySearchBox />
             <div className="flex flex-col items-center justify-between gap-6 text-nowrap sm:flex-row">
-              <MySortBy />
+              {activeTab==="card" && <MySortBy />}
               <TabsList>
                 <TabsTrigger value="card">
                   <LayoutDashboard />
@@ -64,7 +66,6 @@ export function Search({ session }: { session: Session | null }) {
           <ArticleTable session={session} />
         </TabsContent>
       </Tabs>
-      <MyPagination />
     </InstantSearch>
   );
 }

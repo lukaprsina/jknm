@@ -1,5 +1,6 @@
 import { klona } from "klona";
 import { z } from "zod";
+import { algoliasearch as searchClient } from "algoliasearch";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import {
   CreateDraftArticleSchema,
@@ -21,12 +22,13 @@ import {
 } from "~/lib/article-utils";
 import type { PublishedArticleWithAuthors } from "~/components/article/card-adapter";
 import {
-  rename_s3_files_and_content,
   delete_s3_directory,
+  rename_s3_files_and_content,
 } from "~/server/s3-utils";
 import { env } from "~/env";
 import type { S3CopySourceInfo } from "~/lib/s3-publish";
 import { s3_copy, s3_copy_file } from "~/lib/s3-publish";
+import { convert_article_to_algolia_object } from "~/lib/algoliasearch";
 
 export const article_router = createTRPCRouter({
   get_infinite_published: publicProcedure
@@ -255,8 +257,8 @@ export const article_router = createTRPCRouter({
       return transaction;
     }),
 
-  /* if published_id is provided, clone published article to draft
-    if article is provided, create draft article
+  /* if published_id is provided, clone published draft_article to draft
+    if draft_article is provided, create draft draft_article
     else throw error */
   get_or_create_draft: protectedProcedure
     .input(
@@ -272,7 +274,7 @@ export const article_router = createTRPCRouter({
       try {
         const transaction = await ctx.db.transaction(async (tx) => {
           if (!input.published_id && !input.article) {
-            throw new Error("Either published_id or article must be provided");
+            throw new Error("Either published_id or draft_article must be provided");
           }
 
           let published: PublishedArticleWithAuthors | undefined;
@@ -289,7 +291,7 @@ export const article_router = createTRPCRouter({
               },
             });
 
-            if (!published) throw new Error("Published article not found");
+            if (!published) throw new Error("Published draft_article not found");
 
             const draft = await tx.query.DraftArticle.findFirst({
               where: eq(DraftArticle.published_id, input.published_id),
@@ -305,7 +307,7 @@ export const article_router = createTRPCRouter({
             if (draft) return draft;
           }
 
-          // if article is provided, create draft
+          // if draft_article is provided, create draft
           let values: typeof DraftArticle.$inferInsert | undefined = undefined;
           if (input.article) {
             values = input.article;
@@ -426,7 +428,9 @@ export const article_router = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       // console.log("publish input", input);
 
-      const transaction = await ctx.db.transaction(async (tx) => {
+      // console.log("publish transaction", transaction);
+
+      return await ctx.db.transaction(async (tx) => {
         let draft_article: typeof DraftArticle.$inferSelect | undefined;
         let published_article: typeof PublishedArticle.$inferSelect | undefined;
         // check if draft exists
@@ -435,7 +439,7 @@ export const article_router = createTRPCRouter({
             where: eq(DraftArticle.id, input.draft_id),
           });
 
-          // console.log("publishing article has draft_id", { draft });
+          // console.log("publishing draft_article has draft_id", { draft });
           if (!draft_article) throw new Error("Draft not found");
 
           if (draft_article.published_id) {
@@ -444,7 +448,7 @@ export const article_router = createTRPCRouter({
             });
 
             if (!published_article)
-              throw new Error("Published article not found");
+              throw new Error("Published draft_article not found");
           }
         }
 
@@ -515,7 +519,7 @@ export const article_router = createTRPCRouter({
           assert_one(published_articles);
           published_article = published_articles[0];
         } else {
-          // insert new published article
+          // insert new published draft_article
           const published_articles = await tx
             .insert(PublishedArticle)
             .values(value)
@@ -562,20 +566,28 @@ export const article_router = createTRPCRouter({
           });
 
         if (!published_article_with_authors)
-          throw new Error("Published article not found");
+          throw new Error("Published draft_article not found");
+
+        const algolia = searchClient(
+          env.NEXT_PUBLIC_ALGOLIA_ID,
+          env.ALGOLIA_ADMIN_KEY,
+        );
+
+        await algolia.saveObject({
+          indexName: "published_article_created_at_desc",
+          body: convert_article_to_algolia_object(
+            published_article_with_authors,
+          ),
+        });
 
         return published_article_with_authors;
       });
-
-      // console.log("publish transaction", transaction);
-
-      return transaction;
     }),
 
   sync_duplicate_urls: protectedProcedure.mutation(async ({ ctx }) => {
-    const transaction = await ctx.db.transaction(async (tx) => {
-      // update duplicate_urls
-      // TODO: iterate over all duplicate_urls, check them also
+    return await ctx.db.transaction(async (tx) => {
+      // update duplicated_urls
+      // TODO: iterate over all duplicated_urls, check them also
       await tx.delete(DuplicatedArticleUrls);
       const all_urls = await tx.query.PublishedArticle.findMany({
         columns: {
@@ -596,7 +608,7 @@ export const article_router = createTRPCRouter({
         return acc;
       }, []);
 
-      // console.log("duplicate_urls", duplicate_urls);
+      // console.log("duplicated_urls", duplicated_urls);
 
       if (duplicate_urls.length > 0) {
         await tx.insert(DuplicatedArticleUrls).values(duplicate_urls);
@@ -604,15 +616,13 @@ export const article_router = createTRPCRouter({
 
       return duplicate_urls;
     });
-
-    return transaction;
   }),
 
   // input is draft_id
   delete_draft: protectedProcedure
     .input(z.number())
     .mutation(async ({ ctx, input }) => {
-      const transaction = await ctx.db.transaction(async (tx) => {
+      return await ctx.db.transaction(async (tx) => {
         const draft_result = await tx
           .delete(DraftArticle)
           .where(eq(DraftArticle.id, input))
@@ -632,12 +642,10 @@ export const article_router = createTRPCRouter({
           where: eq(PublishedArticle.id, draft.published_id),
         });
 
-        if (!published) throw new Error("Published article not found");
+        if (!published) throw new Error("Published draft_article not found");
 
         return { draft, url: published.url };
       });
-
-      return transaction;
     }),
 
   // TODO: warn user that the draft will be ovewritten
@@ -645,7 +653,7 @@ export const article_router = createTRPCRouter({
   unpublish: protectedProcedure
     .input(z.number())
     .mutation(async ({ ctx, input }) => {
-      const transaction = await ctx.db.transaction(async (tx) => {
+      return await ctx.db.transaction(async (tx) => {
         const all_published = await tx.query.PublishedArticle.findMany({
           where: eq(PublishedArticle.id, input),
           with: {
@@ -657,6 +665,20 @@ export const article_router = createTRPCRouter({
 
         assert_one(all_published);
         const published = all_published[0];
+
+        try {
+          const algolia = searchClient(
+            env.NEXT_PUBLIC_ALGOLIA_ID,
+            env.ALGOLIA_ADMIN_KEY,
+          );
+
+          await algolia.deleteObject({
+            indexName: "published_article_created_at_desc",
+            objectID: published.id.toString(),
+          });
+        } catch (error) {
+          console.error("algolia error", error);
+        }
 
         const all_drafts = await tx.query.DraftArticle.findMany({
           where: eq(DraftArticle.published_id, input),
@@ -712,14 +734,12 @@ export const article_router = createTRPCRouter({
 
         return updated_or_created_draft;
       });
-
-      return transaction;
     }),
 
   delete_both: protectedProcedure
     .input(z.object({ draft_id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      const transaction = await ctx.db.transaction(async (tx) => {
+      return await ctx.db.transaction(async (tx) => {
         const draft_article = await tx
           .delete(DraftArticle)
           .where(eq(DraftArticle.id, input.draft_id))
@@ -742,17 +762,30 @@ export const article_router = createTRPCRouter({
 
           assert_one(published_article);
           const published = published_article[0];
+
           await delete_s3_directory(
             env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
             get_s3_published_directory(published.url, published.created_at),
           );
+
+          try {
+            const algolia = searchClient(
+              env.NEXT_PUBLIC_ALGOLIA_ID,
+              env.ALGOLIA_ADMIN_KEY,
+            );
+
+            await algolia.deleteObject({
+              indexName: "published_article_created_at_desc",
+              objectID: published.id.toString(),
+            });
+          } catch (error) {
+            console.error("algolia error", error);
+          }
 
           return { draft, published };
         }
 
         return { draft };
       });
-
-      return transaction;
     }),
 });

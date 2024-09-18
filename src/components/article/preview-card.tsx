@@ -7,6 +7,10 @@ import {
   PublishedArticleDrizzleCard,
   PublishedArticleWithAuthors,
 } from "~/components/article/card-adapter";
+import { get_published_article_link } from "~/lib/article-utils";
+import { api } from "~/trpc/react";
+import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
+import Link from "next/link";
 
 export function PublishedArticlePreviewCard({
   article,
@@ -22,7 +26,7 @@ export function PublishedArticlePreviewCard({
       <CardContent className="pb-0 pr-0">
         <div className={"grid grid-cols-2"}>
           <div>
-            <h3 className="!my-4">Uredi osnutek</h3>
+            <h3 className="!my-4">Objavljena novica</h3>
             <p>Naslov: {article.title}</p>
             <p>Ustvarjen: {format_date_for_human(article.created_at)}</p>
             <p>Posodobljen: {format_date_for_human(article.updated_at)}</p>
@@ -37,11 +41,15 @@ export function PublishedArticlePreviewCard({
 }
 
 export function DraftArticlePreviewCard({
-  article,
+  draft_article,
+  published_article,
+  duplicated_urls,
 }: {
-  article?: DraftArticleWithAuthors;
+  draft_article?: DraftArticleWithAuthors;
+  published_article?: PublishedArticleWithAuthors;
+  duplicated_urls: string[];
 }) {
-  if (!article) {
+  if (!draft_article) {
     return;
   }
 
@@ -51,12 +59,29 @@ export function DraftArticlePreviewCard({
         <div className={"grid grid-cols-2"}>
           <div>
             <h3 className="!my-4">Uredi osnutek</h3>
-            <p>Naslov: {article.title}</p>
-            <p>Ustvarjen: {format_date_for_human(article.created_at)}</p>
-            <p>Posodobljen: {format_date_for_human(article.updated_at)}</p>
+            <p>Naslov: {draft_article.title}</p>
+            <p>Ustvarjen: {format_date_for_human(draft_article.created_at)}</p>
+            <p>
+              Posodobljen: {format_date_for_human(draft_article.updated_at)}
+            </p>
+            {published_article && (
+              <p>
+                Objavljena verzija:{" "}
+                <Link
+                  target="_blank"
+                  href={get_published_article_link(
+                    published_article.url,
+                    published_article.created_at,
+                    duplicated_urls,
+                  )}
+                >
+                  {published_article.title}
+                </Link>
+              </p>
+            )}
           </div>
           <div className={article_variants({ variant: "card" })}>
-            <DraftArticleDrizzleCard article={article} />
+            <DraftArticleDrizzleCard no_link article={draft_article} />
           </div>
         </div>
       </CardContent>

@@ -10,7 +10,7 @@ import type {
 } from "~/server/db/schema";
 import type { PublishedArticleHit } from "~/lib/validators";
 import type { IntersectionRef } from "./infinite-articles";
-import { content_to_text } from "~/lib/content-to-text";
+import { convert_content_to_text } from "~/lib/content-to-text";
 import {
   get_draft_article_link,
   get_published_article_link,
@@ -54,17 +54,20 @@ export type DraftArticleWithAuthors = typeof DraftArticle.$inferSelect & {
 
 export const DraftArticleDrizzleCard = ({
   article,
+  no_link,
   ref,
 }: {
   article: DraftArticleWithAuthors;
+  no_link?: boolean,
   ref?: IntersectionRef;
 }) => {
   return (
     <ArticleCard
       ref={ref}
+      no_link={no_link}
       title={article.title}
       url={get_draft_article_link(article.id)}
-      content_preview={content_to_text(article.content?.blocks ?? undefined)}
+      content_preview={convert_content_to_text(article.content?.blocks, true).slice(0, 1000)}
       created_at={article.created_at}
       image_url={get_s3_prefix(
         `${article.id}/thumbnail.png`,
@@ -101,7 +104,7 @@ export const PublishedArticleDrizzleCard = ({
         `${get_s3_published_directory(article.url, article.created_at)}/thumbnail.png`,
         env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
       )}
-      content_preview={content_to_text(article.content?.blocks ?? undefined)}
+      content_preview={convert_content_to_text(article.content?.blocks, true).slice(0, 1000)}
       created_at={article.created_at}
       has_thumbnail={Boolean(article.thumbnail_crop)}
       author_ids={article.published_articles_to_authors.map((a) => a.author.id)}
@@ -124,7 +127,7 @@ export function ArticleAlgoliaCard({
       featured={false}
       title={hit.title}
       url={get_published_article_link(hit.url, hit.created_at, duplicate_urls)}
-      content_preview={hit.content_preview}
+      content_preview={hit.content_preview?.slice(0, 1000)}
       created_at={new Date(hit.created_at)}
       has_thumbnail={hit.has_thumbnail}
       author_ids={hit.author_ids}

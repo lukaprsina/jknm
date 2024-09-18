@@ -33,13 +33,13 @@ export function SettingsDialog() {
           <DialogTrigger asChild>
             <Button
               onClick={async () => {
-                /* if (!editor_context.editor || !editor_context.article) return;
+                /* if (!editor_context.editor || !editor_context.draft_article) return;
                 const editor_content = await editor_context.editor_context.save();
 
                 editor_context.update_settings_from_editor(
                   editor_content,
-                  editor_context.article.title,
-                  editor_context.article.url,
+                  editor_context.draft_article.title,
+                  editor_context.draft_article.url,
                 ); */
               }}
               variant="ghost"

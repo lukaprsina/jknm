@@ -22,6 +22,7 @@ const ArticleCardDescription = dynamic(
 
 export function ArticleCard({
   featured,
+                              no_link,
   title,
   url,
   content_preview,
@@ -32,6 +33,7 @@ export function ArticleCard({
   ref,
 }: {
   featured?: boolean;
+  no_link?: boolean;
   title: string;
   url: string;
   content_preview?: string;
@@ -45,7 +47,7 @@ export function ArticleCard({
 
   return (
     <Link
-      href={url}
+      href={no_link ? "#" : url}
       className={cn(
         "overflow-hidden rounded-xl bg-transparent no-underline shadow-lg",
         featured && "col-span-1 md:col-span-2 lg:col-span-3",

@@ -29,12 +29,12 @@ export const thumbnail_validator = z.object({
 export type ThumbnailType = z.infer<typeof thumbnail_validator>;
 
 export const published_article_hit_validator = z.object({
-  published_id: z.number(),
+  objectID: z.string(), // published_id
   title: z.string(),
   url: z.string(),
   created_at: z.number(), // unix timestamp
   updated_at: z.number(), // unix timestamp
-  content_preview: z.string().max(1000), // maybe 600
+  content_preview: z.string().optional(),
   author_ids: z.array(z.number()),
   image: z.string().optional(),
   year: z.string(),

@@ -110,9 +110,9 @@ export function ArticleTable({
             >
               Zadnje posodobljeno
               {sort_api.currentRefinement ===
-                "published_article_created_at_desc" && <ChevronDownIcon />}
+                "published_article_updated_at_desc" && <ChevronDownIcon />}
               {sort_api.currentRefinement ===
-                "published_article_created_at_asc" && <ChevronUpIcon />}
+                "published_article_updated_at_asc" && <ChevronUpIcon />}
             </Button>
           </TableHead>
         </TableRow>
@@ -145,7 +145,7 @@ function ArticleTableRow({
 
   return (
     <TableRow key={hit.objectID}>
-      <TableCell>{hit.published_id}</TableCell>
+      <TableCell>{hit.objectID}</TableCell>
       <TableCell className="font-medium">
         <Button variant="link" asChild>
           <Link

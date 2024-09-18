@@ -44,7 +44,6 @@ export default async function NovicaPage({
     url: decoded,
     created_at: day ? read_date_from_url(day) : undefined,
   });
-  // console.log("novica/ ", { url: decoded, day, draft, published });
 
   if (!published) {
     return (

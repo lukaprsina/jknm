@@ -28,7 +28,7 @@ const open_sans = Open_Sans({
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  // await api.article.get_duplicate_urls.prefetch();
+  // await api.draft_article.get_duplicate_urls.prefetch();
 
   return (
     <StrictMode>
