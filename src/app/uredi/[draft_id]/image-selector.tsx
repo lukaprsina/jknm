@@ -36,6 +36,7 @@ export function ImageSelector({
   const store_images = editor_store.use.image_data();
   const input_ref = useRef<HTMLInputElement>(null);
   const [crop, setCrop] = useState<Crop>();
+  const [uploadedVersion, setUploadedVersion] = useState<number>(Date.now())
 
   const [imageIndex, setImageIndex] = useState<number | undefined>(undefined);
 
@@ -131,7 +132,11 @@ export function ImageSelector({
         );
       }
 
-      console.warn("handle_image_load done");
+      console.warn("handle_image_load done", {
+        formImage,
+        current_crop,
+        image_url,
+      });
 
       setFormImage({
         ...formImage,
@@ -185,14 +190,17 @@ export function ImageSelector({
           console.warn("start")
           setFormImage({
             image_url: response.file.url,
-            width: response.file.width ?? 0,
-            height: response.file.height ?? 0,
+            // width: response.file.width ?? 0,
+            // height: response.file.height ?? 0
+            width: 0,
+            height: 0,
             unit: "%",
             x: 0,
             y: 0,
             uploaded_custom_thumbnail: true,
           });
           setImageIndex(images.length);
+          setUploadedVersion(Date.now())
         }}
       />
       <div className="flex flex-col gap-4">
@@ -208,7 +216,6 @@ export function ImageSelector({
             }
 
             if (image.file.url.endsWith("thumbnail-uploaded.png")) {
-              // console.log("AAAAAA", image.file.url);
               width = 300;
               height = (300 * 9) / 16;
             }
@@ -226,7 +233,7 @@ export function ImageSelector({
                 )}
               >
                 <Image
-                  src={image.file.url}
+                  src={`${image.file.url}?v=${uploadedVersion}`}
                   alt={`Izbira slike #${index}`}
                   width={width}
                   height={height}
@@ -277,8 +284,7 @@ export function ImageSelector({
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                /*?v=${Date.now()}*/
-                src={`${images[imageIndex].file.url}`}
+                src={`${images[imageIndex].file.url}?v=${uploadedVersion}`}
                 alt="Cropped image"
                 onLoad={(event) => handle_image_load(event)}
               />
