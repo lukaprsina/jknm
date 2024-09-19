@@ -24,6 +24,7 @@ import { get_s3_draft_directory } from "~/lib/article-utils";
 import { get_s3_prefix } from "~/lib/s3-publish";
 import { env } from "~/env";
 import { DraftArticleContext } from "~/components/article/context";
+import { ScrollArea } from "~/components/ui/scroll-area";
 
 export function ImageSelector({
   image: formImage,
@@ -46,8 +47,6 @@ export function ImageSelector({
   const images = useMemo(() => {
     const temp = [...store_images];
 
-    console.log("useMemo adding form image", formImage);
-
     if (customThumbnailExists && draft_article) {
       const editor_image = {
         file: {
@@ -59,48 +58,22 @@ export function ImageSelector({
         caption: "",
       } satisfies EditorJSImageData;
 
-      console.log("useMemo adding form image custom thumbnail", {
-        formImage,
-        draft_article,
-        temp,
-        editor_image,
-        imageIndex,
-      });
-
       temp.push(editor_image);
     }
 
-    console.log("images", { temp, formImage, store_images });
     return temp;
-  }, [
-    customThumbnailExists,
-    draft_article,
-    formImage,
-    imageIndex,
-    store_images,
-  ]);
+  }, [customThumbnailExists, draft_article, store_images]);
 
   useEffect(() => {
-    console.log("%c setting crop", "color: #90C0A0;");
-    console.log({ formImage, imageIndex });
     setCrop(formImage);
   }, [formImage, imageIndex]);
 
   useEffect(() => {
     if (!formImage || typeof imageIndex === "number") return;
 
-    console.log("useEffect", { imageIndex, formImage });
-
     const selected_image_index = images.findIndex(
       (image) => image.file.url === formImage.image_url,
     );
-
-    console.log("formImage from draft_article", {
-      formImage,
-      imageIndex,
-      images,
-      selected_image_index,
-    });
 
     if (selected_image_index === -1) {
       setImageIndex(undefined);
@@ -115,15 +88,6 @@ export function ImageSelector({
       const { naturalWidth: width, naturalHeight: height } =
         event.currentTarget;
 
-      console.warn("handle_image_load", {
-        width,
-        height,
-        images,
-        imageIndex,
-        formImage,
-        crop,
-      });
-
       if (typeof imageIndex !== "number") return;
       const image_url = images[imageIndex]?.file.url;
 
@@ -132,7 +96,6 @@ export function ImageSelector({
       if (!doCenterCrop) {
         current_crop = crop;
       }
-      // let current_crop: Crop | undefined = undefined as Crop | undefined;
 
       if (!current_crop) {
         current_crop = centerCrop(
@@ -157,13 +120,6 @@ export function ImageSelector({
         unit: "%",
       } satisfies ThumbnailType;
 
-      console.warn("handle_image_load done", {
-        thumbnail,
-        formImage,
-        current_crop,
-        image_url,
-      });
-
       setDoCenterCrop(false);
       setFormImage(thumbnail);
     },
@@ -171,7 +127,6 @@ export function ImageSelector({
       crop,
       customThumbnailExists,
       doCenterCrop,
-      formImage,
       imageIndex,
       images,
       setFormImage,
@@ -188,14 +143,10 @@ export function ImageSelector({
         onChange={async (event) => {
           const files = event.target.files;
           const file = files?.item(0);
-          console.log("input onChange event", file);
           if (!file) return;
 
           setFormImage(undefined);
           setCustomThumbnailExists(false);
-          // setImageIndex(undefined);
-
-          console.log("ImageSelector -> uploading image");
 
           const response = await upload_image_by_file({
             file,
@@ -206,85 +157,83 @@ export function ImageSelector({
             directory: get_s3_draft_directory(editor_store.get.draft_id()),
           });
 
-          console.log("ImageSelector -> response", response);
-
           if (
             typeof response.file === "undefined" ||
             !("width" in response.file)
           ) {
-            console.log("ImageSelector -> invalid response, returning", {
-              response,
-            });
-
             return;
           }
 
-          console.warn("start");
           setCustomThumbnailExists(true);
-          // setImageIndex(images.length);
           setUploadedVersion(Date.now());
         }}
       />
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-wrap gap-2">
-          {images.map((image, index) => {
-            let width = image.file.width;
-            let height = image.file.height;
-            if (!image.file.url) {
-              width = 0;
-              height = 0;
-            }
+      <div className="flex gap-4">
+        <ScrollArea className="h-[65vh] overflow-y-auto py-4">
+        <div className="flex flex-grow flex-wrap gap-2">
+            {images.map((image, index) => {
+              let width = image.file.width;
+              let height = image.file.height;
+              if (!image.file.url) {
+                width = 0;
+                height = 0;
+              }
 
-            if (image.file.url.endsWith("thumbnail-uploaded.png")) {
-              width = 300;
-              height = (300 * 9) / 16;
-            }
+              if (image.file.url.endsWith("thumbnail-uploaded.png")) {
+                width = 300;
+                height = (300 * 9) / 16;
+              }
 
-            return (
-              <Card
-                key={`${image.file.url}-${index}`}
-                onClick={() => {
-                  setFormImage(undefined);
-                  setUploadedVersion(Date.now());
-                  setImageIndex(index);
-                  setDoCenterCrop(true);
-                }}
-                className={cn(
-                  "box-border flex cursor-pointer items-center justify-center border-2 p-2",
-                  imageIndex === index && "border-blue-500",
-                )}
-              >
-                <Image
-                  src={`${image.file.url}?v=${uploadedVersion}`}
-                  alt={`Izbira slike #${index}`}
-                  width={width}
-                  height={height}
-                  className="max-h-[300px] max-w-[300px]"
-                />
-              </Card>
-            );
-          })}
-          <Card
-            onClick={() => {
-              if (!input_ref.current) return;
-              input_ref.current.value = "";
-              input_ref.current.click();
-            }}
-            className="box-border flex cursor-pointer items-center justify-center border-2 p-2"
-          >
-            <div className="w-[300px]">
-              <AspectRatio
-                ratio={16 / 9}
-                className="flex h-full items-center justify-center"
-              >
-                <PlusIcon />
-              </AspectRatio>
-            </div>
-          </Card>
+              return (
+                <Card
+                  key={`${image.file.url}-${index}`}
+                  onClick={() => {
+                    setFormImage(undefined);
+                    setUploadedVersion(Date.now());
+                    setImageIndex(index);
+                    setDoCenterCrop(true);
+                  }}
+                  className={cn(
+                    "box-border flex cursor-pointer items-center justify-center border-2 p-2",
+                    imageIndex === index && "border-blue-500",
+                    "max-h-[300px] max-w-[300px]",
+                  )}
+                >
+                  <Image
+                    src={`${image.file.url}?v=${uploadedVersion}`}
+                    alt={`Izbira slike #${index}`}
+                    /*width={300}
+                    height={300}*/
+                    width={width}
+                    height={height}
+                    className="object-contain max-w-[300px] max-h-[300px] rounded-sm"
+                  />
+                </Card>
+              );
+            })}
+            <Card
+              onClick={() => {
+                if (!input_ref.current) return;
+                input_ref.current.value = "";
+                input_ref.current.click();
+              }}
+              className="box-border flex cursor-pointer items-center justify-center border-2 p-2"
+            >
+              <div className="w-[300px]">
+                <AspectRatio
+                  ratio={16 / 9}
+                  className="flex h-full items-center justify-center"
+                >
+                  <PlusIcon />
+                </AspectRatio>
+              </div>
+            </Card>
         </div>
+        </ScrollArea>
         {typeof imageIndex === "number" && images[imageIndex]?.file.url && (
-          <div className="max-w-[500px]">
+          <div className="flex items-center justify-center w-[500px] max-w-[500px]">
             <ReactCrop
+              className="w-full"
               onComplete={(_, percent_crop) => {
                 if (!images[imageIndex]) return;
 
@@ -307,6 +256,9 @@ export function ImageSelector({
               <img
                 src={`${images[imageIndex].file.url}?v=${uploadedVersion}`}
                 alt="Cropped image"
+                width={images[imageIndex].file.width}
+                height={images[imageIndex].file.height}
+                className="w-full h-auto min-w-[500px]"
                 onLoad={(event) => handle_image_load(event)}
               />
             </ReactCrop>

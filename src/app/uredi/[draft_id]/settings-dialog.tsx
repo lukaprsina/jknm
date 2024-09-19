@@ -32,16 +32,6 @@ export function SettingsDialog() {
         <TooltipTrigger asChild>
           <DialogTrigger asChild>
             <Button
-              onClick={async () => {
-                /* if (!editor_context.editor || !editor_context.draft_article) return;
-                const editor_content = await editor_context.editor_context.save();
-
-                editor_context.update_settings_from_editor(
-                  editor_content,
-                  editor_context.draft_article.title,
-                  editor_context.draft_article.url,
-                ); */
-              }}
               variant="ghost"
               size="icon"
             >
@@ -52,7 +42,7 @@ export function SettingsDialog() {
         <TooltipContent>Nastavitve</TooltipContent>
       </Tooltip>
       {/* sm:max-w-[425px] */}
-      <DialogContent className="sm:pt-4 sm:max-w-[70vw]">
+      <DialogContent className="sm:pt-4 sm:max-w-[90vw]">
         <DialogHeader>
           <DialogTitle>Nastavitve</DialogTitle>
           <DialogDescription>

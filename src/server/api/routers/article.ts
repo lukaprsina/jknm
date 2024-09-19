@@ -573,8 +573,9 @@ export const article_router = createTRPCRouter({
           env.ALGOLIA_ADMIN_KEY,
         );
 
-        await algolia.saveObject({
+        await algolia.addOrUpdateObject({
           indexName: "published_article_created_at_desc",
+          objectID: published_article_with_authors.id.toString(),
           body: convert_article_to_algolia_object(
             published_article_with_authors,
           ),

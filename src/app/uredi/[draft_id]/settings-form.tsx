@@ -24,7 +24,6 @@ import { useContext } from "react";
 import { useEditorMutations } from "~/hooks/use-editor-mutations";
 import { thumbnail_validator } from "~/lib/validators";
 import { Separator } from "~/components/ui/separator";
-import { ScrollArea } from "~/components/ui/scroll-area";
 
 export const form_schema = z.object({
   created_at: z.date(),
@@ -47,7 +46,6 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
   return (
       <Form {...form}>
         <form className="space-y-4">
-          <ScrollArea className="max-h-[50vh] overflow-y-auto">
             <FormField
               control={form.control}
               name="created_at"
@@ -86,50 +84,9 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
                 </FormItem>
               )}
             />
-          </ScrollArea>
           <Separator />
-          <div className="mt-6 flex flex-col gap-4">
-            {published_article ? (
-              <>
-              <Button
-                onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
-                  editor_mutations.unpublish();
-                  closeDialog();
-                })}
-                variant="secondary"
-              >
-                Skrij novičko
-              </Button>
-              <Separator />
-              </>
-            ) : null}
-            <Button
-              onClick={form.handleSubmit(
-                async (values: z.infer<typeof form_schema>) => {
-                  await editor_mutations.save_draft(
-                    values.created_at,
-                    values.thumbnail_crop,
-                  );
-                  closeDialog();
-                },
-              )}
-              variant="secondary"
-            >
-              Shrani osnutek
-            </Button>
-            <Button
-              onClick={form.handleSubmit(
-                async (values: z.infer<typeof form_schema>) => {
-                  await editor_mutations.publish(
-                    values.created_at,
-                    values.thumbnail_crop,
-                  );
-                  closeDialog();
-                },
-              )}
-            >
-              Objavi spremembe
-            </Button>
+          <div className="flex justify-between gap-2 items-center">
+
             <Button
               onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
                 editor_mutations.delete_both();
@@ -139,7 +96,50 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
             >
               Zbriši novičko
             </Button>
+            <div className="flex justify-end gap-1 items-center">
+              {published_article ? (
+                <>
+                  <Button
+                    onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
+                      editor_mutations.unpublish();
+                      closeDialog();
+                    })}
+                    variant="secondary"
+                  >
+                    Skrij novičko
+                  </Button>
+                </>
+              ) : null}
+              <Button
+                onClick={form.handleSubmit(
+                  async (values: z.infer<typeof form_schema>) => {
+                    await editor_mutations.save_draft(
+                      values.created_at,
+                      values.thumbnail_crop,
+                    );
+                    closeDialog();
+                  },
+                )}
+                variant="secondary"
+              >
+                Shrani osnutek
+              </Button>
+              <Button
+                onClick={form.handleSubmit(
+                  async (values: z.infer<typeof form_schema>) => {
+                    await editor_mutations.publish(
+                      values.created_at,
+                      values.thumbnail_crop,
+                    );
+                    closeDialog();
+                  },
+                )}
+              >
+                Objavi spremembe
+              </Button>
+            </div>
           </div>
+
         </form>
       </Form>
   );
