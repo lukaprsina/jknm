@@ -221,7 +221,7 @@ export const article_router = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const transaction = await ctx.db.transaction(async (tx) => {
+      return await ctx.db.transaction(async (tx) => {
         // console.log("saving draft input", input);
 
         const updated_draft = await tx
@@ -238,9 +238,10 @@ export const article_router = createTRPCRouter({
 
         if (input.author_ids.length !== 0) {
           await tx.insert(DraftArticlesToAuthors).values(
-            input.author_ids.map((author_id) => ({
+            input.author_ids.map((author_id, index) => ({
               author_id,
               draft_id: input.draft_id,
+              order: index,
             })),
           );
         }
@@ -254,8 +255,6 @@ export const article_router = createTRPCRouter({
           },
         });
       });
-
-      return transaction;
     }),
 
   /* if published_id is provided, clone published draft_article to draft
@@ -397,9 +396,10 @@ export const article_router = createTRPCRouter({
             .where(eq(DraftArticlesToAuthors.draft_id, draft_id)); */
 
             await tx.insert(DraftArticlesToAuthors).values(
-              published.published_articles_to_authors.map((author) => ({
+              published.published_articles_to_authors.map((author, index) => ({
                 author_id: author.author_id,
                 draft_id: created_draft.id,
+                order: index,
               })),
             );
           }
@@ -553,9 +553,10 @@ export const article_router = createTRPCRouter({
 
         if (input.author_ids.length !== 0) {
           await tx.insert(PublishedArticlesToAuthors).values(
-            input.author_ids.map((author_id) => ({
+            input.author_ids.map((author_id, index) => ({
               author_id,
               published_id: published_article.id,
+              order: index,
             })),
           );
         }

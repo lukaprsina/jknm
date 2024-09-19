@@ -1,4 +1,0 @@
-from localhost
-https://jknm.s3.eu-central-1.amazonaws.com/45-12-09-2024/Screenshot%202024-06-27%20204350.png
-from s3 še enkrat encoded
-https://jknm.s3.eu-central-1.amazonaws.com/45-12-09-2024/Screenshot%25202024-06-27%2520204350.png

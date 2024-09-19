@@ -152,6 +152,7 @@ export const PublishedArticlesToAuthors = pgTable(
       .references(() => Author.id, {
         onDelete: "cascade",
       }),
+    order: integer("order").default(0).notNull(),
   },
   (published_articles_to_authors) => ({
     compoundKey: primaryKey({
@@ -188,6 +189,7 @@ export const DraftArticlesToAuthors = pgTable(
       .references(() => Author.id, {
         onDelete: "cascade",
       }),
+    order: integer("order").default(0).notNull(),
   },
   (draft_articles_to_authors) => ({
     compoundKey: primaryKey({

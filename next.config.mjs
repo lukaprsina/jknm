@@ -3,9 +3,14 @@
  * for Docker builds.
  */
 await import("./src/env.js");
+import remarkGfm from "remark-gfm";
+import createMDX from "@next/mdx";
+import remarkFrontmatter from "remark-frontmatter";
+import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 
 /** @type {import("next").NextConfig} */
 const config = {
+  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   images: {
     loader: "custom",
     loaderFile: "./image-loader.js",
@@ -76,6 +81,9 @@ const config = {
 
   experimental: {
     // reactCompiler: false,
+    mdxRs: {
+      mdxType: "gfm"
+    },
     serverActions: {
       // TODO
       bodySizeLimit: "100mb",
@@ -91,4 +99,10 @@ const config = {
   },
 };
 
-export default config;
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: [remarkGfm],
+  },
+});
+
+export default withMDX(config);

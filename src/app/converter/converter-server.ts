@@ -180,11 +180,14 @@ export async function upload_articles(
         throw new Error(`Article not found: ${article.old_id}`);
       }
 
+      let index = 0;
       for (const author_id of imported_article.author_ids) {
         joins.push({
           author_id: author_id,
           published_id: article.id,
+          order: index,
         });
+        index++;
       }
     }
 
