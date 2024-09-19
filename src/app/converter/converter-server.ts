@@ -97,6 +97,7 @@ export async function sync_authors() {
 
   await db.insert(Author).values(mapped_guest_authors).returning();
   console.log("Inserted guest authors", mapped_guest_authors.length);
+  console.log("done")
   // fs_promises.readFile()
 }
 
@@ -159,7 +160,7 @@ export async function upload_articles(
 ) {
   if (articles.length === 0) return;
   await db.transaction(async (tx) => {
-    console.log("Inserting articles", articles.length);
+    /*console.log("Inserting articles", articles.length);
     if (articles.length == 0) {
       throw new Error("No articles to insert");
     }
@@ -167,7 +168,8 @@ export async function upload_articles(
     const returned_articles = await tx
       .insert(PublishedArticle)
       .values(articles)
-      .returning();
+      .returning();*/
+    const returned_articles = await tx.query.PublishedArticle.findMany()
 
     const joins: (typeof PublishedArticlesToAuthors.$inferInsert)[] = [];
     for (const article of returned_articles) {

@@ -17,7 +17,7 @@ import { cn } from "~/lib/utils";
 import type { ThumbnailType } from "~/lib/validators";
 import "react-image-crop/dist/ReactCrop.css";
 import type { EditorJSImageData } from "~/lib/editor-utils";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, TrashIcon } from "lucide-react";
 import { AspectRatio } from "~/components/ui/aspect-ratio";
 import { upload_image_by_file } from "~/components/aws-s3/upload-file";
 import { get_s3_draft_directory } from "~/lib/article-utils";
@@ -25,6 +25,9 @@ import { get_s3_prefix } from "~/lib/s3-publish";
 import { env } from "~/env";
 import { DraftArticleContext } from "~/components/article/context";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import { Button } from "~/components/ui/button";
+import { api } from "~/trpc/react";
+import { useToast } from "~/hooks/use-toast";
 
 export function ImageSelector({
   image: formImage,
@@ -43,6 +46,30 @@ export function ImageSelector({
   );
   const [doCenterCrop, setDoCenterCrop] = useState<boolean>(false);
   const [imageIndex, setImageIndex] = useState<number | undefined>(undefined);
+  const toaster = useToast()
+
+  const delete_custom_thumbnail =
+    api.article.delete_custom_thumbnail.useMutation({
+      onSuccess: () => {
+        setCustomThumbnailExists(false);
+        setFormImage(undefined);
+      },
+      onError: (error) => {
+        toaster.toast({
+          title: "Napaka pri brisanju slike",
+          description: error.message,
+        })
+      }
+    });
+
+  const custom_thumbnail_url = useMemo(() => {
+    if(!draft_article) return "";
+
+    return get_s3_prefix(
+      `${get_s3_draft_directory(draft_article.id)}/thumbnail-uploaded.png`,
+      env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+    )
+  }, [draft_article?.id]);
 
   const images = useMemo(() => {
     const temp = [...store_images];
@@ -50,10 +77,7 @@ export function ImageSelector({
     if (customThumbnailExists && draft_article) {
       const editor_image = {
         file: {
-          url: get_s3_prefix(
-            `${draft_article.id}/thumbnail-uploaded.png`,
-            env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
-          ),
+          url: custom_thumbnail_url,
         },
         caption: "",
       } satisfies EditorJSImageData;
@@ -170,16 +194,18 @@ export function ImageSelector({
       />
       <div className="flex gap-4">
         <ScrollArea className="h-[65vh] overflow-y-auto py-4">
-        <div className="flex flex-grow flex-wrap gap-2">
+          <div className="flex flex-grow flex-wrap gap-2">
             {images.map((image, index) => {
               let width = image.file.width;
               let height = image.file.height;
+              let is_custom_image = false;
               if (!image.file.url) {
                 width = 0;
                 height = 0;
               }
 
               if (image.file.url.endsWith("thumbnail-uploaded.png")) {
+                is_custom_image = true;
                 width = 300;
                 height = (300 * 9) / 16;
               }
@@ -187,27 +213,41 @@ export function ImageSelector({
               return (
                 <Card
                   key={`${image.file.url}-${index}`}
-                  onClick={() => {
-                    setFormImage(undefined);
-                    setUploadedVersion(Date.now());
-                    setImageIndex(index);
-                    setDoCenterCrop(true);
-                  }}
                   className={cn(
                     "box-border flex cursor-pointer items-center justify-center border-2 p-2",
                     imageIndex === index && "border-blue-500",
                     "max-h-[300px] max-w-[300px]",
+                    "relative",
                   )}
                 >
                   <Image
                     src={`${image.file.url}?v=${uploadedVersion}`}
                     alt={`Izbira slike #${index}`}
-                    /*width={300}
-                    height={300}*/
                     width={width}
                     height={height}
-                    className="object-contain max-w-[300px] max-h-[300px] rounded-sm"
+                    className="h-full w-full rounded-sm object-contain"
+                    onClick={() => {
+                      setFormImage(undefined);
+                      setUploadedVersion(Date.now());
+                      setImageIndex(index);
+                      setDoCenterCrop(true);
+                    }}
                   />
+                  {is_custom_image && (
+                    <Button
+                      size="icon"
+                      variant="destructive"
+                      type="button"
+                      className="absolute right-0 top-0 m-4 shadow-2xl"
+                      onClick={() => {
+                        delete_custom_thumbnail.mutate(
+                          editor_store.get.draft_id(),
+                        );
+                      }}
+                    >
+                      <TrashIcon />
+                    </Button>
+                  )}
                 </Card>
               );
             })}
@@ -228,10 +268,10 @@ export function ImageSelector({
                 </AspectRatio>
               </div>
             </Card>
-        </div>
+          </div>
         </ScrollArea>
         {typeof imageIndex === "number" && images[imageIndex]?.file.url && (
-          <div className="flex items-center justify-center w-[500px] max-w-[500px]">
+          <div className="flex w-[500px] max-w-[500px] items-center justify-center">
             <ReactCrop
               className="w-full"
               onComplete={(_, percent_crop) => {
@@ -258,7 +298,7 @@ export function ImageSelector({
                 alt="Cropped image"
                 width={images[imageIndex].file.width}
                 height={images[imageIndex].file.height}
-                className="w-full h-auto min-w-[500px]"
+                className="w-full h-full object-contain min-w-[500px]"
                 onLoad={(event) => handle_image_load(event)}
               />
             </ReactCrop>

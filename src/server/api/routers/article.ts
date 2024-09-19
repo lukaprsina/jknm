@@ -22,8 +22,9 @@ import {
 } from "~/lib/article-utils";
 import type { PublishedArticleWithAuthors } from "~/components/article/card-adapter";
 import {
+  delete_objects,
   delete_s3_directory,
-  rename_s3_files_and_content,
+  rename_s3_files_and_content
 } from "~/server/s3-utils";
 import { env } from "~/env";
 import type { S3CopySourceInfo } from "~/lib/s3-publish";
@@ -789,4 +790,24 @@ export const article_router = createTRPCRouter({
         return { draft };
       });
     }),
+
+  // input is draft id
+  delete_custom_thumbnail: protectedProcedure
+    .input(z.number())
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.transaction(async (tx) => {
+        console.log("delete_custom_thumbnail input", input);
+        const draft = await tx.query.DraftArticle.findFirst({
+          where: eq(DraftArticle.id, input),
+        });
+
+        if (!draft) throw new Error("Draft not found");
+
+        const s3_url = `${get_s3_draft_directory(draft.id)}/thumbnail-uploaded.png`;
+
+        await delete_objects(env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME, [s3_url]);
+
+        return draft;
+      });
+    })
 });

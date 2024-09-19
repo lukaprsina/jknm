@@ -177,18 +177,16 @@ export async function list_objects(bucket: string, prefix: string) {
 }
 
 export async function delete_objects(bucket: string, keys: string[]) {
-  // console.log("delete_objects", { bucket, keys });
+  console.log("delete_objects", { bucket, keys });
   try {
     const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
-    const response = await client.send(
+    return await client.send(
       new DeleteObjectsCommand({
         // Bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
         Bucket: bucket,
         Delete: { Objects: keys.map((Key) => ({ Key })) },
       }),
     );
-
-    return response;
   } catch (error) {
     console.error("Error listing objects:", error);
     throw error;

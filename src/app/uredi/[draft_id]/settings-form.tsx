@@ -6,7 +6,6 @@ import { Button } from "~/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -68,9 +67,6 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Naslovna slika</FormLabel>
-                  <FormDescription>
-                    Izberite naslovno sliko za novičko.
-                  </FormDescription>
                   <FormControl>
                     <ImageSelector
                       image={field.value}
