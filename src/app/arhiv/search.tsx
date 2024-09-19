@@ -5,20 +5,20 @@ import { InstantSearch } from "react-instantsearch";
 
 import { ArticleTable } from "./article-table";
 import {
-  CustomClearRefinements,
+  CustomClearRefinements, DEFAULT_REFINEMENT,
   MySearchBox,
   MySortBy,
   MyStats,
-  TimelineRefinement,
+  TimelineRefinement
 } from "./search-components";
 import type { Session } from "next-auth";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
-import { liteClient as algoliasearch } from "algoliasearch/lite";
+import { liteClient as algolia_search } from "algoliasearch/lite";
 import { env } from "~/env";
 import { MyInfiniteHits } from "~/app/arhiv/infinite-hits";
 import { useState } from "react";
 
-const searchClient = algoliasearch(
+const searchClient = algolia_search(
   env.NEXT_PUBLIC_ALGOLIA_ID,
   env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY,
 );
@@ -29,8 +29,9 @@ export function Search({ session }: { session: Session | null }) {
   return (
     <InstantSearch
       future={{ preserveSharedStateOnUnmount: true }}
-      indexName="published_article_created_at_asc"
+      indexName={DEFAULT_REFINEMENT}
       searchClient={searchClient}
+      insights={true}
     >
       <Tabs value={activeTab} onValueChange={(new_value) =>setActiveTab(new_value)} defaultValue="card" className="pb-6 pt-2">
         <div className="flex flex-col gap-4">

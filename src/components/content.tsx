@@ -8,7 +8,6 @@ import { article_variants, page_variants } from "~/lib/page-variants";
 import { EditorToReact } from "~/components/editor/editor-to-react";
 import { getServerAuthSession } from "~/server/auth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { DraftArticlePreviewCard, PublishedArticlePreviewCard } from "~/components/article/preview-card";
 import { api } from "~/trpc/server";
 import { named_promise_all_settled } from "~/lib/named-promise";
 
@@ -64,13 +63,11 @@ export async function TabbedContent({
       <TabsContent value="draft">
         <div className={cn("flex flex-col gap-6", article_variants())}>
           <EditorToReact article={draft} session={session.value} />
-          <DraftArticlePreviewCard draft_article={draft} published_article={published} duplicated_urls={duplicated_urls.value}/>
         </div>
       </TabsContent>
       <TabsContent value="published">
         <div className={cn("flex flex-col gap-6", article_variants())}>
           <EditorToReact article={published} session={session.value} />
-          <PublishedArticlePreviewCard article={published} />
         </div>
       </TabsContent>
     </Tabs>

@@ -8,8 +8,9 @@ import { cn } from "~/lib/utils";
 import { article_grid_variants, article_variants } from "~/lib/page-variants";
 
 const ARTICLE_LOAD_MORE_OFFSET = 9;
+
 export function MyInfiniteHits(props: InfiniteHitsProps<PublishedArticleHit>) {
-  const { items, isLastPage, showMore, } = useInfiniteHits(props);
+  const { items, isLastPage, showMore } = useInfiniteHits(props);
   const { isIntersecting, ref } = useIntersectionObserver({
     threshold: 0,
   });
@@ -24,14 +25,19 @@ export function MyInfiniteHits(props: InfiniteHitsProps<PublishedArticleHit>) {
 
   useEffect(() => {
     if (isIntersecting && !isLastPage) {
-      showMore()
+      showMore();
     }
   }, [isIntersecting, isLastPage, showMore]);
 
   return (
     <div /* className="ais-InfiniteHits" */>
       {/* "ais-InfiniteHits-list" */}
-      <ul className={cn(article_grid_variants(), article_variants({ variant: "card" }))}>
+      <ul
+        className={cn(
+          article_grid_variants(),
+          article_variants({ variant: "card" }),
+        )}
+      >
         {items.map((hit, index) => (
           <ArticleAlgoliaCard
             hit={hit}

@@ -6,7 +6,6 @@ import type {
   UseSearchBoxProps,
 } from "react-instantsearch";
 import { XIcon } from "lucide-react";
-// import { InstantSearchNext } from "react-instantsearch-nextjs";
 import {
   useClearRefinements,
   useRefinementList,
@@ -26,6 +25,9 @@ import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { Input } from "~/components/ui/input";
 import React from "react";
+// import { InstantSearchNext } from "react-instantsearch-nextjs";
+
+export const DEFAULT_REFINEMENT = "published_article_created_at_asc"
 
 export function MySortBy() {
   const { currentRefinement, options, refine } = useSortBy({
@@ -60,6 +62,7 @@ const queryHook: UseSearchBoxProps["queryHook"] = (query, search) => {
 
 export function MySearchBox() {
   const search_api = useSearchBox({ queryHook });
+  const { refine: sort_refine } = useSortBy({ items: SORT_BY_ITEMS });
 
   return (
     <div className="flex w-full max-w-sm items-center space-x-2">
@@ -67,7 +70,17 @@ export function MySearchBox() {
         placeholder="Iskanje ..."
         value={search_api.query}
         className="max-w-xl"
-        onChange={(e) => search_api.refine(e.target.value)}
+        onChange={(e) => {
+          const text = e.target.value
+          const trimmed = text.trim()
+
+          search_api.refine(text)
+          if(trimmed === "") {
+            sort_refine(DEFAULT_REFINEMENT)
+          } else {
+            sort_refine("published_article")
+          }
+        }}
       />
 
       <Button
@@ -175,7 +188,7 @@ export function TimelineItem({
 
 export function CustomClearRefinements(props: ClearRefinementsProps) {
   const { refine: clear_refinements } = useClearRefinements(props);
-  const { clear } = useSearchBox();
+  const { clear: clear_search } = useSearchBox();
   const { refine: sort_refine } = useSortBy({ items: SORT_BY_ITEMS });
 
   return (
@@ -183,8 +196,8 @@ export function CustomClearRefinements(props: ClearRefinementsProps) {
       variant="outline"
       onClick={() => {
         clear_refinements();
-        clear();
-        sort_refine("published_article_created_at_desc");
+        clear_search();
+        sort_refine(DEFAULT_REFINEMENT);
       }}
     >
       Počisti filtre

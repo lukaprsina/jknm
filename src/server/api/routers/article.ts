@@ -574,7 +574,7 @@ export const article_router = createTRPCRouter({
         );
 
         await algolia.addOrUpdateObject({
-          indexName: "published_article_created_at_desc",
+          indexName: "published_article",
           objectID: published_article_with_authors.id.toString(),
           body: convert_article_to_algolia_object(
             published_article_with_authors,
@@ -674,7 +674,7 @@ export const article_router = createTRPCRouter({
           );
 
           await algolia.deleteObject({
-            indexName: "published_article_created_at_desc",
+            indexName: "published_article",
             objectID: published.id.toString(),
           });
         } catch (error) {
@@ -776,7 +776,7 @@ export const article_router = createTRPCRouter({
             );
 
             await algolia.deleteObject({
-              indexName: "published_article_created_at_desc",
+              indexName: "published_article",
               objectID: published.id.toString(),
             });
           } catch (error) {

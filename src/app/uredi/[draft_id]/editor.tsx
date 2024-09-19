@@ -16,7 +16,6 @@ import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { MyToolbar } from "./toolbar";
 import { cn } from "~/lib/utils";
 import { article_variants } from "~/lib/page-variants";
-import { DraftArticlePreviewCard } from "~/components/article/preview-card";
 import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 
 // const Toolbar = dynamic(() => import("./toolbar"), { ssr: false });
@@ -43,7 +42,6 @@ export default function MyEditor({
                 <div id="editorjs" />
               </CardContent>
             </Card>
-            <DraftArticlePreviewCard draft_article={draft} published_article={published} duplicated_urls={duplicated_urls} />
             <SettingsSummary />
           </div>
         </EditorProvider>

@@ -1,10 +1,11 @@
 "use client";
 
 import type { Hit as SearchHit } from "instantsearch.js";
-import type { UseHitsProps } from "react-instantsearch";
+import type { UseInfiniteHitsProps } from "react-instantsearch";
+import { useInfiniteHits } from "react-instantsearch";
 import Link from "next/link";
 import { ChevronDownIcon, ChevronUpIcon, TrashIcon } from "lucide-react";
-import { useHits, useSortBy } from "react-instantsearch";
+import { useSortBy } from "react-instantsearch";
 
 import {
   AlertDialog,
@@ -45,8 +46,8 @@ import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 export function ArticleTable({
   session,
   ...props
-}: { session: Session | null } & UseHitsProps<PublishedArticleHit>) {
-  const { items } = useHits(props);
+}: { session: Session | null } & UseInfiniteHitsProps<PublishedArticleHit>) {
+  const { items } = useInfiniteHits(props);
   const sort_api = useSortBy({
     items: SORT_BY_ITEMS,
   });

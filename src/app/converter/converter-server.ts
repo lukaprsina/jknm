@@ -205,7 +205,7 @@ export async function sync_with_algolia() {
     limit: 1000,
   });
 
-  const indexName = "published_article_created_at_desc";
+  const indexName = "published_article";
   const client = algoliasearch(
     env.NEXT_PUBLIC_ALGOLIA_ID,
     env.ALGOLIA_ADMIN_KEY,

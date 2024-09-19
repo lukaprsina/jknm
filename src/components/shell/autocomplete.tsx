@@ -58,7 +58,7 @@ export function NoviceAutocomplete({ detached }: { detached?: string }) {
               searchClient,
               queries: [
                 {
-                  indexName: "published_article_created_at_desc",
+                  indexName: "published_article",
                   params: {
                     query,
                     hitsPerPage: 8,
