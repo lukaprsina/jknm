@@ -42,15 +42,18 @@ import type { PublishedArticleHit } from "~/lib/validators";
 import { Authors } from "~/components/authors";
 import { get_published_article_link } from "~/lib/article-utils";
 import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
+import { useInfiniteAlgoliaArticles } from "~/hooks/use-infinite-algolia";
+import { IntersectionRef } from "~/components/article/infinite-articles";
 
 export function ArticleTable({
   session,
   ...props
 }: { session: Session | null } & UseInfiniteHitsProps<PublishedArticleHit>) {
-  const { items } = useInfiniteHits(props);
   const sort_api = useSortBy({
     items: SORT_BY_ITEMS,
   });
+
+  const { load_more_ref, items } = useInfiniteAlgoliaArticles({ offset: 20, ...props });
 
   return (
     <Table>
@@ -119,8 +122,8 @@ export function ArticleTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {items.map((item) => (
-          <ArticleTableRow hit={item} session={session} key={item.objectID} />
+        {items.map((item, index) => (
+          <ArticleTableRow hit={item} session={session} key={item.objectID} ref={load_more_ref(index)} />
         ))}
       </TableBody>
       <TableFooter>
@@ -136,16 +139,18 @@ export function ArticleTable({
 }
 
 function ArticleTableRow({
+  ref,
   hit,
   session: _,
 }: {
+  ref?: IntersectionRef
   hit: SearchHit<PublishedArticleHit>;
   session: Session | null;
 }) {
   const duplicate_urls = useDuplicatedUrls();
 
   return (
-    <TableRow key={hit.objectID}>
+    <TableRow ref={ref} key={hit.objectID}>
       <TableCell>{hit.objectID}</TableCell>
       <TableCell className="font-medium">
         <Button variant="link" asChild>

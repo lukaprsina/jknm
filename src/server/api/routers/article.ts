@@ -24,7 +24,7 @@ import type { PublishedArticleWithAuthors } from "~/components/article/card-adap
 import {
   delete_objects,
   delete_s3_directory,
-  rename_s3_files_and_content
+  rename_s3_files_and_content,
 } from "~/server/s3-utils";
 import { env } from "~/env";
 import type { S3CopySourceInfo } from "~/lib/s3-publish";
@@ -273,9 +273,13 @@ export const article_router = createTRPCRouter({
       // console.log("get_or_create_draft input", input);
 
       try {
-        const transaction = await ctx.db.transaction(async (tx) => {
+        // console.log("get_or_create_draft transaction", transaction);
+
+        return await ctx.db.transaction(async (tx) => {
           if (!input.published_id && !input.article) {
-            throw new Error("Either published_id or draft_article must be provided");
+            throw new Error(
+              "Either published_id or draft_article must be provided",
+            );
           }
 
           let published: PublishedArticleWithAuthors | undefined;
@@ -292,7 +296,8 @@ export const article_router = createTRPCRouter({
               },
             });
 
-            if (!published) throw new Error("Published draft_article not found");
+            if (!published)
+              throw new Error("Published draft_article not found");
 
             const draft = await tx.query.DraftArticle.findFirst({
               where: eq(DraftArticle.published_id, input.published_id),
@@ -355,7 +360,14 @@ export const article_router = createTRPCRouter({
           // copy thumbnails from published to draft
           if (published?.id) {
             const s3_url = get_s3_draft_directory(created_draft.id);
-            const names = ["thumbnail.png", "thumbnail-uploaded.png"];
+            const names: string[] = []; // = ["thumbnail.png", "thumbnail-uploaded.png"];
+            if (published.thumbnail_crop) {
+              names.push("thumbnail.png");
+              if (published.thumbnail_crop.uploaded_custom_thumbnail) {
+                names.push("thumbnail-uploaded.png");
+              }
+            }
+
             const thumbnail_sources = names.map(
               (name) =>
                 ({
@@ -408,10 +420,6 @@ export const article_router = createTRPCRouter({
           if (!draft_returning) throw new Error("Created draft not found");
           return draft_returning;
         });
-
-        // console.log("get_or_create_draft transaction", transaction);
-
-        return transaction;
       } catch (error) {
         console.error("draft error", error);
         throw error;
@@ -485,7 +493,14 @@ export const article_router = createTRPCRouter({
           : undefined;
 
         if (draft_article?.id) {
-          const names = ["thumbnail.png", "thumbnail-uploaded.png"];
+          const names: string[] = []; // = ["thumbnail.png", "thumbnail-uploaded.png"];
+          if (draft_article.thumbnail_crop) {
+            names.push("thumbnail.png");
+            if (draft_article.thumbnail_crop.uploaded_custom_thumbnail) {
+              names.push("thumbnail-uploaded.png");
+            }
+          }
+
           const thumbnail_sources = names.map(
             (name) =>
               ({
@@ -809,5 +824,5 @@ export const article_router = createTRPCRouter({
 
         return draft;
       });
-    })
+    }),
 });
