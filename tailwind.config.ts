@@ -60,7 +60,7 @@ export default {
             h3: {
               fontWeight: "700", // 400
               color: theme("colors.blue.800"),
-              fontSize: "20px",
+              fontSize: "18px",
             },
             li: {
               marginTop: "0em",
