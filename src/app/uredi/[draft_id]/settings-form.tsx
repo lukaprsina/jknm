@@ -23,6 +23,7 @@ import { useContext } from "react";
 import { useEditorMutations } from "~/hooks/use-editor-mutations";
 import { thumbnail_validator } from "~/lib/validators";
 import { Separator } from "~/components/ui/separator";
+import DatePicker from "~/components/date-time-picker/new_date_picker";
 
 export const form_schema = z.object({
   created_at: z.date(),
@@ -52,7 +53,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
                 <FormItem className="flex flex-col">
                   <FormLabel>Čas objave</FormLabel>
                   <FormControl>
-                    <DateTimePicker
+                    <DatePicker
                       date={field.value}
                       setDate={(date) => field.onChange(date)}
                     />

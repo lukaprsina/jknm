@@ -2,7 +2,7 @@ thumbnail-custom.png ni nujno da je png
 opozori, če je url že obstaja
 odstrani slike avtorji
 galerija je čudna
-
+nastavljanje datuma ne dela (nastavi kanin šibaa na 1. 9.)
 -------------------
 
 icon links: vercel accesibility, https://kittygiraudel.com/2020/12/10/accessible-icon-links/

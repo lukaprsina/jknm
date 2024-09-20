@@ -8,6 +8,17 @@ export function format_date_for_human(date: Date) {
   });
 }
 
+export function format_datetime_for_human(date: Date) {
+  return date.toLocaleDateString("sl-SI", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+  });
+}
+
 const DATE_FORMAT = "dd-MM-yyyy";
 
 export function format_date_for_url(date: Date) {
