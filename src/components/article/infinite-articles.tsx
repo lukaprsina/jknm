@@ -3,9 +3,10 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { api } from "~/trpc/react";
 import { useIntersectionObserver } from "usehooks-ts";
-import { article_grid_variants } from "~/lib/page-variants";
+import { article_grid_variants, article_variants } from "~/lib/page-variants";
 import { PublishedArticleDrizzleCard } from "./card-adapter";
 import { InfoCard } from "../info-card";
+import { cn } from "~/lib/utils";
 
 export type IntersectionRef = ReturnType<typeof useIntersectionObserver>["ref"];
 const ARTICLE_LOAD_MORE_OFFSET = 9;
@@ -54,7 +55,7 @@ export function InfiniteArticles() {
 
   return (
     /* prose-h3:my-0 prose-p:mt-0 lg:prose-xl prose-p:text-lg mx-auto   */
-    <div className={article_grid_variants()}>
+    <div className={cn(article_grid_variants(), article_variants({ variant: "card" }))}>
       {articles.map((article, index) => (
         <PublishedArticleDrizzleCard
           key={article.id}

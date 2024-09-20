@@ -46,10 +46,16 @@ export function EditorProvider({ children }: { children: ReactNode }) {
   const toaster = useToast();
 
   useEffect(() => {
+    const func = () => true
+
     if (dirty) {
-      window.onbeforeunload = () => true;
+      addEventListener("beforeunload", func)
     } else {
-      window.onbeforeunload = null;
+      removeEventListener("beforeunload", func)
+    }
+
+    return () => {
+      removeEventListener("beforeunload", func)
     }
   }, [dirty]);
 

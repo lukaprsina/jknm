@@ -27,8 +27,6 @@ export default function MyEditor({
   draft: DraftArticleWithAuthors;
   published?: PublishedArticleWithAuthors;
 }) {
-  const duplicated_urls = useDuplicatedUrls() ?? [];
-  // console.log("my editor draft", draft);
   return (
     <DraftArticleContext.Provider value={draft}>
       <PublishedArticleContext.Provider value={published}>

@@ -12,7 +12,6 @@ import type {
   FilesToSave,
 } from "./converter-spaghetti";
 import type { AuthorType } from "./get-authors";
-import { convert_content_to_text } from "~/lib/content-to-text";
 import { db } from "~/server/db";
 import {
   Author,
@@ -20,7 +19,6 @@ import {
   PublishedArticle,
   PublishedArticlesToAuthors,
 } from "~/server/db/schema";
-import type { PublishedArticleHit } from "~/lib/validators";
 import { api } from "~/trpc/server";
 import { crop_image, delete_s3_directory } from "~/server/s3-utils";
 import { env } from "~/env";

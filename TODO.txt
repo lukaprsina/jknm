@@ -1,105 +1,13 @@
 thumbnail-custom.png ni nujno da je png
-avtorji se ne shranijo 63
+opozori, če je url že obstaja
+odstrani slike avtorji
+galerija je čudna
+
 -------------------
 
-
-mobile visual bug
-26 custom avtorjev pred novimi novicami
 icon links: vercel accesibility, https://kittygiraudel.com/2020/12/10/accessible-icon-links/
 
-publish is field in save trpc api
 /* TODO: message to all zod fields
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }), */
-
-saving modifies published articles
-duplicate urls
-
-error, avtorji se seštevajo, ker rabiš brisat tiste prejšnje
-image data se ne shrani (verjetno zaradi join tablov)
-image kopiraj iz draft v published
-
-fetch faila za URL
-- itak uploadaš original, tako da ga najprej nalož
-- sharp ne obreže pravilno
-- extensions na s3 zgubijo piko
-
-override flag za image upload na sploh.
-invalidate ne dela
-
--------------------
-dodaj entity decode in algolia
-updated_at se ne posodablja
-
-id 351 Čaganka – projekt &gt;400
-
-98 slika manjka, ker je v p
-
-DANGER: NM nekaj je v LINKU. pokvariš link
-371
-401
-
-
--------------------
-
-Rejected file promise Error: ENOENT: no such file or directory, copyfile 'D:\JKNM\served\media\img\novice\2014\23\05_andrej_in_tom_pri_nm 9.jpg' -> 'D:\dev\js\jknm\src\app\converter\_files\kanin-2014-prvic-18-08-2014\05_andrej_in_tom_pri_nm-9.jpg'
-    at async Object.copyFile (node:internal/fs/promises:620:10)
-    at async D:\dev\js\jknm\.next\server\app\converter\page.js:118:156133
-    at async Promise.allSettled (index 1) {
-  errno: -4058,
-  code: 'ENOENT',
-  syscall: 'copyfile',
-  path: 'D:\\JKNM\\served\\media\\img\\novice\\2014\\23\\05_andrej_in_tom_pri_nm 9.jpg',
-  dest: 'D:\\dev\\js\\jknm\\src\\app\\converter\\_files\\kanin-2014-prvic-18-08-2014\\05_andrej_in_tom_pri_nm-9.jpg'
-}
-Rejected file promise Error: ENOENT: no such file or directory, copyfile 'D:\JKNM\served\media\img\novice\2014\23\16_pri_nm 97_tom.jpg' -> 'D:\dev\js\jknm\src\app\converter\_files\kanin-2014-prvic-18-08-2014\16_pri_nm-97_tom.jpg'
-    at async Object.copyFile (node:internal/fs/promises:620:10)
-    at async D:\dev\js\jknm\.next\server\app\converter\page.js:118:156133
-    at async Promise.allSettled (index 8) {
-  errno: -4058,
-  code: 'ENOENT',
-  syscall: 'copyfile',
-  path: 'D:\\JKNM\\served\\media\\img\\novice\\2014\\23\\16_pri_nm 97_tom.jpg',
-  dest: 'D:\\dev\\js\\jknm\\src\\app\\converter\\_files\\kanin-2014-prvic-18-08-2014\\16_pri_nm-97_tom.jpg'
-}
-Rejected file promise Error: ENOENT: no such file or directory, copyfile 'D:\JKNM\served\media\img\novice\2015\15\09_andrej_v_nm 7__foto_joze_tomsic__01.jpg' -> 'D:\dev\js\jknm\src\app\converter\_files\kanin-2015-avgustovski-tabor-17-08-2015\09_andrej_v_nm-7_foto_joze_tomsic_01.jpg'
-    at async Object.copyFile (node:internal/fs/promises:620:10)
-    at async D:\dev\js\jknm\.next\server\app\converter\page.js:118:156133
-    at async Promise.allSettled (index 8) {
-  errno: -4058,
-  code: 'ENOENT',
-  syscall: 'copyfile',
-  path: 'D:\\JKNM\\served\\media\\img\\novice\\2015\\15\\09_andrej_v_nm 7__foto_joze_tomsic__01.jpg',
-  dest: 'D:\\dev\\js\\jknm\\src\\app\\converter\\_files\\kanin-2015-avgustovski-tabor-17-08-2015\\09_andrej_v_nm-7_foto_joze_tomsic_01.jpg'
-}
-Rejected file promise Error: ENOENT: no such file or directory, copyfile 'D:\JKNM\served\media\img\novice\2019\slika_5.jpg' -> 'D:\dev\js\jknm\src\app\converter\_files\obisk-mihovske-jame-03-01-2019\slika_5.jpg'
-    at async Object.copyFile (node:internal/fs/promises:620:10)
-    at async D:\dev\js\jknm\.next\server\app\converter\page.js:118:156133
-    at async Promise.allSettled (index 4) {
-  errno: -4058,
-  code: 'ENOENT',
-  syscall: 'copyfile',
-  path: 'D:\\JKNM\\served\\media\\img\\novice\\2019\\slika_5.jpg',
-  dest: 'D:\\dev\\js\\jknm\\src\\app\\converter\\_files\\obisk-mihovske-jame-03-01-2019\\slika_5.jpg'
-}
-Rejected file promise Error: ENOENT: no such file or directory, copyfile 'D:\JKNM\served\si' -> 'D:\dev\js\jknm\src\app\converter\_files\kocevski-rog-je-ociscen-pnevmatik-05-06-2022\si'
-    at async Object.copyFile (node:internal/fs/promises:620:10)
-    at async D:\dev\js\jknm\.next\server\app\converter\page.js:118:156377
-    at async Promise.allSettled (index 1) {
-  errno: -4058,
-  code: 'ENOENT',
-  syscall: 'copyfile',
-  path: 'D:\\JKNM\\served\\si',
-  dest: 'D:\\dev\\js\\jknm\\src\\app\\converter\\_files\\kocevski-rog-je-ociscen-pnevmatik-05-06-2022\\si'
-}
-Rejected file promise Error: ENOENT: no such file or directory, copyfile 'D:\JKNM\served\media\DK\DK8_43_Presetnik__Hudoklin_Tri_desetletja_spremljanja_zatocisc_netopirjev.pdf' -> 'D:\dev\js\jknm\src\app\converter\_files\studenti-biologije-na-obisku-pri-letecih-dolenjcih-16-01-2024\dk8_43_presetnik_hudoklin_tri_desetletja_spremljanja_zatocisc_netopirjev.pdf'
-    at async Object.copyFile (node:internal/fs/promises:620:10)
-    at async D:\dev\js\jknm\.next\server\app\converter\page.js:118:156377
-    at async Promise.allSettled (index 0) {
-  errno: -4058,
-  code: 'ENOENT',
-  syscall: 'copyfile',
-  path: 'D:\\JKNM\\served\\media\\DK\\DK8_43_Presetnik__Hudoklin_Tri_desetletja_spremljanja_zatocisc_netopirjev.pdf',
-  dest: 'D:\\dev\\js\\jknm\\src\\app\\converter\\_files\\studenti-biologije-na-obisku-pri-letecih-dolenjcih-16-01-2024\\dk8_43_presetnik_hudoklin_tri_desetletja_spremljanja_zatocisc_netopirjev.pdf'
-}

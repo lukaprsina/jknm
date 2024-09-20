@@ -45,29 +45,6 @@ export async function rename_s3_files_and_content(
     destination_bucket,
   );
 
-  // rename thumbnail
-  const new_thumbnail = klona(thumbnail_crop);
-  if (thumbnail_crop && new_thumbnail) {
-    const url_parts = new URL(thumbnail_crop.image_url);
-    const source_bucket = get_source_bucket(url_parts);
-
-    if (source_bucket) {
-      const thumb_source = rename_url(
-        url_parts.pathname,
-        source_bucket,
-        destination_url,
-        destination_bucket,
-      );
-      if (thumb_source) {
-        new_thumbnail.image_url = thumb_source.destination_url;
-      }
-    } else {
-      throw new Error(
-        "No bucket in thumbnail URL: " + thumbnail_crop.image_url,
-      );
-    }
-  }
-
   // draft_sources means that the files are in draft bucket
   const draft_sources = sources.filter(
     (source) => source.source_bucket === env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
@@ -81,7 +58,7 @@ export async function rename_s3_files_and_content(
     await s3_copy_between_buckets(sources, destination_bucket, destination_url);
   }
 
-  return { new_content, new_thumbnail };
+  return new_content;
 }
 
 export async function s3_copy_between_buckets(

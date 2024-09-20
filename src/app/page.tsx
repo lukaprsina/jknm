@@ -31,7 +31,7 @@ export default async function HomePageServer() {
     return (
       <Shell without_footer>
         <div
-          className={cn(page_variants(), article_variants({ variant: "card" }))}
+          className={cn(page_variants(), article_variants())}
         >
           <InfiniteArticles />
         </div>
@@ -82,7 +82,7 @@ export default async function HomePageServer() {
             </AccordionContent>
           </AccordionItem>
         </Accordion>
-        <div className={cn(article_variants({ variant: "card" }))}>
+        <div>
           <InfiniteArticles />
         </div>
       </div>

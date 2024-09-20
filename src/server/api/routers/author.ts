@@ -21,7 +21,7 @@ export const author_router = createTRPCRouter({
   insert_guest: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db
+      return ctx.db
         .insert(Author)
         .values({
           author_type: "guest",
@@ -33,7 +33,7 @@ export const author_router = createTRPCRouter({
   delete_guests: protectedProcedure
     .input(z.object({ ids: z.array(z.number()) }))
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db
+      return ctx.db
         .delete(Author)
         .where(
           and(eq(Author.author_type, "guest"), inArray(Author.id, input.ids)),
@@ -44,7 +44,7 @@ export const author_router = createTRPCRouter({
   rename_guest: protectedProcedure
     .input(z.object({ id: z.number(), name: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db
+      return ctx.db
         .update(Author)
         .set({ name: input.name })
         .where(eq(Author.id, input.id))

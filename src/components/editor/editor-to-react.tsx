@@ -3,7 +3,7 @@
 import "./editorjs-attaches.css";
 
 import type { RenderFn } from "editorjs-blocks-react-renderer";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Blocks from "editorjs-blocks-react-renderer";
@@ -35,7 +35,7 @@ import ArticlePageDescription from "~/components/article/description/page-descri
     loading: () => <Skeleton className="h-[1em] w-full bg-[hsl(0_0%_90%)]" />,
   },
 ); */
-/* const WTFFFFFFFFF = dynamic(
+/* const a = dynamic(
   import("~/components/draft_article/description/page-description"),
   {
     // ssr: false,
@@ -82,6 +82,11 @@ export function EditorToReact({
       ? article.published_articles_to_authors.map((a) => a.author_id)
       : article.draft_articles_to_authors.map((a) => a.author_id);
   }, [article]);
+
+
+  useEffect(() => {
+    console.log("editor-to-react", { article, author_ids });
+  }, [article, author_ids]);
 
   if (!editor_data || !article) return;
 
@@ -143,24 +148,16 @@ export const NextImageRenderer: RenderFn<EditorJSImageData> = ({
     }
   }, [data.file.height, data.file.width]);
 
-  /* useEffect(() => {
-    console.log(data, image_props);
-  }, [data, image_props]); */
+  useEffect(() => {
+    console.log("editor-to-react", data, image_props);
+  }, [data, image_props]);
 
   return (
     <figure className="max-h-[1500] max-w-[1500]">
       <Image
         onClick={() => {
-          // router.push(`?image=${data.file.url}`);
-          // gallery_store.set.default_image(data);
           gallery_store.set.default_image(data);
         }}
-        /* onMouseDown={() => {
-          gallery.set_default_image(data);
-        }}
-        onPointerDown={() => {
-          gallery.set_default_image(data);
-        }} */
         className={cn(
           "cursor-pointer",
           className,

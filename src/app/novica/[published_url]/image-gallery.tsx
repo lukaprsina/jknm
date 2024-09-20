@@ -40,39 +40,6 @@ const GALLERY_CANCEL_KEYS: string[] = [
 export function ImageGallery() {
   const default_image = gallery_store.use.default_image();
 
-  useEffect(() => {
-    if (!default_image) return;
-
-    const scroll_callback = (event: WheelEvent | TouchEvent) => {
-      if (event instanceof WheelEvent) {
-        gallery_store.set.default_image(undefined);
-        // event.preventDefault();
-      } else if (event instanceof TouchEvent) {
-        const touch = event.touches[0];
-        if (typeof touch?.clientY !== "undefined") {
-          gallery_store.set.default_image(undefined);
-          event.preventDefault();
-        }
-      }
-    };
-
-    const keypress_callback = (event: KeyboardEvent) => {
-      if (GALLERY_CANCEL_KEYS.includes(event.key)) {
-        gallery_store.set.default_image(undefined);
-      }
-    };
-
-    window.addEventListener("wheel", scroll_callback);
-    window.addEventListener("touchmove", scroll_callback);
-    window.addEventListener("keydown", keypress_callback);
-
-    return () => {
-      window.removeEventListener("wheel", scroll_callback);
-      window.removeEventListener("touchmove", scroll_callback);
-      window.removeEventListener("keydown", keypress_callback);
-    };
-  }, [default_image]);
-
   const portal = useCallback(() => {
     // console.log("portal", gallery.images);
 
@@ -101,8 +68,9 @@ export function ImageGallery() {
   }, [carousel_ref, previous_ref, next_ref]); */
 
 export function MyCarousel({ first_image }: { first_image?: string }) {
+  const default_image = gallery_store.use.default_image();
   const images = gallery_store.use.images();
-  const [api, setApi] = useState<CarouselApi>();
+  const [emblaApi, setEmblaApi] = useState<CarouselApi>();
   const md_breakpoint = useBreakpoint("md", true);
   const carousel_ref = useRef<HTMLDivElement>(null);
   const previous_ref = useRef<HTMLButtonElement>(null);
@@ -118,18 +86,66 @@ export function MyCarousel({ first_image }: { first_image?: string }) {
   });
 
   useEffect(() => {
-    if (!api) return;
+    if (!emblaApi) return;
 
     if (first_image) {
       const index = images.findIndex((image) => image.file.url === first_image);
 
-      api.scrollTo(index);
+      emblaApi.scrollTo(index);
     }
-  }, [api, first_image, images]);
+  }, [emblaApi, first_image, images]);
+
+
+
+  useEffect(() => {
+    if (!default_image) return;
+
+    const scroll_callback = (event: WheelEvent | TouchEvent) => {
+      if (event instanceof WheelEvent) {
+        gallery_store.set.default_image(undefined);
+        // event.preventDefault();
+      } else if (event instanceof TouchEvent) {
+        const touch = event.touches[0];
+        if (typeof touch?.clientY !== "undefined") {
+          gallery_store.set.default_image(undefined);
+          event.preventDefault();
+        }
+      }
+    };
+
+    const keypress_callback = (event: KeyboardEvent) => {
+      if (GALLERY_CANCEL_KEYS.includes(event.key)) {
+        gallery_store.set.default_image(undefined);
+        event.preventDefault()
+      } else if(event.key === "ArrowLeft") {
+        emblaApi?.scrollPrev()
+        event.preventDefault()
+      } else if(event.key === "ArrowRight") {
+        emblaApi?.scrollNext()
+        event.preventDefault()
+      } else if(event.key === "Home") {
+        emblaApi?.scrollTo(0)
+        event.preventDefault()
+      } else if(event.key === "End") {
+        emblaApi?.scrollTo(emblaApi.slideNodes().length - 1)
+        event.preventDefault()
+      }
+    };
+
+    window.addEventListener("wheel", scroll_callback);
+    window.addEventListener("touchmove", scroll_callback);
+    window.addEventListener("keydown", keypress_callback);
+
+    return () => {
+      window.removeEventListener("wheel", scroll_callback);
+      window.removeEventListener("touchmove", scroll_callback);
+      window.removeEventListener("keydown", keypress_callback);
+    };
+  }, [default_image, emblaApi]);
 
   return (
     <Carousel
-      setApi={setApi}
+      setApi={setEmblaApi}
       opts={{
         align: "center",
         duration: 0,
@@ -164,11 +180,12 @@ function GalleryImage({ image }: { image: EditorJSImageData }) {
     }),
     [image.file.width, image.file.height],
   );
+
   return (
     <figure className="max-h-[90vh] max-w-[90vw]">
       <div className="flex h-full max-h-[90vh] w-full max-w-[90vw] items-center justify-center">
         <Image
-          className="rounded-xl object-scale-down"
+          className="rounded-xl object-scale-down max-h-[90vh] max-w-[90vw]"
           src={image.file.url}
           alt={image.caption}
           // sizes="(max-width: 1500px) 100vw, 1500px"

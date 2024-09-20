@@ -246,16 +246,19 @@ export const article_router = createTRPCRouter({
           .where(eq(DraftArticlesToAuthors.draft_id, input.draft_id));
 
         if (input.author_ids.length !== 0) {
-          await tx.insert(DraftArticlesToAuthors).values(
-            input.author_ids.map((author_id, index) => ({
+          const values = input.author_ids.map((author_id, index) => ({
               author_id,
               draft_id: input.draft_id,
               order: index,
-            })),
+            }))
+
+          console.log("save_draft values", values);
+          await tx.insert(DraftArticlesToAuthors).values(
+            values
           );
         }
 
-        return tx.query.DraftArticle.findFirst({
+        const first_draft = await tx.query.DraftArticle.findFirst({
           where: eq(DraftArticle.id, input.draft_id),
           with: {
             draft_articles_to_authors: {
@@ -264,6 +267,10 @@ export const article_router = createTRPCRouter({
             },
           },
         });
+
+        console.log("save_draft first_draft", first_draft);
+
+        return first_draft;
       });
     }),
 
@@ -348,7 +355,7 @@ export const article_router = createTRPCRouter({
           assert_one(created_drafts);
           const created_draft = created_drafts[0];
 
-          const renamed = created_draft.content
+          const renamed_content = created_draft.content
             ? await rename_s3_files_and_content(
                 created_draft.content,
                 created_draft.thumbnail_crop,
@@ -358,14 +365,45 @@ export const article_router = createTRPCRouter({
             : undefined;
 
           // update content with renamed urls
-          if (renamed) {
+          if (renamed_content) {
             await tx
               .update(DraftArticle)
               .set({
-                content: renamed.new_content,
-                thumbnail_crop: renamed.new_thumbnail,
+                content: renamed_content,
               })
               .where(eq(DraftArticle.id, created_draft.id));
+          }
+
+          // upload thumbnails
+          if (published?.id) {
+            const names: string[] = [];
+            if (input.article?.thumbnail_crop) {
+              names.push("thumbnail.png");
+              if (input.article.thumbnail_crop.uploaded_custom_thumbnail) {
+                names.push("thumbnail-uploaded.png");
+              }
+            }
+
+            console.log("get_or_create_draft names", names, input.article?.thumbnail_crop);
+            const s3_url = get_s3_draft_directory(created_draft.id);
+
+            for (const name of names) {
+              const source = {
+                file_name: name,
+                source_bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+                source_path: get_s3_published_directory(
+                  published.url,
+                  published.created_at,
+                ),
+                destination_url: `${s3_url}/thumbnail.png`,
+              } satisfies S3CopySourceInfo;
+
+              await s3_copy_file(
+                source,
+                env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+                s3_url,
+              );
+            }
           }
 
           // copy thumbnails from published to draft
@@ -402,11 +440,7 @@ export const article_router = createTRPCRouter({
           }
 
           if (published && published.published_articles_to_authors.length > 0) {
-            // I don't think this is necessary, because we are creating a new draft
-            /* await tx
-            .delete(DraftArticlesToAuthors)
-            .where(eq(DraftArticlesToAuthors.draft_id, draft_id)); */
-
+            // because we are creating a new draft, we don't need to delete old authors
             await tx.insert(DraftArticlesToAuthors).values(
               published.published_articles_to_authors.map((author, index) => ({
                 author_id: author.author_id,
@@ -476,12 +510,14 @@ export const article_router = createTRPCRouter({
 
         if (published_article) {
           // delete old content
+          const s3_url = get_s3_published_directory(
+            published_article.url,
+            published_article.created_at,
+          )
+
           await delete_s3_directory(
             env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
-            get_s3_published_directory(
-              published_article.url,
-              published_article.created_at,
-            ),
+            s3_url,
           );
         }
 
@@ -496,7 +532,7 @@ export const article_router = createTRPCRouter({
         );
 
         // rename urls and content
-        const renamed = value.content
+        const renamed_content = value.content
           ? await rename_s3_files_and_content(
               value.content,
               value.thumbnail_crop,
@@ -505,26 +541,26 @@ export const article_router = createTRPCRouter({
             )
           : undefined;
 
+        // upload thumbnails
         if (draft_article?.id) {
           const names: string[] = []; // = ["thumbnail.png", "thumbnail-uploaded.png"];
-          if (draft_article.thumbnail_crop) {
+          if (input.article.thumbnail_crop) {
             names.push("thumbnail.png");
-            if (draft_article.thumbnail_crop.uploaded_custom_thumbnail) {
+            if (input.article.thumbnail_crop.uploaded_custom_thumbnail) {
               names.push("thumbnail-uploaded.png");
             }
           }
 
-          const thumbnail_sources = names.map(
-            (name) =>
-              ({
-                file_name: name,
-                source_bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
-                source_path: get_s3_draft_directory(draft_article.id),
-                destination_url: `${s3_url}/thumbnail.png`,
-              }) satisfies S3CopySourceInfo,
-          );
+          console.log("publish names", names, input.article.thumbnail_crop);
 
-          for (const source of thumbnail_sources) {
+          for (const name of names) {
+            const source = {
+              file_name: name,
+              source_bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+              source_path: get_s3_draft_directory(draft_article.id),
+              destination_url: `${s3_url}/thumbnail.png`,
+            } satisfies S3CopySourceInfo;
+
             await s3_copy_file(
               source,
               env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
@@ -534,8 +570,7 @@ export const article_router = createTRPCRouter({
         }
 
         value.url = renamed_url;
-        value.content = renamed?.new_content;
-        value.thumbnail_crop = renamed?.new_thumbnail;
+        value.content = renamed_content
 
         if (published_article?.id) {
           // update if draft had published_id
@@ -579,6 +614,7 @@ export const article_router = createTRPCRouter({
           await tx
             .delete(DraftArticle)
             .where(eq(DraftArticle.id, draft_article.id));
+
           await delete_s3_directory(
             env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
             draft_article.id.toString(),
