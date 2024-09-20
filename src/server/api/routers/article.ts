@@ -12,7 +12,7 @@ import {
   PublishedArticlesToAuthors,
   SaveDraftArticleSchema,
 } from "~/server/db/schema";
-import { and, between, eq } from "drizzle-orm";
+import { and, asc, between, eq } from "drizzle-orm";
 import { assert_at_most_one, assert_one } from "~/lib/assert-length";
 import { withCursorPagination } from "drizzle-pagination";
 import {
@@ -49,6 +49,7 @@ export const article_router = createTRPCRouter({
             with: {
               author: true,
             },
+            orderBy: asc(PublishedArticlesToAuthors.order),
           },
         },
         ...withCursorPagination({
@@ -72,6 +73,7 @@ export const article_router = createTRPCRouter({
           with: {
             author: true,
           },
+          orderBy: asc(PublishedArticlesToAuthors.order),
         },
       },
     });
@@ -91,6 +93,7 @@ export const article_router = createTRPCRouter({
         with: {
           published_articles_to_authors: {
             with: { author: true },
+            orderBy: asc(PublishedArticlesToAuthors.order),
           },
         },
       });
@@ -106,6 +109,7 @@ export const article_router = createTRPCRouter({
         with: {
           published_articles_to_authors: {
             with: { author: true },
+            orderBy: asc(PublishedArticlesToAuthors.order),
           },
         },
       });
@@ -118,6 +122,7 @@ export const article_router = createTRPCRouter({
           with: {
             draft_articles_to_authors: {
               with: { author: true },
+              orderBy: asc(PublishedArticlesToAuthors.order),
             },
           },
         });
@@ -151,6 +156,7 @@ export const article_router = createTRPCRouter({
         with: {
           published_articles_to_authors: {
             with: { author: true },
+            orderBy: asc(PublishedArticlesToAuthors.order),
           },
         },
       });
@@ -168,6 +174,7 @@ export const article_router = createTRPCRouter({
               with: {
                 author: true,
               },
+              orderBy: asc(PublishedArticlesToAuthors.order),
             },
           },
         });
@@ -189,6 +196,7 @@ export const article_router = createTRPCRouter({
             with: {
               author: true,
             },
+            orderBy: asc(PublishedArticlesToAuthors.order),
           },
         },
       });
@@ -201,6 +209,7 @@ export const article_router = createTRPCRouter({
               with: {
                 author: true,
               },
+              orderBy: asc(PublishedArticlesToAuthors.order),
             },
           },
         });
@@ -251,6 +260,7 @@ export const article_router = createTRPCRouter({
           with: {
             draft_articles_to_authors: {
               with: { author: true },
+              orderBy: asc(PublishedArticlesToAuthors.order),
             },
           },
         });
@@ -291,6 +301,7 @@ export const article_router = createTRPCRouter({
                   with: {
                     author: true,
                   },
+                  orderBy: asc(PublishedArticlesToAuthors.order),
                 },
               },
             });
@@ -305,6 +316,7 @@ export const article_router = createTRPCRouter({
                   with: {
                     author: true,
                   },
+                  orderBy: asc(PublishedArticlesToAuthors.order),
                 },
               },
             });
@@ -411,6 +423,7 @@ export const article_router = createTRPCRouter({
                 with: {
                   author: true,
                 },
+                orderBy: asc(PublishedArticlesToAuthors.order),
               },
             },
           });
@@ -578,6 +591,7 @@ export const article_router = createTRPCRouter({
             with: {
               published_articles_to_authors: {
                 with: { author: true },
+                orderBy: asc(PublishedArticlesToAuthors.order),
               },
             },
           });
@@ -677,6 +691,7 @@ export const article_router = createTRPCRouter({
           with: {
             published_articles_to_authors: {
               with: { author: true },
+              orderBy: asc(PublishedArticlesToAuthors.order),
             },
           },
         });
