@@ -1,8 +1,9 @@
 thumbnail-custom.png ni nujno da je png
-opozori, če je url že obstaja
+opozori, če url že obstaja
 odstrani slike avtorji
-galerija je čudna
-nastavljanje datuma ne dela (nastavi kanin šibaa na 1. 9.)
+galerija mobile ne dela
+author card when hover
+algolia author faceting
 -------------------
 
 icon links: vercel accesibility, https://kittygiraudel.com/2020/12/10/accessible-icon-links/

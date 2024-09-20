@@ -358,7 +358,6 @@ export const article_router = createTRPCRouter({
           const renamed_content = created_draft.content
             ? await rename_s3_files_and_content(
                 created_draft.content,
-                created_draft.thumbnail_crop,
                 created_draft.id.toString(),
                 true,
               )
@@ -482,7 +481,7 @@ export const article_router = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      // console.log("publish input", input);
+      console.log("publish input", input);
 
       // console.log("publish transaction", transaction);
 
@@ -535,7 +534,6 @@ export const article_router = createTRPCRouter({
         const renamed_content = value.content
           ? await rename_s3_files_and_content(
               value.content,
-              value.thumbnail_crop,
               s3_url,
               false,
             )

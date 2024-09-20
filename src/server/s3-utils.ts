@@ -9,23 +9,18 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import type { OutputData } from "@editorjs/editorjs";
-import { klona } from "klona";
 import type { PercentCrop } from "react-image-crop";
 import sharp from "sharp";
 
 import { env } from "~/env";
 import type { S3CopySourceInfo } from "~/lib/s3-publish";
 import {
-  get_source_bucket,
-  rename_url,
   rename_urls_in_content,
   s3_copy_file,
 } from "~/lib/s3-publish";
-import type { ThumbnailType } from "~/lib/validators";
 
 export async function rename_s3_files_and_content(
   editor_content: OutputData,
-  thumbnail_crop: ThumbnailType | undefined | null,
   destination_url: string,
   draft: boolean,
 ) {
@@ -239,7 +234,7 @@ export async function clean_s3_directory(
 }
 
 export async function crop_image(file: File, crop: PercentCrop): Promise<File> {
-  // console.log("crop image", crop);
+  console.log("crop image", { file, crop });
 
   const image_buffer = await file.arrayBuffer();
   const sharp_image = sharp(image_buffer);

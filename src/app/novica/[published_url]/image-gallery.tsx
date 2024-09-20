@@ -40,19 +40,17 @@ const GALLERY_CANCEL_KEYS: string[] = [
 export function ImageGallery() {
   const default_image = gallery_store.use.default_image();
 
-  const portal = useCallback(() => {
-    // console.log("portal", gallery.images);
-
+  const portal = useCallback((first_image_src: string) => {
     return createPortal(
       <div
         className="fixed inset-0 z-50 h-screen w-screen bg-black/90 backdrop-blur-sm"
-        onClick={() => {
+        /*onClick={() => {
           gallery_store.set.default_image(undefined);
-        }}
+        }}*/
       >
         <div className="h-full w-full">
           <div className="flex h-full min-h-[350px] w-full items-center justify-around p-10">
-            <MyCarousel />
+            <MyCarousel first_image_src={first_image_src} />
           </div>
         </div>
       </div>,
@@ -60,14 +58,14 @@ export function ImageGallery() {
     );
   }, []);
 
-  return <>{default_image ? portal() : null}</>;
+  return <>{default_image ? portal(default_image.file.url) : null}</>;
 }
 
 /* useOutsideClickMultipleRefs(() => {
     gallery.clear_default_image();
   }, [carousel_ref, previous_ref, next_ref]); */
 
-export function MyCarousel({ first_image }: { first_image?: string }) {
+export function MyCarousel({ first_image_src }: { first_image_src?: string }) {
   const default_image = gallery_store.use.default_image();
   const images = gallery_store.use.images();
   const [emblaApi, setEmblaApi] = useState<CarouselApi>();
@@ -88,17 +86,18 @@ export function MyCarousel({ first_image }: { first_image?: string }) {
   useEffect(() => {
     if (!emblaApi) return;
 
-    if (first_image) {
-      const index = images.findIndex((image) => image.file.url === first_image);
+    if (first_image_src) {
+      const index = images.findIndex((image) => image.file.url === first_image_src);
 
       emblaApi.scrollTo(index);
     }
-  }, [emblaApi, first_image, images]);
+  }, [emblaApi, first_image_src, images]);
 
 
 
   useEffect(() => {
     if (!default_image) return;
+    // console.log("default_image", default_image);
 
     const scroll_callback = (event: WheelEvent | TouchEvent) => {
       if (event instanceof WheelEvent) {
@@ -185,7 +184,7 @@ function GalleryImage({ image }: { image: EditorJSImageData }) {
     <figure className="max-h-[90vh] max-w-[90vw]">
       <div className="flex h-full max-h-[90vh] w-full max-w-[90vw] items-center justify-center">
         <Image
-          className="rounded-xl object-scale-down max-h-[90vh] max-w-[90vw]"
+          className="rounded-xl object-fit w-full h-full"
           src={image.file.url}
           alt={image.caption}
           // sizes="(max-width: 1500px) 100vw, 1500px"

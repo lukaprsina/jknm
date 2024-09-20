@@ -1,7 +1,6 @@
 "use client";
 
 import { useContext, useMemo } from "react";
-import Image from "next/image";
 
 import type { MultiSelectProps } from "~/components/multi-select";
 import { MultiSelect } from "~/components/multi-select";
@@ -9,7 +8,6 @@ import { MultiSelect } from "~/components/multi-select";
 import { EditorContext } from "~/components/editor/editor-context";
 import { editor_store } from "~/components/editor/editor-store";
 import { useAllAuthors } from "~/components/authors";
-import { cn } from "~/lib/utils";
 import { EditorButtons } from "./toolbar-buttons";
 
 export function MyToolbar() {
@@ -25,13 +23,14 @@ export function MyToolbar() {
   const authors = useMemo(() => {
     if (!all_authors) return [];
 
-    const mapped_authors = all_authors
+    return all_authors
       .map(
         (user) =>
           ({
             label: user.name,
             value: user.id.toString(),
-            icon: ({ className }: { className?: string }) => {
+            icon: undefined
+            /*icon: ({ className }: { className?: string }) => {
               if (!user.image || !user.name) return;
 
               return (
@@ -43,14 +42,12 @@ export function MyToolbar() {
                   className={cn("m-0 rounded-full", className)}
                 />
               );
-            },
+            },*/
           }) satisfies MultiSelectProps["options"]["0"],
       )
       .filter((mapped_user) => {
         return mapped_user.label && mapped_user.value;
       });
-
-    return mapped_authors;
   }, [all_authors]);
 
   if (!editor_context) return null;

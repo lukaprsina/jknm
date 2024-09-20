@@ -2,7 +2,7 @@
 
 import "./editor.css";
 
-import {
+import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
 } from "~/components/article/card-adapter";
@@ -16,8 +16,6 @@ import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { MyToolbar } from "./toolbar";
 import { cn } from "~/lib/utils";
 import { article_variants } from "~/lib/page-variants";
-import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
-import DatePicker from "~/components/date-time-picker/new_date_picker";
 
 // const Toolbar = dynamic(() => import("./toolbar"), { ssr: false });
 
@@ -58,11 +56,3 @@ function SettingsSummary() {
     </pre>
   );
 }
-
-export interface SaveCallbackProps {
-  variables?: Partial<DraftArticleWithAuthors>;
-  update?: Partial<{ draft: boolean; content: boolean }> | false;
-  redirect_to?: string | false;
-}
-
-export type SaveCallbackType = (props: SaveCallbackProps) => Promise<void>;

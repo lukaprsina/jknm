@@ -35,7 +35,7 @@ export interface FileUploadJSON {
 }
 
 export async function POST(request: NextRequest) {
-  // console.log("upload_file_to_s3 begins");
+  console.log("upload_file_to_s3 begins");
   const session = await getServerAuthSession();
   if (!session) return NextResponse.error();
 

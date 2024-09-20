@@ -3,7 +3,7 @@
 import "./editorjs-attaches.css";
 
 import type { RenderFn } from "editorjs-blocks-react-renderer";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Blocks from "editorjs-blocks-react-renderer";
@@ -84,9 +84,9 @@ export function EditorToReact({
   }, [article]);
 
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("editor-to-react", { article, author_ids });
-  }, [article, author_ids]);
+  }, [article, author_ids]);*/
 
   if (!editor_data || !article) return;
 
@@ -148,9 +148,9 @@ export const NextImageRenderer: RenderFn<EditorJSImageData> = ({
     }
   }, [data.file.height, data.file.width]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("editor-to-react", data, image_props);
-  }, [data, image_props]);
+  }, [data, image_props]);*/
 
   return (
     <figure className="max-h-[1500] max-w-[1500]">
@@ -168,7 +168,6 @@ export const NextImageRenderer: RenderFn<EditorJSImageData> = ({
         width={image_props.width}
         height={image_props.height}
         priority={true}
-        // fill={!image_props?.dimensions_exist}
       />
       <figcaption>{HTMLReactParser(data.caption)}</figcaption>
     </figure>
