@@ -5,12 +5,15 @@
 await import("./src/env.js");
 import remarkGfm from "remark-gfm";
 import createMDX from "@next/mdx";
+import withSlugs from "rehype-slug";
+import withToc from "@stefanprobst/rehype-extract-toc";
+import withTocExport from "@stefanprobst/rehype-extract-toc/mdx";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 
 /** @type {import("next").NextConfig} */
 const config = {
-  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   images: {
     loader: "custom",
     loaderFile: "./image-loader.js",
@@ -81,20 +84,20 @@ const config = {
 
   experimental: {
     // reactCompiler: false,
-    mdxRs: {
-      mdxType: "gfm"
-    },
+    /*mdxRs: {
+      mdxType: "gfm",
+    },*/
     serverActions: {
       // TODO
       bodySizeLimit: "100mb",
     },
     turbo: {
-      rules: {
+      /*rules: {
         "*.svg": {
           loaders: ["@svgr/webpack"],
           as: "*.js",
         },
-      },
+      },*/
     },
   },
 };
@@ -102,6 +105,7 @@ const config = {
 const withMDX = createMDX({
   options: {
     remarkPlugins: [remarkGfm],
+    rehypePlugins: [withSlugs, withToc, withTocExport],
   },
 });
 
