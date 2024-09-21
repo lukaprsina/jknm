@@ -1,10 +1,8 @@
 "use client";
 
-import type { RefObject } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { createPortal } from "react-dom";
-import { useOnClickOutside } from "usehooks-ts";
 
 import type { CarouselApi } from "~/components/ui/carousel";
 import {
@@ -70,80 +68,89 @@ export function MyCarousel({ first_image_src }: { first_image_src?: string }) {
   const images = gallery_store.use.images();
   const [emblaApi, setEmblaApi] = useState<CarouselApi>();
   const md_breakpoint = useBreakpoint("md", true);
-  const carousel_ref = useRef<HTMLDivElement>(null);
+  const container_ref = useRef<HTMLDivElement>(null);
+  const image_refs = useRef<(HTMLElement | null)[]>([]);
   const previous_ref = useRef<HTMLButtonElement>(null);
   const next_ref = useRef<HTMLButtonElement>(null);
 
-  const refs: RefObject<HTMLElement>[] = useMemo(
-    () => [carousel_ref, previous_ref, next_ref] as RefObject<HTMLElement>[],
-    [carousel_ref, previous_ref, next_ref],
-  );
-
-  useOnClickOutside(refs, () => {
-    gallery_store.set.default_image(undefined);
-  });
+  useEffect(() => {
+    image_refs.current = image_refs.current.slice(0, images.length);
+  }, [images]);
 
   useEffect(() => {
     if (!emblaApi) return;
 
     if (first_image_src) {
-      const index = images.findIndex((image) => image.file.url === first_image_src);
+      const index = images.findIndex(
+        (image) => image.file.url === first_image_src,
+      );
 
       emblaApi.scrollTo(index);
     }
   }, [emblaApi, first_image_src, images]);
 
-
-
   useEffect(() => {
-    if (!default_image) return;
     // console.log("default_image", default_image);
 
-    const scroll_callback = (event: WheelEvent | TouchEvent) => {
-      if (event instanceof WheelEvent) {
+    const outside_callback = (event: MouseEvent) => {
+      // console.log("outside_callback", { default_image, image_refs });
+      if (!default_image) return;
+
+      const all_refs = image_refs.current
+      all_refs.push(previous_ref.current)
+      all_refs.push(next_ref.current)
+
+      const is_clicked_outside = all_refs.every(
+        (ref) => ref && !ref.contains(event.target as Node),
+      );
+
+      // console.log("is_clicked_outside", { is_clicked_outside, image_refs });
+
+      if (is_clicked_outside) {
         gallery_store.set.default_image(undefined);
-        // event.preventDefault();
-      } else if (event instanceof TouchEvent) {
-        const touch = event.touches[0];
-        if (typeof touch?.clientY !== "undefined") {
-          gallery_store.set.default_image(undefined);
-          event.preventDefault();
-        }
+        event.preventDefault()
       }
+    }
+
+    const scroll_callback = () => {
+      if (!default_image) return;
+      gallery_store.set.default_image(undefined);
     };
 
     const keypress_callback = (event: KeyboardEvent) => {
+      if (!default_image) return;
       if (GALLERY_CANCEL_KEYS.includes(event.key)) {
         gallery_store.set.default_image(undefined);
-        event.preventDefault()
-      } else if(event.key === "ArrowLeft") {
-        emblaApi?.scrollPrev()
-        event.preventDefault()
-      } else if(event.key === "ArrowRight") {
-        emblaApi?.scrollNext()
-        event.preventDefault()
-      } else if(event.key === "Home") {
-        emblaApi?.scrollTo(0)
-        event.preventDefault()
-      } else if(event.key === "End") {
-        emblaApi?.scrollTo(emblaApi.slideNodes().length - 1)
-        event.preventDefault()
+        event.preventDefault();
+      } else if (event.key === "ArrowLeft") {
+        emblaApi?.scrollPrev();
+        event.preventDefault();
+      } else if (event.key === "ArrowRight") {
+        emblaApi?.scrollNext();
+        event.preventDefault();
+      } else if (event.key === "Home") {
+        emblaApi?.scrollTo(0);
+        event.preventDefault();
+      } else if (event.key === "End") {
+        emblaApi?.scrollTo(emblaApi.slideNodes().length - 1);
+        event.preventDefault();
       }
     };
 
     window.addEventListener("wheel", scroll_callback);
-    window.addEventListener("touchmove", scroll_callback);
     window.addEventListener("keydown", keypress_callback);
+    window.addEventListener("mousedown", outside_callback);
 
     return () => {
       window.removeEventListener("wheel", scroll_callback);
-      window.removeEventListener("touchmove", scroll_callback);
       window.removeEventListener("keydown", keypress_callback);
+      window.removeEventListener("mousedown", outside_callback);
     };
   }, [default_image, emblaApi]);
 
   return (
     <Carousel
+      ref={container_ref}
       setApi={setEmblaApi}
       opts={{
         align: "center",
@@ -151,13 +158,18 @@ export function MyCarousel({ first_image_src }: { first_image_src?: string }) {
       }}
       className="flex h-full w-full max-w-[80%] items-center justify-center"
     >
-      <CarouselContent ref={carousel_ref}>
+      <CarouselContent>
         {images.map((image, index) => (
           <CarouselItem
             className="flex items-center justify-center"
             key={index}
           >
-            <GalleryImage image={image} />
+            <GalleryImage
+              image={image}
+              ref={(ref: HTMLElement | null) => {
+                image_refs.current[index] = ref;
+              }}
+            />
           </CarouselItem>
         ))}
       </CarouselContent>
@@ -171,7 +183,13 @@ export function MyCarousel({ first_image_src }: { first_image_src?: string }) {
   );
 }
 
-function GalleryImage({ image }: { image: EditorJSImageData }) {
+function GalleryImage({
+  image,
+  ref,
+}: {
+  image: EditorJSImageData;
+  ref?: (ref: HTMLElement | null) => void;
+}) {
   const { width, height } = useMemo(
     () => ({
       width: image.file.width ?? 1500,
@@ -181,10 +199,10 @@ function GalleryImage({ image }: { image: EditorJSImageData }) {
   );
 
   return (
-    <figure className="max-h-[90vh] max-w-[90vw]">
+    <figure ref={ref} className="max-h-[90vh] max-w-[90vw]">
       <div className="flex h-full max-h-[90vh] w-full max-w-[90vw] items-center justify-center">
         <Image
-          className="rounded-xl object-fit w-full h-full"
+          className="object-fit h-full w-full rounded-xl"
           src={image.file.url}
           alt={image.caption}
           // sizes="(max-width: 1500px) 100vw, 1500px"

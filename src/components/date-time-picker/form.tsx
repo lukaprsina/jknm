@@ -3,7 +3,6 @@
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { Calendar } from "~/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
@@ -23,6 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { toast } from "~/hooks/use-toast";
 import { cn } from "~/lib/utils";
+import { Calendar } from "~/components/date-time-picker/new_calendar";
 
 const formSchema = z.object({
   dateTime: z.date().optional(),
@@ -82,7 +82,6 @@ export function DateTimePickerForm() {
                     mode="single"
                     selected={field.value}
                     onSelect={field.onChange}
-                    initialFocus
                   />
                   <div className="border-t border-border p-3">
                     <TimePickerDemo

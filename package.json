@@ -127,6 +127,7 @@
     "superjson": "^2.2.1",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "use-dynamic-refs": "^1.0.0",
     "usehooks-ts": "^3.1.0",
     "uuid": "^10.0.0",
     "vaul": "^0.9.1",

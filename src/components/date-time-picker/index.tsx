@@ -3,7 +3,6 @@ import { add, format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
-import { Calendar } from "~/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
@@ -11,6 +10,7 @@ import {
 } from "~/components/ui/popover";
 import { TimePickerDemo } from "./time-demo";
 import { cn } from "~/lib/utils";
+import { Calendar } from "~/components/date-time-picker/new_calendar";
 
 export function DateTimePicker({
   date,
