@@ -1,72 +1,81 @@
-"use client"
+"use client";
 
 import type { Toc } from "@stefanprobst/rehype-extract-toc";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
-  console.log(tableOfContents);
+const useActiveHeading = (toc: Toc) => {
+  const [activeHeadings, setActiveHeadings] = useState<Record<number, string>>(
+    {},
+  );
 
   useEffect(() => {
+    const headingElements = toc.map((entry) => {
+      const test = false as boolean
+      if (test || !entry.id) return;
+      return document.getElementById(entry.id) ?? undefined;
+    });
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const id = entry.target.getAttribute("id");
+          if (!id) return;
+
+          const depth = Number(entry.target.getAttribute("data-depth"));
+
           if (entry.isIntersecting) {
-            console.log(`#${id} is in view`);
-          } else {
-            console.log(`#${id} is out of view`);
+            setActiveHeadings((prev) => ({
+              ...prev,
+              [depth]: id,
+            }));
+          } else if (activeHeadings[depth] === id) {
+            setActiveHeadings((prev) => {
+              const newState = { ...prev };
+              delete newState[depth];
+              return newState;
+            });
           }
         });
       },
-      {
-        threshold: 0,
-      }
+      { rootMargin: "0px 0px -50% 0px" }, // Adjust this threshold based on when you want to trigger visibility
     );
 
-    tableOfContents.forEach((entry) => {
-        if (!entry.id) {
-          return
-        }
+    headingElements.forEach((element) => element && observer.observe(element));
 
-        const element = document.getElementById(entry.id);
-        if (element) {
-          observer.observe(element);
-        }
+    return () => {
+      headingElements.forEach(
+        (element) => element && observer.unobserve(element),
+      );
+    };
+  }, [activeHeadings, toc]);
 
+  return activeHeadings;
+};
 
-        entry.children?.forEach((child) => {
-          if (!child.id) {
-            return
-          }
+export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
+  console.log("TableOfContents", tableOfContents);
+  // const activeHeadings = useActiveHeading(tableOfContents);
 
-          const childElement = document.getElementById(child.id);
-          if (childElement) {
-            observer.observe(childElement);
-          }
-        })
-      }
-    );
-  }, [tableOfContents]);
-
-  return (
-    <nav>
-      <h2>Table of Contents</h2>
+  const renderToc = (entries: Toc, depth = 1) => {
+    return (
       <ul>
-        {tableOfContents.map((entry) => (
-          <li key={entry.id}>
-            <a href={`#${entry.id}`}>{entry.value}</a>
-            {entry.children && (
-              <ul>
-                {entry.children.map((child) => (
-                  <li key={child.id}>
-                    <a href={`#${child.id}`}>{child.value}</a>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
+        {entries.map((entry) => {
+          const isActive = false as boolean;
+          // const isActive = activeHeadings[depth] === entry.id;
+
+          return (
+            <li
+              key={entry.id}
+              className={isActive ? "border-l-2 border-blue-500" : ""}
+            >
+              <a href={`#${entry.id}`}>{entry.value}</a>
+              {entry.children && renderToc(entry.children, depth + 1)}
+            </li>
+          );
+        })}
       </ul>
-    </nav>
-  );
+    );
+  };
+
+  return <aside>{renderToc(tableOfContents)}</aside>;
 }
