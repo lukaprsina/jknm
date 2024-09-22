@@ -3,25 +3,47 @@
 import type { Toc } from "@stefanprobst/rehype-extract-toc";
 import { useEffect, useState } from "react";
 
+function get_toc_ids(toc: Toc): string[] {
+  const ids: string[] = [];
+  for(const heading of toc){
+    if(heading.id){
+      ids.push(heading.id);
+    }
+
+    if(heading.children){
+      ids.push(...get_toc_ids(heading.children));
+    }
+  }
+  return ids;
+}
+
+function get_heading_depth(toc: Toc, target_id: string): number | undefined {
+  for(const heading of toc){
+    if(heading.id === target_id){
+      return heading.depth;
+    }
+
+    if(heading.children){
+      const depth = get_heading_depth(heading.children, target_id);
+      if(depth) return depth;
+    }
+  }
+}
+
 const useActiveHeading = (toc: Toc) => {
   const [activeHeadings, setActiveHeadings] = useState<Record<number, string>>(
     {},
   );
 
   useEffect(() => {
-    const headingElements = toc.map((entry) => {
-      const test = false as boolean
-      if (test || !entry.id) return;
-      return document.getElementById(entry.id) ?? undefined;
-    });
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const id = entry.target.getAttribute("id");
           if (!id) return;
 
-          const depth = Number(entry.target.getAttribute("data-depth"));
+          const depth = get_heading_depth(toc, id);
+          if(typeof depth === "undefined") return;
 
           if (entry.isIntersecting) {
             setActiveHeadings((prev) => ({
@@ -37,7 +59,12 @@ const useActiveHeading = (toc: Toc) => {
           }
         });
       },
-      { rootMargin: "0px 0px -50% 0px" }, // Adjust this threshold based on when you want to trigger visibility
+      {threshold: 0}
+      // { rootMargin: "0px 0px -50% 0px" }, // Adjust this threshold based on when you want to trigger visibility
+    );
+
+    const headingElements = get_toc_ids(toc).map((id) =>
+      document.getElementById(id),
     );
 
     headingElements.forEach((element) => element && observer.observe(element));
@@ -47,21 +74,26 @@ const useActiveHeading = (toc: Toc) => {
         (element) => element && observer.unobserve(element),
       );
     };
-  }, [activeHeadings, toc]);
+  }, [toc]);
 
   return activeHeadings;
 };
 
-export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
-  console.log("TableOfContents", tableOfContents);
-  // const activeHeadings = useActiveHeading(tableOfContents);
+export function TableOfContents({
+  tableOfContents,
+}: {
+  tableOfContents: Toc;
+}) {
+  const activeHeadings = useActiveHeading(tableOfContents);
+
+  console.log("TableOfContents", activeHeadings);
 
   const renderToc = (entries: Toc, depth = 1) => {
     return (
       <ul>
         {entries.map((entry) => {
-          const isActive = false as boolean;
-          // const isActive = activeHeadings[depth] === entry.id;
+          // const isActive = false as boolean;
+          const isActive = activeHeadings[depth] === entry.id;
 
           return (
             <li
