@@ -1,11 +1,9 @@
 import type { MDXComponents } from 'mdx/types'
-import { Toc } from "@stefanprobst/rehype-extract-toc";
+import { TableOfContents } from "~/components/static/toc";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
-    TableOfContents: (tableOfContents: Toc) => {
-      return <pre>{JSON.stringify(tableOfContents, null, 2)}</pre>
-    },
+    TableOfContents,
     ...components,
-  }
+  };
 }

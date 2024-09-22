@@ -11,6 +11,15 @@ import withTocExport from "@stefanprobst/rehype-extract-toc/mdx";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 
+const mdx_rs =
+  process.env.NEXT_MODE === "no-turbo"
+    ? null
+    : {
+        mdxRs: {
+          mdxType: "gfm",
+        },
+      };
+
 /** @type {import("next").NextConfig} */
 const config = {
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
@@ -84,9 +93,7 @@ const config = {
 
   experimental: {
     // reactCompiler: false,
-    /*mdxRs: {
-      mdxType: "gfm",
-    },*/
+    ...mdx_rs,
     serverActions: {
       // TODO
       bodySizeLimit: "100mb",
