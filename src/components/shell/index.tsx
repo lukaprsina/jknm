@@ -46,7 +46,8 @@ export async function Shell({
           />
         </header>
       ) : undefined}
-      <main className="relative w-full" id="main">
+      <aside id="shell-aside"  className="fixed top-0 right-0 z-[501] bg-white" />
+      <main className="relative w-full" id="shell-main">
         {children}
       </main>
       {!without_footer ? (

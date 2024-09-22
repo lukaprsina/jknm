@@ -50,7 +50,7 @@ export default {
             h1: {
               fontWeight: "600", // 500
               color: theme("colors.blue.800"),
-              // fontSize: "36px",
+              fontSize: "32px",
             },
             h2: {
               fontWeight: "600", // 400
