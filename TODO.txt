@@ -4,6 +4,9 @@ odstrani slike avtorji
 galerija mobile ne dela
 author card when hover
 algolia author faceting
+
+mobile
+pika med avtorjev kanin
 -------------------
 
 icon links: vercel accesibility, https://kittygiraudel.com/2020/12/10/accessible-icon-links/
