@@ -30,6 +30,9 @@ export default {
       },
     },
     extend: {
+      screens: {
+        not_center: "1880px" // 1280 + 2 * 300
+      },
       typography: (theme: (variable: string) => string) => ({
         sm: {
           lineHeight: "1.5",

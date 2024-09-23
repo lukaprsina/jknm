@@ -8,6 +8,7 @@ import type {
 } from "../article/card-adapter";
 import { MobileHeader } from "./header";
 import React from "react";
+import { useBreakpoint } from "~/hooks/use-breakpoint";
 
 interface ShellProps {
   children: React.ReactNode;
@@ -46,9 +47,10 @@ export async function Shell({
           />
         </header>
       ) : undefined}
-      <div className="flex justify-center gap-2">
+      <div className="flex justify-start not_center:justify-center gap-2">
         <aside id="shell-aside" className={cn("flex-shrink-0 fixed left-0 h-full w-[300px]")} />
-        <main className="w-full flex-grow flex-1 ml-[300px]" id="shell-main">
+        {/*<main className="w-full flex-grow flex-1 ml-[300px] not_center:ml-0" id="shell-main">*/}
+        <main className="w-full flex-grow flex-1 ml-[300px] not_center:ml-0" id="shell-main">
           {children}
         </main>
       </div>
