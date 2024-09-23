@@ -8,7 +8,6 @@ import type {
 } from "../article/card-adapter";
 import { MobileHeader } from "./header";
 import React from "react";
-import { useBreakpoint } from "~/hooks/use-breakpoint";
 
 interface ShellProps {
   children: React.ReactNode;
@@ -16,6 +15,7 @@ interface ShellProps {
   draft_article?: DraftArticleWithAuthors;
   without_footer?: boolean;
   without_header?: boolean;
+  show_aside?: boolean;
   className?: string;
 }
 
@@ -25,6 +25,7 @@ export async function Shell({
   children,
   without_footer,
   without_header,
+  show_aside,
   className,
 }: ShellProps) {
   const session = await getServerAuthSession();
@@ -47,10 +48,18 @@ export async function Shell({
           />
         </header>
       ) : undefined}
-      <div className="flex justify-start not_center:justify-center gap-2">
-        <aside id="shell-aside" className={cn("flex-shrink-0 fixed left-0 h-full w-[300px]")} />
-        {/*<main className="w-full flex-grow flex-1 ml-[300px] not_center:ml-0" id="shell-main">*/}
-        <main className="w-full flex-grow flex-1 ml-[300px] not_center:ml-0" id="shell-main">
+      <div className={"flex justify-start gap-2 not_center:justify-center"}>
+        <aside
+          id="shell-aside"
+          className={cn(
+            "fixed left-0 h-full w-[300px] flex-shrink-0",
+            show_aside ? "block" : "hidden",
+          )}
+        />
+        <main
+          className={cn("w-full", show_aside && "ml-[300px] flex-1 flex-grow not_center:ml-0")}
+          id="shell-main"
+        >
           {children}
         </main>
       </div>
