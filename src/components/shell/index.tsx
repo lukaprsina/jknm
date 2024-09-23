@@ -46,10 +46,12 @@ export async function Shell({
           />
         </header>
       ) : undefined}
-      <aside id="shell-aside"  className="fixed top-0 right-0 z-[501] bg-white" />
-      <main className="relative w-full" id="shell-main">
-        {children}
-      </main>
+      <div className="flex justify-center gap-2">
+        <aside id="shell-aside" className={cn("flex-shrink-0 fixed left-0 h-full w-[300px]")} />
+        <main className="w-full flex-grow flex-1 ml-[300px]" id="shell-main">
+          {children}
+        </main>
+      </div>
       {!without_footer ? (
         <footer className="bottom-0">
           <Footer />

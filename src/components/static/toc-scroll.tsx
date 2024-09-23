@@ -1,14 +1,14 @@
 "use client";
 
 import type { Toc } from "@stefanprobst/rehype-extract-toc";
-import { useDebounceCallback } from "usehooks-ts";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { cn } from "~/lib/utils";
+import { shell_store } from "~/components/shell/desktop-header";
+import { ScrollArea } from "~/components/ui/scroll-area";
 
 function get_heading_ids(toc: Toc): string[] {
-  console.log("get_heading_ids", toc);
   const heading_ids: string[] = [];
 
   for (const entry of toc) {
@@ -23,7 +23,7 @@ function get_heading_ids(toc: Toc): string[] {
   return heading_ids;
 }
 
-const SCROLL_CALLBACK_THROTTLE_TIME = 40;
+const SCROLL_CALLBACK_THROTTLE_TIME = 80;
 
 function handle_anchor_highlighting({
   heading_ids,
@@ -94,20 +94,38 @@ function TocTree({
   tableOfContents: Toc;
 }) {
   return (
-    <div>
+    <>
       {tableOfContents.map((entry) => {
         if (!entry.id) return null;
 
         return (
-          <>
+          <Fragment key={entry.id}>
             <Link
               className={cn(
-                "block border-l-2 border-gray-200 text-sm font-medium text-gray-900",
+                // "block text-sm font-medium text-gray-900",
+                "block border-l-2 border-transparent",
+                entry.depth > 1 && "border-gray-200",
                 activeAnchors.includes(entry.id) && "border-black",
               )}
-              style={{ paddingLeft: `${entry.depth * 4}px` }}
+              style={{ paddingLeft: `${entry.depth * 16}px` }}
               href={`#${entry.id}`}
               key={entry.id}
+              onClick={(e) => {
+                // smooth scroll with offset for the sticky navbar
+                e.preventDefault();
+                if (!entry.id) return;
+
+                const anchor = document.getElementById(entry.id);
+                if (!anchor) return;
+                const navbar_height = shell_store.get.navbar_height();
+                if (typeof navbar_height !== "number") return;
+
+                const yOffset = -navbar_height; // offset by navbar height
+                const yPosition =
+                  anchor.getBoundingClientRect().top + window.scrollY + yOffset;
+
+                window.scrollTo({ top: yPosition, behavior: "smooth" });
+              }}
             >
               {entry.value}
             </Link>
@@ -118,10 +136,46 @@ function TocTree({
                 tableOfContents={entry.children}
               />
             )}
-          </>
+          </Fragment>
         );
       })}
-    </div>
+    </>
+  );
+}
+
+function TocPortal({
+  tableOfContents,
+  activeAnchors,
+}: {
+  activeAnchors: string[];
+  tableOfContents: Toc;
+}) {
+  const div_ref = useRef<HTMLDivElement | null>(null);
+  // const is_header_sticky = shell_store.use.is_header_sticky();
+  const navbar_height = shell_store.use.navbar_height();
+  const [tocWidth, setTocWidth] = useState<number | undefined>();
+
+  useEffect(() => {
+    if (!div_ref.current) return;
+    const width = div_ref.current.clientWidth;
+    setTocWidth(width);
+  }, []);
+
+  return (
+      <div
+        ref={div_ref}
+        className={cn("flex h-full w-full justify-start")}
+      >
+        <ScrollArea
+          // style={{ top: `${navbar_height}px` }}
+          className={cn("text-sm", "max-w-[300px] overflow-auto")}
+        >
+          <TocTree
+            activeAnchors={activeAnchors}
+            tableOfContents={tableOfContents}
+          />
+        </ScrollArea>
+      </div>
   );
 }
 
@@ -140,30 +194,27 @@ export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
   }, []);
 
   // should be throttled
-  const scroll_callback = useDebounceCallback(
-    () => {
-      if (!main_ref.current) return;
+  const scroll_callback = useThrottle(() => {
+    console.log("scroll_callback");
+    if (!main_ref.current) return;
 
-      if (tableOfContents.length !== 1) return;
-      const first_toc = tableOfContents[0];
-      if (!first_toc?.children) return;
+    if (tableOfContents.length !== 1) return;
+    const first_toc = tableOfContents[0];
+    if (!first_toc?.children) return;
 
-      const heading_ids = get_heading_ids(first_toc.children);
+    const heading_ids = get_heading_ids(first_toc.children);
 
-      const active_anchors = handle_anchor_highlighting({
-        viewportHeight: window.innerHeight,
-        heading_ids,
-        scrollTop: main_ref.current.scrollTop,
-      });
+    const active_anchors = handle_anchor_highlighting({
+      viewportHeight: window.innerHeight,
+      heading_ids,
+      scrollTop: main_ref.current.scrollTop,
+    });
 
-      setActiveAnchors(active_anchors);
-    },
-    SCROLL_CALLBACK_THROTTLE_TIME,
-    { maxWait: SCROLL_CALLBACK_THROTTLE_TIME, leading: true },
-  );
+    setActiveAnchors(active_anchors);
+  }, SCROLL_CALLBACK_THROTTLE_TIME);
 
   useEffect(() => {
-    scroll_callback()
+    scroll_callback();
   }, [scroll_callback]);
 
   useEffect(() => {
@@ -175,7 +226,7 @@ export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
     if (!aside_ref.current) return;
 
     return createPortal(
-      <TocTree
+      <TocPortal
         activeAnchors={activeAnchors}
         tableOfContents={tableOfContents}
       />,
@@ -185,3 +236,17 @@ export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
 
   return portal();
 }
+
+const useThrottle = (callback: (...args: unknown[]) => void, limit: number) => {
+  const lastCallRef = useRef<number>(0);
+  return useCallback(
+    (...args: unknown[]) => {
+      const now = Date.now();
+      if (now - lastCallRef.current >= limit) {
+        lastCallRef.current = now;
+        callback(...args);
+      }
+    },
+    [callback, limit],
+  );
+};

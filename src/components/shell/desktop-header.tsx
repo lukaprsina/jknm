@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Link from "next/link";
 
 import { NoviceAutocomplete } from "./autocomplete";
@@ -14,6 +14,17 @@ import type {
   PublishedArticleWithAuthors,
 } from "../article/card-adapter";
 import { FacebookIcon, LinksMenu, YoutubeIcon } from "./header";
+import { createStore } from "zustand-x";
+
+export interface ShellStore {
+  is_header_sticky: boolean;
+  navbar_height: number | undefined;
+}
+
+export const shell_store = createStore("shell-store")<ShellStore>({
+  is_header_sticky: false,
+  navbar_height: undefined,
+})
 
 export function DesktopHeader({
   published_article,
@@ -26,9 +37,10 @@ export function DesktopHeader({
   draft_article?: DraftArticleWithAuthors;
   session: Session | null;
 }) {
-  const [sticky, setSticky] = useState(false);
   const sticky_navbar = useRef<HTMLDivElement | null>(null);
   const header_ref = useRef<HTMLDivElement | null>(null);
+  const is_header_sticky = shell_store.use.is_header_sticky();
+  const navbar_height = shell_store.use.navbar_height();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,9 +49,11 @@ export function DesktopHeader({
       // TODO: + 2 is a hack for the separator
       const new_sticky = window.scrollY > header_ref.current.clientHeight + 2;
 
-      if (new_sticky !== sticky) {
-        setSticky(new_sticky);
+      if (new_sticky !== shell_store.get.is_header_sticky()) {
+        shell_store.set.is_header_sticky(new_sticky);
       }
+
+      shell_store.set.navbar_height(sticky_navbar.current.clientHeight)
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -47,7 +61,7 @@ export function DesktopHeader({
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [sticky]);
+  }, []);
 
   return (
     <>
@@ -88,14 +102,14 @@ export function DesktopHeader({
       </div>
       <Separator
         style={{
-          marginBottom: sticky ? sticky_navbar.current?.clientHeight : "",
+          marginBottom: is_header_sticky ? navbar_height : "",
         }}
       />
       <div
         ref={sticky_navbar}
         className={cn(
           "relative z-40 flex w-full items-center justify-center px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:px-12",
-          sticky ? "fixed top-0 bg-white/80 transition-colors" : null,
+          is_header_sticky ? "fixed top-0 bg-white/80 transition-colors" : null,
           className,
         )}
       >

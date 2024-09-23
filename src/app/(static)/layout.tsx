@@ -8,9 +8,7 @@ export default function MarkdownLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <Shell>
-      <div className={cn(article_variants(), page_variants())}>
-        {children}
-      </div>
+      <div className={cn(article_variants(), page_variants())}>{children}</div>
     </Shell>
   );
 }

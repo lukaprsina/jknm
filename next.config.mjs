@@ -8,8 +8,8 @@ import createMDX from "@next/mdx";
 import withSlugs from "rehype-slug";
 import withToc from "@stefanprobst/rehype-extract-toc";
 import withTocExport from "@stefanprobst/rehype-extract-toc/mdx";
-import remarkFrontmatter from "remark-frontmatter";
-import remarkMdxFrontmatter from "remark-mdx-frontmatter";
+// import remarkFrontmatter from "remark-frontmatter";
+// import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 
 const mdx_rs =
   process.env.NEXT_MODE === "no-turbo"
