@@ -6,7 +6,6 @@ author card when hover
 algolia author faceting
 
 mobilne kartico odstran pri novički
-pika med avtorjev kanin
 arhiv na konc
 DANGER: v urejevalniku odstraniš bold in italic headingom
 
