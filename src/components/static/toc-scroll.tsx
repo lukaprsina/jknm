@@ -24,6 +24,7 @@ function get_heading_ids(toc: Toc): string[] {
 }
 
 const SCROLL_CALLBACK_THROTTLE_TIME = 80;
+const HEIGHT_CONSTANT = 150; // 75
 
 function handle_anchor_highlighting({
   heading_ids,
@@ -43,7 +44,7 @@ function handle_anchor_highlighting({
     const anchor_top = anchor.getBoundingClientRect().top;
     if (
       anchor_top < scrollTop + viewportHeight &&
-      anchor_top + 75 > scrollTop
+      anchor_top + HEIGHT_CONSTANT > scrollTop
     ) {
       active_anchors.push(heading_id);
     }
@@ -153,20 +154,19 @@ function TocPortal({
   const div_ref = useRef<HTMLDivElement | null>(null);
 
   return (
-      <div
-        ref={div_ref}
-        className={cn("flex h-full w-full justify-start")}
+    <div ref={div_ref} className={cn("flex h-full w-full justify-start")}>
+      <ScrollArea
+        className={cn(
+          "text-sm",
+          "h-[calc(100vh_-_112px)] max-w-[300px] overflow-auto pb-8 pt-4",
+        )}
       >
-        <ScrollArea
-          // style={{ top: `${navbar_height}px` }}
-          className={cn("text-sm", "max-w-[300px] overflow-auto")}
-        >
-          <TocTree
-            activeAnchors={activeAnchors}
-            tableOfContents={tableOfContents}
-          />
-        </ScrollArea>
-      </div>
+        <TocTree
+          activeAnchors={activeAnchors}
+          tableOfContents={tableOfContents}
+        />
+      </ScrollArea>
+    </div>
   );
 }
 
@@ -184,7 +184,6 @@ export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
     aside_ref.current = possible_aside;
   }, []);
 
-  // should be throttled
   const scroll_callback = useThrottle(() => {
     console.log("scroll_callback");
     if (!main_ref.current) return;
