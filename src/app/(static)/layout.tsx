@@ -8,7 +8,7 @@ export default function MarkdownLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <Shell show_aside>
-      <div className={cn(article_variants(), page_variants(), "ml-0 not_center:ml-auto")}>{children}</div>
+      <div className={cn(article_variants(), page_variants())}>{children}</div>
     </Shell>
   );
 }

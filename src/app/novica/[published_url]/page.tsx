@@ -1,17 +1,8 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-
 import { Shell } from "~/components/shell";
-import { article_variants, page_variants } from "~/lib/page-variants";
 import { api } from "~/trpc/server";
 import { ImageGallery } from "./image-gallery";
 import { getServerAuthSession } from "~/server/auth";
-import { cn } from "~/lib/utils";
-import { EditorToReact } from "~/components/editor/editor-to-react";
 import { read_date_from_url } from "~/lib/format-date";
-import type {
-  DraftArticleWithAuthors,
-  PublishedArticleWithAuthors,
-} from "~/components/article/card-adapter";
 import { ArticleNotFound } from "~/components/component-not-found";
 import { PublishedContent, TabbedContent } from "~/components/content";
 

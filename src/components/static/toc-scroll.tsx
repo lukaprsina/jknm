@@ -7,6 +7,7 @@ import Link from "next/link";
 import { cn } from "~/lib/utils";
 import { shell_store } from "~/components/shell/desktop-header";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import { useBreakpoint } from "~/hooks/use-breakpoint";
 
 function get_heading_ids(toc: Toc): string[] {
   const heading_ids: string[] = [];
@@ -158,7 +159,7 @@ function TocPortal({
       <ScrollArea
         className={cn(
           "text-sm",
-          "h-[calc(100vh_-_112px)] max-w-[300px] overflow-auto pb-8 pt-4",
+          "h-[calc(100vh_-_72px)] max-w-[300px] overflow-auto pb-8 pt-4",
         )}
       >
         <TocTree
@@ -174,6 +175,7 @@ export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
   const [activeAnchors, setActiveAnchors] = useState<string[]>([]);
   const aside_ref = useRef<HTMLElement | null>(null);
   const main_ref = useRef<HTMLElement | null>(null);
+  const md_breakpoint = useBreakpoint("md");
 
   useEffect(() => {
     const possible_main = document.getElementById("shell-main");
@@ -224,7 +226,7 @@ export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
     );
   }, [activeAnchors, tableOfContents]);
 
-  return portal();
+  return md_breakpoint ? portal() : null;
 }
 
 const useThrottle = (callback: (...args: unknown[]) => void, limit: number) => {

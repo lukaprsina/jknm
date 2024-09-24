@@ -83,7 +83,6 @@ export function EditorToReact({
       : article.draft_articles_to_authors.map((a) => a.author_id);
   }, [article]);
 
-
   /*useEffect(() => {
     console.log("editor-to-react", { article, author_ids });
   }, [article, author_ids]);*/
@@ -91,8 +90,32 @@ export function EditorToReact({
   if (!editor_data || !article) return;
 
   return (
-    <Card className="pt-8">
-      <CardHeader>
+    <>
+      <Card className="hidden pt-8 md:block">
+        <CardHeader>
+          <h1>{heading}</h1>
+          <ArticlePageDescription
+            author_ids={author_ids}
+            old_id={
+              session && "old_id" in article
+                ? article.old_id?.toString()
+                : undefined
+            }
+            created_at={article.created_at}
+            session={session}
+          />
+        </CardHeader>
+        <CardContent>
+          <Blocks
+            data={editor_data}
+            renderers={{
+              image: NextImageRenderer,
+              attaches: AttachesRenderer,
+            }}
+          />
+        </CardContent>
+      </Card>
+      <div className="pt-8 md:hidden">
         <h1>{heading}</h1>
         <ArticlePageDescription
           author_ids={author_ids}
@@ -104,13 +127,6 @@ export function EditorToReact({
           created_at={article.created_at}
           session={session}
         />
-        {/* <ArticleCardDescription
-          author_ids={author_ids}
-          featured={false}
-          created_at={draft_article.created_at}
-        /> */}
-      </CardHeader>
-      <CardContent>
         <Blocks
           data={editor_data}
           renderers={{
@@ -118,8 +134,8 @@ export function EditorToReact({
             attaches: AttachesRenderer,
           }}
         />
-      </CardContent>
-    </Card>
+      </div>
+    </>
   );
 }
 

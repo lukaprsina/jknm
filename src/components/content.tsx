@@ -34,13 +34,13 @@ export async function TabbedContent({
   draft?: DraftArticleWithAuthors;
   published?: PublishedArticleWithAuthors;
 }) {
-  const { session,duplicated_urls } = await named_promise_all_settled({
+  const { session, duplicated_urls } = await named_promise_all_settled({
     session: getServerAuthSession(),
-    duplicated_urls: api.article.get_duplicate_urls()
+    duplicated_urls: api.article.get_duplicate_urls(),
   });
 
-  if(session.status === "rejected" || duplicated_urls.status === "rejected") {
-    return
+  if (session.status === "rejected" || duplicated_urls.status === "rejected") {
+    return;
   }
 
   if (!draft?.content && !published?.content) {
@@ -61,15 +61,15 @@ export async function TabbedContent({
         </TabsTrigger>
       </TabsList>
       <TabsContent value="draft">
-        <div className={cn("flex flex-col gap-6", article_variants())}>
+        <div className={cn("flex flex-col gap-6")}>
           <EditorToReact article={draft} session={session.value} />
         </div>
       </TabsContent>
       <TabsContent value="published">
-        <div className={cn("flex flex-col gap-6", article_variants())}>
+        <div className={cn("flex flex-col gap-6")}>
           <EditorToReact article={published} session={session.value} />
         </div>
       </TabsContent>
     </Tabs>
-);
+  );
 }

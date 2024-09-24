@@ -53,13 +53,14 @@ export async function Shell({
           id="shell-aside"
           className={cn(
             "fixed left-0 h-full w-[300px] flex-shrink-0",
-            show_aside ? "block" : "hidden",
+            show_aside ? "md:block" : "hidden",
           )}
         />
         <main
           className={cn(
             "w-full",
-            show_aside && "ml-[300px] flex-1 flex-grow not_center:ml-0",
+            show_aside &&
+              "md:ml-[300px] md:flex-1 md:flex-grow not_center:ml-0",
           )}
           id="shell-main"
         >
