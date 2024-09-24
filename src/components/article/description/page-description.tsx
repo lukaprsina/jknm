@@ -25,7 +25,7 @@ export default function ArticlePageDescription({
   }); */
 
   return (
-    <CardDescription className="flex items-center text-base text-foreground">
+    <CardDescription className="flex items-center text-base text-foreground flex-wrap">
       <span>
         <Authors author_ids={author_ids} />
       </span>

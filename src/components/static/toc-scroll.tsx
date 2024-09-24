@@ -7,7 +7,6 @@ import Link from "next/link";
 import { cn } from "~/lib/utils";
 import { shell_store } from "~/components/shell/desktop-header";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { useBreakpoint } from "~/hooks/use-breakpoint";
 
 function get_heading_ids(toc: Toc): string[] {
   const heading_ids: string[] = [];
@@ -152,17 +151,6 @@ function TocPortal({
   tableOfContents: Toc;
 }) {
   const div_ref = useRef<HTMLDivElement | null>(null);
-  // const is_header_sticky = shell_store.use.is_header_sticky();
-  const navbar_height = shell_store.use.navbar_height();
-  const [tocWidth, setTocWidth] = useState<number | undefined>();
-  const breakpoint = useBreakpoint("not_center")
-
-  useEffect(() => {
-    console.log("breakpoint",breakpoint)
-    if (!div_ref.current) return;
-    const width = div_ref.current.clientWidth;
-    setTocWidth(width);
-  }, [breakpoint]);
 
   return (
       <div

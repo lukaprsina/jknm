@@ -30,4 +30,14 @@ export const article_grid_variants = cva(
   },
 );
 
-export const page_variants = cva("container h-full w-full pb-6 pt-8");
+export const page_variants = cva("container h-full w-full pb-6 pt-8", {
+  variants: {
+    padding: {
+      normal: "px-0 md:px-[2em]",
+      none: "",
+    },
+  },
+  defaultVariants: {
+    padding: "normal",
+  },
+});

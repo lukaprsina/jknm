@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { api } from "~/trpc/react";
 import { useIntersectionObserver } from "usehooks-ts";
 import { article_grid_variants, article_variants } from "~/lib/page-variants";
@@ -12,7 +12,8 @@ export type IntersectionRef = ReturnType<typeof useIntersectionObserver>["ref"];
 const ARTICLE_LOAD_MORE_OFFSET = 9;
 
 export function InfiniteArticles() {
-  const [{ pages }, article_api] =
+  const [firstLoad, setFirstLoad] = useState(true);
+  const [test, article_api] =
     api.article.get_infinite_published.useSuspenseInfiniteQuery(
       {
         limit: 6 * 5,
@@ -28,21 +29,43 @@ export function InfiniteArticles() {
     threshold: 0,
   });
 
-  const articles = useMemo(() => pages.flatMap((page) => page.data), [pages]);
+  const pages = test.pages;
+
+  const articles = useMemo(() => {
+    return firstLoad
+      ? (pages.at(0)?.data ?? [])
+      : pages.flatMap((page) => page.data);
+  }, [firstLoad, pages]);
+
+  useEffect(() => {
+    if (!firstLoad) return;
+
+    // hydration error fix
+    setTimeout(() => {
+      console.log("first load false", firstLoad);
+      setFirstLoad(false);
+    }, 0);
+  }, [firstLoad]);
 
   const load_more_ref = useCallback(
     (index: number) => {
       const ref_index = articles.length - 1 - ARTICLE_LOAD_MORE_OFFSET;
-      return index === Math.max(ref_index, 0) ? ref : undefined;
+      const is_sentinel = index === Math.max(ref_index, 0);
+      console.log("load more ref", ref_index);
+      return is_sentinel ? ref : undefined;
     },
     [articles, ref],
   );
 
   useEffect(() => {
-    if (isIntersecting) {
-      void article_api.fetchNextPage();
+    if (isIntersecting && !firstLoad && !article_api.isFetching) {
+      void article_api.fetchNextPage()
     }
-  }, [isIntersecting, article_api]);
+  }, [isIntersecting, article_api, firstLoad]);
+
+  useEffect(() => {
+    console.log("infinite articles", { articles, test, article_api });
+  }, [article_api, articles, test]);
 
   if (articles.length === 0) {
     return (
@@ -55,7 +78,12 @@ export function InfiniteArticles() {
 
   return (
     /* prose-h3:my-0 prose-p:mt-0 lg:prose-xl prose-p:text-lg mx-auto   */
-    <div className={cn(article_grid_variants(), article_variants({ variant: "card" }))}>
+    <div
+      className={cn(
+        article_grid_variants(),
+        article_variants({ variant: "card" }),
+      )}
+    >
       {articles.map((article, index) => (
         <PublishedArticleDrizzleCard
           key={article.id}

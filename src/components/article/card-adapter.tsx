@@ -21,13 +21,6 @@ import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 import { ArticleCard } from "./card";
 import { get_s3_prefix } from "~/lib/s3-publish";
 import { env } from "~/env";
-/* const ArticleCard = dynamic(
-  () => import("./card").then((mod) => mod.ArticleCard),
-  {
-    ssr: false,
-    loading: () => <Skeleton className="h-96 w-full" />,
-  },
-); */
 
 type SelectPublishedArticlesToAuthors =
   typeof PublishedArticlesToAuthors.$inferSelect & {
@@ -54,17 +47,14 @@ export type DraftArticleWithAuthors = typeof DraftArticle.$inferSelect & {
 
 export const DraftArticleDrizzleCard = ({
   article,
-  no_link,
   ref,
 }: {
   article: DraftArticleWithAuthors;
-  no_link?: boolean,
   ref?: IntersectionRef;
 }) => {
   return (
     <ArticleCard
       ref={ref}
-      no_link={no_link}
       title={article.title}
       url={get_draft_article_link(article.id)}
       content_preview={convert_content_to_text(article.content?.blocks, true).slice(0, 1000)}

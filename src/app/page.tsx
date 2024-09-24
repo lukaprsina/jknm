@@ -23,16 +23,16 @@ export default async function HomePageServer() {
   await api.author.get_all.prefetch();
   const drafts = session ? await api.article.get_all_drafts() : undefined;
 
-  await api.article.get_infinite_published.prefetch({
+  const test = await api.article.get_infinite_published({
     limit: 6 * 5,
   });
+
+  console.log("infinite articles page", test.data.length);
 
   if (!session) {
     return (
       <Shell without_footer>
-        <div
-          className={cn(page_variants(), article_variants())}
-        >
+        <div className={cn(page_variants(), article_variants())}>
           <InfiniteArticles />
         </div>
       </Shell>

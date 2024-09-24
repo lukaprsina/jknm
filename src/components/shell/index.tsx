@@ -57,7 +57,10 @@ export async function Shell({
           )}
         />
         <main
-          className={cn("w-full", show_aside && "ml-[300px] flex-1 flex-grow not_center:ml-0")}
+          className={cn(
+            "w-full",
+            show_aside && "ml-[300px] flex-1 flex-grow not_center:ml-0",
+          )}
           id="shell-main"
         >
           {children}
