@@ -109,7 +109,7 @@ def iterate_page_one_dir(directory: Path):
 
 
 def main():
-    iterate_page_one_dir(Path(base_path) / "publiciranje")
+    iterate_page_one_dir(Path(base_path) / "varstvo")
     """ for entry in os.listdir(base_path):
         absolute = os.path.join(base_path, entry)
         if os.path.isfile(absolute):
