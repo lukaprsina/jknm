@@ -42,7 +42,7 @@ export function InfiniteArticles() {
 
     // hydration error fix
     setTimeout(() => {
-      console.log("first load false", firstLoad);
+      // console.log("first load false", firstLoad);
       setFirstLoad(false);
     }, 0);
   }, [firstLoad]);
@@ -51,7 +51,7 @@ export function InfiniteArticles() {
     (index: number) => {
       const ref_index = articles.length - 1 - ARTICLE_LOAD_MORE_OFFSET;
       const is_sentinel = index === Math.max(ref_index, 0);
-      console.log("load more ref", ref_index);
+      // console.log("load more ref", ref_index);
       return is_sentinel ? ref : undefined;
     },
     [articles, ref],
@@ -59,13 +59,13 @@ export function InfiniteArticles() {
 
   useEffect(() => {
     if (isIntersecting && !firstLoad && !article_api.isFetching) {
-      void article_api.fetchNextPage()
+      void article_api.fetchNextPage();
     }
   }, [isIntersecting, article_api, firstLoad]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     console.log("infinite articles", { articles, test, article_api });
-  }, [article_api, articles, test]);
+  }, [article_api, articles, test]); */
 
   if (articles.length === 0) {
     return (

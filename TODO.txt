@@ -1,7 +1,10 @@
+page metadata (title)
+desn klik na novičke da enak meni
+algolia no border?
+DANGER: avtor v novici ne dela!!
+
 thumbnail-custom.png ni nujno da je png
 opozori, če url že obstaja
-odstrani slike avtorji
-galerija mobile ne dela
 author card when hover
 algolia author faceting
 

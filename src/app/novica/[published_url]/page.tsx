@@ -5,6 +5,7 @@ import { getServerAuthSession } from "~/server/auth";
 import { read_date_from_url } from "~/lib/format-date";
 import { ArticleNotFound } from "~/components/component-not-found";
 import { PublishedContent, TabbedContent } from "~/components/content";
+import type { Metadata, ResolvingMetadata } from "next";
 
 interface NovicaProps {
   params: {
@@ -13,28 +14,30 @@ interface NovicaProps {
   searchParams: Record<string, string | string[] | undefined>;
 }
 
+export async function generateMetadata(
+  { params: { published_url }, searchParams }: NovicaProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const { published } = await get_articles(published_url, searchParams);
+  const awaited_parent = await parent;
+
+  let title = awaited_parent.title?.absolute;
+  if (published?.title) {
+    title = published.title;
+  }
+
+  return {
+    title,
+  };
+}
+
 export default async function NovicaPage({
   params: { published_url },
   searchParams,
 }: NovicaProps) {
-  await api.author.get_all.prefetch();
   const session = await getServerAuthSession();
 
-  const decoded = decodeURIComponent(published_url);
-  let day: string | undefined;
-
-  for (const key in searchParams) {
-    if (key !== "dan") continue;
-    const value = searchParams[key];
-    if (typeof value !== "string") continue;
-    day = value;
-    break;
-  }
-
-  const { draft, published } = await api.article.get_article_by_published_url({
-    url: decoded,
-    created_at: day ? read_date_from_url(day) : undefined,
-  });
+  const { draft, published } = await get_articles(published_url, searchParams);
 
   if (!published) {
     return (
@@ -54,4 +57,27 @@ export default async function NovicaPage({
       <ImageGallery />
     </Shell>
   );
+}
+
+async function get_articles(
+  published_url: string,
+  searchParams: Record<string, string | string[] | undefined>,
+) {
+  await api.author.get_all.prefetch();
+
+  const decoded = decodeURIComponent(published_url);
+  let day: string | undefined;
+
+  for (const key in searchParams) {
+    if (key !== "dan") continue;
+    const value = searchParams[key];
+    if (typeof value !== "string") continue;
+    day = value;
+    break;
+  }
+
+  return await api.article.get_article_by_published_url({
+    url: decoded,
+    created_at: day ? read_date_from_url(day) : undefined,
+  });
 }
