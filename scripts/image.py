@@ -29,10 +29,11 @@ def convert_title_to_url(dangerous_url: str) -> str:
 base_path = Path.cwd() / "src/app/(static)"
 
 sorted_dirs = [
-    "01 Dolenjski kras",
-    "02 Kanin",
-    "03 Grmeč (BiH)",
-    "04 Biološke raziskave",
+    "01 Kataster jam",
+    "02 Izobraževanje",
+    "03 Etični kodeks",
+    "04 Društvo v javnem interesu",
+    "05 Jamarska reševalna služba",
 ]
 
 
@@ -43,7 +44,7 @@ def iterate_page_subdir(directory: Path):
     for entry in files:
         absolute = directory / entry
         relative = absolute.relative_to(directory.parent)
-        stem = absolute.stem[6:]
+        stem = absolute.stem[9:]
         name = convert_title_to_url(stem)
 
         slug = name
@@ -109,7 +110,7 @@ def iterate_page_one_dir(directory: Path):
 
 
 def main():
-    iterate_page_one_dir(Path(base_path) / "varstvo")
+    iterate_page(Path(base_path) / "klub")
     """ for entry in os.listdir(base_path):
         absolute = os.path.join(base_path, entry)
         if os.path.isfile(absolute):
