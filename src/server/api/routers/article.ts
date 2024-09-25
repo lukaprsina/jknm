@@ -25,10 +25,9 @@ import {
   delete_objects,
   delete_s3_directory,
   rename_s3_files_and_content,
+  s3_copy_thumbnails,
 } from "~/server/s3-utils";
 import { env } from "~/env";
-import type { S3CopySourceInfo } from "~/lib/s3-publish";
-import { s3_copy, s3_copy_file } from "~/lib/s3-publish";
 import { convert_article_to_algolia_object } from "~/lib/algoliasearch";
 
 export const article_router = createTRPCRouter({
@@ -247,15 +246,13 @@ export const article_router = createTRPCRouter({
 
         if (input.author_ids.length !== 0) {
           const values = input.author_ids.map((author_id, index) => ({
-              author_id,
-              draft_id: input.draft_id,
-              order: index,
-            }))
+            author_id,
+            draft_id: input.draft_id,
+            order: index,
+          }));
 
           console.log("save_draft values", values);
-          await tx.insert(DraftArticlesToAuthors).values(
-            values
-          );
+          await tx.insert(DraftArticlesToAuthors).values(values);
         }
 
         const first_draft = await tx.query.DraftArticle.findFirst({
@@ -300,6 +297,11 @@ export const article_router = createTRPCRouter({
 
           let published: PublishedArticleWithAuthors | undefined;
 
+          /*
+          if published_id is provided, check if it has draft
+          if it has, return draft
+          else, create draft from published
+           */
           if (input.published_id) {
             published = await tx.query.PublishedArticle.findFirst({
               where: eq(PublishedArticle.id, input.published_id),
@@ -331,7 +333,7 @@ export const article_router = createTRPCRouter({
             if (draft) return draft;
           }
 
-          // if draft_article is provided, create draft
+          // values for draft
           let values: typeof DraftArticle.$inferInsert | undefined = undefined;
           if (input.article) {
             values = input.article;
@@ -355,6 +357,7 @@ export const article_router = createTRPCRouter({
           assert_one(created_drafts);
           const created_draft = created_drafts[0];
 
+          // we update content with renamed urls
           const renamed_content = created_draft.content
             ? await rename_s3_files_and_content(
                 created_draft.content,
@@ -363,7 +366,6 @@ export const article_router = createTRPCRouter({
               )
             : undefined;
 
-          // update content with renamed urls
           if (renamed_content) {
             await tx
               .update(DraftArticle)
@@ -373,73 +375,26 @@ export const article_router = createTRPCRouter({
               .where(eq(DraftArticle.id, created_draft.id));
           }
 
-          // upload thumbnails
-          if (published?.id) {
-            const names: string[] = [];
-            if (input.article?.thumbnail_crop) {
-              names.push("thumbnail.png");
-              if (input.article.thumbnail_crop.uploaded_custom_thumbnail) {
-                names.push("thumbnail-uploaded.png");
-              }
-            }
-
-            console.log("get_or_create_draft names", names, input.article?.thumbnail_crop);
-            const s3_url = get_s3_draft_directory(created_draft.id);
-
-            for (const name of names) {
-              const source = {
-                file_name: name,
-                source_bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
-                source_path: get_s3_published_directory(
-                  published.url,
-                  published.created_at,
-                ),
-                destination_url: `${s3_url}/thumbnail.png`,
-              } satisfies S3CopySourceInfo;
-
-              await s3_copy_file(
-                source,
-                env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
-                s3_url,
-              );
-            }
-          }
-
           // copy thumbnails from published to draft
           if (published?.id) {
-            const s3_url = get_s3_draft_directory(created_draft.id);
-            const names: string[] = []; // = ["thumbnail.png", "thumbnail-uploaded.png"];
-            if (published.thumbnail_crop) {
-              names.push("thumbnail.png");
-              if (published.thumbnail_crop.uploaded_custom_thumbnail) {
-                names.push("thumbnail-uploaded.png");
-              }
-            }
-
-            const thumbnail_sources = names.map(
-              (name) =>
-                ({
-                  file_name: name,
-                  source_bucket: env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
-                  source_path: get_s3_published_directory(
-                    published.url,
-                    published.created_at,
-                  ),
-                  destination_url: `${s3_url}/thumbnail.png`,
-                }) satisfies S3CopySourceInfo,
-            );
-
-            for (const source of thumbnail_sources) {
-              await s3_copy_file(
-                source,
-                env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
-                s3_url,
-              );
-            }
+            await s3_copy_thumbnails({
+              source_bucket: env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+              source_path: get_s3_published_directory(
+                published.url,
+                published.created_at,
+              ),
+              destination_bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+              destination_url: get_s3_draft_directory(created_draft.id),
+              thumbnail_crop: values.thumbnail_crop ?? undefined,
+            });
           }
 
+          /* 
+          add authors from old published article
+          because we are creating a new draft,
+            we don't need to delete old draft authors
+          */
           if (published && published.published_articles_to_authors.length > 0) {
-            // because we are creating a new draft, we don't need to delete old authors
             await tx.insert(DraftArticlesToAuthors).values(
               published.published_articles_to_authors.map((author, index) => ({
                 author_id: author.author_id,
@@ -449,6 +404,7 @@ export const article_router = createTRPCRouter({
             );
           }
 
+          // return draft article with authors
           const draft_returning = await tx.query.DraftArticle.findFirst({
             where: eq(DraftArticle.id, created_draft.id),
             with: {
@@ -488,7 +444,8 @@ export const article_router = createTRPCRouter({
       return await ctx.db.transaction(async (tx) => {
         let draft_article: typeof DraftArticle.$inferSelect | undefined;
         let published_article: typeof PublishedArticle.$inferSelect | undefined;
-        // check if draft exists
+
+        // if draft_id is provided, get the draft and published article
         if (input.draft_id) {
           draft_article = await tx.query.DraftArticle.findFirst({
             where: eq(DraftArticle.id, input.draft_id),
@@ -507,12 +464,12 @@ export const article_router = createTRPCRouter({
           }
         }
 
+        // delete content from published article, which we overwrite
         if (published_article) {
-          // delete old content
           const s3_url = get_s3_published_directory(
             published_article.url,
             published_article.created_at,
-          )
+          );
 
           await delete_s3_directory(
             env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
@@ -520,12 +477,13 @@ export const article_router = createTRPCRouter({
           );
         }
 
+        // new published article value
         const value = klona(input.article);
         if (!value.created_at) throw new Error("created_at is required");
 
         const renamed_url = convert_title_to_url(value.title);
 
-        const s3_url = get_s3_published_directory(
+        const published_s3_url = get_s3_published_directory(
           renamed_url,
           value.created_at,
         );
@@ -534,44 +492,27 @@ export const article_router = createTRPCRouter({
         const renamed_content = value.content
           ? await rename_s3_files_and_content(
               value.content,
-              s3_url,
+              published_s3_url,
               false,
             )
           : undefined;
 
         // upload thumbnails
         if (draft_article?.id) {
-          const names: string[] = []; // = ["thumbnail.png", "thumbnail-uploaded.png"];
-          if (input.article.thumbnail_crop) {
-            names.push("thumbnail.png");
-            if (input.article.thumbnail_crop.uploaded_custom_thumbnail) {
-              names.push("thumbnail-uploaded.png");
-            }
-          }
-
-          console.log("publish names", names, input.article.thumbnail_crop);
-
-          for (const name of names) {
-            const source = {
-              file_name: name,
-              source_bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
-              source_path: get_s3_draft_directory(draft_article.id),
-              destination_url: `${s3_url}/thumbnail.png`,
-            } satisfies S3CopySourceInfo;
-
-            await s3_copy_file(
-              source,
-              env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
-              s3_url,
-            );
-          }
+          await s3_copy_thumbnails({
+            source_bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+            source_path: get_s3_draft_directory(draft_article.id),
+            destination_bucket: env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+            destination_url: published_s3_url,
+            thumbnail_crop: value.thumbnail_crop ?? undefined,
+          });
         }
 
         value.url = renamed_url;
-        value.content = renamed_content
+        value.content = renamed_content;
 
+        // finally insert or update published article
         if (published_article?.id) {
-          // update if draft had published_id
           const published_articles = await tx
             .update(PublishedArticle)
             .set(value)
@@ -591,6 +532,7 @@ export const article_router = createTRPCRouter({
           published_article = published_articles[0];
         }
 
+        // update authors
         await tx
           .delete(PublishedArticlesToAuthors)
           .where(
@@ -619,6 +561,7 @@ export const article_router = createTRPCRouter({
           );
         }
 
+        // get updated published article with authors to return
         const published_article_with_authors =
           await tx.query.PublishedArticle.findFirst({
             where: eq(PublishedArticle.id, published_article.id),
@@ -633,6 +576,7 @@ export const article_router = createTRPCRouter({
         if (!published_article_with_authors)
           throw new Error("Published draft_article not found");
 
+        // update algolia index
         const algolia = searchClient(
           env.NEXT_PUBLIC_ALGOLIA_ID,
           env.ALGOLIA_ADMIN_KEY,
@@ -720,6 +664,7 @@ export const article_router = createTRPCRouter({
     .input(z.number())
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.transaction(async (tx) => {
+        // get published article
         const all_published = await tx.query.PublishedArticle.findMany({
           where: eq(PublishedArticle.id, input),
           with: {
@@ -733,6 +678,7 @@ export const article_router = createTRPCRouter({
         assert_one(all_published);
         const published = all_published[0];
 
+        // delete article from algolia index
         try {
           const algolia = searchClient(
             env.NEXT_PUBLIC_ALGOLIA_ID,
@@ -747,6 +693,7 @@ export const article_router = createTRPCRouter({
           console.error("algolia error", error);
         }
 
+        // get the current draft, which will be overwritten
         const all_drafts = await tx.query.DraftArticle.findMany({
           where: eq(DraftArticle.published_id, input),
         });
@@ -761,11 +708,12 @@ export const article_router = createTRPCRouter({
           );
         }
 
-        const s3_url = get_s3_published_directory(
+        const published_s3_url = get_s3_published_directory(
           published.url,
           published.created_at,
         );
 
+        // copy published article to draft
         const draft_fields = {
           published_id: null,
           content: published.content,
@@ -787,19 +735,54 @@ export const article_router = createTRPCRouter({
         assert_one(draft_return);
         const updated_or_created_draft = draft_return[0];
 
-        await s3_copy({
+        const draft_s3_url = get_s3_draft_directory(
+          updated_or_created_draft.id,
+        );
+
+        // rename urls and content
+        const renamed_content = published.content
+          ? await rename_s3_files_and_content(
+              published.content,
+              draft_s3_url,
+              true,
+            )
+          : undefined;
+
+        if (renamed_content) {
+          await tx
+            .update(DraftArticle)
+            .set({
+              content: renamed_content,
+            })
+            .where(eq(DraftArticle.id, updated_or_created_draft.id));
+        }
+
+        // copy thumbnails from published to draft, then delete the published directory
+        await s3_copy_thumbnails({
           source_bucket: env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
-          source_url: s3_url,
+          source_path: published_s3_url,
           destination_bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
-          destination_url: get_s3_draft_directory(updated_or_created_draft.id),
+          destination_url: draft_s3_url,
+          thumbnail_crop: published.thumbnail_crop ?? undefined,
         });
 
         await delete_s3_directory(
           env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
-          s3_url,
+          published_s3_url,
         );
 
-        return updated_or_created_draft;
+        // return updated draft with authors
+        const updated_draft = await tx.query.DraftArticle.findFirst({
+          where: eq(DraftArticle.id, updated_or_created_draft.id),
+          with: {
+            draft_articles_to_authors: {
+              with: { author: true },
+              orderBy: asc(PublishedArticlesToAuthors.order),
+            },
+          },
+        });
+
+        return updated_draft;
       });
     }),
 

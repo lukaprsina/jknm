@@ -3,7 +3,7 @@
 import "./editorjs-attaches.css";
 
 import type { RenderFn } from "editorjs-blocks-react-renderer";
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Blocks from "editorjs-blocks-react-renderer";
@@ -24,24 +24,19 @@ import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
 } from "../article/card-adapter";
-/* import dynamic from "next/dynamic";
-import { Skeleton } from "../ui/skeleton"; */
+import dynamic from "next/dynamic";
+import { Skeleton } from "../ui/skeleton";
 
-import ArticlePageDescription from "~/components/article/description/page-description";
-/* const ArticleCardDescription = dynamic(
-  () => import("~/components/draft_article/description/card-description"),
+// import ArticlePageDescription from "~/components/article/description/page-description";
+const ArticleCardDescription = dynamic(
+  () => import("~/components/article/card-description"),
   {
     ssr: false,
-    loading: () => <Skeleton className="h-[1em] w-full bg-[hsl(0_0%_90%)]" />,
+    loading: () => (
+      <Skeleton className="h-[1em] w-[300px] bg-[hsl(0_0%_90%)]" />
+    ),
   },
-); */
-/* const a = dynamic(
-  import("~/components/draft_article/description/page-description"),
-  {
-    // ssr: false,
-    loading: () => <Skeleton className="h-[1em] w-full bg-[hsl(0_0%_90%)]" />,
-  },
-); */
+);
 
 export function EditorToReact({
   article,
@@ -93,8 +88,22 @@ export function EditorToReact({
     <>
       <Card className="hidden pt-8 md:block">
         <CardHeader>
-          <h1>{heading}</h1>
-          <ArticlePageDescription
+          <h1
+            dangerouslySetInnerHTML={{
+              __html: heading ?? "Untitled",
+            }}
+          />
+          <ArticleCardDescription
+            author_ids={author_ids}
+            created_at={article.created_at}
+            featured={true}
+            old_id={
+              session && "old_id" in article
+                ? article.old_id?.toString()
+                : undefined
+            }
+          />
+          {/* <ArticlePageDescription3
             author_ids={author_ids}
             old_id={
               session && "old_id" in article
@@ -103,7 +112,7 @@ export function EditorToReact({
             }
             created_at={article.created_at}
             session={session}
-          />
+          /> */}
         </CardHeader>
         <CardContent>
           <Blocks
@@ -115,9 +124,9 @@ export function EditorToReact({
           />
         </CardContent>
       </Card>
-      <div className="pt-8 md:hidden">
+      {/* <div className="pt-8 md:hidden">
         <h1>{heading}</h1>
-        <ArticlePageDescription
+        <ArticlePageDescription2
           author_ids={author_ids}
           old_id={
             session && "old_id" in article
@@ -134,7 +143,7 @@ export function EditorToReact({
             attaches: AttachesRenderer,
           }}
         />
-      </div>
+      </div> */}
     </>
   );
 }

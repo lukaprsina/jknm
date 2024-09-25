@@ -1,7 +1,11 @@
 page metadata (title)
 desn klik na novičke da enak meni
 algolia no border?
-DANGER: avtor v novici ne dela!!
+unpublish ne kopira slik
+italic v naslovu ignoriran
+
+ko updataš avtorje in shraniš, se restorajo tastari
+skrij novičko ne posodobi urejevalnika
 
 thumbnail-custom.png ni nujno da je png
 opozori, če url že obstaja

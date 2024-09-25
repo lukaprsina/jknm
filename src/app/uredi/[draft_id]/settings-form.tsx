@@ -13,7 +13,6 @@ import {
 } from "~/components/ui/form";
 
 import { editor_store } from "~/components/editor/editor-store";
-import { DateTimePicker } from "~/components/date-time-picker";
 import { ImageSelector } from "./image-selector";
 import {
   DraftArticleContext,
@@ -44,100 +43,91 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
   });
 
   return (
-      <Form {...form}>
-        <form className="space-y-4">
-            <FormField
-              control={form.control}
-              name="created_at"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Čas objave</FormLabel>
-                  <FormControl>
-                    <DatePicker
-                      date={field.value}
-                      setDate={(date) => field.onChange(date)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="thumbnail_crop"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Naslovna slika</FormLabel>
-                  <FormControl>
-                    <ImageSelector
-                      image={field.value}
-                      setImage={(value) => {
-                        console.log("settings-form -> setImage", value)
-                        field.onChange(value);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          <Separator />
-          <div className="flex justify-between gap-2 items-center">
-
-            <Button
-              onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
-                editor_mutations.delete_both();
-                closeDialog();
-              })}
-              variant="destructive"
-            >
-              Zbriši novičko
-            </Button>
-            <div className="flex justify-end gap-1 items-center">
-              {published_article ? (
-                <>
-                  <Button
-                    onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
+    <Form {...form}>
+      <form className="space-y-4">
+        <FormField
+          control={form.control}
+          name="created_at"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Čas objave</FormLabel>
+              <FormControl>
+                <DatePicker date={field.value} setDate={field.onChange} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="thumbnail_crop"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Naslovna slika</FormLabel>
+              <FormControl>
+                <ImageSelector image={field.value} setImage={field.onChange} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Separator />
+        <div className="flex items-center justify-between gap-2">
+          <Button
+            onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
+              editor_mutations.delete_both();
+              closeDialog();
+            })}
+            variant="destructive"
+          >
+            Zbriši novičko
+          </Button>
+          <div className="flex items-center justify-end gap-1">
+            {published_article ? (
+              <>
+                <Button
+                  onClick={form.handleSubmit(
+                    (_: z.infer<typeof form_schema>) => {
                       editor_mutations.unpublish();
                       closeDialog();
-                    })}
-                    variant="secondary"
-                  >
-                    Skrij novičko
-                  </Button>
-                </>
-              ) : null}
-              <Button
-                onClick={form.handleSubmit(
-                  async (values: z.infer<typeof form_schema>) => {
-                    await editor_mutations.save_draft(
-                      values.created_at,
-                      values.thumbnail_crop,
-                    );
-                    closeDialog();
-                  },
-                )}
-                variant="secondary"
-              >
-                Shrani osnutek
-              </Button>
-              <Button
-                onClick={form.handleSubmit(
-                  async (values: z.infer<typeof form_schema>) => {
-                    await editor_mutations.publish(
-                      values.created_at,
-                      values.thumbnail_crop,
-                    );
-                    closeDialog();
-                  },
-                )}
-              >
-                Objavi spremembe
-              </Button>
-            </div>
+                    },
+                  )}
+                  variant="secondary"
+                >
+                  Skrij novičko
+                </Button>
+              </>
+            ) : null}
+            <Button
+              onClick={form.handleSubmit(
+                async (values: z.infer<typeof form_schema>) => {
+                  await editor_mutations.save_draft(
+                    values.created_at,
+                    values.thumbnail_crop,
+                  );
+                  closeDialog();
+                },
+              )}
+              variant="secondary"
+            >
+              Shrani osnutek
+            </Button>
+            <Button
+              onClick={form.handleSubmit(
+                async (values: z.infer<typeof form_schema>) => {
+                  await editor_mutations.publish(
+                    values.created_at,
+                    values.thumbnail_crop,
+                  );
+                  closeDialog();
+                },
+              )}
+            >
+              Objavi spremembe
+            </Button>
           </div>
-
-        </form>
-      </Form>
+        </div>
+      </form>
+    </Form>
   );
 }

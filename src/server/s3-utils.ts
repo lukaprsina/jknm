@@ -14,10 +14,8 @@ import sharp from "sharp";
 
 import { env } from "~/env";
 import type { S3CopySourceInfo } from "~/lib/s3-publish";
-import {
-  rename_urls_in_content,
-  s3_copy_file,
-} from "~/lib/s3-publish";
+import { rename_urls_in_content, s3_copy_file } from "~/lib/s3-publish";
+import type { ThumbnailType } from "~/lib/validators";
 
 export async function rename_s3_files_and_content(
   editor_content: OutputData,
@@ -27,12 +25,6 @@ export async function rename_s3_files_and_content(
   const destination_bucket = draft
     ? env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME
     : env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME;
-
-  /* console.log("rename_s3_files_and_content", {
-    editor_content,
-    destination_url,
-    destination_bucket,
-  }); */
 
   const { sources, new_content } = rename_urls_in_content(
     editor_content,
@@ -54,6 +46,40 @@ export async function rename_s3_files_and_content(
   }
 
   return new_content;
+}
+
+export async function s3_copy_thumbnails({
+  source_bucket,
+  source_path,
+  destination_bucket,
+  destination_url,
+  thumbnail_crop,
+}: {
+  source_bucket: string;
+  source_path: string;
+  destination_bucket: string;
+  destination_url: string;
+  thumbnail_crop: ThumbnailType | undefined;
+}) {
+  const names: string[] = [];
+
+  if (thumbnail_crop) {
+    names.push("thumbnail.png");
+    if (thumbnail_crop.uploaded_custom_thumbnail) {
+      names.push("thumbnail-uploaded.png");
+    }
+  }
+
+  for (const name of names) {
+    const source = {
+      file_name: name,
+      source_bucket,
+      source_path,
+      destination_url: `${destination_url}/thumbnail.png`,
+    } satisfies S3CopySourceInfo;
+
+    await s3_copy_file(source, destination_bucket, destination_url);
+  }
 }
 
 export async function s3_copy_between_buckets(
