@@ -29,14 +29,10 @@ def convert_title_to_url(dangerous_url: str) -> str:
 base_path = Path.cwd() / "src/app/(static)"
 
 sorted_dirs = [
-    "1962 Ustanovitev",
-    "1978 Ponovni zagon",
-    "1982–1987 Topliško obdobje",
-    "1988–1995 Gabrsko obdobje",
-    "1996–2001 Tečajniško obdobje",
-    "2002–2008 Mirnopeško obdobje",
-    "2008–2016 Čagankarsko obdobje",
-    "2017–2022 Obdobje presežkov",
+    "01 Dolenjski kras",
+    "02 Kanin",
+    "03 Grmeč (BiH)",
+    "04 Biološke raziskave",
 ]
 
 
@@ -89,7 +85,7 @@ def iterate_page(directory: Path):
 
 
 def main():
-    iterate_page(Path(base_path) / "zgodovina")
+    iterate_page(Path(base_path) / "raziskovanje")
     """ for entry in os.listdir(base_path):
         absolute = os.path.join(base_path, entry)
         if os.path.isfile(absolute):
