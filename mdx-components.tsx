@@ -7,11 +7,11 @@ import React from "react";
 function ImageWithCaption({
   caption,
   ...props
-}: ImageProps & { caption: React.ReactNode }) {
+}: ImageProps & { caption?: React.ReactNode }) {
   return (
     <figure>
       <Image {...props} />
-      <figcaption>{caption}</figcaption>
+      {caption && <figcaption>{caption}</figcaption>}
     </figure>
   );
 }

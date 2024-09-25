@@ -43,7 +43,7 @@ def iterate_page_subdir(directory: Path):
     for entry in files:
         absolute = directory / entry
         relative = absolute.relative_to(directory.parent)
-        stem = absolute.stem[9:]
+        stem = absolute.stem[6:]
         name = convert_title_to_url(stem)
 
         slug = name
@@ -84,8 +84,32 @@ def iterate_page(directory: Path):
     print(f"done with {directory}")
 
 
+def iterate_page_one_dir(directory: Path):
+    print(f"page {directory}: {sorted_dirs}")
+
+    if os.path.isdir(directory):
+        print("subdir", directory)
+        imports_set = iterate_page_subdir(directory)
+
+        for slug, relative, stem in imports_set:
+            print(f'import {slug} from "./{relative}"')
+
+        print()
+
+        for slug, relative, stem in imports_set:
+            print(f'<Image src={{{slug}}} alt="{stem}" caption="" />')
+
+        input()
+        print()
+        print()
+        print()
+    else:
+        print(f"missing {directory}")
+    print(f"done with {directory}")
+
+
 def main():
-    iterate_page(Path(base_path) / "raziskovanje")
+    iterate_page_one_dir(Path(base_path) / "publiciranje")
     """ for entry in os.listdir(base_path):
         absolute = os.path.join(base_path, entry)
         if os.path.isfile(absolute):
