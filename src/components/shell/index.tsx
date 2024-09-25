@@ -1,6 +1,6 @@
 import { cn } from "~/lib/utils";
 import { DesktopHeader } from "./desktop-header";
-import { Footer } from "./footer";
+import { FooterComponent } from "../footer";
 import { getServerAuthSession } from "~/server/auth";
 import type {
   DraftArticleWithAuthors,
@@ -8,6 +8,7 @@ import type {
 } from "../article/card-adapter";
 import { MobileHeader } from "./header";
 import React from "react";
+import { Separator } from "../ui/separator";
 
 interface ShellProps {
   children: React.ReactNode;
@@ -68,9 +69,10 @@ export async function Shell({
         </main>
       </div>
       {!without_footer ? (
-        <footer className="bottom-0">
-          <Footer />
-        </footer>
+        <>
+          <Separator />
+          <FooterComponent />
+        </>
       ) : undefined}
     </div>
   );

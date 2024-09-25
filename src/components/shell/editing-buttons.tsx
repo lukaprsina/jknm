@@ -38,10 +38,12 @@ export default function EditingButtons({
   return (
     <>
       {published_article && (
-        <EditButton variant="ghost" published_article_id={published_article.id} />
+        <EditButton
+          variant="ghost"
+          published_article_id={published_article.id}
+        />
       )}
       <MakeNewDraftButton
-        published_article_id={published_article?.id}
         className="dark:bg-primary/80 dark:text-primary-foreground"
         variant="ghost"
         size="icon"

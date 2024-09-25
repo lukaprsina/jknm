@@ -96,9 +96,9 @@ export function MyCarousel({ first_image_src }: { first_image_src?: string }) {
       // console.log("outside_callback", { default_image, image_refs });
       if (!default_image) return;
 
-      const all_refs = image_refs.current
-      all_refs.push(previous_ref.current)
-      all_refs.push(next_ref.current)
+      const all_refs = image_refs.current;
+      all_refs.push(previous_ref.current);
+      all_refs.push(next_ref.current);
 
       const is_clicked_outside = all_refs.every(
         (ref) => ref && !ref.contains(event.target as Node),
@@ -108,9 +108,9 @@ export function MyCarousel({ first_image_src }: { first_image_src?: string }) {
 
       if (is_clicked_outside) {
         gallery_store.set.default_image(undefined);
-        event.preventDefault()
+        event.preventDefault();
       }
-    }
+    };
 
     const scroll_callback = () => {
       if (!default_image) return;
@@ -200,9 +200,10 @@ function GalleryImage({
 
   return (
     <figure ref={ref} className="max-h-[90vh] max-w-[90vw]">
-      <div className="flex h-full max-h-[90vh] w-full max-w-[90vw] items-center justify-center">
+      <div className="flex h-full w-full items-center justify-center">
         <Image
-          className="object-fit h-full w-full rounded-xl"
+          // className="h-full w-full rounded-xl"
+          className="rounded-xl"
           src={image.file.url}
           alt={image.caption}
           // sizes="(max-width: 1500px) 100vw, 1500px"

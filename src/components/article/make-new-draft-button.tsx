@@ -17,9 +17,8 @@ import { get_draft_article_link } from "~/lib/article-utils";
 
 export default function MakeNewDraftButton({
   title,
-  published_article_id,
   ...props
-}: ButtonProps & { title?: string; published_article_id?: number }) {
+}: ButtonProps & { title?: string }) {
   const router = useRouter();
   const trpc_utils = api.useUtils();
 
@@ -41,7 +40,6 @@ export default function MakeNewDraftButton({
               onClick={() => {
                 create_draft.mutate({
                   article: get_content_from_title(title),
-                  published_id: published_article_id,
                 });
               }}
             />
