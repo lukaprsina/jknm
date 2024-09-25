@@ -13,8 +13,9 @@ import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
 } from "../article/card-adapter";
-import { FacebookIcon, LinksMenu, YoutubeIcon } from "./header";
+import { LinksMenu } from "./header";
 import { createStore } from "zustand-x";
+import { FacebookIcon, YoutubeIcon } from "./icons";
 
 export interface ShellStore {
   is_header_sticky: boolean;
@@ -24,7 +25,7 @@ export interface ShellStore {
 export const shell_store = createStore("shell-store")<ShellStore>({
   is_header_sticky: false,
   navbar_height: undefined,
-})
+});
 
 export function DesktopHeader({
   published_article,
@@ -53,7 +54,7 @@ export function DesktopHeader({
         shell_store.set.is_header_sticky(new_sticky);
       }
 
-      shell_store.set.navbar_height(sticky_navbar.current.clientHeight)
+      shell_store.set.navbar_height(sticky_navbar.current.clientHeight);
     };
 
     window.addEventListener("scroll", handleScroll);

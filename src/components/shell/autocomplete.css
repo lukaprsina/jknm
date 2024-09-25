@@ -10,26 +10,34 @@ body {
   overflow: visible;
 }
 
+.aa-DetachedContainer {
+  border-radius: 6px !important;
+}
+
+.aa-DetachedSearchButtonQuery {
+  max-width: 130px;
+}
+
 .aa-Panel {
   z-index: 5000;
 }
 
 .aa-Form {
   border: 0;
-  border-radius: 6px;
+  border-radius: 6px !important;
 }
 
 .aa-DetachedSearchButton {
   border: 0;
-  border-radius: 6px;
-  padding-right: 20px!important;
+  border-radius: 6px !important;
+  padding-right: 20px !important;
   /*padding-left: 20px!important;*/
 }
 
 .aa-Autocomplete {
   border: 0;
   box-sizing: border-box;
-  border-radius: 6px; /* calc(var(--radius) - 2px) */
+  /* border-radius: 32px; calc(var(--radius) - 2px) */
   height: 36px;
 }
 

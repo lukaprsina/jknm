@@ -1,44 +1,81 @@
-'use client'
+import Link from "next/link";
+import { Mail, Phone } from "lucide-react";
+import {
+  FacebookIcon,
+  InstagramIcon,
+  TwitterIcon,
+  YoutubeIcon,
+} from "./shell/icons";
 
-import Link from "next/link"
-
-export function FooterComponent() {
+export function Footer() {
   return (
-    <footer className="bg-gray-900 text-white py-12">
+    <footer className="bg-gray-900 py-12 text-white">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between space-y-8 md:space-y-0 md:space-x-8">
+        <div className="flex flex-col justify-between space-y-8 md:flex-row md:space-x-8 md:space-y-0">
           <div className="flex-1">
-            <h2 className="text-xl font-bold mb-4">Company</h2>
+            <h2 className="mb-4 text-xl font-bold">Vizitka</h2>
+            <address className="mb-4 not-italic">
+              Jamarski klub Novo mesto
+              <br />
+              Seidlova cest 29
+              <br />
+              8000 Novo mesto
+            </address>
+            <div className="text-sm">
+              <p>
+                <strong>TRR:</strong> 02970-0020299064
+              </p>
+              <p>
+                <strong>Davčna številka:</strong> 82533113
+              </p>
+              <p>Nismo zavezanci za DDV</p>
+            </div>
+          </div>
+          <div className="flex-1">
+            <h2 className="mb-4 text-xl font-bold">Kontakt</h2>
             <ul className="space-y-2">
-              <li><Link href="#" className="hover:text-gray-300">About Us</Link></li>
-              <li><Link href="#" className="hover:text-gray-300">Careers</Link></li>
-              <li><Link href="#" className="hover:text-gray-300">Press</Link></li>
-              <li><Link href="#" className="hover:text-gray-300">Blog</Link></li>
+              <li className="flex items-center">
+                <Mail className="mr-2 h-5 w-5" />
+                <Link
+                  href="mailto:info@jknm.si"
+                  className="hover:text-gray-300"
+                >
+                  info@jknm.si
+                </Link>
+              </li>
+              <li className="flex items-center">
+                <Phone className="mr-2 h-5 w-5" />
+                <Link href="tel:+38641871385" className="hover:text-gray-300">
+                  +386 (0)41 871 385 Zdravko Bučar
+                </Link>
+              </li>
             </ul>
           </div>
           <div className="flex-1">
-            <h2 className="text-xl font-bold mb-4">Products</h2>
-            <ul className="space-y-2">
-              <li><Link href="#" className="hover:text-gray-300">Features</Link></li>
-              <li><Link href="#" className="hover:text-gray-300">Pricing</Link></li>
-              <li><Link href="#" className="hover:text-gray-300">Security</Link></li>
-              <li><Link href="#" className="hover:text-gray-300">Enterprise</Link></li>
-            </ul>
-          </div>
-          <div className="flex-1">
-            <h2 className="text-xl font-bold mb-4">Resources</h2>
-            <ul className="space-y-2">
-              <li><Link href="#" className="hover:text-gray-300">Documentation</Link></li>
-              <li><Link href="#" className="hover:text-gray-300">Tutorials</Link></li>
-              <li><Link href="#" className="hover:text-gray-300">Support</Link></li>
-              <li><Link href="#" className="hover:text-gray-300">API Reference</Link></li>
+            <h2 className="mb-4 text-xl font-bold">Spremljajte nas</h2>
+            <ul className="flex space-x-4">
+              <li>
+                <FacebookIcon />
+              </li>
+              <li>
+                <InstagramIcon />
+              </li>
+              <li>
+                <YoutubeIcon />
+              </li>
+              <li>
+                <TwitterIcon />
+              </li>
             </ul>
           </div>
         </div>
-        <div className="mt-8 pt-8 border-t border-gray-700 text-center text-sm">
-          <p>&copy; 2023 Your Company Name. All rights reserved.</p>
+        <div className="mt-8 border-t border-gray-700 pt-8 text-center text-sm">
+          <p>
+            &copy; {new Date().getFullYear()} Jamarski klub Novo mesto. Vse
+            pravice pridržane.
+          </p>
         </div>
       </div>
     </footer>
-  )
+  );
 }

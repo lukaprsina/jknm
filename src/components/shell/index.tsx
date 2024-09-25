@@ -1,6 +1,6 @@
 import { cn } from "~/lib/utils";
 import { DesktopHeader } from "./desktop-header";
-import { FooterComponent } from "../footer";
+import { Footer } from "../footer";
 import { getServerAuthSession } from "~/server/auth";
 import type {
   DraftArticleWithAuthors,
@@ -68,12 +68,12 @@ export async function Shell({
           {children}
         </main>
       </div>
-      {!without_footer ? (
+      {without_footer ? undefined : (
         <>
           <Separator />
-          <FooterComponent />
+          <Footer />
         </>
-      ) : undefined}
+      )}
     </div>
   );
 }
