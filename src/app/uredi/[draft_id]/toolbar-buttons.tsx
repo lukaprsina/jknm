@@ -28,9 +28,9 @@ import { EditorContext } from "~/components/editor/editor-context";
 import { DraftArticleContext } from "~/components/article/context";
 import { useEditorMutations } from "~/hooks/use-editor-mutations";
 
-export function EditorButtons() {
+export function ToolbarButtons() {
   return (
-    <div className="flex items-center">
+    <div className="flex flex-wrap items-center">
       <ExportButton />
       <ImportButton />
       <SaveButton />

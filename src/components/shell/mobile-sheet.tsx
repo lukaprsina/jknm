@@ -58,8 +58,17 @@ export function MobileSheet({
           />
           <SheetDescription>Jamarski klub Novo mesto</SheetDescription>
         </SheetHeader>
-        <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-24 pl-6">
-          <div className="flex flex-col space-y-3">
+        <ScrollArea
+          id="mobile-toc"
+          className="my-4 h-[calc(100vh-8rem)] pb-24 pl-6"
+        ></ScrollArea>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+/* 
+<div className="flex flex-col space-y-3">
             {docsConfig.mainNav.map(
               (item) =>
                 item.href && (
@@ -101,11 +110,7 @@ export function MobileSheet({
               </div>
             ))}
           </div>
-        </ScrollArea>
-      </SheetContent>
-    </Sheet>
-  );
-}
+*/
 
 interface MobileLinkProps extends LinkProps {
   onOpenChange?: (open: boolean) => void;
@@ -127,7 +132,7 @@ function MobileLink({
       href={href}
       onClick={() => {
         // router.push(href.toString());
-        onOpenChange?.(false);
+        if (onOpenChange) onOpenChange(false);
       }}
       className={cn(className)}
       {...props}

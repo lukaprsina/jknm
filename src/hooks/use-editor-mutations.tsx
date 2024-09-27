@@ -181,9 +181,9 @@ export function useEditorMutations() {
         thumbnail_crop: thumbnail_crop ?? state.thumbnail_crop,
         editor_content,
         article_id: draft_article.id,
-        author_ids: draft_article.draft_articles_to_authors.map(
+        /* author_ids: draft_article.draft_articles_to_authors.map(
           (a) => a.author_id,
-        ),
+        ), */
       });
 
       /* console.log("editor mutation save_draft", {

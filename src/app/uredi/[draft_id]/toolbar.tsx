@@ -8,7 +8,7 @@ import { MultiSelect } from "~/components/multi-select";
 import { EditorContext } from "~/components/editor/editor-context";
 import { editor_store } from "~/components/editor/editor-store";
 import { useAllAuthors } from "~/components/authors";
-import { EditorButtons } from "./toolbar-buttons";
+import { ToolbarButtons } from "./toolbar-buttons";
 
 export function MyToolbar() {
   const editor_context = useContext(EditorContext);
@@ -29,7 +29,7 @@ export function MyToolbar() {
           ({
             label: user.name,
             value: user.id.toString(),
-            icon: undefined
+            icon: undefined,
             /*icon: ({ className }: { className?: string }) => {
               if (!user.image || !user.name) return;
 
@@ -53,7 +53,7 @@ export function MyToolbar() {
   if (!editor_context) return null;
   return (
     <div className="flex flex-col justify-between gap-4">
-      <div className="flex w-full items-center justify-between p-4">
+      <div className="flex w-full flex-wrap items-center justify-between p-4">
         <div className="flex items-center gap-2">
           <MultiSelect
             onValueChange={(value) => {
@@ -71,7 +71,7 @@ export function MyToolbar() {
             {editor_context.savingText}
           </span>
         </div>
-        <EditorButtons />
+        <ToolbarButtons />
       </div>
     </div>
   );

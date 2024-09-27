@@ -174,16 +174,14 @@ function TocPortal({
 export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
   const [activeAnchors, setActiveAnchors] = useState<string[]>([]);
   const aside_ref = useRef<HTMLElement | null>(null);
+  const mobile_ref = useRef<HTMLElement | null>(null);
   const main_ref = useRef<HTMLElement | null>(null);
   const md_breakpoint = useBreakpoint("md");
 
   useEffect(() => {
-    const possible_main = document.getElementById("shell-main");
-    const possible_aside = document.getElementById("shell-aside");
-    if (!possible_aside || !possible_main) return;
-
-    main_ref.current = possible_main;
-    aside_ref.current = possible_aside;
+    main_ref.current = document.getElementById("shell-main");
+    aside_ref.current = document.getElementById("shell-aside");
+    mobile_ref.current = document.getElementById("mobile-toc");
   }, []);
 
   const scroll_callback = useThrottle(() => {
@@ -215,18 +213,26 @@ export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
   }, [scroll_callback]);
 
   const portal = useCallback(() => {
-    if (!aside_ref.current) return;
+    let element: HTMLElement | null = null;
+    if (md_breakpoint) {
+      element = aside_ref.current;
+    } else {
+      element = mobile_ref.current;
+    }
+    console.log("portal", { element, aside_ref, mobile_ref, md_breakpoint });
+
+    if (!element) return null;
 
     return createPortal(
       <TocPortal
         activeAnchors={activeAnchors}
         tableOfContents={tableOfContents}
       />,
-      aside_ref.current,
+      element,
     );
-  }, [activeAnchors, tableOfContents]);
+  }, [activeAnchors, md_breakpoint, tableOfContents]);
 
-  return md_breakpoint ? portal() : null;
+  return portal();
 }
 
 const useThrottle = (callback: (...args: unknown[]) => void, limit: number) => {
