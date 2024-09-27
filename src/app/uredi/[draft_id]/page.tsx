@@ -12,6 +12,7 @@ import { getServerAuthSession } from "~/server/auth";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import MakeNewDraftButton from "~/components/article/make-new-draft-button";
+import type { ResolvingMetadata, Metadata } from "next";
 
 const Editor = dynamic(() => import("./editor"), {
   ssr: false,
@@ -20,6 +21,31 @@ const Editor = dynamic(() => import("./editor"), {
 interface EditorPageProps {
   params: {
     draft_id: string;
+  };
+}
+
+export async function generateMetadata(
+  { params: { draft_id } }: EditorPageProps,
+  _parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const session = await getServerAuthSession();
+  if (!session)
+    return {
+      title: "Napaka",
+    };
+
+  const decoded = decodeURIComponent(draft_id);
+  const novica_id = parseInt(decoded);
+
+  if (isNaN(novica_id))
+    return {
+      title: "Napaka",
+    };
+
+  const { draft } = await api.article.get_article_by_draft_id(novica_id);
+
+  return {
+    title: draft ? draft.title : "Novica",
   };
 }
 

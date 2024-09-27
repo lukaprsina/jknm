@@ -594,6 +594,21 @@ export const article_router = createTRPCRouter({
       });
     }),
 
+  check_if_url_duplicate: protectedProcedure
+    .input(z.object({ url: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const urls = await ctx.db.query.PublishedArticle.findMany({
+        columns: {
+          id: true,
+          url: true,
+          created_at: true,
+        },
+        where: eq(PublishedArticle.url, input.url),
+      });
+
+      return { urls };
+    }),
+
   sync_duplicate_urls: protectedProcedure.mutation(async ({ ctx }) => {
     return await ctx.db.transaction(async (tx) => {
       // update duplicated_urls

@@ -16,6 +16,10 @@ import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { MyToolbar } from "./toolbar";
 import { cn } from "~/lib/utils";
 import { article_variants } from "~/lib/page-variants";
+import { api } from "~/trpc/react";
+import { format_date_for_human } from "~/lib/format-date";
+import { Alert } from "~/components/ui/alert";
+import { TriangleAlertIcon } from "lucide-react";
 
 // const Toolbar = dynamic(() => import("./toolbar"), { ssr: false });
 
@@ -26,11 +30,38 @@ export default function MyEditor({
   draft: DraftArticleWithAuthors;
   published?: PublishedArticleWithAuthors;
 }) {
+  const store_url = editor_store.use.url();
+  const duplicate_urls = api.article.check_if_url_duplicate.useQuery({
+    url: store_url,
+  });
+
   return (
     <DraftArticleContext.Provider value={draft}>
       <PublishedArticleContext.Provider value={published}>
         <EditorProvider>
           <div className={cn("flex flex-col gap-6", article_variants())}>
+            {duplicate_urls.data?.urls.length !== 0 && (
+              <Alert>
+                <h3 className="flex gap-2 text-destructive">
+                  <TriangleAlertIcon />
+                  <span>
+                    Opozorilo: Obstajajo že članki z URL <b>{store_url}</b>
+                  </span>
+                </h3>
+                <p>
+                  Članki z istim URL-jem bodo imeli dodan datum nastanka v URL,
+                  da se izognemo konfliktom.
+                </p>
+                <ul>
+                  {duplicate_urls.data?.urls.map((article) => (
+                    <li key={article.id}>
+                      ID: {article.id}, ustvarjen na{" "}
+                      {format_date_for_human(article.created_at)}
+                    </li>
+                  ))}
+                </ul>
+              </Alert>
+            )}
             <Card className="mx-auto w-full">
               <CardHeader>
                 <MyToolbar />
