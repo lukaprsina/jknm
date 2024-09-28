@@ -1,7 +1,7 @@
 "use client";
 
 import type { LinkProps } from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 
 import { Logo } from "./logo";
@@ -23,6 +23,11 @@ import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
 } from "../article/card-adapter";
+import { createStore } from "zustand-x";
+
+export const mobile_nav_store = createStore("mobile-nav")<{ open: boolean }>({
+  open: false,
+});
 
 export function MobileSheet({
   published_article,
@@ -33,10 +38,15 @@ export function MobileSheet({
   draft_article?: DraftArticleWithAuthors;
   session: Session | null;
 }) {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
+  const open = mobile_nav_store.use.open();
 
   return (
-    <Sheet open={open} modal={false} onOpenChange={setOpen}>
+    <Sheet
+      open={open}
+      modal={false}
+      onOpenChange={(new_state) => mobile_nav_store.set.open(new_state)}
+    >
       <SheetTrigger asChild>
         <Button variant="outline" size="icon">
           <MenuIcon />
@@ -58,10 +68,9 @@ export function MobileSheet({
           />
           <SheetDescription>Jamarski klub Novo mesto</SheetDescription>
         </SheetHeader>
-        <ScrollArea
-          id="mobile-toc"
-          className="my-4 h-[calc(100vh-8rem)] pb-24 pl-6"
-        ></ScrollArea>
+        <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-24 pl-6">
+          <div id="mobile-toc" />
+        </ScrollArea>
       </SheetContent>
     </Sheet>
   );

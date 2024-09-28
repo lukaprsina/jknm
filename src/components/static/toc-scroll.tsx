@@ -8,6 +8,7 @@ import { cn } from "~/lib/utils";
 import { shell_store } from "~/components/shell/desktop-header";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
+import { mobile_nav_store } from "../shell/mobile-sheet";
 
 function get_heading_ids(toc: Toc): string[] {
   const heading_ids: string[] = [];
@@ -173,20 +174,35 @@ function TocPortal({
 
 export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
   const [activeAnchors, setActiveAnchors] = useState<string[]>([]);
-  const aside_ref = useRef<HTMLElement | null>(null);
+  const [asideRef, setAsideRef] = useState<HTMLElement | null>(null);
+  const [mobileRef, setMobileRef] = useState<HTMLElement | null>(null);
+  const [mainRef, setMainRef] = useState<HTMLElement | null>(null);
+  /* const aside_ref = useRef<HTMLElement | null>(null);
   const mobile_ref = useRef<HTMLElement | null>(null);
-  const main_ref = useRef<HTMLElement | null>(null);
+  const main_ref = useRef<HTMLElement | null>(null); */
   const md_breakpoint = useBreakpoint("md");
+  const mobile_sheet_open = mobile_nav_store.use.open();
 
   useEffect(() => {
-    main_ref.current = document.getElementById("shell-main");
+    /* main_ref.current = document.getElementById("shell-main");
     aside_ref.current = document.getElementById("shell-aside");
-    mobile_ref.current = document.getElementById("mobile-toc");
-  }, []);
+    mobile_ref.current = document.getElementById("mobile-toc"); */
+    setMainRef(document.getElementById("shell-main"));
+    setAsideRef(document.getElementById("shell-aside"));
+    // TODO: hack
+    if (mobile_sheet_open) {
+      setTimeout(() => {
+        const mobile_ref = document.getElementById("mobile-toc");
+        console.log("setting mobile_ref", mobile_ref);
+        setMobileRef(mobile_ref);
+      }, 100);
+    }
+  }, [mobile_sheet_open]);
 
   const scroll_callback = useThrottle(() => {
     console.log("scroll_callback");
-    if (!main_ref.current) return;
+    // if (!main_ref.current) return;
+    if (!mainRef) return;
 
     if (tableOfContents.length !== 1) return;
     const first_toc = tableOfContents[0];
@@ -197,7 +213,8 @@ export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
     const active_anchors = handle_anchor_highlighting({
       viewportHeight: window.innerHeight,
       heading_ids,
-      scrollTop: main_ref.current.scrollTop,
+      // scrollTop: main_ref.current.scrollTop,
+      scrollTop: mainRef.scrollTop,
     });
 
     setActiveAnchors(active_anchors);
@@ -214,12 +231,17 @@ export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
 
   const portal = useCallback(() => {
     let element: HTMLElement | null = null;
-    if (md_breakpoint) {
+    /* if (md_breakpoint) {
       element = aside_ref.current;
     } else {
       element = mobile_ref.current;
     }
-    console.log("portal", { element, aside_ref, mobile_ref, md_breakpoint });
+    console.log("portal", { element, aside_ref, mobile_ref, md_breakpoint }); */
+    if (md_breakpoint) {
+      element = asideRef;
+    } else {
+      element = mobileRef;
+    }
 
     if (!element) return null;
 
@@ -230,7 +252,8 @@ export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
       />,
       element,
     );
-  }, [activeAnchors, md_breakpoint, tableOfContents]);
+    // }, [activeAnchors, md_breakpoint, tableOfContents]);
+  }, [activeAnchors, md_breakpoint, tableOfContents, asideRef, mobileRef]);
 
   return portal();
 }
