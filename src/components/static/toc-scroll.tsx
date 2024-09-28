@@ -9,6 +9,7 @@ import { shell_store } from "~/components/shell/desktop-header";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { mobile_nav_store } from "../shell/mobile-header";
+import { useThrottle } from "~/hooks/use-throttle";
 
 function get_heading_ids(toc: Toc): string[] {
   const heading_ids: string[] = [];
@@ -244,17 +245,3 @@ export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
 
   return portal();
 }
-
-const useThrottle = (callback: (...args: unknown[]) => void, limit: number) => {
-  const lastCallRef = useRef<number>(0);
-  return useCallback(
-    (...args: unknown[]) => {
-      const now = Date.now();
-      if (now - lastCallRef.current >= limit) {
-        lastCallRef.current = now;
-        callback(...args);
-      }
-    },
-    [callback, limit],
-  );
-};

@@ -13,9 +13,10 @@ import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
 } from "../article/adapter";
-import { LinksMenu } from "./header";
 import { createStore } from "zustand-x";
 import { FacebookIcon, YoutubeIcon } from "./icons";
+import { Navigation } from "./navigation";
+import { useThrottle } from "~/hooks/use-throttle";
 
 export interface ShellStore {
   is_header_sticky: boolean;
@@ -43,26 +44,31 @@ export function DesktopHeader({
   const is_header_sticky = shell_store.use.is_header_sticky();
   const navbar_height = shell_store.use.navbar_height();
 
+  const handle_scroll = useThrottle(() => {
+    if (!sticky_navbar.current || !header_ref.current) return;
+
+    // TODO: + 2 is a hack for the separator
+    const new_sticky = window.scrollY > header_ref.current.clientHeight + 2;
+
+    if (new_sticky !== shell_store.get.is_header_sticky()) {
+      shell_store.set.is_header_sticky(new_sticky);
+    }
+
+    shell_store.set.navbar_height(sticky_navbar.current.clientHeight);
+  }, 80);
+
   useEffect(() => {
-    const handleScroll = () => {
-      if (!sticky_navbar.current || !header_ref.current) return;
-
-      // TODO: + 2 is a hack for the separator
-      const new_sticky = window.scrollY > header_ref.current.clientHeight + 2;
-
-      if (new_sticky !== shell_store.get.is_header_sticky()) {
-        shell_store.set.is_header_sticky(new_sticky);
-      }
-
-      shell_store.set.navbar_height(sticky_navbar.current.clientHeight);
-    };
-
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handle_scroll);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", handle_scroll);
     };
-  }, []);
+  }, [handle_scroll]);
+
+  // activate on mount
+  useEffect(() => {
+    handle_scroll();
+  }, [handle_scroll]);
 
   return (
     <>
@@ -114,7 +120,8 @@ export function DesktopHeader({
           className,
         )}
       >
-        <LinksMenu />
+        {/* <LinksMenu /> */}
+        <Navigation />
       </div>
     </>
   );

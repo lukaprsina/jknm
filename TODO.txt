@@ -1,3 +1,7 @@
+soft scrolling on nav menu links
+remake scroll feedback
+
+
 page metadata (title)
 desn klik na novičke da enak meni
 algolia no border?
