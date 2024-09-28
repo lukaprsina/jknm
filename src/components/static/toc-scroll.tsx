@@ -8,7 +8,7 @@ import { cn } from "~/lib/utils";
 import { shell_store } from "~/components/shell/desktop-header";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
-import { mobile_nav_store } from "../shell/mobile-sheet";
+import { mobile_nav_store } from "../shell/mobile-header";
 
 function get_heading_ids(toc: Toc): string[] {
   const heading_ids: string[] = [];

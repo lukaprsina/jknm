@@ -6,9 +6,10 @@ import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
 } from "../article/adapter";
-import { MobileHeader } from "./header";
 import React from "react";
 import { Separator } from "../ui/separator";
+import { MobileHeader } from "./mobile-header";
+import { Navigation } from "./navigation";
 
 interface ShellProps {
   children: React.ReactNode;
@@ -33,6 +34,7 @@ export async function Shell({
 
   return (
     <div className={cn("w-full", className)}>
+      <Navigation />
       {!without_header ? (
         <header className="h-28 w-full md:h-auto">
           <DesktopHeader

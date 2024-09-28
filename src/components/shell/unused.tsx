@@ -60,13 +60,10 @@ export function MobileLink({
   children,
   ...props
 }: MobileLinkProps) {
-  //   const router = useRouter();
-
   return (
     <Link
       href={href}
       onClick={() => {
-        // router.push(href.toString());
         if (onOpenChange) onOpenChange(false);
       }}
       className={cn(className)}

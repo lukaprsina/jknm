@@ -25,17 +25,44 @@ import type {
 import { createStore } from "zustand-x";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { usePathname } from "next/navigation";
+import { cn } from "~/lib/utils";
 
-export const mobile_nav_store = createStore("mobile-nav")<{ open: boolean }>(
-  {
-    open: false,
-  },
-  {
-    persist: {
-      enabled: false,
-    },
-  },
-);
+export const mobile_nav_store = createStore("mobile-nav")<{ open: boolean }>({
+  open: false,
+});
+
+export function MobileHeader({
+  published_article,
+  draft_article,
+  session,
+  className,
+  ...props
+}: React.ComponentProps<"div"> & {
+  published_article?: PublishedArticleWithAuthors;
+  draft_article?: DraftArticleWithAuthors;
+  session: Session | null;
+}) {
+  return (
+    <div
+      className={cn(
+        "fixed top-0 z-40 flex w-full items-center justify-between bg-white/90 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        className,
+      )}
+      {...props}
+    >
+      {/* <Logo className="w-4" /> */}
+      <Link className="text-2xl font-bold" href="/">
+        Jamarski klub Novo mesto
+      </Link>
+      <MobileSheet
+        published_article={published_article}
+        draft_article={draft_article}
+        session={session}
+      />
+    </div>
+  );
+}
 
 export function MobileSheet({
   published_article,
@@ -48,14 +75,15 @@ export function MobileSheet({
 }) {
   const md_breakpoint = useBreakpoint("md");
   const open = mobile_nav_store.use.open();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (md_breakpoint) mobile_nav_store.set.open(false);
   }, [md_breakpoint]);
 
   useEffect(() => {
-    console.log("open", open);
-  }, [open]);
+    console.log("mobile sheet", pathname);
+  }, [pathname]);
 
   return (
     <Sheet

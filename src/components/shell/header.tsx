@@ -1,9 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-import { MobileSheet } from "./mobile-sheet";
 import { cn } from "~/lib/utils";
-import type { Session } from "next-auth";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,42 +11,6 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "~/components/ui/navigation-menu";
-import type {
-  DraftArticleWithAuthors,
-  PublishedArticleWithAuthors,
-} from "../article/adapter";
-
-export function MobileHeader({
-  published_article,
-  draft_article,
-  session,
-  className,
-  ...props
-}: React.ComponentProps<"div"> & {
-  published_article?: PublishedArticleWithAuthors;
-  draft_article?: DraftArticleWithAuthors;
-  session: Session | null;
-}) {
-  return (
-    <div
-      className={cn(
-        "fixed top-0 z-40 flex w-full items-center justify-between bg-white/90 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-        className,
-      )}
-      {...props}
-    >
-      {/* <Logo className="w-4" /> */}
-      <Link className="text-2xl font-bold" href="/">
-        Jamarski klub Novo mesto
-      </Link>
-      <MobileSheet
-        published_article={published_article}
-        draft_article={draft_article}
-        session={session}
-      />
-    </div>
-  );
-}
 
 export function LinksMenu() {
   return (
@@ -78,7 +40,7 @@ export function LinksMenu() {
   );
 }
 
-function DesktopHeaderLink({
+export function DesktopHeaderLink({
   href,
   children,
 }: {
@@ -101,7 +63,7 @@ function DesktopHeaderLink({
   );
 }
 
-const ListItem = React.forwardRef<
+export const ListItem = React.forwardRef<
   React.ComponentRef<"a">,
   React.ComponentPropsWithoutRef<"a">
 >(({ className, title, children, ...props }, ref) => {
