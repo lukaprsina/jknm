@@ -72,7 +72,7 @@ export function LinksMenu() {
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
-        <DesktopHeaderLink href="/arhiv">Arhiv</DesktopHeaderLink>
+        <DesktopHeaderLink href="/arhiv">Arhiv novic</DesktopHeaderLink>
       </NavigationMenuList>
     </NavigationMenu>
   );

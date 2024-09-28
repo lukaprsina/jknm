@@ -103,16 +103,6 @@ export function EditorToReact({
                 : undefined
             }
           />
-          {/* <ArticlePageDescription3
-            author_ids={author_ids}
-            old_id={
-              session && "old_id" in article
-                ? article.old_id?.toString()
-                : undefined
-            }
-            created_at={article.created_at}
-            session={session}
-          /> */}
         </CardHeader>
         <CardContent>
           <Blocks
@@ -124,17 +114,21 @@ export function EditorToReact({
           />
         </CardContent>
       </Card>
-      {/* <div className="pt-8 md:hidden">
-        <h1>{heading}</h1>
-        <ArticlePageDescription2
+      <div className="pt-8 md:hidden">
+        <h1
+          dangerouslySetInnerHTML={{
+            __html: heading ?? "Untitled",
+          }}
+        />
+        <ArticleCardDescription
           author_ids={author_ids}
+          created_at={article.created_at}
+          featured={true}
           old_id={
             session && "old_id" in article
               ? article.old_id?.toString()
               : undefined
           }
-          created_at={article.created_at}
-          session={session}
         />
         <Blocks
           data={editor_data}
@@ -143,7 +137,7 @@ export function EditorToReact({
             attaches: AttachesRenderer,
           }}
         />
-      </div> */}
+      </div>
     </>
   );
 }

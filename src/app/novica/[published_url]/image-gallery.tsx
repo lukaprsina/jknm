@@ -97,8 +97,10 @@ export function MyCarousel({ first_image_src }: { first_image_src?: string }) {
       if (!default_image) return;
 
       const all_refs = image_refs.current;
-      all_refs.push(previous_ref.current);
-      all_refs.push(next_ref.current);
+      if (next_ref.current && previous_ref.current) {
+        all_refs.push(previous_ref.current);
+        all_refs.push(next_ref.current);
+      }
 
       const is_clicked_outside = all_refs.every(
         (ref) => ref && !ref.contains(event.target as Node),

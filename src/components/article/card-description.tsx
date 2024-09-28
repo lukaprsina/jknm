@@ -7,7 +7,7 @@ import { Authors } from "../authors";
 import { CardDescription } from "../ui/card";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 
-export default function ArticleCardDescription({
+export default function ArticleDescription({
   author_ids,
   featured,
   created_at,
@@ -19,6 +19,13 @@ export default function ArticleCardDescription({
   old_id?: string;
 }) {
   const md_breakpoint = useBreakpoint("md");
+
+  console.log("ArticleDescription", {
+    author_ids,
+    featured,
+    created_at,
+    old_id,
+  });
 
   return (
     <CardDescription
@@ -36,12 +43,8 @@ export default function ArticleCardDescription({
       </span>
       {featured && md_breakpoint && author_ids.length !== 0 && <DotIcon />}
       <span>{format_date_for_human(created_at)}</span>
-      {old_id && (
-        <>
-          <DotIcon />
-          <span>#{old_id}</span>
-        </>
-      )}
+      {md_breakpoint && old_id && <DotIcon />}
+      {old_id && <span>#{old_id}</span>}
     </CardDescription>
   );
 }
