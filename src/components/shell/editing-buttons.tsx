@@ -18,7 +18,7 @@ import { SettingsDropdown } from "../settings";
 import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
-} from "../article/card-adapter";
+} from "../article/adapter";
 import { get_draft_article_link } from "~/lib/article-utils";
 
 export default function EditingButtons({

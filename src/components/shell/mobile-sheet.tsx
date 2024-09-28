@@ -21,7 +21,7 @@ import type { Session } from "next-auth";
 import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
-} from "../article/card-adapter";
+} from "../article/adapter";
 import { createStore } from "zustand-x";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";

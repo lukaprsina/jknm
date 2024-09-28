@@ -23,13 +23,13 @@ import { cn } from "~/lib/utils";
 import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
-} from "../article/card-adapter";
+} from "../article/adapter";
 import dynamic from "next/dynamic";
 import { Skeleton } from "../ui/skeleton";
 
 // import ArticlePageDescription from "~/components/article/description/page-description";
-const ArticleCardDescription = dynamic(
-  () => import("~/components/article/card-description"),
+const ArticleDescription = dynamic(
+  () => import("~/components/article/description"),
   {
     ssr: false,
     loading: () => (
@@ -93,10 +93,10 @@ export function EditorToReact({
               __html: heading ?? "Untitled",
             }}
           />
-          <ArticleCardDescription
+          <ArticleDescription
+            type="page"
             author_ids={author_ids}
             created_at={article.created_at}
-            featured={true}
             old_id={
               session && "old_id" in article
                 ? article.old_id?.toString()
@@ -120,10 +120,10 @@ export function EditorToReact({
             __html: heading ?? "Untitled",
           }}
         />
-        <ArticleCardDescription
+        <ArticleDescription
+          type="page"
           author_ids={author_ids}
           created_at={article.created_at}
-          featured={true}
           old_id={
             session && "old_id" in article
               ? article.old_id?.toString()

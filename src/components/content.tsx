@@ -1,7 +1,7 @@
 import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
-} from "~/components/article/card-adapter";
+} from "~/components/article/adapter";
 import { ArticleNotFound } from "~/components/component-not-found";
 import { cn } from "~/lib/utils";
 import { article_variants, page_variants } from "~/lib/page-variants";

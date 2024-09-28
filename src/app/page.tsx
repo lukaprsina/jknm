@@ -14,7 +14,7 @@ import {
   article_variants,
   page_variants,
 } from "~/lib/page-variants";
-import { DraftArticleDrizzleCard } from "~/components/article/card-adapter";
+import { DraftArticleDrizzleCard } from "~/components/article/adapter";
 
 export const dynamic = "force-dynamic";
 

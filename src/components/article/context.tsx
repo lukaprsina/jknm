@@ -4,7 +4,7 @@ import { createContext } from "react";
 import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
-} from "./card-adapter";
+} from "./adapter";
 
 export const PublishedArticleContext = createContext<
   PublishedArticleWithAuthors | undefined

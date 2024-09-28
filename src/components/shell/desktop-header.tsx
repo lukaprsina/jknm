@@ -12,7 +12,7 @@ import type { Session } from "next-auth";
 import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
-} from "../article/card-adapter";
+} from "../article/adapter";
 import { LinksMenu } from "./header";
 import { createStore } from "zustand-x";
 import { FacebookIcon, YoutubeIcon } from "./icons";

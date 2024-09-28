@@ -16,7 +16,7 @@ import {
 import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
-} from "../article/card-adapter";
+} from "../article/adapter";
 
 export function MobileHeader({
   published_article,

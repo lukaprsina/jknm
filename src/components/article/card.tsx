@@ -11,8 +11,8 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { Skeleton } from "../ui/skeleton";
 
-// import ArticleCardDescription from "./description/card-description";
-const ArticleCardDescription = dynamic(() => import("./card-description"), {
+// import ArticleDescription from "./description/card-description";
+const ArticleDescription = dynamic(() => import("./description"), {
   ssr: false,
   loading: () => <Skeleton className="h-[1em] w-[300px] bg-[hsl(0_0%_90%)]" />,
 });
@@ -87,9 +87,9 @@ export function ArticleCard({
               }}
             />
             <div className="flex w-full justify-between gap-2">
-              <ArticleCardDescription
+              <ArticleDescription
+                type={featured ? "card-featured" : "card"}
                 author_ids={author_ids}
-                featured={featured}
                 created_at={created_at}
               />
             </div>

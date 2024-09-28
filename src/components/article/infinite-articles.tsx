@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { api } from "~/trpc/react";
 import { useIntersectionObserver } from "usehooks-ts";
 import { article_grid_variants, article_variants } from "~/lib/page-variants";
-import { PublishedArticleDrizzleCard } from "./card-adapter";
+import { PublishedArticleDrizzleCard } from "./adapter";
 import { InfoCard } from "../info-card";
 import { cn } from "~/lib/utils";
 

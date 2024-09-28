@@ -5,7 +5,7 @@ import "./editor.css";
 import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
-} from "~/components/article/card-adapter";
+} from "~/components/article/adapter";
 import { EditorProvider } from "~/components/editor/editor-context";
 import { editor_store } from "~/components/editor/editor-store";
 import {

@@ -5,7 +5,7 @@ import { getServerAuthSession } from "~/server/auth";
 import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
-} from "../article/card-adapter";
+} from "../article/adapter";
 import { MobileHeader } from "./header";
 import React from "react";
 import { Separator } from "../ui/separator";

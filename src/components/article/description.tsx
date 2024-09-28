@@ -5,45 +5,33 @@ import { format_date_for_human } from "~/lib/format-date";
 import { cn } from "~/lib/utils";
 import { Authors } from "../authors";
 import { CardDescription } from "../ui/card";
-import { useBreakpoint } from "~/hooks/use-breakpoint";
 
 export default function ArticleDescription({
   author_ids,
-  featured,
+  type,
   created_at,
   old_id,
 }: {
   author_ids: number[];
-  featured?: boolean;
+  type: "card" | "card-featured" | "page";
   created_at: Date;
   old_id?: string;
 }) {
-  const md_breakpoint = useBreakpoint("md");
-
-  console.log("ArticleDescription", {
-    author_ids,
-    featured,
-    created_at,
-    old_id,
-  });
-
   return (
     <CardDescription
       className={cn(
         "flex w-full flex-wrap items-center gap-3 text-foreground",
-        author_ids.length === 0 ? "justify-end" : "justify-between",
-        featured &&
-          md_breakpoint &&
-          author_ids.length !== 0 &&
-          "justify-normal gap-0",
+        type === "card" ? "justify-between" : "justify-normal gap-0",
+        // author_ids.length === 0 ? "justify-end" : "justify-between",
+        // type === "card" && author_ids.length !== 0 && "justify-normal gap-0",
       )}
     >
       <span className="relative line-clamp-1 flex flex-grow-0 items-center justify-start text-ellipsis text-nowrap">
         <Authors author_ids={author_ids} />
       </span>
-      {featured && md_breakpoint && author_ids.length !== 0 && <DotIcon />}
+      {type !== "card" && author_ids.length !== 0 && <DotIcon />}
       <span>{format_date_for_human(created_at)}</span>
-      {md_breakpoint && old_id && <DotIcon />}
+      {type !== "card" && old_id && <DotIcon />}
       {old_id && <span>#{old_id}</span>}
     </CardDescription>
   );

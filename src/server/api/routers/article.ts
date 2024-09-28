@@ -20,7 +20,7 @@ import {
   get_s3_draft_directory,
   get_s3_published_directory,
 } from "~/lib/article-utils";
-import type { PublishedArticleWithAuthors } from "~/components/article/card-adapter";
+import type { PublishedArticleWithAuthors } from "~/components/article/adapter";
 import {
   delete_objects,
   delete_s3_directory,
