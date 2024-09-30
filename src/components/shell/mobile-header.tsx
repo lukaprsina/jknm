@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { Fragment, useEffect, useMemo } from "react";
 import Link from "next/link";
 
 import { Logo } from "./logo";
@@ -64,6 +64,15 @@ export function MobileHeader({
   );
 }
 
+const MOBILE_NAV_LINKS = [
+  { title: "Zgodovina", href: "zgodovina" },
+  { title: "Raziskovanje", href: "raziskovanje" },
+  { title: "Publiciranje", href: "publiciranje" },
+  { title: "Varstvo", href: "varstvo" },
+  { title: "Klub", href: "klub" },
+  { title: "Arhiv novic", href: "arhiv" },
+];
+
 export function MobileSheet({
   published_article,
   draft_article,
@@ -81,16 +90,22 @@ export function MobileSheet({
     if (md_breakpoint) mobile_nav_store.set.open(false);
   }, [md_breakpoint]);
 
-  useEffect(() => {
-    console.log("mobile sheet", pathname);
-  }, [pathname]);
+  const links: { title: string; href: string; active?: boolean }[] =
+    useMemo(() => {
+      return MOBILE_NAV_LINKS.map((link) => {
+        if (pathname.includes(link.href)) {
+          return { ...link, active: true };
+        }
+
+        return link;
+      });
+    }, [pathname]);
 
   return (
     <Sheet
       open={open}
       modal={false}
       onOpenChange={(new_state) => {
-        console.log("sheet open change", new_state);
         mobile_nav_store.set.open(new_state);
       }}
     >
@@ -121,7 +136,14 @@ export function MobileSheet({
           </VisuallyHidden>
         </SheetHeader>
         <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-24 pl-6">
-          <div id="mobile-toc" />
+          {links.map((link) => (
+            <Fragment key={link.href}>
+              <Link className="block" href={`/${link.href}`}>
+                {link.title}
+              </Link>
+              {link.active && <div id="mobile-toc" />}
+            </Fragment>
+          ))}
         </ScrollArea>
       </SheetContent>
     </Sheet>

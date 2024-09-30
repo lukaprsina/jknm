@@ -27,7 +27,7 @@ function get_heading_ids(toc: Toc): string[] {
 }
 
 const SCROLL_CALLBACK_THROTTLE_TIME = 80;
-const HEIGHT_CONSTANT = 150; // 75
+const HEIGHT_CONSTANT = 75; // 75
 
 function handle_anchor_highlighting({
   heading_ids,
@@ -128,18 +128,20 @@ function TocTree({
                 const yPosition =
                   anchor.getBoundingClientRect().top + window.scrollY + yOffset;
 
+                console.log("scrolling", { yPosition, yOffset });
+                mobile_nav_store.set.open(false);
                 window.scrollTo({ top: yPosition, behavior: "smooth" });
               }}
             >
               {entry.value}
             </Link>
 
-            {entry.children && (
+            {/* {entry.children && (
               <TocTree
                 activeAnchors={activeAnchors}
                 tableOfContents={entry.children}
               />
-            )}
+            )} */}
           </Fragment>
         );
       })}

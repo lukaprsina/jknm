@@ -61,7 +61,7 @@ function NavigationItem({
         {title}
       </NavigationMenuTrigger>
       <NavigationMenuContent className="relative z-50">
-        <ul className="z-50 grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+        <ul className="z-50 grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-1 lg:w-[600px]">
           {toc.at(0)?.children?.map((item) => (
             <ListItem
               key={item.id}

@@ -48,10 +48,18 @@ export function DesktopHeader({
     if (!sticky_navbar.current || !header_ref.current) return;
 
     // TODO: + 2 is a hack for the separator
-    const new_sticky = window.scrollY > header_ref.current.clientHeight + 2;
+    const should_be_sticky =
+      window.scrollY > header_ref.current.clientHeight + 2;
 
-    if (new_sticky !== shell_store.get.is_header_sticky()) {
-      shell_store.set.is_header_sticky(new_sticky);
+    console.log("handle scroll", {
+      clientHeight: sticky_navbar.current.clientHeight,
+      clientHeight2: header_ref.current.clientHeight,
+      new_sticky: should_be_sticky,
+      old_sticky: shell_store.get.is_header_sticky(),
+    });
+
+    if (should_be_sticky !== shell_store.get.is_header_sticky()) {
+      shell_store.set.is_header_sticky(should_be_sticky);
     }
 
     shell_store.set.navbar_height(sticky_navbar.current.clientHeight);
