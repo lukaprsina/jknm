@@ -1,12 +1,12 @@
-// @ts-expect-error - mdx import
+// @ ts-expect-error - mdx import
 import { tableOfContents as toc_zgodovina } from "~/app/(static)/zgodovina/page.mdx";
-// @ts-expect-error - mdx import
+// @ ts-expect-error - mdx import
 import { tableOfContents as toc_raziskovanje } from "~/app/(static)/raziskovanje/page.mdx";
-// @ts-expect-error - mdx import
+// @ ts-expect-error - mdx import
 import { tableOfContents as toc_publiciranje } from "~/app/(static)/publiciranje/page.mdx";
-// @ts-expect-error - mdx import
+// @ ts-expect-error - mdx import
 import { tableOfContents as toc_varstvo } from "~/app/(static)/varstvo/page.mdx";
-// @ts-expect-error - mdx import
+// @ ts-expect-error - mdx import
 import { tableOfContents as toc_klub } from "~/app/(static)/klub/page.mdx";
 import {
   NavigationMenu,
