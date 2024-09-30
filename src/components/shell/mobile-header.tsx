@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment, useEffect, useMemo } from "react";
+import React, { Fragment, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 
 import { Logo } from "./logo";
@@ -27,6 +27,7 @@ import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { usePathname } from "next/navigation";
 import { cn } from "~/lib/utils";
+import { shell_store } from "./desktop-header";
 
 export const mobile_nav_store = createStore("mobile-nav")<{ open: boolean }>({
   open: false,
@@ -43,8 +44,30 @@ export function MobileHeader({
   draft_article?: DraftArticleWithAuthors;
   session: Session | null;
 }) {
+  const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
+  const md_breakpoint = useBreakpoint("md");
+
+  useEffect(() => {
+    console.log("mobile md_breakpoint", md_breakpoint);
+    if (md_breakpoint) {
+      mobile_nav_store.set.open(false);
+      return;
+    }
+
+    if (!sticky_navbar_ref.current) return;
+
+    console.log(
+      "mobile setting navbar height",
+      sticky_navbar_ref.current.clientHeight,
+      { md_breakpoint },
+    );
+
+    shell_store.set.navbar_height(sticky_navbar_ref.current.clientHeight);
+  }, [md_breakpoint]);
+
   return (
     <div
+      ref={sticky_navbar_ref}
       className={cn(
         "fixed top-0 z-40 flex w-full items-center justify-between bg-white/90 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60",
         className,
@@ -82,13 +105,8 @@ export function MobileSheet({
   draft_article?: DraftArticleWithAuthors;
   session: Session | null;
 }) {
-  const md_breakpoint = useBreakpoint("md");
   const open = mobile_nav_store.use.open();
   const pathname = usePathname();
-
-  useEffect(() => {
-    if (md_breakpoint) mobile_nav_store.set.open(false);
-  }, [md_breakpoint]);
 
   const links: { title: string; href: string; active?: boolean }[] =
     useMemo(() => {
@@ -106,6 +124,7 @@ export function MobileSheet({
       open={open}
       modal={false}
       onOpenChange={(new_state) => {
+        console.log("setting mobile nav open", new_state);
         mobile_nav_store.set.open(new_state);
       }}
     >
@@ -138,7 +157,13 @@ export function MobileSheet({
         <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-24 pl-6">
           {links.map((link) => (
             <Fragment key={link.href}>
-              <Link className="block" href={`/${link.href}`}>
+              <Link
+                className="block"
+                href={`/${link.href}`}
+                onClick={() => {
+                  mobile_nav_store.set.open(false);
+                }}
+              >
                 {link.title}
               </Link>
               {link.active && <div id="mobile-toc" />}

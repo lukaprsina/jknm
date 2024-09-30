@@ -9,7 +9,9 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { mobile_nav_store } from "../shell/mobile-header";
 import { useThrottle } from "~/hooks/use-throttle";
-import { smooth_scroll } from "~/lib/smooth-scroll";
+import { smooth_scroll_store, SmoothScroll } from "../smooth-scroll";
+import React from "react";
+import { usePathname } from "next/navigation";
 
 function get_heading_ids(toc: Toc): string[] {
   const heading_ids: string[] = [];
@@ -97,6 +99,8 @@ function TocTree({
   activeAnchors: string[];
   tableOfContents: Toc;
 }) {
+  const pathname = usePathname();
+
   return (
     <Fragment>
       {tableOfContents.map((entry) => {
@@ -114,12 +118,11 @@ function TocTree({
               style={{ paddingLeft: `${entry.depth * 16}px` }}
               href={`#${entry.id}`}
               key={entry.id}
-              /* onClick={(e) => {
-                e.preventDefault();
+              onClick={(e) => {
                 if (!entry.id) return;
-
-                smooth_scroll(entry.id);
-              }} */
+                e.preventDefault();
+                smooth_scroll_store.set.set_both(pathname, entry.id);
+              }}
             >
               {entry.value}
             </Link>
@@ -186,7 +189,7 @@ export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
   }, [mobile_sheet_open]);
 
   const scroll_callback = useThrottle(() => {
-    console.log("scroll_callback");
+    // console.log("scroll_callback");
     if (!mainRef) return;
 
     if (tableOfContents.length !== 1) return;
@@ -233,5 +236,10 @@ export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
     );
   }, [activeAnchors, md_breakpoint, tableOfContents, asideRef, mobileRef]);
 
-  return portal();
+  return (
+    <>
+      <SmoothScroll />
+      {portal()}
+    </>
+  );
 }

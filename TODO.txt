@@ -1,5 +1,7 @@
-soft scrolling on nav menu links
-remake scroll feedback
+smooth scroll store, ki persista
+- ko link klikneš, v onclick nastaviš smooth scroll
+- vsak page mora imeti <SmoothScroll />, ki je client useEffect za scrollanje
+  - preveri še če se pathname ujema
 
 
 page metadata (title)

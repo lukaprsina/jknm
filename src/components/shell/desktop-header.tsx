@@ -17,6 +17,7 @@ import { createStore } from "zustand-x";
 import { FacebookIcon, YoutubeIcon } from "./icons";
 import { Navigation } from "./navigation";
 import { useThrottle } from "~/hooks/use-throttle";
+import { useBreakpoint } from "~/hooks/use-breakpoint";
 
 export interface ShellStore {
   is_header_sticky: boolean;
@@ -39,31 +40,45 @@ export function DesktopHeader({
   draft_article?: DraftArticleWithAuthors;
   session: Session | null;
 }) {
-  const sticky_navbar = useRef<HTMLDivElement | null>(null);
+  const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
   const header_ref = useRef<HTMLDivElement | null>(null);
   const is_header_sticky = shell_store.use.is_header_sticky();
   const navbar_height = shell_store.use.navbar_height();
+  const md_breakpoint = useBreakpoint("md");
 
   const handle_scroll = useThrottle(() => {
-    if (!sticky_navbar.current || !header_ref.current) return;
+    if (!header_ref.current) return;
 
     // TODO: + 2 is a hack for the separator
     const should_be_sticky =
       window.scrollY > header_ref.current.clientHeight + 2;
 
-    console.log("handle scroll", {
+    /* console.log("handle scroll", {
       clientHeight: sticky_navbar.current.clientHeight,
       clientHeight2: header_ref.current.clientHeight,
       new_sticky: should_be_sticky,
       old_sticky: shell_store.get.is_header_sticky(),
-    });
+    }); */
 
     if (should_be_sticky !== shell_store.get.is_header_sticky()) {
+      console.log("setting sticky", { should_be_sticky, md_breakpoint });
       shell_store.set.is_header_sticky(should_be_sticky);
     }
-
-    shell_store.set.navbar_height(sticky_navbar.current.clientHeight);
   }, 80);
+
+  useEffect(() => {
+    if (!sticky_navbar_ref.current) return;
+
+    if (md_breakpoint) {
+      console.log(
+        "desktop setting navbar height",
+        sticky_navbar_ref.current.clientHeight,
+        { md_breakpoint },
+      );
+
+      shell_store.set.navbar_height(sticky_navbar_ref.current.clientHeight);
+    }
+  }, [md_breakpoint]);
 
   useEffect(() => {
     window.addEventListener("scroll", handle_scroll);
@@ -121,7 +136,7 @@ export function DesktopHeader({
         }}
       />
       <div
-        ref={sticky_navbar}
+        ref={sticky_navbar_ref}
         className={cn(
           "relative z-40 flex w-full items-center justify-center px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:px-12",
           is_header_sticky ? "fixed top-0 bg-white/80 transition-colors" : null,
