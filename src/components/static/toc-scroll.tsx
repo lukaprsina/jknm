@@ -5,11 +5,11 @@ import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { cn } from "~/lib/utils";
-import { shell_store } from "~/components/shell/desktop-header";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { mobile_nav_store } from "../shell/mobile-header";
 import { useThrottle } from "~/hooks/use-throttle";
+import { smooth_scroll } from "~/lib/smooth-scroll";
 
 function get_heading_ids(toc: Toc): string[] {
   const heading_ids: string[] = [];
@@ -98,7 +98,7 @@ function TocTree({
   tableOfContents: Toc;
 }) {
   return (
-    <>
+    <Fragment>
       {tableOfContents.map((entry) => {
         if (!entry.id) return null;
 
@@ -114,24 +114,12 @@ function TocTree({
               style={{ paddingLeft: `${entry.depth * 16}px` }}
               href={`#${entry.id}`}
               key={entry.id}
-              onClick={(e) => {
-                // smooth scroll with offset for the sticky navbar
+              /* onClick={(e) => {
                 e.preventDefault();
                 if (!entry.id) return;
 
-                const anchor = document.getElementById(entry.id);
-                if (!anchor) return;
-                const navbar_height = shell_store.get.navbar_height();
-                if (typeof navbar_height !== "number") return;
-
-                const yOffset = -navbar_height; // offset by navbar height
-                const yPosition =
-                  anchor.getBoundingClientRect().top + window.scrollY + yOffset;
-
-                console.log("scrolling", { yPosition, yOffset });
-                mobile_nav_store.set.open(false);
-                window.scrollTo({ top: yPosition, behavior: "smooth" });
-              }}
+                smooth_scroll(entry.id);
+              }} */
             >
               {entry.value}
             </Link>
@@ -145,7 +133,7 @@ function TocTree({
           </Fragment>
         );
       })}
-    </>
+    </Fragment>
   );
 }
 

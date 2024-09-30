@@ -17,6 +17,9 @@ import {
 } from "~/components/ui/navigation-menu";
 import { DesktopHeaderLink, ListItem } from "./header";
 import type { Toc } from "@stefanprobst/rehype-extract-toc";
+import { smooth_scroll } from "~/lib/smooth-scroll";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
 
 export function Navigation() {
   return (
@@ -55,6 +58,18 @@ function NavigationItem({
   href: string;
   toc: Toc;
 }) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [headingHref, setHeadingHref] = useState<string | null>(null);
+
+  useEffect(() => {
+    console.log("nav useEffect", { headingHref, isPending });
+    if (!isPending && typeof headingHref === "string") {
+      setHeadingHref(null);
+      smooth_scroll(headingHref);
+    }
+  }, [headingHref, isPending]);
+
   return (
     <NavigationMenuItem>
       <NavigationMenuTrigger className="bg-transparent text-base">
@@ -67,6 +82,15 @@ function NavigationItem({
               key={item.id}
               title={item.value}
               href={`/${href}#${item.id}`}
+              /* onClick={(e) => {
+                e.preventDefault();
+
+                startTransition(() => {
+                  if (!item.id) return;
+                  setHeadingHref(`#${item.id}`);
+                  router.push(`/${href}`);
+                });
+              }} */
             />
             // <p key={item.id}>{item.value}</p>
           ))}

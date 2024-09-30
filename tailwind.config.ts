@@ -17,7 +17,7 @@ delete colors["blueGray"];
 
 export default {
   darkMode: ["class"],
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: ["./src/**/*.{js,jsx,ts,tsx}", "mdx-components.tsx"],
   theme: {
     container: {
       padding: "2rem",
@@ -31,7 +31,7 @@ export default {
     },
     extend: {
       screens: {
-        not_center: "1880px" // 1280 + 2 * 300
+        not_center: "1880px", // 1280 + 2 * 300
       },
       typography: (theme: (variable: string) => string) => ({
         sm: {
