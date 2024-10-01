@@ -14,7 +14,9 @@ import {
   sync_with_algolia,
   copy_and_rename_images,
   get_authors_server,
-  delete_articles, delete_s3_published_bucket
+  delete_articles,
+  delete_s3_published_bucket,
+  test_strong_bold,
 } from "./converter-server";
 import { iterate_over_articles } from "./converter-spaghetti";
 import { cn } from "~/lib/utils";
@@ -35,8 +37,16 @@ export function ArticleConverter() {
   return (
     <div className={cn(article_variants(), page_variants())}>
       <div className="flex w-full flex-wrap gap-4">
+        <Button onClick={() => test_strong_bold()}>
+          Testiraj strong, bold
+        </Button>
         <Button onClick={() => delete_articles()}>Delete articles</Button>
-        <Button variant="destructive" onClick={() => delete_s3_published_bucket()}>Delete s3 published bucket</Button>
+        <Button
+          variant="destructive"
+          onClick={() => delete_s3_published_bucket()}
+        >
+          Delete s3 published bucket
+        </Button>
         <Button onClick={() => delete_authors()}>Delete authors</Button>
         <Button onClick={() => sync_authors()}>Sync authors</Button>
         <Button onClick={() => sync_duplicate_urls.mutate()}>

@@ -234,7 +234,11 @@ async function parse_csv_article(
 
   let html = imported_article.content;
   if (PROBLEMATIC_CONSTANTS.includes(imported_article.objave_id)) {
-    console.log("Getting draft_article", imported_article.objave_id, "from file");
+    console.log(
+      "Getting draft_article",
+      imported_article.objave_id,
+      "from file",
+    );
     html = await get_problematic_html(
       imported_article.objave_id,
       problematic_dir,
@@ -247,21 +251,28 @@ async function parse_csv_article(
   // is image in div
   {
     const images = root.querySelectorAll("img");
-    for(const image of images) {
-      const possible_div_1 = image?.parentNode;
-      const possible_div_2 = possible_div_1?.parentNode;
+    for (const image of images) {
+      const possible_div_1 = image.parentNode;
+      const possible_div_2 = possible_div_1.parentNode;
       const valid =
-        possible_div_1?.tagName === "DIV" || possible_div_2?.tagName === "DIV";
+        possible_div_1.tagName === "DIV" || possible_div_2.tagName === "DIV";
 
       if (!valid) {
-        console.log("Parsing draft_article", imported_article.objave_id, root.structure);
+        console.log(
+          "Parsing draft_article",
+          imported_article.objave_id,
+          root.structure,
+        );
         console.warn(
           "Images isn't in div",
           imported_article.objave_id,
           image.outerHTML,
-          {first: possible_div_1?.tagName, second: possible_div_2?.tagName},
+          { first: possible_div_1.tagName, second: possible_div_2.tagName },
         );
-        problems.images_no_div.push([imported_article.objave_id, image.outerHTML]);
+        problems.images_no_div.push([
+          imported_article.objave_id,
+          image.outerHTML,
+        ]);
         // throw new Error("Images in p");
       }
     }

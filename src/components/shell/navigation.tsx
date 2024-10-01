@@ -24,35 +24,31 @@ import { usePathname } from "next/navigation";
 export function Navigation() {
   return (
     <NavigationMenu
-      className="z-50 !w-[600px]"
-      // value="radix-:r7c:"
-      onValueChange={console.log}
+      className="z-50"
+      /* value="zgodovina"
+      onValueChange={console.log} */
     >
       <NavigationMenuList>
-        <NavigationItem
-          title="Zgodovina"
-          href="zgodovina"
-          toc={toc_zgodovina}
-        />
-        <NavigationItem
+        <NavDropdown title="Zgodovina" href="zgodovina" toc={toc_zgodovina} />
+        <NavDropdown
           title="Raziskovanje"
           href="raziskovanje"
           toc={toc_raziskovanje}
         />
-        <NavigationItem
+        <NavDropdown
           title="Publiciranje"
           href="publiciranje"
           toc={toc_publiciranje}
         />
-        <NavigationItem title="Varstvo" href="varstvo" toc={toc_varstvo} />
-        <NavigationItem title="Klub" href="klub" toc={toc_klub} />
+        <NavDropdown title="Varstvo" href="varstvo" toc={toc_varstvo} />
+        <NavDropdown title="Klub" href="klub" toc={toc_klub} />
         <DesktopHeaderLink href="/arhiv">Arhiv novic</DesktopHeaderLink>
       </NavigationMenuList>
     </NavigationMenu>
   );
 }
 
-function NavigationItem({
+function NavDropdown({
   title,
   href,
   toc,
@@ -64,12 +60,13 @@ function NavigationItem({
   const pathname = usePathname();
 
   return (
-    <NavigationMenuItem>
+    <NavigationMenuItem value={href}>
       <NavigationMenuTrigger className="bg-transparent text-base">
         <Link href={`/${href}`}>{title}</Link>
       </NavigationMenuTrigger>
       <NavigationMenuContent className="relative z-50">
-        <ul className="z-50 grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-1 lg:w-[600px]">
+        {/* <ul className="z-50 grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-1 lg:w-[600px]"> */}
+        <ul className="z-50 grid w-[653px] grid-cols-1 p-4">
           {toc.at(0)?.children?.map((item) => (
             <ListItem
               key={item.id}

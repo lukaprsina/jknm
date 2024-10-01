@@ -3,7 +3,7 @@
 import path from "path";
 import fs from "node:fs";
 import fs_promises from "node:fs/promises";
-import { sql } from "drizzle-orm";
+import { asc, sql } from "drizzle-orm";
 import sharp from "sharp";
 
 import type {
@@ -24,6 +24,33 @@ import { crop_image, delete_s3_directory } from "~/server/s3-utils";
 import { env } from "~/env";
 import { algoliasearch } from "algoliasearch";
 import { convert_article_to_algolia_object } from "~/lib/algoliasearch";
+
+export async function test_strong_bold() {
+  const articles = await db.query.PublishedArticle.findMany({
+    orderBy: asc(PublishedArticle.id),
+  });
+
+  for (const article of articles) {
+    if (article.id % 100 === 0) console.log(article.id);
+    if (!article.content?.blocks) continue;
+
+    let has_strong = false;
+    for (const block of article.content.blocks) {
+      if (block.type === "paragraph") {
+        const paragraph_data = block.data as { text: string };
+        const text = paragraph_data.text;
+        const strong = text.match(/<strong>/g);
+
+        if (strong && strong.length > 1) {
+          has_strong = true;
+          break;
+        }
+      }
+    }
+    if (has_strong) console.log(article.id, article.title, "has strong");
+  }
+  console.log("done");
+}
 
 export async function delete_s3_published_bucket() {
   console.log("deleting s3 published bucket");
@@ -95,7 +122,7 @@ export async function sync_authors() {
 
   await db.insert(Author).values(mapped_guest_authors).returning();
   console.log("Inserted guest authors", mapped_guest_authors.length);
-  console.log("done")
+  console.log("done");
   // fs_promises.readFile()
 }
 
@@ -167,7 +194,7 @@ export async function upload_articles(
       .insert(PublishedArticle)
       .values(articles)
       .returning();*/
-    const returned_articles = await tx.query.PublishedArticle.findMany()
+    const returned_articles = await tx.query.PublishedArticle.findMany();
 
     const joins: (typeof PublishedArticlesToAuthors.$inferInsert)[] = [];
     for (const article of returned_articles) {
