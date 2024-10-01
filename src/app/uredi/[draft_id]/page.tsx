@@ -13,6 +13,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import MakeNewDraftButton from "~/components/article/make-new-draft-button";
 import type { ResolvingMetadata, Metadata } from "next";
+import DOMPurify from "isomorphic-dompurify";
 
 const Editor = dynamic(() => import("./editor"), {
   ssr: false,
@@ -44,8 +45,14 @@ export async function generateMetadata(
 
   const { draft } = await api.article.get_article_by_draft_id(novica_id);
 
+  const title = draft
+    ? DOMPurify.sanitize(draft.title, {
+        ALLOWED_TAGS: [],
+      })
+    : "Uredi novico";
+
   return {
-    title: draft ? draft.title : "Novica",
+    title,
   };
 }
 

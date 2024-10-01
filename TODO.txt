@@ -1,7 +1,4 @@
-smooth scroll store, ki persista
-- ko link klikneš, v onclick nastaviš smooth scroll
-- vsak page mora imeti <SmoothScroll />, ki je client useEffect za scrollanje
-  - preveri še če se pathname ujema
+ko hitro poscrollaš gor, se sticky ne umakne
 
 
 page metadata (title)

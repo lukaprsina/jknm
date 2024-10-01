@@ -1,6 +1,6 @@
 import { cn } from "~/lib/utils";
 import { DesktopHeader } from "./desktop-header";
-import { Footer } from "../footer";
+import { Footer } from "./footer";
 import { getServerAuthSession } from "~/server/auth";
 import type {
   DraftArticleWithAuthors,

@@ -33,6 +33,7 @@ export default function MyEditor({
   const store_url = editor_store.use.url();
   const duplicate_urls = api.article.check_if_url_duplicate.useQuery({
     url: store_url,
+    ignore_published_id: draft.published_id ?? undefined,
   });
 
   return (

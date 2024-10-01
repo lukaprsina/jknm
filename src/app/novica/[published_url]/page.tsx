@@ -6,6 +6,7 @@ import { read_date_from_url } from "~/lib/format-date";
 import { ArticleNotFound } from "~/components/component-not-found";
 import { PublishedContent, TabbedContent } from "~/components/content";
 import type { Metadata, ResolvingMetadata } from "next";
+import DOMPurify from "isomorphic-dompurify";
 
 interface NovicaProps {
   params: {
@@ -21,13 +22,20 @@ export async function generateMetadata(
   const { published } = await get_articles(published_url, searchParams);
   const awaited_parent = await parent;
 
-  let title = awaited_parent.title?.absolute;
-  if (published?.title) {
-    title = published.title;
+  let title = published?.title;
+
+  if (!title) {
+    title = awaited_parent.title?.absolute;
+  }
+
+  if (!title) {
+    title = "Jamarski klub Novo mesto";
   }
 
   return {
-    title,
+    title: DOMPurify.sanitize(title, {
+      ALLOWED_TAGS: [],
+    }),
   };
 }
 

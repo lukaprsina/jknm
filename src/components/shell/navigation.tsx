@@ -23,7 +23,6 @@ export function Navigation() {
   return (
     <NavigationMenu className="z-50">
       <NavigationMenuList>
-        {/* TODO: soft scrolling */}
         <NavigationItem
           title="Zgodovina"
           href="zgodovina"

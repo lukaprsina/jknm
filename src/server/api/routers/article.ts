@@ -12,7 +12,7 @@ import {
   PublishedArticlesToAuthors,
   SaveDraftArticleSchema,
 } from "~/server/db/schema";
-import { and, asc, between, eq } from "drizzle-orm";
+import { and, asc, between, eq, ne } from "drizzle-orm";
 import { assert_at_most_one, assert_one } from "~/lib/assert-length";
 import { withCursorPagination } from "drizzle-pagination";
 import {
@@ -595,7 +595,9 @@ export const article_router = createTRPCRouter({
     }),
 
   check_if_url_duplicate: protectedProcedure
-    .input(z.object({ url: z.string() }))
+    .input(
+      z.object({ url: z.string(), ignore_published_id: z.number().optional() }),
+    )
     .query(async ({ ctx, input }) => {
       const urls = await ctx.db.query.PublishedArticle.findMany({
         columns: {
@@ -603,7 +605,12 @@ export const article_router = createTRPCRouter({
           url: true,
           created_at: true,
         },
-        where: eq(PublishedArticle.url, input.url),
+        where: and(
+          eq(PublishedArticle.url, input.url),
+          input.ignore_published_id
+            ? ne(PublishedArticle.id, input.ignore_published_id)
+            : undefined,
+        ),
       });
 
       return { urls };
