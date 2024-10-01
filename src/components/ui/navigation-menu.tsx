@@ -51,6 +51,11 @@ const NavigationMenuTrigger = React.forwardRef<
   <NavigationMenuPrimitive.Trigger
     ref={ref}
     className={cn(navigationMenuTriggerStyle(), "group", className)}
+    onClick={(event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      props.onClick?.(event);
+    }}
     {...props}
   >
     {children}

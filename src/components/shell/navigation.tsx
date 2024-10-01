@@ -18,10 +18,16 @@ import {
 import { DesktopHeaderLink, ListItem } from "./header";
 import type { Toc } from "@stefanprobst/rehype-extract-toc";
 import { smooth_scroll_store } from "../smooth-scroll";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function Navigation() {
   return (
-    <NavigationMenu className="z-50">
+    <NavigationMenu
+      className="z-50 !w-[600px]"
+      // value="radix-:r7c:"
+      onValueChange={console.log}
+    >
       <NavigationMenuList>
         <NavigationItem
           title="Zgodovina"
@@ -55,10 +61,12 @@ function NavigationItem({
   href: string;
   toc: Toc;
 }) {
+  const pathname = usePathname();
+
   return (
     <NavigationMenuItem>
       <NavigationMenuTrigger className="bg-transparent text-base">
-        {title}
+        <Link href={`/${href}`}>{title}</Link>
       </NavigationMenuTrigger>
       <NavigationMenuContent className="relative z-50">
         <ul className="z-50 grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-1 lg:w-[600px]">
@@ -67,8 +75,13 @@ function NavigationItem({
               key={item.id}
               title={item.value}
               href={`/${href}`} /* #${item.id} */
-              onClick={() => {
+              onClick={(event) => {
                 if (!item.id) return;
+
+                if (pathname === `/${href}`) {
+                  event.preventDefault();
+                }
+
                 smooth_scroll_store.set.set_both(`/${href}`, item.id);
               }}
             />
