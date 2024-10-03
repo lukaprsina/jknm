@@ -19,15 +19,13 @@ import { DraftArticleDrizzleCard } from "~/components/article/adapter";
 export const dynamic = "force-dynamic";
 
 export default async function HomePageServer() {
+  const first = Date.now();
   const session = await getServerAuthSession();
+  const second = Date.now();
   await api.author.get_all.prefetch();
+  const third = Date.now();
   const drafts = session ? await api.article.get_all_drafts() : undefined;
-
-  const test = await api.article.get_infinite_published({
-    limit: 6 * 5,
-  });
-
-  console.log("infinite articles page", test.data.length);
+  const fourth = Date.now();
 
   if (!session) {
     return (
@@ -51,6 +49,28 @@ export default async function HomePageServer() {
       sklon = "osnutkov";
     }
   }
+
+  const fifth = Date.now();
+
+  console.log({
+    first,
+    second,
+    third,
+    fourth,
+    fifth,
+  });
+
+  const diff1 = second - first;
+  const diff2 = third - second;
+  const diff3 = fourth - third;
+  const diff4 = fifth - fourth;
+
+  console.log({
+    diff1,
+    diff2,
+    diff3,
+    diff4,
+  });
 
   return (
     <Shell>

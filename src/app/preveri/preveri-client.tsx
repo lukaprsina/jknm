@@ -13,6 +13,7 @@ import { EditorToReact } from "~/components/editor/editor-to-react";
 
 import { InfoCard } from "~/components/info-card";
 import { createStore } from "zustand-x";
+import React from "react";
 
 export interface PreveriStoreType {
   index: number;
