@@ -47,6 +47,7 @@ export function ArticleCard({
         "overflow-hidden rounded-xl bg-transparent no-underline shadow-lg",
         featured && "col-span-1 md:col-span-2 lg:col-span-3",
       )}
+      prefetch={false}
       ref={ref}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}

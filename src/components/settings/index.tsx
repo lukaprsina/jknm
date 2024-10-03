@@ -17,12 +17,13 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import Link from "next/link";
 import { api } from "~/trpc/react";
 import { useToast } from "~/hooks/use-toast";
+import React from "react";
 // import { AuthorsDialog } from "./authors";
 // import { useState } from "react";
 
 export function SettingsDropdown() {
   const router = useRouter();
-  const toaster = useToast()
+  const toaster = useToast();
 
   // TODO: to bi moral biti dialog.
   const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation({
@@ -30,15 +31,15 @@ export function SettingsDropdown() {
       toaster.toast({
         title: "Uspeh",
         description: `Obstaja ${data.length} podvojenih URL-jev`,
-      })
+      });
     },
     onError: (error) => {
       toaster.toast({
         title: "Napaka",
         description: error.message,
-      })
-    }
-  })
+      });
+    },
+  });
   // const [authorDialogOpen, setAuthorDialogOpen] = useState(false);
 
   return (
@@ -66,11 +67,11 @@ export function SettingsDropdown() {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={async () => {
-              sync_duplicate_urls.mutate()
+            onClick={() => {
+              sync_duplicate_urls.mutate();
             }}
           >
-            <RefreshCcw className="mr-2 h-4 w-4"  size={18} />
+            <RefreshCcw className="mr-2 h-4 w-4" size={18} />
             <span>Popravi</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />

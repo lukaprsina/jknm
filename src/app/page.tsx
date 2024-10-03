@@ -65,7 +65,7 @@ export default async function HomePageServer() {
   const diff3 = fourth - third;
   const diff4 = fifth - fourth;
 
-  console.log({
+  console.error({
     diff1,
     diff2,
     diff3,
