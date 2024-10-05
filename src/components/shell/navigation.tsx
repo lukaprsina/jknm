@@ -14,12 +14,13 @@ import {
   NavigationMenuItem,
   NavigationMenuTrigger,
   NavigationMenuContent,
+  NavigationMenuLink,
 } from "~/components/ui/navigation-menu";
 import { DesktopHeaderLink, ListItem } from "./header";
 import type { Toc } from "@stefanprobst/rehype-extract-toc";
 import { smooth_scroll_store } from "../smooth-scroll";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { HistoryIcon } from "lucide-react";
 
 export function Navigation() {
   return (
@@ -62,16 +63,41 @@ function NavDropdown({
   return (
     <NavigationMenuItem value={href}>
       <NavigationMenuTrigger className="bg-transparent text-base">
-        <Link href={`/${href}`}>{title}</Link>
+        {/* <Link href={`/${href}`}>{title}</Link> */}
+        {title}
       </NavigationMenuTrigger>
-      <NavigationMenuContent className="relative z-50">
+      {/* relative */}
+      <NavigationMenuContent className="z-50">
         {/* <ul className="z-50 grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-1 lg:w-[600px]"> */}
-        <ul className="z-50 grid w-[653px] grid-cols-1 p-4">
+        {/* <ul className="z-50 grid w-[653px] grid-cols-1 p-4"> */}
+        {/* <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]"> */}
+        <ul className="grid w-[660px] gap-3 p-6 lg:grid-cols-[.75fr_1fr]">
+          <li
+            className="row-span-3"
+            style={{
+              gridRow: `span ${toc.at(0)?.children?.length} / span ${toc.at(0)?.children?.length}`,
+            }}
+          >
+            <NavigationMenuLink asChild>
+              <a
+                className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                href={`/${href}`}
+              >
+                <HistoryIcon size={24} /* className="h-6 w-6" */ />
+                <div className="mb-2 mt-4 text-lg font-medium">{title}</div>
+                <p className="text-sm leading-tight text-muted-foreground">
+                  Beautifully designed components that you can copy and paste
+                  into your apps. Accessible. Customizable. Open Source.
+                </p>
+              </a>
+            </NavigationMenuLink>
+          </li>
           {toc.at(0)?.children?.map((item) => (
             <ListItem
               key={item.id}
               title={item.value}
-              href={`/${href}`} /* #${item.id} */
+              // href={`/${href}`}
+              href={`/${href}#${item.id}`}
               onClick={(event) => {
                 if (!item.id) return;
 

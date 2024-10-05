@@ -29,14 +29,14 @@ export function SmoothScroll() {
   const id = smooth_scroll_store.use.id();
 
   useEffect(() => {
-    console.log("smooth scroll effect", { id, pathname, testhref });
+    // console.log("smooth scroll effect", { id, pathname, testhref });
     if (testhref !== pathname) return;
     if (!id) return;
 
     const anchor = document.getElementById(id);
     if (!anchor) return;
     const navbar_height = shell_store.get.navbar_height();
-    console.log("smooth scroll", { id, navbar_height });
+    // console.log("smooth scroll", { id, navbar_height });
     if (typeof navbar_height !== "number") return;
 
     const yOffset = -navbar_height; // offset by navbar height

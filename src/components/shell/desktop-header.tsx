@@ -46,25 +46,31 @@ export function DesktopHeader({
   const navbar_height = shell_store.use.navbar_height();
   const md_breakpoint = useBreakpoint("md");
 
-  const handle_scroll = useThrottle(() => {
-    if (!header_ref.current) return;
+  const handle_scroll = useThrottle(
+    () => {
+      if (!header_ref.current) return;
 
-    // TODO: + 2 is a hack for the separator
-    const should_be_sticky =
-      window.scrollY > header_ref.current.clientHeight + 2;
+      // TODO: + 2 is a hack for the separator
+      const should_be_sticky =
+        window.scrollY > header_ref.current.clientHeight + 2;
 
-    /* console.log("handle scroll", {
+      // console.log("handle scroll", window.scrollY);
+
+      /* console.log("handle scroll", {
       clientHeight: sticky_navbar.current.clientHeight,
       clientHeight2: header_ref.current.clientHeight,
       new_sticky: should_be_sticky,
       old_sticky: shell_store.get.is_header_sticky(),
     }); */
 
-    if (should_be_sticky !== shell_store.get.is_header_sticky()) {
-      console.log("setting sticky", { should_be_sticky, md_breakpoint });
-      shell_store.set.is_header_sticky(should_be_sticky);
-    }
-  }, 80);
+      if (should_be_sticky !== shell_store.get.is_header_sticky()) {
+        // console.log("setting sticky", { should_be_sticky, md_breakpoint });
+        shell_store.set.is_header_sticky(should_be_sticky);
+      }
+    },
+    80,
+    typeof window !== "undefined" && window.scrollY < 100,
+  );
 
   useEffect(() => {
     if (!sticky_navbar_ref.current) return;
