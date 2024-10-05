@@ -41,7 +41,7 @@ export default function MyEditor({
       <PublishedArticleContext.Provider value={published}>
         <EditorProvider>
           <div className={cn("flex flex-col gap-6", article_variants())}>
-            {duplicate_urls.data?.urls.length !== 0 && (
+            {duplicate_urls.data && duplicate_urls.data.urls.length !== 0 && (
               <Alert>
                 <h3 className="flex gap-2 text-destructive">
                   <TriangleAlertIcon />
@@ -54,7 +54,7 @@ export default function MyEditor({
                   da se izognemo konfliktom.
                 </p>
                 <ul>
-                  {duplicate_urls.data?.urls.map((article) => (
+                  {duplicate_urls.data.urls.map((article) => (
                     <li key={article.id}>
                       ID: {article.id}, ustvarjen na{" "}
                       {format_date_for_human(article.created_at)}

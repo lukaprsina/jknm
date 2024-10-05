@@ -29,7 +29,6 @@ export const env = createEnv({
     ALGOLIA_ADMIN_KEY: z.string(),
     JKNM_WORKSPACE_ID: z.string(),
     JKNM_SERVICE_ACCOUNT_CREDENTIALS: z.string(),
-    ADMIN_PASSWORD: z.string(),
   },
 
   /**
@@ -67,7 +66,6 @@ export const env = createEnv({
     JKNM_WORKSPACE_ID: process.env.JKNM_WORKSPACE_ID,
     JKNM_SERVICE_ACCOUNT_CREDENTIALS:
       process.env.JKNM_SERVICE_ACCOUNT_CREDENTIALS,
-    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
 
     // public
     NEXT_PUBLIC_ALGOLIA_ID: process.env.NEXT_PUBLIC_ALGOLIA_ID,
