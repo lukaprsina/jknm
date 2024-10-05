@@ -48,7 +48,7 @@ export function MobileHeader({
   const md_breakpoint = useBreakpoint("md");
 
   useEffect(() => {
-    console.log("mobile md_breakpoint", md_breakpoint);
+    // console.log("mobile md_breakpoint", md_breakpoint);
     if (md_breakpoint) {
       mobile_nav_store.set.open(false);
       return;
@@ -56,11 +56,11 @@ export function MobileHeader({
 
     if (!sticky_navbar_ref.current) return;
 
-    console.log(
+    /* console.log(
       "mobile setting navbar height",
       sticky_navbar_ref.current.clientHeight,
       { md_breakpoint },
-    );
+    ); */
 
     shell_store.set.navbar_height(sticky_navbar_ref.current.clientHeight);
   }, [md_breakpoint]);

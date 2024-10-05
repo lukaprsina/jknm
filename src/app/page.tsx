@@ -4,18 +4,26 @@ import { getServerAuthSession } from "~/server/auth";
 import { Accordion } from "~/components/ui/accordion";
 import { cn } from "~/lib/utils";
 import { article_variants, page_variants } from "~/lib/page-variants";
-import { DraftArticles } from "~/components/draft-articles";
+import dynamic from "next/dynamic";
+import { Skeleton } from "~/components/ui/skeleton";
 
-export const dynamic = "force-dynamic";
+// import { DraftArticles } from "~/components/draft-articles";
+const DraftArticles = dynamic(
+  () => import("~/components/draft-articles").then((mod) => mod.DraftArticles),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-14 w-full" />,
+  },
+);
 
 export default async function HomePageServer() {
-  const first = Date.now();
+  // const first = Date.now();
   const session = await getServerAuthSession();
-  const second = Date.now();
+  // const second = Date.now();
   // await api.author.get_all.prefetch();
-  const third = Date.now();
+  // const third = Date.now();
   // const drafts = session ? await api.article.get_all_drafts() : undefined;
-  const fourth = Date.now();
+  // const fourth = Date.now();
 
   if (!session) {
     return (
@@ -27,27 +35,27 @@ export default async function HomePageServer() {
     );
   }
 
-  const fifth = Date.now();
+  // const fifth = Date.now();
 
-  console.log({
+  /* console.log({
     first,
     second,
     third,
     fourth,
     fifth,
-  });
+  }); */
 
-  const diff1 = second - first;
+  /* const diff1 = second - first;
   const diff2 = third - second;
   const diff3 = fourth - third;
-  const diff4 = fifth - fourth;
+  const diff4 = fifth - fourth; */
 
-  console.error({
+  /* console.error({
     diff1,
     diff2,
     diff3,
     diff4,
-  });
+  }); */
 
   return (
     <Shell>

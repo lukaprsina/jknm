@@ -70,11 +70,11 @@ export function DesktopHeader({
     if (!sticky_navbar_ref.current) return;
 
     if (md_breakpoint) {
-      console.log(
+      /* console.log(
         "desktop setting navbar height",
         sticky_navbar_ref.current.clientHeight,
         { md_breakpoint },
-      );
+      ); */
 
       shell_store.set.navbar_height(sticky_navbar_ref.current.clientHeight);
     }
