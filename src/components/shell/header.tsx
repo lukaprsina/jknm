@@ -66,7 +66,7 @@ export function DesktopHeaderLink({
 
 export const ListItem = React.forwardRef<
   React.ComponentRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
+  React.ComponentPropsWithoutRef<"a"> & { title: React.ReactNode }
 >(({ className, title, href, ...props }, ref) => {
   if (!href) {
     return null;

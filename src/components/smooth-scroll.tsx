@@ -44,7 +44,7 @@ export function SmoothScroll() {
       anchor.getBoundingClientRect().top + window.scrollY + yOffset;
 
     mobile_nav_store.set.open(false);
-    window.scrollTo({ top: yPosition, behavior: "smooth" });
+    window.scrollTo({ top: yPosition, behavior: "instant" });
 
     smooth_scroll_store.set.set_both(null, null);
   }, [id, pathname, testhref]);
