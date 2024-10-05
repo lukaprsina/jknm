@@ -117,7 +117,7 @@ function NavDropdown({
               <NavigationMenuLink asChild>
                 <Link
                   /* justify-end w-full h-full  */
-                  className="flex h-60 w-60 select-none flex-col justify-center rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                  className="flex h-full w-60 select-none flex-col justify-center rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                   href={`/${href}`}
                 >
                   {/* <HistoryIcon size={24} className="h-6 w-6" /> */}
@@ -133,12 +133,15 @@ function NavDropdown({
             </li>
           )}
           {toc.at(0)?.value && (
-            <ListItem title={<b>{toc.at(0)?.value}</b>} href={`/${href}`} />
+            <ListItem
+              list_title={<b>{toc.at(0)?.value}</b>}
+              href={`/${href}`}
+            />
           )}
           {toc.at(0)?.children?.map((item) => (
             <ListItem
               key={item.id}
-              title={item.value}
+              list_title={item.value}
               // href={`/${href}`}
               href={`/${href}#${item.id}`}
               onClick={(event) => {

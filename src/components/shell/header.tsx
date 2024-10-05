@@ -27,11 +27,17 @@ export function LinksMenu() {
           </NavigationMenuTrigger>
           <NavigationMenuContent className="relative z-50">
             <ul className="z-50 grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              <ListItem title="Kataster jam" href=""></ListItem>
-              <ListItem title="Izobraževanje" href=""></ListItem>
-              <ListItem title="Etični kodeks" href=""></ListItem>
-              <ListItem title="Društvo v javnem interesu" href=""></ListItem>
-              <ListItem title="Jamarska reševalna služba" href=""></ListItem>
+              <ListItem list_title="Kataster jam" href=""></ListItem>
+              <ListItem list_title="Izobraževanje" href=""></ListItem>
+              <ListItem list_title="Etični kodeks" href=""></ListItem>
+              <ListItem
+                list_title="Društvo v javnem interesu"
+                href=""
+              ></ListItem>
+              <ListItem
+                list_title="Jamarska reševalna služba"
+                href=""
+              ></ListItem>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
@@ -66,8 +72,8 @@ export function DesktopHeaderLink({
 
 export const ListItem = React.forwardRef<
   React.ComponentRef<"a">,
-  React.ComponentPropsWithoutRef<"a"> & { title: React.ReactNode }
->(({ className, title, href, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<"a"> & { list_title?: React.ReactNode }
+>(({ className, list_title, href, ...props }, ref) => {
   if (!href) {
     return null;
   }
@@ -83,12 +89,13 @@ export const ListItem = React.forwardRef<
             className,
           )} */
           className={cn(
+            "prose",
             buttonVariants({ size: "sm", variant: "link" }),
             className,
           )}
           {...props}
         >
-          {title}
+          {list_title}
           {/* text-sm font-medium */}
           {/* <div className="text-sm font-medium leading-none">{title}</div> */}
           {/* <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
