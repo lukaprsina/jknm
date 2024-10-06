@@ -23,13 +23,12 @@ export const smooth_scroll_store = createStore("smooth-scroll")<{
 }));
 
 // smooth scroll with offset for the sticky navbar
-export function SmoothScroll() {
+export function useSmoothScroll() {
   const pathname = usePathname();
   const testhref = smooth_scroll_store.use.test_href();
   const id = smooth_scroll_store.use.id();
 
   useEffect(() => {
-    // console.log("smooth scroll effect", { id, pathname, testhref });
     if (testhref !== pathname) return;
     if (!id) return;
 
@@ -42,6 +41,14 @@ export function SmoothScroll() {
     const yOffset = -navbar_height; // offset by navbar height
     const yPosition =
       anchor.getBoundingClientRect().top + window.scrollY + yOffset;
+
+    console.log("smooth scroll effect", {
+      id,
+      pathname,
+      testhref,
+      navbar_height,
+      yPosition,
+    });
 
     mobile_nav_store.set.open(false);
     window.scrollTo({ top: yPosition, behavior: "instant" });

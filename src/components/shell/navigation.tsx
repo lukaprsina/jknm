@@ -17,7 +17,6 @@ import {
 } from "~/components/ui/navigation-menu";
 import { DesktopHeaderLink, ListItem } from "./header";
 import type { Toc } from "@stefanprobst/rehype-extract-toc";
-import { smooth_scroll_store } from "../smooth-scroll";
 import { usePathname } from "next/navigation";
 import {
   BookIcon,
@@ -28,6 +27,7 @@ import {
 } from "lucide-react";
 import { NavigationMenuTrigger } from "../navigation-menu-trigger";
 import Link from "next/link";
+import { smooth_scroll_store } from "~/hooks/use-smooth-scroll";
 
 export function Navigation() {
   return (
