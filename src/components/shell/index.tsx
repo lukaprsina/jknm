@@ -49,12 +49,15 @@ export async function Shell({
           />
         </header>
       ) : undefined}
-      <div className={"flex justify-start gap-2 not_center:justify-center"}>
+      <div /* className={"flex justify-start gap-2 not_center:justify-center"} */
+      >
         <aside
           id="shell-aside"
           className={cn(
-            "fixed left-0 h-full w-[300px] flex-shrink-0",
-            show_aside ? "md:block" : "hidden",
+            // "fixed left-0 h-full w-[300px] flex-shrink-0",
+            "fixed flex h-full w-full items-center justify-center",
+            // ? "md:block" :
+            !show_aside && "hidden",
           )}
         />
         <main

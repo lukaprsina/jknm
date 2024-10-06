@@ -150,7 +150,10 @@ function TocPortal({
   const div_ref = useRef<HTMLDivElement | null>(null);
 
   return (
-    <div ref={div_ref} className={cn("flex h-full w-full justify-start")}>
+    <div
+      ref={div_ref}
+      className={cn("flex h-full w-[1880px] justify-self-center")}
+    >
       <ScrollArea
         className={cn(
           "text-sm",
