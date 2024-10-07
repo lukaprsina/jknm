@@ -96,7 +96,7 @@ function getBaseUrl() {
   console.log("getBaseUrl", {
     window: typeof window,
     process_port: process.env.PORT,
-    window_location: window.location.origin,
+    window_location: typeof window === "object" && window.location.origin,
     last: `http://localhost:${process.env.PORT ?? 3000}`,
     VERCEL_URL: process.env.VERCEL_URL,
     VERCEL: process.env.VERCEL_URL,
