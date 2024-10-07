@@ -93,6 +93,16 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 }
 
 function getBaseUrl() {
+  console.log("getBaseUrl", {
+    window,
+    process_port: process.env.PORT,
+    window_location: window.location.origin,
+    last: `http://localhost:${process.env.PORT ?? 3000}`,
+    VERCEL_URL: process.env.VERCEL_URL,
+    VERCEL: process.env.VERCEL_URL,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+  });
+
   if (typeof window !== "undefined") return window.location.origin;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   return `http://localhost:${process.env.PORT ?? 3000}`;

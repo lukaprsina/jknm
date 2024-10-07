@@ -3,7 +3,7 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+// import { SpeedInsights } from "@vercel/speed-insights/next";
 import { TRPCReactProvider } from "~/trpc/react";
 import { HydrateClient } from "~/trpc/server";
 import { TooltipProvider } from "~/components/ui/tooltip";
@@ -46,7 +46,7 @@ export default function RootLayout({
               <TooltipProvider>
                 {children}
                 <Toaster />
-                <SpeedInsights />
+                {/* <SpeedInsights /> */}
               </TooltipProvider>
             </HydrateClient>
           </TRPCReactProvider>
