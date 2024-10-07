@@ -18,6 +18,7 @@ const DraftArticles = dynamic(
 
 export default async function HomePageServer() {
   // const first = Date.now();
+  console.log("first", new Date());
   const session = await getServerAuthSession();
   // const second = Date.now();
   // await api.author.get_all.prefetch();
@@ -37,6 +38,7 @@ export default async function HomePageServer() {
 
   // const fifth = Date.now();
 
+  console.log("second", new Date());
   /* console.log({
     first,
     second,
