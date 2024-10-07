@@ -2,7 +2,6 @@
 
 import type { Hit as SearchHit } from "instantsearch.js";
 import type { UseInfiniteHitsProps } from "react-instantsearch";
-import { useInfiniteHits } from "react-instantsearch";
 import Link from "next/link";
 import { ChevronDownIcon, ChevronUpIcon, TrashIcon } from "lucide-react";
 import { useSortBy } from "react-instantsearch";
@@ -35,15 +34,14 @@ import {
 } from "~/components/ui/tooltip";
 
 import { format_date_for_human } from "~/lib/format-date";
-import { api } from "~/trpc/react";
 import { MyStats, SORT_BY_ITEMS } from "./search-components";
 import type { Session } from "next-auth";
 import type { PublishedArticleHit } from "~/lib/validators";
 import { Authors } from "~/components/authors";
 import { get_published_article_link } from "~/lib/article-utils";
-import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 import { useInfiniteAlgoliaArticles } from "~/hooks/use-infinite-algolia";
-import { IntersectionRef } from "~/components/article/infinite-articles";
+import type { IntersectionRef } from "~/components/article/infinite-articles";
+import { cached_state_store } from "../provider";
 
 export function ArticleTable({
   session,
@@ -53,7 +51,10 @@ export function ArticleTable({
     items: SORT_BY_ITEMS,
   });
 
-  const { load_more_ref, items } = useInfiniteAlgoliaArticles({ offset: 20, ...props });
+  const { load_more_ref, items } = useInfiniteAlgoliaArticles({
+    offset: 20,
+    ...props,
+  });
 
   return (
     <Table>
@@ -123,7 +124,12 @@ export function ArticleTable({
       </TableHeader>
       <TableBody>
         {items.map((item, index) => (
-          <ArticleTableRow hit={item} session={session} key={item.objectID} ref={load_more_ref(index)} />
+          <ArticleTableRow
+            hit={item}
+            session={session}
+            key={item.objectID}
+            ref={load_more_ref(index)}
+          />
         ))}
       </TableBody>
       <TableFooter>
@@ -143,11 +149,11 @@ function ArticleTableRow({
   hit,
   session: _,
 }: {
-  ref?: IntersectionRef
+  ref?: IntersectionRef;
   hit: SearchHit<PublishedArticleHit>;
   session: Session | null;
 }) {
-  const duplicate_urls = useDuplicatedUrls();
+  const duplicate_urls = cached_state_store.get.duplicate_urls();
 
   return (
     <TableRow ref={ref} key={hit.objectID}>
@@ -176,14 +182,11 @@ function ArticleTableRow({
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function DeleteDialog({ article_id }: { article_id: number }) {
-  const trpc_utils = api.useUtils();
-
-  // TODO
-  const article_delete = api.article.delete_both.useMutation({
+  /* const article_delete = api.article.delete_both.useMutation({
     onSuccess: async () => {
       await trpc_utils.article.invalidate();
     },
-  });
+  }); */
 
   return (
     <AlertDialog>
@@ -208,7 +211,7 @@ function DeleteDialog({ article_id }: { article_id: number }) {
           <AlertDialogCancel>Prekliči</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
-              article_delete.mutate({ draft_id: article_id });
+              // article_delete.mutate({ draft_id: article_id });
             }}
           >
             OK

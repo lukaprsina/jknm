@@ -1,15 +1,14 @@
+/* eslint-disable @typescript-eslint/require-await */
 "use client";
 
 import {
   get_published_article_link,
   get_s3_draft_directory,
 } from "~/lib/article-utils";
-import { api } from "~/trpc/react";
 import {
   update_settings_from_editor,
   validate_article,
 } from "~/components/editor/editor-lib";
-import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 import { useContext } from "react";
 import {
   DraftArticleContext,
@@ -26,13 +25,26 @@ import type {
 import type { z } from "zod";
 import type { ThumbnailType } from "~/lib/validators";
 import { upload_image_by_url } from "~/components/aws-s3/upload-file";
+import { cached_state_store } from "~/app/provider";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { save_draft } from "~/server/article/save-draft";
+import { publish } from "~/server/article/publish";
+import { delete_both, delete_draft } from "~/server/article/delete";
+import { unpublish } from "~/server/article/unpublish";
+import type {
+  delete_both_validator,
+  delete_draft_validator,
+  publish_validator,
+  save_draft_validator,
+  unpublish_validator,
+} from "~/server/article/validators";
 
 export function useEditorMutations() {
+  const query_client = useQueryClient();
   const draft_article = useContext(DraftArticleContext);
   const publish_article = useContext(PublishedArticleContext);
   const editor_context = useContext(EditorContext);
-  const duplicate_urls = useDuplicatedUrls();
-  const trpc_utils = api.useUtils();
+  const duplicate_urls = cached_state_store.get.duplicate_urls();
 
   const toaster = useToast();
   const router = useRouter();
@@ -41,21 +53,25 @@ export function useEditorMutations() {
     throw new Error("Missing context");
   }
 
-  const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation({
+  // TODO
+  /* const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation({
     onError: (error) => {
       toaster.toast({
         title: "Napaka pri sinhronizaciji URL-jev",
         description: error.message,
       });
     },
-  });
+  }); */
 
-  const save_draft = api.article.save_draft.useMutation({
+  const save_draft_mutation = useMutation({
+    mutationFn: (input: z.infer<typeof save_draft_validator>) =>
+      save_draft(input),
     onSettled: async () => {
       editor_context.setSavingText(undefined);
       editor_context.setDirty(false);
-      await trpc_utils.article.invalidate();
-      await trpc_utils.article.get_infinite_published.invalidate();
+
+      /* await trpc_utils.article.invalidate();
+      await trpc_utils.article.get_infinite_published.invalidate(); */
     },
     onError: (error) => {
       toaster.toast({
@@ -65,9 +81,10 @@ export function useEditorMutations() {
     },
   });
 
-  const publish = api.article.publish.useMutation({
+  const publish_mutation = useMutation({
+    mutationFn: (input: z.infer<typeof publish_validator>) => publish(input),
     onSuccess: (data) => {
-      sync_duplicate_urls.mutate();
+      // sync_duplicate_urls.mutate();
       router.push(
         get_published_article_link(data.url, data.created_at, duplicate_urls),
       );
@@ -75,9 +92,13 @@ export function useEditorMutations() {
     onSettled: async () => {
       editor_context.setSavingText(undefined);
       editor_context.setDirty(false);
-      await trpc_utils.article.invalidate();
+
+      await query_client.invalidateQueries({
+        queryKey: ["infinite_published"],
+      });
+      /* await trpc_utils.article.invalidate();
       await trpc_utils.article.get_duplicate_urls.invalidate();
-      await trpc_utils.article.get_infinite_published.invalidate();
+      await trpc_utils.article.get_infinite_published.invalidate(); */
     },
     onError: (error) => {
       toaster.toast({
@@ -87,7 +108,9 @@ export function useEditorMutations() {
     },
   });
 
-  const delete_draft = api.article.delete_draft.useMutation({
+  const delete_draft_mutation = useMutation({
+    mutationFn: (input: z.infer<typeof delete_draft_validator>) =>
+      delete_draft(input),
     onSuccess: (data) => {
       if (data.url) {
         router.push(
@@ -103,8 +126,11 @@ export function useEditorMutations() {
     },
     onSettled: async () => {
       editor_context.setSavingText(undefined);
-      await trpc_utils.article.invalidate();
-      await trpc_utils.article.get_infinite_published.invalidate();
+      await query_client.invalidateQueries({
+        queryKey: ["infinite_published"],
+      });
+      /* await trpc_utils.article.invalidate();
+      await trpc_utils.article.get_infinite_published.invalidate(); */
     },
     onError: (error) => {
       toaster.toast({
@@ -114,11 +140,16 @@ export function useEditorMutations() {
     },
   });
 
-  const unpublish = api.article.unpublish.useMutation({
+  const unpublish_mutation = useMutation({
+    mutationFn: (input: z.infer<typeof unpublish_validator>) =>
+      unpublish(input),
     onSettled: async () => {
       editor_context.setSavingText(undefined);
-      await trpc_utils.article.invalidate();
-      await trpc_utils.article.get_infinite_published.invalidate();
+      await query_client.invalidateQueries({
+        queryKey: ["infinite_published"],
+      });
+      /* await trpc_utils.article.invalidate();
+      await trpc_utils.article.get_infinite_published.invalidate(); */
       router.refresh();
     },
     onError: (error) => {
@@ -129,10 +160,15 @@ export function useEditorMutations() {
     },
   });
 
-  const delete_both = api.article.delete_both.useMutation({
+  const delete_both_mutation = useMutation({
+    mutationFn: (input: z.infer<typeof delete_both_validator>) =>
+      delete_both(input),
     onSettled: async () => {
-      await trpc_utils.article.invalidate();
-      await trpc_utils.article.get_infinite_published.invalidate();
+      await query_client.invalidateQueries({
+        queryKey: ["infinite_published"],
+      });
+      /* await trpc_utils.article.invalidate();
+      await trpc_utils.article.get_infinite_published.invalidate(); */
       router.replace(`/`);
     },
     onError: (error) => {
@@ -192,7 +228,7 @@ export function useEditorMutations() {
         state,
       }); */
 
-      save_draft.mutate({
+      save_draft_mutation.mutate({
         draft_id: draft_article.id,
         article,
         author_ids: state.author_ids,
@@ -240,7 +276,7 @@ export function useEditorMutations() {
         ),
       });
 
-      publish.mutate({
+      publish_mutation.mutate({
         draft_id: draft_article.id,
         article,
         author_ids: state.author_ids,
@@ -248,7 +284,7 @@ export function useEditorMutations() {
     },
     delete_draft: () => {
       editor_context.setSavingText("Brišem osnutek...");
-      delete_draft.mutate(draft_article.id);
+      delete_draft_mutation.mutate({ draft_id: draft_article.id });
     },
     unpublish: () => {
       if (!publish_article) {
@@ -256,11 +292,11 @@ export function useEditorMutations() {
       }
 
       editor_context.setSavingText("Skrivam novičko ...");
-      unpublish.mutate(publish_article.id);
+      unpublish_mutation.mutate({ published_id: publish_article.id });
     },
     delete_both: () => {
       editor_context.setSavingText("Brišem novičko ...");
-      delete_both.mutate({ draft_id: draft_article.id });
+      delete_both_mutation.mutate({ draft_id: draft_article.id });
     },
   };
 }

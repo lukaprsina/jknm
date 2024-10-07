@@ -11,7 +11,6 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import type { GuestAuthor } from "./table";
-import { api } from "~/trpc/react";
 import { DialogClose, DialogFooter } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
 
@@ -26,8 +25,8 @@ export function EditAuthorNameForm({
   author: GuestAuthor;
   close_dialog: () => void;
 }) {
-  const rename_guest = api.author.rename_guest.useMutation();
-  const trpc_utils = api.useUtils();
+  // const rename_guest = api.author.rename_guest.useMutation();
+  // const trpc_utils = api.useUtils();
 
   const form = useForm<z.infer<typeof edit_form_schema>>({
     resolver: zodResolver(edit_form_schema),
@@ -40,12 +39,12 @@ export function EditAuthorNameForm({
     <Form {...form}>
       <form
         className="space-y-4"
-        onSubmit={form.handleSubmit(async () => {
-          rename_guest.mutate({
+        onSubmit={form.handleSubmit(() => {
+          /* rename_guest.mutate({
             id: author.id,
             name: form.getValues("name"),
           });
-          await trpc_utils.author.invalidate();
+          await trpc_utils.author.invalidate(); */
 
           close_dialog();
         })}
@@ -82,8 +81,8 @@ export const insert_form_schema = z.object({
 });
 
 export function InsertAuthorForm() {
-  const insert_guest = api.author.insert_guest.useMutation();
-  const trpc_utils = api.useUtils();
+  // const insert_guest = api.author.insert_guest.useMutation();
+  // const trpc_utils = api.useUtils();
 
   const form = useForm<z.infer<typeof insert_form_schema>>({
     resolver: zodResolver(insert_form_schema),
@@ -96,9 +95,9 @@ export function InsertAuthorForm() {
     <Form {...form}>
       <form
         className="space-y-4"
-        onSubmit={form.handleSubmit(async () => {
-          insert_guest.mutate(form.getValues("name"));
-          await trpc_utils.author.invalidate();
+        onSubmit={form.handleSubmit(() => {
+          // insert_guest.mutate(form.getValues("name"));
+          // await trpc_utils.author.invalidate();
         })}
       >
         <FormField

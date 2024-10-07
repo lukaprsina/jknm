@@ -26,8 +26,11 @@ import { env } from "~/env";
 import { DraftArticleContext } from "~/components/article/context";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { Button } from "~/components/ui/button";
-import { api } from "~/trpc/react";
 import { useToast } from "~/hooks/use-toast";
+import { useMutation } from "@tanstack/react-query";
+import type { z } from "zod";
+import type { delete_custom_thumbnail_validator } from "~/server/article/validators";
+import { delete_custom_thumbnail } from "~/server/article/delete";
 
 export function ImageSelector({
   image: formImage,
@@ -46,30 +49,31 @@ export function ImageSelector({
   );
   const [doCenterCrop, setDoCenterCrop] = useState<boolean>(false);
   const [imageIndex, setImageIndex] = useState<number | undefined>(undefined);
-  const toaster = useToast()
+  const toaster = useToast();
 
-  const delete_custom_thumbnail =
-    api.article.delete_custom_thumbnail.useMutation({
-      onSuccess: () => {
-        setCustomThumbnailExists(false);
-        setFormImage(undefined);
-      },
-      onError: (error) => {
-        toaster.toast({
-          title: "Napaka pri brisanju slike",
-          description: error.message,
-        })
-      }
-    });
+  const delete_custom_thumbnail_mutation = useMutation({
+    mutationFn: (input: z.infer<typeof delete_custom_thumbnail_validator>) =>
+      delete_custom_thumbnail(input),
+    onSuccess: () => {
+      setCustomThumbnailExists(false);
+      setFormImage(undefined);
+    },
+    onError: (error) => {
+      toaster.toast({
+        title: "Napaka pri brisanju slike",
+        description: error.message,
+      });
+    },
+  });
 
   const custom_thumbnail_url = useMemo(() => {
-    if(!draft_article) return "";
+    if (!draft_article) return "";
 
     return get_s3_prefix(
       `${get_s3_draft_directory(draft_article.id)}/thumbnail-uploaded.png`,
       env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
-    )
-  }, [draft_article?.id]);
+    );
+  }, [draft_article]);
 
   const images = useMemo(() => {
     const temp = [...store_images];
@@ -86,7 +90,12 @@ export function ImageSelector({
     }
 
     return temp;
-  }, [customThumbnailExists, draft_article, store_images]);
+  }, [
+    customThumbnailExists,
+    custom_thumbnail_url,
+    draft_article,
+    store_images,
+  ]);
 
   useEffect(() => {
     setCrop(formImage);
@@ -240,9 +249,9 @@ export function ImageSelector({
                       type="button"
                       className="absolute right-0 top-0 m-4 shadow-2xl"
                       onClick={() => {
-                        delete_custom_thumbnail.mutate(
-                          editor_store.get.draft_id(),
-                        );
+                        delete_custom_thumbnail_mutation.mutate({
+                          draft_id: editor_store.get.draft_id(),
+                        });
                       }}
                     >
                       <TrashIcon />
@@ -298,7 +307,7 @@ export function ImageSelector({
                 alt="Cropped image"
                 width={images[imageIndex].file.width}
                 height={images[imageIndex].file.height}
-                className="w-full h-full object-contain min-w-[500px]"
+                className="h-full w-full min-w-[500px] object-contain"
                 onLoad={(event) => handle_image_load(event)}
               />
             </ReactCrop>

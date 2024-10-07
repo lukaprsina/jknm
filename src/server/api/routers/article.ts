@@ -72,7 +72,7 @@ export const article_router = createTRPCRouter({
           with: {
             author: true,
           },
-          orderBy: asc(PublishedArticlesToAuthors.order),
+          orderBy: asc(DraftArticlesToAuthors.order),
         },
       },
     });
@@ -279,7 +279,7 @@ export const article_router = createTRPCRouter({
       z.object({
         published_id: z.number().optional(),
         article: CreateDraftArticleSchema.optional(),
-        images: z.array(z.string()).optional(),
+        // images: z.array(z.string()).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {

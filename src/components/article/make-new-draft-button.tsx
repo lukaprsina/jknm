@@ -7,40 +7,57 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 
-import { api } from "~/trpc/react";
 import { Button } from "~/components/ui/button";
 import type { ButtonProps } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { article_variants } from "~/lib/page-variants";
 import { get_draft_article_link } from "~/lib/article-utils";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import type { create_draft_validator } from "~/server/article/create-draft";
+import { create_draft } from "~/server/article/create-draft";
+import type { z } from "zod";
 
 export default function MakeNewDraftButton({
   title,
   ...props
 }: ButtonProps & { title?: string }) {
   const router = useRouter();
-  const trpc_utils = api.useUtils();
+  const [open, setOpen] = useState(false);
+  const create_draft_mutation = useMutation({
+    mutationFn: (input: z.infer<typeof create_draft_validator>) =>
+      create_draft(input),
+    onSuccess: (data) => {
+      router.push(get_draft_article_link(data.id));
+    },
+    onSettled: (data, e) => {
+      console.log("get_or_create_draft", { data, e });
+      setOpen(false);
+    },
+  });
+  // const trpc_utils = api.useUtils();
 
   // TODO
-  const create_draft = api.article.get_or_create_draft.useMutation({
+  /* const create_draft = api.article.get_or_create_draft.useMutation({
     onSuccess: async (data) => {
       await trpc_utils.article.invalidate();
       router.push(get_draft_article_link(data.id));
     },
-  });
+  }); */
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <Tooltip>
         <TooltipTrigger asChild>
           <PopoverTrigger asChild>
             <Button
               {...props}
               onClick={() => {
-                create_draft.mutate({
+                create_draft_mutation.mutate({ title: title ?? "Nova novica" });
+                /* create_draft.mutate({
                   article: get_content_from_title(title),
-                });
+                }); */
               }}
             />
           </PopoverTrigger>
@@ -79,26 +96,4 @@ function LoadingSpinner({ className }: { className?: string }) {
       <path d="M21 12a9 9 0 1 1-6.219-8.56" />
     </svg>
   );
-}
-
-function get_content_from_title(title?: string) {
-  const new_title = title ?? "Nova novica";
-
-  const content = {
-    blocks: [
-      {
-        id: "sheNwCUP5A",
-        type: "header",
-        data: {
-          text: new_title,
-          level: 1,
-        },
-      },
-    ],
-  };
-
-  return {
-    title: new_title,
-    content,
-  };
 }

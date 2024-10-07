@@ -19,7 +19,6 @@ import {
   PublishedArticle,
   PublishedArticlesToAuthors,
 } from "~/server/db/schema";
-import { api } from "~/trpc/server";
 import { crop_image, delete_s3_directory } from "~/server/s3-utils";
 import { env } from "~/env";
 import { algoliasearch } from "algoliasearch";
@@ -83,7 +82,7 @@ export async function delete_authors() {
 }
 
 export async function sync_authors() {
-  const google_authors = await api.author.sync_with_google();
+  // const google_authors = await api.author.sync_with_google();
 
   const read_file = true as boolean;
   if (!read_file) return;
@@ -231,8 +230,13 @@ export async function sync_with_algolia() {
   /* const articles = await db.query.PublishedArticle.findMany({
     // limit: 10,
   }); */
-  const articles = await api.article.get_infinite_published({
-    limit: 1000,
+  const articles = await db.query.PublishedArticle.findMany({
+    with: {
+      published_articles_to_authors: {
+        with: { author: true },
+        orderBy: asc(PublishedArticlesToAuthors.order),
+      },
+    },
   });
 
   const indexName = "published_article";
@@ -254,7 +258,7 @@ export async function sync_with_algolia() {
   });
 
   const chunkSize = 50;
-  const objects = articles.data
+  const objects = articles
     .map(convert_article_to_algolia_object)
     .filter((article) => typeof article !== "undefined");
 

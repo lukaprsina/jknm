@@ -17,6 +17,10 @@ export default function ArticleDescription({
   created_at: Date;
   old_id?: string;
 }) {
+  /* useEffect(() => {
+    console.log("ArticleDescription", { author_ids, type, created_at, old_id });
+  }, [author_ids, created_at, old_id, type]); */
+
   return (
     <CardDescription
       className={cn(

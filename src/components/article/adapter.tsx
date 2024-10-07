@@ -16,11 +16,11 @@ import {
   get_published_article_link,
   get_s3_published_directory,
 } from "~/lib/article-utils";
-import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 
 import { ArticleCard } from "./card";
 import { get_s3_prefix } from "~/lib/s3-publish";
 import { env } from "~/env";
+import { cached_state_store } from "~/app/provider";
 
 type SelectPublishedArticlesToAuthors =
   typeof PublishedArticlesToAuthors.$inferSelect & {
@@ -57,7 +57,10 @@ export const DraftArticleDrizzleCard = ({
       ref={ref}
       title={article.title}
       url={get_draft_article_link(article.id)}
-      content_preview={convert_content_to_text(article.content?.blocks, true).slice(0, 1000)}
+      content_preview={convert_content_to_text(
+        article.content?.blocks,
+        true,
+      ).slice(0, 1000)}
       created_at={article.created_at}
       image_url={get_s3_prefix(
         `${article.id}/thumbnail.png`,
@@ -78,7 +81,7 @@ export const PublishedArticleDrizzleCard = ({
   featured?: boolean;
   ref?: IntersectionRef;
 }) => {
-  const duplicate_urls = useDuplicatedUrls();
+  const duplicate_urls = cached_state_store.get.duplicate_urls();
 
   return (
     <ArticleCard
@@ -94,7 +97,10 @@ export const PublishedArticleDrizzleCard = ({
         `${get_s3_published_directory(article.url, article.created_at)}/thumbnail.png`,
         env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
       )}
-      content_preview={convert_content_to_text(article.content?.blocks, true).slice(0, 1000)}
+      content_preview={convert_content_to_text(
+        article.content?.blocks,
+        true,
+      ).slice(0, 1000)}
       created_at={article.created_at}
       has_thumbnail={Boolean(article.thumbnail_crop)}
       author_ids={article.published_articles_to_authors.map((a) => a.author.id)}
@@ -104,12 +110,12 @@ export const PublishedArticleDrizzleCard = ({
 
 export function ArticleAlgoliaCard({
   hit,
-  ref
+  ref,
 }: {
   hit: SearchHit<PublishedArticleHit>;
-  ref?: IntersectionRef
+  ref?: IntersectionRef;
 }) {
-  const duplicate_urls = useDuplicatedUrls();
+  const duplicate_urls = cached_state_store.get.duplicate_urls();
 
   return (
     <ArticleCard

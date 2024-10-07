@@ -21,7 +21,6 @@ import {
 import { iterate_over_articles } from "./converter-spaghetti";
 import { cn } from "~/lib/utils";
 import { EDITOR_JS_PLUGINS } from "~/components/editor/plugins";
-import { api } from "~/trpc/react";
 
 export function ArticleConverter() {
   const editorJS = useRef<EditorJS | null>(null);
@@ -32,7 +31,7 @@ export function ArticleConverter() {
   const [doDimensions, setDoDimensions] = useState(false);
   const [firstArticle, setFirstArticle] = useState("23");
   const [lastArticle, setLastArticle] = useState("24");
-  const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation();
+  // const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation();
 
   return (
     <div className={cn(article_variants(), page_variants())}>
@@ -49,9 +48,9 @@ export function ArticleConverter() {
         </Button>
         <Button onClick={() => delete_authors()}>Delete authors</Button>
         <Button onClick={() => sync_authors()}>Sync authors</Button>
-        <Button onClick={() => sync_duplicate_urls.mutate()}>
+        {/* <Button onClick={() => sync_duplicate_urls.mutate()}>
           Sync duplicate urls
-        </Button>
+        </Button> */}
         <Button onClick={() => sync_with_algolia()}>Sync with Algolia</Button>
         <Button onClick={() => copy_and_rename_images()}>
           Copy and rename images

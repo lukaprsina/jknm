@@ -2,6 +2,7 @@
 /src/app/converter/_*/
 /src/app/converter/info/
 /src/assets/Objave.*
+/unLFS_dryRun.ps1
 
 # dependencies
 /node_modules

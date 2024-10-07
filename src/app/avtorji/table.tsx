@@ -32,7 +32,6 @@ import {
   AuthorsTableCellButtons,
   AuthorsTableHeaderButtons,
 } from "./table-buttons";
-import { api } from "~/trpc/react";
 
 export interface GuestAuthor {
   id: number;
@@ -128,10 +127,11 @@ export function AuthorsDataTable() {
     pageSize: 8,
   });
 
-  const guest_authors = api.author.get_all.useQuery("guest");
+  // const guest_authors = api.author.get_all.useQuery("guest");
 
   const table = useReactTable({
-    data: guest_authors.data ?? [],
+    // data: guest_authors.data ?? [],
+    data: [],
     columns,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),

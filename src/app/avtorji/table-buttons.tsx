@@ -28,12 +28,11 @@ import type { GuestAuthor } from "./table";
 import { Button } from "~/components/ui/button";
 import type { Row } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
-import { api } from "~/trpc/react";
 import { EditAuthorNameForm, InsertAuthorForm } from "./table-forms";
 
 export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
-  const delete_guests = api.author.delete_guests.useMutation();
-  const trpc_utils = api.useUtils();
+  // const delete_guests = api.author.delete_guests.useMutation();
+  // const trpc_utils = api.useUtils();
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -83,9 +82,9 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
           <AlertDialogFooter>
             <AlertDialogCancel>Prekliči</AlertDialogCancel>
             <AlertDialogAction
-              onClick={async () => {
-                delete_guests.mutate({ ids: [author.id] });
-                await trpc_utils.author.invalidate();
+              onClick={() => {
+                // delete_guests.mutate({ ids: [author.id] });
+                // await trpc_utils.author.invalidate();
                 setDialogOpen(false);
               }}
             >
@@ -103,8 +102,8 @@ export function AuthorsTableHeaderButtons({
 }: {
   rows: Row<GuestAuthor>[];
 }) {
-  const trpc_utils = api.useUtils();
-  const delete_guests = api.author.delete_guests.useMutation();
+  // const trpc_utils = api.useUtils();
+  // const delete_guests = api.author.delete_guests.useMutation();
 
   const message = useMemo(() => {
     const length = rows.length;
@@ -177,11 +176,11 @@ export function AuthorsTableHeaderButtons({
             </AlertDialogCancel>
             {rows.length !== 0 && (
               <AlertDialogAction
-                onClick={async () => {
-                  delete_guests.mutate({
+                onClick={() => {
+                  /* delete_guests.mutate({
                     ids: rows.map((row) => row.original.id),
                   });
-                  await trpc_utils.author.invalidate();
+                  await trpc_utils.author.invalidate(); */
                 }}
               >
                 Izbriši
