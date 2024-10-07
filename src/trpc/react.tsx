@@ -94,7 +94,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 
 function getBaseUrl() {
   console.log("getBaseUrl", {
-    window,
+    window: typeof window,
     process_port: process.env.PORT,
     window_location: window.location.origin,
     last: `http://localhost:${process.env.PORT ?? 3000}`,
