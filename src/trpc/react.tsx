@@ -93,7 +93,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 }
 
 function getBaseUrl() {
-  console.log("getBaseUrl", {
+  /* console.log("getBaseUrl", {
     window: typeof window,
     process_port: process.env.PORT,
     window_location: typeof window === "object" && window.location.origin,
@@ -102,7 +102,7 @@ function getBaseUrl() {
     VERCEL: process.env.VERCEL_URL,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     VERCEL_PROJECT_PRODUCTION_URL: process.env.VERCEL_PROJECT_PRODUCTION_URL,
-  });
+  }); */
 
   if (typeof window !== "undefined") return window.location.origin;
   if (process.env.VERCEL_PROJECT_PRODUCTION_URL)

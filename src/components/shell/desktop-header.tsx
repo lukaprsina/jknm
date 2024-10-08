@@ -16,7 +16,6 @@ import type {
 import { createStore } from "zustand-x";
 import { FacebookIcon, YoutubeIcon } from "./icons";
 import { Navigation } from "./navigation";
-import { useThrottle } from "~/hooks/use-throttle";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 
 export interface ShellStore {
@@ -49,7 +48,7 @@ export function DesktopHeader({
   const handle_scroll = useCallback(() => {
     if (!header_ref.current) return;
 
-    console.log("handle scroll", window.scrollY);
+    // console.log("handle scroll", window.scrollY);
 
     // TODO: + 2 is a hack for the separator
     const should_be_sticky =

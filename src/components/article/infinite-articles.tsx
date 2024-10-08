@@ -19,15 +19,21 @@ export function InfiniteArticles() {
         limit: 6 * 5,
       },
       {
-        maxPages: 100,
+        // maxPages: 2,
         getNextPageParam: (lastPage) => lastPage.next_cursor,
-        getPreviousPageParam: (firstPage) => firstPage.next_cursor,
+        // getPreviousPageParam: (firstPage) => firstPage.next_cursor,
       },
     );
 
-  const { isIntersecting, ref } = useIntersectionObserver({
-    threshold: 0,
-  });
+  const { isIntersecting: isIntersectingFirst, ref: refFirst } =
+    useIntersectionObserver({
+      threshold: 0,
+    });
+
+  const { isIntersecting: isIntersectingLast, ref: refLast } =
+    useIntersectionObserver({
+      threshold: 0,
+    });
 
   const pages = test.pages;
 
@@ -47,23 +53,35 @@ export function InfiniteArticles() {
     }, 0);
   }, [firstLoad]);
 
-  const load_more_ref = useCallback(
+  const load_more_ref_last = useCallback(
     (index: number) => {
       const ref_index = articles.length - 1 - ARTICLE_LOAD_MORE_OFFSET;
       const is_sentinel = index === Math.max(ref_index, 0);
       // console.log("load more ref", ref_index);
-      return is_sentinel ? ref : undefined;
+      return is_sentinel ? refLast : undefined;
     },
-    [articles, ref],
+    [articles, refLast],
+  );
+
+  const load_more_ref_first = useCallback(
+    (index: number) => {
+      const is_sentinel = index === 0;
+      return is_sentinel ? refFirst : undefined;
+    },
+    [refFirst],
   );
 
   useEffect(() => {
-    if (isIntersecting && !firstLoad && !article_api.isFetching) {
+    if (isIntersectingLast && !firstLoad && !article_api.isFetching) {
       void article_api.fetchNextPage();
     }
-  }, [isIntersecting, article_api, firstLoad]);
+  }, [isIntersectingLast, article_api, firstLoad]);
 
   /* useEffect(() => {
+    if (isIntersectingFirst && !firstLoad && !article_api.isFetching) {
+      void article_api.fetchPreviousPage();
+    }
+  }, [isIntersectingFirst, article_api, firstLoad]) */ /* useEffect(() => {
     console.log("infinite articles", { articles, test, article_api });
   }, [article_api, articles, test]); */
 
@@ -89,7 +107,7 @@ export function InfiniteArticles() {
           key={article.id}
           featured={index === 0}
           article={article}
-          ref={load_more_ref(index)}
+          ref={load_more_ref_last(index) ?? load_more_ref_first(index)}
         />
       ))}
     </div>

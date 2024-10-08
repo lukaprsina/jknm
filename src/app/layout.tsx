@@ -11,6 +11,7 @@ import { Toaster } from "~/components/ui/toaster";
 import { cn } from "~/lib/utils";
 import { GeistMono } from "geist/font/mono";
 import { StrictMode } from "react";
+import Providers from "./provider";
 
 export const metadata: Metadata = {
   title: "Jamarski klub Novo mesto",
@@ -43,11 +44,13 @@ export default function RootLayout({
         >
           <TRPCReactProvider>
             <HydrateClient>
-              <TooltipProvider>
-                {children}
-                <Toaster />
-                {/* <SpeedInsights /> */}
-              </TooltipProvider>
+              <Providers>
+                <TooltipProvider>
+                  {children}
+                  <Toaster />
+                  {/* <SpeedInsights /> */}
+                </TooltipProvider>
+              </Providers>
             </HydrateClient>
           </TRPCReactProvider>
         </body>

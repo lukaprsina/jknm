@@ -8,12 +8,13 @@ import {
   PublishedArticlesToAuthors,
 } from "~/server/db/schema";
 
-export async function get_infinite_published(input: {
-  limit: number;
-  cursor?: string;
-  direction?: "forward" | "backward";
+export async function get_infinite_published2({
+  pageParam,
+}: {
+  pageParam: number | null;
 }) {
-  const direction = input.direction === "backward" ? "asc" : "desc";
+  const direction = "desc";
+  const cursor = pageParam ? new Date(pageParam) : new Date();
 
   const data = await db.query.PublishedArticle.findMany({
     with: {
@@ -25,8 +26,8 @@ export async function get_infinite_published(input: {
       },
     },
     ...withCursorPagination({
-      limit: input.limit,
-      cursors: [[PublishedArticle.created_at, direction, input.cursor]],
+      limit: 31,
+      cursors: [[PublishedArticle.created_at, direction, cursor]],
     }),
   });
 
