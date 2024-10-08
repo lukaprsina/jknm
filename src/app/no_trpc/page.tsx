@@ -14,8 +14,8 @@ export default async function HomePageServer() {
 
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["infinite_published"],
-    queryFn: get_infinite_published2,
-    initialPageParam: null,
+    queryFn: (props) => get_infinite_published2({ limit: 31, ...props }),
+    initialPageParam: undefined,
   });
 
   return (

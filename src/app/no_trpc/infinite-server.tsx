@@ -10,11 +10,13 @@ import {
 
 export async function get_infinite_published2({
   pageParam,
+  limit,
 }: {
-  pageParam: number | null;
+  pageParam: Date | undefined;
+  limit: number;
 }) {
   const direction = "desc";
-  const cursor = pageParam ? new Date(pageParam) : new Date();
+  const cursor = pageParam;
 
   const data = await db.query.PublishedArticle.findMany({
     with: {
@@ -26,15 +28,14 @@ export async function get_infinite_published2({
       },
     },
     ...withCursorPagination({
-      limit: 31,
+      limit,
       cursors: [[PublishedArticle.created_at, direction, cursor]],
     }),
   });
 
-  const last = data.at(-1);
-
   return {
     data,
-    next_cursor: last?.created_at,
+    next_cursor: data.at(-1)?.created_at,
+    // prev_cursor: data.at(0)?.created_at,
   };
 }
