@@ -1,34 +1,22 @@
 "use client";
 
-import { Fragment, useMemo } from "react";
-import { api } from "~/trpc/react";
-
-export function useAllAuthors() {
-  /* const all_authors = api.author.get_all.useQuery(undefined, {
-    staleTime: 1000 * 60 * 60 * 24, // 24 hours
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-  });
-
-  return all_authors.data; */
-  return [];
-}
+import { Fragment, use, useMemo } from "react";
+import { cachedAllAuthors } from "~/server/api/authors/get-all-authors";
 
 export function Authors({ author_ids }: { author_ids: number[] }) {
-  const all_authors = useAllAuthors();
+  const all_authors = [];
 
   const authors = useMemo(
     () =>
       all_authors
-        ?.filter((author) => author_ids.includes(author.id))
+        .filter((author) => author_ids.includes(author.id))
         .sort((a, b) => author_ids.indexOf(a.id) - author_ids.indexOf(b.id)),
     [all_authors, author_ids],
   );
 
   return (
     <>
-      {authors?.map((author, index) => (
+      {authors.map((author, index) => (
         // span className="flex-shrink-0"
         <Fragment key={author.id}>
           {author.name}
