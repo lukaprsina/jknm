@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 "use client";
 
 import {
@@ -32,7 +33,7 @@ export function useEditorMutations() {
   const publish_article = useContext(PublishedArticleContext);
   const editor_context = useContext(EditorContext);
   const duplicate_urls = useDuplicatedUrls();
-  const trpc_utils = api.useUtils();
+  // const trpc_utils = api.useUtils();
 
   const toaster = useToast();
   const router = useRouter();
@@ -54,8 +55,8 @@ export function useEditorMutations() {
     onSettled: async () => {
       editor_context.setSavingText(undefined);
       editor_context.setDirty(false);
-      await trpc_utils.article.invalidate();
-      await trpc_utils.article.get_infinite_published.invalidate();
+      /* await trpc_utils.article.invalidate();
+      await trpc_utils.article.get_infinite_published.invalidate(); */
     },
     onError: (error) => {
       toaster.toast({
@@ -75,9 +76,9 @@ export function useEditorMutations() {
     onSettled: async () => {
       editor_context.setSavingText(undefined);
       editor_context.setDirty(false);
-      await trpc_utils.article.invalidate();
+      /* await trpc_utils.article.invalidate();
       await trpc_utils.article.get_duplicate_urls.invalidate();
-      await trpc_utils.article.get_infinite_published.invalidate();
+      await trpc_utils.article.get_infinite_published.invalidate(); */
     },
     onError: (error) => {
       toaster.toast({
@@ -103,8 +104,8 @@ export function useEditorMutations() {
     },
     onSettled: async () => {
       editor_context.setSavingText(undefined);
-      await trpc_utils.article.invalidate();
-      await trpc_utils.article.get_infinite_published.invalidate();
+      /* await trpc_utils.article.invalidate();
+      await trpc_utils.article.get_infinite_published.invalidate(); */
     },
     onError: (error) => {
       toaster.toast({
@@ -117,8 +118,8 @@ export function useEditorMutations() {
   const unpublish = api.article.unpublish.useMutation({
     onSettled: async () => {
       editor_context.setSavingText(undefined);
-      await trpc_utils.article.invalidate();
-      await trpc_utils.article.get_infinite_published.invalidate();
+      /* await trpc_utils.article.invalidate();
+      await trpc_utils.article.get_infinite_published.invalidate(); */
       router.refresh();
     },
     onError: (error) => {
@@ -131,8 +132,8 @@ export function useEditorMutations() {
 
   const delete_both = api.article.delete_both.useMutation({
     onSettled: async () => {
-      await trpc_utils.article.invalidate();
-      await trpc_utils.article.get_infinite_published.invalidate();
+      /* await trpc_utils.article.invalidate();
+      await trpc_utils.article.get_infinite_published.invalidate(); */
       router.replace(`/`);
     },
     onError: (error) => {

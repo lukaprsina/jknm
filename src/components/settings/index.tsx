@@ -15,7 +15,6 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import Link from "next/link";
-import { api } from "~/trpc/react";
 import { useToast } from "~/hooks/use-toast";
 import React from "react";
 // import { AuthorsDialog } from "./authors";
@@ -26,7 +25,7 @@ export function SettingsDropdown() {
   const toaster = useToast();
 
   // TODO: to bi moral biti dialog.
-  const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation({
+  /* const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation({
     onSuccess: (data) => {
       toaster.toast({
         title: "Uspeh",
@@ -39,7 +38,7 @@ export function SettingsDropdown() {
         description: error.message,
       });
     },
-  });
+  }); */
   // const [authorDialogOpen, setAuthorDialogOpen] = useState(false);
 
   return (
@@ -68,7 +67,7 @@ export function SettingsDropdown() {
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
-              sync_duplicate_urls.mutate();
+              // sync_duplicate_urls.mutate();
             }}
           >
             <RefreshCcw className="mr-2 h-4 w-4" size={18} />

@@ -4,14 +4,15 @@ import { Fragment, useMemo } from "react";
 import { api } from "~/trpc/react";
 
 export function useAllAuthors() {
-  const all_authors = api.author.get_all.useQuery(undefined, {
+  /* const all_authors = api.author.get_all.useQuery(undefined, {
     staleTime: 1000 * 60 * 60 * 24, // 24 hours
     refetchOnMount: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
   });
 
-  return all_authors.data;
+  return all_authors.data; */
+  return [];
 }
 
 export function Authors({ author_ids }: { author_ids: number[] }) {
