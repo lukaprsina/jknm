@@ -4,7 +4,6 @@ import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { PencilIcon, PlusIcon } from "lucide-react";
 
-import { api } from "~/trpc/react";
 import type { Session } from "next-auth";
 import MakeNewDraftButton from "../article/make-new-draft-button";
 import { Button } from "~/components/ui/button";
@@ -20,6 +19,10 @@ import type {
   PublishedArticleWithAuthors,
 } from "../article/adapter";
 import { get_draft_article_link } from "~/lib/article-utils";
+import { useMutation } from "@tanstack/react-query";
+import type { create_draft_validator } from "~/server/article/create-draft";
+import { create_draft } from "~/server/article/create-draft";
+import type { z } from "zod";
 
 export default function EditingButtons({
   published_article,
@@ -64,7 +67,6 @@ export function EditButton({
   published_article_id: number;
 }) {
   const router = useRouter();
-  const trpc_utils = api.useUtils();
 
   const handle_navigation = useCallback(
     (id: number) => {
@@ -79,13 +81,20 @@ export function EditButton({
     [new_tab, router],
   );
 
-  // TODO
-  const get_or_create_draft = api.article.get_or_create_draft.useMutation({
+  const create_draft_mutation = useMutation({
+    mutationFn: (input: z.infer<typeof create_draft_validator>) =>
+      create_draft(input),
+    onSuccess: (data) => {
+      router.push(get_draft_article_link(data.id));
+      handle_navigation(data.id);
+    },
+  });
+  /* const get_or_create_draft = api.article.get_or_create_draft.useMutation({
     onSuccess: async (data) => {
       await trpc_utils.article.invalidate();
       handle_navigation(data.id);
     },
-  });
+  }); */
 
   return (
     <Tooltip>
@@ -94,9 +103,12 @@ export function EditButton({
           className="flex flex-shrink-0 dark:bg-primary/80 dark:text-primary-foreground"
           size="icon"
           onClick={() => {
-            get_or_create_draft.mutate({
+            create_draft_mutation.mutate({
               published_id: published_article_id,
             });
+            /* get_or_create_draft.mutate({
+              published_id: published_article_id,
+            }); */
           }}
           {...props}
         >

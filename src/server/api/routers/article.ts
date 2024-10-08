@@ -72,7 +72,7 @@ export const article_router = createTRPCRouter({
           with: {
             author: true,
           },
-          orderBy: asc(PublishedArticlesToAuthors.order),
+          orderBy: asc(DraftArticlesToAuthors.order),
         },
       },
     });

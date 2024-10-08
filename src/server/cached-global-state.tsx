@@ -6,8 +6,8 @@ export const cachedAllAuthors = memoize(
     return db.query.Author.findMany();
   },
   {
-    revalidateTags: () => ["authors"],
-    log: ["dedupe", "datacache", "verbose"],
+    revalidateTags: ["authors"],
+    // log: ["dedupe", "datacache", "verbose"],
     logid: "authors",
   },
 );
@@ -18,8 +18,8 @@ export const cachedDuplicateUrls = memoize(
     return urls.map((data) => data.url);
   },
   {
-    revalidateTags: () => ["duplicate-urls"],
-    log: ["dedupe", "datacache", "verbose"],
+    revalidateTags: ["duplicate-urls"],
+    // log: ["dedupe", "datacache", "verbose"],
     logid: "duplicate-urls",
   },
 );

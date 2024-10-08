@@ -15,7 +15,7 @@ import Providers from "./provider";
 import {
   cachedAllAuthors,
   cachedDuplicateUrls,
-} from "~/server/api/cached-global-state";
+} from "~/server/cached-global-state";
 
 export const metadata: Metadata = {
   title: "Jamarski klub Novo mesto",

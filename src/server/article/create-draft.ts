@@ -20,12 +20,23 @@ import {
 import { env } from "~/env";
 import type { PublishedArticleWithAuthors } from "~/components/article/adapter";
 import { get_content_from_title } from "~/lib/get-content-from-title";
+import { z } from "zod";
+import { revalidatePath, revalidateTag } from "next/cache";
 
-export async function get_or_create_draft(input: {
-  published_id?: number;
-  title?: string;
-}) {
-  return await db.transaction(async (tx) => {
+export const create_draft_validator = z.object({
+  published_id: z.number().optional(),
+  title: z.string().optional(),
+});
+
+export async function create_draft(
+  input: z.infer<typeof create_draft_validator>,
+) {
+  const validated_input = create_draft_validator.safeParse(input);
+  if (!validated_input.success) {
+    throw new Error(validated_input.error.message);
+  }
+
+  const transaction = await db.transaction(async (tx) => {
     if (
       typeof input.published_id === "undefined" &&
       typeof input.title === "undefined"
@@ -154,4 +165,8 @@ export async function get_or_create_draft(input: {
     if (!draft_returning) throw new Error("Created draft not found");
     return draft_returning;
   });
+
+  revalidateTag("drafts");
+  revalidatePath("/");
+  return transaction;
 }

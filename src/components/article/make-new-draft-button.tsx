@@ -15,7 +15,9 @@ import { article_variants } from "~/lib/page-variants";
 import { get_draft_article_link } from "~/lib/article-utils";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { get_or_create_draft } from "~/server/api/article/get-or-create-draft";
+import type { create_draft_validator } from "~/server/article/create-draft";
+import { create_draft } from "~/server/article/create-draft";
+import type { z } from "zod";
 
 export default function MakeNewDraftButton({
   title,
@@ -23,15 +25,16 @@ export default function MakeNewDraftButton({
 }: ButtonProps & { title?: string }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const create_draft = useMutation({
-    mutationFn: () => {
-      console.log("create_draft in make-new-draft-button");
-      return get_or_create_draft({ title: title ?? "Nova novica" });
-    },
+  const create_draft_mutation = useMutation({
+    mutationFn: (input: z.infer<typeof create_draft_validator>) =>
+      create_draft(input),
     onSuccess: (data) => {
       router.push(get_draft_article_link(data.id));
     },
-    onSettled: () => setOpen(false),
+    onSettled: (data, e) => {
+      console.log("get_or_create_draft", { data, e });
+      setOpen(false);
+    },
   });
   // const trpc_utils = api.useUtils();
 
@@ -51,7 +54,7 @@ export default function MakeNewDraftButton({
             <Button
               {...props}
               onClick={() => {
-                create_draft.mutate();
+                create_draft_mutation.mutate({ title: title ?? "Nova novica" });
                 /* create_draft.mutate({
                   article: get_content_from_title(title),
                 }); */

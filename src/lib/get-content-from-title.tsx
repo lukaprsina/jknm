@@ -1,13 +1,11 @@
-export function get_content_from_title(title?: string) {
-  const new_title = title ?? "Nova novica";
-
+export function get_content_from_title(title: string) {
   const content = {
     blocks: [
       {
         id: "sheNwCUP5A",
         type: "header",
         data: {
-          text: new_title,
+          text: title,
           level: 1,
         },
       },
@@ -15,7 +13,7 @@ export function get_content_from_title(title?: string) {
   };
 
   return {
-    title: new_title,
+    title: title,
     content,
   };
 }

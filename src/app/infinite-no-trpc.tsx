@@ -4,21 +4,23 @@ import { cn } from "~/lib/utils";
 import { article_grid_variants, article_variants } from "~/lib/page-variants";
 import { PublishedArticleDrizzleCard } from "~/components/article/adapter";
 import { get_infinite_published2 } from "./infinite-server";
-import type { QueryFunctionContext } from "@tanstack/react-query";
+// import type { QueryFunctionContext } from "@tanstack/react-query";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Fragment, useEffect } from "react";
 import { useIntersectionObserver } from "usehooks-ts";
 
 export function InfiniteArticles() {
-  const test = async ({
+  /* const test = async ({
     pageParam,
   }: QueryFunctionContext<string[], Date | undefined>) => {
     return get_infinite_published2({ pageParam, limit: 60 });
-  };
+  }; */
 
   const infinite_published = useInfiniteQuery({
     queryKey: ["infinite_published"],
-    queryFn: test,
+    // queryFn: test,
+    queryFn: ({ pageParam }) =>
+      get_infinite_published2({ pageParam, limit: 60 }),
     initialPageParam: undefined as Date | undefined,
     getNextPageParam: (lastPage) => lastPage.next_cursor,
     // getPreviousPageParam: (firstPage) => firstPage.prev_cursor,
@@ -54,7 +56,8 @@ export function InfiniteArticles() {
             let ref = undefined;
             /* if (group_index === 0 && index === 0) {
               ref = first_observer_ref;
-            } else  */ if (
+            } else  */
+            if (
               group_index === infinite_published.data.pages.length - 1 &&
               index === group.data.length - 10
             ) {
