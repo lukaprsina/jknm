@@ -14,8 +14,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { article_variants } from "~/lib/page-variants";
 import { get_draft_article_link } from "~/lib/article-utils";
 import { useMutation } from "@tanstack/react-query";
-import { get_or_create_draft } from "~/server/article";
 import { useState } from "react";
+import { get_or_create_draft } from "~/server/api/article/get-or-create-draft";
 
 export default function MakeNewDraftButton({
   title,
@@ -24,7 +24,7 @@ export default function MakeNewDraftButton({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const create_draft = useMutation({
-    mutationFn: async () => {
+    mutationFn: () => {
       console.log("create_draft in make-new-draft-button");
       return get_or_create_draft({ title: title ?? "Nova novica" });
     },

@@ -40,9 +40,9 @@ import type { Session } from "next-auth";
 import type { PublishedArticleHit } from "~/lib/validators";
 import { Authors } from "~/components/authors";
 import { get_published_article_link } from "~/lib/article-utils";
-import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 import { useInfiniteAlgoliaArticles } from "~/hooks/use-infinite-algolia";
-import { IntersectionRef } from "~/components/article/infinite-articles";
+import type { IntersectionRef } from "~/components/article/infinite-articles";
+import { cached_state_store } from "../provider";
 
 export function ArticleTable({
   session,
@@ -154,7 +154,7 @@ function ArticleTableRow({
   hit: SearchHit<PublishedArticleHit>;
   session: Session | null;
 }) {
-  const duplicate_urls = useDuplicatedUrls();
+  const duplicate_urls = cached_state_store.get.duplicate_urls();
 
   return (
     <TableRow ref={ref} key={hit.objectID}>

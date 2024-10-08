@@ -10,7 +10,6 @@ import {
   update_settings_from_editor,
   validate_article,
 } from "~/components/editor/editor-lib";
-import { useDuplicatedUrls } from "~/hooks/use-duplicated-urls";
 import { useContext } from "react";
 import {
   DraftArticleContext,
@@ -27,12 +26,13 @@ import type {
 import type { z } from "zod";
 import type { ThumbnailType } from "~/lib/validators";
 import { upload_image_by_url } from "~/components/aws-s3/upload-file";
+import { cached_state_store } from "~/app/provider";
 
 export function useEditorMutations() {
   const draft_article = useContext(DraftArticleContext);
   const publish_article = useContext(PublishedArticleContext);
   const editor_context = useContext(EditorContext);
-  const duplicate_urls = useDuplicatedUrls();
+  const duplicate_urls = cached_state_store.get.duplicate_urls();
   // const trpc_utils = api.useUtils();
 
   const toaster = useToast();

@@ -7,12 +7,12 @@ import { MultiSelect } from "~/components/multi-select";
 
 import { EditorContext } from "~/components/editor/editor-context";
 import { editor_store } from "~/components/editor/editor-store";
-import { useAllAuthors } from "~/components/authors";
 import { ToolbarButtons } from "./toolbar-buttons";
+import { cached_state_store } from "~/app/provider";
 
 export function MyToolbar() {
   const editor_context = useContext(EditorContext);
-  const all_authors = useAllAuthors();
+  const all_authors = cached_state_store.get.all_authors();
   const author_ids = editor_store.use.author_ids();
 
   const selected_author_ids = useMemo(() => {
@@ -21,8 +21,6 @@ export function MyToolbar() {
   }, [author_ids]);
 
   const authors = useMemo(() => {
-    if (!all_authors) return [];
-
     return all_authors
       .map(
         (user) =>
