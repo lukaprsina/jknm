@@ -2,11 +2,14 @@
 "use client";
 
 // Since QueryClientProvider relies on useContext under the hood, we have to put 'use client' on top
+import { createStore } from "zustand-x";
 import {
   isServer,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import type { Author } from "~/server/db/schema";
+import { useEffect } from "react";
 
 function makeQueryClient() {
   return new QueryClient({
@@ -36,12 +39,44 @@ function getQueryClient() {
   }
 }
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+interface CachedStateStoreType {
+  all_authors: (typeof Author.$inferSelect)[];
+  duplicate_urls: string[];
+}
+
+export const cached_state_store = createStore(
+  "global_state",
+)<CachedStateStoreType>(
+  {
+    all_authors: [],
+    duplicate_urls: [],
+  },
+  {
+    persist: {
+      enabled: true,
+    },
+  },
+);
+
+export default function Providers({
+  all_authors,
+  duplicate_urls,
+  children,
+}: {
+  all_authors: (typeof Author.$inferSelect)[];
+  duplicate_urls: string[];
+  children: React.ReactNode;
+}) {
   // NOTE: Avoid useState when initializing the query client if you don't
   //       have a suspense boundary between this and the code that may
   //       suspend because React will throw away the client on the initial
   //       render if it suspends and there is no boundary
   const queryClient = getQueryClient();
+
+  useEffect(() => {
+    cached_state_store.set.all_authors(all_authors);
+    cached_state_store.set.duplicate_urls(duplicate_urls);
+  }, [all_authors, duplicate_urls]);
 
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

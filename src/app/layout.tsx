@@ -12,6 +12,10 @@ import { cn } from "~/lib/utils";
 import { GeistMono } from "geist/font/mono";
 import { StrictMode } from "react";
 import Providers from "./provider";
+import {
+  cachedAllAuthors,
+  cachedDuplicateUrls,
+} from "~/server/api/cached-global-state";
 
 export const metadata: Metadata = {
   title: "Jamarski klub Novo mesto",
@@ -26,10 +30,14 @@ const open_sans = Open_Sans({
   variable: "--font-opensans",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   // await api.draft_article.get_duplicate_urls.prefetch();
+  const [all_authors, duplicate_urls] = await Promise.all([
+    cachedAllAuthors(),
+    cachedDuplicateUrls(),
+  ]);
 
   return (
     <StrictMode>
@@ -44,7 +52,7 @@ export default function RootLayout({
         >
           {/* <TRPCReactProvider> */}
           {/* <HydrateClient> */}
-          <Providers>
+          <Providers all_authors={all_authors} duplicate_urls={duplicate_urls}>
             <TooltipProvider>
               {children}
               <Toaster />

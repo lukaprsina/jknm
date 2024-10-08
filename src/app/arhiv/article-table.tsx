@@ -2,7 +2,6 @@
 
 import type { Hit as SearchHit } from "instantsearch.js";
 import type { UseInfiniteHitsProps } from "react-instantsearch";
-import { useInfiniteHits } from "react-instantsearch";
 import Link from "next/link";
 import { ChevronDownIcon, ChevronUpIcon, TrashIcon } from "lucide-react";
 import { useSortBy } from "react-instantsearch";
@@ -53,7 +52,10 @@ export function ArticleTable({
     items: SORT_BY_ITEMS,
   });
 
-  const { load_more_ref, items } = useInfiniteAlgoliaArticles({ offset: 20, ...props });
+  const { load_more_ref, items } = useInfiniteAlgoliaArticles({
+    offset: 20,
+    ...props,
+  });
 
   return (
     <Table>
@@ -123,7 +125,12 @@ export function ArticleTable({
       </TableHeader>
       <TableBody>
         {items.map((item, index) => (
-          <ArticleTableRow hit={item} session={session} key={item.objectID} ref={load_more_ref(index)} />
+          <ArticleTableRow
+            hit={item}
+            session={session}
+            key={item.objectID}
+            ref={load_more_ref(index)}
+          />
         ))}
       </TableBody>
       <TableFooter>
@@ -143,7 +150,7 @@ function ArticleTableRow({
   hit,
   session: _,
 }: {
-  ref?: IntersectionRef
+  ref?: IntersectionRef;
   hit: SearchHit<PublishedArticleHit>;
   session: Session | null;
 }) {
