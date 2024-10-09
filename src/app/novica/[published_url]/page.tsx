@@ -71,8 +71,6 @@ async function get_articles(
   published_url: string,
   searchParams: Record<string, string | string[] | undefined>,
 ) {
-  await api.author.get_all.prefetch();
-
   const decoded = decodeURIComponent(published_url);
   let day: string | undefined;
 

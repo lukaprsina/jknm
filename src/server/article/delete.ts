@@ -7,7 +7,7 @@ import { eq } from "drizzle-orm";
 import { assert_one } from "~/lib/assert-length";
 import { delete_objects, delete_s3_directory } from "../s3-utils";
 import { env } from "~/env";
-import { searchClient } from "algoliasearch";
+import { algoliasearch as searchClient } from "algoliasearch";
 import {
   get_s3_draft_directory,
   get_s3_published_directory,

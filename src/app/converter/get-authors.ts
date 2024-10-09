@@ -4,7 +4,7 @@ import { parse as html_parse } from "node-html-parser";
 
 import type { RouterOutputs } from "~/trpc/react";
 import type { ImportedArticle } from "./converter-spaghetti";
-import { cachedAllAuthors } from "~/server/cached-global-state";
+import { cached_state_store } from "../provider";
 
 export interface AuthorType {
   name: string;
@@ -16,10 +16,8 @@ export function get_authors(
   imported_article: ImportedArticle,
   all_blocks: OutputBlockData[],
   authors_by_name: AuthorType[],
-  all_authors: RouterOutputs["author"]["get_all"],
 ) {
   // const all_authors = await api.author.get_all();
-  const all_authors = await cachedAllAuthors()
   let number_of_paragraphs = 3;
 
   const last_paragraphs: string[] = [];
@@ -86,7 +84,6 @@ export function get_authors(
       for (const split_author of split_authors) {
         process_author(
           split_author,
-          all_authors,
           not_found_authors,
           current_authors,
         );
@@ -106,12 +103,12 @@ export function get_authors(
 
 function process_author(
   split_author: string,
-  all_authors: RouterOutputs["author"]["get_all"],
   not_found_authors: Set<string>,
   current_authors: Set<number>,
   // csv_article: CSVType,
 ) {
   let index: number | undefined = undefined;
+  const all_authors = cached_state_store.get.all_authors()
 
   for (let i = 0; i < all_authors.length; i++) {
     const db_author = all_authors[i];

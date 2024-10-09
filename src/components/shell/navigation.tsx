@@ -1,13 +1,13 @@
 // @ ts-expect-error - mdx import
-import { tableOfContents as toc_zgodovina } from "~/app/(static)/zgodovina/page.mdx";
+// import { tableOfContents as toc_zgodovina } from "~/app/(static)/zgodovina/page.mdx";
 // @ ts-expect-error - mdx import
-import { tableOfContents as toc_raziskovanje } from "~/app/(static)/raziskovanje/page.mdx";
+// import { tableOfContents as toc_raziskovanje } from "~/app/(static)/raziskovanje/page.mdx";
 // @ ts-expect-error - mdx import
-import { tableOfContents as toc_publiciranje } from "~/app/(static)/publiciranje/page.mdx";
+// import { tableOfContents as toc_publiciranje } from "~/app/(static)/publiciranje/page.mdx";
 // @ ts-expect-error - mdx import
-import { tableOfContents as toc_varstvo } from "~/app/(static)/varstvo/page.mdx";
+// import { tableOfContents as toc_varstvo } from "~/app/(static)/varstvo/page.mdx";
 // @ ts-expect-error - mdx import
-import { tableOfContents as toc_klub } from "~/app/(static)/klub/page.mdx";
+// import { tableOfContents as toc_klub } from "~/app/(static)/klub/page.mdx";
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -37,7 +37,7 @@ export function Navigation() {
       onValueChange={console.log} */
     >
       <NavigationMenuList>
-        <NavDropdown
+        { /* <NavDropdown
           title="Zgodovina"
           href="zgodovina"
           toc={toc_zgodovina}
@@ -71,7 +71,7 @@ export function Navigation() {
           toc={toc_klub}
           description="Oglejte si informacije o klubu, katastru jam, izobraževanju, etičnem kodeksu, društvu v javnem interesu in jamarski reševalni službi."
           icon={<UsersIcon size={24} />}
-        />
+        /> */ }
         <DesktopHeaderLink href="/arhiv">Arhiv novic</DesktopHeaderLink>
       </NavigationMenuList>
     </NavigationMenu>

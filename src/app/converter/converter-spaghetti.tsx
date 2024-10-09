@@ -129,7 +129,6 @@ export async function iterate_over_articles(
   do_dimensions: boolean,
   first_article: number,
   last_article: number,
-  all_authors: RouterOutputs["author"]["get_all"],
 ) {
   if (false as boolean) {
     return;
@@ -188,7 +187,6 @@ export async function iterate_over_articles(
       csv_article,
       editorJS,
       csv_ids,
-      all_authors,
       authors_by_name,
       do_dimensions,
       problems,
@@ -225,7 +223,6 @@ async function parse_csv_article(
   imported_article: ImportedArticle,
   editorJS: EditorJS | null,
   csv_ids: number[],
-  all_authors: RouterOutputs["author"]["get_all"],
   authors_by_name: AuthorType[],
   do_dimensions: boolean,
   problems: InitialProblems,
@@ -373,7 +370,6 @@ async function parse_csv_article(
     imported_article,
     blocks,
     authors_by_name,
-    all_authors,
   );
 
   await editorJS?.render({

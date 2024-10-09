@@ -9,7 +9,7 @@ import {
   PublishedArticlesToAuthors,
 } from "../db/schema";
 import { assert_at_most_one, assert_one } from "~/lib/assert-length";
-import { searchClient } from "algoliasearch";
+import { algoliasearch as searchClient } from "algoliasearch";
 import { env } from "~/env";
 import {
   delete_s3_directory,

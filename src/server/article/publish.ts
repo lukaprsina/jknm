@@ -22,7 +22,7 @@ import {
 import { env } from "~/env";
 import { klona } from "klona";
 import { assert_one } from "~/lib/assert-length";
-import { searchClient } from "algoliasearch";
+import { algoliasearch as searchClient } from "algoliasearch";
 import { convert_article_to_algolia_object } from "~/lib/algoliasearch";
 import { revalidatePath } from "next/cache";
 

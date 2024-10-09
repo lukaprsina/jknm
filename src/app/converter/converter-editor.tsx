@@ -140,7 +140,6 @@ export function ArticleConverter() {
           <Button
             onClick={async () => {
               console.clear();
-              const authors = await get_authors_server();
 
               await iterate_over_articles(
                 editorJS.current,
@@ -150,7 +149,6 @@ export function ArticleConverter() {
                 doDimensions,
                 parseInt(firstArticle),
                 parseInt(lastArticle),
-                authors,
               );
             }}
           >
