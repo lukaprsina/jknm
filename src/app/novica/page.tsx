@@ -1,4 +1,3 @@
-import { api } from "~/trpc/server";
 import { Shell } from "~/components/shell";
 import { ArticleNotFound } from "~/components/component-not-found";
 import { redirect } from "next/navigation";
@@ -10,7 +9,7 @@ export default async function Page({
 }: {
   searchParams: Record<string, string | string[] | undefined>;
 }) {
-  await api.author.get_all.prefetch();
+  // await api.author.get_all.prefetch();
   // const session = await getServerAuthSession();
   let id: number | undefined;
 
@@ -28,6 +27,7 @@ export default async function Page({
     }
   }
 
+  // TODO
   const { article, duplicate_urls } = await named_promise_all_settled({
     article: api.article.get_article_by_published_id(id),
     duplicate_urls: api.article.get_duplicate_urls(),

@@ -28,13 +28,35 @@ import type { GuestAuthor } from "./table";
 import { Button } from "~/components/ui/button";
 import type { Row } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
+import { api } from "~/trpc/react";
 import { EditAuthorNameForm, InsertAuthorForm } from "./table-forms";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { delete_guests, delete_guests_validator } from "~/server/author/delete";
+import { z } from "zod";
+import { useToast } from "~/hooks/use-toast";
 
 export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
   // const delete_guests = api.author.delete_guests.useMutation();
   // const trpc_utils = api.useUtils();
-
   const [dialogOpen, setDialogOpen] = useState(false);
+  const toaster = useToast()
+  const query_client = useQueryClient()
+
+  const delete_guests_mutation = useMutation({
+    mutationFn: (input: z.infer<typeof delete_guests_validator>) =>
+      delete_guests(input),
+    onSettled: async () => {
+      await query_client.invalidateQueries({
+        queryKey: ["infinite_published"],
+      });
+    },
+    onError: (error) => {
+      toaster.toast({
+        title: "Napaka pri brisanju avtorjev",
+        description: error.message,
+      });
+    },
+  });
 
   return (
     <div className="flex gap-1">
@@ -80,11 +102,12 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
             <b>{author.name}</b>?
           </span>
           <AlertDialogFooter>
-            <AlertDialogCancel>Prekliči</AlertDialogCancel>
+            <AlertDialogCancel>Prekliči</AlertDialogCancel>            
             <AlertDialogAction
-              onClick={() => {
+              onClick={async () => {
                 // delete_guests.mutate({ ids: [author.id] });
                 // await trpc_utils.author.invalidate();
+                delete_guests_mutation.mutate({ids: [author.id]})
                 setDialogOpen(false);
               }}
             >
@@ -102,8 +125,26 @@ export function AuthorsTableHeaderButtons({
 }: {
   rows: Row<GuestAuthor>[];
 }) {
-  // const trpc_utils = api.useUtils();
-  // const delete_guests = api.author.delete_guests.useMutation();
+  /* const trpc_utils = api.useUtils();
+  const delete_guests = api.author.delete_guests.useMutation(); */
+  const toaster = useToast()
+  const query_client = useQueryClient()
+
+  const delete_guests_mutation = useMutation({
+    mutationFn: (input: z.infer<typeof delete_guests_validator>) =>
+      delete_guests(input),
+    onSettled: async () => {
+      await query_client.invalidateQueries({
+        queryKey: ["infinite_published"],
+      });
+    },
+    onError: (error) => {
+      toaster.toast({
+        title: "Napaka pri brisanju avtorjev",
+        description: error.message,
+      });
+    },
+  });
 
   const message = useMemo(() => {
     const length = rows.length;
@@ -176,11 +217,12 @@ export function AuthorsTableHeaderButtons({
             </AlertDialogCancel>
             {rows.length !== 0 && (
               <AlertDialogAction
-                onClick={() => {
+                onClick={async () => {
                   /* delete_guests.mutate({
                     ids: rows.map((row) => row.original.id),
                   });
                   await trpc_utils.author.invalidate(); */
+                  delete_guests_mutation.mutate({ids: rows.map((row) => row.original.id)})
                 }}
               >
                 Izbriši

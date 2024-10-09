@@ -42,6 +42,11 @@ import { get_published_article_link } from "~/lib/article-utils";
 import { useInfiniteAlgoliaArticles } from "~/hooks/use-infinite-algolia";
 import type { IntersectionRef } from "~/components/article/infinite-articles";
 import { cached_state_store } from "../provider";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "~/hooks/use-toast";
+import { delete_both, delete_both_validator } from "~/server/article/delete";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
 
 export function ArticleTable({
   session,
@@ -182,11 +187,35 @@ function ArticleTableRow({
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function DeleteDialog({ article_id }: { article_id: number }) {
+  // const trpc_utils = api.useUtils();
+
   /* const article_delete = api.article.delete_both.useMutation({
     onSuccess: async () => {
       await trpc_utils.article.invalidate();
     },
   }); */
+  const toaster = useToast()
+  const router = useRouter()
+  const query_client = useQueryClient()
+
+  const delete_both_mutation = useMutation({
+    mutationFn: (input: z.infer<typeof delete_both_validator>) =>
+      delete_both(input),
+    onSettled: async () => {
+      await query_client.invalidateQueries({
+        queryKey: ["infinite_published"],
+      });
+      /* await trpc_utils.article.invalidate();
+      await trpc_utils.article.get_infinite_published.invalidate(); */
+      router.replace(`/`);
+    },
+    onError: (error) => {
+      toaster.toast({
+        title: "Napaka pri brisanju novičke",
+        description: error.message,
+      });
+    },
+  });
 
   return (
     <AlertDialog>
@@ -211,7 +240,7 @@ function DeleteDialog({ article_id }: { article_id: number }) {
           <AlertDialogCancel>Prekliči</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
-              // article_delete.mutate({ draft_id: article_id });
+              delete_both_mutation.mutate({ draft_id: article_id });
             }}
           >
             OK

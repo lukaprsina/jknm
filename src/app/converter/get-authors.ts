@@ -4,6 +4,7 @@ import { parse as html_parse } from "node-html-parser";
 
 import type { RouterOutputs } from "~/trpc/react";
 import type { ImportedArticle } from "./converter-spaghetti";
+import { cachedAllAuthors } from "~/server/cached-global-state";
 
 export interface AuthorType {
   name: string;
@@ -18,6 +19,7 @@ export function get_authors(
   all_authors: RouterOutputs["author"]["get_all"],
 ) {
   // const all_authors = await api.author.get_all();
+  const all_authors = await cachedAllAuthors()
   let number_of_paragraphs = 3;
 
   const last_paragraphs: string[] = [];

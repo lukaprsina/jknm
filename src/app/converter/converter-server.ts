@@ -23,6 +23,7 @@ import { crop_image, delete_s3_directory } from "~/server/s3-utils";
 import { env } from "~/env";
 import { algoliasearch } from "algoliasearch";
 import { convert_article_to_algolia_object } from "~/lib/algoliasearch";
+import { cachedAllAuthors } from "~/server/cached-global-state";
 
 export async function test_strong_bold() {
   const articles = await db.query.PublishedArticle.findMany({
@@ -83,6 +84,10 @@ export async function delete_authors() {
 
 export async function sync_authors() {
   // const google_authors = await api.author.sync_with_google();
+  if(true as boolean) {
+    throw new Error("Tega ne smeš več klicat")
+  }
+  const google_authors = await cachedAllAuthors()
 
   const read_file = true as boolean;
   if (!read_file) return;
