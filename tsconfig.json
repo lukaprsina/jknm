@@ -39,5 +39,5 @@
     ".eslint.config.js",
     "next-env.d.ts"
   ],
-  "exclude": ["node_modules", "node_modules/@types/mdx/index.d.ts"]
+  "exclude": ["node_modules", "src/app/(static)/**/*.mdx"]
 }

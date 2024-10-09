@@ -22,7 +22,9 @@ const mdx_rs =
 
 /** @type {import("next").NextConfig} */
 const config = {
-  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+  // "md", "mdx", 
+  
+  pageExtensions: ["js", "jsx", "ts", "tsx"],
   images: {
     loader: "custom",
     loaderFile: "./image-loader.js",
