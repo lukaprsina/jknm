@@ -1,9 +1,10 @@
 "use server";
 
-import type { z } from "zod";
+import { z } from "zod";
 import { db } from "../db";
 import {
   DraftArticle,
+  PublishArticleSchema,
   PublishedArticle,
   PublishedArticlesToAuthors,
 } from "../db/schema";
@@ -21,10 +22,15 @@ import {
 import { env } from "~/env";
 import { klona } from "klona";
 import { assert_one } from "~/lib/assert-length";
-import { algoliasearch as search_client } from "algoliasearch";
+import { searchClient } from "algoliasearch";
 import { convert_article_to_algolia_object } from "~/lib/algoliasearch";
 import { revalidatePath } from "next/cache";
-import { publish_validator } from "./validators";
+
+export const publish_validator = z.object({
+  article: PublishArticleSchema,
+  author_ids: z.array(z.number()),
+  draft_id: z.number().optional(),
+});
 
 export async function publish(input: z.infer<typeof publish_validator>) {
   const validated_input = publish_validator.safeParse(input);
@@ -166,7 +172,7 @@ export async function publish(input: z.infer<typeof publish_validator>) {
       throw new Error("Published draft_article not found");
 
     // update algolia index
-    const algolia = search_client(
+    const algolia = searchClient(
       env.NEXT_PUBLIC_ALGOLIA_ID,
       env.ALGOLIA_ADMIN_KEY,
     );

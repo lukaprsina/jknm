@@ -20,9 +20,13 @@ import {
 import { env } from "~/env";
 import type { PublishedArticleWithAuthors } from "~/components/article/adapter";
 import { get_content_from_title } from "~/lib/get-content-from-title";
-import type { z } from "zod";
+import { z } from "zod";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { create_draft_validator } from "./validators";
+
+export const create_draft_validator = z.object({
+  published_id: z.number().optional(),
+  title: z.string().optional(),
+});
 
 export async function create_draft(
   input: z.infer<typeof create_draft_validator>,

@@ -1,6 +1,6 @@
 "use server";
 
-import type { z } from "zod";
+import { z } from "zod";
 import { db } from "../db";
 import { asc, eq } from "drizzle-orm";
 import {
@@ -9,7 +9,7 @@ import {
   PublishedArticlesToAuthors,
 } from "../db/schema";
 import { assert_at_most_one, assert_one } from "~/lib/assert-length";
-import { algoliasearch as search_client } from "algoliasearch";
+import { searchClient } from "algoliasearch";
 import { env } from "~/env";
 import {
   delete_s3_directory,
@@ -21,7 +21,10 @@ import {
   get_s3_published_directory,
 } from "~/lib/article-utils";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { unpublish_validator } from "./validators";
+
+export const unpublish_validator = z.object({
+  published_id: z.number(),
+});
 
 export async function unpublish(input: z.infer<typeof unpublish_validator>) {
   const validated_input = unpublish_validator.safeParse(input);
@@ -45,7 +48,7 @@ export async function unpublish(input: z.infer<typeof unpublish_validator>) {
 
     // delete article from algolia index
     try {
-      const algolia = search_client(
+      const algolia = searchClient(
         env.NEXT_PUBLIC_ALGOLIA_ID,
         env.ALGOLIA_ADMIN_KEY,
       );

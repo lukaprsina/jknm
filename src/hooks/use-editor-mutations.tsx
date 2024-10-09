@@ -27,17 +27,17 @@ import type { ThumbnailType } from "~/lib/validators";
 import { upload_image_by_url } from "~/components/aws-s3/upload-file";
 import { cached_state_store } from "~/app/provider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { save_draft_validator } from "~/server/article/save-draft";
 import { save_draft } from "~/server/article/save-draft";
+import type { publish_validator } from "~/server/article/publish";
 import { publish } from "~/server/article/publish";
-import { delete_both, delete_draft } from "~/server/article/delete";
-import { unpublish } from "~/server/article/unpublish";
 import type {
   delete_both_validator,
   delete_draft_validator,
-  publish_validator,
-  save_draft_validator,
-  unpublish_validator,
-} from "~/server/article/validators";
+} from "~/server/article/delete";
+import { delete_both, delete_draft } from "~/server/article/delete";
+import type { unpublish_validator } from "~/server/article/unpublish";
+import { unpublish } from "~/server/article/unpublish";
 
 export function useEditorMutations() {
   const query_client = useQueryClient();
@@ -53,7 +53,6 @@ export function useEditorMutations() {
     throw new Error("Missing context");
   }
 
-  // TODO
   /* const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation({
     onError: (error) => {
       toaster.toast({
