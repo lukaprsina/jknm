@@ -5,11 +5,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { CardHeader, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
-import type { IntersectionRef } from "./infinite-articles";
 import { MagicCard } from "../magic-card";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { Skeleton } from "../ui/skeleton";
+import type { IntersectionRef } from "~/app/infinite-no-trpc";
 
 // import ArticleDescription from "./description/card-description";
 const ArticleDescription = dynamic(() => import("./description"), {

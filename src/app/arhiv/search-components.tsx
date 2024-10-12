@@ -27,7 +27,7 @@ import { Input } from "~/components/ui/input";
 import React from "react";
 // import { InstantSearchNext } from "react-instantsearch-nextjs";
 
-export const DEFAULT_REFINEMENT = "published_article_created_at_asc"
+export const DEFAULT_REFINEMENT = "published_article_created_at_asc";
 
 export function MySortBy() {
   const { currentRefinement, options, refine } = useSortBy({
@@ -67,18 +67,18 @@ export function MySearchBox() {
   return (
     <div className="flex w-full max-w-sm items-center space-x-2">
       <Input
-        placeholder="Iskanje ..."
+        placeholder="Išči po novicah …"
         value={search_api.query}
         className="max-w-xl"
         onChange={(e) => {
-          const text = e.target.value
-          const trimmed = text.trim()
+          const text = e.target.value;
+          const trimmed = text.trim();
 
-          search_api.refine(text)
-          if(trimmed === "") {
-            sort_refine(DEFAULT_REFINEMENT)
+          search_api.refine(text);
+          if (trimmed === "") {
+            sort_refine(DEFAULT_REFINEMENT);
           } else {
-            sort_refine("published_article")
+            sort_refine("published_article");
           }
         }}
       />

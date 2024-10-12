@@ -2,7 +2,6 @@ import type { OutputBlockData } from "@editorjs/editorjs";
 import { decode } from "html-entities";
 import { parse as html_parse } from "node-html-parser";
 
-import type { RouterOutputs } from "~/trpc/react";
 import type { ImportedArticle } from "./converter-spaghetti";
 import { cached_state_store } from "../provider";
 
@@ -82,11 +81,7 @@ export function get_authors(
       const split_authors = author.split(", ");
 
       for (const split_author of split_authors) {
-        process_author(
-          split_author,
-          not_found_authors,
-          current_authors,
-        );
+        process_author(split_author, not_found_authors, current_authors);
       }
     }
   }
@@ -108,7 +103,7 @@ function process_author(
   // csv_article: CSVType,
 ) {
   let index: number | undefined = undefined;
-  const all_authors = cached_state_store.get.all_authors()
+  const all_authors = cached_state_store.get.all_authors();
 
   for (let i = 0; i < all_authors.length; i++) {
     const db_author = all_authors[i];

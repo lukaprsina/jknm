@@ -32,7 +32,6 @@ import {
   AuthorsTableCellButtons,
   AuthorsTableHeaderButtons,
 } from "./table-buttons";
-import { api } from "~/trpc/react";
 import { cached_state_store } from "../provider";
 
 export interface GuestAuthor {
@@ -130,8 +129,11 @@ export function AuthorsDataTable() {
   });
 
   // const guest_authors = api.author.get_all.useQuery("guest");
-  const all_authors = cached_state_store.get.all_authors()
-  const guest_authors = useMemo(() => all_authors.filter((author) => author.author_type === "guest"), [all_authors])
+  const all_authors = cached_state_store.get.all_authors();
+  const guest_authors = useMemo(
+    () => all_authors.filter((author) => author.author_type === "guest"),
+    [all_authors],
+  );
 
   const table = useReactTable({
     data: guest_authors,
@@ -179,9 +181,9 @@ export function AuthorsDataTable() {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                     </TableHead>
                   );
                 })}

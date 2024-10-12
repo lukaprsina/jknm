@@ -1,5 +1,4 @@
 import { Shell } from "~/components/shell";
-import { api } from "~/trpc/server";
 import { ImageGallery } from "./image-gallery";
 import { getServerAuthSession } from "~/server/auth";
 import { read_date_from_url } from "~/lib/format-date";
@@ -7,6 +6,7 @@ import { ArticleNotFound } from "~/components/component-not-found";
 import { PublishedContent, TabbedContent } from "~/components/content";
 import type { Metadata, ResolvingMetadata } from "next";
 import DOMPurify from "isomorphic-dompurify";
+import { get_article_by_published_url } from "~/server/article/get-article";
 
 interface NovicaProps {
   params: {
@@ -82,7 +82,7 @@ async function get_articles(
     break;
   }
 
-  return await api.article.get_article_by_published_url({
+  return get_article_by_published_url({
     url: decoded,
     created_at: day ? read_date_from_url(day) : undefined,
   });

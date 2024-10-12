@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 
-import { api } from "~/trpc/react";
 import { useToast } from "~/hooks/use-toast";
 import { EditButton } from "~/components/shell/editing-buttons";
 import { EditorToReact } from "~/components/editor/editor-to-react";
@@ -14,6 +13,8 @@ import { EditorToReact } from "~/components/editor/editor-to-react";
 import { InfoCard } from "~/components/info-card";
 import { createStore } from "zustand-x";
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { get_article_by_published_id } from "~/server/article/get-article";
 
 export interface PreveriStoreType {
   index: number;
@@ -75,9 +76,11 @@ export function PreveriClient({
     };
   }, [articles, preveri_store_index]);
 
-  const article = api.article.get_published_by_id.useQuery(
-    page_info.current_id,
-  );
+  const article = useQuery({
+    queryKey: ["preveri-client"],
+    queryFn: () =>
+      get_article_by_published_id({ published_id: page_info.current_id }),
+  });
 
   const iframe_src = useCallback(
     (id: number) => `https://www.jknm.si/si/?id=${id}`,
@@ -143,7 +146,7 @@ export function PreveriClient({
             <EditButton
               type="button"
               variant="outline"
-              published_article_id={article.data.id}
+              published_article_id={article.data.published?.id ?? -1}
               new_tab
             />
           )}
@@ -156,7 +159,7 @@ export function PreveriClient({
               className="h-full w-full overflow-y-hidden rounded-xl"
               src={iframe_src(preveri_store_index)}
             />
-            <EditorToReact article={article.data} session={null} />
+            <EditorToReact article={article.data.published} session={null} />
           </>
         ) : (
           <InfoCard title="Nekaj je narobe" description="Pokliči me" />

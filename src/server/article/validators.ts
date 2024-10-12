@@ -33,3 +33,16 @@ export const save_draft_validator = z.object({
 export const unpublish_validator = z.object({
   published_id: z.number(),
 });
+
+export const get_article_by_published_id_validator = z.object({
+  published_id: z.number(),
+});
+
+export const get_article_by_published_url_validator = z.object({
+  url: z.string(),
+  created_at: z.date().optional(),
+});
+
+export const get_article_by_draft_id_validator = z.object({
+  draft_id: z.number(),
+});

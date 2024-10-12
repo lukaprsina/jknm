@@ -15,7 +15,6 @@ import {
 } from "./converter-server";
 import { get_authors } from "./get-authors";
 import { parse_node } from "./parse-node";
-import type { RouterOutputs } from "~/trpc/react";
 import { read_from_xml } from "./xml-server";
 import { PROBLEMATIC_CONSTANTS } from "./info/problematic";
 import { convert_title_to_url } from "~/lib/article-utils";

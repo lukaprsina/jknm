@@ -1,4 +1,6 @@
+algolia max 1000
 ko hitro poscrollaš gor, se sticky ne umakne
+zamenjaj social
 
 
 page metadata (title)

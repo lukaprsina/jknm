@@ -5,7 +5,6 @@ import { CardContent, CardFooter } from "~/components/ui/card";
 
 import { Shell } from "~/components/shell";
 import { article_variants, page_variants } from "~/lib/page-variants";
-import { api } from "~/trpc/server";
 import { InfoCard } from "~/components/info-card";
 import { cn } from "~/lib/utils";
 import { getServerAuthSession } from "~/server/auth";
@@ -14,6 +13,7 @@ import Link from "next/link";
 import MakeNewDraftButton from "~/components/article/make-new-draft-button";
 import type { ResolvingMetadata, Metadata } from "next";
 import DOMPurify from "isomorphic-dompurify";
+import { get_article_by_draft_id } from "~/server/article/get-article";
 
 const Editor = dynamic(() => import("./editor"), {
   ssr: false,
@@ -43,7 +43,7 @@ export async function generateMetadata(
       title: "Napaka",
     };
 
-  const { draft } = await api.article.get_article_by_draft_id(novica_id);
+  const { draft } = await get_article_by_draft_id({ draft_id: novica_id });
 
   const title = draft
     ? DOMPurify.sanitize(draft.title, {
@@ -73,8 +73,9 @@ export default async function EditorPage({
     );
   }
 
-  const { draft, published } =
-    await api.article.get_article_by_draft_id(novica_id);
+  const { draft, published } = await get_article_by_draft_id({
+    draft_id: novica_id,
+  });
 
   return (
     <Shell draft_article={draft} published_article={published}>

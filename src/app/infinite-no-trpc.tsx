@@ -9,6 +9,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { Fragment, useEffect } from "react";
 import { useIntersectionObserver } from "usehooks-ts";
 
+export type IntersectionRef = ReturnType<typeof useIntersectionObserver>["ref"];
 export function InfiniteArticles() {
   /* const test = async ({
     pageParam,

@@ -29,6 +29,7 @@ import { liteClient as algoliasearch } from "algoliasearch/lite";
 import { env } from "~/env";
 import { article_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
+import { cached_state_store } from "~/app/provider";
 
 const searchClient = algoliasearch(
   env.NEXT_PUBLIC_ALGOLIA_ID,
@@ -127,13 +128,13 @@ export function Autocomplete({ detached, ...props }: AutocompleteProps) {
     }
 
     const search_api = autocomplete({
-      placeholder: "Išči po strani",
+      placeholder: "Išči po strani …",
       container: containerRef.current,
       detachedMediaQuery: detached ?? "(max-width: 1024px)",
       renderer: {
         createElement,
         Fragment,
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         render: () => {},
       },
       render({ children }, root) {
@@ -185,8 +186,7 @@ function ArticleAutocompleteItem({
   hit,
   components,
 }: ArticleAutocompleteItemProps) {
-  // const duplicated_urls = useDuplicatedUrls();
-  const duplicate_urls: string[] = [];
+  const duplicate_urls = cached_state_store.use.duplicate_urls();
 
   const href = useMemo(
     () => get_published_article_link(hit.url, hit.created_at, duplicate_urls),

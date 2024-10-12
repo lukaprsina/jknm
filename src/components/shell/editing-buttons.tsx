@@ -20,9 +20,9 @@ import type {
 } from "../article/adapter";
 import { get_draft_article_link } from "~/lib/article-utils";
 import { useMutation } from "@tanstack/react-query";
-import type { create_draft_validator } from "~/server/article/create-draft";
 import { create_draft } from "~/server/article/create-draft";
 import type { z } from "zod";
+import type { create_draft_validator } from "~/server/article/validators";
 
 export default function EditingButtons({
   published_article,

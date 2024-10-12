@@ -40,13 +40,14 @@ import type { PublishedArticleHit } from "~/lib/validators";
 import { Authors } from "~/components/authors";
 import { get_published_article_link } from "~/lib/article-utils";
 import { useInfiniteAlgoliaArticles } from "~/hooks/use-infinite-algolia";
-import type { IntersectionRef } from "~/components/article/infinite-articles";
 import { cached_state_store } from "../provider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "~/hooks/use-toast";
-import { delete_both, delete_both_validator } from "~/server/article/delete";
+import { delete_both } from "~/server/article/delete";
 import { useRouter } from "next/navigation";
-import { z } from "zod";
+import type { z } from "zod";
+import type { delete_both_validator } from "~/server/article/validators";
+import type { IntersectionRef } from "../infinite-no-trpc";
 
 export function ArticleTable({
   session,
@@ -158,7 +159,7 @@ function ArticleTableRow({
   hit: SearchHit<PublishedArticleHit>;
   session: Session | null;
 }) {
-  const duplicate_urls = cached_state_store.get.duplicate_urls();
+  const duplicate_urls = cached_state_store.use.duplicate_urls();
 
   return (
     <TableRow ref={ref} key={hit.objectID}>
@@ -194,9 +195,9 @@ function DeleteDialog({ article_id }: { article_id: number }) {
       await trpc_utils.article.invalidate();
     },
   }); */
-  const toaster = useToast()
-  const router = useRouter()
-  const query_client = useQueryClient()
+  const toaster = useToast();
+  const router = useRouter();
+  const query_client = useQueryClient();
 
   const delete_both_mutation = useMutation({
     mutationFn: (input: z.infer<typeof delete_both_validator>) =>

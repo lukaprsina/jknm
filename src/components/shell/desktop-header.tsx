@@ -127,9 +127,9 @@ export function DesktopHeader({
             />
           </div>
           <div className="flex items-center justify-between gap-2">
+            <NoviceAutocomplete detached="" />
             <FacebookIcon />
             <YoutubeIcon />
-            <NoviceAutocomplete detached="" />
           </div>
         </div>
       </div>

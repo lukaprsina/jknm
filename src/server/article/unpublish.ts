@@ -1,6 +1,6 @@
 "use server";
 
-import { z } from "zod";
+import type { z } from "zod";
 import { db } from "../db";
 import { asc, eq } from "drizzle-orm";
 import {
@@ -21,10 +21,7 @@ import {
   get_s3_published_directory,
 } from "~/lib/article-utils";
 import { revalidatePath, revalidateTag } from "next/cache";
-
-export const unpublish_validator = z.object({
-  published_id: z.number(),
-});
+import { unpublish_validator } from "./validators";
 
 export async function unpublish(input: z.infer<typeof unpublish_validator>) {
   const validated_input = unpublish_validator.safeParse(input);

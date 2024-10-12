@@ -1,10 +1,9 @@
 "use server";
 
-import { z } from "zod";
+import type { z } from "zod";
 import { db } from "../db";
 import {
   DraftArticle,
-  PublishArticleSchema,
   PublishedArticle,
   PublishedArticlesToAuthors,
 } from "../db/schema";
@@ -25,12 +24,7 @@ import { assert_one } from "~/lib/assert-length";
 import { algoliasearch as searchClient } from "algoliasearch";
 import { convert_article_to_algolia_object } from "~/lib/algoliasearch";
 import { revalidatePath } from "next/cache";
-
-export const publish_validator = z.object({
-  article: PublishArticleSchema,
-  author_ids: z.array(z.number()),
-  draft_id: z.number().optional(),
-});
+import { publish_validator } from "./validators";
 
 export async function publish(input: z.infer<typeof publish_validator>) {
   const validated_input = publish_validator.safeParse(input);

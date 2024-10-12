@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { z } from "zod";
 import { google } from "googleapis";
@@ -6,9 +6,9 @@ import { db } from "../db";
 import { Author } from "../db/schema";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { env } from "~/env";
-import { JWTInput } from "google-auth-library";
+import type { JWTInput } from "google-auth-library";
 
-export const sync_members_validator = z.object({ name: z.string() })
+export const sync_members_validator = z.object({ name: z.string() });
 
 // TODO
 export async function sync_members(
@@ -83,7 +83,7 @@ export async function sync_members(
     .returning();
 
   revalidateTag("authors");
-  revalidatePath("/")
+  revalidatePath("/");
 
   console.log("Inserted google authors", google_result.length);
   return google_result;

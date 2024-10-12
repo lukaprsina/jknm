@@ -1,20 +1,14 @@
 "use server";
 
-import { z } from "zod";
+import type { z } from "zod";
 import {
   DraftArticle,
   DraftArticlesToAuthors,
-  SaveDraftArticleSchema,
 } from "~/server/db/schema";
 import { db } from "../db";
 import { asc, eq } from "drizzle-orm";
 import { revalidatePath, revalidateTag } from "next/cache";
-
-export const save_draft_validator = z.object({
-  article: SaveDraftArticleSchema,
-  author_ids: z.array(z.number()),
-  draft_id: z.number(),
-});
+import { save_draft_validator } from "./validators";
 
 export async function save_draft(input: z.infer<typeof save_draft_validator>) {
   const validated_input = save_draft_validator.safeParse(input);

@@ -9,7 +9,6 @@ import type {
   PublishedArticlesToAuthors,
 } from "~/server/db/schema";
 import type { PublishedArticleHit } from "~/lib/validators";
-import type { IntersectionRef } from "./infinite-articles";
 import { convert_content_to_text } from "~/lib/content-to-text";
 import {
   get_draft_article_link,
@@ -21,6 +20,7 @@ import { ArticleCard } from "./card";
 import { get_s3_prefix } from "~/lib/s3-publish";
 import { env } from "~/env";
 import { cached_state_store } from "~/app/provider";
+import type { IntersectionRef } from "~/app/infinite-no-trpc";
 
 type SelectPublishedArticlesToAuthors =
   typeof PublishedArticlesToAuthors.$inferSelect & {

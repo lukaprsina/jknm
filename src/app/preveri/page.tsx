@@ -2,7 +2,6 @@ import { Shell } from "~/components/shell";
 import { db } from "~/server/db";
 import { PublishedArticle } from "~/server/db/schema";
 import { asc } from "drizzle-orm";
-import { api } from "~/trpc/server";
 import dynamic from "next/dynamic";
 import { article_variants, page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
@@ -16,7 +15,6 @@ const PreveriClient = dynamic(
 );
 
 export default async function PreveriPage() {
-  await api.author.get_all.prefetch();
   const articles = await db.query.PublishedArticle.findMany({
     columns: {
       id: true,
@@ -29,7 +27,9 @@ export default async function PreveriPage() {
 
   return (
     <Shell without_footer>
-      <div className={cn(page_variants(), article_variants(), "max-w-none px-6")}>
+      <div
+        className={cn(page_variants(), article_variants(), "max-w-none px-6")}
+      >
         <PreveriClient articles={articles} /* csv_articles={csv_articles} */ />
       </div>
     </Shell>

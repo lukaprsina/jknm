@@ -21,7 +21,7 @@ import {
 } from "~/server/db/schema";
 import { crop_image, delete_s3_directory } from "~/server/s3-utils";
 import { env } from "~/env";
-import { algoliasearch } from "algoliasearch";
+import { algoliasearch as searchClient } from "algoliasearch";
 import { convert_article_to_algolia_object } from "~/lib/algoliasearch";
 import { cachedAllAuthors } from "~/server/cached-global-state";
 
@@ -245,7 +245,7 @@ export async function sync_with_algolia() {
   });
 
   const indexName = "published_article";
-  const client = algoliasearch(
+  const client = searchClient(
     env.NEXT_PUBLIC_ALGOLIA_ID,
     env.ALGOLIA_ADMIN_KEY,
   );

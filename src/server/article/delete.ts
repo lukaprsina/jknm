@@ -1,6 +1,6 @@
 "use server";
 
-import { z } from "zod";
+import type { z } from "zod";
 import { db } from "../db";
 import { DraftArticle, PublishedArticle } from "../db/schema";
 import { eq } from "drizzle-orm";
@@ -13,10 +13,7 @@ import {
   get_s3_published_directory,
 } from "~/lib/article-utils";
 import { revalidatePath, revalidateTag } from "next/cache";
-
-export const delete_draft_validator = z.object({
-  draft_id: z.number(),
-});
+import { delete_both_validator, delete_custom_thumbnail_validator, delete_draft_validator } from "./validators";
 
 export async function delete_draft(
   input: z.infer<typeof delete_draft_validator>,
@@ -56,10 +53,6 @@ export async function delete_draft(
 
   return transaction;
 }
-
-export const delete_both_validator = z.object({
-  draft_id: z.number(),
-});
 
 export async function delete_both(
   input: z.infer<typeof delete_both_validator>,
@@ -123,10 +116,6 @@ export async function delete_both(
 
   return transaction;
 }
-
-export const delete_custom_thumbnail_validator = z.object({
-  draft_id: z.number(),
-});
 
 export async function delete_custom_thumbnail(
   input: z.infer<typeof delete_custom_thumbnail_validator>,

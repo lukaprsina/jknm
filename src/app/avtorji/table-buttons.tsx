@@ -28,19 +28,19 @@ import type { GuestAuthor } from "./table";
 import { Button } from "~/components/ui/button";
 import type { Row } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
-import { api } from "~/trpc/react";
 import { EditAuthorNameForm, InsertAuthorForm } from "./table-forms";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { delete_guests, delete_guests_validator } from "~/server/author/delete";
-import { z } from "zod";
+import type { delete_guests_validator } from "~/server/author/validator";
+import { delete_guests } from "~/server/author/delete";
+import type { z } from "zod";
 import { useToast } from "~/hooks/use-toast";
 
 export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
   // const delete_guests = api.author.delete_guests.useMutation();
   // const trpc_utils = api.useUtils();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const toaster = useToast()
-  const query_client = useQueryClient()
+  const toaster = useToast();
+  const query_client = useQueryClient();
 
   const delete_guests_mutation = useMutation({
     mutationFn: (input: z.infer<typeof delete_guests_validator>) =>
@@ -102,12 +102,12 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
             <b>{author.name}</b>?
           </span>
           <AlertDialogFooter>
-            <AlertDialogCancel>Prekliči</AlertDialogCancel>            
+            <AlertDialogCancel>Prekliči</AlertDialogCancel>
             <AlertDialogAction
-              onClick={async () => {
+              onClick={() => {
                 // delete_guests.mutate({ ids: [author.id] });
                 // await trpc_utils.author.invalidate();
-                delete_guests_mutation.mutate({ids: [author.id]})
+                delete_guests_mutation.mutate({ ids: [author.id] });
                 setDialogOpen(false);
               }}
             >
@@ -127,8 +127,8 @@ export function AuthorsTableHeaderButtons({
 }) {
   /* const trpc_utils = api.useUtils();
   const delete_guests = api.author.delete_guests.useMutation(); */
-  const toaster = useToast()
-  const query_client = useQueryClient()
+  const toaster = useToast();
+  const query_client = useQueryClient();
 
   const delete_guests_mutation = useMutation({
     mutationFn: (input: z.infer<typeof delete_guests_validator>) =>
@@ -217,12 +217,14 @@ export function AuthorsTableHeaderButtons({
             </AlertDialogCancel>
             {rows.length !== 0 && (
               <AlertDialogAction
-                onClick={async () => {
+                onClick={() => {
                   /* delete_guests.mutate({
                     ids: rows.map((row) => row.original.id),
                   });
                   await trpc_utils.author.invalidate(); */
-                  delete_guests_mutation.mutate({ids: rows.map((row) => row.original.id)})
+                  delete_guests_mutation.mutate({
+                    ids: rows.map((row) => row.original.id),
+                  });
                 }}
               >
                 Izbriši
