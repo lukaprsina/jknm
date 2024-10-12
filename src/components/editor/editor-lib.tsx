@@ -28,7 +28,7 @@ export function update_settings_from_editor({
 }) {
   const image_data = get_image_data_from_editor(editor_content);
   // const store_crop = editor_store.get.thumbnail_crop();
-  console.log("update_settings_from_editor", {
+  /* console.log("update_settings_from_editor", {
     title,
     url,
     s3_url,
@@ -36,7 +36,7 @@ export function update_settings_from_editor({
     editor_content,
     article_id,
     author_ids,
-  });
+  }); */
 
   editor_store.set.state((draft) => {
     draft.draft_id = article_id;

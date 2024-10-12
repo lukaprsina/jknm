@@ -24,6 +24,7 @@ import { env } from "~/env";
 import { algoliasearch as searchClient } from "algoliasearch";
 import { convert_article_to_algolia_object } from "~/lib/algoliasearch";
 import { cachedAllAuthors } from "~/server/cached-global-state";
+import { convert_content_to_text } from "~/lib/content-to-text";
 
 export async function test_strong_bold() {
   const articles = await db.query.PublishedArticle.findMany({
@@ -84,10 +85,10 @@ export async function delete_authors() {
 
 export async function sync_authors() {
   // const google_authors = await api.author.sync_with_google();
-  if(true as boolean) {
-    throw new Error("Tega ne smeš več klicat")
+  if (true as boolean) {
+    throw new Error("Tega ne smeš več klicat");
   }
-  const google_authors = await cachedAllAuthors()
+  const google_authors = await cachedAllAuthors();
 
   const read_file = true as boolean;
   if (!read_file) return;
@@ -228,6 +229,24 @@ export async function upload_articles(
   console.log("done uploading articles");
 }
 
+export async function content_size_stats() {
+  const articles = await db.query.PublishedArticle.findMany({
+    with: {
+      published_articles_to_authors: {
+        with: { author: true },
+        orderBy: asc(PublishedArticlesToAuthors.order),
+      },
+    },
+  });
+
+  const texts = articles.map((a) => convert_content_to_text(a.content?.blocks));
+  const maxLength = texts.reduce((max, text) => Math.max(max, text.length), 0);
+  console.log("max length is", maxLength);
+  const totalLength = texts.reduce((sum, text) => sum + text.length, 0);
+  const averageLength = totalLength / texts.length;
+  console.log("avg length is", averageLength);
+}
+
 // sync just the published articles
 export async function sync_with_algolia() {
   console.log("Syncing articles");
@@ -262,7 +281,7 @@ export async function sync_with_algolia() {
     objectIDs: all_record_ids,
   });
 
-  const chunkSize = 50;
+  const chunkSize = 20;
   const objects = articles
     .map(convert_article_to_algolia_object)
     .filter((article) => typeof article !== "undefined");

@@ -9,14 +9,11 @@ import { Input } from "~/components/ui/input";
 
 import { article_variants, page_variants } from "~/lib/page-variants";
 import {
-  delete_authors,
   sync_authors,
   sync_with_algolia,
   copy_and_rename_images,
-  get_authors_server,
-  delete_articles,
-  delete_s3_published_bucket,
   test_strong_bold,
+  content_size_stats,
 } from "./converter-server";
 import { iterate_over_articles } from "./converter-spaghetti";
 import { cn } from "~/lib/utils";
@@ -24,7 +21,6 @@ import { EDITOR_JS_PLUGINS } from "~/components/editor/plugins";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "~/hooks/use-toast";
 import { sync_duplicate_urls } from "~/server/article/sync-duplicate-urls";
-import { z } from "zod";
 
 export function ArticleConverter() {
   const editorJS = useRef<EditorJS | null>(null);
@@ -35,10 +31,10 @@ export function ArticleConverter() {
   const [doDimensions, setDoDimensions] = useState(false);
   const [firstArticle, setFirstArticle] = useState("23");
   const [lastArticle, setLastArticle] = useState("24");
-  const toaster = useToast()
-  const query_client = useQueryClient()
-  
-  // const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation();  
+  const toaster = useToast();
+  const query_client = useQueryClient();
+
+  // const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation();
   const sync_duplicate_urls_mutation = useMutation({
     mutationFn: () => sync_duplicate_urls(),
     onSettled: async () => {
@@ -60,14 +56,17 @@ export function ArticleConverter() {
         <Button onClick={() => test_strong_bold()}>
           Testiraj strong, bold
         </Button>
-        <Button onClick={() => delete_articles()}>Delete articles</Button>
-        <Button
+        <Button onClick={() => content_size_stats()}>
+          Povprečna velikost teksta
+        </Button>
+        {/* <Button onClick={() => delete_articles()}>Delete articles</Button> */}
+        {/* <Button
           variant="destructive"
           onClick={() => delete_s3_published_bucket()}
         >
           Delete s3 published bucket
-        </Button>
-        <Button onClick={() => delete_authors()}>Delete authors</Button>
+        </Button> */}
+        {/* <Button onClick={() => delete_authors()}>Delete authors</Button> */}
         <Button onClick={() => sync_authors()}>Sync authors</Button>
         <Button onClick={() => sync_duplicate_urls_mutation.mutate()}>
           Sync duplicate urls

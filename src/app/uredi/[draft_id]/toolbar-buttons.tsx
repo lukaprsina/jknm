@@ -181,7 +181,7 @@ export function SaveButton() {
             <SaveIcon />
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Shrani</TooltipContent>
+        <TooltipContent>Shrani kot osnutek</TooltipContent>
       </Tooltip>
     </div>
   );

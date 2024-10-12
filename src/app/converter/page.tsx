@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { Shell } from "~/components/shell";
 import { getServerAuthSession } from "~/server/auth";
@@ -21,7 +21,7 @@ export default async function Page() {
   const session = await getServerAuthSession();
 
   if (!session) {
-    redirect("/");
+    notFound();
   }
 
   const article_count = await db

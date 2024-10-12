@@ -6,12 +6,11 @@ import {
   PublishedArticle,
   PublishedArticlesToAuthors,
 } from "../db/schema";
-import type {
+import {
   get_article_by_published_url_validator,
   get_article_by_published_id_validator,
   get_article_by_draft_id_validator,
 } from "./validators";
-import { publish_validator } from "./validators";
 import { eq, between, and, asc } from "drizzle-orm";
 import { db } from "../db";
 import { getServerAuthSession } from "../auth";
@@ -19,7 +18,8 @@ import { getServerAuthSession } from "../auth";
 export async function get_article_by_published_id(
   input: z.infer<typeof get_article_by_published_id_validator>,
 ) {
-  const validated_input = publish_validator.safeParse(input);
+  const validated_input =
+    get_article_by_published_id_validator.safeParse(input);
   if (!validated_input.success) {
     throw new Error(validated_input.error.message);
   }
@@ -57,7 +57,8 @@ export async function get_article_by_published_id(
 export async function get_article_by_published_url(
   input: z.infer<typeof get_article_by_published_url_validator>,
 ) {
-  const validated_input = publish_validator.safeParse(input);
+  const validated_input =
+    get_article_by_published_url_validator.safeParse(input);
   if (!validated_input.success) {
     throw new Error(validated_input.error.message);
   }
@@ -109,7 +110,7 @@ export async function get_article_by_published_url(
 export async function get_article_by_draft_id(
   input: z.infer<typeof get_article_by_draft_id_validator>,
 ) {
-  const validated_input = publish_validator.safeParse(input);
+  const validated_input = get_article_by_draft_id_validator.safeParse(input);
   if (!validated_input.success) {
     throw new Error(validated_input.error.message);
   }

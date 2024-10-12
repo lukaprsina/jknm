@@ -33,8 +33,8 @@ export default function EditingButtons({
   session: Session | null;
 }) {
   /* useEffect(() => {
-    console.log("EditingButtons", { published_article });
-  }); */
+    console.log("EditingButtons", { published_article, session });
+  }, [published_article, session]); */
 
   if (!session) return null;
 

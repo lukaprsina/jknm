@@ -1,4 +1,4 @@
-algolia max 1000
+ko skriješ novičke, ima thumbnail napačno ime
 ko hitro poscrollaš gor, se sticky ne umakne
 zamenjaj social
 

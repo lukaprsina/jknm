@@ -110,7 +110,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
               )}
               variant="secondary"
             >
-              Shrani osnutek
+              Shrani kot osnutek
             </Button>
             <Button
               onClick={form.handleSubmit(

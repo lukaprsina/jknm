@@ -149,7 +149,7 @@ export function useEditorMutations() {
       });
       /* await trpc_utils.article.invalidate();
       await trpc_utils.article.get_infinite_published.invalidate(); */
-      router.refresh();
+      location.reload();
     },
     onError: (error) => {
       toaster.toast({
