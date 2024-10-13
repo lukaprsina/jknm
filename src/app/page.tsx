@@ -10,12 +10,16 @@ import {
 import { get_infinite_published2 } from "./infinite-server";
 import { DraftArticles } from "~/components/draft-articles";
 import { getServerAuthSession } from "~/server/auth";
+import ArticleDescription from "~/components/article/description";
+import type { PublishedArticleWithAuthors } from "~/components/article/adapter";
+import { cachedDuplicateUrls } from "~/server/cached-global-state";
 
 export default async function HomePageServer() {
   const queryClient = new QueryClient();
 
-  const [session] = await Promise.all([
+  const [session, duplicate_urls] = await Promise.all([
     getServerAuthSession(),
+    await cachedDuplicateUrls(),
     queryClient.prefetchInfiniteQuery({
       queryKey: ["infinite_published"],
       queryFn: (props) => get_infinite_published2({ limit: 31, ...props }),
@@ -23,11 +27,22 @@ export default async function HomePageServer() {
     }),
   ]);
 
+  const description = (article: PublishedArticleWithAuthors) => (
+    <ArticleDescription
+      type="card"
+      author_ids={article.published_articles_to_authors.map((a) => a.author.id)}
+      created_at={article.created_at}
+    />
+  );
+
   if (!session) {
     return (
       <Shell without_footer>
         <div className={cn(page_variants(), article_variants())}>
-          <InfiniteArticles />
+          <InfiniteArticles
+            description={description}
+            duplicate_urls={duplicate_urls}
+          />
         </div>
       </Shell>
     );
@@ -39,7 +54,10 @@ export default async function HomePageServer() {
         <div className={cn(page_variants())}>
           <DraftArticles />
           <div>
-            <InfiniteArticles />
+            <InfiniteArticles
+              description={description}
+              duplicate_urls={duplicate_urls}
+            />
           </div>
         </div>
       </Shell>

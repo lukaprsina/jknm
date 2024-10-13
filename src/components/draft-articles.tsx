@@ -10,6 +10,7 @@ import { db } from "~/server/db";
 import { asc } from "drizzle-orm";
 import { DraftArticlesToAuthors } from "~/server/db/schema";
 import { memoize } from "nextjs-better-unstable-cache";
+import ArticleDescription from "./article/description";
 
 export const cachedDrafts = memoize(
   async () => {
@@ -61,7 +62,19 @@ export async function DraftArticles() {
           {drafts.length !== 0 ? (
             <div className={article_grid_variants()}>
               {drafts.map((article) => (
-                <DraftArticleDrizzleCard key={article.id} article={article} />
+                <DraftArticleDrizzleCard
+                  key={article.id}
+                  article={article}
+                  description={
+                    <ArticleDescription
+                      type="card"
+                      author_ids={article.draft_articles_to_authors.map(
+                        (a) => a.author.id,
+                      )}
+                      created_at={article.created_at}
+                    />
+                  }
+                />
               ))}
             </div>
           ) : (

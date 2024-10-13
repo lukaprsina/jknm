@@ -1,3 +1,5 @@
+"use client";
+
 import type { Hit as SearchHit } from "instantsearch.js";
 import type {
   Author,
@@ -19,8 +21,7 @@ import { get_s3_prefix } from "~/lib/s3-publish";
 import { env } from "~/env";
 import { cached_state_store } from "~/app/provider";
 import type { IntersectionRef } from "~/app/infinite-no-trpc";
-import { cachedDuplicateUrls } from "~/server/cached-global-state";
-import ArticleDescription from "./description";
+import type { ReactNode } from "react";
 
 type SelectPublishedArticlesToAuthors =
   typeof PublishedArticlesToAuthors.$inferSelect & {
@@ -48,9 +49,11 @@ export type DraftArticleWithAuthors = typeof DraftArticle.$inferSelect & {
 export function DraftArticleDrizzleCard({
   article,
   ref,
+  description,
 }: {
   article: DraftArticleWithAuthors;
   ref?: IntersectionRef;
+  description: ReactNode;
 }) {
   return (
     <ArticleCard
@@ -68,28 +71,24 @@ export function DraftArticleDrizzleCard({
       )}
       has_thumbnail={Boolean(article.thumbnail_crop)}
       author_ids={article.draft_articles_to_authors.map((a) => a.author.id)}
-      description={
-        <ArticleDescription
-          type="card"
-          author_ids={article.draft_articles_to_authors.map((a) => a.author.id)}
-          created_at={article.created_at}
-        />
-      }
+      description={description}
     />
   );
 }
 
-export async function PublishedArticleDrizzleCard({
+export function PublishedArticleDrizzleCard({
   article,
   featured,
   ref,
+  description,
+  duplicate_urls,
 }: {
   article: PublishedArticleWithAuthors;
   featured?: boolean;
   ref?: IntersectionRef;
+  description: ReactNode;
+  duplicate_urls?: string[];
 }) {
-  const duplicate_urls = await cachedDuplicateUrls();
-
   return (
     <ArticleCard
       featured={featured}
@@ -111,15 +110,7 @@ export async function PublishedArticleDrizzleCard({
       created_at={article.created_at}
       has_thumbnail={Boolean(article.thumbnail_crop)}
       author_ids={article.published_articles_to_authors.map((a) => a.author.id)}
-      description={
-        <ArticleDescription
-          type={featured ? "card-featured" : "card"}
-          author_ids={article.published_articles_to_authors.map(
-            (a) => a.author.id,
-          )}
-          created_at={article.created_at}
-        />
-      }
+      description={description}
     />
   );
 }
@@ -127,9 +118,11 @@ export async function PublishedArticleDrizzleCard({
 export function ArticleAlgoliaCard({
   hit,
   ref,
+  description,
 }: {
   hit: SearchHit<PublishedArticleHit>;
   ref?: IntersectionRef;
+  description: ReactNode;
 }) {
   const duplicate_urls = cached_state_store.get.duplicate_urls();
 
@@ -147,13 +140,7 @@ export function ArticleAlgoliaCard({
         `${get_s3_published_directory(hit.url, hit.created_at)}/thumbnail.png`,
         env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
       )}
-      description={
-        <ArticleDescription
-          type="card"
-          author_ids={hit.author_ids}
-          created_at={new Date(hit.created_at)}
-        />
-      }
+      description={description}
     />
   );
 }

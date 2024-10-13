@@ -19,6 +19,8 @@ import { env } from "~/env";
 import { MyInfiniteHits } from "~/app/arhiv/infinite-hits";
 import type { ReactNode } from "react";
 import { useState } from "react";
+import type { Hit } from "instantsearch.js";
+import type { PublishedArticleHit } from "~/lib/validators";
 
 const searchClient = algolia_search(
   env.NEXT_PUBLIC_ALGOLIA_ID,
@@ -28,9 +30,11 @@ const searchClient = algolia_search(
 export function Search({
   session,
   authors,
+  description,
 }: {
   session: Session | null;
   authors: (author_ids: number[]) => ReactNode;
+  description: (hit: Hit<PublishedArticleHit>) => ReactNode;
 }) {
   const [activeTab, setActiveTab] = useState<string>("card");
 
@@ -74,7 +78,7 @@ export function Search({
           value="card"
           className="flex flex-col justify-between gap-4"
         >
-          <MyInfiniteHits />
+          <MyInfiniteHits description={description} />
         </TabsContent>
         <TabsContent value="table">
           <ArticleTable session={session} authors={authors} />

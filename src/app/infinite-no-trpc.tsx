@@ -2,15 +2,23 @@
 
 import { cn } from "~/lib/utils";
 import { article_grid_variants, article_variants } from "~/lib/page-variants";
+import type { PublishedArticleWithAuthors } from "~/components/article/adapter";
 import { PublishedArticleDrizzleCard } from "~/components/article/adapter";
 import { get_infinite_published2 } from "./infinite-server";
 // import type { QueryFunctionContext } from "@tanstack/react-query";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import type { ReactNode } from "react";
 import { Fragment, useEffect } from "react";
 import { useIntersectionObserver } from "usehooks-ts";
 
 export type IntersectionRef = ReturnType<typeof useIntersectionObserver>["ref"];
-export function InfiniteArticles() {
+export function InfiniteArticles({
+  description,
+  duplicate_urls,
+}: {
+  description: (article: PublishedArticleWithAuthors) => ReactNode;
+  duplicate_urls?: string[];
+}) {
   /* const test = async ({
     pageParam,
   }: QueryFunctionContext<string[], Date | undefined>) => {
@@ -71,6 +79,9 @@ export function InfiniteArticles() {
                 featured={group_index === 0 && index === 0}
                 article={article}
                 ref={ref}
+                // description={<p>test</p>}
+                description={description(article)}
+                duplicate_urls={duplicate_urls}
               />
             );
           })}
