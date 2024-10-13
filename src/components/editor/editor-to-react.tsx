@@ -3,6 +3,7 @@
 import "./editorjs-attaches.css";
 
 import type { RenderFn } from "editorjs-blocks-react-renderer";
+import type { ReactNode } from "react";
 import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,7 +14,6 @@ import { Card, CardContent, CardHeader } from "~/components/ui/card";
 
 import { gallery_store } from "~/components/gallery-store";
 import { human_file_size } from "~/lib/human-file-size";
-import type { Session } from "next-auth";
 import type { EditorJSImageData } from "~/lib/editor-utils";
 import {
   get_heading_from_editor,
@@ -24,11 +24,7 @@ import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
 } from "../article/adapter";
-import dynamic from "next/dynamic";
-import { Skeleton } from "../ui/skeleton";
-
-// import ArticlePageDescription from "~/components/article/description/page-description";
-const ArticleDescription = dynamic(
+/* const ArticleDescription = dynamic(
   () => import("~/components/article/description"),
   {
     ssr: false,
@@ -36,14 +32,14 @@ const ArticleDescription = dynamic(
       <Skeleton className="h-[1em] w-[300px] bg-[hsl(0_0%_90%)]" />
     ),
   },
-);
+); */
 
 export function EditorToReact({
   article,
-  session,
+  description,
 }: {
   article: DraftArticleWithAuthors | PublishedArticleWithAuthors | undefined;
-  session: Session | null;
+  description: ReactNode;
 }) {
   const [heading, setHeading] = useState<string | undefined>();
 
@@ -70,13 +66,13 @@ export function EditorToReact({
     };
   }, [article?.content]);
 
-  const author_ids = useMemo(() => {
+  /* const author_ids = useMemo(() => {
     if (!article) return [];
 
     return "old_id" in article
       ? article.published_articles_to_authors.map((a) => a.author_id)
       : article.draft_articles_to_authors.map((a) => a.author_id);
-  }, [article]);
+  }, [article]); */
 
   /*useEffect(() => {
     console.log("editor-to-react", { article, author_ids });
@@ -93,16 +89,7 @@ export function EditorToReact({
               __html: heading ?? "Untitled",
             }}
           />
-          <ArticleDescription
-            type="page"
-            author_ids={author_ids}
-            created_at={article.created_at}
-            old_id={
-              session && "old_id" in article
-                ? article.old_id?.toString()
-                : undefined
-            }
-          />
+          {description}
         </CardHeader>
         <CardContent>
           <Blocks
@@ -120,16 +107,7 @@ export function EditorToReact({
             __html: heading ?? "Untitled",
           }}
         />
-        <ArticleDescription
-          type="page"
-          author_ids={author_ids}
-          created_at={article.created_at}
-          old_id={
-            session && "old_id" in article
-              ? article.old_id?.toString()
-              : undefined
-          }
-        />
+        {description}
         <Blocks
           data={editor_data}
           renderers={{

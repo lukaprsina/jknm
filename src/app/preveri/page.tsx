@@ -5,6 +5,8 @@ import { asc } from "drizzle-orm";
 import dynamic from "next/dynamic";
 import { article_variants, page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
+import ArticleDescription from "~/components/article/description";
+import type { PublishedArticleWithAuthors } from "~/components/article/adapter";
 
 // import { PreveriClient } from "./preveri-client";
 const PreveriClient = dynamic(
@@ -30,7 +32,20 @@ export default async function PreveriPage() {
       <div
         className={cn(page_variants(), article_variants(), "max-w-none px-6")}
       >
-        <PreveriClient articles={articles} /* csv_articles={csv_articles} */ />
+        <PreveriClient
+          articles={articles}
+          description={(article: PublishedArticleWithAuthors) => (
+            <ArticleDescription
+              type="page"
+              author_ids={article.published_articles_to_authors.map(
+                (a) => a.author_id,
+              )}
+              created_at={article.created_at}
+              old_id={article.old_id?.toString()}
+            />
+          )}
+          /* csv_articles={csv_articles} */
+        />
       </div>
     </Shell>
   );

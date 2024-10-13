@@ -1,5 +1,3 @@
-"use client";
-
 import { DotIcon } from "lucide-react";
 import { format_date_for_human } from "~/lib/format-date";
 import { cn } from "~/lib/utils";

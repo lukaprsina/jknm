@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -15,6 +16,7 @@ import { createStore } from "zustand-x";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { get_article_by_published_id } from "~/server/article/get-article";
+import type { PublishedArticleWithAuthors } from "~/components/article/adapter";
 
 export interface PreveriStoreType {
   index: number;
@@ -35,12 +37,14 @@ export const preveri_store = createStore("preveri")<PreveriStoreType>(
 
 export function PreveriClient({
   articles,
+  description,
   // csv_articles,
 }: {
   articles: {
     id: number;
     old_id: number | null;
   }[];
+  description: (article: PublishedArticleWithAuthors) => ReactNode;
   // csv_articles: CSVType[];
 }) {
   const toaster = useToast();
@@ -153,13 +157,16 @@ export function PreveriClient({
         </div>
       </form>
       <div className="grid h-full w-full grid-cols-2 gap-2">
-        {article.data ? (
+        {article.data?.published ? (
           <>
             <iframe
               className="h-full w-full overflow-y-hidden rounded-xl"
               src={iframe_src(preveri_store_index)}
             />
-            <EditorToReact article={article.data.published} session={null} />
+            <EditorToReact
+              article={article.data.published}
+              description={description(article.data.published)}
+            />
           </>
         ) : (
           <InfoCard title="Nekaj je narobe" description="Pokliči me" />

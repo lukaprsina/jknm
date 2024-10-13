@@ -2,31 +2,31 @@
 
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { useState } from "react";
 import { CardHeader, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 import { MagicCard } from "../magic-card";
 import Image from "next/image";
-import dynamic from "next/dynamic";
-import { Skeleton } from "../ui/skeleton";
 import type { IntersectionRef } from "~/app/infinite-no-trpc";
 
-// import ArticleDescription from "./description/card-description";
-const ArticleDescription = dynamic(() => import("./description"), {
+// import ArticleDescription from "./description";
+/* const ArticleDescription = dynamic(() => import("./description"), {
   ssr: false,
   loading: () => <Skeleton className="h-[1em] w-[300px] bg-[hsl(0_0%_90%)]" />,
-});
+}); */
 
 export function ArticleCard({
   featured,
   title,
   url,
   content_preview,
-  created_at,
+  created_at: _c,
   has_thumbnail,
   image_url,
-  author_ids,
+  author_ids: _,
   ref,
+  description,
 }: {
   featured?: boolean;
   title: string;
@@ -37,6 +37,7 @@ export function ArticleCard({
   image_url?: string;
   author_ids: number[];
   ref?: IntersectionRef;
+  description: ReactNode;
 }) {
   const [hover, setHover] = useState(false);
 
@@ -88,11 +89,7 @@ export function ArticleCard({
               }}
             />
             <div className="flex w-full justify-between gap-2">
-              <ArticleDescription
-                type={featured ? "card-featured" : "card"}
-                author_ids={author_ids}
-                created_at={created_at}
-              />
+              {description}
             </div>
           </CardHeader>
           <CardContent className="">

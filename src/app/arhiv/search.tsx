@@ -5,17 +5,19 @@ import { InstantSearch } from "react-instantsearch";
 
 import { ArticleTable } from "./article-table";
 import {
-  CustomClearRefinements, DEFAULT_REFINEMENT,
+  CustomClearRefinements,
+  DEFAULT_REFINEMENT,
   MySearchBox,
   MySortBy,
   MyStats,
-  TimelineRefinement
+  TimelineRefinement,
 } from "./search-components";
 import type { Session } from "next-auth";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 import { liteClient as algolia_search } from "algoliasearch/lite";
 import { env } from "~/env";
 import { MyInfiniteHits } from "~/app/arhiv/infinite-hits";
+import type { ReactNode } from "react";
 import { useState } from "react";
 
 const searchClient = algolia_search(
@@ -23,7 +25,13 @@ const searchClient = algolia_search(
   env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY,
 );
 
-export function Search({ session }: { session: Session | null }) {
+export function Search({
+  session,
+  authors,
+}: {
+  session: Session | null;
+  authors: (author_ids: number[]) => ReactNode;
+}) {
   const [activeTab, setActiveTab] = useState<string>("card");
 
   return (
@@ -33,12 +41,17 @@ export function Search({ session }: { session: Session | null }) {
       searchClient={searchClient}
       insights={true}
     >
-      <Tabs value={activeTab} onValueChange={(new_value) =>setActiveTab(new_value)} defaultValue="card" className="pb-6 pt-2">
+      <Tabs
+        value={activeTab}
+        onValueChange={(new_value) => setActiveTab(new_value)}
+        defaultValue="card"
+        className="pb-6 pt-2"
+      >
         <div className="flex flex-col gap-4">
           <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
             <MySearchBox />
             <div className="flex flex-col items-center justify-between gap-6 text-nowrap sm:flex-row">
-              {activeTab==="card" && <MySortBy />}
+              {activeTab === "card" && <MySortBy />}
               <TabsList>
                 <TabsTrigger value="card">
                   <LayoutDashboard />
@@ -64,7 +77,7 @@ export function Search({ session }: { session: Session | null }) {
           <MyInfiniteHits />
         </TabsContent>
         <TabsContent value="table">
-          <ArticleTable session={session} />
+          <ArticleTable session={session} authors={authors} />
         </TabsContent>
       </Tabs>
     </InstantSearch>

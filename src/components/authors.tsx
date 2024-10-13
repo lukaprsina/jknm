@@ -1,15 +1,16 @@
-"use client";
+import { Fragment } from "react";
+import { cachedAllAuthors } from "~/server/cached-global-state";
 
-import { Fragment, useMemo } from "react";
-import { cached_state_store } from "~/app/provider";
+export async function Authors({ author_ids }: { author_ids: number[] }) {
+  const all_authors = await cachedAllAuthors();
 
-export function Authors({ author_ids }: { author_ids: number[] }) {
-  const all_authors = cached_state_store.get.all_authors();
-
-  const authors = useMemo(
+  const authors = all_authors.filter((author) =>
+    author_ids.includes(author.id),
+  );
+  /* const authors = useMemo(
     () => all_authors.filter((author) => author_ids.includes(author.id)),
     [all_authors, author_ids],
-  );
+  ); */
   // .sort((a, b) => author_ids.indexOf(a.id) - author_ids.indexOf(b.id)),
 
   return (

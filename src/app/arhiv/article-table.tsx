@@ -37,7 +37,6 @@ import { format_date_for_human } from "~/lib/format-date";
 import { MyStats, SORT_BY_ITEMS } from "./search-components";
 import type { Session } from "next-auth";
 import type { PublishedArticleHit } from "~/lib/validators";
-import { Authors } from "~/components/authors";
 import { get_published_article_link } from "~/lib/article-utils";
 import { useInfiniteAlgoliaArticles } from "~/hooks/use-infinite-algolia";
 import { cached_state_store } from "../provider";
@@ -48,11 +47,16 @@ import { useRouter } from "next/navigation";
 import type { z } from "zod";
 import type { delete_both_validator } from "~/server/article/validators";
 import type { IntersectionRef } from "../infinite-no-trpc";
+import type { ReactNode } from "react";
 
 export function ArticleTable({
-  session,
+  session: _,
+  authors,
   ...props
-}: { session: Session | null } & UseInfiniteHitsProps<PublishedArticleHit>) {
+}: {
+  session: Session | null;
+  authors: (author_ids: number[]) => ReactNode;
+} & UseInfiniteHitsProps<PublishedArticleHit>) {
   const sort_api = useSortBy({
     items: SORT_BY_ITEMS,
   });
@@ -132,7 +136,7 @@ export function ArticleTable({
         {items.map((item, index) => (
           <ArticleTableRow
             hit={item}
-            session={session}
+            authors={authors(item.author_ids)}
             key={item.objectID}
             ref={load_more_ref(index)}
           />
@@ -153,11 +157,11 @@ export function ArticleTable({
 function ArticleTableRow({
   ref,
   hit,
-  session: _,
+  authors,
 }: {
   ref?: IntersectionRef;
   hit: SearchHit<PublishedArticleHit>;
-  session: Session | null;
+  authors: ReactNode;
 }) {
   const duplicate_urls = cached_state_store.use.duplicate_urls();
 
@@ -177,9 +181,7 @@ function ArticleTableRow({
           </Link>
         </Button>
       </TableCell>
-      <TableCell>
-        <Authors author_ids={hit.author_ids} />
-      </TableCell>
+      <TableCell>{authors}</TableCell>
       <TableCell>{format_date_for_human(new Date(hit.created_at))}</TableCell>
       <TableCell>{format_date_for_human(new Date(hit.updated_at))}</TableCell>
     </TableRow>

@@ -6,8 +6,8 @@ import { ArticleNotFound } from "~/components/component-not-found";
 import { cn } from "~/lib/utils";
 import { article_variants, page_variants } from "~/lib/page-variants";
 import { EditorToReact } from "~/components/editor/editor-to-react";
-import { getServerAuthSession } from "~/server/auth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import ArticleDescription from "./article/description";
 
 export function PublishedContent({
   article,
@@ -18,25 +18,56 @@ export function PublishedContent({
     return <ArticleNotFound />;
   }
 
+  const author_ids = article.published_articles_to_authors.map(
+    (a) => a.author_id,
+  );
+
   return (
     <div className={cn(article_variants(), page_variants())}>
-      <EditorToReact article={article} session={null} />
+      <EditorToReact
+        article={article}
+        description={
+          <ArticleDescription
+            type="page"
+            author_ids={author_ids}
+            created_at={article.created_at}
+            old_id={article.old_id?.toString()}
+          />
+        }
+      />
     </div>
   );
 }
 
-export async function TabbedContent({
+export function TabbedContent({
   draft,
   published,
 }: {
   draft?: DraftArticleWithAuthors;
   published?: PublishedArticleWithAuthors;
 }) {
-  const session = await getServerAuthSession();
-
   if (!draft?.content && !published?.content) {
     return <ArticleNotFound />;
   }
+
+  const draft_description = draft ? (
+    <ArticleDescription
+      type="page"
+      author_ids={draft.draft_articles_to_authors.map((a) => a.author_id)}
+      created_at={draft.created_at}
+    />
+  ) : undefined;
+
+  const published_description = published ? (
+    <ArticleDescription
+      type="page"
+      author_ids={published.published_articles_to_authors.map(
+        (a) => a.author_id,
+      )}
+      created_at={published.created_at}
+      old_id={published.old_id?.toString()}
+    />
+  ) : undefined;
 
   return (
     <Tabs
@@ -53,12 +84,15 @@ export async function TabbedContent({
       </TabsList>
       <TabsContent value="draft">
         <div className={cn("flex flex-col gap-6")}>
-          <EditorToReact article={draft} session={session} />
+          <EditorToReact article={draft} description={draft_description} />
         </div>
       </TabsContent>
       <TabsContent value="published">
         <div className={cn("flex flex-col gap-6")}>
-          <EditorToReact article={published} session={session} />
+          <EditorToReact
+            article={published}
+            description={published_description}
+          />
         </div>
       </TabsContent>
     </Tabs>
