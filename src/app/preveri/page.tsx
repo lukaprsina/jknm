@@ -7,7 +7,7 @@ import { article_variants, page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
 import { memoize } from "nextjs-better-unstable-cache";
 
-export const cachedAllPublished = memoize(
+const cachedAllPublished = memoize(
   async () => {
     return await db.query.PublishedArticle.findMany({
       columns: {

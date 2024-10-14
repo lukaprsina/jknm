@@ -23,7 +23,7 @@ import { klona } from "klona";
 import { assert_one } from "~/lib/assert-length";
 import { algoliasearch as searchClient } from "algoliasearch";
 import { convert_article_to_algolia_object } from "~/lib/algoliasearch";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { publish_validator } from "./validators";
 
 export async function publish(input: z.infer<typeof publish_validator>) {
@@ -181,6 +181,5 @@ export async function publish(input: z.infer<typeof publish_validator>) {
   });
 
   revalidatePath("/");
-  revalidateTag("all-published");
   return transaction;
 }
