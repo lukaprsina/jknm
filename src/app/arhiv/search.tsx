@@ -1,72 +1,119 @@
 "use client";
 
-import { LayoutDashboard, TableIcon } from "lucide-react";
-import { InstantSearch } from "react-instantsearch";
-
 import { ArticleTable } from "./article-table";
-import {
-  CustomClearRefinements, DEFAULT_REFINEMENT,
-  MySearchBox,
-  MySortBy,
-  MyStats,
-  TimelineRefinement
-} from "./search-components";
+import { DEFAULT_REFINEMENT } from "./components";
 import type { Session } from "next-auth";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
+import { Tabs, TabsContent } from "~/components/ui/tabs";
 import { liteClient as algolia_search } from "algoliasearch/lite";
 import { env } from "~/env";
-import { MyInfiniteHits } from "~/app/arhiv/infinite-hits";
 import { useState } from "react";
+import { InstantSearchNext } from "react-instantsearch-nextjs";
+import dynamic from "next/dynamic";
+import { Skeleton } from "~/components/ui/skeleton";
+import { cn } from "~/lib/utils";
+import { article_grid_variants } from "~/lib/page-variants";
+
+const SearchControlsDynamic = dynamic(
+  () => import("./search-controls").then((mod) => mod.SearchControls),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-[172px] w-full bg-[hsl(0_0%_90%)]" />,
+  },
+);
+
+/* import("./infinite-hits").then(async (mod) => {
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      return mod.MyInfiniteHits;
+    }), */
+const MyInfiniteHitsDynamic = dynamic(
+  () => import("./infinite-hits").then((mod) => mod.MyInfiniteHits),
+  {
+    ssr: false,
+    loading: () => {
+      return (
+        <div className={cn(article_grid_variants())}>
+          {Array.from({ length: 10 }).map((_, index) => (
+            <Skeleton key={index} className="h-[441px] bg-[hsl(0_0%_90%)]" />
+          ))}
+        </div>
+      );
+    },
+  },
+);
 
 const searchClient = algolia_search(
   env.NEXT_PUBLIC_ALGOLIA_ID,
   env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY,
 );
 
-export function Search({ session }: { session: Session | null }) {
-  const [activeTab, setActiveTab] = useState<string>("card");
-
+export function Search2() {
   return (
-    <InstantSearch
+    <InstantSearchNext
       future={{ preserveSharedStateOnUnmount: true }}
       indexName={DEFAULT_REFINEMENT}
       searchClient={searchClient}
-      insights={true}
+      // insights={true}
+      routing={{
+        router: {
+          cleanUrlOnDispose: false,
+          /* windowTitle(routeState) {
+              const indexState = routeState.indexName ?? {};
+              return indexState.query
+                ? `MyWebsite - Results for: ${indexState.query}`
+                : "MyWebsite - Results page";
+            }, */
+        },
+      }}
     >
-      <Tabs value={activeTab} onValueChange={(new_value) =>setActiveTab(new_value)} defaultValue="card" className="pb-6 pt-2">
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
-            <MySearchBox />
-            <div className="flex flex-col items-center justify-between gap-6 text-nowrap sm:flex-row">
-              {activeTab==="card" && <MySortBy />}
-              <TabsList>
-                <TabsTrigger value="card">
-                  <LayoutDashboard />
-                </TabsTrigger>
-                <TabsTrigger value="table">
-                  <TableIcon />
-                </TabsTrigger>
-              </TabsList>
-            </div>
-          </div>
-          <div className="flex w-full items-center justify-end gap-6">
-            <MyStats />
-            <CustomClearRefinements />
-          </div>
-          <div className="flex w-full items-center justify-between">
-            <TimelineRefinement />
-          </div>
-        </div>
+      {/* <InfiniteHits /> */}
+      {/* <Suspense fallback={<div>Loading (suspense)...</div>}> */}
+      {/* <MyInfiniteHits /> */}
+      <MyInfiniteHitsDynamic />
+      {/* </Suspense> */}
+    </InstantSearchNext>
+  );
+}
+
+export function Search({ session }: { session: Session | null }) {
+  const [activeTab, setActiveTab] = useState<"card" | "table">("card");
+
+  return (
+    <InstantSearchNext
+      future={{ preserveSharedStateOnUnmount: true }}
+      indexName={DEFAULT_REFINEMENT}
+      searchClient={searchClient}
+      // insights={true}
+      routing={{
+        router: {
+          cleanUrlOnDispose: false,
+          /* windowTitle(routeState) {
+              const indexState = routeState.indexName ?? {};
+              return indexState.query
+                ? `MyWebsite - Results for: ${indexState.query}`
+                : "MyWebsite - Results page";
+            }, */
+        },
+      }}
+    >
+      <Tabs
+        value={activeTab}
+        onValueChange={(new_value) =>
+          setActiveTab(new_value as "card" | "table")
+        }
+        defaultValue="card"
+        className="pb-6 pt-2"
+      >
+        <SearchControlsDynamic activeTab={activeTab} />
         <TabsContent
           value="card"
           className="flex flex-col justify-between gap-4"
         >
-          <MyInfiniteHits />
+          <MyInfiniteHitsDynamic />
         </TabsContent>
         <TabsContent value="table">
           <ArticleTable session={session} />
         </TabsContent>
       </Tabs>
-    </InstantSearch>
+    </InstantSearchNext>
   );
 }

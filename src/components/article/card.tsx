@@ -10,6 +10,9 @@ import Image from "next/image";
 import type { IntersectionRef } from "~/app/infinite-no-trpc";
 
 import ArticleDescription from "./description";
+import { LinkIcon } from "lucide-react";
+import { Button } from "../ui/button";
+import { useToast } from "~/hooks/use-toast";
 /* const ArticleDescription = dynamic(() => import("./description"), {
   ssr: false,
   loading: () => <Skeleton className="h-[1em] w-[300px] bg-[hsl(0_0%_90%)]" />,
@@ -19,6 +22,7 @@ export function ArticleCard({
   featured,
   title,
   url,
+  id,
   content_preview,
   created_at,
   has_thumbnail,
@@ -29,6 +33,7 @@ export function ArticleCard({
   featured?: boolean;
   title: string;
   url: string;
+  id?: number;
   content_preview?: string;
   created_at: Date;
   has_thumbnail: boolean;
@@ -37,6 +42,8 @@ export function ArticleCard({
   ref?: IntersectionRef;
 }) {
   const [hover, setHover] = useState(false);
+  const [hoverLink, setHoverLink] = useState(false);
+  const toaster = useToast();
 
   return (
     <Link
@@ -79,12 +86,39 @@ export function ArticleCard({
         {/* TODO: prose-h3:text-xl prose-h3:font-semibold*/}
         <div className="h-full">
           <CardHeader>
-            <h3
-              className="line-clamp-2 h-[3em]"
-              dangerouslySetInnerHTML={{
-                __html: title,
-              }}
-            />
+            <div
+              className="flex justify-between gap-2"
+              onMouseEnter={() => setHoverLink(true)}
+              onMouseLeave={() => setHoverLink(false)}
+            >
+              <h3
+                className="line-clamp-2 h-[3em]"
+                dangerouslySetInnerHTML={{
+                  __html: title,
+                }}
+              />
+              {typeof id === "number" && (
+                <Button
+                  className={cn(
+                    "flex-shrink-0 opacity-100 transition-opacity",
+                    !hoverLink && "opacity-0",
+                  )}
+                  size="icon"
+                  variant="ghost"
+                  onClick={async () => {
+                    toaster.toast({
+                      title: "Trajna povezava kopirana v odložišče.",
+                    });
+
+                    await navigator.clipboard.writeText(
+                      `https://jknm.si/novica/?id=${id}`,
+                    );
+                  }}
+                >
+                  <LinkIcon size={18} />
+                </Button>
+              )}
+            </div>
             <div className="flex w-full justify-between gap-2">
               <ArticleDescription
                 type={featured ? "card-featured" : "card"}

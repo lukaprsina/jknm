@@ -34,7 +34,7 @@ import {
 } from "~/components/ui/tooltip";
 
 import { format_date_for_human } from "~/lib/format-date";
-import { MyStats, SORT_BY_ITEMS } from "./search-components";
+import { MyStats, SORT_BY_ITEMS } from "./components";
 import type { Session } from "next-auth";
 import type { PublishedArticleHit } from "~/lib/validators";
 import { Authors } from "~/components/authors";

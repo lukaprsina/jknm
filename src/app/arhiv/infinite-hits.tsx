@@ -1,14 +1,15 @@
-import React, { useCallback, useEffect } from "react";
+import React from "react";
 import type { InfiniteHitsProps } from "react-instantsearch";
-import { useInfiniteHits } from "react-instantsearch";
 import type { PublishedArticleHit } from "~/lib/validators";
-import { useIntersectionObserver } from "usehooks-ts";
 import { ArticleAlgoliaCard } from "~/components/article/adapter";
 import { cn } from "~/lib/utils";
 import { article_grid_variants, article_variants } from "~/lib/page-variants";
 import { useInfiniteAlgoliaArticles } from "~/hooks/use-infinite-algolia";
 
 export function MyInfiniteHits(props: InfiniteHitsProps<PublishedArticleHit>) {
+  // console.log("MyInfiniteHits", typeof window);
+  // if (typeof window !== "object") return null;
+
   const { load_more_ref, items } = useInfiniteAlgoliaArticles({
     offset: 9,
     ...props,

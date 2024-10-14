@@ -24,11 +24,16 @@ import type { RefinementListItem } from "instantsearch.js/es/connectors/refineme
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { Input } from "~/components/ui/input";
-import React from "react";
-// import { InstantSearchNext } from "react-instantsearch-nextjs";
+import React, { useCallback, useState } from "react";
 
 export const DEFAULT_REFINEMENT = "published_article_created_at_asc";
 
+/* 
+TODO:
+Warning: Can't perform a React state update on a component that hasn't mounted yet.
+This indicates that you have a side-effect in your render function that asynchronously
+later calls tries to update the component. Move this work to useEffect instead
+ */
 export function MySortBy() {
   const { currentRefinement, options, refine } = useSortBy({
     items: SORT_BY_ITEMS,
@@ -56,11 +61,137 @@ export function MySortBy() {
   );
 }
 
-const queryHook: UseSearchBoxProps["queryHook"] = (query, search) => {
+/* const queryHook: UseSearchBoxProps["queryHook"] = (query, search) => {
   search(query);
 };
 
-export function MySearchBox() {
+export function CustomSearchBox(props: UseSearchBoxProps) {
+  const { query, refine } = useSearchBox(props);
+  const { status } = useInstantSearch();
+  const [inputValue, setInputValue] = useState(query);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const isSearchStalled = status === "stalled";
+
+  function setQuery(newQuery: string) {
+    setInputValue(newQuery);
+
+    refine(newQuery);
+  }
+
+  return (
+    <div>
+      <form
+        action=""
+        role="search"
+        noValidate
+        onSubmit={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+
+          if (inputRef.current) {
+            inputRef.current.blur();
+          }
+        }}
+        onReset={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+
+          setQuery("");
+
+          if (inputRef.current) {
+            inputRef.current.focus();
+          }
+        }}
+      >
+        <input
+          ref={inputRef}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          placeholder="Search for products"
+          spellCheck={false}
+          maxLength={512}
+          type="search"
+          value={inputValue}
+          onChange={(event) => {
+            setQuery(event.currentTarget.value);
+          }}
+          autoFocus
+        />
+        <button type="submit">Submit</button>
+        <button
+          type="reset"
+          hidden={inputValue.length === 0 || isSearchStalled}
+        >
+          Reset
+        </button>
+        <span hidden={!isSearchStalled}>Searching…</span>
+      </form>
+    </div>
+  );
+} */
+
+/* 
+TODO:
+Warning: Can't perform a React state update on a component that hasn't mounted yet.
+This indicates that you have a side-effect in your render function that asynchronously
+later calls tries to update the component. Move this work to useEffect instead
+ */
+export function MySearchBox2(props: UseSearchBoxProps) {
+  const { query, refine: search_refine } = useSearchBox(props);
+  const [inputValue, setInputValue] = useState(query);
+  const { refine: sort_refine } = useSortBy({ items: SORT_BY_ITEMS });
+
+  const setQuery = useCallback(
+    (new_query: string) => {
+      const trimmed = new_query.trim();
+
+      if (trimmed === "") {
+        sort_refine(DEFAULT_REFINEMENT);
+      } else {
+        sort_refine("published_article");
+      }
+
+      setInputValue(new_query);
+      search_refine(new_query);
+    },
+    [search_refine, sort_refine],
+  );
+
+  return (
+    <div className="flex w-full max-w-sm items-center space-x-2">
+      <Input
+        placeholder="Išči po novicah …"
+        value={inputValue}
+        className="max-w-xl"
+        onChange={(e) => {
+          const text = e.target.value;
+
+          setQuery(text);
+        }}
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+        spellCheck={false}
+        maxLength={512}
+      />
+
+      <Button
+        variant="outline"
+        size="icon"
+        className="flex-shrink-0"
+        onClick={() => {
+          setQuery("");
+        }}
+      >
+        <XIcon size={12} />
+      </Button>
+    </div>
+  );
+}
+
+/* export function MySearchBox() {
   const search_api = useSearchBox({ queryHook });
   const { refine: sort_refine } = useSortBy({ items: SORT_BY_ITEMS });
 
@@ -75,7 +206,7 @@ export function MySearchBox() {
           const trimmed = text.trim();
 
           search_api.refine(text);
-          if (trimmed === "") {
+          if (trimmed.length === 0) {
             sort_refine(DEFAULT_REFINEMENT);
           } else {
             sort_refine("published_article");
@@ -94,7 +225,7 @@ export function MySearchBox() {
       </Button>
     </div>
   );
-}
+} */
 
 export function MyStats() {
   const stats = useStats();

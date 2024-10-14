@@ -1,6 +1,7 @@
 import { useIntersectionObserver } from "usehooks-ts";
 import { useCallback, useEffect } from "react";
-import { type InfiniteHitsProps, useInfiniteHits } from "react-instantsearch";
+import { useInfiniteHits } from "react-instantsearch";
+import type { InfiniteHitsProps } from "react-instantsearch";
 import type { PublishedArticleHit } from "~/lib/validators";
 
 export function useInfiniteAlgoliaArticles({
@@ -20,7 +21,7 @@ export function useInfiniteAlgoliaArticles({
       const ref_index = items.length - 1 - offset_not_null;
       return index === Math.max(ref_index, 0) ? ref : undefined;
     },
-    [items, ref],
+    [items.length, offset, ref],
   );
 
   useEffect(() => {

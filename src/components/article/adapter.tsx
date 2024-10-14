@@ -94,6 +94,7 @@ export const PublishedArticleDrizzleCard = ({
         article.created_at,
         duplicate_urls,
       )}
+      id={article.id}
       image_url={get_s3_prefix(
         `${get_s3_published_directory(article.url, article.created_at)}/thumbnail.png`,
         env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
@@ -124,6 +125,7 @@ export function ArticleAlgoliaCard({
       featured={false}
       title={hit.title}
       url={get_published_article_link(hit.url, hit.created_at, duplicate_urls)}
+      id={parseInt(hit.objectID)}
       content_preview={hit.content_preview?.slice(0, 1000)}
       created_at={new Date(hit.created_at)}
       has_thumbnail={hit.has_thumbnail}
