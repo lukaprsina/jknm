@@ -7,6 +7,7 @@ import {
   TimelineRefinement,
   MySearchBox2,
 } from "./components";
+import { Button } from "~/components/ui/button";
 
 export function SearchControls({ activeTab }: { activeTab: "card" | "table" }) {
   return (
@@ -19,11 +20,15 @@ export function SearchControls({ activeTab }: { activeTab: "card" | "table" }) {
         <div className="flex flex-col items-center justify-between gap-6 text-nowrap sm:flex-row">
           {activeTab === "card" && <MySortBy />}
           <TabsList>
-            <TabsTrigger value="card">
-              <LayoutDashboard />
+            <TabsTrigger value="card" asChild>
+              <Button variant="ghost" size="icon">
+                <LayoutDashboard />
+              </Button>
             </TabsTrigger>
-            <TabsTrigger value="table">
-              <TableIcon />
+            <TabsTrigger value="table" asChild>
+              <Button variant="ghost" size="icon">
+                <TableIcon />
+              </Button>
             </TabsTrigger>
           </TabsList>
         </div>

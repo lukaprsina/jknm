@@ -2,6 +2,7 @@ ko skriješ novičke, ima thumbnail napačno ime
 ko hitro poscrollaš gor, se sticky ne umakne
 zamenjaj social
 
+#240 &amp; pa slovenske jame
 
 page metadata (title)
 desn klik na novičke da enak meni
