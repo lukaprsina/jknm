@@ -9,7 +9,7 @@ import {
   update_settings_from_editor,
   validate_article,
 } from "~/components/editor/editor-lib";
-import { useContext } from "react";
+import { use, useContext } from "react";
 import {
   DraftArticleContext,
   PublishedArticleContext,
@@ -25,7 +25,6 @@ import type {
 import type { z } from "zod";
 import type { ThumbnailType } from "~/lib/validators";
 import { upload_image_by_url } from "~/components/aws-s3/upload-file";
-import { cached_state_store } from "~/app/provider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { save_draft } from "~/server/article/save-draft";
 import { publish } from "~/server/article/publish";
@@ -38,13 +37,14 @@ import type {
   save_draft_validator,
   unpublish_validator,
 } from "~/server/article/validators";
+import { DuplicateURLsContext } from "~/app/provider";
 
 export function useEditorMutations() {
   const query_client = useQueryClient();
   const draft_article = useContext(DraftArticleContext);
   const publish_article = useContext(PublishedArticleContext);
   const editor_context = useContext(EditorContext);
-  const duplicate_urls = cached_state_store.get.duplicate_urls();
+  const duplicate_urls = use(DuplicateURLsContext);
 
   const toaster = useToast();
   const router = useRouter();

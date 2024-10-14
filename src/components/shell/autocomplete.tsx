@@ -8,6 +8,7 @@ import type { Root } from "react-dom/client";
 import React, {
   createElement,
   Fragment,
+  use,
   useEffect,
   useMemo,
   useRef,
@@ -29,7 +30,7 @@ import { liteClient as algoliasearch } from "algoliasearch/lite";
 import { env } from "~/env";
 import { article_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
-import { cached_state_store } from "~/app/provider";
+import { DuplicateURLsContext } from "~/app/provider";
 
 const searchClient = algoliasearch(
   env.NEXT_PUBLIC_ALGOLIA_ID,
@@ -186,7 +187,7 @@ function ArticleAutocompleteItem({
   hit,
   components,
 }: ArticleAutocompleteItemProps) {
-  const duplicate_urls = cached_state_store.use.duplicate_urls();
+  const duplicate_urls = use(DuplicateURLsContext);
 
   const href = useMemo(
     () => get_published_article_link(hit.url, hit.created_at, duplicate_urls),

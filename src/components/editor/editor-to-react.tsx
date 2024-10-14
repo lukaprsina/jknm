@@ -24,11 +24,9 @@ import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
 } from "../article/adapter";
-import dynamic from "next/dynamic";
-import { Skeleton } from "../ui/skeleton";
 
-// import ArticlePageDescription from "~/components/article/description/page-description";
-const ArticleDescription = dynamic(
+import ArticleDescription from "~/components/article/description";
+/* const ArticleDescription = dynamic(
   () => import("~/components/article/description"),
   {
     ssr: false,
@@ -36,7 +34,7 @@ const ArticleDescription = dynamic(
       <Skeleton className="h-[1em] w-[300px] bg-[hsl(0_0%_90%)]" />
     ),
   },
-);
+); */
 
 export function EditorToReact({
   article,

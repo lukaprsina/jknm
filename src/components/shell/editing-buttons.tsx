@@ -85,7 +85,6 @@ export function EditButton({
     mutationFn: (input: z.infer<typeof create_draft_validator>) =>
       create_draft(input),
     onSuccess: (data) => {
-      router.push(get_draft_article_link(data.id));
       handle_navigation(data.id);
     },
   });

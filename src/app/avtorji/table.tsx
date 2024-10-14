@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { use, useMemo, useState } from "react";
 import type {
   ColumnDef,
   PaginationState,
@@ -32,7 +32,7 @@ import {
   AuthorsTableCellButtons,
   AuthorsTableHeaderButtons,
 } from "./table-buttons";
-import { cached_state_store } from "../provider";
+import { AllAuthorsContext } from "../provider";
 
 export interface GuestAuthor {
   id: number;
@@ -129,7 +129,7 @@ export function AuthorsDataTable() {
   });
 
   // const guest_authors = api.author.get_all.useQuery("guest");
-  const all_authors = cached_state_store.get.all_authors();
+  const all_authors = use(AllAuthorsContext);
   const guest_authors = useMemo(
     () => all_authors.filter((author) => author.author_type === "guest"),
     [all_authors],

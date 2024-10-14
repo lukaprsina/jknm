@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { use, useCallback, useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
 
 import { Button } from "~/components/ui/button";
@@ -21,6 +21,7 @@ import { EDITOR_JS_PLUGINS } from "~/components/editor/plugins";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "~/hooks/use-toast";
 import { sync_duplicate_urls } from "~/server/article/sync-duplicate-urls";
+import { AllAuthorsContext } from "../provider";
 
 export function ArticleConverter() {
   const editorJS = useRef<EditorJS | null>(null);
@@ -31,6 +32,7 @@ export function ArticleConverter() {
   const [doDimensions, setDoDimensions] = useState(false);
   const [firstArticle, setFirstArticle] = useState("23");
   const [lastArticle, setLastArticle] = useState("24");
+  const all_authors = use(AllAuthorsContext);
   const toaster = useToast();
   const query_client = useQueryClient();
 
@@ -142,6 +144,7 @@ export function ArticleConverter() {
 
               await iterate_over_articles(
                 editorJS.current,
+                all_authors,
                 doSplice,
                 doDryRun,
                 doUpdate,

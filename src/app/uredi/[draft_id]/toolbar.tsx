@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useMemo } from "react";
+import { use, useContext, useMemo } from "react";
 
 import type { MultiSelectProps } from "~/components/multi-select";
 import { MultiSelect } from "~/components/multi-select";
@@ -8,11 +8,11 @@ import { MultiSelect } from "~/components/multi-select";
 import { EditorContext } from "~/components/editor/editor-context";
 import { editor_store } from "~/components/editor/editor-store";
 import { ToolbarButtons } from "./toolbar-buttons";
-import { cached_state_store } from "~/app/provider";
+import { AllAuthorsContext } from "~/app/provider";
 
 export function MyToolbar() {
   const editor_context = useContext(EditorContext);
-  const all_authors = cached_state_store.get.all_authors();
+  const all_authors = use(AllAuthorsContext);
   const author_ids = editor_store.use.author_ids();
 
   const selected_author_ids = useMemo(() => {
@@ -28,19 +28,6 @@ export function MyToolbar() {
             label: user.name,
             value: user.id.toString(),
             icon: undefined,
-            /*icon: ({ className }: { className?: string }) => {
-              if (!user.image || !user.name) return;
-
-              return (
-                <Image
-                  src={user.image}
-                  alt={user.name}
-                  width={16}
-                  height={16}
-                  className={cn("m-0 rounded-full", className)}
-                />
-              );
-            },*/
           }) satisfies MultiSelectProps["options"]["0"],
       )
       .filter((mapped_user) => {
@@ -74,3 +61,17 @@ export function MyToolbar() {
     </div>
   );
 }
+
+/*icon: ({ className }: { className?: string }) => {
+              if (!user.image || !user.name) return;
+
+              return (
+                <Image
+                  src={user.image}
+                  alt={user.name}
+                  width={16}
+                  height={16}
+                  className={cn("m-0 rounded-full", className)}
+                />
+              );
+            },*/

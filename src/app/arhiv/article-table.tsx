@@ -40,7 +40,6 @@ import type { PublishedArticleHit } from "~/lib/validators";
 import { Authors } from "~/components/authors";
 import { get_published_article_link } from "~/lib/article-utils";
 import { useInfiniteAlgoliaArticles } from "~/hooks/use-infinite-algolia";
-import { cached_state_store } from "../provider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "~/hooks/use-toast";
 import { delete_both } from "~/server/article/delete";
@@ -48,6 +47,8 @@ import { useRouter } from "next/navigation";
 import type { z } from "zod";
 import type { delete_both_validator } from "~/server/article/validators";
 import type { IntersectionRef } from "../infinite-no-trpc";
+import { use } from "react";
+import { DuplicateURLsContext } from "../provider";
 
 export function ArticleTable({
   session,
@@ -159,7 +160,7 @@ function ArticleTableRow({
   hit: SearchHit<PublishedArticleHit>;
   session: Session | null;
 }) {
-  const duplicate_urls = cached_state_store.use.duplicate_urls();
+  const duplicate_urls = use(DuplicateURLsContext);
 
   return (
     <TableRow ref={ref} key={hit.objectID}>

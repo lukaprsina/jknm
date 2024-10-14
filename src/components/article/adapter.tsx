@@ -19,8 +19,9 @@ import {
 import { ArticleCard } from "./card";
 import { get_s3_prefix } from "~/lib/s3-publish";
 import { env } from "~/env";
-import { cached_state_store } from "~/app/provider";
 import type { IntersectionRef } from "~/app/infinite-no-trpc";
+import { use } from "react";
+import { DuplicateURLsContext } from "~/app/provider";
 
 type SelectPublishedArticlesToAuthors =
   typeof PublishedArticlesToAuthors.$inferSelect & {
@@ -81,7 +82,7 @@ export const PublishedArticleDrizzleCard = ({
   featured?: boolean;
   ref?: IntersectionRef;
 }) => {
-  const duplicate_urls = cached_state_store.get.duplicate_urls();
+  const duplicate_urls = use(DuplicateURLsContext);
 
   return (
     <ArticleCard
@@ -115,7 +116,7 @@ export function ArticleAlgoliaCard({
   hit: SearchHit<PublishedArticleHit>;
   ref?: IntersectionRef;
 }) {
-  const duplicate_urls = cached_state_store.get.duplicate_urls();
+  const duplicate_urls = use(DuplicateURLsContext);
 
   return (
     <ArticleCard

@@ -77,7 +77,7 @@ export function PreveriClient({
   }, [articles, preveri_store_index]);
 
   const article = useQuery({
-    queryKey: ["preveri-client"],
+    queryKey: ["preveri-client", page_info.current_id],
     queryFn: () =>
       get_article_by_published_id({ published_id: page_info.current_id }),
   });
@@ -91,6 +91,21 @@ export function PreveriClient({
     router.prefetch(iframe_src(page_info.next));
     router.prefetch(iframe_src(page_info.previous));
   }, [iframe_src, page_info.next, page_info.previous, router]);
+
+  const page = useMemo(() => {
+    if (article.isPending) {
+      return "Nalagam...";
+    } else if (article.isError) {
+      return (
+        <InfoCard
+          title="Nekaj je narobe, pokliči me"
+          description={article.error.message}
+        />
+      );
+    } else {
+      return <EditorToReact article={article.data.published} session={null} />;
+    }
+  }, [article]);
 
   return (
     <>
@@ -153,17 +168,13 @@ export function PreveriClient({
         </div>
       </form>
       <div className="grid h-full w-full grid-cols-2 gap-2">
-        {article.data ? (
-          <>
-            <iframe
-              className="h-full w-full overflow-y-hidden rounded-xl"
-              src={iframe_src(preveri_store_index)}
-            />
-            <EditorToReact article={article.data.published} session={null} />
-          </>
-        ) : (
-          <InfoCard title="Nekaj je narobe" description="Pokliči me" />
-        )}
+        <>
+          <iframe
+            className="h-full w-full overflow-y-hidden rounded-xl"
+            src={iframe_src(preveri_store_index)}
+          />
+          {page}
+        </>
       </div>
     </>
   );

@@ -18,7 +18,7 @@ import { parse_node } from "./parse-node";
 import { read_from_xml } from "./xml-server";
 import { PROBLEMATIC_CONSTANTS } from "./info/problematic";
 import { convert_title_to_url } from "~/lib/article-utils";
-import type { PublishArticleSchema } from "~/server/db/schema";
+import type { Author, PublishArticleSchema } from "~/server/db/schema";
 import type { z } from "zod";
 import type { ThumbnailType } from "~/lib/validators";
 import { centerCrop, makeAspectCrop } from "react-image-crop";
@@ -122,6 +122,7 @@ const ids_by_dimensions: IdsByDimentionType[] = [];
 
 export async function iterate_over_articles(
   editorJS: EditorJS | null,
+  all_authors: (typeof Author.$inferSelect)[],
   do_splice: boolean,
   do_dry_run: boolean,
   _do_update: boolean,
@@ -189,6 +190,7 @@ export async function iterate_over_articles(
       authors_by_name,
       do_dimensions,
       problems,
+      all_authors,
     );
     articles.push(article);
   }
@@ -225,6 +227,7 @@ async function parse_csv_article(
   authors_by_name: AuthorType[],
   do_dimensions: boolean,
   problems: InitialProblems,
+  all_authors: (typeof Author.$inferSelect)[],
 ): Promise<ConverterArticleWithAuthorIds> {
   const problematic_dir = "1723901265154";
 
@@ -369,6 +372,7 @@ async function parse_csv_article(
     imported_article,
     blocks,
     authors_by_name,
+    all_authors,
   );
 
   await editorJS?.render({

@@ -1,10 +1,11 @@
 "use client";
 
-import { Fragment, useMemo } from "react";
-import { cached_state_store } from "~/app/provider";
+import { Fragment, use, useMemo } from "react";
+import { AllAuthorsContext } from "~/app/provider";
 
 export function Authors({ author_ids }: { author_ids: number[] }) {
-  const all_authors = cached_state_store.get.all_authors();
+  // const all_authors = cached_state_store.get.all_authors();
+  const all_authors = use(AllAuthorsContext);
 
   const authors = useMemo(
     () => all_authors.filter((author) => author_ids.includes(author.id)),
