@@ -88,7 +88,24 @@ export function ArticleTable({
               )}
             </Button>
           </TableHead>
-          <TableHead>Avtorji</TableHead>
+          <TableHead>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                sort_api.refine(
+                  sort_api.currentRefinement === "published_article_author_desc"
+                    ? "published_article_author_asc"
+                    : "published_article_author_desc",
+                );
+              }}
+            >
+              Avtorji
+              {sort_api.currentRefinement ===
+                "published_article_author_desc" && <ChevronDownIcon />}
+              {sort_api.currentRefinement ===
+                "published_article_author_asc" && <ChevronUpIcon />}
+            </Button>
+          </TableHead>
           <TableHead>
             <Button
               variant="ghost"

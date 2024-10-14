@@ -14,6 +14,7 @@ export function convert_article_to_algolia_object(
     content_preview: convert_content_to_text(article.content?.blocks),
     year: article.created_at.getFullYear().toString(),
     author_ids: article.published_articles_to_authors.map((a) => a.author_id),
+    first_author: article.published_articles_to_authors.at(0)?.author.name,
     has_thumbnail: Boolean(article.thumbnail_crop),
   } satisfies PublishedArticleHit;
 }

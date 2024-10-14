@@ -9,9 +9,7 @@ import { Input } from "~/components/ui/input";
 
 import { article_variants, page_variants } from "~/lib/page-variants";
 import {
-  sync_authors,
   sync_with_algolia,
-  copy_and_rename_images,
   test_strong_bold,
   content_size_stats,
 } from "./converter-server";
@@ -69,14 +67,14 @@ export function ArticleConverter() {
           Delete s3 published bucket
         </Button> */}
         {/* <Button onClick={() => delete_authors()}>Delete authors</Button> */}
-        <Button onClick={() => sync_authors()}>Sync authors</Button>
+        {/* <Button onClick={() => sync_authors()}>Sync authors</Button> */}
         <Button onClick={() => sync_duplicate_urls_mutation.mutate()}>
           Sync duplicate urls
         </Button>
         <Button onClick={() => sync_with_algolia()}>Sync with Algolia</Button>
-        <Button onClick={() => copy_and_rename_images()}>
+        {/* <Button onClick={() => copy_and_rename_images()}>
           Copy and rename images
-        </Button>
+        </Button> */}
         <div className="flex flex-shrink gap-2">
           <Input
             value={firstArticle}

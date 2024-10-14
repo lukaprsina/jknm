@@ -341,4 +341,6 @@ export const SORT_BY_ITEMS = [
   { value: "published_article_created_at_asc", label: "Najstarejše" },
   { value: "published_article_title_asc", label: "Ime naraščajoče" },
   { value: "published_article_title_desc", label: "Ime padajoče" },
+  { value: "published_article_author_asc", label: "Avtor naraščajoče" },
+  { value: "published_article_author_desc", label: "Avtor padajoče" },
 ];

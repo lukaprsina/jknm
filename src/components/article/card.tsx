@@ -13,6 +13,7 @@ import ArticleDescription from "./description";
 import { LinkIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { useToast } from "~/hooks/use-toast";
+import { get_base_url } from "~/lib/get-base-url";
 /* const ArticleDescription = dynamic(() => import("./description"), {
   ssr: false,
   loading: () => <Skeleton className="h-[1em] w-[300px] bg-[hsl(0_0%_90%)]" />,
@@ -105,14 +106,17 @@ export function ArticleCard({
                   )}
                   size="icon"
                   variant="ghost"
-                  onClick={async () => {
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const article_url = `${get_base_url(true)}/novica/?id=${id}`;
+
                     toaster.toast({
                       title: "Trajna povezava kopirana v odložišče.",
+                      description: article_url,
                     });
 
-                    await navigator.clipboard.writeText(
-                      `https://jknm.si/novica/?id=${id}`,
-                    );
+                    await navigator.clipboard.writeText(article_url);
                   }}
                 >
                   <LinkIcon size={18} />
