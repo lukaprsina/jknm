@@ -4,15 +4,15 @@ import { fontFamily } from "tailwindcss/defaultTheme";
 
 import colors from "tailwindcss/colors";
 
-// @ts-expect-error - bun error
+// @ts-expect-error - next turbo error
 delete colors["lightBlue"];
-// @ts-expect-error - bun error
+// @ts-expect-error - next turbo error
 delete colors["warmGray"];
-// @ts-expect-error - bun error
+// @ts-expect-error - next turbo error
 delete colors["trueGray"];
-// @ts-expect-error - bun error
+// @ts-expect-error - next turbo error
 delete colors["coolGray"];
-// @ts-expect-error - bun error
+// @ts-expect-error - next turbo error
 delete colors["blueGray"];
 
 export default {

@@ -14,6 +14,14 @@ import ArticleDescription from "~/components/article/description";
 import type { PublishedArticleWithAuthors } from "~/components/article/adapter";
 import { cachedDuplicateUrls } from "~/server/cached-global-state";
 
+const Description = (article: PublishedArticleWithAuthors) => (
+  <ArticleDescription
+    type="card"
+    author_ids={article.published_articles_to_authors.map((a) => a.author.id)}
+    created_at={article.created_at}
+  />
+);
+
 export default async function HomePageServer() {
   const queryClient = new QueryClient();
 
@@ -27,20 +35,12 @@ export default async function HomePageServer() {
     }),
   ]);
 
-  const description = (article: PublishedArticleWithAuthors) => (
-    <ArticleDescription
-      type="card"
-      author_ids={article.published_articles_to_authors.map((a) => a.author.id)}
-      created_at={article.created_at}
-    />
-  );
-
   if (!session) {
     return (
       <Shell without_footer>
         <div className={cn(page_variants(), article_variants())}>
           <InfiniteArticles
-            description={description}
+            description={Description}
             duplicate_urls={duplicate_urls}
           />
         </div>
@@ -55,7 +55,7 @@ export default async function HomePageServer() {
           <DraftArticles />
           <div>
             <InfiniteArticles
-              description={description}
+              description={Description}
               duplicate_urls={duplicate_urls}
             />
           </div>
