@@ -15,8 +15,8 @@ export const env = createEnv({
       process.env.NODE_ENV === "production"
         ? z.string()
         : z.string().optional(),
-    NEXTAUTH_URL: z.preprocess(
-      // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
+        NEXTAUTH_URL: z.preprocess(
+      // This makes Vercel deployments not fail if you don't set NEXT_PUBLIC_NEXTAUTH_URL
       // Since NextAuth.js automatically uses the VERCEL_URL if present.
       (str) => process.env.VERCEL_URL ?? str,
       // VERCEL_URL doesn't include `https` so it cant be validated as a URL
@@ -42,6 +42,13 @@ export const env = createEnv({
     NEXT_PUBLIC_AWS_REGION: z.string(),
     NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME: z.string(),
     NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME: z.string(),
+    NEXT_PUBLIC_NEXTAUTH_URL: z.preprocess(
+      // This makes Vercel deployments not fail if you don't set NEXT_PUBLIC_NEXTAUTH_URL
+      // Since NextAuth.js automatically uses the VERCEL_URL if present.
+      (str) => process.env.VERCEL_URL ?? str,
+      // VERCEL_URL doesn't include `https` so it cant be validated as a URL
+      process.env.VERCEL ? z.string() : z.string().url(),
+    ),
   },
 
   /**
@@ -57,19 +64,20 @@ export const env = createEnv({
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-    NEXT_PUBLIC_AWS_REGION: process.env.NEXT_PUBLIC_AWS_REGION,
-    NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME:
-      process.env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
-    NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME:
-      process.env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
     ALGOLIA_ADMIN_KEY: process.env.ALGOLIA_ADMIN_KEY,
     JKNM_WORKSPACE_ID: process.env.JKNM_WORKSPACE_ID,
     JKNM_SERVICE_ACCOUNT_CREDENTIALS:
-      process.env.JKNM_SERVICE_ACCOUNT_CREDENTIALS,
-
+    process.env.JKNM_SERVICE_ACCOUNT_CREDENTIALS,
+    
     // public
     NEXT_PUBLIC_ALGOLIA_ID: process.env.NEXT_PUBLIC_ALGOLIA_ID,
     NEXT_PUBLIC_ALGOLIA_SEARCH_KEY: process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY,
+    NEXT_PUBLIC_NEXTAUTH_URL: process.env.NEXT_PUBLIC_NEXTAUTH_URL,
+    NEXT_PUBLIC_AWS_REGION: process.env.NEXT_PUBLIC_AWS_REGION,
+    NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME:
+    process.env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+    NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME:
+    process.env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
