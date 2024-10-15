@@ -22,9 +22,20 @@ const mdx_rs =
 
 /** @type {import("next").NextConfig} */
 const config = {
-  // "md", "mdx", 
-  
+  // "md", "mdx",
+
   pageExtensions: ["js", "jsx", "ts", "tsx"],
+  /* rewrites() {
+    return [
+      {
+        basePath: false,
+        source: "/novica/:slug/:filename*{jpg|jpeg|png|gif|pdf|docx}",
+        destination:
+          // "https://f000.backblazeb2.com/file/your-bucket-name/:filename*", // Replace with your B2 bucket URL
+          "https://jknm.s3.eu-central-1.amazonaws.com/:slug/:filename*",
+      },
+    ];
+  }, */
   images: {
     loader: "custom",
     loaderFile: "./image-loader.js",
