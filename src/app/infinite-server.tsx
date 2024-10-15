@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "~/server/db";
-import { withCursorPagination } from "drizzle-pagination";
+import { withCursorPagination } from "~/lib/drizzle-pagination";
 import { asc } from "drizzle-orm";
 import {
   PublishedArticle,
