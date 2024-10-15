@@ -5,11 +5,12 @@ import { get_published_article_link } from "~/lib/article-utils";
 import { get_article_by_published_id } from "~/server/article/get-article";
 import { cachedDuplicateUrls } from "~/server/cached-global-state";
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: Record<string, string | string[] | undefined>;
-}) {
+export default async function Page(
+  props: {
+    searchParams: Promise<Record<string, string | string[] | undefined>>;
+  }
+) {
+  const searchParams = await props.searchParams;
   let id: number | undefined;
 
   for (const key in searchParams) {

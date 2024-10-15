@@ -17,9 +17,14 @@ export default function ArticleDescription({
   created_at: Date;
   old_id?: string;
 }) {
-  /* useEffect(() => {
-    console.log("ArticleDescription", { author_ids, type, created_at, old_id });
-  }, [author_ids, created_at, old_id, type]); */
+  if (typeof created_at.toLocaleDateString !== "function") {
+    console.error("ArticleDescription", {
+      author_ids,
+      type,
+      created_at,
+      old_id,
+    });
+  }
 
   return (
     <CardDescription

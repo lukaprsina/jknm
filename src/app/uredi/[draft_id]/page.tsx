@@ -20,15 +20,18 @@ const Editor = dynamic(() => import("./editor"), {
 });
 
 interface EditorPageProps {
-  params: {
+  params: Promise<{
     draft_id: string;
-  };
+  }>;
 }
 
-export async function generateMetadata(
-  { params: { draft_id } }: EditorPageProps,
-  _parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata(props: EditorPageProps, _parent: ResolvingMetadata): Promise<Metadata> {
+  const params = await props.params;
+
+  const {
+    draft_id
+  } = params;
+
   const session = await getServerAuthSession();
   if (!session)
     return {
@@ -56,9 +59,13 @@ export async function generateMetadata(
   };
 }
 
-export default async function EditorPage({
-  params: { draft_id },
-}: EditorPageProps) {
+export default async function EditorPage(props: EditorPageProps) {
+  const params = await props.params;
+
+  const {
+    draft_id
+  } = params;
+
   const session = await getServerAuthSession();
   if (!session) return notFound();
 

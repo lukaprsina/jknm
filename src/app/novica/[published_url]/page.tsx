@@ -9,16 +9,20 @@ import DOMPurify from "isomorphic-dompurify";
 import { get_article_by_published_url } from "~/server/article/get-article";
 
 interface NovicaProps {
-  params: {
+  params: Promise<{
     published_url: string;
-  };
-  searchParams: Record<string, string | string[] | undefined>;
+  }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-export async function generateMetadata(
-  { params: { published_url }, searchParams }: NovicaProps,
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata(props: NovicaProps, parent: ResolvingMetadata): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
+
+  const {
+    published_url
+  } = params;
+
   const { published } = await get_articles(published_url, searchParams);
   const awaited_parent = await parent;
 
@@ -39,10 +43,14 @@ export async function generateMetadata(
   };
 }
 
-export default async function NovicaPage({
-  params: { published_url },
-  searchParams,
-}: NovicaProps) {
+export default async function NovicaPage(props: NovicaProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
+
+  const {
+    published_url
+  } = params;
+
   const session = await getServerAuthSession();
 
   const { draft, published } = await get_articles(published_url, searchParams);
