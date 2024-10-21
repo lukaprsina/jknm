@@ -4,7 +4,6 @@ import type { ToolConstructable, ToolSettings } from "@editorjs/editorjs";
 import AttachesTool from "@editorjs/attaches";
 // @ts-expect-error no types
 import CheckList from "@editorjs/checklist";
-// @ts-expect-error no types
 import Code from "@editorjs/code";
 import Delimiter from "@editorjs/delimiter";
 // @ts-expect-error no types
@@ -21,11 +20,13 @@ import Quote from "@editorjs/quote";
 import Table from "@editorjs/table";
 // @ts-expect-error no types
 import Warning from "@editorjs/warning";
-import createGenericInlineTool, { UnderlineInlineTool } from "editorjs-inline-tool";
+import createGenericInlineTool, {
+  UnderlineInlineTool,
+} from "editorjs-inline-tool";
 import {
   upload_file,
   upload_image_by_file,
-  upload_image_by_url
+  upload_image_by_url,
 } from "../aws-s3/upload-file";
 import { get_s3_draft_directory } from "~/lib/article-utils";
 import { editor_store } from "./editor-store";
@@ -46,16 +47,16 @@ export function EDITOR_JS_PLUGINS(): Record<
             upload_image_by_file({
               file,
               draft: true,
-              directory: get_s3_draft_directory(editor_store.get.draft_id())
+              directory: get_s3_draft_directory(editor_store.get.draft_id()),
             }),
           uploadByUrl: (url: string) =>
             upload_image_by_url({
               url,
               draft: true,
-              directory: get_s3_draft_directory(editor_store.get.draft_id())
-            })
-        }
-      }
+              directory: get_s3_draft_directory(editor_store.get.draft_id()),
+            }),
+        },
+      },
     },
     attaches: {
       class: AttachesTool,
@@ -65,14 +66,14 @@ export function EDITOR_JS_PLUGINS(): Record<
             upload_file({
               file,
               draft: true,
-              directory: get_s3_draft_directory(editor_store.get.draft_id())
-            })
-        }
-      }
+              directory: get_s3_draft_directory(editor_store.get.draft_id()),
+            }),
+        },
+      },
     },
     paragraph: {
       class: Paragraph,
-      inlineToolbar: true
+      inlineToolbar: true,
     },
     embed: Embed,
     table: {
@@ -80,8 +81,8 @@ export function EDITOR_JS_PLUGINS(): Record<
       class: Table,
       // inlineToolbar: true,
       config: {
-        withHeadings: true
-      }
+        withHeadings: true,
+      },
     },
     marker: Marker,
     list: {
@@ -89,8 +90,8 @@ export function EDITOR_JS_PLUGINS(): Record<
       class: List,
       inlineToolbar: true,
       config: {
-        defaultStyle: "unordered"
-      }
+        defaultStyle: "unordered",
+      },
     },
     warning: Warning,
     code: Code,
@@ -100,8 +101,8 @@ export function EDITOR_JS_PLUGINS(): Record<
       class: Header,
       inlineToolbar: true,
       config: {
-        defaultLevel: 2
-      }
+        defaultLevel: 2,
+      },
     },
     quote: Quote,
     checklist: CheckList,
@@ -110,18 +111,18 @@ export function EDITOR_JS_PLUGINS(): Record<
     underline: UnderlineInlineTool,
     superscript: createGenericInlineTool({
       sanitize: {
-        sup: {}
+        sup: {},
       },
       tagName: "SUP",
-      toolboxIcon: SUPERSCRIPT_ICON
+      toolboxIcon: SUPERSCRIPT_ICON,
     }),
     subscript: createGenericInlineTool({
       sanitize: {
-        sub: {}
+        sub: {},
       },
       tagName: "SUB",
-      toolboxIcon: SUBSCRIPT_ICON
-    })
+      toolboxIcon: SUBSCRIPT_ICON,
+    }),
   };
 }
 
