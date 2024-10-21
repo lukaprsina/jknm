@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { get_base_url } from "./lib/get-base-url";
+import { env } from "./env";
 
 export function middleware(req: NextRequest) {
   // Extract the path after /novica/
   const path = req.nextUrl.pathname.replace(/^\/novica\//, "");
-  const new_url = new URL(`https://cdn.${get_base_url(true)}/${path}`);
+  const new_url = new URL(`https://cdn.${env.SITE_DOMAIN}/${path}`);
 
   console.log("MIDDLEWARE", req.nextUrl.pathname, new_url.toString());
   return NextResponse.rewrite(new_url);
