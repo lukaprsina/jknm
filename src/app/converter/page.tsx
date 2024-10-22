@@ -11,7 +11,9 @@ import { PublishedArticle } from "~/server/db/schema";
 // import { ArticleConverter } from "./converter-editor";
 
 const DynamicArticleConverter = dynamic(
-  () => import("./converter-editor").then((mod) => mod.ArticleConverter),
+  () => import("./converter-editor").then((mod) => ({
+    default: mod.ArticleConverter
+  })),
   {
     ssr: false,
   },

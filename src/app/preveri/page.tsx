@@ -26,7 +26,9 @@ const cachedAllPublished = memoize(
 
 // import { PreveriClient } from "./preveri-client";
 const PreveriClient = dynamic(
-  () => import("./preveri-client").then((mod) => mod.PreveriClient),
+  () => import("./preveri-client").then((mod) => ({
+    default: mod.PreveriClient
+  })),
   {
     ssr: false,
   },

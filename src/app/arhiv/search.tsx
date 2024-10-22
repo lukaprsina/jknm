@@ -14,7 +14,9 @@ import { cn } from "~/lib/utils";
 import { article_grid_variants } from "~/lib/page-variants";
 
 const SearchControlsDynamic = dynamic(
-  () => import("./search-controls").then((mod) => mod.SearchControls),
+  () => import("./search-controls").then((mod) => ({
+    default: mod.SearchControls
+  })),
   {
     ssr: false,
     loading: () => <Skeleton className="h-[172px] w-full bg-[hsl(0_0%_90%)]" />,
@@ -26,7 +28,9 @@ const SearchControlsDynamic = dynamic(
       return mod.MyInfiniteHits;
     }), */
 const MyInfiniteHitsDynamic = dynamic(
-  () => import("./infinite-hits").then((mod) => mod.MyInfiniteHits),
+  () => import("./infinite-hits").then((mod) => ({
+    default: mod.MyInfiniteHits
+  })),
   {
     ssr: false,
     loading: () => {
