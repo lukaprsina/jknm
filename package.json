@@ -17,7 +17,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@algolia/autocomplete-js": "^1.17.4",
+    "@algolia/autocomplete-js": "^1.17.6",
     "@algolia/autocomplete-theme-classic": "^1.17.4",
     "@auth/drizzle-adapter": "^1.1.0",
     "@aws-sdk/client-s3": "^3.637.0",
@@ -77,7 +77,7 @@
     "@trpc/server": "^11.0.0-rc.446",
     "@types/mdx": "^2.0.13",
     "@vercel/speed-insights": "^1.0.12",
-    "algoliasearch": "^5.4.1",
+    "algoliasearch": "^5.10.0",
     "babel-plugin-react-compiler": "^0.0.0-experimental-4e0eccf-20240830",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
