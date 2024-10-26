@@ -11,11 +11,7 @@ import {
 import { assert_at_most_one, assert_one } from "~/lib/assert-length";
 import { algoliasearch as searchClient } from "algoliasearch";
 import { env } from "~/env";
-import {
-  delete_s3_directory,
-  rename_s3_files_and_content,
-  s3_copy_thumbnails,
-} from "../s3-utils";
+import { delete_s3_directory, s3_copy_thumbnails } from "../s3-utils";
 import {
   get_s3_draft_directory,
   get_s3_published_directory,
@@ -103,20 +99,6 @@ export async function unpublish(input: z.infer<typeof unpublish_validator>) {
     const updated_or_created_draft = draft_return[0];
 
     const draft_s3_url = get_s3_draft_directory(updated_or_created_draft.id);
-
-    // rename urls and content
-    const renamed_content = published.content
-      ? await rename_s3_files_and_content(published.content, draft_s3_url, true)
-      : undefined;
-
-    if (renamed_content) {
-      await tx
-        .update(DraftArticle)
-        .set({
-          content: renamed_content,
-        })
-        .where(eq(DraftArticle.id, updated_or_created_draft.id));
-    }
 
     // copy thumbnails from published to draft, then delete the published directory
     await s3_copy_thumbnails({

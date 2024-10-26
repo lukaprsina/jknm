@@ -51,6 +51,38 @@ export async function test_strong_bold() {
     }
     if (has_strong) console.log(article.id, article.title, "has strong");
   }
+
+  console.log("done");
+}
+
+export async function rename_all_files() {
+  console.log("Renaming all files");
+  const articles = await db.query.PublishedArticle.findMany();
+
+  for (const article of articles) {
+    if (!article.content) throw new Error("No content");
+
+    // https://jknm.s3.eu-central-1.amazonaws.com/kanin-2024-nm-5-sibaaaa-20-09-2024/slika_1.jpg
+    for (const block of article.content.blocks) {
+      switch (block.type) {
+        case "image": {
+          const data = block.data as { file: { url: string } };
+          const url = data.file.url;
+          if (!url.startsWith("https://jknm.s3.eu-central-1.amazonaws.com"))
+            throw new Error("Not jknm url");
+          break;
+        }
+        case "attaches": {
+          const data = block.data as { file: { url: string } };
+          const url = data.file.url;
+          if (!url.startsWith("https://jknm.s3.eu-central-1.amazonaws.com"))
+            throw new Error("Not jknm url");
+          break;
+        }
+      }
+    }
+  }
+
   console.log("done");
 }
 

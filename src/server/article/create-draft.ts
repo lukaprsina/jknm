@@ -9,10 +9,7 @@ import {
   PublishedArticlesToAuthors,
 } from "~/server/db/schema";
 import { assert_one } from "~/lib/assert-length";
-import {
-  rename_s3_files_and_content,
-  s3_copy_thumbnails,
-} from "~/server/s3-utils";
+import { s3_copy_thumbnails } from "~/server/s3-utils";
 import {
   get_s3_draft_directory,
   get_s3_published_directory,
@@ -97,24 +94,6 @@ export async function create_draft(
 
     assert_one(created_drafts);
     const created_draft = created_drafts[0];
-
-    // update content with renamed urls (now that we have the id)
-    const renamed_content = created_draft.content
-      ? await rename_s3_files_and_content(
-          created_draft.content,
-          created_draft.id.toString(),
-          true,
-        )
-      : undefined;
-
-    if (renamed_content) {
-      await tx
-        .update(DraftArticle)
-        .set({
-          content: renamed_content,
-        })
-        .where(eq(DraftArticle.id, created_draft.id));
-    }
 
     // copy thumbnails from published to draft
     if (published?.id) {
