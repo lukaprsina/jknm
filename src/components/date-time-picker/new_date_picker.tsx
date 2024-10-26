@@ -14,7 +14,13 @@ import { Calendar } from "~/components/date-time-picker/new_calendar";
 import { TimePickerDemo } from "~/components/date-time-picker/time-demo";
 import { format_datetime_for_human } from "~/lib/format-date";
 
-export default function DatePicker({date, setDate}: {date: Date | undefined, setDate: (date: Date | undefined) => void}) {
+export default function DatePicker({
+  date,
+  setDate,
+}: {
+  date: Date | undefined;
+  setDate: (date: Date | undefined) => void;
+}) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -39,16 +45,16 @@ export default function DatePicker({date, setDate}: {date: Date | undefined, set
           mode="single"
           selected={date}
           onSelect={(new_date) => {
-            const old_date = date || new Date();
+            const old_date = date ?? new Date();
 
-            if(new_date) {
+            if (new_date) {
               const updated_date = new Date(
                 new_date.getFullYear(),
                 new_date.getMonth(),
                 new_date.getDate(),
                 old_date.getHours(),
                 old_date.getMinutes(),
-                old_date.getSeconds()
+                old_date.getSeconds(),
               );
 
               setDate(updated_date);

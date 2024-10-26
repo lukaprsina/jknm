@@ -112,7 +112,7 @@ function Calendar({
                   differenceInCalendarDays(
                     new Date(displayYears.from - 1, 0, 1),
                     startMonth,
-                  ) < 0) ||
+                  ) < 0) ??
                 (endMonth &&
                   differenceInCalendarDays(
                     new Date(displayYears.from - 1, 0, 1),
@@ -130,7 +130,7 @@ function Calendar({
                   differenceInCalendarDays(
                     new Date(displayYears.to + 1, 0, 1),
                     startMonth,
-                  ) < 0) ||
+                  ) < 0) ??
                 (endMonth &&
                   differenceInCalendarDays(
                     new Date(displayYears.to + 1, 0, 1),

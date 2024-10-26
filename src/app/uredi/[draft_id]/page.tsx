@@ -25,12 +25,13 @@ interface EditorPageProps {
   }>;
 }
 
-export async function generateMetadata(props: EditorPageProps, _parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(
+  props: EditorPageProps,
+  _parent: ResolvingMetadata,
+): Promise<Metadata> {
   const params = await props.params;
 
-  const {
-    draft_id
-  } = params;
+  const { draft_id } = params;
 
   const session = await getServerAuthSession();
   if (!session)
@@ -62,9 +63,7 @@ export async function generateMetadata(props: EditorPageProps, _parent: Resolvin
 export default async function EditorPage(props: EditorPageProps) {
   const params = await props.params;
 
-  const {
-    draft_id
-  } = params;
+  const { draft_id } = params;
 
   const session = await getServerAuthSession();
   if (!session) return notFound();
@@ -114,7 +113,9 @@ function CreateNewArticle({ novica_ime }: { novica_ime: string }) {
         <Link className={buttonVariants({ variant: "secondary" })} href="/">
           Domov
         </Link>
-        <MakeNewDraftButton title={novica_ime} children="Ustvari novico" />
+        <MakeNewDraftButton title={novica_ime}>
+          Ustvari novico
+        </MakeNewDraftButton>
       </CardFooter>
     </InfoCard>
   );
