@@ -120,8 +120,8 @@
     "react-dom": "19.0.0-rc-65a56d0e-20241020",
     "react-hook-form": "^7.53.0",
     "react-image-crop": "^11.0.7",
-    "react-instantsearch": "^7.13.0",
-    "react-instantsearch-nextjs": "^0.3.14",
+    "react-instantsearch": "^7.13.6",
+    "react-instantsearch-router-nextjs": "^7.13.6",
     "rehype-slug": "^6.0.0",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.0",
@@ -146,8 +146,8 @@
     "@tailwindcss/typography": "^0.5.15",
     "@types/eslint": "^8.56.10",
     "@types/node": "^20.14.10",
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
+    "@types/react": "npm:types-react@rc",
+    "@types/react-dom": "npm:types-react-dom@rc",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.1.0",
     "@typescript-eslint/parser": "^8.1.0",
@@ -174,7 +174,7 @@
     "initVersion": "7.37.0"
   },
   "overrides": {
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
+    "@types/react": "npm:types-react@rc",
+    "@types/react-dom": "npm:types-react-dom@rc"
   }
 }
