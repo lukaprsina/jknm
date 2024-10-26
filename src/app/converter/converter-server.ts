@@ -25,6 +25,7 @@ import { algoliasearch as searchClient } from "algoliasearch";
 import { convert_article_to_algolia_object } from "~/lib/algoliasearch";
 import { cachedAllAuthors } from "~/server/cached-global-state";
 import { convert_content_to_text } from "~/lib/content-to-text";
+import type { PublishedArticleHit } from "~/lib/validators";
 
 export async function test_strong_bold() {
   const articles = await db.query.PublishedArticle.findMany({
@@ -269,9 +270,9 @@ export async function sync_with_algolia() {
     env.ALGOLIA_ADMIN_KEY,
   );
   const all_record_ids: string[] = [];
-  await client.browseObjects({
+  await client.browseObjects<PublishedArticleHit>({
     indexName,
-    aggregator: (response) => {
+    aggregator: (response: { hits: PublishedArticleHit[] }) => {
       all_record_ids.push(...response.hits.map((hit) => hit.objectID));
     },
   });

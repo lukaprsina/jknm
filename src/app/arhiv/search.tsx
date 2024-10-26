@@ -7,16 +7,19 @@ import { Tabs, TabsContent } from "~/components/ui/tabs";
 import { liteClient as algolia_search } from "algoliasearch/lite";
 import { env } from "~/env";
 import { useState } from "react";
-import { InstantSearchNext } from "react-instantsearch-nextjs";
+import { createInstantSearchRouterNext } from "react-instantsearch-router-nextjs";
+import singletonRouter from "next/router";
 import dynamic from "next/dynamic";
 import { Skeleton } from "~/components/ui/skeleton";
 import { cn } from "~/lib/utils";
 import { article_grid_variants } from "~/lib/page-variants";
+import { InstantSearch } from "react-instantsearch";
 
 const SearchControlsDynamic = dynamic(
-  () => import("./search-controls").then((mod) => ({
-    default: mod.SearchControls
-  })),
+  () =>
+    import("./search-controls").then((mod) => ({
+      default: mod.SearchControls,
+    })),
   {
     ssr: false,
     loading: () => <Skeleton className="h-[172px] w-full bg-[hsl(0_0%_90%)]" />,
@@ -28,9 +31,10 @@ const SearchControlsDynamic = dynamic(
       return mod.MyInfiniteHits;
     }), */
 const MyInfiniteHitsDynamic = dynamic(
-  () => import("./infinite-hits").then((mod) => ({
-    default: mod.MyInfiniteHits
-  })),
+  () =>
+    import("./infinite-hits").then((mod) => ({
+      default: mod.MyInfiniteHits,
+    })),
   {
     ssr: false,
     loading: () => {
@@ -50,54 +54,16 @@ const searchClient = algolia_search(
   env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY,
 );
 
-export function Search2() {
-  return (
-    <InstantSearchNext
-      future={{ preserveSharedStateOnUnmount: true }}
-      indexName={DEFAULT_REFINEMENT}
-      searchClient={searchClient}
-      // insights={true}
-      routing={{
-        router: {
-          cleanUrlOnDispose: false,
-          /* windowTitle(routeState) {
-              const indexState = routeState.indexName ?? {};
-              return indexState.query
-                ? `MyWebsite - Results for: ${indexState.query}`
-                : "MyWebsite - Results page";
-            }, */
-        },
-      }}
-    >
-      {/* <InfiniteHits /> */}
-      {/* <Suspense fallback={<div>Loading (suspense)...</div>}> */}
-      {/* <MyInfiniteHits /> */}
-      <MyInfiniteHitsDynamic />
-      {/* </Suspense> */}
-    </InstantSearchNext>
-  );
-}
-
 export function Search({ session }: { session: Session | null }) {
   const [activeTab, setActiveTab] = useState<"card" | "table">("card");
 
   return (
-    <InstantSearchNext
+    <InstantSearch
       future={{ preserveSharedStateOnUnmount: true }}
       indexName={DEFAULT_REFINEMENT}
       searchClient={searchClient}
       // insights={true}
-      routing={{
-        router: {
-          cleanUrlOnDispose: false,
-          /* windowTitle(routeState) {
-              const indexState = routeState.indexName ?? {};
-              return indexState.query
-                ? `MyWebsite - Results for: ${indexState.query}`
-                : "MyWebsite - Results page";
-            }, */
-        },
-      }}
+      routing={{ router: createInstantSearchRouterNext({ singletonRouter }) }}
     >
       <Tabs
         value={activeTab}
@@ -118,6 +84,6 @@ export function Search({ session }: { session: Session | null }) {
           <ArticleTable session={session} />
         </TabsContent>
       </Tabs>
-    </InstantSearchNext>
+    </InstantSearch>
   );
 }
