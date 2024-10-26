@@ -1,5 +1,3 @@
-import dynamic from "next/dynamic";
-
 import { buttonVariants } from "~/components/ui/button";
 import { CardContent, CardFooter } from "~/components/ui/card";
 
@@ -14,10 +12,11 @@ import MakeNewDraftButton from "~/components/article/make-new-draft-button";
 import type { ResolvingMetadata, Metadata } from "next";
 import DOMPurify from "isomorphic-dompurify";
 import { get_article_by_draft_id } from "~/server/article/get-article";
+import Editor from "./editor";
 
-const Editor = dynamic(() => import("./editor"), {
+/* const Editor = dynamic(() => import("./editor"), {
   ssr: false,
-});
+}); */
 
 interface EditorPageProps {
   params: Promise<{

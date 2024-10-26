@@ -8,11 +8,7 @@ import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 
 import { article_variants, page_variants } from "~/lib/page-variants";
-import {
-  sync_with_algolia,
-  test_strong_bold,
-  content_size_stats,
-} from "./converter-server";
+import { test_strong_bold, rename_all_files } from "./converter-server";
 import { iterate_over_articles } from "./converter-spaghetti";
 import { cn } from "~/lib/utils";
 import { EDITOR_JS_PLUGINS } from "~/components/editor/plugins";
@@ -53,6 +49,9 @@ export function ArticleConverter() {
   return (
     <div className={cn(article_variants(), page_variants())}>
       <div className="flex w-full flex-wrap gap-4">
+        <Button onClick={() => rename_all_files()}>
+          Preimenuj vse datoteke B2
+        </Button>
         <Button onClick={() => test_strong_bold()}>
           Testiraj strong, bold
         </Button>

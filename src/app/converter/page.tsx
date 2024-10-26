@@ -2,15 +2,14 @@ import { notFound } from "next/navigation";
 
 import { Shell } from "~/components/shell";
 import { getServerAuthSession } from "~/server/auth";
-import dynamic from "next/dynamic";
 import { article_variants, page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
 import { db } from "~/server/db";
 import { count } from "drizzle-orm";
 import { PublishedArticle } from "~/server/db/schema";
-// import { ArticleConverter } from "./converter-editor";
+import { ArticleConverter } from "./converter-editor";
 
-const DynamicArticleConverter = dynamic(
+/* const DynamicArticleConverter = dynamic(
   () =>
     import("./converter-editor").then((mod) => ({
       default: mod.ArticleConverter,
@@ -18,7 +17,7 @@ const DynamicArticleConverter = dynamic(
   {
     ssr: false,
   },
-);
+); */
 
 export default async function Page() {
   const session = await getServerAuthSession();
@@ -37,8 +36,8 @@ export default async function Page() {
         <h1>
           Article converter: {article_count.at(0)?.count ?? "napaka"} novičk
         </h1>
-        <DynamicArticleConverter />
-        {/* <ArticleConverter /> */}
+        {/* <DynamicArticleConverter /> */}
+        <ArticleConverter />
       </div>
     </Shell>
   );
