@@ -2,10 +2,19 @@ import { Shell } from "~/components/shell";
 import { db } from "~/server/db";
 import { PublishedArticle } from "~/server/db/schema";
 import { asc } from "drizzle-orm";
-import dynamic from "next/dynamic";
 import { article_variants, page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
 import { memoize } from "nextjs-better-unstable-cache";
+import { PreveriClient } from "./preveri-client";
+
+/* const PreveriClient = dynamic(
+  () => import("./preveri-client").then((mod) => ({
+    default: mod.PreveriClient
+  })),
+  {
+    ssr: false,
+  },
+); */
 
 const cachedAllPublished = memoize(
   async () => {
@@ -21,16 +30,6 @@ const cachedAllPublished = memoize(
     revalidateTags: ["all-published"],
     // log: ["dedupe", "datacache", "verbose"],
     logid: "all-published",
-  },
-);
-
-// import { PreveriClient } from "./preveri-client";
-const PreveriClient = dynamic(
-  () => import("./preveri-client").then((mod) => ({
-    default: mod.PreveriClient
-  })),
-  {
-    ssr: false,
   },
 );
 

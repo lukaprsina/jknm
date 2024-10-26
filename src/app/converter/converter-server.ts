@@ -59,6 +59,9 @@ export async function rename_all_files() {
   console.log("Renaming all files");
   const articles = await db.query.PublishedArticle.findMany();
 
+  let images_count = 0;
+  let attaches_count = 0;
+  let link_count = 0;
   for (const article of articles) {
     if (!article.content) throw new Error("No content");
 
@@ -70,6 +73,7 @@ export async function rename_all_files() {
           const url = data.file.url;
           if (!url.startsWith("https://jknm.s3.eu-central-1.amazonaws.com"))
             throw new Error("Not jknm url");
+          images_count++;
           break;
         }
         case "attaches": {
@@ -77,13 +81,22 @@ export async function rename_all_files() {
           const url = data.file.url;
           if (!url.startsWith("https://jknm.s3.eu-central-1.amazonaws.com"))
             throw new Error("Not jknm url");
+          attaches_count++;
           break;
+        }
+        default: {
+          if ("text" in block.data) {
+            const text = block.data.text as string;
+            if (text.includes("<a")) {
+              link_count++;
+            }
+          }
         }
       }
     }
   }
 
-  console.log("done");
+  console.log("done", { images_count, attaches_count, link_count });
 }
 
 export async function delete_s3_published_bucket() {
