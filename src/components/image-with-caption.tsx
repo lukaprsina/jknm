@@ -6,36 +6,39 @@ import React, { useEffect, useState } from "react";
 import { gallery_store } from "~/components/gallery-store";
 import type { EditorJSImageData } from "~/lib/editor-utils";
 
-interface ImageWithCaptionProps extends ImageProps {
-  caption?: React.ReactNode;
+export interface ImageSize {
+  url: string;
+  width: number;
+  height: number;
 }
 
-export function ImageWithCaption({ caption, ...props }: ImageWithCaptionProps) {
+interface ImageWithCaptionProps extends ImageProps {
+  caption?: React.ReactNode;
+  image_sizes: ImageSize[];
+}
+
+export function ImageWithCaption({
+  caption,
+  image_sizes,
+  ...props
+}: ImageWithCaptionProps) {
   const [imageData, setImageData] = useState<EditorJSImageData | undefined>(
     undefined,
   );
 
   useEffect(() => {
     const props_src = props.src;
-    if (typeof props_src === "string")
-      throw new Error("Image src must be a StaticImport");
-    if ("default" in props_src)
-      throw new Error("Image src should be StaticImageData, not StaticRequire");
+    if (typeof props_src !== "string")
+      throw new Error("Image src should be string");
 
-    const image_index = gallery_store.get
-      .images()
-      .findIndex((image) => image.file.url === props_src.src);
-    if (image_index !== -1) return;
+    const image_size = image_sizes.find((size) => size.url === props_src);
+    if (!image_size) throw new Error("Image size not found");
 
     setImageData({
-      file: {
-        url: props_src.src,
-        width: props_src.width,
-        height: props_src.height,
-      },
+      file: image_size,
       caption: caption as string,
     });
-  }, [caption, props]);
+  }, [caption, image_sizes, props]);
 
   useEffect(() => {
     if (!imageData) return;
