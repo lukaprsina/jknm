@@ -37,7 +37,8 @@
     "**/*.js",
     ".next/types/**/*.ts",
     ".eslint.config.js",
-    "next-env.d.ts"
+    "next-env.d.ts",
+    "next.config.mjs"
   ],
   "exclude": ["node_modules", "src/app/(static)/**/*.mdx"]
 }
