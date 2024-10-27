@@ -8,7 +8,12 @@ import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 
 import { article_variants, page_variants } from "~/lib/page-variants";
-import { test_strong_bold, rename_all_files } from "./converter-server";
+import {
+  test_strong_bold,
+  rename_all_files,
+  content_size_stats,
+  sync_with_algolia,
+} from "./converter-server";
 import { iterate_over_articles } from "./converter-spaghetti";
 import { cn } from "~/lib/utils";
 import { EDITOR_JS_PLUGINS } from "~/components/editor/plugins";

@@ -60,7 +60,6 @@ export async function rename_all_files() {
   const articles = await db.query.PublishedArticle.findMany();
 
   let images_count = 0;
-  let attaches_count = 0;
   let link_count = 0;
   for (const article of articles) {
     if (!article.content) throw new Error("No content");
@@ -70,35 +69,48 @@ export async function rename_all_files() {
       switch (block.type) {
         case "image": {
           const data = block.data as { file: { url: string } };
-          const url = data.file.url;
-          if (!url.startsWith("https://jknm.s3.eu-central-1.amazonaws.com"))
+          if (
+            !data.file.url.startsWith(
+              "https://jknm.s3.eu-central-1.amazonaws.com",
+            )
+          )
             throw new Error("Not jknm url");
+
           images_count++;
-          break;
-        }
-        case "attaches": {
-          const data = block.data as { file: { url: string } };
-          const url = data.file.url;
-          if (!url.startsWith("https://jknm.s3.eu-central-1.amazonaws.com"))
-            throw new Error("Not jknm url");
-          attaches_count++;
+          const url_parts = data.file.url.split("/");
+          const name = url_parts.at(-1);
+          if (!name) throw new Error("No name");
+
+          data.file.url = name;
+          console.log("renamed", { from: data.file.url, to: name });
+
           break;
         }
         default: {
           if ("text" in block.data) {
             const text = block.data.text as string;
-            if (text.includes("<a")) {
-              link_count++;
+            const links = text.match(
+              /https:\/\/jknm.s3.eu-central-1.amazonaws.com\/[^ ]+/g,
+            );
+            if (links) {
+              for (const link of links) {
+                link_count++;
+                const url_parts = link.split("/");
+                const name = url_parts.at(-1);
+                if (!name) throw new Error("No name");
+
+                const new_text = text.replace(link, name);
+                block.data.text = new_text;
+                console.log("renamed", { from: link, to: name });
+              }
             }
           }
         }
       }
     }
   }
-
-  console.log("done", { images_count, attaches_count, link_count });
+  console.log("done", { images_count, link_count });
 }
-
 export async function delete_s3_published_bucket() {
   console.log("deleting s3 published bucket");
   await delete_s3_directory(env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME, "");
