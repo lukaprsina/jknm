@@ -106,7 +106,7 @@ const config = {
 
   experimental: {
     // reactCompiler: false,
-    // ...mdx_rs, // TODO
+    ...mdx_rs, // TODO
     serverActions: {
       // TODO
       bodySizeLimit: "100mb",
