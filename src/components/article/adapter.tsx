@@ -53,6 +53,18 @@ export const DraftArticleDrizzleCard = ({
   article: DraftArticleWithAuthors;
   ref?: IntersectionRef;
 }) => {
+  if (typeof article.created_at.toLocaleDateString !== "function") {
+    console.warn("DraftArticleDrizzleCard", {
+      article,
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      created_at_to_locale_date_string: article.created_at.toLocaleDateString,
+      created_at_to_locale_date_string_type:
+        typeof article.created_at.toLocaleDateString,
+      created_at_type: typeof article.created_at,
+      created_at: article.created_at,
+    });
+  }
+
   return (
     <ArticleCard
       ref={ref}
