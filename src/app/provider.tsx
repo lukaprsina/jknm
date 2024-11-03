@@ -2,14 +2,14 @@
 "use client";
 
 // Since QueryClientProvider relies on useContext under the hood, we have to put 'use client' on top
-import { createStore } from "zustand-x";
 import {
+  defaultShouldDehydrateQuery,
   isServer,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
 import type { Author } from "~/server/db/schema";
-import { createContext, useEffect } from "react";
+import { createContext } from "react";
 
 function makeQueryClient() {
   return new QueryClient({
@@ -18,6 +18,12 @@ function makeQueryClient() {
         // With SSR, we usually want to set some default staleTime
         // above 0 to avoid refetching immediately on the client
         staleTime: 60 * 1000,
+      },
+      dehydrate: {
+        // include pending queries in dehydration
+        shouldDehydrateQuery: (query) =>
+          defaultShouldDehydrateQuery(query) ||
+          query.state.status === "pending",
       },
     },
   });

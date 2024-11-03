@@ -18,11 +18,13 @@ export default function ArticleDescription({
   old_id?: string;
 }) {
   if (typeof created_at.toLocaleDateString !== "function") {
-    console.error("ArticleDescription", {
+    console.warn("ArticleDescription", {
       author_ids,
       type,
       created_at,
       old_id,
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      created_at_func: created_at.toLocaleDateString,
     });
   }
 

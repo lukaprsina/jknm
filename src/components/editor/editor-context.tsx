@@ -46,17 +46,17 @@ export function EditorProvider({ children }: { children: ReactNode }) {
   const toaster = useToast();
 
   useEffect(() => {
-    const func = () => true
+    const func = () => true;
 
     if (dirty) {
-      addEventListener("beforeunload", func)
+      addEventListener("beforeunload", func);
     } else {
-      removeEventListener("beforeunload", func)
+      removeEventListener("beforeunload", func);
     }
 
     return () => {
-      removeEventListener("beforeunload", func)
-    }
+      removeEventListener("beforeunload", func);
+    };
   }, [dirty]);
 
   const content = useMemo(
@@ -111,7 +111,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       },
       onChange: (_, event) => {
         if (Array.isArray(event)) {
-          for (const _ of event) {
+          for (const {} of event) {
             onChange();
           }
         } else {

@@ -1,6 +1,13 @@
 import { format, parse } from "date-fns";
 
 export function format_date_for_human(date: Date) {
+  if (typeof date.toLocaleString !== "function") {
+    console.warn("format_date_for_human", {
+      date,
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      date_func: date.toLocaleDateString,
+    });
+  }
   return date.toLocaleDateString("sl-SI", {
     day: "numeric",
     month: "long",

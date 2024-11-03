@@ -244,5 +244,6 @@ export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
     );
   }, [activeAnchors, md_breakpoint, tableOfContents, asideRef, mobileRef]);
 
-  return portal();
+  // TODO: what the typescript
+  return <>{portal() ?? <p>what</p>}</>;
 }

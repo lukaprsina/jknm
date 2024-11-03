@@ -29,7 +29,6 @@ export const env = createEnv({
     ALGOLIA_ADMIN_KEY: z.string(),
     JKNM_WORKSPACE_ID: z.string(),
     JKNM_SERVICE_ACCOUNT_CREDENTIALS: z.string(),
-    SITE_DOMAIN: z.string(),
   },
 
   /**
@@ -50,6 +49,7 @@ export const env = createEnv({
       // VERCEL_URL doesn't include `https` so it cant be validated as a URL
       process.env.VERCEL ? z.string() : z.string().url(),
     ),
+    NEXT_PUBLIC_SITE_DOMAIN: z.string(),
   },
 
   /**
@@ -69,7 +69,7 @@ export const env = createEnv({
     JKNM_WORKSPACE_ID: process.env.JKNM_WORKSPACE_ID,
     JKNM_SERVICE_ACCOUNT_CREDENTIALS:
       process.env.JKNM_SERVICE_ACCOUNT_CREDENTIALS,
-    SITE_DOMAIN: process.env.SITE_DOMAIN,
+    NEXT_PUBLIC_SITE_DOMAIN: process.env.NEXT_PUBLIC_SITE_DOMAIN,
 
     // public
     NEXT_PUBLIC_ALGOLIA_ID: process.env.NEXT_PUBLIC_ALGOLIA_ID,
