@@ -63,6 +63,7 @@ export const DraftArticleDrizzleCard = ({
       created_at_type: typeof article.created_at,
       created_at: article.created_at,
     });
+    article.created_at = new Date(article.created_at);
   }
 
   return (
@@ -79,7 +80,7 @@ export const DraftArticleDrizzleCard = ({
         `${article.id}/thumbnail.png`,
         env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
       )} */
-      image_url={`https://cdn.${env.NEXT_PUBLIC_SITE_DOMAIN}/${get_s3_draft_directory(article.id)}/thumbnail.png`}
+      image_url={`https://cdn-drafts.${env.NEXT_PUBLIC_SITE_DOMAIN}/${get_s3_draft_directory(article.id)}/thumbnail.png`}
       has_thumbnail={Boolean(article.thumbnail_crop)}
       author_ids={article.draft_articles_to_authors.map((a) => a.author.id)}
     />

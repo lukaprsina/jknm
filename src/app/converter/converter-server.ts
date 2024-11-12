@@ -26,6 +26,7 @@ import { convert_article_to_algolia_object } from "~/lib/algoliasearch";
 import { cachedAllAuthors } from "~/server/cached-global-state";
 import { convert_content_to_text } from "~/lib/content-to-text";
 import type { PublishedArticleHit } from "~/lib/validators";
+import { convert_filename_to_url } from "~/lib/article-utils";
 
 export async function test_strong_bold() {
   const articles = await db.query.PublishedArticle.findMany({
@@ -57,10 +58,65 @@ export async function test_strong_bold() {
 
 export async function rename_all_files() {
   console.log("Renaming all files");
-  const articles = await db.query.PublishedArticle.findMany();
+  const articles = await db.query.PublishedArticle.findMany({
+    limit: 50,
+  });
 
   let images_count = 0;
   let link_count = 0;
+
+  const getAllFiles = async (dirPath: string, arrayOfFiles: string[] = []) => {
+    const files = await fs_promises.readdir(dirPath);
+
+    for (const file of files) {
+      const filePath = path.join(dirPath, file);
+      const stat = await fs_promises.stat(filePath);
+
+      if (stat.isDirectory()) {
+        await getAllFiles(filePath, arrayOfFiles);
+      } else {
+        arrayOfFiles.push(filePath);
+      }
+    }
+
+    return arrayOfFiles;
+  };
+
+  const [all_files_0, all_files_1] = await Promise.all([
+    getAllFiles("D:/JKNM/served/media/DK"),
+    getAllFiles("D:/JKNM/served/media/pdf"),
+  ]);
+  const all_files = [...all_files_0, ...all_files_1].map((file) =>
+    convert_filename_to_url(file),
+  );
+  console.log(all_files);
+
+  const add_link = (text: string) => {
+    const links = text.match(
+      /https:\/\/jknm.s3.eu-central-1.amazonaws.com\/[^ ]+/g,
+    );
+    if (!links) return false;
+
+    for (const link of links) {
+      link_count++;
+      const url_parts = link.split("/");
+      const name = url_parts.at(-1);
+      if (!name) throw new Error("No name");
+
+      // const new_text = text.replace(link, name);
+      // block.data.text = new_text;
+      console.log("renamed", link, name);
+      for (const file of all_files) {
+        if (file.includes(name)) {
+          console.log("found", { link, name, file });
+          break;
+        }
+      }
+    }
+
+    return true;
+  };
+
   for (const article of articles) {
     if (!article.content) throw new Error("No content");
 
@@ -82,35 +138,23 @@ export async function rename_all_files() {
           if (!name) throw new Error("No name");
 
           data.file.url = name;
-          console.log("renamed", { from: data.file.url, to: name });
+          // console.log("renamed image", { from: data.file.url, to: name });
 
           break;
         }
         default: {
           if ("text" in block.data) {
             const text = block.data.text as string;
-            const links = text.match(
-              /https:\/\/jknm.s3.eu-central-1.amazonaws.com\/[^ ]+/g,
-            );
-            if (links) {
-              for (const link of links) {
-                link_count++;
-                const url_parts = link.split("/");
-                const name = url_parts.at(-1);
-                if (!name) throw new Error("No name");
-
-                const new_text = text.replace(link, name);
-                block.data.text = new_text;
-                console.log("renamed", { from: link, to: name });
-              }
-            }
+            add_link(text);
           }
         }
       }
     }
   }
+
   console.log("done", { images_count, link_count });
 }
+
 export async function delete_s3_published_bucket() {
   console.log("deleting s3 published bucket");
   await delete_s3_directory(env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME, "");

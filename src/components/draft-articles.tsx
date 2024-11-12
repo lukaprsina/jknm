@@ -13,7 +13,7 @@ import { memoize } from "nextjs-better-unstable-cache";
 
 export const cachedDrafts = memoize(
   async () => {
-    return db.query.DraftArticle.findMany({
+    const articles = await db.query.DraftArticle.findMany({
       with: {
         draft_articles_to_authors: {
           with: {
@@ -23,6 +23,28 @@ export const cachedDrafts = memoize(
         },
       },
     });
+
+    console.log(
+      "drafts",
+      articles.map((a) => a.created_at),
+    );
+    for (const article of articles) {
+      if (typeof article.created_at.toLocaleDateString !== "function") {
+        console.log("draft-articles", {
+          article,
+          created_at_to_locale_date_string:
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            article.created_at.toLocaleDateString,
+          created_at_to_locale_date_string_type:
+            typeof article.created_at.toLocaleDateString,
+          created_at_type: typeof article.created_at,
+          created_at: article.created_at,
+        });
+        throw new Error("created_at is not a Date object");
+      }
+    }
+
+    return articles;
   },
   {
     revalidateTags: ["drafts"],

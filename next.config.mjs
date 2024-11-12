@@ -11,66 +11,34 @@ import withTocExport from "@stefanprobst/rehype-extract-toc/mdx";
 // import remarkFrontmatter from "remark-frontmatter";
 // import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 
-const mdx_rs =
+/* const mdx_rs =
   process.env.NEXT_MODE === "no-turbo"
     ? null
     : {
         mdxRs: {
           mdxType: "gfm",
         },
-      };
+      }; */
 
 /** @type {import("next").NextConfig} */
 const config = {
-  // "md", "mdx",
-
-  pageExtensions: ["js", "jsx", "ts", "tsx"],
-  /* rewrites() {
-    return [
-      {
-        basePath: false,
-        source: "/novica/:slug/:filename*{jpg|jpeg|png|gif|pdf|docx}",
-        destination:
-          // "https://f000.backblazeb2.com/file/your-bucket-name/:filename*", // Replace with your B2 bucket URL
-          "https://jknm.s3.eu-central-1.amazonaws.com/:slug/:filename*",
-      },
-    ];
-  }, */
+  pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
+  experimental: {
+    // reactCompiler: false,
+    // ...mdx_rs, // TODO
+    mdxRs: {
+      mdxType: "gfm",
+    },
+    serverActions: {
+      bodySizeLimit: "100mb",
+    },
+    turbo: {},
+  },
   images: {
     loader: "custom",
     loaderFile: "./image-loader.js",
     unoptimized: true,
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "unsplash.com",
-        port: "",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-        port: "",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
-        hostname: "jamarski-klub-novo-mesto.s3.eu-central-1.amazonaws.com",
-        port: "",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
-        hostname: "jknm.s3.eu-central-1.amazonaws.com",
-        port: "",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
-        hostname: "jknm-draft.s3.eu-central-1.amazonaws.com",
-        port: "",
-        pathname: "**",
-      },
       {
         protocol: "https",
         hostname: "www.jknm.si",
@@ -103,23 +71,6 @@ const config = {
       },
     ],
   },
-
-  experimental: {
-    // reactCompiler: false,
-    ...mdx_rs, // TODO
-    serverActions: {
-      // TODO
-      bodySizeLimit: "100mb",
-    },
-    turbo: {
-      /*rules: {
-        "*.svg": {
-          loaders: ["@svgr/webpack"],
-          as: "*.js",
-        },
-      },*/
-    },
-  },
 };
 
 const withMDX = createMDX({
@@ -129,4 +80,5 @@ const withMDX = createMDX({
   },
 });
 
-export default withMDX(config);
+// export default withMDX(config);
+export default config;
