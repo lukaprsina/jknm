@@ -21,6 +21,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "~/hooks/use-toast";
 import { sync_duplicate_urls } from "~/server/article/sync-duplicate-urls";
 import { AllAuthorsContext } from "../provider";
+import { generate_images } from "./generate-images";
 
 export function ArticleConverter() {
   const editorJS = useRef<EditorJS | null>(null);
@@ -57,6 +58,7 @@ export function ArticleConverter() {
         <Button onClick={() => rename_all_files()}>
           Preimenuj vse datoteke B2
         </Button>
+        <Button onClick={() => generate_images()}>Generiraj slike</Button>
         <Button onClick={() => test_strong_bold()}>
           Testiraj strong, bold
         </Button>
