@@ -4,8 +4,8 @@
 // import { tableOfContents as toc_raziskovanje } from "~/app/(static)/raziskovanje/page.mdx";
 // @ ts-expect-error - mdx import
 // import { tableOfContents as toc_publiciranje } from "~/app/(static)/publiciranje/page.mdx";
-// @ ts-expect-error - mdx import
-// import { tableOfContents as toc_varstvo } from "~/app/(static)/varstvo/page.mdx";
+// @ts-expect-error - mdx import
+import { tableOfContents as toc_varstvo } from "~/app/(static)/varstvo/page.mdx";
 // @ ts-expect-error - mdx import
 // import { tableOfContents as toc_klub } from "~/app/(static)/klub/page.mdx";
 import {
@@ -37,7 +37,7 @@ export function Navigation() {
       onValueChange={console.log} */
     >
       <NavigationMenuList>
-        { /* <NavDropdown
+        {/* <NavDropdown
           title="Zgodovina"
           href="zgodovina"
           toc={toc_zgodovina}
@@ -57,21 +57,21 @@ export function Navigation() {
           toc={toc_publiciranje}
           description="Preberite več o objavah in publikacijah društva."
           icon={<BookIcon size={24} />}
-        />
+        /> */}
         <NavDropdown
           title="Varstvo"
           href="varstvo"
-          toc={toc_varstvo}
+          // toc={toc_varstvo}
           description="Preberite več o varstvu jam in narave."
           icon={<ShieldIcon size={24} />}
         />
-        <NavDropdown
+        {/* <NavDropdown
           title="Klub"
           href="klub"
           toc={toc_klub}
           description="Oglejte si informacije o klubu, katastru jam, izobraževanju, etičnem kodeksu, društvu v javnem interesu in jamarski reševalni službi."
           icon={<UsersIcon size={24} />}
-        /> */ }
+        /> */}
         <DesktopHeaderLink href="/arhiv">Arhiv novic</DesktopHeaderLink>
       </NavigationMenuList>
     </NavigationMenu>
@@ -87,13 +87,24 @@ function NavDropdown({
 }: {
   title: string;
   href: string;
-  toc: Toc;
+  toc?: Toc;
   description?: string;
   icon?: React.ReactNode;
 }) {
   const pathname = usePathname();
 
-  const c = toc.at(0)?.children;
+  const c = toc?.at(0)?.children;
+
+  if (!toc) {
+    return (
+      <NavigationMenuItem value={href}>
+        <NavigationMenuTrigger className="bg-transparent text-base">
+          <Link href={`/${href}`}>{title}</Link>
+          {/* {title} */}
+        </NavigationMenuTrigger>
+      </NavigationMenuItem>
+    );
+  }
 
   return (
     <NavigationMenuItem value={href}>

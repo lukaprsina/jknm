@@ -16,7 +16,7 @@ import withTocExport from "@stefanprobst/rehype-extract-toc/mdx";
     ? null
     : {
         mdxRs: {
-          mdxType: "gfm",
+          mdxType: "gfm" as const,
         },
       }; */
 
@@ -80,5 +80,5 @@ const withMDX = createMDX({
   },
 });
 
-// export default withMDX(config);
-export default config;
+export default withMDX(config);
+// export default config;

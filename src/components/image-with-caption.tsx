@@ -4,25 +4,19 @@ import type { ImageProps } from "next/image";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { gallery_store } from "~/components/gallery-store";
-import type { EditorJSImageData } from "~/lib/editor-utils";
-
-export interface ImageSize {
-  url: string;
-  width: number;
-  height: number;
-}
+import image_sizes from "artifacts/image_sizes.json";
+import { env } from "~/env";
 
 interface ImageWithCaptionProps extends ImageProps {
   caption?: React.ReactNode;
-  image_sizes: ImageSize[];
 }
 
 export function ImageWithCaption({
+  src,
   caption,
-  image_sizes,
   ...props
 }: ImageWithCaptionProps) {
-  const [imageData, setImageData] = useState<EditorJSImageData | undefined>(
+  /* const [imageData, setImageData] = useState<EditorJSImageData | undefined>(
     undefined,
   );
 
@@ -31,28 +25,39 @@ export function ImageWithCaption({
     if (typeof props_src !== "string")
       throw new Error("Image src should be string");
 
-    const image_size = image_sizes.find((size) => size.url === props_src);
+    const image_size = image_sizes.find((size) => size.path === props_src);
     if (!image_size) throw new Error("Image size not found");
 
     setImageData({
-      file: image_size,
+      file: {
+        url: image_size.path,
+        width: image_size.size.width,
+        height: image_size.size.height,
+      },
       caption: caption as string,
     });
-  }, [caption, image_sizes, props]);
+  }, [caption, props]);
 
   useEffect(() => {
     if (!imageData) return;
     gallery_store.set.add_image(imageData);
-  }, [imageData]);
+  }, [imageData]); */
+  if (typeof src !== "string") throw new Error("Image src should be string");
+  const image_size = image_sizes.find((size) => size.path === src);
+  if (!image_size) throw new Error("Image size not found");
 
   return (
     <figure>
+      {/* eslint-disable-next-line jsx-a11y/alt-text */}
       <Image
+        src={`https://cdn-content.${env.NEXT_PUBLIC_SITE_DOMAIN}/${src}`}
+        width={image_size.size.width}
+        height={image_size.size.height}
         {...props}
-        onClick={() => {
+        /* onClick={() => {
           if (!imageData) return;
           gallery_store.set.default_image(imageData);
-        }}
+        }} */
       />
       {caption && <figcaption>{caption}</figcaption>}
     </figure>
