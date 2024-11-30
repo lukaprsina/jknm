@@ -10,7 +10,6 @@ import { Input } from "~/components/ui/input";
 import { article_variants, page_variants } from "~/lib/page-variants";
 import {
   test_strong_bold,
-  rename_all_files,
   content_size_stats,
   sync_with_algolia,
 } from "./converter-server";
@@ -21,7 +20,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "~/hooks/use-toast";
 import { sync_duplicate_urls } from "~/server/article/sync-duplicate-urls";
 import { AllAuthorsContext } from "../provider";
-import { generate_images } from "./generate-images";
+import { generate_images, rename_all_files } from "./generate-images";
 
 export function ArticleConverter() {
   const editorJS = useRef<EditorJS | null>(null);
@@ -55,9 +54,7 @@ export function ArticleConverter() {
   return (
     <div className={cn(article_variants(), page_variants())}>
       <div className="flex w-full flex-wrap gap-4">
-        <Button onClick={() => rename_all_files()}>
-          Preimenuj vse datoteke B2
-        </Button>
+        <Button onClick={() => rename_all_files()}>Preimenuj slike</Button>
         <Button onClick={() => generate_images()}>Generiraj slike</Button>
         <Button onClick={() => test_strong_bold()}>
           Testiraj strong, bold
