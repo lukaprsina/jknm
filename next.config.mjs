@@ -4,6 +4,7 @@
  */
 await import("./src/env.js");
 import withMDX from "@next/mdx";
+import rehypeMinifyWhitespace from "rehype-minify-whitespace";
 /* import remarkGfm from "remark-gfm";
 import createMDX from "@next/mdx";
 import withSlugs from "rehype-slug";
@@ -81,5 +82,9 @@ const config = {
   },
 }); */
 
-export default withMDX()(config);
+export default withMDX({
+  options: {
+    // rehypePlugins: [rehypeMinifyWhitespace],
+  },
+})(config);
 // export default config;
