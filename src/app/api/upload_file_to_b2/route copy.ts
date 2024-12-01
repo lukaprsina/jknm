@@ -1,9 +1,13 @@
 "use server";
 
-import B2 from "b2-js";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { HeadObjectCommand, NotFound, S3Client } from "@aws-sdk/client-s3";
+import {
+  HeadObjectCommand,
+  NotFound,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import mime from "mime/lite";
 
 import { env } from "~/env";
@@ -13,7 +17,6 @@ import { thumbnail_validator } from "~/lib/validators";
 import { v4 as uuid } from "uuid";
 import path from "path/posix";
 import { crop_image } from "~/server/s3-utils";
-import sharp from "sharp";
 
 export interface FileUploadResponse {
   success: 0 | 1;
@@ -141,46 +144,23 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const b2 = await B2.authorize({
-    applicationKeyId: env.AWS_ACCESS_KEY_ID,
-    applicationKey: env.AWS_SECRET_ACCESS_KEY,
-  });
+  await client.send(
+    new PutObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      Body: "Hello world!",
+      //   ContentType: mime_type,
+    }),
+  );
 
-  const bucket_obj = await b2.bucket(bucket);
-
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
-  await bucket_obj.upload(key, buffer);
-
-  let file_data: ImageUploadJSON | FileUploadJSON | undefined = undefined;
-
-  if (file_type === "image") {
-    const image_buffer = await file.arrayBuffer();
-    const image_metadata = await sharp(image_buffer).metadata();
-    const image_width = image_metadata.width;
-    const image_height = image_metadata.height;
-
-    file_data = {
+  return NextResponse.json({
+    success: 1,
+    file: {
       url: key,
-      width: image_width,
-      height: image_height,
-    };
-  } else {
-    file_data = {
-      url: key,
-      title: file.name,
+      title: title,
       size: file.size,
       name: file.name,
-      extension: file.name.split(".").pop() ?? "",
-    };
-  }
-
-  const response_json = {
-    success: 1,
-    file: file_data,
-  } satisfies FileUploadResponse;
-
-  // console.log("upload_file_to_s3", response_json);
-
-  return NextResponse.json(response_json);
+      extension: path.extname(file.name),
+    },
+  });
 }

@@ -78,6 +78,7 @@
     "@types/node-dir": "^0.0.37",
     "@vercel/speed-insights": "^1.0.12",
     "algoliasearch": "^5.10.0",
+    "b2-js": "^1.2.4",
     "babel-plugin-react-compiler": "^0.0.0-experimental-4e0eccf-20240830",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

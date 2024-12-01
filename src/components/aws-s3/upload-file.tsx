@@ -2,7 +2,7 @@
 
 import mime from "mime/lite";
 
-import type { FileUploadResponse } from "~/app/api/upload_file_to_s3/route";
+import type { FileUploadResponse } from "~/app/api/upload_file_to_b2/route";
 import type { PercentCrop } from "react-image-crop";
 
 export async function upload_file({
@@ -35,7 +35,7 @@ export async function upload_file({
     form_data.append("allow_overwrite", allow_overwrite);
   }
 
-  const file_data = await fetch("/api/upload_file_to_s3", {
+  const file_data = await fetch("/api/upload_file_to_b2", {
     method: "POST",
     body: form_data,
   });
@@ -96,7 +96,7 @@ export async function upload_image_by_file({
     form_data.append("crop", JSON.stringify(crop));
   }
 
-  const file_data = await fetch("/api/upload_file_to_s3", {
+  const file_data = await fetch("/api/upload_file_to_b2", {
     method: "POST",
     body: form_data,
   });
@@ -161,7 +161,7 @@ export async function upload_image_by_url({
     form_data.append("crop", JSON.stringify(crop));
   }
 
-  const file_data = await fetch("/api/upload_file_to_s3", {
+  const file_data = await fetch("/api/upload_file_to_b2", {
     method: "POST",
     body: form_data,
   });
