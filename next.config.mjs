@@ -3,11 +3,12 @@
  * for Docker builds.
  */
 await import("./src/env.js");
-import remarkGfm from "remark-gfm";
+import withMDX from "@next/mdx";
+/* import remarkGfm from "remark-gfm";
 import createMDX from "@next/mdx";
 import withSlugs from "rehype-slug";
 import withToc from "@stefanprobst/rehype-extract-toc";
-import withTocExport from "@stefanprobst/rehype-extract-toc/mdx";
+import withTocExport from "@stefanprobst/rehype-extract-toc/mdx"; */
 // import remarkFrontmatter from "remark-frontmatter";
 // import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 
@@ -78,7 +79,7 @@ const config = {
     remarkPlugins: [remarkGfm],
     rehypePlugins: [withSlugs, withToc, withTocExport],
   },
-});
+}); */
 
-export default withMDX(config); */
-export default config;
+export default withMDX()(config);
+// export default config;
