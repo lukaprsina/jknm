@@ -110,7 +110,10 @@ export async function POST(request: NextRequest) {
     key,
     bucket,
   });
-  const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
+  const client = new S3Client({
+    region: env.NEXT_PUBLIC_AWS_REGION,
+    endpoint: "https://s3.eu-central-003.backblazeb2.com",
+  });
 
   // Check if the file already exists
   if (allow_overwrite !== "allow_overwrite") {
@@ -167,7 +170,14 @@ export async function POST(request: NextRequest) {
   });
 
   if (!upload_response.ok) {
-    console.error("Failed to upload file", upload_response, fields, file);
+    console.error("Failed to upload file", {
+      upload_response,
+      fields,
+      file,
+      bucket,
+      key,
+      formData,
+    });
     return NextResponse.error();
   }
 

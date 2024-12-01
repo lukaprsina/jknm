@@ -1,16 +1,19 @@
 "use server";
 
 import type { z } from "zod";
-import {
-  DraftArticle,
-  DraftArticlesToAuthors,
-} from "~/server/db/schema";
+import { DraftArticle, DraftArticlesToAuthors } from "~/server/db/schema";
 import { db } from "../db";
 import { asc, eq } from "drizzle-orm";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { save_draft_validator } from "./validators";
+import { getServerAuthSession } from "../auth";
 
 export async function save_draft(input: z.infer<typeof save_draft_validator>) {
+  const session = await getServerAuthSession();
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
   const validated_input = save_draft_validator.safeParse(input);
   if (!validated_input.success) {
     throw new Error(validated_input.error.message);

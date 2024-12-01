@@ -18,8 +18,14 @@ import {
 } from "~/lib/article-utils";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { unpublish_validator } from "./validators";
+import { getServerAuthSession } from "../auth";
 
 export async function unpublish(input: z.infer<typeof unpublish_validator>) {
+  const session = await getServerAuthSession();
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
   const validated_input = unpublish_validator.safeParse(input);
   if (!validated_input.success) {
     throw new Error(validated_input.error.message);

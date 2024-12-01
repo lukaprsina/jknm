@@ -84,7 +84,10 @@ export async function s3_copy_file(
     destination_bucket,
   }); */
 
-  const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
+  const client = new S3Client({
+    region: env.NEXT_PUBLIC_AWS_REGION,
+    endpoint: "https://s3.eu-central-003.backblazeb2.com",
+  });
   try {
     return await client.send(
       new CopyObjectCommand({

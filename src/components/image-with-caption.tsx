@@ -42,7 +42,7 @@ export async function ImageWithCaption({
   }, [imageData]); */
   if (typeof src !== "string") throw new Error("Image src should be string");
   const image_size = image_sizes.find((size) => size.path === src);
-  if (!image_size) throw new Error("Image size not found");
+  if (!image_size) throw new Error(`Image size not found for ${src}`);
 
   const new_src = `https://cdn-content.${env.NEXT_PUBLIC_SITE_DOMAIN}/${src}`;
 

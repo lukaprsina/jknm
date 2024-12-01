@@ -69,7 +69,10 @@ export async function s3_copy_between_buckets(
 // old
 export async function rename_s3_directory(old_dir: string, new_dir: string) {
   // console.log("rename_s3_directory", { old_dir, new_dir });
-  const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
+  const client = new S3Client({
+    region: env.NEXT_PUBLIC_AWS_REGION,
+    endpoint: "https://s3.eu-central-003.backblazeb2.com",
+  });
   let objects: _Object[] | undefined;
 
   try {
@@ -126,7 +129,10 @@ export async function rename_s3_directory(old_dir: string, new_dir: string) {
 
 export async function list_objects(bucket: string, prefix: string) {
   try {
-    const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
+    const client = new S3Client({
+      region: env.NEXT_PUBLIC_AWS_REGION,
+      endpoint: "https://s3.eu-central-003.backblazeb2.com",
+    });
     const response = await client.send(
       new ListObjectsV2Command({
         // Bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
@@ -145,7 +151,10 @@ export async function list_objects(bucket: string, prefix: string) {
 export async function delete_objects(bucket: string, keys: string[]) {
   // console.log("delete_objects", { bucket, keys });
   try {
-    const client = new S3Client({ region: env.NEXT_PUBLIC_AWS_REGION });
+    const client = new S3Client({
+      region: env.NEXT_PUBLIC_AWS_REGION,
+      endpoint: "https://s3.eu-central-003.backblazeb2.com",
+    });
     return await client.send(
       new DeleteObjectsCommand({
         // Bucket: env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,

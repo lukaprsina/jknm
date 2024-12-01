@@ -7,6 +7,7 @@ import { Author } from "../db/schema";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { env } from "~/env";
 import type { JWTInput } from "google-auth-library";
+import { getServerAuthSession } from "../auth";
 
 export const sync_members_validator = z.object({ name: z.string() });
 
@@ -14,6 +15,11 @@ export const sync_members_validator = z.object({ name: z.string() });
 export async function sync_members(
   input: z.infer<typeof sync_members_validator>,
 ) {
+  const session = await getServerAuthSession();
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
   const validated_input = sync_members_validator.safeParse(input);
   if (!validated_input.success) {
     throw new Error(validated_input.error.message);

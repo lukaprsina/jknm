@@ -20,10 +20,16 @@ import { get_content_from_title } from "~/lib/get-content-from-title";
 import type { z } from "zod";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { create_draft_validator } from "./validators";
+import { getServerAuthSession } from "../auth";
 
 export async function create_draft(
   input: z.infer<typeof create_draft_validator>,
 ) {
+  const session = await getServerAuthSession();
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
   const validated_input = create_draft_validator.safeParse(input);
   if (!validated_input.success) {
     throw new Error(validated_input.error.message);

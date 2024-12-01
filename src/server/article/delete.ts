@@ -13,11 +13,21 @@ import {
   get_s3_published_directory,
 } from "~/lib/article-utils";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { delete_both_validator, delete_custom_thumbnail_validator, delete_draft_validator } from "./validators";
+import {
+  delete_both_validator,
+  delete_custom_thumbnail_validator,
+  delete_draft_validator,
+} from "./validators";
+import { getServerAuthSession } from "../auth";
 
 export async function delete_draft(
   input: z.infer<typeof delete_draft_validator>,
 ) {
+  const session = await getServerAuthSession();
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
   const validated_input = delete_draft_validator.safeParse(input);
   if (!validated_input.success) {
     throw new Error(validated_input.error.message);
