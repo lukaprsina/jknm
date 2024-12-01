@@ -73,12 +73,12 @@ const config = {
   },
 };
 
-const withMDX = createMDX({
+/* const withMDX = createMDX({
   options: {
     remarkPlugins: [remarkGfm],
     rehypePlugins: [withSlugs, withToc, withTocExport],
   },
 });
 
-export default withMDX(config);
-// export default config;
+export default withMDX(config); */
+export default config;

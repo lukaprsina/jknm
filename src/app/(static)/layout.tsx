@@ -8,7 +8,7 @@ export default function MarkdownLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <Shell show_aside>
+    <Shell>
       <div className={cn(article_variants(), page_variants())}>
         {children}
         <ImageGallery />

@@ -4,8 +4,8 @@
 // import { tableOfContents as toc_raziskovanje } from "~/app/(static)/raziskovanje/page.mdx";
 // @ ts-expect-error - mdx import
 // import { tableOfContents as toc_publiciranje } from "~/app/(static)/publiciranje/page.mdx";
-// @ts-expect-error - mdx import
-import { tableOfContents as toc_varstvo } from "~/app/(static)/varstvo/page.mdx";
+// @ ts-expect-error - mdx import
+// import { tableOfContents as toc_varstvo } from "~/app/(static)/varstvo/page.mdx";
 // @ ts-expect-error - mdx import
 // import { tableOfContents as toc_klub } from "~/app/(static)/klub/page.mdx";
 import {
@@ -37,27 +37,27 @@ export function Navigation() {
       onValueChange={console.log} */
     >
       <NavigationMenuList>
-        {/* <NavDropdown
+        <NavDropdown
           title="Zgodovina"
           href="zgodovina"
-          toc={toc_zgodovina}
+          // toc={toc_zgodovina}
           description="Oglejte si zgodovino društva in jamarske dejavnosti v Sloveniji."
           icon={<HistoryIcon size={24} />}
         />
         <NavDropdown
           title="Raziskovanje"
           href="raziskovanje"
-          toc={toc_raziskovanje}
+          // toc={toc_raziskovanje}
           description="Preberite več o raziskovanju jam in kraškega sveta."
           icon={<TelescopeIcon size={24} />}
         />
         <NavDropdown
           title="Publiciranje"
           href="publiciranje"
-          toc={toc_publiciranje}
+          // toc={toc_publiciranje}
           description="Preberite več o objavah in publikacijah društva."
           icon={<BookIcon size={24} />}
-        /> */}
+        />
         <NavDropdown
           title="Varstvo"
           href="varstvo"
@@ -65,13 +65,13 @@ export function Navigation() {
           description="Preberite več o varstvu jam in narave."
           icon={<ShieldIcon size={24} />}
         />
-        {/* <NavDropdown
+        <NavDropdown
           title="Klub"
           href="klub"
-          toc={toc_klub}
+          // toc={toc_klub}
           description="Oglejte si informacije o klubu, katastru jam, izobraževanju, etičnem kodeksu, društvu v javnem interesu in jamarski reševalni službi."
           icon={<UsersIcon size={24} />}
-        /> */}
+        />
         <DesktopHeaderLink href="/arhiv">Arhiv novic</DesktopHeaderLink>
       </NavigationMenuList>
     </NavigationMenu>
