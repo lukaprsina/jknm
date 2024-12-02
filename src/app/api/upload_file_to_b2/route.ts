@@ -52,6 +52,12 @@ export async function POST(request: NextRequest) {
   const allow_overwrite = form_data.get("allow_overwrite");
   const bucket_string = form_data.get("bucket");
   let title = form_data.get("title");
+
+  if (typeof title !== "string" && title !== null) {
+    console.log("Title is not a string", title, typeof title);
+    throw new Error("Title is not a string");
+  }
+
   let mime_type = "";
   let key = "";
 
@@ -65,14 +71,19 @@ export async function POST(request: NextRequest) {
   }
 
   // TODO: encode with convert_title_to_url
-  if ((file_type === "image" || file_type === "file") && file instanceof File) {
-    // Upload from a file.
-    // key = `${directory}/${convert_filename_to_url(file.name)}`;
-    if (typeof title !== "string") {
-      title = file.name;
-    }
+  // TODO:  && file instanceof File gives an error: ReferenceError: File is not defined
+  if (file_type === "image" || file_type === "file") {
+    if (typeof file !== "string" && file) {
+      // Upload from a file.
+      // key = `${directory}/${convert_filename_to_url(file.name)}`;
+      if (typeof title !== "string") {
+        title = file.name;
+      }
 
-    mime_type = file.type;
+      mime_type = file.type;
+    } else {
+      title = "unknown_image.jpg";
+    }
   } else if (
     file_type === "image" &&
     typeof external_url === "string" &&
@@ -147,6 +158,7 @@ export async function POST(request: NextRequest) {
   });
 
   const bucket_obj = await b2.bucket(bucket);
+  if (typeof file !== "object" || !file) return NextResponse.error();
 
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
