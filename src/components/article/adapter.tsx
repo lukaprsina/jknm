@@ -22,6 +22,7 @@ import type { IntersectionRef } from "~/app/infinite-no-trpc";
 import { use } from "react";
 import { DuplicateURLsContext } from "~/app/provider";
 import { env } from "~/env";
+import { get_s3_prefix } from "~/lib/s3-publish";
 
 type SelectPublishedArticlesToAuthors =
   typeof PublishedArticlesToAuthors.$inferSelect & {
@@ -76,11 +77,11 @@ export const DraftArticleDrizzleCard = ({
         true,
       ).slice(0, 1000)}
       created_at={article.created_at}
-      /* image_url={get_s3_prefix(
+      image_url={get_s3_prefix(
         `${article.id}/thumbnail.png`,
         env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
-      )} */
-      image_url={`https://cdn-drafts.${env.NEXT_PUBLIC_SITE_DOMAIN}/${get_s3_draft_directory(article.id)}/thumbnail.png`}
+      )}
+      // image_url={`https://cdn-drafts.${env.NEXT_PUBLIC_SITE_DOMAIN}/${get_s3_draft_directory(article.id)}/thumbnail.png`}
       has_thumbnail={Boolean(article.thumbnail_crop)}
       author_ids={article.draft_articles_to_authors.map((a) => a.author.id)}
     />
@@ -109,11 +110,11 @@ export const PublishedArticleDrizzleCard = ({
         duplicate_urls,
       )}
       id={article.id}
-      /* image_url={get_s3_prefix(
+      image_url={get_s3_prefix(
         `${get_s3_published_directory(article.url, article.created_at)}/thumbnail.png`,
         env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
-      )} */
-      image_url={`https://cdn.${env.NEXT_PUBLIC_SITE_DOMAIN}/${get_s3_published_directory(article.url, article.created_at)}/thumbnail.png`}
+      )}
+      // image_url={`https://cdn.${env.NEXT_PUBLIC_SITE_DOMAIN}/${get_s3_published_directory(article.url, article.created_at)}/thumbnail.png`}
       content_preview={convert_content_to_text(
         article.content?.blocks,
         true,
@@ -145,11 +146,11 @@ export function ArticleAlgoliaCard({
       created_at={new Date(hit.created_at)}
       has_thumbnail={hit.has_thumbnail}
       author_ids={hit.author_ids}
-      /* image_url={get_s3_prefix(
+      image_url={get_s3_prefix(
         `${get_s3_published_directory(hit.url, hit.created_at)}/thumbnail.png`,
         env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
-      )} */
-      image_url={`https://cdn.${env.NEXT_PUBLIC_SITE_DOMAIN}/${get_s3_published_directory(hit.url, hit.created_at)}/thumbnail.png`}
+      )}
+      // image_url={`https://cdn.${env.NEXT_PUBLIC_SITE_DOMAIN}/${get_s3_published_directory(hit.url, hit.created_at)}/thumbnail.png`}
     />
   );
 }

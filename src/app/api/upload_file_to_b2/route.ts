@@ -3,15 +3,12 @@
 import B2 from "b2-js";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { HeadObjectCommand, NotFound, S3Client } from "@aws-sdk/client-s3";
 import mime from "mime/lite";
 
 import { env } from "~/env";
 import { getServerAuthSession } from "~/server/auth";
 import { convert_filename_to_url } from "~/lib/article-utils";
 import { thumbnail_validator } from "~/lib/validators";
-import { v4 as uuid } from "uuid";
-import path from "path/posix";
 import { crop_image } from "~/server/s3-utils";
 import sharp from "sharp";
 
@@ -36,7 +33,7 @@ export interface FileUploadJSON {
 }
 
 export async function POST(request: NextRequest) {
-  console.log("upload_file_to_s3 begins");
+  console.log("upload_file_to_b2 start of function");
   const session = await getServerAuthSession();
   if (!session) return NextResponse.error();
 
@@ -49,7 +46,7 @@ export async function POST(request: NextRequest) {
   const file_type = form_data.get("type");
   const external_url = form_data.get("url");
   const crop_entry = form_data.get("crop");
-  const allow_overwrite = form_data.get("allow_overwrite");
+  // const allow_overwrite = form_data.get("allow_overwrite");
   const bucket_string = form_data.get("bucket");
   let title = form_data.get("title");
 
@@ -72,19 +69,7 @@ export async function POST(request: NextRequest) {
 
   // TODO: encode with convert_title_to_url
   // TODO:  && file instanceof File gives an error: ReferenceError: File is not defined
-  if (file_type === "image" || file_type === "file") {
-    if (typeof file !== "string" && file) {
-      // Upload from a file.
-      // key = `${directory}/${convert_filename_to_url(file.name)}`;
-      if (typeof title !== "string") {
-        title = file.name;
-      }
-
-      mime_type = file.type;
-    } else {
-      title = "unknown_image.jpg";
-    }
-  } else if (
+  if (
     file_type === "image" &&
     typeof external_url === "string" &&
     typeof title === "string"
@@ -101,19 +86,33 @@ export async function POST(request: NextRequest) {
 
     const url_image_response = await fetch(external_url);
     const blob = await url_image_response.blob();
-    file = new File([blob], title, { type: mime_type });
+    const uncropped_file = new File([blob], title, { type: mime_type });
 
     if (typeof crop_entry === "string") {
       const crop = JSON.parse(crop_entry) as unknown;
       const validated_crop = thumbnail_validator.parse(crop);
-      file = await crop_image(file, validated_crop);
+      file = await crop_image(uncropped_file, validated_crop);
+    }
+  } else if (file_type === "image" || file_type === "file") {
+    if (typeof file !== "string" && file) {
+      // Upload from a file.
+      // key = `${directory}/${convert_filename_to_url(file.name)}`;
+      if (typeof title !== "string") {
+        title = file.name;
+      }
+
+      mime_type = file.type;
+    } else {
+      title = "unknown_image.jpg";
     }
   } else {
     return NextResponse.error();
   }
-
+  // https://jknm-osnutki.s3.eu-central-003.backblazeb2.com/519/519_154.jpg
+  // key = `${directory}/${convert_filename_to_url(title)}`;
+  // key = `https://jknm-osnutki.s3.eu-central-003.backblazeb2.com/${directory}/${convert_filename_to_url(title)}`;
   key = `${directory}/${convert_filename_to_url(title)}`;
-  console.log("upload_file_to_s3", {
+  console.log("upload_file_to_b2", {
     directory,
     file_type,
     external_url,
@@ -121,15 +120,16 @@ export async function POST(request: NextRequest) {
     mime_type,
     key,
     bucket,
+    crop_entry,
   });
 
-  const client = new S3Client({
+  /* const client = new S3Client({
     region: env.NEXT_PUBLIC_AWS_REGION,
     endpoint: "https://s3.eu-central-003.backblazeb2.com",
-  });
+  }); */
 
   // Check if the file already exists
-  if (allow_overwrite !== "allow_overwrite") {
+  /* if (allow_overwrite !== "allow_overwrite") {
     try {
       await client.send(
         new HeadObjectCommand({
@@ -150,7 +150,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.error();
       }
     }
-  }
+  } */
 
   const b2 = await B2.authorize({
     applicationKeyId: env.AWS_ACCESS_KEY_ID,
@@ -162,7 +162,10 @@ export async function POST(request: NextRequest) {
 
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
-  await bucket_obj.upload(key, buffer);
+  await bucket_obj.upload(key, buffer, {
+    contentType: mime_type,
+    contentLength: 5 * 10485760, // up to 10 MB
+  });
 
   let file_data: ImageUploadJSON | FileUploadJSON | undefined = undefined;
 

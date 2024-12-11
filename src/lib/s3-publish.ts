@@ -3,7 +3,8 @@ import { env } from "~/env";
 import { list_objects, s3_copy_between_buckets } from "~/server/s3-utils";
 
 export function get_s3_prefix(url: string, bucket: string) {
-  return `https://${bucket}.s3.${env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${url}`;
+  // return `https://${bucket}.s3.${env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${url}`;
+  return `https://${bucket}.s3.${env.NEXT_PUBLIC_AWS_REGION}.backblazeb2.com/${url}`;
 }
 
 const ALLOWERD_BUCKETS = [

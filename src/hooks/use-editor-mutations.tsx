@@ -187,7 +187,9 @@ export function useEditorMutations() {
       const editor_content = await editor_context.editor?.save();
       if (!editor_content) return;
 
+      console.log("MAKING A THUMBNAIIIL DRAFT", thumbnail_crop);
       if (thumbnail_crop) {
+        // TODO: this is probably wrong. don't need to upload. its already on b2. same with publish
         await upload_image_by_url({
           url: thumbnail_crop.image_url,
           custom_title: "thumbnail.png",
@@ -243,7 +245,9 @@ export function useEditorMutations() {
 
       const created_at = fake_created_at ?? draft_article.created_at;
 
+      console.log("MAKING A THUMBNAIIIL PUBLISH", thumbnail_crop);
       if (thumbnail_crop) {
+        // TODO
         await upload_image_by_url({
           url: thumbnail_crop.image_url,
           custom_title: "thumbnail.png",

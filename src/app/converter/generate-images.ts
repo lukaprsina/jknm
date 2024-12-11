@@ -5,6 +5,8 @@ import path from "path";
 import sharp from "sharp";
 import { db } from "~/server/db";
 import { convert_filename_to_url } from "~/lib/article-utils";
+import { PublishedArticle } from "~/server/db/schema";
+import { eq } from "drizzle-orm";
 
 // const content_path = "C:/Users/luka/Documents/jknm-backup/slike_renamed";
 const content_path = "C:/Users/peter/Downloads/(static)_renamed";
@@ -162,4 +164,36 @@ async function* walk_dir(dir: string): AsyncGenerator<string> {
     if (d.isDirectory()) yield* walk_dir(entry);
     else if (d.isFile()) yield entry;
   }
+}
+
+export async function rename_all_images_hardcoded() {
+  const articles = await db.query.PublishedArticle.findMany({});
+
+  articles.map((article) => {
+    article.content?.blocks.map((block) => {
+      if (block.type === "image") {
+        const data = block.data as { file: { url: string } };
+        const url_parts = data.file.url.split("/");
+        const article_name = url_parts[url_parts.length - 2];
+        const image_name = url_parts[url_parts.length - 1];
+        const new_url = `https://jknm-novice.s3.eu-central-003.backblazeb2.com/${article_name}/${image_name}`;
+
+        console.log("renamed image", { from: data.file.url, to: new_url });
+        data.file.url = new_url;
+      }
+
+      return block;
+    });
+  });
+
+  console.log("updating...");
+
+  for (const article of articles) {
+    await db
+      .update(PublishedArticle)
+      .set({ content: article.content })
+      .where(eq(PublishedArticle.id, article.id));
+  }
+
+  console.log("Done");
 }
