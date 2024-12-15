@@ -29,8 +29,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <tbody {...props}>{clean_children(children)}</tbody>
     ),
     strong: (props) => <b {...props} />,
-    a: ({ href, ...props }) => {
+    a: ({ href, ref: _, ...props }) => {
       if (typeof href === "undefined") throw new Error("href is undefined");
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       return <Link href={href} {...props} />;
     },
     TableOfContents,
