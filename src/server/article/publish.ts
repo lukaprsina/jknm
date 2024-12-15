@@ -13,7 +13,11 @@ import {
   get_s3_draft_directory,
   get_s3_published_directory,
 } from "~/lib/article-utils";
-import { delete_s3_directory, s3_copy_thumbnails } from "../s3-utils";
+import {
+  delete_s3_directory,
+  rename_s3_files_and_content,
+  s3_copy_thumbnails,
+} from "../s3-utils";
 import { env } from "~/env";
 import { klona } from "klona";
 import { assert_one } from "~/lib/assert-length";
@@ -81,6 +85,14 @@ export async function publish(input: z.infer<typeof publish_validator>) {
       value.created_at,
     );
 
+    const renamed_content = value.content
+      ? await rename_s3_files_and_content(
+          value.content,
+          published_s3_url,
+          false,
+        )
+      : undefined;
+
     // upload thumbnails
     if (draft_article?.id) {
       await s3_copy_thumbnails({
@@ -93,6 +105,7 @@ export async function publish(input: z.infer<typeof publish_validator>) {
     }
 
     value.url = renamed_url;
+    value.content = renamed_content;
 
     // finally insert or update published article
     if (published_article?.id) {

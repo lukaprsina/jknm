@@ -169,6 +169,7 @@ export async function POST(request: NextRequest) {
 
   let file_data: ImageUploadJSON | FileUploadJSON | undefined = undefined;
 
+  const returned_url = `https://jknm-osnutki.s3.eu-central-003.backblazeb2.com/${key}`;
   if (file_type === "image") {
     const image_buffer = await file.arrayBuffer();
     const image_metadata = await sharp(image_buffer).metadata();
@@ -176,13 +177,13 @@ export async function POST(request: NextRequest) {
     const image_height = image_metadata.height;
 
     file_data = {
-      url: key,
+      url: returned_url,
       width: image_width,
       height: image_height,
     };
   } else {
     file_data = {
-      url: key,
+      url: returned_url,
       title: file.name,
       size: file.size,
       name: file.name,

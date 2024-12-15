@@ -8,13 +8,51 @@ import {
   ListObjectsV2Command,
   S3Client,
 } from "@aws-sdk/client-s3";
+import type { OutputData } from "@editorjs/editorjs";
 import type { PercentCrop } from "react-image-crop";
 import sharp from "sharp";
 
 import { env } from "~/env";
 import type { S3CopySourceInfo } from "~/lib/s3-publish";
-import { s3_copy_file } from "~/lib/s3-publish";
+import { rename_urls_in_content, s3_copy_file } from "~/lib/s3-publish";
 import type { ThumbnailType } from "~/lib/validators";
+
+export async function rename_s3_files_and_content(
+  editor_content: OutputData,
+  destination_url: string,
+  draft: boolean,
+) {
+  const destination_bucket = draft
+    ? env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME
+    : env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME;
+
+  const { sources, new_content } = rename_urls_in_content(
+    editor_content,
+    destination_url,
+    destination_bucket,
+  );
+
+  // draft_sources means that the files are in draft bucket
+  const draft_sources = sources.filter(
+    (source) => source.source_bucket === env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+  );
+  const published_sources = sources.filter(
+    (source) =>
+      source.source_bucket === env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+  );
+
+  console.log("s3 utils rename", {
+    destination_bucket,
+    destination_url,
+    draft_sources,
+    published_sources,
+  });
+  for (const sources of [draft_sources, published_sources]) {
+    await s3_copy_between_buckets(sources, destination_bucket, destination_url);
+  }
+
+  return new_content;
+}
 
 export async function s3_copy_thumbnails({
   source_bucket,
