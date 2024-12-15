@@ -137,17 +137,10 @@ export async function s3_copy_file(
         CopySource,
         Bucket: destination_bucket,
         Key,
-        // ACL: "public-read",
       }),
     );
   } catch (error) {
-    // console.error("Error copying file", error);
-    console.error("Error copying file:", {
-      message: error.message,
-      stack: error.stack,
-      request: error.$metadata?.httpRequest,
-      response: error.$metadata?.httpResponse,
-    });
+    console.error("Error copying file", error);
   }
 }
 
