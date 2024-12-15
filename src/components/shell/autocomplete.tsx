@@ -43,7 +43,8 @@ export function NoviceAutocomplete({ detached }: { detached?: string }) {
   const duplicate_urls: string[] = [];
   return (
     <Autocomplete
-      detached={detached}
+      // TODO: this is also broken wtf
+      // detached={detached}
       openOnFocus={true}
       getSources={({ query }) => [
         {

@@ -63,7 +63,8 @@ export function Search({ session }: { session: Session | null }) {
       indexName={DEFAULT_REFINEMENT}
       searchClient={searchClient}
       // insights={true}
-      routing={{ router: createInstantSearchRouterNext({ singletonRouter }) }}
+      // TODO: broken, idk. Error: No router instance found.
+      // routing={{ router: createInstantSearchRouterNext({ singletonRouter }) }}
     >
       <Tabs
         value={activeTab}
