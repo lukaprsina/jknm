@@ -90,12 +90,13 @@ export function NoviceAutocomplete({ detached }: { detached?: string }) {
                   <Separator className="w-full" />
                   <div
                     className={cn(
-                      "flex items-end justify-between px-6 py-8",
+                      "flex flex-wrap items-center justify-center gap-2 pb-6 pt-8",
                       article_variants(),
+                      // "flex items-end justify-between px-6 py-8",
                     )}
                   >
                     <Link href="/arhiv">Arhiv novic</Link>
-                    <PoweredBy className="w-40" />
+                    <PoweredBy className="w-32" />
                   </div>
                 </div>
               );
