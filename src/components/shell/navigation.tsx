@@ -1,13 +1,3 @@
-// @ ts-expect-error - mdx import
-// import { tableOfContents as toc_zgodovina } from "~/app/(static)/zgodovina/page.mdx";
-// @ ts-expect-error - mdx import
-// import { tableOfContents as toc_raziskovanje } from "~/app/(static)/raziskovanje/page.mdx";
-// @ ts-expect-error - mdx import
-// import { tableOfContents as toc_publiciranje } from "~/app/(static)/publiciranje/page.mdx";
-// @ ts-expect-error - mdx import
-// import { tableOfContents as toc_varstvo } from "~/app/(static)/varstvo/page.mdx";
-// @ ts-expect-error - mdx import
-// import { tableOfContents as toc_klub } from "~/app/(static)/klub/page.mdx";
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -28,13 +18,46 @@ import {
 import { NavigationMenuTrigger } from "../navigation-menu-trigger";
 import Link from "next/link";
 import { smooth_scroll_store } from "~/hooks/use-smooth-scroll";
+import toc from "~/toc.json";
+import slugify from "slugify";
 
 export function Navigation() {
+  toc.map((item) => {
+    console.log(item.file);
+    item.headings.map((heading) => {
+      console.log(heading.value);
+    });
+  });
+
+  return (
+    <NavigationMenu className="z-50">
+      <NavigationMenuList>
+        {toc.map((item) => {
+          const section = item.file.split("\\").slice(-2, -1)[0];
+
+          if (!section) throw new Error("TOC: No section found");
+
+          return (
+            <NavDropdown
+              key={item.file}
+              title={section.charAt(0).toUpperCase() + section.slice(1)}
+              href={section}
+              headings={item.headings
+                .filter((heading) => heading.depth === 2)
+                .map((heading) => heading.value)}
+              icon={<HistoryIcon size={24} />}
+            />
+          );
+        })}
+      </NavigationMenuList>
+    </NavigationMenu>
+  );
+}
+
+/* export function Navigation() {
   return (
     <NavigationMenu
       className="z-50"
-      /* value="zgodovina"
-      onValueChange={console.log} */
     >
       <NavigationMenuList>
         <NavDropdown
@@ -76,31 +99,28 @@ export function Navigation() {
       </NavigationMenuList>
     </NavigationMenu>
   );
-}
+} */
 
 function NavDropdown({
   title,
   href,
-  toc,
+  headings,
   description,
   icon,
 }: {
   title: string;
   href: string;
-  toc?: Toc;
+  headings: string[];
   description?: string;
   icon?: React.ReactNode;
 }) {
   const pathname = usePathname();
 
-  const c = toc?.at(0)?.children;
-
-  if (!toc) {
+  if (!headings) {
     return (
       <NavigationMenuItem value={href}>
         <NavigationMenuTrigger className="bg-transparent text-base">
           <Link href={`/${href}`}>{title}</Link>
-          {/* {title} */}
         </NavigationMenuTrigger>
       </NavigationMenuItem>
     );
@@ -109,32 +129,27 @@ function NavDropdown({
   return (
     <NavigationMenuItem value={href}>
       <NavigationMenuTrigger className="bg-transparent text-base">
-        {/* <Link href={`/${href}`}>{title}</Link> */}
         {title}
       </NavigationMenuTrigger>
-      {/* relative */}
       <NavigationMenuContent className="z-50">
-        {/* <ul className="z-50 grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-1 lg:w-[600px]"> */}
-        {/* <ul className="z-50 grid w-[653px] grid-cols-1 p-4"> */}
-        {/* <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]"> */}
         <ul className="grid w-[653px] p-6 lg:grid-cols-[.75fr_1fr]">
           {description && (
             <li
               className="row-span-3"
               style={{
-                gridRow: c && `span ${c.length + 1} / span ${c.length + 1}`,
+                gridRow:
+                  headings &&
+                  `span ${headings.length + 1} / span ${headings.length + 1}`,
               }}
             >
               <NavigationMenuLink asChild>
                 <Link
-                  /* justify-end w-full h-full  */
                   className="flex h-full w-60 select-none flex-col justify-center rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                   href={`/${href}`}
                 >
-                  {/* <HistoryIcon size={24} className="h-6 w-6" /> */}
                   {icon}
                   <div className="mb-2 mt-4 text-lg font-medium">
-                    <b>{toc.at(0)?.value}</b>
+                    <b>{title}</b>
                   </div>
                   <p className="text-sm leading-tight text-muted-foreground">
                     {description}
@@ -143,29 +158,27 @@ function NavDropdown({
               </NavigationMenuLink>
             </li>
           )}
-          {toc.at(0)?.value && (
-            <ListItem
-              list_title={<b>{toc.at(0)?.value}</b>}
-              href={`/${href}`}
-            />
-          )}
-          {toc.at(0)?.children?.map((item) => (
-            <ListItem
-              key={item.id}
-              list_title={item.value}
-              // href={`/${href}`}
-              href={`/${href}#${item.id}`}
-              onClick={(event) => {
-                if (!item.id) return;
+          {title && <ListItem list_title={<b>{title}</b>} href={`/${href}`} />}
+          {headings?.map((heading) => {
+            const slug = slugify(heading, { lower: true, strict: true });
 
-                if (pathname === `/${href}`) {
-                  event.preventDefault();
-                }
+            return (
+              <ListItem
+                key={heading}
+                list_title={heading}
+                href={`/${href}#${slug}`}
+                onClick={(event) => {
+                  if (!heading) return;
 
-                smooth_scroll_store.set.set_both(`/${href}`, item.id);
-              }}
-            />
-          ))}
+                  if (pathname === `/${href}`) {
+                    event.preventDefault();
+                  }
+
+                  smooth_scroll_store.set.set_both(`/${href}`, heading);
+                }}
+              />
+            );
+          })}
         </ul>
       </NavigationMenuContent>
     </NavigationMenuItem>

@@ -1,7 +1,9 @@
-declare module "*.mdx" {
-  import type { MDXProps } from "mdx/types";
-  import type { Toc } from "@stefanprobst/rehype-extract-toc";
+import type { JSX as Jsx } from "react/jsx-runtime";
 
-  export const tableOfContents: Toc;
-  export default function MDXContent(props: MDXProps): JSX.Element;
+declare global {
+  namespace JSX {
+    type ElementClass = Jsx.ElementClass;
+    type Element = Jsx.Element;
+    type IntrinsicElements = Jsx.IntrinsicElements;
+  }
 }
