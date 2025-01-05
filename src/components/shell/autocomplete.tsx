@@ -67,6 +67,13 @@ export function NoviceAutocomplete({ detached }: { detached?: string }) {
                     hitsPerPage: 8,
                   },
                 },
+                {
+                  indexName: "static_pages",
+                  params: {
+                    query,
+                    hitsPerPage: 2,
+                  },
+                },
               ],
             });
           },
