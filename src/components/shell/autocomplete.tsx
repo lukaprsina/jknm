@@ -44,7 +44,7 @@ export function NoviceAutocomplete({ detached }: { detached?: string }) {
   return (
     <Autocomplete
       // TODO: this is also broken wtf
-      // detached={detached}
+      detached={detached}
       openOnFocus={true}
       getSources={({ query }) => [
         {

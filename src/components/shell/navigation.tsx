@@ -3,11 +3,9 @@ import {
   NavigationMenuList,
   NavigationMenuItem,
   NavigationMenuContent,
-  NavigationMenuLink,
 } from "~/components/ui/navigation-menu";
 import { ListItem } from "./header";
 import { usePathname } from "next/navigation";
-import { HistoryIcon } from "lucide-react";
 import { NavigationMenuTrigger } from "../navigation-menu-trigger";
 import Link from "next/link";
 import { smooth_scroll_store } from "~/hooks/use-smooth-scroll";
@@ -78,7 +76,7 @@ function NavDropdown({
 }) {
   const pathname = usePathname();
 
-  console.log({ title, href, headings });
+  // console.log({ title, href, headings });
 
   if (headings.length === 0) {
     return (
