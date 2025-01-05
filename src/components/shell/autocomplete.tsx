@@ -1,129 +1,27 @@
 "use client";
 
-import type {
-  AutocompleteComponents,
-  AutocompleteSource,
-} from "@algolia/autocomplete-js";
+import type { AutocompleteSource } from "@algolia/autocomplete-js";
 import type { Root } from "react-dom/client";
-import React, {
-  createElement,
-  Fragment,
-  use,
-  useEffect,
-  useMemo,
-  useRef,
-} from "react";
-import { autocomplete, getAlgoliaResults } from "@algolia/autocomplete-js";
+import React, { createElement, Fragment, useEffect, useRef } from "react";
+import { autocomplete } from "@algolia/autocomplete-js";
 import { createRoot } from "react-dom/client";
 
 import "@algolia/autocomplete-theme-classic";
 
-import Link from "next/link";
-
 import "./autocomplete.css";
 
-import { PoweredBy } from "react-instantsearch";
-import { Separator } from "~/components/ui/separator";
 import type { PublishedArticleHit } from "~/lib/validators";
-import { get_published_article_link } from "~/lib/article-utils";
-import { liteClient as algoliasearch } from "algoliasearch/lite";
-import { env } from "~/env";
-import { article_variants } from "~/lib/page-variants";
-import { cn } from "~/lib/utils";
-import { DuplicateURLsContext } from "~/app/provider";
-
-const searchClient = algoliasearch(
-  env.NEXT_PUBLIC_ALGOLIA_ID,
-  env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY,
-);
-
-export function NoviceAutocomplete({ detached }: { detached?: string }) {
-  // TODO: broken
-  // const duplicated_urls = useDuplicatedUrls();
-  const duplicate_urls: string[] = [];
-  return (
-    <Autocomplete
-      // TODO: this is also broken wtf
-      detached={detached}
-      openOnFocus={true}
-      getSources={({ query }) => [
-        {
-          sourceId: "autocomplete",
-          getItemUrl: ({ item }) => {
-            return get_published_article_link(
-              item.url,
-              item.created_at,
-              duplicate_urls,
-            );
-          },
-          getItems() {
-            return getAlgoliaResults({
-              searchClient,
-              queries: [
-                {
-                  indexName: "published_article",
-                  params: {
-                    query,
-                    hitsPerPage: 8,
-                  },
-                },
-                {
-                  indexName: "static_pages",
-                  params: {
-                    query,
-                    hitsPerPage: 2,
-                  },
-                },
-              ],
-            });
-          },
-          templates: {
-            header() {
-              return (
-                <>
-                  <span className="aa-SourceHeaderTitle">Novice</span>
-                  <div className="aa-SourceHeaderLine" />
-                </>
-              );
-            },
-            item({ item, components }) {
-              return (
-                <ArticleAutocompleteItem hit={item} components={components} />
-              );
-            },
-            footer() {
-              return (
-                <div className="w-full">
-                  <Separator className="w-full" />
-                  <div
-                    className={cn(
-                      "flex flex-wrap items-center justify-center gap-2 pb-6 pt-8",
-                      article_variants(),
-                      // "flex items-end justify-between px-6 py-8",
-                    )}
-                  >
-                    <Link href="/arhiv">Arhiv novic</Link>
-                    <PoweredBy className="w-32" />
-                  </div>
-                </div>
-              );
-            },
-            noResults() {
-              return "Ni ujemajočih novic.";
-            },
-          },
-        },
-      ]}
-    />
-  );
-}
+import type { StaticHit } from "./article-autocomplete";
 
 interface AutocompleteProps {
   detached?: string;
   openOnFocus: boolean;
   getSources: (props: {
     query: string;
-  }) => AutocompleteSource<PublishedArticleHit>[];
+  }) => [
+    AutocompleteSource<StaticHit>,
+    AutocompleteSource<PublishedArticleHit>,
+  ];
 }
 
 // https://www.algolia.com/doc/ui-libraries/autocomplete/integrations/using-react/
@@ -147,7 +45,7 @@ export function Autocomplete({ detached, ...props }: AutocompleteProps) {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         render: () => {},
       },
-      render({ children }, root) {
+      render({ children, elements, state }, root) {
         if (!panelRootRef.current || rootRef.current !== root) {
           rootRef.current = root;
 
@@ -176,7 +74,7 @@ export function Autocomplete({ detached, ...props }: AutocompleteProps) {
           window.open(itemUrl, "_blank", "noopener");
         },
       },
-      ...props,
+      // ...props,
     });
 
     return () => {
@@ -185,34 +83,4 @@ export function Autocomplete({ detached, ...props }: AutocompleteProps) {
   }, [detached, props]);
 
   return <div className="box-border flex-grow border-0" ref={containerRef} />;
-}
-
-interface ArticleAutocompleteItemProps {
-  hit: PublishedArticleHit;
-  components: AutocompleteComponents;
-}
-
-function ArticleAutocompleteItem({
-  hit,
-  components,
-}: ArticleAutocompleteItemProps) {
-  const duplicate_urls = use(DuplicateURLsContext);
-
-  const href = useMemo(
-    () => get_published_article_link(hit.url, hit.created_at, duplicate_urls),
-    [duplicate_urls, hit.created_at, hit.url],
-  );
-
-  return (
-    <Link href={href} className="aa-ItemLink text-inherit">
-      <div className="aa-ItemContent h-12 overflow-hidden">
-        <div className="aa-ItemContentBody">
-          <div className="aa-ItemContentTitle">
-            <components.Highlight hit={hit} attribute="title" />
-          </div>
-          <div className="aa-ItemContentDescription" />
-        </div>
-      </div>
-    </Link>
-  );
 }

@@ -3,7 +3,6 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 
-import { NoviceAutocomplete } from "./autocomplete";
 import EditingButtons from "./editing-buttons";
 import { Logo } from "./logo";
 import { cn } from "~/lib/utils";
@@ -17,6 +16,7 @@ import { createStore } from "zustand-x";
 import { FacebookIcon, YoutubeIcon } from "./icons";
 import { Navigation } from "./navigation";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
+import { ArticleAutocomplete } from "./article-autocomplete";
 
 export interface ShellStore {
   is_header_sticky: boolean;
@@ -127,7 +127,8 @@ export function DesktopHeader({
             />
           </div>
           <div className="flex items-center justify-between gap-2">
-            <NoviceAutocomplete detached="" />
+            {/* <NoviceAutocomplete detached="" /> */}
+            <ArticleAutocomplete />
             <FacebookIcon />
             <YoutubeIcon />
           </div>
