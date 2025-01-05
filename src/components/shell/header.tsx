@@ -72,22 +72,21 @@ export function DesktopHeaderLink({
 
 export const ListItem = React.forwardRef<
   React.ComponentRef<"a">,
-  React.ComponentPropsWithoutRef<"a"> & { list_title?: React.ReactNode }
->(({ className, list_title, href, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<"a"> & {
+    list_title?: React.ReactNode;
+    is_title?: boolean;
+  }
+>(({ className, list_title, is_title, href, ...props }, ref) => {
   if (!href) {
     return null;
   }
 
   return (
-    <li>
+    <li className={cn(is_title && "col-span-2")}>
       <NavigationMenuLink asChild>
         <Link
           href={href}
           ref={ref}
-          /* className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className,
-          )} */
           className={cn(
             "prose",
             buttonVariants({ size: "sm", variant: "link" }),
@@ -96,11 +95,6 @@ export const ListItem = React.forwardRef<
           {...props}
         >
           {list_title}
-          {/* text-sm font-medium */}
-          {/* <div className="text-sm font-medium leading-none">{title}</div> */}
-          {/* <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-            {children}
-          </p> */}
         </Link>
       </NavigationMenuLink>
     </li>
