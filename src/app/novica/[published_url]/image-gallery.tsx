@@ -47,7 +47,7 @@ export function ImageGallery() {
         }}*/
       >
         <div className="h-full w-full">
-          <div className="flex h-full min-h-[350px] w-full items-center justify-around p-10">
+          <div className="flex h-full min-h-[350px] w-full items-center justify-around md:p-10">
             <MyCarousel first_image_src={first_image_src} />
           </div>
         </div>
@@ -158,7 +158,7 @@ export function MyCarousel({ first_image_src }: { first_image_src?: string }) {
         align: "center",
         duration: 0,
       }}
-      className="flex h-full w-full max-w-[80%] items-center justify-center"
+      className="flex h-full w-full items-center justify-center md:max-w-[80%]"
     >
       <CarouselContent>
         {images.map((image, index) => (
@@ -200,21 +200,34 @@ function GalleryImage({
     [image.file.width, image.file.height],
   );
 
+  // Determine if the image is portrait and compute maxWidth accordingly.
+  const isPortrait = height > width;
+  const computedMaxWidth = `calc((100vh - 50px) * ${width / height})`;
+
   return (
-    <figure ref={ref} className="max-h-[90vh] max-w-[90vw]">
-      <div className="flex h-full w-full items-center justify-center">
+    <figure ref={ref} className="mx-auto w-full md:max-w-[90vw]">
+      <div
+        className="mx-auto overflow-hidden"
+        style={{
+          maxHeight: "calc(100vh - 50px)",
+          maxWidth: isPortrait ? computedMaxWidth : "100%",
+        }}
+      >
         <Image
-          // className="h-full w-full rounded-xl"
           className="rounded-xl"
           src={image.file.url}
           alt={image.caption}
-          // sizes="(max-width: 1500px) 100vw, 1500px"
           width={width}
           height={height}
+          style={{
+            objectFit: "contain",
+            width: "100%",
+            height: "auto",
+          }}
         />
       </div>
       {image.caption && (
-        <figcaption className="mt-2 w-full rounded-xl text-white">
+        <figcaption className="mt-2 w-full flex-none rounded-xl pl-2 text-white">
           {image.caption}
         </figcaption>
       )}
