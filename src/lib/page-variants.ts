@@ -30,17 +30,19 @@ export const article_grid_variants = cva(
   },
 );
 
-export const page_variants = cva(
-  "container h-full w-full pb-6 pt-8 max-w-[800px]",
-  {
-    variants: {
-      padding: {
-        normal: "px-[1em] md:px-[2em]",
-        none: "",
-      },
+export const page_variants = cva("container h-full w-full pb-6 pt-8", {
+  variants: {
+    max_width: {
+      normal: "max-w-[800px]",
+      wide: "max-w-[1280px]",
     },
-    defaultVariants: {
-      padding: "normal",
+    padding: {
+      normal: "px-[1em] md:px-[2em]",
+      none: "",
     },
   },
-);
+  defaultVariants: {
+    padding: "normal",
+    max_width: "normal",
+  },
+});

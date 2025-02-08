@@ -26,7 +26,12 @@ export default async function HomePageServer() {
   if (!session) {
     return (
       <Shell without_footer>
-        <div className={cn(page_variants(), article_variants())}>
+        <div
+          className={cn(
+            page_variants({ max_width: "wide" }),
+            article_variants(),
+          )}
+        >
           <InfiniteArticles />
         </div>
       </Shell>
@@ -36,7 +41,7 @@ export default async function HomePageServer() {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <Shell without_footer>
-        <div className={cn(page_variants())}>
+        <div className={cn(page_variants({ max_width: "wide" }))}>
           <DraftArticles />
           <div>
             <InfiniteArticles />
