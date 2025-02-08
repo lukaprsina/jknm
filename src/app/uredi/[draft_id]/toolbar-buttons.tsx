@@ -181,9 +181,20 @@ export function SaveButton() {
             <SaveIcon />
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Shrani kot osnutek</TooltipContent>
+        <TooltipContent>
+          Shrani kot osnutek <KeyboardShortcut>⌘</KeyboardShortcut>
+          <KeyboardShortcut>S</KeyboardShortcut>
+        </TooltipContent>
       </Tooltip>
     </div>
+  );
+}
+
+export function KeyboardShortcut({ children }: { children: React.ReactNode }) {
+  return (
+    <kbd className="pointer-events-none ml-2 inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+      <span className="text-xs">{children}</span>
+    </kbd>
   );
 }
 

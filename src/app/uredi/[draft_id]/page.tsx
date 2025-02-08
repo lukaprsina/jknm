@@ -84,7 +84,13 @@ export default async function EditorPage(props: EditorPageProps) {
 
   return (
     <Shell draft_article={draft} published_article={published}>
-      <div className={cn(article_variants(), page_variants(), "min-h-screen")}>
+      <div
+        className={cn(
+          article_variants(),
+          page_variants({ max_width: "wide" }),
+          "min-h-screen",
+        )}
+      >
         {draft ? (
           <Editor draft={draft} published={published} />
         ) : (

@@ -13,12 +13,12 @@ import toc from "~/toc.json";
 import slugify from "slugify";
 
 const SORTED_SECTIONS = [
-  "arhiv",
   "zgodovina",
   "raziskovanje",
   "publiciranje",
   "varstvo",
   "klub",
+  "arhiv",
 ];
 
 export function Navigation() {
@@ -47,12 +47,17 @@ export function Navigation() {
     <NavigationMenu className="z-50">
       <NavigationMenuList>
         {sorted_toc.map((item) => {
+          let uppercase =
+            item.section.charAt(0).toUpperCase() + item.section.slice(1);
+
+          // TODO: ugly hack
+          if (item.section === "arhiv") {
+            uppercase = "Arhiv novic";
+          }
           return (
             <NavDropdown
               key={item.section}
-              title={
-                item.section.charAt(0).toUpperCase() + item.section.slice(1)
-              }
+              title={uppercase}
               href={item.section}
               headings={item.headings
                 .filter((heading) => heading.depth === 2)

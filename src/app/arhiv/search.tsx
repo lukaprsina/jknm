@@ -7,13 +7,13 @@ import { Tabs, TabsContent } from "~/components/ui/tabs";
 import { liteClient as algolia_search } from "algoliasearch/lite";
 import { env } from "~/env";
 import { useState } from "react";
-import { createInstantSearchRouterNext } from "react-instantsearch-router-nextjs";
-import singletonRouter from "next/router";
 import dynamic from "next/dynamic";
 import { Skeleton } from "~/components/ui/skeleton";
 import { cn } from "~/lib/utils";
 import { article_grid_variants } from "~/lib/page-variants";
 import { InstantSearch } from "react-instantsearch";
+// import { createInstantSearchRouterNext } from "react-instantsearch-router-nextjs";
+// import singletonRouter from "next/router";
 
 const SearchControlsDynamic = dynamic(
   () =>

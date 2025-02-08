@@ -80,7 +80,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
             })}
             variant="destructive"
           >
-            Zbriši novičko
+            Izbriši novičko
           </Button>
           <div className="flex items-center justify-end gap-1">
             {published_article ? (

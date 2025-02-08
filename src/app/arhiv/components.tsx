@@ -26,7 +26,7 @@ import { cn } from "~/lib/utils";
 import { Input } from "~/components/ui/input";
 import React, { useCallback, useState } from "react";
 
-export const DEFAULT_REFINEMENT = "published_article_created_at_asc";
+export const DEFAULT_REFINEMENT = "published_article_created_at_desc";
 
 /* 
 TODO:
@@ -162,7 +162,7 @@ export function MySearchBox2(props: UseSearchBoxProps) {
   return (
     <div className="flex w-full max-w-sm items-center space-x-2">
       <Input
-        placeholder="Išči po novicah …"
+        placeholder="Išči …"
         value={inputValue}
         className="max-w-xl"
         onChange={(e) => {

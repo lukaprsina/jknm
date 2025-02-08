@@ -36,7 +36,7 @@ export function Autocomplete({ detached, ...props }: AutocompleteProps) {
     }
 
     const search_api = autocomplete({
-      placeholder: "Išči po strani …",
+      placeholder: "Išči …",
       container: containerRef.current,
       detachedMediaQuery: detached ?? "(max-width: 1024px)",
       renderer: {

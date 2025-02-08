@@ -11,7 +11,7 @@ export default async function Novice() {
 
   return (
     <Shell>
-      <div className={cn(page_variants())}>
+      <div className={cn(page_variants({ max_width: "wide" }))}>
         {/* <Search2 /> */}
         <Search session={session} />
       </div>

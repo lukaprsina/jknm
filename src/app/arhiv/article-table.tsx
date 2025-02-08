@@ -246,11 +246,11 @@ function DeleteDialog({ article_id }: { article_id: number }) {
             </Button>
           </AlertDialogTrigger>
         </TooltipTrigger>
-        <TooltipContent>Zbriši novico</TooltipContent>
+        <TooltipContent>Ibriši novico</TooltipContent>
       </Tooltip>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Zbriši novico</AlertDialogTitle>
+          <AlertDialogTitle>Izbriši novico</AlertDialogTitle>
           <AlertDialogDescription>
             Ste prepričani, da želite zbrisati novico?
           </AlertDialogDescription>

@@ -22,6 +22,7 @@ import {
 import { EditorContext } from "~/components/editor/editor-context";
 import { useEditorMutations } from "~/hooks/use-editor-mutations";
 import { DraftArticleContext } from "~/components/article/context";
+import { KeyboardShortcut } from "./toolbar-buttons";
 
 export function UploadDialog() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -51,7 +52,11 @@ export function UploadDialog() {
             <ArrowUpToLineIcon />
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Shrani in objavi</TooltipContent>
+        <TooltipContent>
+          Shrani in objavi <KeyboardShortcut>⌘</KeyboardShortcut>
+          <KeyboardShortcut>⇧</KeyboardShortcut>
+          <KeyboardShortcut>S</KeyboardShortcut>
+        </TooltipContent>
       </Tooltip>
       <AlertDialogContent>
         <AlertDialogHeader>
