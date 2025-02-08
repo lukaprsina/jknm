@@ -31,7 +31,9 @@ export function Autocomplete({ ...props }: AutocompleteProps) {
   const panelRootRef = useRef<Root | null>(null);
 
   useEffect(() => {
+    console.log("Initializing autocomplete on", window.location.hostname);
     if (!containerRef.current) {
+      console.error("Container not found");
       return;
     }
 
@@ -77,10 +79,12 @@ export function Autocomplete({ ...props }: AutocompleteProps) {
       // ...props,
     });
 
+    console.log("search_api", search_api);
+
     return () => {
       search_api.destroy();
     };
-  }, [props]);
+  }, []); // changed dependency array to run only once on mount
 
   return <div className="box-border flex-grow border-0" ref={containerRef} />;
 }

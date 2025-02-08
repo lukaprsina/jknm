@@ -87,7 +87,7 @@ export function TwitterIcon() {
       className={cn(
         buttonVariants({ variant: "ghost", size: "icon" }),
         "h-9 w-9 rounded-full p-0 text-center",
-        "transition-colors hover:text-[#000000]",
+        "transition-colors hover:text-black",
       )}
     >
       <svg
@@ -106,7 +106,7 @@ export function TwitterIcon() {
 export function IntranetIcon() {
   return (
     <Link
-      href="https://www.youtube.com/@MrKlemi"
+      href="http://clani.jknm.si/"
       target="_blank"
       className={cn(
         buttonVariants({ variant: "ghost", size: "icon" }),
@@ -122,7 +122,7 @@ export function IntranetIcon() {
 export function ContactIcon() {
   return (
     <Link
-      href="https://www.youtube.com/@MrKlemi"
+      href="/kontakt"
       target="_blank"
       className={cn(
         buttonVariants({ variant: "ghost", size: "icon" }),

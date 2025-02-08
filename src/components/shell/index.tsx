@@ -34,7 +34,7 @@ export async function Shell({
   return (
     <div className={cn("w-full", className)}>
       {!without_header ? (
-        <header className="h-20 w-full md:h-auto">
+        <header className="h-20 w-full bg-blue-50 md:h-auto">
           <DesktopHeader
             published_article={published_article}
             draft_article={draft_article}

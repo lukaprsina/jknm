@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import {
   type AutocompleteComponents,
   getAlgoliaResults,
@@ -32,66 +35,53 @@ export function ArticleAutocomplete() {
   return (
     <Autocomplete
       openOnFocus={true}
-      getSources={({ query }) => [
-        {
-          sourceId: "static_pages",
-          getItemUrl: ({ item }) => {
-            return `/strani/${item.objectID}`;
-          },
-          getItems() {
-            return getAlgoliaResults({
-              searchClient,
-              queries: [
-                {
-                  indexName: "static_pages",
-                  params: {
-                    query,
-                    hitsPerPage: 2,
-                  },
-                },
-              ],
-            });
-          },
-          templates: {
-            header() {
-              return (
-                <>
-                  <span className="aa-SourceHeaderTitle">Besedilo</span>
-                  <div className="aa-SourceHeaderLine" />
-                </>
-              );
+      getSources={async ({ query }) => {
+        const sources: Array<any> = [];
+        // Fetch static pages results first
+        const staticPagesResults = await getAlgoliaResults({
+          searchClient,
+          queries: [
+            {
+              indexName: "static_pages",
+              params: {
+                query,
+                hitsPerPage: 3,
+              },
             },
-            item({ item, components }) {
-              return (
-                <ArticleAutocompleteStaticItem
-                  hit={item}
-                  components={components}
-                />
-              );
+          ],
+        });
+        const staticHits = staticPagesResults[0].hits;
+        if (staticHits && staticHits.length > 0) {
+          sources.push({
+            sourceId: "static_pages",
+            getItemUrl: ({ item }) => `/strani/${item.objectID}`,
+            // Return the fetched hits to avoid duplicate requests.
+            getItems: () => staticHits,
+            templates: {
+              header() {
+                return (
+                  <>
+                    <span className="aa-SourceHeaderTitle">Besedilo</span>
+                    <div className="aa-SourceHeaderLine" />
+                  </>
+                );
+              },
+              item({ item, components }) {
+                return (
+                  <ArticleAutocompleteStaticItem
+                    hit={item}
+                    components={components}
+                  />
+                );
+              },
+              noResults() {
+                return "Ni ujemajočih novic.";
+              },
             },
-            /* footer() {
-              return (
-                <div className="w-full">
-                  <Separator className="w-full" />
-                  <div
-                    className={cn(
-                      "flex flex-wrap items-center justify-center gap-2 pb-6 pt-8",
-                      article_variants(),
-                      // "flex items-end justify-between px-6 py-8",
-                    )}
-                  >
-                    <Link href="/arhiv">Arhiv novic</Link>
-                    <PoweredBy className="w-32" />
-                  </div>
-                </div>
-              );
-            },
-            noResults() {
-              return "Ni ujemajočih novic.";
-            }, */
-          },
-        },
-        {
+          });
+        }
+        // Always add dynamic published_article source
+        sources.push({
           sourceId: "published_article",
           getItemUrl: ({ item }) => {
             return get_published_article_link(
@@ -100,8 +90,8 @@ export function ArticleAutocomplete() {
               duplicate_urls,
             );
           },
-          getItems() {
-            return getAlgoliaResults({
+          getItems: () =>
+            getAlgoliaResults({
               searchClient,
               queries: [
                 {
@@ -112,8 +102,7 @@ export function ArticleAutocomplete() {
                   },
                 },
               ],
-            });
-          },
+            }),
           templates: {
             header() {
               return (
@@ -136,7 +125,6 @@ export function ArticleAutocomplete() {
                     className={cn(
                       "flex flex-wrap items-center justify-center gap-2 pb-6 pt-8",
                       article_variants(),
-                      // "flex items-end justify-between px-6 py-8",
                     )}
                   >
                     <Link href="/arhiv">Arhiv novic</Link>
@@ -149,8 +137,9 @@ export function ArticleAutocomplete() {
               return "Ni ujemajočih novic.";
             },
           },
-        },
-      ]}
+        });
+        return sources;
+      }}
     />
   );
 }

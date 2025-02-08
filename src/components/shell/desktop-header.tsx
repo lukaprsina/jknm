@@ -107,14 +107,8 @@ export function DesktopHeader({
         {...props}
       >
         <Link href="/" className="flex-shrink-0 gap-6 text-2xl font-bold">
-          <div className="block lg:hidden">
-            <p>Jamarski klub</p>
-            <p>Novo mesto</p>
-          </div>
-          <div className="hidden lg:block">
-            <p>Jamarski klub</p>
-            <p>Novo mesto</p>
-          </div>
+          <p>Jamarski klub</p>
+          <p>Novo mesto</p>
         </Link>
         <Link href="/" className="absolute left-1/2 -translate-x-1/2 transform">
           <Logo className="w-[150px]" />
@@ -129,11 +123,15 @@ export function DesktopHeader({
           </div>
           <div className="flex flex-col items-end gap-4">
             {/* <NoviceAutocomplete detached="" /> */}
-            <div>
-              <FacebookIcon />
-              <YoutubeIcon />
-              <IntranetIcon />
-              <ContactIcon />
+            <div className="flex items-center gap-4">
+              <div>
+                <FacebookIcon />
+                <YoutubeIcon />
+              </div>
+              <div>
+                <ContactIcon />
+                <IntranetIcon />
+              </div>
             </div>
             <ArticleAutocomplete />
           </div>

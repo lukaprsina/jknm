@@ -48,20 +48,12 @@ export function Footer() {
           </div>
           <div className="flex-1">
             <h2 className="mb-4 text-xl font-bold">Spremljajte nas</h2>
-            <ul className="flex space-x-4">
-              <li>
-                <FacebookIcon />
-              </li>
-              <li>
-                <InstagramIcon />
-              </li>
-              <li>
-                <YoutubeIcon />
-              </li>
-              <li>
-                <TwitterIcon />
-              </li>
-            </ul>
+            <div className="flex space-x-4">
+              <FacebookIcon />
+              <YoutubeIcon />
+              <InstagramIcon />
+              <TwitterIcon />
+            </div>
           </div>
         </div>
         <div className="mt-8 border-t border-gray-700 pt-8 text-center text-sm">
