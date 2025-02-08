@@ -1,6 +1,7 @@
 import { cn } from "~/lib/utils";
 import { buttonVariants } from "../ui/button";
 import Link from "next/link";
+import { MailIcon, UsersIcon } from "lucide-react";
 
 // simpleicons.org
 export function FacebookIcon() {
@@ -98,6 +99,38 @@ export function TwitterIcon() {
         <title>X</title>
         <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
       </svg>
+    </Link>
+  );
+}
+
+export function IntranetIcon() {
+  return (
+    <Link
+      href="https://www.youtube.com/@MrKlemi"
+      target="_blank"
+      className={cn(
+        buttonVariants({ variant: "ghost", size: "icon" }),
+        "h-9 w-9 rounded-full p-0 text-center",
+        "transition-colors hover:text-[#000000]",
+      )}
+    >
+      <UsersIcon />
+    </Link>
+  );
+}
+
+export function ContactIcon() {
+  return (
+    <Link
+      href="https://www.youtube.com/@MrKlemi"
+      target="_blank"
+      className={cn(
+        buttonVariants({ variant: "ghost", size: "icon" }),
+        "h-9 w-9 rounded-full p-0 text-center",
+        "transition-colors hover:text-[#000000]",
+      )}
+    >
+      <MailIcon />
     </Link>
   );
 }

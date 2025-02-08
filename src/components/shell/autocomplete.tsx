@@ -14,7 +14,7 @@ import type { PublishedArticleHit } from "~/lib/validators";
 import type { StaticHit } from "./article-autocomplete";
 
 interface AutocompleteProps {
-  detached?: string;
+  // detached?: string;
   openOnFocus: boolean;
   getSources: (props: {
     query: string;
@@ -25,7 +25,7 @@ interface AutocompleteProps {
 }
 
 // https://www.algolia.com/doc/ui-libraries/autocomplete/integrations/using-react/
-export function Autocomplete({ detached, ...props }: AutocompleteProps) {
+export function Autocomplete({ ...props }: AutocompleteProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const rootRef = useRef<HTMLElement | null>(null);
   const panelRootRef = useRef<Root | null>(null);
@@ -38,7 +38,7 @@ export function Autocomplete({ detached, ...props }: AutocompleteProps) {
     const search_api = autocomplete({
       placeholder: "Išči …",
       container: containerRef.current,
-      detachedMediaQuery: detached ?? "(max-width: 1024px)",
+      detachedMediaQuery: "(max-width: 1024px)",
       renderer: {
         createElement,
         Fragment,
@@ -80,7 +80,7 @@ export function Autocomplete({ detached, ...props }: AutocompleteProps) {
     return () => {
       search_api.destroy();
     };
-  }, [detached, props]);
+  }, [props]);
 
   return <div className="box-border flex-grow border-0" ref={containerRef} />;
 }

@@ -13,7 +13,7 @@ import type {
   PublishedArticleWithAuthors,
 } from "../article/adapter";
 import { createStore } from "zustand-x";
-import { FacebookIcon, YoutubeIcon } from "./icons";
+import { ContactIcon, FacebookIcon, IntranetIcon, YoutubeIcon } from "./icons";
 import { Navigation } from "./navigation";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { ArticleAutocomplete } from "./article-autocomplete";
@@ -112,7 +112,8 @@ export function DesktopHeader({
             <p>Novo mesto</p>
           </div>
           <div className="hidden lg:block">
-            <p>Jamarski klub Novo mesto</p>
+            <p>Jamarski klub</p>
+            <p>Novo mesto</p>
           </div>
         </Link>
         <Link href="/" className="absolute left-1/2 -translate-x-1/2 transform">
@@ -126,11 +127,15 @@ export function DesktopHeader({
               session={session}
             />
           </div>
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex flex-col items-end gap-4">
             {/* <NoviceAutocomplete detached="" /> */}
+            <div>
+              <FacebookIcon />
+              <YoutubeIcon />
+              <IntranetIcon />
+              <ContactIcon />
+            </div>
             <ArticleAutocomplete />
-            <FacebookIcon />
-            <YoutubeIcon />
           </div>
         </div>
       </div>
