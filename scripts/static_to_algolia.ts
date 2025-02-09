@@ -4,11 +4,11 @@ import { glob } from "glob";
 import fs from "fs/promises";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
-import type { Content } from "mdast";
+import type { RootContent } from "mdast";
 import path from "path";
 import { is } from "unist-util-is";
 
-function serializeNode(node: Content): string {
+function serializeNode(node: RootContent): string {
   switch (node.type) {
     case "heading":
       return `${"#".repeat(node.depth)} ${node.children.map(serializeNode).join("")}`;
@@ -58,7 +58,8 @@ async function main() {
       const sections = await splitMarkdownByHeading(file);
       const pageName = path.basename(path.dirname(file));
       return sections.map((section, i) => ({
-        objectID: `${pageName}-${i}`,
+        index: i,
+        section: pageName,
         text: section,
       }));
     }),

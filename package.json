@@ -14,7 +14,8 @@
     "devm": "cross-env NEXT_MODE='no-turbo' next dev",
     "lint": "next lint",
     "start": "next start",
-    "toc": "bun run scripts/generate_toc.ts"
+    "toc": "bun run scripts/generate_toc.ts",
+    "static": "bun run scripts/static_to_algolia.ts"
   },
   "dependencies": {
     "@algolia/autocomplete-js": "^1.17.6",
@@ -50,7 +51,7 @@
     "@radix-ui/react-aspect-ratio": "^1.1.0",
     "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-context-menu": "^2.2.1",
-    "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-dialog": "^1.1.6",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
     "@radix-ui/react-hover-card": "^1.1.1",
     "@radix-ui/react-label": "^2.1.0",
@@ -147,6 +148,7 @@
     "tailwindcss-animate": "^1.0.7",
     "unified": "^11.0.5",
     "unist-util-is": "^6.0.0",
+    "use-debounce": "^10.0.4",
     "use-dynamic-refs": "^1.0.0",
     "usehooks-ts": "^3.1.0",
     "uuid": "^10.0.0",

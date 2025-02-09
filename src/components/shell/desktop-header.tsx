@@ -16,7 +16,7 @@ import { createStore } from "zustand-x";
 import { ContactIcon, FacebookIcon, IntranetIcon, YoutubeIcon } from "./icons";
 import { Navigation } from "./navigation";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
-import { CommandBar } from "./command-bar";
+import { CommandMenu } from "./cmd-menu";
 
 export interface ShellStore {
   is_header_sticky: boolean;
@@ -129,11 +129,11 @@ export function DesktopHeader({
                 <YoutubeIcon />
               </div>
               <div>
-                <ContactIcon />
                 <IntranetIcon />
+                <ContactIcon />
               </div>
             </div>
-            <CommandBar />
+            <CommandMenu />
             {/* <ArticleAutocomplete /> */}
           </div>
         </div>

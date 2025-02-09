@@ -1,7 +1,8 @@
 import { cn } from "~/lib/utils";
-import { buttonVariants } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import Link from "next/link";
-import { MailIcon, UsersIcon } from "lucide-react";
+import { MailIcon, TrashIcon, UsersIcon } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 // simpleicons.org
 export function FacebookIcon() {
@@ -121,16 +122,21 @@ export function IntranetIcon() {
 
 export function ContactIcon() {
   return (
-    <Link
-      href="/kontakt"
-      target="_blank"
-      className={cn(
-        buttonVariants({ variant: "ghost", size: "icon" }),
-        "h-9 w-9 rounded-full p-0 text-center",
-        "transition-colors hover:text-[#000000]",
-      )}
-    >
-      <MailIcon />
-    </Link>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Link
+          href="/kontakt"
+          target="_blank"
+          className={cn(
+            buttonVariants({ variant: "ghost", size: "icon" }),
+            "h-9 w-9 rounded-full p-0 text-center",
+            "transition-colors hover:text-[#000000]",
+          )}
+        >
+          <MailIcon />
+        </Link>
+      </TooltipTrigger>
+      <TooltipContent>Kontakt</TooltipContent>
+    </Tooltip>
   );
 }
