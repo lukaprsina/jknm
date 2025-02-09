@@ -39,6 +39,6 @@
     ".eslint.config.js",
     "next-env.d.ts",
     "next.config.mjs"
-, "src/components/shell/article-autocomplete.jsx"  ],
+, "src/components/shell/article-autocomplete.tsx.old"  ],
   "exclude": ["node_modules", "src/app/(static)/**/*.mdx"]
 }
