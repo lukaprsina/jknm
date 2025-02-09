@@ -14,11 +14,9 @@ import InlineCode from "@editorjs/inline-code";
 import List from "@editorjs/list";
 // @ts-expect-error no types
 import Marker from "@editorjs/marker";
-// @ts-expect-error no types
 import Paragraph from "@editorjs/paragraph";
 import Quote from "@editorjs/quote";
 import Table from "@editorjs/table";
-// @ts-expect-error no types
 import Warning from "@editorjs/warning";
 import createGenericInlineTool, {
   UnderlineInlineTool,
@@ -72,7 +70,7 @@ export function EDITOR_JS_PLUGINS(): Record<
       },
     },
     paragraph: {
-      class: Paragraph,
+      class: Paragraph as ToolConstructable,
       inlineToolbar: true,
     },
     embed: Embed,

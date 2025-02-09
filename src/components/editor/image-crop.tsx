@@ -67,9 +67,11 @@ export function ImageCrop() {
     if (e.target.files && e.target.files.length > 0) {
       setCrop(undefined); // Makes crop preview update between images.
       const reader = new FileReader();
-      reader.addEventListener("load", () =>
-        setImgSrc(reader.result?.toString() ?? ""),
-      );
+      reader.addEventListener("load", () => {
+        if (typeof reader.result === "string") {
+          setImgSrc(reader.result);
+        }
+      });
 
       const file = e.target.files[0];
       if (!file) return;
