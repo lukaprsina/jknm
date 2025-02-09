@@ -15,6 +15,7 @@ import { type PublishedArticleHit } from "~/lib/validators";
 import { type SearchResponse } from "algoliasearch";
 import { useDebounce } from "use-debounce";
 import Link from "next/link";
+import { useSearchContext } from "./search-context";
 
 const ALGOLIA_CLIENT = algoliasearch(
   env.NEXT_PUBLIC_ALGOLIA_ID,
@@ -29,7 +30,8 @@ export type StaticHit = {
 };
 
 export function CommandMenu() {
-  const [open, setOpen] = useState(false);
+  const { isSearchOpen, setSearchOpen } = useSearchContext();
+
   const [value, setValue] = useState("");
   const [noResults, setNoResults] = useState(false);
 
@@ -41,7 +43,7 @@ export function CommandMenu() {
   const [debounced_value] = useDebounce(value, 100, { maxWait: 1500 });
 
   useEffect(() => {
-    if (!debounced_value || !open) return;
+    if (!debounced_value || !isSearchOpen) return;
 
     const callback = async () => {
       const { results } = await ALGOLIA_CLIENT.searchForHits<
@@ -73,24 +75,24 @@ export function CommandMenu() {
     };
 
     void callback();
-  }, [debounced_value, open]);
+  }, [debounced_value, isSearchOpen]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        setOpen((open) => !open);
+        setSearchOpen(!isSearchOpen);
       }
     };
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
-  }, []);
+  }, [isSearchOpen, setSearchOpen]);
 
   return (
     <CommandDialog
       commandProps={{ shouldFilter: false }}
-      open={open}
-      onOpenChange={setOpen}
+      open={isSearchOpen}
+      onOpenChange={setSearchOpen}
     >
       <VisuallyHidden>
         <DialogTitle>Command Menu</DialogTitle>
@@ -101,28 +103,39 @@ export function CommandMenu() {
       <CommandInput
         value={value}
         onValueChange={(new_value) => setValue(new_value)}
-        placeholder="Type a command or search..."
+        placeholder="Išči..."
       />
       <CommandList>
-        <CommandEmpty>
-          {noResults ? "Ni rezultatov" : "Začnite pisati ..."}
-        </CommandEmpty>
-        <CommandGroup heading="Pages">
-          {staticPages.map((item, idx) => (
-            <CommandItem asChild key={idx}>
-              <Link href={`/${item.section}`}>
-                {item.section.charAt(0).toUpperCase() + item.section.slice(1)}
-              </Link>
-            </CommandItem>
-          ))}
-        </CommandGroup>
-        <CommandGroup heading="Articles">
-          {publishedArticles.map((item, idx) => (
-            <CommandItem asChild key={idx}>
-              <Link href={`/novica/${item.url}`}>{item.title}</Link>
-            </CommandItem>
-          ))}
-        </CommandGroup>
+        {noResults && <CommandEmpty>Ni rezultatov</CommandEmpty>}
+        {value && (
+          <>
+            <CommandGroup heading="Stran">
+              {staticPages.map((item, idx) => (
+                <CommandItem
+                  asChild
+                  key={idx}
+                  onSelect={(value) => console.log("Stran Selected", value)}
+                >
+                  <Link href={`/${item.section}`}>
+                    {item.section.charAt(0).toUpperCase() +
+                      item.section.slice(1)}
+                  </Link>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+            <CommandGroup heading="Novice">
+              {publishedArticles.map((item, idx) => (
+                <CommandItem
+                  asChild
+                  key={idx}
+                  onSelect={(value) => console.log("Novice Selected", value)}
+                >
+                  <Link href={`/novica/${item.url}`}>{item.title}</Link>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </>
+        )}
       </CommandList>
     </CommandDialog>
   );

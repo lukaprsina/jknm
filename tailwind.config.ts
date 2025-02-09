@@ -1,19 +1,8 @@
 import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 // import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
-
-import colors from "tailwindcss/colors";
-
-// @ts-expect-error - bun error
-delete colors["lightBlue"];
-// @ts-expect-error - bun error
-delete colors["warmGray"];
-// @ts-expect-error - bun error
-delete colors["trueGray"];
-// @ts-expect-error - bun error
-delete colors["coolGray"];
-// @ts-expect-error - bun error
-delete colors["blueGray"];
+import tailwindcssAnimate from "tailwindcss-animate";
+import typography from "@tailwindcss/typography";
 
 export default {
   darkMode: ["class"],
@@ -159,8 +148,8 @@ export default {
     },
   },
   plugins: [
-    require("tailwindcss-animate"),
-    require("@tailwindcss/typography"),
+    tailwindcssAnimate,
+    typography,
     // addVariablesForColors,
   ],
 } satisfies Config;

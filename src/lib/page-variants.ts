@@ -33,7 +33,7 @@ export const article_grid_variants = cva(
 export const page_variants = cva("container h-full w-full pb-6 pt-8", {
   variants: {
     max_width: {
-      normal: "max-w-[800px]",
+      normal: "max-w-[700px]",
       wide: "max-w-[1280px]",
     },
     padding: {

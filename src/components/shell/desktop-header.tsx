@@ -13,7 +13,13 @@ import type {
   PublishedArticleWithAuthors,
 } from "../article/adapter";
 import { createStore } from "zustand-x";
-import { ContactIcon, FacebookIcon, IntranetIcon, YoutubeIcon } from "./icons";
+import {
+  ContactIcon,
+  FacebookIcon,
+  IntranetIcon,
+  SearchIcon,
+  YoutubeIcon,
+} from "./icons";
 import { Navigation } from "./navigation";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { CommandMenu } from "./cmd-menu";
@@ -124,13 +130,14 @@ export function DesktopHeader({
           <div className="flex flex-col items-end gap-4">
             {/* <NoviceAutocomplete detached="" /> */}
             <div className="flex items-center gap-4">
+              <SearchIcon />
               <div>
                 <FacebookIcon />
                 <YoutubeIcon />
               </div>
               <div>
-                <IntranetIcon />
                 <ContactIcon />
+                <IntranetIcon />
               </div>
             </div>
             <CommandMenu />

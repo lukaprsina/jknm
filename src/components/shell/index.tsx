@@ -9,6 +9,7 @@ import type {
 import React from "react";
 import { Separator } from "../ui/separator";
 import { MobileHeader } from "./mobile-header";
+import { SearchProvider } from "./search-context";
 
 interface ShellProps {
   children: React.ReactNode;
@@ -32,51 +33,53 @@ export async function Shell({
   const session = await getServerAuthSession();
 
   return (
-    <div className={cn("w-full", className)}>
-      {!without_header ? (
-        <header className="h-20 w-full bg-blue-50 md:h-auto">
-          <DesktopHeader
-            published_article={published_article}
-            draft_article={draft_article}
-            className="hidden md:flex"
-            session={session}
-          />
-          <MobileHeader
-            published_article={published_article}
-            draft_article={draft_article}
-            className="flex md:hidden"
-            session={session}
-          />
-        </header>
-      ) : undefined}
-      <div /* className={"flex justify-start gap-2 not_center:justify-center"} */
-      >
-        <aside
-          id="shell-aside"
-          className={cn(
-            // "fixed left-0 h-full w-[300px] flex-shrink-0",
-            "fixed flex h-full w-full items-center justify-center",
-            // ? "md:block" :
-            !show_aside && "hidden",
-          )}
-        />
-        <main
-          className={cn(
-            "w-full",
-            show_aside &&
-              "md:ml-[300px] md:flex-1 md:flex-grow not_center:ml-0",
-          )}
-          id="shell-main"
+    <SearchProvider>
+      <div className={cn("w-full", className)}>
+        {!without_header ? (
+          <header className="h-20 w-full bg-blue-50 md:h-auto">
+            <DesktopHeader
+              published_article={published_article}
+              draft_article={draft_article}
+              className="hidden md:flex"
+              session={session}
+            />
+            <MobileHeader
+              published_article={published_article}
+              draft_article={draft_article}
+              className="flex md:hidden"
+              session={session}
+            />
+          </header>
+        ) : undefined}
+        <div /* className={"flex justify-start gap-2 not_center:justify-center"} */
         >
-          {children}
-        </main>
+          <aside
+            id="shell-aside"
+            className={cn(
+              // "fixed left-0 h-full w-[300px] flex-shrink-0",
+              "fixed flex h-full w-full items-center justify-center",
+              // ? "md:block" :
+              !show_aside && "hidden",
+            )}
+          />
+          <main
+            className={cn(
+              "w-full",
+              show_aside &&
+                "md:ml-[300px] md:flex-1 md:flex-grow not_center:ml-0",
+            )}
+            id="shell-main"
+          >
+            {children}
+          </main>
+        </div>
+        {without_footer ? undefined : (
+          <>
+            <Separator />
+            <Footer />
+          </>
+        )}
       </div>
-      {without_footer ? undefined : (
-        <>
-          <Separator />
-          <Footer />
-        </>
-      )}
-    </div>
+    </SearchProvider>
   );
 }
