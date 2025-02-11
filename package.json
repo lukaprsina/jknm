@@ -184,7 +184,6 @@
     "prettier-plugin-tailwindcss": "^0.6.5",
     "tailwindcss": "^3.4.3",
     "tailwindcss-animate": "^1.0.7",
-    "tailwindcss-animated": "^2.0.0",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.0-alpha.62"
   },
