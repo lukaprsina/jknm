@@ -22,22 +22,21 @@ export function ImageWithCaption({
   );
 
   useEffect(() => {
-    const props_src = src;
-    if (typeof props_src !== "string")
-      throw new Error("Image src should be string");
+    if (typeof src !== "string") throw new Error("Image src should be string");
 
-    const image_size = image_sizes.find((size) => size.path === props_src);
+    const new_src = `https://cdn-content.${env.NEXT_PUBLIC_SITE_DOMAIN}/${src}`;
+    const image_size = image_sizes.find((size) => size.path === src);
     if (!image_size) throw new Error("Image size not found");
 
     setImageData({
       file: {
-        url: image_size.path,
+        url: new_src,
         width: image_size.size.width,
         height: image_size.size.height,
       },
       caption: caption as string,
     });
-  }, [caption, props, src]);
+  }, [caption, src]);
 
   useEffect(() => {
     if (!imageData) return;
