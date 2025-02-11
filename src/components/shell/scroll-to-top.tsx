@@ -18,8 +18,6 @@ const ScrollToTop: React.FC = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (isHidden) return null;
-
   return (
     <div
       onAnimationEnd={() => {
@@ -28,7 +26,8 @@ const ScrollToTop: React.FC = () => {
         }
       }}
       className={cn(
-        "fixed bottom-5 right-5",
+        "fixed bottom-5 right-5 z-50 transition-all duration-300",
+        isHidden ? "invisible opacity-0" : "visible opacity-100",
         enabled
           ? "animate-in fade-in slide-in-from-top"
           : "animate-out fade-out slide-out-to-top",
