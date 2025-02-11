@@ -7,6 +7,8 @@ import { PublishedContent, TabbedContent } from "~/components/content";
 import type { Metadata, ResolvingMetadata } from "next";
 import DOMPurify from "isomorphic-dompurify";
 import { get_article_by_published_url } from "~/server/article/get-article";
+import { ScrollProvider } from "~/contexts/ScrollContext";
+import ScrollToTop from "~/components/shell/scroll-to-top";
 
 interface NovicaProps {
   params: Promise<{
@@ -15,13 +17,14 @@ interface NovicaProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-export async function generateMetadata(props: NovicaProps, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(
+  props: NovicaProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   const searchParams = await props.searchParams;
   const params = await props.params;
 
-  const {
-    published_url
-  } = params;
+  const { published_url } = params;
 
   const { published } = await get_articles(published_url, searchParams);
   const awaited_parent = await parent;
@@ -47,9 +50,7 @@ export default async function NovicaPage(props: NovicaProps) {
   const searchParams = await props.searchParams;
   const params = await props.params;
 
-  const {
-    published_url
-  } = params;
+  const { published_url } = params;
 
   const session = await getServerAuthSession();
 
@@ -65,12 +66,15 @@ export default async function NovicaPage(props: NovicaProps) {
 
   return (
     <Shell draft_article={draft} published_article={published}>
-      {session ? (
-        <TabbedContent draft={draft} published={published} />
-      ) : (
-        <PublishedContent article={published} />
-      )}
-      <ImageGallery />
+      <ScrollProvider>
+        <ScrollToTop />
+        {session ? (
+          <TabbedContent draft={draft} published={published} />
+        ) : (
+          <PublishedContent article={published} />
+        )}
+        <ImageGallery />
+      </ScrollProvider>
     </Shell>
   );
 }
