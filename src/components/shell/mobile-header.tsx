@@ -28,6 +28,13 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { usePathname } from "next/navigation";
 import { cn } from "~/lib/utils";
 import { shell_store } from "./desktop-header";
+import {
+  IntranetIcon,
+  FacebookIcon,
+  ContactIcon,
+  SearchIcon,
+  YoutubeIcon,
+} from "./icons";
 
 export const mobile_nav_store = createStore("mobile-nav")<{ open: boolean }>({
   open: false,
@@ -151,10 +158,17 @@ export function MobileSheet({
           </div>
           <SheetTitle>Jamarski klub Novo mesto</SheetTitle>
           <VisuallyHidden>
-            <SheetDescription>mobile navigation bar</SheetDescription>
+            <SheetDescription>Mobile navigation bar</SheetDescription>
           </VisuallyHidden>
         </SheetHeader>
         <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-24 pl-6">
+          <div className="flex w-full items-center justify-between pb-4 pt-2">
+            <SearchIcon />
+            <FacebookIcon />
+            <YoutubeIcon />
+            <ContactIcon />
+            <IntranetIcon />
+          </div>
           {links.map((link) => (
             <Fragment key={link.href}>
               <Link

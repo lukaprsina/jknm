@@ -24,6 +24,8 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Call handleScroll on mount
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, [enabled]);
 

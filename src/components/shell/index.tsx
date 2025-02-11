@@ -10,6 +10,7 @@ import React from "react";
 import { Separator } from "../ui/separator";
 import { MobileHeader } from "./mobile-header";
 import { SearchProvider } from "./search-context";
+import { Searchbar } from "./searchbar";
 
 interface ShellProps {
   children: React.ReactNode;
@@ -36,7 +37,8 @@ export async function Shell({
     <SearchProvider>
       <div className={cn("w-full", className)}>
         {!without_header ? (
-          <header className="h-20 w-full bg-blue-50 md:h-auto">
+          /* TODO: bg gradient */
+          <header className="h-20 w-full bg-gradient-to-b from-[#BBB] to-gray-50 text-gray-800 md:h-auto">
             <DesktopHeader
               published_article={published_article}
               draft_article={draft_article}
@@ -80,6 +82,7 @@ export async function Shell({
           </>
         )}
       </div>
+      <Searchbar />
     </SearchProvider>
   );
 }

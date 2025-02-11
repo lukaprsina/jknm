@@ -5,6 +5,50 @@ import Link from "next/link";
 import React, { type HTMLProps, type ReactNode } from "react";
 import slugify from "slugify";
 
+export function useMDXComponents(components: MDXComponents): MDXComponents {
+  return {
+    table: ({ children, ...props }: HTMLProps<HTMLTableElement>) => (
+      <table {...props}>{clean_children(children)}</table>
+    ),
+    thead: ({ children, ...props }: HTMLProps<HTMLTableSectionElement>) => (
+      <thead {...props}>{clean_children(children)}</thead>
+    ),
+    tr: ({ children, ...props }: HTMLProps<HTMLTableRowElement>) => (
+      <tr {...props}>{clean_children(children)}</tr>
+    ),
+    tbody: ({ children, ...props }: HTMLProps<HTMLTableSectionElement>) => (
+      <tbody {...props}>{clean_children(children)}</tbody>
+    ),
+    strong: (props) => <b {...props} />,
+    a: ({ href, ref: _, ...props }) => {
+      if (typeof href === "undefined") throw new Error("href is undefined");
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      return <Link target="_blank" href={href} {...props} />;
+    },
+    TableOfContents,
+    Image: (props) => <ImageWithCaption {...props} />,
+    h1: (props: HTMLProps<HTMLHeadingElement>) => (
+      <HeadingWithSlug {...props} level={1} />
+    ),
+    h2: (props: HTMLProps<HTMLHeadingElement>) => (
+      <HeadingWithSlug {...props} level={2} />
+    ),
+    h3: (props: HTMLProps<HTMLHeadingElement>) => (
+      <HeadingWithSlug {...props} level={3} />
+    ),
+    h4: (props: HTMLProps<HTMLHeadingElement>) => (
+      <HeadingWithSlug {...props} level={4} />
+    ),
+    h5: (props: HTMLProps<HTMLHeadingElement>) => (
+      <HeadingWithSlug {...props} level={5} />
+    ),
+    h6: (props: HTMLProps<HTMLHeadingElement>) => (
+      <HeadingWithSlug {...props} level={6} />
+    ),
+    ...components,
+  };
+}
+
 function clean_children(children: ReactNode): ReactNode {
   if (!children) throw new Error("table children is undefined");
 
@@ -67,48 +111,4 @@ function HeadingWithSlug({
     default:
       throw new Error("Invalid heading level");
   }
-}
-
-export function useMDXComponents(components: MDXComponents): MDXComponents {
-  return {
-    table: ({ children, ...props }: HTMLProps<HTMLTableElement>) => (
-      <table {...props}>{clean_children(children)}</table>
-    ),
-    thead: ({ children, ...props }: HTMLProps<HTMLTableSectionElement>) => (
-      <thead {...props}>{clean_children(children)}</thead>
-    ),
-    tr: ({ children, ...props }: HTMLProps<HTMLTableRowElement>) => (
-      <tr {...props}>{clean_children(children)}</tr>
-    ),
-    tbody: ({ children, ...props }: HTMLProps<HTMLTableSectionElement>) => (
-      <tbody {...props}>{clean_children(children)}</tbody>
-    ),
-    strong: (props) => <b {...props} />,
-    a: ({ href, ref: _, ...props }) => {
-      if (typeof href === "undefined") throw new Error("href is undefined");
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      return <Link target="_blank" href={href} {...props} />;
-    },
-    TableOfContents,
-    Image: (props) => <ImageWithCaption {...props} />,
-    h1: (props: HTMLProps<HTMLHeadingElement>) => (
-      <HeadingWithSlug {...props} level={1} />
-    ),
-    h2: (props: HTMLProps<HTMLHeadingElement>) => (
-      <HeadingWithSlug {...props} level={2} />
-    ),
-    h3: (props: HTMLProps<HTMLHeadingElement>) => (
-      <HeadingWithSlug {...props} level={3} />
-    ),
-    h4: (props: HTMLProps<HTMLHeadingElement>) => (
-      <HeadingWithSlug {...props} level={4} />
-    ),
-    h5: (props: HTMLProps<HTMLHeadingElement>) => (
-      <HeadingWithSlug {...props} level={5} />
-    ),
-    h6: (props: HTMLProps<HTMLHeadingElement>) => (
-      <HeadingWithSlug {...props} level={6} />
-    ),
-    ...components,
-  };
 }

@@ -4,7 +4,7 @@ import { FacebookIcon, InstagramIcon, TwitterIcon, YoutubeIcon } from "./icons";
 
 export function Footer() {
   return (
-    <footer className="bg-gray-900 py-12 text-white">
+    <footer className="bg-[#333333] py-12 text-white">
       <div className="container mx-auto px-4">
         <div className="flex flex-col justify-between space-y-8 md:flex-row md:space-x-8 md:space-y-0">
           <div className="flex-1">

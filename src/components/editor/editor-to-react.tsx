@@ -140,7 +140,7 @@ export function EditorToReact({
   );
 }
 
-const DOUBLE_IMAGES = false as boolean;
+const DOUBLE_IMAGES = true as boolean;
 
 export const NextImageRenderer: RenderFn<EditorJSImageData> = ({
   data,
@@ -180,8 +180,8 @@ export const NextImageRenderer: RenderFn<EditorJSImageData> = ({
           className,
           !image_props.dimensions_exist && "object-contain",
         )}
-        src={data.file.url}
         alt={data.caption}
+        src={data.file.url}
         width={image_props.width}
         height={image_props.height}
         priority={true}

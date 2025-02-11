@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ArrowBigUpIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { useScroll } from "~/contexts/ScrollContext";
+import { useScroll } from "~/contexts/scroll-context";
 import { cn } from "~/lib/utils";
 
 const ScrollToTop: React.FC = () => {
@@ -14,18 +14,19 @@ const ScrollToTop: React.FC = () => {
   };
 
   return (
-    <div
+    <Button
       className={cn(
-        "fixed bottom-5 right-5 z-50 transition-all duration-300 fill-mode-forwards",
+        "fixed bottom-5 right-5 z-50 shadow-2xl transition-all duration-300 fill-mode-forwards",
         enabled
           ? "animate-in fade-in slide-in-from-top"
           : "animate-out fade-out slide-out-to-top",
       )}
+      variant="outline"
+      size="icon"
+      onClick={handleClick}
     >
-      <Button variant="outline" size="icon" onClick={handleClick}>
-        <ArrowBigUpIcon />
-      </Button>
-    </div>
+      <ArrowBigUpIcon />
+    </Button>
   );
 };
 

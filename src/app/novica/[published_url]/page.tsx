@@ -7,7 +7,7 @@ import { PublishedContent, TabbedContent } from "~/components/content";
 import type { Metadata, ResolvingMetadata } from "next";
 import DOMPurify from "isomorphic-dompurify";
 import { get_article_by_published_url } from "~/server/article/get-article";
-import { ScrollProvider } from "~/contexts/ScrollContext";
+import { ScrollProvider } from "~/contexts/scroll-context";
 import ScrollToTop from "~/components/shell/scroll-to-top";
 
 interface NovicaProps {
@@ -67,13 +67,13 @@ export default async function NovicaPage(props: NovicaProps) {
   return (
     <Shell draft_article={draft} published_article={published}>
       <ScrollProvider>
-        <ScrollToTop />
         {session ? (
           <TabbedContent draft={draft} published={published} />
         ) : (
           <PublishedContent article={published} />
         )}
         <ImageGallery />
+        <ScrollToTop />
       </ScrollProvider>
     </Shell>
   );

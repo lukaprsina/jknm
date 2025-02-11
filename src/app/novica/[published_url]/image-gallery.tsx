@@ -15,6 +15,9 @@ import {
 import { gallery_store } from "~/components/gallery-store";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import type { EditorJSImageData } from "~/lib/editor-utils";
+import { Button } from "~/components/ui/button";
+import { XIcon } from "lucide-react";
+import { cn } from "~/lib/utils";
 
 const GALLERY_CANCEL_KEYS: string[] = [
   "Escape",
@@ -179,9 +182,26 @@ export function MyCarousel({ first_image_src }: { first_image_src?: string }) {
         <>
           <CarouselPrevious ref={previous_ref} />
           <CarouselNext ref={next_ref} />
+          <CloseButton className="-right-12 top-0 -translate-y-1/2" />
         </>
       )}
+      {!md_breakpoint && <CloseButton className="right-0 top-0 m-4" />}
     </Carousel>
+  );
+}
+
+function CloseButton({ className }: { className?: string }) {
+  return (
+    <Button
+      variant="outline"
+      size="icon"
+      className={cn(className, "absolute h-8 w-8 rounded-full")}
+      onClick={() => {
+        gallery_store.set.default_image(undefined);
+      }}
+    >
+      <XIcon />
+    </Button>
   );
 }
 
@@ -220,7 +240,7 @@ function GalleryImage({
           width={width}
           height={height}
           style={{
-            objectFit: "contain",
+            objectFit: "scale-down",
             width: "100%",
             height: "auto",
           }}
