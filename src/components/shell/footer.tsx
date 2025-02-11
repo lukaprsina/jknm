@@ -27,7 +27,7 @@ export function Footer() {
             </div>
           </div>
           <div className="flex-1">
-            <h2 className="mb-4 text-xl font-bold">Kontakt</h2>
+            <h2 className="mb-4 text-xl font-bold">Stik z nami</h2>
             <ul className="space-y-2">
               <li className="flex items-center">
                 <Mail className="mr-2 h-5 w-5" />
@@ -41,7 +41,7 @@ export function Footer() {
               <li className="flex items-center">
                 <Phone className="mr-2 h-5 w-5" />
                 <Link href="tel:+38641871385" className="hover:text-gray-300">
-                  +386 (0)41 871 385 Zdravko Bučar
+                  +386 (0)41 871 385, Zdravko Bučar
                 </Link>
               </li>
             </ul>

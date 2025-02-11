@@ -14,7 +14,7 @@ import { liteClient as algoliasearch } from "algoliasearch/lite";
 import { type PublishedArticleHit } from "~/lib/validators";
 import { type SearchResponse } from "algoliasearch";
 import { useDebounce } from "use-debounce";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useSearchContext } from "./search-context";
 
 const ALGOLIA_CLIENT = algoliasearch(
@@ -29,7 +29,7 @@ export type StaticHit = {
   section: string;
 };
 
-export function CommandMenu() {
+export function Searchbar() {
   const { isSearchOpen, setSearchOpen } = useSearchContext();
 
   const [value, setValue] = useState("");
@@ -41,6 +41,8 @@ export function CommandMenu() {
   >([]);
 
   const [debounced_value] = useDebounce(value, 100, { maxWait: 1500 });
+
+  const router = useRouter();
 
   useEffect(() => {
     if (!debounced_value || !isSearchOpen) return;
@@ -103,34 +105,29 @@ export function CommandMenu() {
       <CommandInput
         value={value}
         onValueChange={(new_value) => setValue(new_value)}
-        placeholder="Išči..."
+        placeholder="Iskanje"
       />
       <CommandList>
         {noResults && <CommandEmpty>Ni rezultatov</CommandEmpty>}
         {value && (
           <>
-            <CommandGroup heading="Stran">
+            <CommandGroup heading="Vsebina">
               {staticPages.map((item, idx) => (
                 <CommandItem
-                  asChild
                   key={idx}
-                  onSelect={(value) => console.log("Stran Selected", value)}
+                  onSelect={() => router.push(`/${item.section}`)}
                 >
-                  <Link href={`/${item.section}`}>
-                    {item.section.charAt(0).toUpperCase() +
-                      item.section.slice(1)}
-                  </Link>
+                  {item.section.charAt(0).toUpperCase() + item.section.slice(1)}
                 </CommandItem>
               ))}
             </CommandGroup>
             <CommandGroup heading="Novice">
               {publishedArticles.map((item, idx) => (
                 <CommandItem
-                  asChild
                   key={idx}
-                  onSelect={(value) => console.log("Novice Selected", value)}
+                  onSelect={() => router.push(`/novica/${item.url}`)}
                 >
-                  <Link href={`/novica/${item.url}`}>{item.title}</Link>
+                  {item.title}
                 </CommandItem>
               ))}
             </CommandGroup>

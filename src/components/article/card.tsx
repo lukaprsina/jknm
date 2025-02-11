@@ -14,6 +14,7 @@ import { LinkIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { useToast } from "~/hooks/use-toast";
 import { get_base_url } from "~/lib/get-base-url";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 /* const ArticleDescription = dynamic(() => import("./description"), {
   ssr: false,
   loading: () => <Skeleton className="h-[1em] w-[300px] bg-[hsl(0_0%_90%)]" />,
@@ -99,28 +100,33 @@ export function ArticleCard({
                 }}
               />
               {typeof id === "number" && (
-                <Button
-                  className={cn(
-                    "flex-shrink-0 opacity-100 transition-opacity",
-                    !hoverLink && "opacity-0",
-                  )}
-                  size="icon"
-                  variant="ghost"
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const article_url = `${get_base_url(true)}/novica/?id=${id}`;
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      className={cn(
+                        "flex-shrink-0 opacity-100 transition-opacity",
+                        !hoverLink && "opacity-0",
+                      )}
+                      size="icon"
+                      variant="ghost"
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const article_url = `${get_base_url(true)}/novica/?id=${id}`;
 
-                    toaster.toast({
-                      title: "Trajna povezava kopirana v odložišče.",
-                      description: article_url,
-                    });
+                        toaster.toast({
+                          title: "Trajna povezava je kopirana v odložišče.",
+                          description: article_url,
+                        });
 
-                    await navigator.clipboard.writeText(article_url);
-                  }}
-                >
-                  <LinkIcon size={18} />
-                </Button>
+                        await navigator.clipboard.writeText(article_url);
+                      }}
+                    >
+                      <LinkIcon size={18} />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Kopiraj trajno povezavo</TooltipContent>
+                </Tooltip>
               )}
             </div>
             <div className="flex w-full justify-between gap-2">

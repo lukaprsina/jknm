@@ -22,7 +22,7 @@ import {
 } from "./icons";
 import { Navigation } from "./navigation";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
-import { CommandMenu } from "./cmd-menu";
+import { Searchbar } from "./searchbar";
 
 export interface ShellStore {
   is_header_sticky: boolean;
@@ -140,7 +140,7 @@ export function DesktopHeader({
                 <IntranetIcon />
               </div>
             </div>
-            <CommandMenu />
+            <Searchbar />
             {/* <ArticleAutocomplete /> */}
           </div>
         </div>

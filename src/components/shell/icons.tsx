@@ -64,7 +64,7 @@ export function YoutubeIcon() {
           </svg>
         </Link>
       </TooltipTrigger>
-      <TooltipContent>Youtube</TooltipContent>
+      <TooltipContent>YouTube</TooltipContent>
     </Tooltip>
   );
 }
@@ -143,7 +143,7 @@ export function IntranetIcon() {
           <UsersIcon />
         </Link>
       </TooltipTrigger>
-      <TooltipContent>Intranet za člane</TooltipContent>
+      <TooltipContent>Prijava</TooltipContent>
     </Tooltip>
   );
 }
@@ -168,7 +168,7 @@ export function SearchIcon() {
           <LucideSearchIcon />
         </Button>
       </TooltipTrigger>
-      <TooltipContent>Išči ...</TooltipContent>
+      <TooltipContent>Iskanje</TooltipContent>
     </Tooltip>
   );
 }
@@ -189,7 +189,7 @@ export function ContactIcon() {
           <MailIcon />
         </Link>
       </TooltipTrigger>
-      <TooltipContent>Kontakt</TooltipContent>
+      <TooltipContent>Stik z nami</TooltipContent>
     </Tooltip>
   );
 }
