@@ -29,6 +29,7 @@ export const env = createEnv({
     ALGOLIA_ADMIN_KEY: z.string(),
     JKNM_WORKSPACE_ID: z.string(),
     JKNM_SERVICE_ACCOUNT_CREDENTIALS: z.string(),
+    RESEND_API_KEY: z.string(),
   },
 
   /**
@@ -86,6 +87,7 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
     NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME:
       process.env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

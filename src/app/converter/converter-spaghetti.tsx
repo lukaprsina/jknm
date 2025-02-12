@@ -16,7 +16,7 @@ import {
 import { get_authors } from "./get-authors";
 import { parse_node } from "./parse-node";
 import { read_from_xml } from "./xml-server";
-import { PROBLEMATIC_CONSTANTS } from "./info/problematic";
+import { PROBLEMATIC_CONSTANTS } from "./_info/problematic";
 import { convert_title_to_url } from "~/lib/article-utils";
 import type { Author, PublishArticleSchema } from "~/server/db/schema";
 import type { z } from "zod";
