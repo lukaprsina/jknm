@@ -9,6 +9,7 @@ import {
 
 const resend = new Resend(env.RESEND_API_KEY);
 
+/* TODO: zamenjaj domeno na jknm.si */
 export async function POST(req: Request) {
   try {
     const values = (await req.json()) as z.infer<typeof contact_form_schema>;

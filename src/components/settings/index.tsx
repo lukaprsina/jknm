@@ -15,14 +15,12 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import Link from "next/link";
-import { useToast } from "~/hooks/use-toast";
 import React from "react";
 // import { AuthorsDialog } from "./authors";
 // import { useState } from "react";
 
 export function SettingsDropdown() {
   const router = useRouter();
-  const toaster = useToast();
 
   // TODO: to bi moral biti dialog.
   /* const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation({

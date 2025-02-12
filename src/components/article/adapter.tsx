@@ -13,7 +13,6 @@ import { convert_content_to_text } from "~/lib/content-to-text";
 import {
   get_draft_article_link,
   get_published_article_link,
-  get_s3_draft_directory,
   get_s3_published_directory,
 } from "~/lib/article-utils";
 

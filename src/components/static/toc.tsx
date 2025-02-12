@@ -5,12 +5,12 @@ import { useEffect, useState } from "react";
 
 function get_toc_ids(toc: Toc): string[] {
   const ids: string[] = [];
-  for(const heading of toc){
-    if(heading.id){
+  for (const heading of toc) {
+    if (heading.id) {
       ids.push(heading.id);
     }
 
-    if(heading.children){
+    if (heading.children) {
       ids.push(...get_toc_ids(heading.children));
     }
   }
@@ -18,14 +18,14 @@ function get_toc_ids(toc: Toc): string[] {
 }
 
 function get_heading_depth(toc: Toc, target_id: string): number | undefined {
-  for(const heading of toc){
-    if(heading.id === target_id){
+  for (const heading of toc) {
+    if (heading.id === target_id) {
       return heading.depth;
     }
 
-    if(heading.children){
+    if (heading.children) {
       const depth = get_heading_depth(heading.children, target_id);
-      if(depth) return depth;
+      if (depth) return depth;
     }
   }
 }
@@ -43,7 +43,7 @@ const useActiveHeading = (toc: Toc) => {
           if (!id) return;
 
           const depth = get_heading_depth(toc, id);
-          if(typeof depth === "undefined") return;
+          if (typeof depth === "undefined") return;
 
           if (entry.isIntersecting) {
             setActiveHeadings((prev) => ({
@@ -59,7 +59,7 @@ const useActiveHeading = (toc: Toc) => {
           }
         });
       },
-      {threshold: 0}
+      { threshold: 0 },
       // { rootMargin: "0px 0px -50% 0px" }, // Adjust this threshold based on when you want to trigger visibility
     );
 
@@ -74,16 +74,12 @@ const useActiveHeading = (toc: Toc) => {
         (element) => element && observer.unobserve(element),
       );
     };
-  }, [toc]);
+  }, [toc, activeHeadings]);
 
   return activeHeadings;
 };
 
-export function TableOfContents({
-  tableOfContents,
-}: {
-  tableOfContents: Toc;
-}) {
+export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
   const activeHeadings = useActiveHeading(tableOfContents);
 
   console.log("TableOfContents", activeHeadings);

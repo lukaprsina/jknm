@@ -14,12 +14,6 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import { env } from "~/env";
-import { Resend } from "resend";
-import {
-  AdminContactEmailTemplate,
-  UserContactEmailTemplate,
-} from "../../components/email-template";
 
 export const contact_form_schema = z.object({
   email: z.string(),
