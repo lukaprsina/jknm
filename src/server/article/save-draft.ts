@@ -7,6 +7,7 @@ import { asc, eq } from "drizzle-orm";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { save_draft_validator } from "./validators";
 import { getServerAuthSession } from "../auth";
+import { assert_one } from "~/lib/assert-length";
 
 export async function save_draft(input: z.infer<typeof save_draft_validator>) {
   const session = await getServerAuthSession();
@@ -22,13 +23,13 @@ export async function save_draft(input: z.infer<typeof save_draft_validator>) {
   const transaction = db.transaction(async (tx) => {
     // console.log("saving draft input", input);
 
-    const updated_draft = await tx
+    const updated_drafts = await tx
       .update(DraftArticle)
       .set(input.article)
       .where(eq(DraftArticle.id, input.draft_id))
       .returning();
 
-    if (updated_draft.length !== 1) throw new Error("Draft not found");
+    assert_one(updated_drafts);
 
     await tx
       .delete(DraftArticlesToAuthors)

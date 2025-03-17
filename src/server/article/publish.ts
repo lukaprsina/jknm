@@ -49,9 +49,13 @@ export async function publish(input: z.infer<typeof publish_validator>) {
       });
 
       // console.log("publishing draft_article has draft_id", { draft });
-      if (!draft_article) throw new Error("Draft not found");
-
-      if (draft_article.published_id) {
+      if (!draft_article) {
+        console.warn(
+          "Draft not found for draft_id",
+          input.draft_id,
+          ". Continuing to publish as new article.",
+        );
+      } else if (draft_article.published_id) {
         published_article = await tx.query.PublishedArticle.findFirst({
           where: eq(PublishedArticle.id, draft_article.published_id),
         });

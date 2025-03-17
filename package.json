@@ -117,16 +117,16 @@
     "klona": "^2.0.6",
     "lucide-react": "^0.438.0",
     "mime": "^4.0.4",
-    "next": "^15.1.1-canary.5",
+    "next": "^15.3.0-canary.10",
     "next-auth": "^4.24.7",
     "nextjs-better-unstable-cache": "^1.1.0",
     "node-dir": "^0.1.17",
     "node-html-parser": "^6.1.13",
     "postgres": "^3.4.4",
-    "react": "19.0.0-rc-66855b96-20241106",
+    "react": "^19.0.0",
     "react-date-picker": "^11.0.0",
     "react-day-picker": "9.0.4",
-    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "react-dom": "^19.0.0",
     "react-hook-form": "^7.53.0",
     "react-image-crop": "^11.0.7",
     "react-instantsearch": "^7.13.9",
@@ -163,8 +163,8 @@
     "@tailwindcss/typography": "^0.5.15",
     "@types/eslint": "^8.56.10",
     "@types/node": "^22.10.5",
-    "@types/react": "^18.2.25",
-    "@types/react-dom": "npm:types-react-dom@latest",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.1.0",
     "@typescript-eslint/parser": "^8.1.0",
@@ -190,9 +190,5 @@
   },
   "ct3aMetadata": {
     "initVersion": "7.37.0"
-  },
-  "overrides": {
-    "@types/react": "18.2.25",
-    "@types/react-dom": "npm:types-react-dom@latest"
   }
 }
