@@ -41,8 +41,8 @@ export function Footer() {
               <li className="flex items-center">
                 <Phone className="mr-2 h-5 w-5" />
                 <Link href="tel:+38641871385" className="hover:text-gray-300">
-                  +386 (0)41 871 385, Zdravko Bučar
-                </Link>
+                  +386 (0)41 871 385
+                </Link>, Zdravko Bučar
               </li>
             </ul>
           </div>
