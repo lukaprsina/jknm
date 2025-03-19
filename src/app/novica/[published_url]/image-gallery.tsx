@@ -205,6 +205,7 @@ function CloseButton({ className }: { className?: string }) {
   );
 }
 
+/* TODO: IMAGE GALLERY NOT FIXED YET */
 function GalleryImage({
   image,
   ref,

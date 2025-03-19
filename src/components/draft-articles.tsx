@@ -7,8 +7,8 @@ import {
 import { article_variants, article_grid_variants } from "~/lib/page-variants";
 import { DraftArticleDrizzleCard } from "./article/adapter";
 import { db } from "~/server/db";
-import { asc } from "drizzle-orm";
-import { DraftArticlesToAuthors } from "~/server/db/schema";
+import { asc, desc } from "drizzle-orm";
+import { DraftArticle, DraftArticlesToAuthors } from "~/server/db/schema";
 import { memoize } from "nextjs-better-unstable-cache";
 
 export const cachedDrafts = memoize(
@@ -22,6 +22,7 @@ export const cachedDrafts = memoize(
           orderBy: asc(DraftArticlesToAuthors.order),
         },
       },
+      orderBy: desc(DraftArticle.updated_at),
     });
 
     console.log(
