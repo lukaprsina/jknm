@@ -69,6 +69,7 @@
     "@stefanprobst/rehype-extract-toc": "^3.0.0",
     "@svgr/webpack": "^8.1.0",
     "@t3-oss/env-nextjs": "^0.13.4",
+    "@tailwindcss/postcss": "^4.1.5",
     "@tanstack/query-sync-storage-persister": "^5.54.1",
     "@tanstack/react-query": "^5.50.0",
     "@tanstack/react-query-devtools": "^5.55.0",
@@ -84,7 +85,7 @@
     "algoliasearch": "^5.10.0",
     "b2-js": "^1.2.4",
     "babel-plugin-react-compiler": "^19.1.0-rc.1",
-    "class-variance-authority": "^0.7.0",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
     "csv-parse": "^5.5.6",
@@ -154,8 +155,7 @@
     "uuid": "^11.1.0",
     "vaul": "^1.1.2",
     "zod": "^3.23.8",
-    "zustand": "^5.0.4",
-    "zustand-x": "^6.1.0"
+    "zustand": "^5.0.4"
   },
   "devDependencies": {
     "@eslint/compat": "^1.1.1",
@@ -180,11 +180,12 @@
     "eslint-plugin-react": "^7.35.2",
     "eslint-plugin-react-hooks": "^5.2.0",
     "htmlparser2": "^10.0.0",
-    "postcss": "^8.4.39",
+    "postcss": "^8.5.3",
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "tailwindcss": "3.4.17",
+    "tailwindcss": "^4.1.5",
     "tailwindcss-animate": "^1.0.7",
+    "tw-animate-css": "^1.2.9",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.0-alpha.62"
   },

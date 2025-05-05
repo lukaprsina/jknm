@@ -22,8 +22,7 @@ import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
 } from "../article/adapter";
-import { createStore } from "zustand-x";
-import { useBreakpoint } from "~/hooks/use-breakpoint";
+import { createStore } from "zustand";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { usePathname } from "next/navigation";
 import { cn } from "~/lib/utils";
@@ -35,6 +34,7 @@ import {
   SearchIcon,
   YoutubeIcon,
 } from "./icons";
+import { useMediaQuery } from "usehooks-ts";
 
 export const mobile_nav_store = createStore("mobile-nav")<{ open: boolean }>({
   open: false,
@@ -52,7 +52,7 @@ export function MobileHeader({
   session: Session | null;
 }) {
   const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
-  const md_breakpoint = useBreakpoint("md");
+  const md_breakpoint = useMediaQuery("(min-width: 48rem)");
 
   useEffect(() => {
     // console.log("mobile md_breakpoint", md_breakpoint);
@@ -76,7 +76,7 @@ export function MobileHeader({
     <div
       ref={sticky_navbar_ref}
       className={cn(
-        "fixed top-0 z-40 flex w-full items-center justify-between bg-white/90 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        "supports-[backdrop-filter]:bg-background/60 fixed top-0 z-40 flex w-full items-center justify-between bg-white/90 px-6 py-4 backdrop-blur",
         className,
       )}
       {...props}
@@ -162,7 +162,7 @@ export function MobileSheet({
           </VisuallyHidden>
         </SheetHeader>
         <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-24 pl-6">
-          <div className="flex w-full items-center justify-between pb-4 pt-2">
+          <div className="flex w-full items-center justify-between pt-2 pb-4">
             <SearchIcon />
             <FacebookIcon />
             <YoutubeIcon />

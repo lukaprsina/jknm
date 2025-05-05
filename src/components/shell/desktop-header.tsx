@@ -21,7 +21,7 @@ import {
   YoutubeIcon,
 } from "./icons";
 import { Navigation } from "./navigation";
-import { useBreakpoint } from "~/hooks/use-breakpoint";
+import { useMediaQuery } from "usehooks-ts";
 
 export interface ShellStore {
   is_header_sticky: boolean;
@@ -48,7 +48,7 @@ export function DesktopHeader({
   const header_ref = useRef<HTMLDivElement | null>(null);
   const is_header_sticky = shell_store.use.is_header_sticky();
   const navbar_height = shell_store.use.navbar_height();
-  const md_breakpoint = useBreakpoint("md");
+  const md_breakpoint = useMediaQuery("(min-width: 48rem)");
 
   const handle_scroll = useCallback(() => {
     if (!header_ref.current) return;
@@ -106,7 +106,7 @@ export function DesktopHeader({
       <div
         ref={header_ref}
         className={cn(
-          "container relative flex h-[182px] w-full items-end justify-between px-6 py-4 backdrop-blur-sm",
+          "relative container flex h-[182px] w-full items-end justify-between px-6 py-4 backdrop-blur-sm",
           className,
         )}
         {...props}
@@ -150,7 +150,7 @@ export function DesktopHeader({
       <div
         ref={sticky_navbar_ref}
         className={cn(
-          "relative z-40 flex w-full items-center justify-center px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:px-12",
+          "supports-[backdrop-filter]:bg-background/60 relative z-40 flex w-full items-center justify-center px-6 py-4 backdrop-blur md:px-12",
           is_header_sticky ? "fixed top-0 bg-white/80 transition-colors" : null,
           className,
         )}

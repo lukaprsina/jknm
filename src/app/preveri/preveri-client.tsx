@@ -11,26 +11,23 @@ import { EditButton } from "~/components/shell/editing-buttons";
 import { EditorToReact } from "~/components/editor/editor-to-react";
 
 import { InfoCard } from "~/components/info-card";
-import { createStore } from "zustand-x";
+import { createStore } from "zustand";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { get_article_by_published_id } from "~/server/article/get-article";
+import { persist } from "zustand/middleware";
 
 export interface PreveriStoreType {
   index: number;
 }
 
-const initial_data = {
-  index: 1,
-} satisfies PreveriStoreType;
-
-export const preveri_store = createStore("preveri")<PreveriStoreType>(
-  initial_data,
-  {
-    persist: {
-      enabled: true,
-    },
-  },
+export const preveri_store = createStore<PreveriStoreType>()(
+  persist(
+    () => ({
+      index: 1,
+    }),
+    { name: "preveri" },
+  ),
 );
 
 export function PreveriClient({
@@ -46,7 +43,7 @@ export function PreveriClient({
   const toaster = useToast();
   const [inputPage, setInputPage] = useState(1);
   const router = useRouter();
-  const preveri_store_index = preveri_store.use.index();
+  const preveri_store_index = preveri_store.getState().index;
 
   const page_info = useMemo(() => {
     const article_index = articles.findIndex(
@@ -126,7 +123,7 @@ export function PreveriClient({
             return;
           }
 
-          preveri_store.set.index(inputPage);
+          preveri_store.setState({ index: inputPage });
         }}
         className="my-8 flex items-center gap-4"
       >
@@ -134,14 +131,16 @@ export function PreveriClient({
           <Button
             type="button"
             disabled={isNaN(page_info.previous)}
-            onClick={() => preveri_store.set.index(page_info.previous)}
+            onClick={() =>
+              preveri_store.setState({ index: page_info.previous })
+            }
           >
             Prejšnja: {page_info.previous}
           </Button>
           <Button
             type="button"
             disabled={isNaN(page_info.next)}
-            onClick={() => preveri_store.set.index(page_info.next)}
+            onClick={() => preveri_store.setState({ index: page_info.next })}
           >
             Naslednja: {page_info.next}
           </Button>

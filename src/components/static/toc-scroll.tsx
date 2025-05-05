@@ -6,7 +6,6 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import { cn } from "~/lib/utils";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { mobile_nav_store } from "../shell/mobile-header";
 import { useThrottle } from "~/hooks/use-throttle";
 import React from "react";
@@ -15,6 +14,7 @@ import {
   smooth_scroll_store,
   useSmoothScroll,
 } from "~/hooks/use-smooth-scroll";
+import { useMediaQuery } from "usehooks-ts";
 
 function get_heading_ids(toc: Toc): string[] {
   const heading_ids: string[] = [];
@@ -161,7 +161,7 @@ function TocPortal({
       <ScrollArea
         className={cn(
           "text-sm",
-          "max-w-[300px] overflow-auto pb-8 pt-4",
+          "max-w-[300px] overflow-auto pt-4 pb-8",
           // "h-[calc(100vh_-_72px)]",
         )}
       >
@@ -179,7 +179,7 @@ export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
   const [asideRef, setAsideRef] = useState<HTMLElement | null>(null);
   const [mobileRef, setMobileRef] = useState<HTMLElement | null>(null);
   const [mainRef, setMainRef] = useState<HTMLElement | null>(null);
-  const md_breakpoint = useBreakpoint("md");
+  const md_breakpoint = useMediaQuery("(min-width: 48rem)");
   const mobile_sheet_open = mobile_nav_store.use.open();
   useSmoothScroll();
 

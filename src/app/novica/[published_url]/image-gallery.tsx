@@ -13,7 +13,6 @@ import {
   CarouselPrevious,
 } from "~/components/ui/carousel";
 import { gallery_store } from "~/components/gallery-store";
-import { useBreakpoint } from "~/hooks/use-breakpoint";
 import type { EditorJSImageData } from "~/lib/editor-utils";
 import { Button } from "~/components/ui/button";
 import { XIcon } from "lucide-react";
@@ -70,7 +69,6 @@ export function MyCarousel({ first_image_src }: { first_image_src?: string }) {
   const default_image = gallery_store.use.default_image();
   const images = gallery_store.use.images();
   const [emblaApi, setEmblaApi] = useState<CarouselApi>();
-  const md_breakpoint = useBreakpoint("md", true);
   const container_ref = useRef<HTMLDivElement>(null);
   const image_refs = useRef<(HTMLElement | null)[]>([]);
   const previous_ref = useRef<HTMLButtonElement>(null);
@@ -178,14 +176,12 @@ export function MyCarousel({ first_image_src }: { first_image_src?: string }) {
           </CarouselItem>
         ))}
       </CarouselContent>
-      {md_breakpoint && (
-        <>
-          <CarouselPrevious ref={previous_ref} />
-          <CarouselNext ref={next_ref} />
-          <CloseButton className="-right-12 top-0 -translate-y-1/2" />
-        </>
-      )}
-      {!md_breakpoint && <CloseButton className="right-0 top-0 m-4" />}
+      <div className="hidden md:block">
+        <CarouselPrevious ref={previous_ref} />
+        <CarouselNext ref={next_ref} />
+        <CloseButton className="top-0 -right-12 -translate-y-1/2" />
+      </div>
+      <CloseButton className="top-0 right-0 m-4 block md:hidden" />
     </Carousel>
   );
 }
