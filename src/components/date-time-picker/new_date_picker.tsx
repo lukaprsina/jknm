@@ -66,7 +66,8 @@ export default function DatePicker({
           startMonth={new Date(1999, 11)}
           endMonth={new Date(today.getFullYear(), today.getMonth(), 1)}
         />
-        <div className="border-t border-border p-3">
+        {/* TODO: border-border */}
+        <div className="border-t p-3">
           <TimePickerDemo setDate={(d) => setDate(d)} date={date} />
         </div>
       </PopoverContent>

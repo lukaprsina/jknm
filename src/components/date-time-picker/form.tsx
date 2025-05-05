@@ -83,7 +83,8 @@ export function DateTimePickerForm() {
                     selected={field.value}
                     onSelect={field.onChange}
                   />
-                  <div className="border-t border-border p-3">
+                  {/* TODO: border-border */}
+                  <div className="border-t p-3">
                     <TimePickerDemo
                       setDate={field.onChange}
                       date={field.value}

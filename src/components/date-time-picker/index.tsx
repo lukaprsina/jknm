@@ -57,7 +57,8 @@ export function DateTimePicker({
           selected={date}
           onSelect={(d) => handleSelect(d)}
         />
-        <div className="border-t border-border p-3">
+        {/* TODO: border-border */}
+        <div className="border-t p-3">
           <TimePickerDemo setDate={(d) => setDate(d)} date={date} />
         </div>
       </PopoverContent>
