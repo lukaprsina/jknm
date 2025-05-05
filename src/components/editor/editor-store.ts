@@ -1,5 +1,6 @@
-import { createStore } from "zustand-x";
-import type { EditorJSImageData } from "../../lib/editor-utils";
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import type { EditorJSImageData } from "~/lib/editor-utils";
 import type { ThumbnailType } from "~/lib/validators";
 
 interface EditorStoreType {
@@ -10,9 +11,11 @@ interface EditorStoreType {
   thumbnail_crop: ThumbnailType | null;
   image_data: EditorJSImageData[];
   author_ids: number[];
+  reset: () => void;
 }
 
-const initial_data = {
+// Define initial_data for default state
+const initial_data: Omit<EditorStoreType, "reset"> = {
   draft_id: -1,
   title: "",
   url: "",
@@ -20,24 +23,14 @@ const initial_data = {
   thumbnail_crop: null,
   image_data: [],
   author_ids: [],
-} satisfies EditorStoreType;
+};
 
-export const editor_store = createStore("editor")<EditorStoreType>(
-  initial_data,
-  {
-    persist: {
-      enabled: true,
-    },
-  },
-).extendActions((set) => ({
-  reset: () =>
-    set.state((draft) => {
-      draft.draft_id = initial_data.draft_id;
-      draft.title = initial_data.title;
-      draft.url = initial_data.url;
-      draft.s3_url = initial_data.s3_url;
-      draft.thumbnail_crop = initial_data.thumbnail_crop;
-      draft.image_data = initial_data.image_data;
-      draft.author_ids = initial_data.author_ids;
+export const editor_store = create<EditorStoreType>()(
+  persist(
+    (set) => ({
+      ...initial_data,
+      reset: () => set(() => ({ ...initial_data })),
     }),
-}));
+    { name: "editor" },
+  ),
+);

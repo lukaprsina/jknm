@@ -1,20 +1,21 @@
-import { createStore } from "zustand-x";
+import { create } from "zustand";
+import { produce } from "immer";
 import type { EditorJSImageData } from "~/lib/editor-utils";
 
 export interface GalleryStoreType {
   images: EditorJSImageData[];
   default_image: EditorJSImageData | undefined;
+  add_image: (image: EditorJSImageData) => void;
 }
 
-const initial_data = {
+export const gallery_store = create<GalleryStoreType>()((set) => ({
   images: [],
   default_image: undefined,
-} satisfies GalleryStoreType;
-
-export const gallery_store = createStore("gallery")<GalleryStoreType>(
-  initial_data,
-).extendActions((set, get) => ({
   add_image: (image: EditorJSImageData) => {
-    set.images(get.images().concat(image));
+    set(
+      produce((state: GalleryStoreType) => {
+        state.images.push(image);
+      }),
+    );
   },
 }));

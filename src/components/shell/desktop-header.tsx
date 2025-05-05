@@ -12,7 +12,6 @@ import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
 } from "../article/adapter";
-import { createStore } from "zustand-x";
 import {
   ContactIcon,
   FacebookIcon,
@@ -22,16 +21,17 @@ import {
 } from "./icons";
 import { Navigation } from "./navigation";
 import { useMediaQuery } from "usehooks-ts";
+import { create } from "zustand";
 
 export interface ShellStore {
   is_header_sticky: boolean;
   navbar_height: number | undefined;
 }
 
-export const shell_store = createStore("shell-store")<ShellStore>({
+export const shell_store = create<ShellStore>()(() => ({
   is_header_sticky: false,
   navbar_height: undefined,
-});
+}));
 
 export function DesktopHeader({
   published_article,
@@ -46,8 +46,8 @@ export function DesktopHeader({
 }) {
   const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
   const header_ref = useRef<HTMLDivElement | null>(null);
-  const is_header_sticky = shell_store.use.is_header_sticky();
-  const navbar_height = shell_store.use.navbar_height();
+  const is_header_sticky = shell_store((state) => state.is_header_sticky);
+  const navbar_height = shell_store((state) => state.navbar_height);
   const md_breakpoint = useMediaQuery("(min-width: 48rem)");
 
   const handle_scroll = useCallback(() => {
@@ -68,9 +68,9 @@ export function DesktopHeader({
       old_sticky: shell_store.get.is_header_sticky(),
     }); */
 
-    if (should_be_sticky !== shell_store.get.is_header_sticky()) {
+    if (should_be_sticky !== is_header_sticky) {
       // console.log("setting sticky", { should_be_sticky, md_breakpoint });
-      shell_store.set.is_header_sticky(should_be_sticky);
+      shell_store.setState({ is_header_sticky: should_be_sticky });
     }
   }, []);
 
@@ -84,7 +84,9 @@ export function DesktopHeader({
         { md_breakpoint },
       ); */
 
-      shell_store.set.navbar_height(sticky_navbar_ref.current.clientHeight);
+      shell_store.setState({
+        navbar_height: sticky_navbar_ref.current.clientHeight,
+      });
     }
   }, [md_breakpoint]);
 

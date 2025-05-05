@@ -11,7 +11,7 @@ import { EditButton } from "~/components/shell/editing-buttons";
 import { EditorToReact } from "~/components/editor/editor-to-react";
 
 import { InfoCard } from "~/components/info-card";
-import { createStore } from "zustand";
+import { create } from "zustand";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { get_article_by_published_id } from "~/server/article/get-article";
@@ -21,7 +21,7 @@ export interface PreveriStoreType {
   index: number;
 }
 
-export const preveri_store = createStore<PreveriStoreType>()(
+export const preveri_store = create<PreveriStoreType>()(
   persist(
     () => ({
       index: 1,

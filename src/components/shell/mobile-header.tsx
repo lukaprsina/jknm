@@ -22,7 +22,7 @@ import type {
   DraftArticleWithAuthors,
   PublishedArticleWithAuthors,
 } from "../article/adapter";
-import { createStore } from "zustand";
+import { create } from "zustand";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { usePathname } from "next/navigation";
 import { cn } from "~/lib/utils";
@@ -36,9 +36,9 @@ import {
 } from "./icons";
 import { useMediaQuery } from "usehooks-ts";
 
-export const mobile_nav_store = createStore("mobile-nav")<{ open: boolean }>({
+export const mobile_nav_store = create<{ open: boolean }>()(() => ({
   open: false,
-});
+}));
 
 export function MobileHeader({
   published_article,
@@ -57,7 +57,7 @@ export function MobileHeader({
   useEffect(() => {
     // console.log("mobile md_breakpoint", md_breakpoint);
     if (md_breakpoint) {
-      mobile_nav_store.set.open(false);
+      mobile_nav_store.setState({ open: false });
       return;
     }
 
@@ -69,7 +69,9 @@ export function MobileHeader({
       { md_breakpoint },
     ); */
 
-    shell_store.set.navbar_height(sticky_navbar_ref.current.clientHeight);
+    shell_store.setState({
+      navbar_height: sticky_navbar_ref.current.clientHeight,
+    });
   }, [md_breakpoint]);
 
   return (
@@ -112,7 +114,7 @@ export function MobileSheet({
   draft_article?: DraftArticleWithAuthors;
   session: Session | null;
 }) {
-  const open = mobile_nav_store.use.open();
+  const open = mobile_nav_store((state) => state.open);
   const pathname = usePathname();
 
   const links: { title: string; href: string; active?: boolean }[] =
@@ -132,7 +134,7 @@ export function MobileSheet({
       modal={false}
       onOpenChange={(new_state) => {
         console.log("setting mobile nav open", new_state);
-        mobile_nav_store.set.open(new_state);
+        mobile_nav_store.setState({ open: new_state });
       }}
     >
       <SheetTrigger asChild>
@@ -175,7 +177,7 @@ export function MobileSheet({
                 className="block"
                 href={`/${link.href}`}
                 onClick={() => {
-                  mobile_nav_store.set.open(false);
+                  mobile_nav_store.setState({ open: false });
                 }}
               >
                 {link.title}

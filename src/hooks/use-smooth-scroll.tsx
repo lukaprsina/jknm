@@ -1,32 +1,31 @@
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import { createStore } from "zustand-x";
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { shell_store } from "~/components/shell/desktop-header";
 import { mobile_nav_store } from "~/components/shell/mobile-header";
 
-export const smooth_scroll_store = createStore("smooth-scroll")<{
+type SmoothScrollType = {
   test_href: string | null;
   id: string | null;
-}>(
-  {
-    test_href: "",
-    id: "",
-  },
-  {
-    persist: { enabled: true },
-  },
-).extendActions((set) => ({
-  set_both: (test_href: string | null, id: string | null) => {
-    set.test_href(test_href);
-    set.id(id);
-  },
-}));
+};
+
+export const smooth_scroll_store = create<SmoothScrollType>()(
+  persist(
+    () =>
+      ({
+        test_href: "",
+        id: "",
+      }) as SmoothScrollType,
+    { name: "smooth-scroll" },
+  ),
+);
 
 // smooth scroll with offset for the sticky navbar
 export function useSmoothScroll() {
   const pathname = usePathname();
-  const testhref = smooth_scroll_store.use.test_href();
-  const id = smooth_scroll_store.use.id();
+  const testhref = smooth_scroll_store((state) => state.test_href);
+  const id = smooth_scroll_store((state) => state.id);
 
   useEffect(() => {
     if (testhref !== pathname) return;
@@ -34,7 +33,7 @@ export function useSmoothScroll() {
 
     const anchor = document.getElementById(id);
     if (!anchor) return;
-    const navbar_height = shell_store.get.navbar_height();
+    const navbar_height = shell_store.getState().navbar_height;
     // console.log("smooth scroll", { id, navbar_height });
     if (typeof navbar_height !== "number") return;
 
@@ -50,10 +49,10 @@ export function useSmoothScroll() {
       yPosition,
     });
 
-    mobile_nav_store.set.open(false);
+    mobile_nav_store.setState({ open: false });
     window.scrollTo({ top: yPosition, behavior: "instant" });
 
-    smooth_scroll_store.set.set_both(null, null);
+    smooth_scroll_store.setState({ id: null, test_href: null });
   }, [id, pathname, testhref]);
 
   return null;
