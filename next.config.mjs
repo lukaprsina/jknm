@@ -4,8 +4,8 @@
  */
 await import("./src/env.js");
 import withMDX from "@next/mdx";
-import rehypeMinifyWhitespace from "rehype-minify-whitespace";
-/* import remarkGfm from "remark-gfm";
+/* import rehypeMinifyWhitespace from "rehype-minify-whitespace";
+import remarkGfm from "remark-gfm";
 import createMDX from "@next/mdx";
 import withSlugs from "rehype-slug";
 import withToc from "@stefanprobst/rehype-extract-toc";
@@ -34,7 +34,6 @@ const config = {
     serverActions: {
       bodySizeLimit: "100mb",
     },
-    turbo: {},
   },
   images: {
     loader: "custom",
