@@ -35,11 +35,24 @@ export function EDITOR_JS_PLUGINS(): Record<
   ToolConstructable | ToolSettings
 > {
   return {
+    /* TODO: captions dont't work */
     image: {
       class: Image,
       // inlineToolbar: ["link"],
       inlineToolbar: true,
       config: {
+        actions: [
+          {
+            name: "new_button",
+            icon: "<svg>...</svg>",
+            title: "New Button",
+            toggle: true,
+            action: (name: string) => {
+              alert(`${name} button clicked`);
+            },
+          },
+        ],
+        features: { border: false, caption: true, stretch: false },
         uploader: {
           uploadByFile: (file: File) =>
             upload_image_by_file({

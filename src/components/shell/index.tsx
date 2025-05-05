@@ -11,6 +11,7 @@ import { Separator } from "../ui/separator";
 import { MobileHeader } from "./mobile-header";
 import { SearchProvider } from "./search-context";
 import { Searchbar } from "./searchbar";
+// import { PinkBackground } from "./background"; // Added import
 
 interface ShellProps {
   children: React.ReactNode;

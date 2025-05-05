@@ -1,0 +1,44 @@
+tudi na stari strani manjka slika, sem skopiral
+- https://www.jknm.si/si/?id=534&l=2019
+- D:\JKNM\served\media\img\novice\2019\01
+- D:\dev\js\jknm\src\app\converter\_files\obisk-mihovske-jame-03-01-2019
+Rejected file promise Error: ENOENT: no such file or directory, copyfile 'D:\JKNM\served\media\img\novice\2019\slika_5.jpg' -> 'D:\dev\js\jknm\src\app\converter\_files\obisk-mihovske-jame-03-01-2019\slika_5.jpg'
+    at async Object.copyFile (node:internal/fs/promises:620:10)
+    at async D:\dev\js\jknm\.next\server\app\converter\page.js:118:156133
+    at async Promise.allSettled (index 4) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'copyfile',
+  path: 'D:\\JKNM\\served\\media\\img\\novice\\2019\\slika_5.jpg',
+  dest: 'D:\\dev\\js\\jknm\\src\\app\\converter\\_files\\obisk-mihovske-jame-03-01-2019\\slika_5.jpg'
+}
+
+false positive
+- https://www.jknm.si/si/?id=606&l=2022
+Rejected file promise Error: ENOENT: no such file or directory, copyfile 'D:\JKNM\served\si' -> 'D:\dev\js\jknm\src\app\converter\_files\kocevski-rog-je-ociscen-pnevmatik-05-06-2022\si'
+    at async Object.copyFile (node:internal/fs/promises:620:10)
+    at async D:\dev\js\jknm\.next\server\app\converter\page.js:118:156377
+    at async Promise.allSettled (index 1) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'copyfile',
+  path: 'D:\\JKNM\\served\\si',
+  dest: 'D:\\dev\\js\\jknm\\src\\app\\converter\\_files\\kocevski-rog-je-ociscen-pnevmatik-05-06-2022\\si'
+}
+
+ker so DK še lanski, nimam osemke. sem skopiral
+- https://www.jknm.si/si/?id=633
+- v downloadih je original
+- D:\dev\js\jknm\src\app\converter\_files\studenti-biologije-na-obisku-pri-letecih-dolenjcih-16-01-2024\
+- dk8_43_presetnik_hudoklin_tri_desetletja_spremljanja_zatocisc_netopirjev.pdf
+
+Rejected file promise Error: ENOENT: no such file or directory, copyfile 'D:\JKNM\served\media\DK\DK8_43_Presetnik__Hudoklin_Tri_desetletja_spremljanja_zatocisc_netopirjev.pdf' -> 'D:\dev\js\jknm\src\app\converter\_files\studenti-biologije-na-obisku-pri-letecih-dolenjcih-16-01-2024\dk8_43_presetnik_hudoklin_tri_desetletja_spremljanja_zatocisc_netopirjev.pdf'
+    at async Object.copyFile (node:internal/fs/promises:620:10)
+    at async D:\dev\js\jknm\.next\server\app\converter\page.js:118:156377
+    at async Promise.allSettled (index 0) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'copyfile',
+  path: 'D:\\JKNM\\served\\media\\DK\\DK8_43_Presetnik__Hudoklin_Tri_desetletja_spremljanja_zatocisc_netopirjev.pdf',
+  dest: 'D:\\dev\\js\\jknm\\src\\app\\converter\\_files\\studenti-biologije-na-obisku-pri-letecih-dolenjcih-16-01-2024\\dk8_43_presetnik_hudoklin_tri_desetletja_spremljanja_zatocisc_netopirjev.pdf'
+}

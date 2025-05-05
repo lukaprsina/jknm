@@ -1,5 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 /src/assets/Objave.*
+/src/app/converter/_files/*
+/src/app/converter/_htmls/*
 /unLFS_dryRun.ps1
 
 # dependencies
