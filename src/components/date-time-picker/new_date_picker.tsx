@@ -21,6 +21,8 @@ export default function DatePicker({
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
 }) {
+  const today = new Date();
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -62,7 +64,7 @@ export default function DatePicker({
           }}
           autoFocus
           startMonth={new Date(1999, 11)}
-          endMonth={new Date(2025, 2)}
+          endMonth={new Date(today.getFullYear(), today.getMonth(), 1)}
         />
         <div className="border-t border-border p-3">
           <TimePickerDemo setDate={(d) => setDate(d)} date={date} />

@@ -5,7 +5,7 @@ import { db } from "../db";
 import { DraftArticle, PublishedArticle } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { assert_one } from "~/lib/assert-length";
-import { delete_objects, delete_s3_directory } from "../s3-utils";
+import { delete_objects, delete_s3_directory } from "../../lib/s3-utils";
 import { env } from "~/env";
 import { algoliasearch as searchClient } from "algoliasearch";
 import {

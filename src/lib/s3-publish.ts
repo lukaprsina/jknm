@@ -2,7 +2,7 @@ import { CopyObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import type { OutputData } from "@editorjs/editorjs";
 import { klona } from "klona";
 import { env } from "~/env";
-import { list_objects, s3_copy_between_buckets } from "~/server/s3-utils";
+import { list_objects, s3_copy_between_buckets } from "~/lib/s3-utils";
 
 export function get_s3_prefix(url: string, bucket: string) {
   // return `https://${bucket}.s3.${env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${url}`;

@@ -19,7 +19,7 @@ import {
   PublishedArticle,
   PublishedArticlesToAuthors,
 } from "~/server/db/schema";
-import { crop_image, delete_s3_directory } from "~/server/s3-utils";
+import { crop_image, delete_s3_directory } from "~/lib/s3-utils";
 import { env } from "~/env";
 import { algoliasearch as searchClient } from "algoliasearch";
 import { convert_article_to_algolia_object } from "~/lib/algoliasearch";

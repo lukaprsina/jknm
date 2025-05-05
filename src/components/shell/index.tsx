@@ -37,8 +37,8 @@ export async function Shell({
     <SearchProvider>
       <div className={cn("w-full", className)}>
         {!without_header ? (
-          /* TODO: bg gradient */
-          <header className="h-20 w-full bg-gradient-to-b from-[#BBB] to-gray-50 text-gray-800 md:h-auto">
+          /* bg-gradient-to-b from-[#BBB] to-gray-50  */
+          <header className="h-20 w-full text-gray-800 md:h-auto">
             <DesktopHeader
               published_article={published_article}
               draft_article={draft_article}

@@ -10,6 +10,8 @@ import {
 } from "@aws-sdk/client-s3";
 import type { OutputData } from "@editorjs/editorjs";
 import type { PercentCrop } from "react-image-crop";
+
+/* TODO: CRITICAL, SHARP */
 import sharp from "sharp";
 
 import { env } from "~/env";

@@ -1,5 +1,7 @@
 "use server";
 
+/* TODO: CRITICAL ERROR */
+
 import B2 from "b2-js";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
@@ -9,7 +11,7 @@ import { env } from "~/env";
 import { getServerAuthSession } from "~/server/auth";
 import { convert_filename_to_url } from "~/lib/article-utils";
 import { thumbnail_validator } from "~/lib/validators";
-import { crop_image } from "~/server/s3-utils";
+import { crop_image } from "~/lib/s3-utils";
 import sharp from "sharp";
 
 export interface FileUploadResponse {

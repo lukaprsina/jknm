@@ -11,7 +11,7 @@ import {
 import { assert_at_most_one, assert_one } from "~/lib/assert-length";
 import { algoliasearch as searchClient } from "algoliasearch";
 import { env } from "~/env";
-import { delete_s3_directory, s3_copy_thumbnails } from "../s3-utils";
+import { delete_s3_directory, s3_copy_thumbnails } from "../../lib/s3-utils";
 import {
   get_s3_draft_directory,
   get_s3_published_directory,
