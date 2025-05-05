@@ -1,8 +1,7 @@
 import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
-// import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
-import tailwindcssAnimate from "tailwindcss-animate";
 import typography from "@tailwindcss/typography";
+// import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
 
 export default {
   darkMode: ["class"],
@@ -33,7 +32,7 @@ export default {
             color: "black",
             // color: theme("colors.neutral.700"),
             "--card-foreground": theme("colors.neutral.700"),
-            "--tw-prose-bullets": theme("colors.neutral[500]"),
+            "--tw-prose-bullets": theme("colors.neutral.500"),
             "--tw-prose-links": theme("colors.blue.800"),
             p: {
               // fontWeight: "400",
@@ -147,11 +146,7 @@ export default {
       },
     },
   },
-  plugins: [
-    tailwindcssAnimate,
-    typography,
-    // addVariablesForColors,
-  ],
+  plugins: [typography],
 } satisfies Config;
 
 // This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
