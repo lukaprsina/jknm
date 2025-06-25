@@ -3,14 +3,17 @@ import {
   NavigationMenuList,
   NavigationMenuItem,
   NavigationMenuContent,
+  NavigationMenuLink,
 } from "~/components/ui/navigation-menu";
-import { ListItem } from "./header";
 import { usePathname } from "next/navigation";
 import { NavigationMenuTrigger } from "../navigation-menu-trigger";
 import Link from "next/link";
 import { smooth_scroll_store } from "~/hooks/use-smooth-scroll";
 import toc from "~/toc.json";
 import slugify from "slugify";
+import React from "react";
+import { cn } from "~/lib/utils";
+import { buttonVariants } from "../ui/button";
 
 const SORTED_SECTIONS = [
   "zgodovina",
@@ -42,9 +45,8 @@ export function Navigation() {
 
     return item;
   });
-
   return (
-    <NavigationMenu className="z-50">
+    <NavigationMenu className="z-50" delayDuration={200}>
       <NavigationMenuList>
         {sorted_toc.map((item) => {
           let uppercase =
@@ -129,3 +131,35 @@ function NavDropdown({
     </NavigationMenuItem>
   );
 }
+
+export const ListItem = React.forwardRef<
+  React.ComponentRef<"a">,
+  React.ComponentPropsWithoutRef<"a"> & {
+    list_title?: React.ReactNode;
+    is_title?: boolean;
+  }
+>(({ className, list_title, is_title, href, ...props }, ref) => {
+  if (!href) {
+    return null;
+  }
+
+  return (
+    <li className={cn(is_title && "col-span-2")}>
+      <NavigationMenuLink asChild>
+        <Link
+          href={href}
+          ref={ref}
+          className={cn(
+            "prose",
+            buttonVariants({ size: "sm", variant: "link" }),
+            className,
+          )}
+          {...props}
+        >
+          {list_title}
+        </Link>
+      </NavigationMenuLink>
+    </li>
+  );
+});
+ListItem.displayName = "ListItem";
