@@ -1,46 +1,28 @@
 "use client";
 
-import { use, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import EditorJS from "@editorjs/editorjs";
 
-import { Button } from "~/components/ui/button";
-import { Checkbox } from "~/components/ui/checkbox";
-import { Input } from "~/components/ui/input";
 
 import { article_variants, page_variants } from "~/lib/page-variants";
-import {
-  test_strong_bold,
-  content_size_stats,
-  sync_with_algolia,
-} from "./converter-server";
-import { iterate_over_articles } from "./converter-spaghetti";
 import { cn } from "~/lib/utils";
 import { EDITOR_JS_PLUGINS } from "~/components/editor/plugins";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useToast } from "~/hooks/use-toast";
-import { sync_duplicate_urls } from "~/server/article/sync-duplicate-urls";
-import { AllAuthorsContext } from "../provider";
-import {
-  generate_images,
-  rename_all_files,
-  rename_all_images_hardcoded,
-} from "./generate-images";
 
 export function ArticleConverter() {
   const editorJS = useRef<EditorJS | null>(null);
 
-  const [doSplice, setDoSplice] = useState(true);
+  /* const [doSplice, setDoSplice] = useState(true);
   const [doDryRun, setDoDryRun] = useState(true);
   const [doUpdate, setDoUpdate] = useState(false);
   const [doDimensions, setDoDimensions] = useState(false);
   const [firstArticle, setFirstArticle] = useState("23");
   const [lastArticle, setLastArticle] = useState("24");
-  const all_authors = use(AllAuthorsContext);
-  const toaster = useToast();
-  const query_client = useQueryClient();
+  const all_authors = use(AllAuthorsContext); */
+  /* const toaster = useToast();
+  const query_client = useQueryClient(); */
 
   // const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation();
-  const sync_duplicate_urls_mutation = useMutation({
+ /*  const sync_duplicate_urls_mutation = useMutation({
     mutationFn: () => sync_duplicate_urls(),
     onSettled: async () => {
       await query_client.invalidateQueries({
@@ -53,12 +35,12 @@ export function ArticleConverter() {
         description: error.message,
       });
     },
-  });
+  }); */
 
   return (
     <div className={cn(article_variants(), page_variants())}>
       <div className="flex w-full flex-wrap gap-4">
-        <Button onClick={() => rename_all_files()}>Preimenuj slike</Button>
+        {/* <Button onClick={() => rename_all_files()}>Preimenuj slike</Button>
         <Button onClick={() => rename_all_images_hardcoded()}>
           Preimenuj slike hardcode
         </Button>
@@ -68,7 +50,7 @@ export function ArticleConverter() {
         </Button>
         <Button onClick={() => content_size_stats()}>
           Povprečna velikost teksta
-        </Button>
+        </Button> */}
         {/* <Button onClick={() => delete_articles()}>Delete articles</Button> */}
         {/* <Button
           variant="destructive"
@@ -78,14 +60,14 @@ export function ArticleConverter() {
         </Button> */}
         {/* <Button onClick={() => delete_authors()}>Delete authors</Button> */}
         {/* <Button onClick={() => sync_authors()}>Sync authors</Button> */}
-        <Button onClick={() => sync_duplicate_urls_mutation.mutate()}>
+       {/*  <Button onClick={() => sync_duplicate_urls_mutation.mutate()}>
           Sync duplicate urls
         </Button>
-        <Button onClick={() => sync_with_algolia()}>Sync with Algolia</Button>
+        <Button onClick={() => sync_with_algolia()}>Sync with Algolia</Button> */}
         {/* <Button onClick={() => copy_and_rename_images()}>
           Copy and rename images
         </Button> */}
-        <div className="flex flex-shrink gap-2">
+        {/* <div className="flex flex-shrink gap-2">
           <Input
             value={firstArticle}
             onChange={(event) => setFirstArticle(event.target.value)}
@@ -164,7 +146,7 @@ export function ArticleConverter() {
           >
             Convert
           </Button>
-        </div>
+        </div> */}
       </div>
       <TempEditor editorJS={editorJS} />
     </div>
@@ -174,12 +156,12 @@ export function ArticleConverter() {
 export function TempEditor({
   editorJS,
 }: {
-  editorJS: React.MutableRefObject<EditorJS | null>;
+  editorJS: React.RefObject<EditorJS | null>;
 }) {
   const editor_factory = useCallback(() => {
     const temp_editor = new EditorJS({
       holder: "editorjs",
-      tools: EDITOR_JS_PLUGINS(),
+      tools: EDITOR_JS_PLUGINS({markdown: true}),
       autofocus: true,
     });
 

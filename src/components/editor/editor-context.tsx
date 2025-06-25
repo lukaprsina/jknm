@@ -71,7 +71,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 
     const temp_editor = new EditorJS({
       holder: "editorjs",
-      tools: EDITOR_JS_PLUGINS(),
+      tools: EDITOR_JS_PLUGINS({}),
       data: content,
       inlineToolbar: true,
       autofocus: true,

@@ -18,6 +18,7 @@ import Paragraph from "@editorjs/paragraph";
 import Quote from "@editorjs/quote";
 import Table from "@editorjs/table";
 import Warning from "@editorjs/warning";
+import MDParser from 'editorjs-md-parser';
 import createGenericInlineTool, {
   UnderlineInlineTool,
 } from "editorjs-inline-tool";
@@ -29,7 +30,7 @@ import {
 import { get_s3_draft_directory } from "~/lib/article-utils";
 import { editor_store } from "./editor-store";
 
-export function EDITOR_JS_PLUGINS(): Record<
+export function EDITOR_JS_PLUGINS({markdown = false}: {markdown?: boolean}): Record<
   // toast: ReturnType<typeof useToast>,
   string,
   ToolConstructable | ToolSettings
@@ -134,6 +135,14 @@ export function EDITOR_JS_PLUGINS(): Record<
       tagName: "SUB",
       toolboxIcon: SUBSCRIPT_ICON,
     }),
+    markdownParser: {
+          class: MDParser,
+          config: {
+              filename: 'markdown-test',
+              timestamp: true,
+              callback: (blocksData: any) => { console.log("Callback MDParser", blocksData) }
+          },
+      }
   };
 }
 

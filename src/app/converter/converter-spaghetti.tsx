@@ -15,7 +15,7 @@ import {
 } from "./converter-server";
 import { get_authors } from "./get-authors";
 import { parse_node } from "./parse-node";
-import { read_from_xml } from "./xml-server";
+import { read_from_csv } from "./xml-server";
 import { PROBLEMATIC_CONSTANTS } from "./info/problematic";
 import { convert_title_to_url } from "~/lib/article-utils";
 import type { Author, PublishArticleSchema } from "~/server/db/schema";
@@ -145,7 +145,7 @@ export async function iterate_over_articles(
   /* const spliced_csv_articles = do_splice
     ? csv_articles.slice(first_article, last_article)
     : csv_articles; */
-  const imported_articles = await read_from_xml();
+  const imported_articles = await read_from_csv();
   const first_index = imported_articles.findIndex(
     (a) => a.objave_id === first_article,
   );
