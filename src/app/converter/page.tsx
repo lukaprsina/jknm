@@ -4,20 +4,11 @@ import { Shell } from "~/components/shell";
 import { getServerAuthSession } from "~/server/auth";
 import { article_variants, page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
-import { db } from "~/server/db";
-import { count } from "drizzle-orm";
-import { PublishedArticle } from "~/server/db/schema";
+import { readFile } from "fs/promises"
 import { ArticleConverter } from "./converter-editor";
+import { type PublishedArticle } from "~/server/db/schema";
 
-/* const DynamicArticleConverter = dynamic(
-  () =>
-    import("./converter-editor").then((mod) => ({
-      default: mod.ArticleConverter,
-    })),
-  {
-    ssr: false,
-  },
-); */
+export type Articles = (typeof PublishedArticle.$inferSelect)[]
 
 export default async function Page() {
   const session = await getServerAuthSession();
@@ -26,18 +17,20 @@ export default async function Page() {
     notFound();
   }
 
-  const article_count = await db
-    .select({ count: count() })
-    .from(PublishedArticle);
+  const raw_articles = await readFile(
+    "scripts/articles.json", {
+    encoding: "utf-8",
+  })
+
+  const articles = JSON.parse(raw_articles) as Articles;
 
   return (
     <Shell>
       <div className={cn(page_variants(), article_variants())}>
         <h1>
-          Article converter: {article_count.at(0)?.count ?? "napaka"} novičk
+          Article converter: {articles.length ?? "napaka"} novičk
         </h1>
-        {/* <DynamicArticleConverter /> */}
-        <ArticleConverter />
+        <ArticleConverter articles={articles} />
       </div>
     </Shell>
   );

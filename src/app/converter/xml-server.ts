@@ -9,13 +9,9 @@ import type { ImportedArticle } from "./converter-spaghetti";
 interface ObjaveType {
   ID: number;
   Kategorija: number;
-  Jezik: string;
   Naslov: string;
-  Povzetek: string;
   Tekst: string;
   Datum1: string;
-  Objavi: number;
-  Vnasalec: number;
   ZadnjaSprememba: string;
 }
 
@@ -37,15 +33,15 @@ export async function read_from_csv() {
     columns: true,
     skip_empty_lines: true,
     trim: true,
-  });
+  }) as ObjaveType[];
 
   for (const objava of records) {
     // Kategorija is a string in CSV, convert to number
-    const kategorija = Number(objava.Kategorija);
+    const kategorija = objava.Kategorija
     switch (kategorija) {
       case 1: {
         imported_articles.push({
-          objave_id: Number(objava.ID),
+          objave_id: objava.ID,
           title: objava.Naslov,
           content: objava.Tekst,
           created_at: objava.Datum1,
