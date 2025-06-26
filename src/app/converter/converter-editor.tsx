@@ -9,6 +9,7 @@ import { get_article_by_id, get_embeds as log_embeds, save_markdown_articles } f
 import dynamic from "next/dynamic";
 import type { Articles } from "./page";
 import { Input } from "~/components/ui/input";
+import { PublishedArticle } from "~/server/db/schema";
 
 const DynamicTempEditor = dynamic(
   () =>
@@ -34,7 +35,7 @@ const parseMarkdown = await MDfromBlocks();
 export function ArticleConverter({ articles }: { articles: Articles }) {
   const editorJS = useRef<EditorJS | null>(null);
   const [dbId, setDbId] = useState<string | null>("2");
-  
+
 
   const convert_everything = useCallback(async () => {
     const markdowns: MarkdownArticle[] = [];
@@ -66,7 +67,7 @@ export function ArticleConverter({ articles }: { articles: Articles }) {
         <Button
           onClick={async () => {
             const article = await get_article_by_id(parseInt(dbId!));
-            if(!editorJS.current ||!article?.content)
+            if (!editorJS.current || !article?.content)
               return
 
             await editorJS.current.render(article.content);
@@ -75,12 +76,31 @@ export function ArticleConverter({ articles }: { articles: Articles }) {
             console.log("Markdown from DB ID", { dbId, markdown, blocks: article.content?.blocks });
           }}
         >
-          Convert to markdown
+          Convert one to markdown
         </Button>
         {/* <Button onClick={async () => log_embeds()}>Embeds</Button> */}
         <Button onClick={async () => convert_everything()}>
           Convert all articles
         </Button>
+        <Button onClick={async () => {
+          const available_plugins = ["header",
+            "paragraph",
+            "list",
+            "image",
+            "embed"] as const;
+
+          const find_articles_with_plugin = async (plugin: typeof available_plugins[number]) => {
+            return Promise.all(articles.map(article => article.content?.blocks?.some((block) => block.type === plugin) ? article.id : null).filter(Boolean));
+          }
+
+          const articles_by_plugin = await Promise.all(available_plugins.map(async (plugin) => {
+            const articles = await find_articles_with_plugin(plugin);
+            return { plugin, articles }
+          }));
+
+          console.log(articles_by_plugin)
+        }}>List articles by plugin</Button>
+
       </div>
       <DynamicTempEditor editorJS={editorJS} />
     </div>
