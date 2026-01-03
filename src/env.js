@@ -8,13 +8,14 @@ if (
 	"localStorage" in global &&
 	typeof global.localStorage?.getItem !== "function"
 ) {
-	try {
+	global.localStorage = undefined;
+	/* try {
 		// prefer delete so `typeof localStorage` becomes "undefined"
 		delete global.localStorage;
 	} catch (_) {
 		// fallback to undefined assignment if deletion is disallowed
 		global.localStorage = undefined;
-	}
+	} */
 }
 
 import { createEnv } from "@t3-oss/env-nextjs";
