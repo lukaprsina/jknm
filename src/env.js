@@ -8,7 +8,7 @@ if (
 	"localStorage" in global &&
 	typeof global.localStorage?.getItem !== "function"
 ) {
-	global.localStorage = undefined;
+	// global.localStorage = undefined;
 	/* try {
 		// prefer delete so `typeof localStorage` becomes "undefined"
 		delete global.localStorage;
