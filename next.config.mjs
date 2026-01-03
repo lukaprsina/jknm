@@ -24,55 +24,55 @@ import withTocExport from "@stefanprobst/rehype-extract-toc/mdx"; */
 
 /** @type {import("next").NextConfig} */
 const config = {
-  pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
-  experimental: {
-    // reactCompiler: false,
-    // ...mdx_rs, // TODO
-    mdxRs: {
-      mdxType: "gfm",
-    },
-    serverActions: {
-      bodySizeLimit: "100mb",
-    },
-    turbo: {},
-  },
-  images: {
-    loader: "custom",
-    loaderFile: "./image-loader.js",
-    unoptimized: true,
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "www.jknm.si",
-        port: "",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
-        hostname: "lh3.googleusercontent.com",
-        port: "",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
-        hostname: "lh3.google.com",
-        port: "",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
-        hostname: "jknm-turborepo.vercel.app",
-        port: "",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
-        hostname: "jknm-si.vercel.app",
-        port: "",
-        pathname: "**",
-      },
-    ],
-  },
+	pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
+	experimental: {
+		// reactCompiler: false,
+		// ...mdx_rs, // TODO
+		mdxRs: {
+			mdxType: "gfm",
+		},
+		serverActions: {
+			bodySizeLimit: "100mb",
+		},
+		turbo: {},
+	},
+	images: {
+		loader: "custom",
+		loaderFile: "./image-loader.js",
+		unoptimized: true,
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "www.jknm.si",
+				port: "",
+				pathname: "**",
+			},
+			{
+				protocol: "https",
+				hostname: "lh3.googleusercontent.com",
+				port: "",
+				pathname: "**",
+			},
+			{
+				protocol: "https",
+				hostname: "lh3.google.com",
+				port: "",
+				pathname: "**",
+			},
+			{
+				protocol: "https",
+				hostname: "jknm-turborepo.vercel.app",
+				port: "",
+				pathname: "**",
+			},
+			{
+				protocol: "https",
+				hostname: "jknm-si.vercel.app",
+				port: "",
+				pathname: "**",
+			},
+		],
+	},
 };
 
 /* const withMDX = createMDX({
@@ -83,8 +83,8 @@ const config = {
 }); */
 
 export default withMDX({
-  options: {
-    // rehypePlugins: [rehypeMinifyWhitespace],
-  },
+	options: {
+		// rehypePlugins: [rehypeMinifyWhitespace],
+	},
 })(config);
 // export default config;
