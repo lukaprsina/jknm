@@ -119,7 +119,7 @@ export function DesktopHeader({
 					</div>
 					<div className="flex-1 flex items-center justify-center">
 						<Link href="/">
-							<Logo className="w-auto min-w-[200px]" />
+							<Logo className="w-auto min-w-[290px]" />
 						</Link>
 					</div>
 					<div className="flex-1 flex flex-col items-end justify-between">
