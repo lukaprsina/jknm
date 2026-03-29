@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { env } from "./env";
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   // Extract the path after /novica/
   const path = req.nextUrl.pathname.replace(/^\/novica\//, "");
   const new_url = new URL(`https://cdn.${env.NEXT_PUBLIC_SITE_DOMAIN}/${path}`);
