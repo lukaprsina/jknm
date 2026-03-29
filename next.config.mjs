@@ -34,7 +34,6 @@ const config = {
 		serverActions: {
 			bodySizeLimit: "100mb",
 		},
-		turbo: {},
 	},
 	images: {
 		loader: "custom",
