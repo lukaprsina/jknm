@@ -12,7 +12,7 @@ import {
 	varchar,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
-import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
 import type { ThumbnailType } from "~/lib/validators";
 import { content_validator, thumbnail_validator } from "~/lib/validators";
 
@@ -215,31 +215,48 @@ export const DraftArticlesToAuthorsRelations = relations(
 	}),
 );
 
-export const CreateDraftArticleSchema = createInsertSchema(DraftArticle, {
-	content: content_validator as any,
-	thumbnail_crop: thumbnail_validator as any,
-	// updated_at: z.date(),
-}).omit({
-	id: true,
-	created_at: true,
+export const CreateDraftArticleSchema = z.object({
+	published_id: z.number().optional(),
+	title: z.string(),
 });
 
-export const SaveDraftArticleSchema = createInsertSchema(DraftArticle, {
-	content: content_validator as any,
-	thumbnail_crop: thumbnail_validator as any,
-	// updated_at: z.date(),
-}).omit({
-	id: true,
-	// created_at: true,
+export const SaveDraftArticleSchema = z.object({
+	title: z.string(),
+	created_at: z.date().optional(),
+	updated_at: z.date().optional(),
+	content: content_validator.optional(),
+	content_preview: z.string().optional(),
+	thumbnail_crop: thumbnail_validator.optional(),
+	published_id: z.number().optional(),
+	draft_articles_to_authors: z
+		.array(
+			z.object({
+				draft_id: z.number().optional(),
+				author_id: z.number(),
+				order: z.number().optional(),
+			}),
+		)
+		.optional(),
 });
 
-export const PublishArticleSchema = createInsertSchema(PublishedArticle, {
-	content: content_validator as any,
-	thumbnail_crop: thumbnail_validator as any,
-	// created_at: z.date(),
-}).omit({
-	id: true,
-	// created_at: true,
+export const PublishArticleSchema = z.object({
+	old_id: z.number().optional(),
+	title: z.string(),
+	url: z.string(),
+	created_at: z.date().optional(),
+	updated_at: z.date().optional(),
+	content: content_validator.optional(),
+	content_preview: z.string().optional(),
+	thumbnail_crop: thumbnail_validator.optional(),
+	published_articles_to_authors: z
+		.array(
+			z.object({
+				published_id: z.number().optional(),
+				author_id: z.number(),
+				order: z.number().optional(),
+			}),
+		)
+		.optional(),
 });
 
 export const users = pgTable("user", {

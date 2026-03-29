@@ -33,7 +33,17 @@ export async function publish(input: z.infer<typeof publish_validator>) {
 		throw new Error("Unauthorized");
 	}
 
-	const validated_input = publish_validator.safeParse(input);
+	console.warn("Publishing article with input:", input);
+	let validated_input: z.SafeParseReturnType<
+		unknown,
+		z.infer<typeof publish_validator>
+	>;
+	try {
+		validated_input = publish_validator.safeParse(input);
+	} catch (error) {
+		console.error("Error validating input in publish function:", error);
+		throw error;
+	}
 	if (!validated_input.success) {
 		throw new Error(validated_input.error.message);
 	}
