@@ -41,6 +41,7 @@ import {
 	SearchIcon,
 	YoutubeIcon,
 } from "./icons";
+import { Sponsors } from "./sponsors";
 
 export const mobile_nav_store = createStore(
 	{
@@ -186,6 +187,9 @@ export function MobileSheet({
 							{link.active && <div id="mobile-toc" />}
 						</Fragment>
 					))}
+					<div className="mt-6 pr-6">
+						<Sponsors compact />
+					</div>
 				</ScrollArea>
 			</SheetContent>
 		</Sheet>
