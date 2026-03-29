@@ -200,18 +200,22 @@ export function useEditorMutations() {
 			const created_at = fake_created_at ?? draft_article.created_at;
 
 			const state = editor_store.get("state");
+			const resolved_thumbnail_crop = thumbnail_crop ?? state.thumbnail_crop;
 			const article: z.infer<typeof save_draft_validator>["article"] = {
 				title: updated?.title ?? state.title,
 				created_at,
 				content: editor_content,
-				thumbnail_crop: thumbnail_crop ?? state.thumbnail_crop,
+				thumbnail_crop:
+					resolved_thumbnail_crop === null
+						? undefined
+						: resolved_thumbnail_crop,
 			};
 
 			update_settings_from_editor({
 				title: updated?.title ?? "",
 				url: updated?.url ?? "",
 				s3_url: get_s3_draft_directory(draft_article.id),
-				thumbnail_crop: thumbnail_crop ?? state.thumbnail_crop,
+				thumbnail_crop: resolved_thumbnail_crop,
 				editor_content,
 				article_id: draft_article.id,
 				/* author_ids: draft_article.draft_articles_to_authors.map(
@@ -255,19 +259,23 @@ export function useEditorMutations() {
 			}
 
 			const state = editor_store.get("state");
+			const resolved_thumbnail_crop = thumbnail_crop ?? state.thumbnail_crop;
 			const article: z.infer<typeof publish_validator>["article"] = {
 				title: updated.title,
 				url: updated.url,
 				created_at,
 				content: editor_content,
-				thumbnail_crop: thumbnail_crop ?? state.thumbnail_crop,
+				thumbnail_crop:
+					resolved_thumbnail_crop === null
+						? undefined
+						: resolved_thumbnail_crop,
 			};
 
 			update_settings_from_editor({
 				title: updated.title,
 				url: updated.url,
 				s3_url: get_s3_draft_directory(draft_article.id),
-				thumbnail_crop: article.thumbnail_crop,
+				thumbnail_crop: resolved_thumbnail_crop,
 				editor_content,
 				article_id: draft_article.id,
 				author_ids: draft_article.draft_articles_to_authors.map(
