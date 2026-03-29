@@ -43,5 +43,5 @@
 		"src/components/shell/command-bar.tsx.ol",
 		".next/dev/types/**/*.ts"
 	],
-	"exclude": ["node_modules", "src/app/(static)/**/*.mdx"]
+	"exclude": ["node_modules", "vendor", "src/app/(static)/**/*.mdx"]
 }

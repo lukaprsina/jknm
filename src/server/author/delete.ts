@@ -9,25 +9,25 @@ import { delete_guests_validator } from "./validator";
 import { getServerAuthSession } from "../auth";
 
 export async function delete_guests(
-  input: z.infer<typeof delete_guests_validator>,
+	input: z.infer<typeof delete_guests_validator>,
 ) {
-  const session = await getServerAuthSession();
-  if (!session) {
-    throw new Error("Unauthorized");
-  }
+	const session = await getServerAuthSession();
+	if (!session) {
+		throw new Error("Unauthorized");
+	}
 
-  const validated_input = delete_guests_validator.safeParse(input);
-  if (!validated_input.success) {
-    throw new Error(validated_input.error.message);
-  }
+	const validated_input = delete_guests_validator.safeParse(input);
+	if (!validated_input.success) {
+		throw new Error(validated_input.error.message);
+	}
 
-  const result = await db
-    .delete(Author)
-    .where(and(eq(Author.author_type, "guest"), inArray(Author.id, input.ids)))
-    .returning();
+	const result = await db
+		.delete(Author)
+		.where(and(eq(Author.author_type, "guest"), inArray(Author.id, input.ids)))
+		.returning();
 
-  revalidateTag("authors");
-  revalidatePath("/");
+	revalidateTag("authors", "max");
+	revalidatePath("/");
 
-  return result;
+	return result;
 }

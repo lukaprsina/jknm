@@ -1,17 +1,23 @@
 "use client";
 
-import React, { Fragment, useEffect, useMemo, useRef } from "react";
+import {
+	Fragment,
+	useEffect,
+	useMemo,
+	useRef,
+	type ComponentProps,
+} from "react";
 import Link from "next/link";
 
 import { Logo } from "./logo";
 import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-  SheetClose,
+	Sheet,
+	SheetTrigger,
+	SheetContent,
+	SheetHeader,
+	SheetTitle,
+	SheetDescription,
+	SheetClose,
 } from "~/components/ui/sheet";
 import { MenuIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
@@ -19,172 +25,169 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import EditingButtons from "./editing-buttons";
 import type { Session } from "next-auth";
 import type {
-  DraftArticleWithAuthors,
-  PublishedArticleWithAuthors,
+	DraftArticleWithAuthors,
+	PublishedArticleWithAuthors,
 } from "../article/adapter";
-import { createStore } from "zustand-x";
+import { createStore, useStoreValue } from "zustand-x";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { usePathname } from "next/navigation";
 import { cn } from "~/lib/utils";
 import { shell_store } from "./desktop-header";
 import {
-  IntranetIcon,
-  FacebookIcon,
-  ContactIcon,
-  SearchIcon,
-  YoutubeIcon,
+	IntranetIcon,
+	FacebookIcon,
+	ContactIcon,
+	SearchIcon,
+	YoutubeIcon,
 } from "./icons";
 
-export const mobile_nav_store = createStore("mobile-nav")<{ open: boolean }>({
-  open: false,
-});
+export const mobile_nav_store = createStore(
+	{
+		open: false,
+	},
+	{
+		name: "mobile-nav",
+	},
+);
 
 export function MobileHeader({
-  published_article,
-  draft_article,
-  session,
-  className,
-  ...props
-}: React.ComponentProps<"div"> & {
-  published_article?: PublishedArticleWithAuthors;
-  draft_article?: DraftArticleWithAuthors;
-  session: Session | null;
+	published_article,
+	draft_article,
+	session,
+	className,
+	...props
+}: ComponentProps<"div"> & {
+	published_article?: PublishedArticleWithAuthors;
+	draft_article?: DraftArticleWithAuthors;
+	session: Session | null;
 }) {
-  const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
-  const md_breakpoint = useBreakpoint("md");
+	const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
+	const md_breakpoint = useBreakpoint("md");
 
-  useEffect(() => {
-    // console.log("mobile md_breakpoint", md_breakpoint);
-    if (md_breakpoint) {
-      mobile_nav_store.set.open(false);
-      return;
-    }
+	useEffect(() => {
+		if (md_breakpoint) {
+			mobile_nav_store.set("open", false);
+			return;
+		}
 
-    if (!sticky_navbar_ref.current) return;
+		if (!sticky_navbar_ref.current) return;
 
-    /* console.log(
-      "mobile setting navbar height",
-      sticky_navbar_ref.current.clientHeight,
-      { md_breakpoint },
-    ); */
+		shell_store.set("navbar_height", sticky_navbar_ref.current.clientHeight);
+	}, [md_breakpoint]);
 
-    shell_store.set.navbar_height(sticky_navbar_ref.current.clientHeight);
-  }, [md_breakpoint]);
-
-  return (
-    <div
-      ref={sticky_navbar_ref}
-      className={cn(
-        "fixed top-0 z-40 flex w-full items-center justify-between bg-white/90 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-        className,
-      )}
-      {...props}
-    >
-      {/* <Logo className="w-4" /> */}
-      <Link className="text-2xl font-bold" href="/">
-        Jamarski klub Novo mesto
-      </Link>
-      <MobileSheet
-        published_article={published_article}
-        draft_article={draft_article}
-        session={session}
-      />
-    </div>
-  );
+	return (
+		<div
+			ref={sticky_navbar_ref}
+			className={cn(
+				"fixed top-0 z-40 flex w-full items-center justify-between bg-white/90 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+				className,
+			)}
+			{...props}
+		>
+			<Link className="text-2xl font-bold" href="/">
+				Jamarski klub Novo mesto
+			</Link>
+			<MobileSheet
+				published_article={published_article}
+				draft_article={draft_article}
+				session={session}
+			/>
+		</div>
+	);
 }
 
 const MOBILE_NAV_LINKS = [
-  { title: "Zgodovina", href: "zgodovina" },
-  { title: "Raziskovanje", href: "raziskovanje" },
-  { title: "Publiciranje", href: "publiciranje" },
-  { title: "Varstvo", href: "varstvo" },
-  { title: "Klub", href: "klub" },
-  { title: "Arhiv novic", href: "arhiv" },
+	{ title: "Zgodovina", href: "zgodovina" },
+	{ title: "Raziskovanje", href: "raziskovanje" },
+	{ title: "Publiciranje", href: "publiciranje" },
+	{ title: "Varstvo", href: "varstvo" },
+	{ title: "Klub", href: "klub" },
+	{ title: "Arhiv novic", href: "arhiv" },
 ];
 
 export function MobileSheet({
-  published_article,
-  draft_article,
-  session,
+	published_article,
+	draft_article,
+	session,
 }: {
-  published_article?: PublishedArticleWithAuthors;
-  draft_article?: DraftArticleWithAuthors;
-  session: Session | null;
+	published_article?: PublishedArticleWithAuthors;
+	draft_article?: DraftArticleWithAuthors;
+	session: Session | null;
 }) {
-  const open = mobile_nav_store.use.open();
-  const pathname = usePathname();
+	const open = useStoreValue(mobile_nav_store, "open");
+	const pathname = usePathname();
 
-  const links: { title: string; href: string; active?: boolean }[] =
-    useMemo(() => {
-      return MOBILE_NAV_LINKS.map((link) => {
-        if (pathname.includes(link.href)) {
-          return { ...link, active: true };
-        }
+	const links: { title: string; href: string; active?: boolean }[] =
+		useMemo(() => {
+			return MOBILE_NAV_LINKS.map((link) => {
+				if (pathname.includes(link.href)) {
+					return { ...link, active: true };
+				}
 
-        return link;
-      });
-    }, [pathname]);
+				return link;
+			});
+		}, [pathname]);
 
-  return (
-    <Sheet
-      open={open}
-      modal={false}
-      onOpenChange={(new_state) => {
-        console.log("setting mobile nav open", new_state);
-        mobile_nav_store.set.open(new_state);
-      }}
-    >
-      <SheetTrigger asChild>
-        <Button variant="outline" size="icon">
-          <MenuIcon />
-        </Button>
-      </SheetTrigger>
-      <SheetContent onOpenAutoFocus={(e) => e.preventDefault()}>
-        <SheetHeader>
-          <div className="flex w-full items-center justify-center">
-            <SheetClose asChild>
-              <Link href="/">
-                <Logo className="w-32" />
-              </Link>
-            </SheetClose>
-          </div>
-          <div className="flex justify-end">
-            <EditingButtons
-              published_article={published_article}
-              draft_article={draft_article}
-              session={session}
-            />
-          </div>
-          <SheetTitle>Jamarski klub Novo mesto</SheetTitle>
-          <VisuallyHidden>
-            <SheetDescription>Mobile navigation bar</SheetDescription>
-          </VisuallyHidden>
-        </SheetHeader>
-        <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-24 pl-6">
-          <div className="flex w-full items-center justify-between pb-4 pt-2">
-            <SearchIcon />
-            <FacebookIcon />
-            <YoutubeIcon />
-            <ContactIcon />
-            <IntranetIcon />
-          </div>
-          {links.map((link) => (
-            <Fragment key={link.href}>
-              <Link
-                className="block"
-                href={`/${link.href}`}
-                onClick={() => {
-                  mobile_nav_store.set.open(false);
-                }}
-              >
-                {link.title}
-              </Link>
-              {link.active && <div id="mobile-toc" />}
-            </Fragment>
-          ))}
-        </ScrollArea>
-      </SheetContent>
-    </Sheet>
-  );
+	return (
+		<Sheet
+			open={open}
+			modal={false}
+			onOpenChange={(new_state) => {
+				console.log("setting mobile nav open", new_state);
+				mobile_nav_store.set("open", new_state);
+			}}
+		>
+			<SheetTrigger asChild>
+				<Button variant="outline" size="icon">
+					<MenuIcon />
+				</Button>
+			</SheetTrigger>
+			<SheetContent onOpenAutoFocus={(e) => e.preventDefault()}>
+				<SheetHeader>
+					<div className="flex w-full items-center justify-center">
+						<SheetClose asChild>
+							<Link href="/">
+								<Logo className="w-32" />
+							</Link>
+						</SheetClose>
+					</div>
+					<div className="flex justify-end">
+						<EditingButtons
+							published_article={published_article}
+							draft_article={draft_article}
+							session={session}
+						/>
+					</div>
+					<SheetTitle>Jamarski klub Novo mesto</SheetTitle>
+					<VisuallyHidden>
+						<SheetDescription>Mobile navigation bar</SheetDescription>
+					</VisuallyHidden>
+				</SheetHeader>
+				<ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-24 pl-6">
+					<div className="flex w-full items-center justify-between pb-4 pt-2">
+						<SearchIcon />
+						<FacebookIcon />
+						<YoutubeIcon />
+						<ContactIcon />
+						<IntranetIcon />
+					</div>
+					{links.map((link) => (
+						<Fragment key={link.href}>
+							<Link
+								className="block"
+								href={`/${link.href}`}
+								onClick={() => {
+									mobile_nav_store.set("open", false);
+								}}
+							>
+								{link.title}
+							</Link>
+							{link.active && <div id="mobile-toc" />}
+						</Fragment>
+					))}
+				</ScrollArea>
+			</SheetContent>
+		</Sheet>
+	);
 }

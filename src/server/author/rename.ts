@@ -9,26 +9,26 @@ import { rename_guest_validator } from "./validator";
 import { getServerAuthSession } from "../auth";
 
 export async function rename_guest(
-  input: z.infer<typeof rename_guest_validator>,
+	input: z.infer<typeof rename_guest_validator>,
 ) {
-  const session = await getServerAuthSession();
-  if (!session) {
-    throw new Error("Unauthorized");
-  }
+	const session = await getServerAuthSession();
+	if (!session) {
+		throw new Error("Unauthorized");
+	}
 
-  const validated_input = rename_guest_validator.safeParse(input);
-  if (!validated_input.success) {
-    throw new Error(validated_input.error.message);
-  }
+	const validated_input = rename_guest_validator.safeParse(input);
+	if (!validated_input.success) {
+		throw new Error(validated_input.error.message);
+	}
 
-  const result = await db
-    .update(Author)
-    .set({ name: input.name })
-    .where(eq(Author.id, input.id))
-    .returning();
+	const result = await db
+		.update(Author)
+		.set({ name: input.name })
+		.where(eq(Author.id, input.id))
+		.returning();
 
-  revalidateTag("authors");
-  revalidatePath("/");
+	revalidateTag("authors", "max");
+	revalidatePath("/");
 
-  return result;
+	return result;
 }

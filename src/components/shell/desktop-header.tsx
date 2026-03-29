@@ -15,6 +15,7 @@ import type {
 	PublishedArticleWithAuthors,
 } from "../article/adapter";
 import { createStore } from "zustand-x";
+import { useStoreValue } from "zustand-x";
 import {
 	ContactIcon,
 	FacebookIcon,
@@ -30,10 +31,15 @@ export interface ShellStore {
 	navbar_height: number | undefined;
 }
 
-export const shell_store = createStore("shell-store")<ShellStore>({
-	is_header_sticky: false,
-	navbar_height: undefined,
-});
+export const shell_store = createStore<ShellStore>(
+	{
+		is_header_sticky: false,
+		navbar_height: undefined,
+	},
+	{
+		name: "shell-store",
+	},
+);
 
 export function DesktopHeader({
 	published_article,
@@ -48,8 +54,8 @@ export function DesktopHeader({
 }) {
 	const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
 	const header_ref = useRef<HTMLDivElement | null>(null);
-	const is_header_sticky = shell_store.use.is_header_sticky();
-	const navbar_height = shell_store.use.navbar_height();
+	const is_header_sticky = useStoreValue(shell_store, "is_header_sticky");
+	const navbar_height = useStoreValue(shell_store, "navbar_height");
 	const md_breakpoint = useBreakpoint("md");
 
 	const handle_scroll = useCallback(() => {
@@ -70,9 +76,9 @@ export function DesktopHeader({
       old_sticky: shell_store.get.is_header_sticky(),
     }); */
 
-		if (should_be_sticky !== shell_store.get.is_header_sticky()) {
+		if (should_be_sticky !== shell_store.get("is_header_sticky")) {
 			// console.log("setting sticky", { should_be_sticky, md_breakpoint });
-			shell_store.set.is_header_sticky(should_be_sticky);
+			shell_store.set("is_header_sticky", should_be_sticky);
 		}
 	}, []);
 
@@ -86,7 +92,7 @@ export function DesktopHeader({
         { md_breakpoint },
       ); */
 
-			shell_store.set.navbar_height(sticky_navbar_ref.current.clientHeight);
+			shell_store.set("navbar_height", sticky_navbar_ref.current.clientHeight);
 		}
 	}, [md_breakpoint]);
 

@@ -11,10 +11,10 @@ const initial_data = {
 	default_image: undefined,
 } satisfies GalleryStoreType;
 
-export const gallery_store = createStore("gallery")<GalleryStoreType>(
-	initial_data,
-).extendActions((set, get) => ({
+export const gallery_store = createStore<GalleryStoreType>(initial_data, {
+	name: "gallery",
+}).extendActions(({ set, get }) => ({
 	add_image: (image: EditorJSImageData) => {
-		set.images(get.images().concat(image));
+		set("images", get("images").concat(image));
 	},
 }));

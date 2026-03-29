@@ -10,58 +10,60 @@ import { getServerAuthSession } from "../auth";
 import { assert_one } from "~/lib/assert-length";
 
 export async function save_draft(input: z.infer<typeof save_draft_validator>) {
-  const session = await getServerAuthSession();
-  if (!session) {
-    throw new Error("Unauthorized");
-  }
+	const session = await getServerAuthSession();
+	if (!session) {
+		throw new Error("Unauthorized");
+	}
 
-  const validated_input = save_draft_validator.safeParse(input);
-  if (!validated_input.success) {
-    throw new Error(validated_input.error.message);
-  }
+	const validated_input = save_draft_validator.safeParse(input);
+	if (!validated_input.success) {
+		throw new Error(validated_input.error.message);
+	}
 
-  const transaction = db.transaction(async (tx) => {
-    // console.log("saving draft input", input);
+	const transaction = db.transaction(async (tx) => {
+		// console.log("saving draft input", input);
 
-    const updated_drafts = await tx
-      .update(DraftArticle)
-      .set(input.article)
-      .where(eq(DraftArticle.id, input.draft_id))
-      .returning();
+		const updated_drafts = await tx
+			.update(DraftArticle)
+			.set(input.article)
+			.where(eq(DraftArticle.id, input.draft_id))
+			.returning();
 
-    assert_one(updated_drafts);
+		assert_one(updated_drafts);
 
-    await tx
-      .delete(DraftArticlesToAuthors)
-      .where(eq(DraftArticlesToAuthors.draft_id, input.draft_id));
+		await tx
+			.delete(DraftArticlesToAuthors)
+			.where(eq(DraftArticlesToAuthors.draft_id, input.draft_id));
 
-    if (input.author_ids.length !== 0) {
-      const values = input.author_ids.map((author_id, index) => ({
-        author_id,
-        draft_id: input.draft_id,
-        order: index,
-      }));
+		if (input.author_ids.length !== 0) {
+			const values = input.author_ids.map(
+				(author_id: number, index: number) => ({
+					author_id,
+					draft_id: input.draft_id,
+					order: index,
+				}),
+			);
 
-      // console.log("save_draft values", values);
-      await tx.insert(DraftArticlesToAuthors).values(values);
-    }
+			// console.log("save_draft values", values);
+			await tx.insert(DraftArticlesToAuthors).values(values);
+		}
 
-    const first_draft = await tx.query.DraftArticle.findFirst({
-      where: eq(DraftArticle.id, input.draft_id),
-      with: {
-        draft_articles_to_authors: {
-          with: { author: true },
-          orderBy: asc(DraftArticlesToAuthors.order),
-        },
-      },
-    });
+		const first_draft = await tx.query.DraftArticle.findFirst({
+			where: eq(DraftArticle.id, input.draft_id),
+			with: {
+				draft_articles_to_authors: {
+					with: { author: true },
+					orderBy: asc(DraftArticlesToAuthors.order),
+				},
+			},
+		});
 
-    // console.log("save_draft first_draft", first_draft);
+		// console.log("save_draft first_draft", first_draft);
 
-    return first_draft;
-  });
+		return first_draft;
+	});
 
-  revalidateTag("drafts");
-  revalidatePath("/");
-  return transaction;
+	revalidateTag("drafts", "max");
+	revalidatePath("/");
+	return transaction;
 }

@@ -6,7 +6,7 @@ import { gallery_store } from "~/components/gallery-store";
 import image_sizes from "../../artifacts/image_sizes.json";
 import { env } from "~/env";
 import { useState, useEffect } from "react";
-import { type EditorJSImageData } from "~/lib/editor-utils";
+import type { EditorJSImageData } from "~/lib/editor-utils";
 
 interface ImageWithCaptionProps extends ImageProps {
 	caption?: React.ReactNode;
@@ -40,7 +40,7 @@ export function ImageWithCaption({
 
 	useEffect(() => {
 		if (!imageData) return;
-		gallery_store.set.add_image(imageData);
+		gallery_store.set("add_image", imageData);
 	}, [imageData]);
 
 	if (typeof src !== "string") throw new Error("Image src should be string");
@@ -60,7 +60,7 @@ export function ImageWithCaption({
 				{...props}
 				onClick={() => {
 					if (!imageData) return;
-					gallery_store.set.default_image(imageData);
+					gallery_store.set("default_image", imageData);
 				}}
 			/>
 			{caption && <figcaption>{caption}</figcaption>}
