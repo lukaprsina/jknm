@@ -1,0 +1,21 @@
+2026-04-08 19:42:56.017 [info] upload_file_to_b2 start of function
+2026-04-08 19:42:56.043 [info] upload_file_to_b2 {
+  directory: '1271',
+  file_type: 'image',
+  external_url: null,
+  title: 'tecaj1.jpg',
+  mime_type: 'image/jpeg',
+  key: '1271/tecaj1.jpg',
+  bucket: 'jknm-osnutki',
+  crop_entry: null
+}
+2026-04-08 19:42:56.683 [error] Error: 
+    at e.request (.next/server/chunks/[root-of-the-server]__0a8abza._.js:1:334155)
+    at async p.default.refreshBucketInfo (.next/server/chunks/[root-of-the-server]__0a8abza._.js:1:331292)
+    at async p.default.getBucketId (.next/server/chunks/[root-of-the-server]__0a8abza._.js:1:331086)
+    at async o.requestNew (.next/server/chunks/[root-of-the-server]__0a8abza._.js:1:328138)
+    at async p.default.uploadSinglePart (.next/server/chunks/[root-of-the-server]__0a8abza._.js:1:331656)
+    at async p.default.upload (.next/server/chunks/[root-of-the-server]__0a8abza._.js:1:331899)
+    at async ee (.next/server/chunks/[root-of-the-server]__0a8abza._.js:9:21336) {
+  apiData: { code: 'unauthorized', message: '', status: 401 }
+}
