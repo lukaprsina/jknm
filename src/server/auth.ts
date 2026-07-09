@@ -64,7 +64,7 @@ export const authOptions: NextAuthOptions = {
 		accountsTable: accounts,
 		sessionsTable: sessions,
 		verificationTokensTable: verificationTokens,
-	}) as Adapter,
+	}),
 	providers: [
 		/* CredentialsProvider({
       name: "Credentials",

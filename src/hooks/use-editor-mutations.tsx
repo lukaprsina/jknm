@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/require-await */
+ 
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
