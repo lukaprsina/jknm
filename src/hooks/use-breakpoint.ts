@@ -1,8 +1,12 @@
 import { create } from "@kodingdotninja/use-tailwind-breakpoint";
-import resolveConfig from "tailwindcss/resolveConfig";
 
-import tailwindConfig from "~/../tailwind.config";
+const screens = {
+  sm: "640px",
+  md: "768px",
+  lg: "1024px",
+  xl: "1280px",
+  "2xl": "1536px",
+  not_center: "1880px",
+} as const;
 
-const config = resolveConfig(tailwindConfig);
-
-export const { useBreakpoint } = create(config.theme.screens);
+export const { useBreakpoint } = create(screens);

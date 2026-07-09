@@ -34,10 +34,7 @@ export async function publish(input: z.infer<typeof publish_validator>) {
 	}
 
 	console.warn("Publishing article with input:", input);
-	let validated_input: z.SafeParseReturnType<
-		unknown,
-		z.infer<typeof publish_validator>
-	>;
+	let validated_input: ReturnType<typeof publish_validator.safeParse>;
 	try {
 		validated_input = publish_validator.safeParse(input);
 	} catch (error) {

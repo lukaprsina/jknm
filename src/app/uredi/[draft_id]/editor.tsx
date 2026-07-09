@@ -3,14 +3,14 @@
 import "./editor.css";
 
 import type {
-  DraftArticleWithAuthors,
-  PublishedArticleWithAuthors,
+	DraftArticleWithAuthors,
+	PublishedArticleWithAuthors,
 } from "~/components/article/adapter";
 import { EditorProvider } from "~/components/editor/editor-context";
 import { editor_store } from "~/components/editor/editor-store";
 import {
-  DraftArticleContext,
-  PublishedArticleContext,
+	DraftArticleContext,
+	PublishedArticleContext,
 } from "~/components/article/context";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { MyToolbar } from "./toolbar";
@@ -20,41 +20,41 @@ import { article_variants } from "~/lib/page-variants";
 // const Toolbar = dynamic(() => import("./toolbar"), { ssr: false });
 
 export default function MyEditor({
-  draft,
-  published,
+	draft,
+	published,
 }: {
-  draft: DraftArticleWithAuthors;
-  published?: PublishedArticleWithAuthors;
+	draft: DraftArticleWithAuthors;
+	published?: PublishedArticleWithAuthors;
 }) {
-  return (
-    <DraftArticleContext.Provider value={draft}>
-      <PublishedArticleContext.Provider value={published}>
-        <EditorProvider>
-          <div className={cn("flex flex-col gap-6", article_variants())}>
-            <DuplicateUrlWarning />
-            <Card className="mx-auto w-full">
-              <CardHeader>
-                <MyToolbar />
-              </CardHeader>
-              <CardContent className="prose-h1:!mb-6 prose-img:!my-0">
-                <div id="editorjs" />
-              </CardContent>
-            </Card>
-            <SettingsSummary />
-          </div>
-        </EditorProvider>
-      </PublishedArticleContext.Provider>
-    </DraftArticleContext.Provider>
-  );
+	return (
+		<DraftArticleContext.Provider value={draft}>
+			<PublishedArticleContext.Provider value={published}>
+				<EditorProvider>
+					<div className={cn("flex flex-col gap-6", article_variants())}>
+						<DuplicateUrlWarning />
+						<Card className="mx-auto w-full">
+							<CardHeader>
+								<MyToolbar />
+							</CardHeader>
+							<CardContent className="prose prose-h1:mb-6! prose-img:my-0!">
+								<div id="editorjs" />
+							</CardContent>
+						</Card>
+						<SettingsSummary />
+					</div>
+				</EditorProvider>
+			</PublishedArticleContext.Provider>
+		</DraftArticleContext.Provider>
+	);
 }
 
 function DuplicateUrlWarning() {
-  /* const duplicate_urls = api.article.check_if_url_duplicate.useQuery({
+	/* const duplicate_urls = api.article.check_if_url_duplicate.useQuery({
     url: store_url,
     ignore_published_id: draft.published_id ?? undefined,
   }); */
-  return null;
-  /* const store_url = editor_store.use.url();
+	return null;
+	/* const store_url = editor_store.use.url();
   if(!duplicate_urls.data || duplicate_urls.data.urls.length === 0)
     return
 
@@ -82,11 +82,11 @@ function DuplicateUrlWarning() {
     ); */
 }
 function SettingsSummary() {
-  const data = editor_store.useStore();
+	const data = editor_store.useStore();
 
-  return (
-    <pre className="my-8 h-full overflow-auto">
-      {JSON.stringify(data, null, 2)}
-    </pre>
-  );
+	return (
+		<pre className="my-8 h-full overflow-auto">
+			{JSON.stringify(data, null, 2)}
+		</pre>
+	);
 }

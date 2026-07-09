@@ -7,7 +7,7 @@ export const content_validator = z
       z.object({
         id: z.string().optional(),
         type: z.string(),
-        data: z.record(z.any()),
+        data: z.record(z.string(), z.any()),
       }),
     ),
     version: z.string().optional(),

@@ -257,9 +257,9 @@ async function parse_csv_article(
 		const images = root.querySelectorAll("img");
 		for (const image of images) {
 			const possible_div_1 = image.parentNode;
-			const possible_div_2 = possible_div_1.parentNode;
+			const possible_div_2 = possible_div_1?.parentNode ?? null;
 			const valid =
-				possible_div_1.tagName === "DIV" || possible_div_2.tagName === "DIV";
+				possible_div_1?.tagName === "DIV" || possible_div_2?.tagName === "DIV";
 
 			if (!valid) {
 				console.log(
@@ -271,7 +271,7 @@ async function parse_csv_article(
 					"Images isn't in div",
 					imported_article.objave_id,
 					image.outerHTML,
-					{ first: possible_div_1.tagName, second: possible_div_2.tagName },
+					{ first: possible_div_1?.tagName, second: possible_div_2?.tagName },
 				);
 				problems.images_no_div.push([
 					imported_article.objave_id,
