@@ -1,0 +1,99 @@
+decision,name,visibility,diskMB,pushed,stars,lang,notes
+k,jknm,PUBLIC,9.5,2026-07-09,0,TypeScript,this repo — actively used
+k,uozp-naloge,PUBLIC,0.1,2026-06-30,0,Python,recent course project
+k,opb,PRIVATE,0.1,2026-06-30,0,TypeScript,actively developed
+k,dis,PRIVATE,905,2026-06-29,0,Python,actively developed — big disk
+k,megatron,PUBLIC,27.7,2026-06-29,0,Python,actively developed
+d,colcon_ws,PRIVATE,0.1,2026-04-03,0,Shell,ROS workspace — done
+d,hw3-fitting-lukaprsina,PRIVATE,0,2026-03-26,0,Python,fork — school hw done
+d,dis_tutorial3,PUBLIC,25.9,2026-03-24,0,Python,fork — tutorial done
+k,ace-roster,PRIVATE,123,2026-03-24,1,TypeScript,active private project
+d,hw2-linreg-lukaprsina,PRIVATE,0.2,2026-03-17,0,Python,school hw done
+k,jknm-convex,PUBLIC,3.6,2026-03-09,0,TypeScript,related to main project
+d,luka_ws,PRIVATE,0,2026-03-05,0,Python,ROS workspace — done
+d,dis_tutorial1,PUBLIC,0.1,2026-03-03,0,Python,fork — tutorial done
+k,zagovor,PRIVATE,12.4,2026-01-14,0,Python,thesis work
+k,is-seminarska-nlp,PRIVATE,24.8,2026-01-11,0,Jupyter Notebook,thesis/seminar work
+d,05_assignement,PRIVATE,10.1,2026-01-07,0,Python,school assignment done
+d,04_assignement,PRIVATE,0.7,2026-01-07,0,Python,school assignment done
+d,IS-Course-Labs-UL-FRI,PUBLIC,8.9,2025-12-23,0,Python,fork — school
+d,GRIP,PUBLIC,0.7,2025-12-22,0,Python,fork — school
+k,thesis-chats,PRIVATE,0.1,2025-12-14,0,,thesis work
+d,MLG,PRIVATE,6.9,2025-12-04,0,Jupyter Notebook,school project done
+d,is-seminarska,PRIVATE,1.1,2025-11-28,0,Jupyter Notebook,superseded by NLP version
+d,umetno-zaznavanje,PRIVATE,9.2,2025-11-27,0,Python,school done
+d,assignment2,PRIVATE,5.1,2025-11-09,0,Jupyter Notebook,school done
+d,vite-react,PRIVATE,0,2025-10-28,0,CSS,throwaway experiment
+d,cf-start-convex,PRIVATE,0.3,2025-10-17,0,TypeScript,throwaway experiment
+d,roots-of-unity,PRIVATE,0,2025-09-03,0,TypeScript,throwaway experiment
+k,Baudgeist,PRIVATE,2.5,2025-08-19,0,C,game project — maybe revisit
+k,baudgeist-server,PRIVATE,0.1,2025-08-19,0,Rust,game server — maybe revisit
+k,jknm-solid,PRIVATE,0.1,2025-07-14,0,CSS,related experiment
+d,OS-vse,PRIVATE,41.5,2025-07-01,0,Python,school done
+k,csz-converter,PRIVATE,0,2025-06-30,0,TypeScript,useful utility — keep for reference
+d,editorjs-md-parser,PUBLIC,0.3,2025-06-29,0,JavaScript,fork — not mine
+k,jknm-start,PUBLIC,3.8,2025-06-29,0,MDX,related to main
+d,aws-tanstack-start,PRIVATE,0.2,2025-06-27,0,TypeScript,throwaway experiment
+a,aps-good-problems,PRIVATE,0.4,2025-06-16,0,,APS reference — keep
+a,max-flow-visualization,PRIVATE,0.1,2025-06-15,0,TypeScript,nice visualization — keep for portfolio
+k,Non-Euclidian-Raytracing,PRIVATE,1.8,2025-06-05,0,ShaderLab,recent personal project
+k,raytracing,PRIVATE,0.2,2025-05-20,0,Julia,recent personal project
+d,tanstack-start,PRIVATE,0,2025-05-20,0,,empty repo — never used
+d,Matematicno-Modeliranje,PRIVATE,0.2,2025-05-15,0,Jupyter Notebook,fork — school done
+d,TIS-HW2,PRIVATE,0,2025-04-21,0,Python,school hw done
+d,TIS-HW1,PRIVATE,0,2025-03-28,0,Python,school hw done
+d,HW1,PUBLIC,0,2025-03-26,0,Julia,school hw done
+d,discord-image-scraper,PRIVATE,0,2025-03-08,0,TypeScript,throwaway experiment
+d,my-tanstack-project,PRIVATE,0,2024-11-26,0,TypeScript,throwaway experiment
+d,radix-primitives,PUBLIC,19.2,2024-10-03,0,TypeScript,fork — not mine
+a,jknm-turborepo,PUBLIC,2.9,2024-09-02,0,TypeScript,old version — superseded by jknm
+k,cvinger,PUBLIC,681,2024-08-14,0,TypeScript,production website
+a,jknm-old,PUBLIC,15.4,2024-07-23,1,TypeScript,old version — superseded by jknm
+d,facebook-lexical,PUBLIC,0,2024-07-18,0,TypeScript,throwaway experiment
+k,engine-cpp,PUBLIC,0.5,2024-07-15,1,C++,personal game engine — keep
+d,RK_LDN7,PRIVATE,0.1,2024-05-28,0,Java,school done
+d,editor,PUBLIC,2.3,2024-02-24,0,TypeScript,fork — not mine
+d,anze-nov,PUBLIC,9.5,2024-02-18,0,TypeScript,old project — done
+d,utopia,PRIVATE,0.2,2024-02-08,0,Rust,old experiment — done
+d,smalls,PUBLIC,0.1,2024-01-19,0,TypeScript,throwaway experiment
+d,wordle-fri,PRIVATE,0.1,2024-01-07,0,Java,school done
+d,roget,PUBLIC,0.9,2024-01-07,0,Rust,fork — not mine
+d,test,PUBLIC,8,2024-01-02,0,TypeScript,fork — not mine
+d,next14test,PUBLIC,0.1,2023-11-14,0,TypeScript,throwaway experiment
+d,solid-start,PUBLIC,11.2,2023-11-10,0,TypeScript,fork — not mine
+d,programiranje,PUBLIC,0.1,2023-11-03,0,Java,school done
+a,moodle_calendar,PUBLIC,0,2023-10-20,0,TypeScript,useful utility — keep for reference
+a,upload-files,PRIVATE,2.1,2023-08-26,0,TypeScript,useful utility — keep for reference
+a,musescore-rip,PUBLIC,0,2023-08-14,0,Rust,useful tool — keep for reference
+k,fizika,PUBLIC,5.2,2023-08-04,0,TypeScript,production website
+d,spletna_stran,PUBLIC,0.1,2023-05-22,0,TypeScript,old school project — done
+a,ric-dl,PUBLIC,0,2023-05-09,0,Rust,useful scraper — keep for reference
+k,math-eval,PUBLIC,0.5,2023-04-25,1,Rust,published MIT — keep
+a,fizika-old,PUBLIC,49.6,2023-04-17,1,Rust,already archived — superseded by fizika
+k,arduino-stopwatch,PUBLIC,0,2023-03-27,1,C++,maker project — keep for reference
+a,nem,PUBLIC,0,2023-03-21,0,Rust,rust experiment — maybe revisit
+d,competitive,PUBLIC,0,2023-03-11,0,,empty — never used
+d,solid-jsx-provider,PUBLIC,0.1,2023-01-01,0,TypeScript,published package — keep
+d,solid-google-auth,PUBLIC,0.1,2022-12-17,0,TypeScript,published package — keep
+d,turisticna,PUBLIC,5.2,2022-06-10,0,TypeScript,high school project — done
+d,tekmovanja,PUBLIC,0.2,2022-03-11,0,C++,competition — done
+d,gis_lidar_downloader,PUBLIC,0,2022-02-12,0,Rust,throwaway experiment
+d,merge-sort,PUBLIC,0.1,2022-02-02,0,TypeScript,tiny educational — done
+a,uno,PUBLIC,0,2022-01-21,0,Rust,rust game — maybe revisit
+d,fri,PUBLIC,2.9,2021-12-09,0,Rust,school done
+a,engine,PUBLIC,0,2021-11-28,1,Rust,old engine prototype — sentimental
+a,dodaj_jamo,PUBLIC,0,2021-10-31,0,C++,caving utility — keep for reference
+d,school,PUBLIC,0,2021-10-14,0,C++,school done
+d,Vulkan-Samples,PUBLIC,38.8,2021-10-11,0,C++,fork — not mine
+d,VulkanMemoryAllocator,PUBLIC,24.1,2021-10-08,0,C,fork — not mine
+d,Vulkan-Samples-Assets,PUBLIC,183,2021-08-30,0,,fork — not mine
+a,EngineOld,PUBLIC,47.2,2021-03-30,1,C++,superseded — archiving for history
+a,EngineTest,PUBLIC,0.1,2021-02-28,0,C++,superseded — archiving for history
+d,imgui,PUBLIC,69.2,2021-02-22,0,C++,fork — not mine
+a,EngineHazel,PUBLIC,13.5,2021-02-21,1,C++,superseded — archiving for history
+d,OpenGL,PUBLIC,51,2021-02-13,0,C++,old learning — archiving for history
+a,drive,PUBLIC,5,2021-01-23,1,JavaScript,sentimental — 1 star
+a,avtopralnica,PUBLIC,0.5,2020-11-19,0,JavaScript,school project — done
+a,cvinger.net,PUBLIC,739,2020-10-27,0,HTML,superseded by cvinger — 739MB to reclaim
+d,stack5,PRIVATE,0,2020-10-27,0,C,security CTF — done
+d,novice,PUBLIC,3.5,2020-10-12,0,JavaScript,old school project — done
