@@ -1,7 +1,8 @@
 // "use client";
 
 import Image from "next/image";
-import React, {
+import type React from "react";
+import {
 	useCallback,
 	useContext,
 	useEffect,
@@ -16,22 +17,22 @@ import { Card } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 import type { ThumbnailType } from "~/lib/validators";
 import "react-image-crop/dist/ReactCrop.css";
-import type { EditorJSImageData } from "~/lib/editor-utils";
-import { PlusIcon, TrashIcon } from "lucide-react";
-import { AspectRatio } from "~/components/ui/aspect-ratio";
-import { upload_image_by_file } from "~/components/aws-s3/upload-file";
-import { get_s3_draft_directory } from "~/lib/article-utils";
-import { get_s3_prefix } from "~/lib/s3-publish";
-import { env } from "~/env";
-import { DraftArticleContext } from "~/components/article/context";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import { Button } from "~/components/ui/button";
-import { useToast } from "~/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
+import { PlusIcon, TrashIcon } from "lucide-react";
 import type { z } from "zod";
-import type { delete_custom_thumbnail_validator } from "~/server/article/validators";
-import { delete_custom_thumbnail } from "~/server/article/delete";
 import { useStoreValue } from "zustand-x";
+import { DraftArticleContext } from "~/components/article/context";
+import { upload_image_by_file } from "~/components/aws-s3/upload-file";
+import { AspectRatio } from "~/components/ui/aspect-ratio";
+import { Button } from "~/components/ui/button";
+import { ScrollArea } from "~/components/ui/scroll-area";
+import { env } from "~/env";
+import { useToast } from "~/hooks/use-toast";
+import { get_s3_draft_directory } from "~/lib/article-utils";
+import type { EditorJSImageData } from "~/lib/editor-utils";
+import { get_s3_prefix } from "~/lib/s3-publish";
+import { delete_custom_thumbnail } from "~/server/article/delete";
+import type { delete_custom_thumbnail_validator } from "~/server/article/validators";
 
 export function ImageSelector({
 	image: formImage,

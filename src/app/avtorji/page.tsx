@@ -13,14 +13,14 @@ import { AuthorsDataTable } from "./table";
 ); */
 
 export default async function Authors() {
-  const session = await getServerAuthSession();
-  if (!session) redirect("/");
+	const session = await getServerAuthSession();
+	if (!session) redirect("/");
 
-  return (
-    <Shell>
-      <div className={cn(page_variants(), article_variants())}>
-        <AuthorsDataTable />
-      </div>
-    </Shell>
-  );
+	return (
+		<Shell>
+			<div className={cn(page_variants(), article_variants())}>
+				<AuthorsDataTable />
+			</div>
+		</Shell>
+	);
 }

@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import type { ToolConstructable, ToolSettings } from "@editorjs/editorjs";
+
 // @ts-expect-error no types
 import AttachesTool from "@editorjs/attaches";
 // @ts-expect-error no types
 import CheckList from "@editorjs/checklist";
 import Code from "@editorjs/code";
 import Delimiter from "@editorjs/delimiter";
+import type { ToolConstructable, ToolSettings } from "@editorjs/editorjs";
 // @ts-expect-error no types
 import Embed from "@editorjs/embed";
 import Header from "@editorjs/header";
@@ -21,12 +22,12 @@ import Warning from "@editorjs/warning";
 import createGenericInlineTool, {
 	UnderlineInlineTool,
 } from "editorjs-inline-tool";
+import { get_s3_draft_directory } from "~/lib/article-utils";
 import {
 	upload_file,
 	upload_image_by_file,
 	upload_image_by_url,
 } from "../aws-s3/upload-file";
-import { get_s3_draft_directory } from "~/lib/article-utils";
 import { editor_store } from "./editor-store";
 
 export function EDITOR_JS_PLUGINS(): Record<

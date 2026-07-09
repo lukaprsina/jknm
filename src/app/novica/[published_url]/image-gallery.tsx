@@ -1,9 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { XIcon } from "lucide-react";
 import Image from "next/image";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-
+import { useStoreValue } from "zustand-x";
+import { gallery_store } from "~/components/gallery-store";
+import { Button } from "~/components/ui/button";
 import type { CarouselApi } from "~/components/ui/carousel";
 import {
 	Carousel,
@@ -12,12 +15,8 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "~/components/ui/carousel";
-import { gallery_store } from "~/components/gallery-store";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
-import { useStoreValue } from "zustand-x";
 import type { EditorJSImageData } from "~/lib/editor-utils";
-import { Button } from "~/components/ui/button";
-import { XIcon } from "lucide-react";
 import { cn } from "~/lib/utils";
 
 const GALLERY_CANCEL_KEYS: string[] = [

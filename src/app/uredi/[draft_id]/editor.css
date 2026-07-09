@@ -1,8 +1,8 @@
 .ce-block__content,
 .ce-toolbar__content {
-  max-width: calc(100% - 180px) !important;
+	max-width: calc(100% - 180px) !important;
 }
 
 .cdx-block {
-  max-width: 100% !important;
+	max-width: 100% !important;
 }

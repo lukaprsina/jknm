@@ -1,6 +1,6 @@
 import type { OutputBlockData } from "@editorjs/editorjs";
-import sanitizeHtml from "sanitize-html";
 import { decode } from "html-entities";
+import sanitizeHtml from "sanitize-html";
 
 const ALLOWED_BLOCKS = ["paragraph", "list", "quote"];
 

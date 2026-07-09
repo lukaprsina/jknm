@@ -1,31 +1,31 @@
 "use server";
 
+import { algoliasearch as searchClient } from "algoliasearch";
+import { asc, eq } from "drizzle-orm";
+import { klona } from "klona";
+import { revalidatePath } from "next/cache";
 import type { z } from "zod";
+import { env } from "~/env";
+import { convert_article_to_algolia_object } from "~/lib/algoliasearch";
+import {
+	convert_title_to_url,
+	get_s3_draft_directory,
+	get_s3_published_directory,
+} from "~/lib/article-utils";
+import { assert_one } from "~/lib/assert-length";
+import {
+	delete_s3_directory,
+	rename_s3_files_and_content,
+	s3_copy_thumbnails,
+} from "../../lib/s3-utils";
+import { getServerAuthSession } from "../auth";
 import { db } from "../db";
 import {
 	DraftArticle,
 	PublishedArticle,
 	PublishedArticlesToAuthors,
 } from "../db/schema";
-import { asc, eq } from "drizzle-orm";
-import {
-	convert_title_to_url,
-	get_s3_draft_directory,
-	get_s3_published_directory,
-} from "~/lib/article-utils";
-import {
-	delete_s3_directory,
-	rename_s3_files_and_content,
-	s3_copy_thumbnails,
-} from "../../lib/s3-utils";
-import { env } from "~/env";
-import { klona } from "klona";
-import { assert_one } from "~/lib/assert-length";
-import { algoliasearch as searchClient } from "algoliasearch";
-import { convert_article_to_algolia_object } from "~/lib/algoliasearch";
-import { revalidatePath } from "next/cache";
 import { publish_validator } from "./validators";
-import { getServerAuthSession } from "../auth";
 
 export async function publish(input: z.infer<typeof publish_validator>) {
 	const session = await getServerAuthSession();

@@ -1,13 +1,13 @@
+import type { OutputData } from "@editorjs/editorjs";
+import type { useToast } from "~/hooks/use-toast";
+import { convert_title_to_url } from "~/lib/article-utils";
 import {
 	get_heading_from_editor,
 	get_image_data_from_editor,
 } from "~/lib/editor-utils";
-import type { OutputData } from "@editorjs/editorjs";
-import { editor_store } from "./editor-store";
-import type { useToast } from "~/hooks/use-toast";
-import { NoHeadingButton, WrongHeadingButton } from "./error-buttons";
-import { convert_title_to_url } from "~/lib/article-utils";
 import type { ThumbnailType } from "~/lib/validators";
+import { editor_store } from "./editor-store";
+import { NoHeadingButton, WrongHeadingButton } from "./error-buttons";
 
 export function update_settings_from_editor({
 	title,

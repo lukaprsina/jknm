@@ -1,11 +1,11 @@
 "use server";
 
+import { revalidatePath, revalidateTag } from "next/cache";
 import type { z } from "zod";
+import { getServerAuthSession } from "../auth";
 import { db } from "../db";
 import { Author } from "../db/schema";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { insert_guest_validator } from "./validator";
-import { getServerAuthSession } from "../auth";
 
 export async function insert_guest(
 	input: z.infer<typeof insert_guest_validator>,

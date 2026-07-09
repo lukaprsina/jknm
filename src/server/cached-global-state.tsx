@@ -2,26 +2,26 @@ import { memoize } from "nextjs-better-unstable-cache";
 import { db } from "~/server/db";
 
 export const cachedAllAuthors = memoize(
-  async () => {
-    return db.query.Author.findMany();
-  },
-  {
-    revalidateTags: ["authors"],
-    // log: ["dedupe", "datacache", "verbose"],
-    logid: "authors",
-  },
+	async () => {
+		return db.query.Author.findMany();
+	},
+	{
+		revalidateTags: ["authors"],
+		// log: ["dedupe", "datacache", "verbose"],
+		logid: "authors",
+	},
 );
 
 export const cachedDuplicateUrls = memoize(
-  async () => {
-    const urls = await db.query.DuplicatedArticleUrls.findMany();
-    return urls.map((data) => data.url);
-  },
-  {
-    revalidateTags: ["duplicate-urls"],
-    // log: ["dedupe", "datacache", "verbose"],
-    logid: "duplicate-urls",
-  },
+	async () => {
+		const urls = await db.query.DuplicatedArticleUrls.findMany();
+		return urls.map((data) => data.url);
+	},
+	{
+		revalidateTags: ["duplicate-urls"],
+		// log: ["dedupe", "datacache", "verbose"],
+		logid: "duplicate-urls",
+	},
 );
 
 /* export const cachedAllAuthors = memoize(

@@ -1,14 +1,14 @@
 "use client";
 
-import { cn } from "~/lib/utils";
-import { article_grid_variants, article_variants } from "~/lib/page-variants";
-import { PublishedArticleDrizzleCard } from "~/components/article/adapter";
-import { get_infinite_published2 } from "./infinite-server";
 // import type { QueryFunctionContext } from "@tanstack/react-query";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Fragment, useEffect } from "react";
 import { useIntersectionObserver } from "usehooks-ts";
+import { PublishedArticleDrizzleCard } from "~/components/article/adapter";
 import { Sponsors } from "~/components/shell/sponsors";
+import { article_grid_variants, article_variants } from "~/lib/page-variants";
+import { cn } from "~/lib/utils";
+import { get_infinite_published2 } from "./infinite-server";
 
 export type IntersectionRef = ReturnType<typeof useIntersectionObserver>["ref"];
 export function InfiniteArticles() {
@@ -55,7 +55,7 @@ export function InfiniteArticles() {
 			{infinite_published.data?.pages.map((group, group_index) => (
 				<Fragment key={group_index}>
 					{group.data.map((article, index) => {
-						let ref = undefined;
+						let ref;
 						/* if (group_index === 0 && index === 0) {
               ref = first_observer_ref;
             } else  */

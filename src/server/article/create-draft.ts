@@ -1,6 +1,19 @@
 "use server";
 
 import { asc, eq } from "drizzle-orm";
+import { revalidatePath, revalidateTag } from "next/cache";
+import type { z } from "zod";
+import type { PublishedArticleWithAuthors } from "~/components/article/adapter";
+import { env } from "~/env";
+import {
+	get_s3_draft_directory,
+	get_s3_published_directory,
+} from "~/lib/article-utils";
+import { assert_one } from "~/lib/assert-length";
+import {
+	rename_s3_files_and_content,
+	s3_copy_thumbnails,
+} from "~/lib/s3-utils";
 import { db } from "~/server/db";
 import {
 	DraftArticle,
@@ -8,21 +21,8 @@ import {
 	PublishedArticle,
 	PublishedArticlesToAuthors,
 } from "~/server/db/schema";
-import { assert_one } from "~/lib/assert-length";
-import {
-	rename_s3_files_and_content,
-	s3_copy_thumbnails,
-} from "~/lib/s3-utils";
-import {
-	get_s3_draft_directory,
-	get_s3_published_directory,
-} from "~/lib/article-utils";
-import { env } from "~/env";
-import type { PublishedArticleWithAuthors } from "~/components/article/adapter";
-import type { z } from "zod";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { create_draft_validator } from "./validators";
 import { getServerAuthSession } from "../auth";
+import { create_draft_validator } from "./validators";
 
 export async function create_draft(
 	input: z.infer<typeof create_draft_validator>,
@@ -80,7 +80,7 @@ export async function create_draft(
 		}
 
 		// otherwise, create a new draft, copied from the published one
-		let values: typeof DraftArticle.$inferInsert | undefined = undefined;
+		let values: typeof DraftArticle.$inferInsert | undefined;
 		if (input.title) {
 			values = {
 				title: input.title,

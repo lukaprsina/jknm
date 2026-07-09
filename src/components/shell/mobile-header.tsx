@@ -1,46 +1,45 @@
 "use client";
 
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { MenuIcon } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import type { Session } from "next-auth";
 import {
+	type ComponentProps,
 	Fragment,
 	useEffect,
 	useMemo,
 	useRef,
-	type ComponentProps,
 } from "react";
-import Link from "next/link";
-
-import { Logo } from "./logo";
-import {
-	Sheet,
-	SheetTrigger,
-	SheetContent,
-	SheetHeader,
-	SheetTitle,
-	SheetDescription,
-	SheetClose,
-} from "~/components/ui/sheet";
-import { MenuIcon } from "lucide-react";
+import { createStore, useStoreValue } from "zustand-x";
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import EditingButtons from "./editing-buttons";
-import type { Session } from "next-auth";
+import {
+	Sheet,
+	SheetClose,
+	SheetContent,
+	SheetDescription,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger,
+} from "~/components/ui/sheet";
+import { useBreakpoint } from "~/hooks/use-breakpoint";
+import { cn } from "~/lib/utils";
 import type {
 	DraftArticleWithAuthors,
 	PublishedArticleWithAuthors,
 } from "../article/adapter";
-import { createStore, useStoreValue } from "zustand-x";
-import { useBreakpoint } from "~/hooks/use-breakpoint";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { usePathname } from "next/navigation";
-import { cn } from "~/lib/utils";
 import { shell_store } from "./desktop-header";
+import EditingButtons from "./editing-buttons";
 import {
-	IntranetIcon,
-	FacebookIcon,
 	ContactIcon,
+	FacebookIcon,
+	IntranetIcon,
 	SearchIcon,
 	YoutubeIcon,
 } from "./icons";
+import { Logo } from "./logo";
 import { Sponsors } from "./sponsors";
 
 export const mobile_nav_store = createStore(

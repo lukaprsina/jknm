@@ -2,14 +2,14 @@
 
 import { createContext } from "react";
 import type {
-  DraftArticleWithAuthors,
-  PublishedArticleWithAuthors,
+	DraftArticleWithAuthors,
+	PublishedArticleWithAuthors,
 } from "./adapter";
 
 export const PublishedArticleContext = createContext<
-  PublishedArticleWithAuthors | undefined
+	PublishedArticleWithAuthors | undefined
 >(undefined);
 
 export const DraftArticleContext = createContext<
-  DraftArticleWithAuthors | undefined
+	DraftArticleWithAuthors | undefined
 >(undefined);

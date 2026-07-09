@@ -1,21 +1,19 @@
 "use client";
 
+import Link from "next/link";
+import type { Session } from "next-auth";
 import type React from "react";
 import { useCallback, useEffect, useRef } from "react";
-import Link from "next/link";
-
-import EditingButtons from "./editing-buttons";
-import { Logo } from "./logo";
+import { createStore, useStoreValue } from "zustand-x";
+import { Separator } from "~/components/ui/separator";
+import { useBreakpoint } from "~/hooks/use-breakpoint";
 // import Logo from "~/assets/logo-barvni.svg";
 import { cn } from "~/lib/utils";
-import { Separator } from "~/components/ui/separator";
-import type { Session } from "next-auth";
 import type {
 	DraftArticleWithAuthors,
 	PublishedArticleWithAuthors,
 } from "../article/adapter";
-import { createStore } from "zustand-x";
-import { useStoreValue } from "zustand-x";
+import EditingButtons from "./editing-buttons";
 import {
 	ContactIcon,
 	FacebookIcon,
@@ -23,8 +21,8 @@ import {
 	SearchIcon,
 	YoutubeIcon,
 } from "./icons";
+import { Logo } from "./logo";
 import { Navigation } from "./navigation";
-import { useBreakpoint } from "~/hooks/use-breakpoint";
 
 export interface ShellStore {
 	is_header_sticky: boolean;

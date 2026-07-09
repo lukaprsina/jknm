@@ -1,6 +1,6 @@
 import { createStore } from "zustand-x";
-import type { EditorJSImageData } from "../../lib/editor-utils";
 import type { ThumbnailType } from "~/lib/validators";
+import type { EditorJSImageData } from "../../lib/editor-utils";
 
 interface EditorStoreType {
 	draft_id: number;

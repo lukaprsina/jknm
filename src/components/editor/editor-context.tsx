@@ -1,5 +1,10 @@
 "use client";
 
+import EditorJS from "@editorjs/editorjs";
+// @ts-expect-error no types
+import DragDrop from "editorjs-drag-drop";
+// @ts-expect-error no types
+import Undo from "editorjs-undo";
 import type { ReactNode } from "react";
 import React, {
 	createContext,
@@ -11,19 +16,12 @@ import React, {
 	useRef,
 	useState,
 } from "react";
-import EditorJS from "@editorjs/editorjs";
-
-// @ts-expect-error no types
-import DragDrop from "editorjs-drag-drop";
-// @ts-expect-error no types
-import Undo from "editorjs-undo";
-
-import { editor_store } from "./editor-store";
-import { EDITOR_JS_PLUGINS } from "./plugins";
-import { update_settings_from_editor, validate_article } from "./editor-lib";
-import { DraftArticleContext } from "../article/context";
 import { useToast } from "~/hooks/use-toast";
 import { get_s3_draft_directory } from "~/lib/article-utils";
+import { DraftArticleContext } from "../article/context";
+import { update_settings_from_editor, validate_article } from "./editor-lib";
+import { editor_store } from "./editor-store";
+import { EDITOR_JS_PLUGINS } from "./plugins";
 
 export interface EditorContextType {
 	editor?: EditorJS;

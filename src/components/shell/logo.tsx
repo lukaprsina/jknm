@@ -1,4 +1,4 @@
-import { HTMLAttributes } from "react";
+import type { HTMLAttributes } from "react";
 
 export function Logo({ className, ...props }: HTMLAttributes<SVGElement>) {
 	return (

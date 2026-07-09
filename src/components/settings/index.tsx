@@ -1,29 +1,28 @@
 "use client";
 
 import { LogOut, RefreshCcw, SettingsIcon, UsersIcon } from "lucide-react";
-import { signOut } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-
+import { signOut } from "next-auth/react";
+import React from "react";
 import { Button } from "~/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import Link from "next/link";
-import React from "react";
 // import { AuthorsDialog } from "./authors";
 // import { useState } from "react";
 
 export function SettingsDropdown() {
-  const router = useRouter();
+	const router = useRouter();
 
-  // TODO: to bi moral biti dialog.
-  /* const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation({
+	// TODO: to bi moral biti dialog.
+	/* const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation({
     onSuccess: (data) => {
       toaster.toast({
         title: "Uspeh",
@@ -37,58 +36,58 @@ export function SettingsDropdown() {
       });
     },
   }); */
-  // const [authorDialogOpen, setAuthorDialogOpen] = useState(false);
+	// const [authorDialogOpen, setAuthorDialogOpen] = useState(false);
 
-  return (
-    <>
-      <DropdownMenu>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <SettingsIcon size={22} className="" />
-              </Button>
-            </DropdownMenuTrigger>
-          </TooltipTrigger>
-          <TooltipContent>Nastavitve</TooltipContent>
-        </Tooltip>
-        <DropdownMenuContent className="w-56">
-          <DropdownMenuLabel>Nastavitve</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            asChild /* onClick={() => setAuthorDialogOpen(true)} */
-          >
-            <Link href="/avtorji">
-              <UsersIcon className="mr-2 h-4 w-4" />
-              <span>Avtorji</span>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              // sync_duplicate_urls.mutate();
-            }}
-          >
-            <RefreshCcw className="mr-2 h-4 w-4" size={18} />
-            <span>Popravi</span>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={async () => {
-              await signOut();
-              router.push("/");
-            }}
-          >
-            <LogOut className="mr-2 h-4 w-4" />
-            <span>Odjava</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-      {/* <AuthorsDialog
+	return (
+		<>
+			<DropdownMenu>
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<DropdownMenuTrigger asChild>
+							<Button variant="ghost" size="icon">
+								<SettingsIcon size={22} className="" />
+							</Button>
+						</DropdownMenuTrigger>
+					</TooltipTrigger>
+					<TooltipContent>Nastavitve</TooltipContent>
+				</Tooltip>
+				<DropdownMenuContent className="w-56">
+					<DropdownMenuLabel>Nastavitve</DropdownMenuLabel>
+					<DropdownMenuSeparator />
+					<DropdownMenuItem
+						asChild /* onClick={() => setAuthorDialogOpen(true)} */
+					>
+						<Link href="/avtorji">
+							<UsersIcon className="mr-2 h-4 w-4" />
+							<span>Avtorji</span>
+						</Link>
+					</DropdownMenuItem>
+					<DropdownMenuItem
+						onClick={() => {
+							// sync_duplicate_urls.mutate();
+						}}
+					>
+						<RefreshCcw className="mr-2 h-4 w-4" size={18} />
+						<span>Popravi</span>
+					</DropdownMenuItem>
+					<DropdownMenuSeparator />
+					<DropdownMenuItem
+						onClick={async () => {
+							await signOut();
+							router.push("/");
+						}}
+					>
+						<LogOut className="mr-2 h-4 w-4" />
+						<span>Odjava</span>
+					</DropdownMenuItem>
+				</DropdownMenuContent>
+			</DropdownMenu>
+			{/* <AuthorsDialog
         open={authorDialogOpen}
         onClose={() => setAuthorDialogOpen(false)}
       /> */}
-    </>
-  );
+		</>
+	);
 }
 
 /* 

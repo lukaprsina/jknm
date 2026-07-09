@@ -1,9 +1,8 @@
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import { createStore } from "zustand-x";
+import { createStore, useStoreValue } from "zustand-x";
 import { shell_store } from "~/components/shell/desktop-header";
 import { mobile_nav_store } from "~/components/shell/mobile-header";
-import { useStoreValue } from "zustand-x";
 
 export interface SmoothScrollStore {
 	test_href: string | null;

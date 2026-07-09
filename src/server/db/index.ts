@@ -9,16 +9,16 @@ import * as schema from "./schema";
  * update.
  */
 const globalForDb = globalThis as unknown as {
-  conn: postgres.Sql | undefined;
+	conn: postgres.Sql | undefined;
 };
 
 // https://supabase.com/docs/guides/database/connecting-to-postgres#connecting-with-drizzle
 // https://github.com/drizzle-team/drizzle-orm/issues/1704
 const conn =
-  globalForDb.conn ??
-  postgres(env.DATABASE_URL, {
-    prepare: false,
-  });
+	globalForDb.conn ??
+	postgres(env.DATABASE_URL, {
+		prepare: false,
+	});
 if (env.NODE_ENV !== "production") globalForDb.conn = conn;
 
 export const db = drizzle(conn, { schema });

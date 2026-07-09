@@ -1,17 +1,16 @@
+import type { Metadata, ResolvingMetadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import sanitizeHtml from "sanitize-html";
+import MakeNewDraftButton from "~/components/article/make-new-draft-button";
+import { InfoCard } from "~/components/info-card";
+import { Shell } from "~/components/shell";
 import { buttonVariants } from "~/components/ui/button";
 import { CardContent, CardFooter } from "~/components/ui/card";
-
-import { Shell } from "~/components/shell";
 import { article_variants, page_variants } from "~/lib/page-variants";
-import { InfoCard } from "~/components/info-card";
 import { cn } from "~/lib/utils";
-import { getServerAuthSession } from "~/server/auth";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import MakeNewDraftButton from "~/components/article/make-new-draft-button";
-import type { ResolvingMetadata, Metadata } from "next";
-import sanitizeHtml from "sanitize-html";
 import { get_article_by_draft_id } from "~/server/article/get-article";
+import { getServerAuthSession } from "~/server/auth";
 import Editor from "./editor";
 
 /* const Editor = dynamic(() => import("./editor"), {

@@ -6,16 +6,16 @@ import type {
 	DraftArticleWithAuthors,
 	PublishedArticleWithAuthors,
 } from "~/components/article/adapter";
-import { EditorProvider } from "~/components/editor/editor-context";
-import { editor_store } from "~/components/editor/editor-store";
 import {
 	DraftArticleContext,
 	PublishedArticleContext,
 } from "~/components/article/context";
+import { EditorProvider } from "~/components/editor/editor-context";
+import { editor_store } from "~/components/editor/editor-store";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
-import { MyToolbar } from "./toolbar";
-import { cn } from "~/lib/utils";
 import { article_variants } from "~/lib/page-variants";
+import { cn } from "~/lib/utils";
+import { MyToolbar } from "./toolbar";
 
 // const Toolbar = dynamic(() => import("./toolbar"), { ssr: false });
 

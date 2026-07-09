@@ -1,41 +1,41 @@
 "use server";
 
-import { db } from "~/server/db";
-import { withCursorPagination } from "~/lib/drizzle-pagination";
 import { asc } from "drizzle-orm";
+import { withCursorPagination } from "~/lib/drizzle-pagination";
+import { db } from "~/server/db";
 import {
-  PublishedArticle,
-  PublishedArticlesToAuthors,
+	PublishedArticle,
+	PublishedArticlesToAuthors,
 } from "~/server/db/schema";
 
 export async function get_infinite_published2({
-  pageParam,
-  limit,
+	pageParam,
+	limit,
 }: {
-  pageParam: Date | undefined;
-  limit: number;
+	pageParam: Date | undefined;
+	limit: number;
 }) {
-  const direction = "desc";
-  const cursor = pageParam;
+	const direction = "desc";
+	const cursor = pageParam;
 
-  const data = await db.query.PublishedArticle.findMany({
-    with: {
-      published_articles_to_authors: {
-        with: {
-          author: true,
-        },
-        orderBy: asc(PublishedArticlesToAuthors.order),
-      },
-    },
-    ...withCursorPagination({
-      limit,
-      cursors: [[PublishedArticle.created_at, direction, cursor]],
-    }),
-  });
+	const data = await db.query.PublishedArticle.findMany({
+		with: {
+			published_articles_to_authors: {
+				with: {
+					author: true,
+				},
+				orderBy: asc(PublishedArticlesToAuthors.order),
+			},
+		},
+		...withCursorPagination({
+			limit,
+			cursors: [[PublishedArticle.created_at, direction, cursor]],
+		}),
+	});
 
-  return {
-    data,
-    next_cursor: data.at(-1)?.created_at,
-    // prev_cursor: data.at(0)?.created_at,
-  };
+	return {
+		data,
+		next_cursor: data.at(-1)?.created_at,
+		// prev_cursor: data.at(0)?.created_at,
+	};
 }

@@ -1,16 +1,16 @@
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import slugify from "slugify";
 import {
 	NavigationMenu,
-	NavigationMenuList,
-	NavigationMenuItem,
 	NavigationMenuContent,
+	NavigationMenuItem,
+	NavigationMenuList,
 } from "~/components/ui/navigation-menu";
-import { ListItem } from "./header";
-import { usePathname } from "next/navigation";
-import { NavigationMenuTrigger } from "../navigation-menu-trigger";
-import Link from "next/link";
 import { smooth_scroll_store } from "~/hooks/use-smooth-scroll";
 import toc from "~/toc.json";
-import slugify from "slugify";
+import { NavigationMenuTrigger } from "../navigation-menu-trigger";
+import { ListItem } from "./header";
 
 const SORTED_SECTIONS = [
 	"zgodovina",

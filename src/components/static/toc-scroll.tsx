@@ -1,21 +1,26 @@
 "use client";
 
 import type { Toc } from "@stefanprobst/rehype-extract-toc";
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import Link from "next/link";
-import { cn } from "~/lib/utils";
+import { usePathname } from "next/navigation";
+import React, {
+	Fragment,
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
+import { createPortal } from "react-dom";
+import { useStoreValue } from "zustand-x";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
-import { mobile_nav_store } from "../shell/mobile-header";
-import { useThrottle } from "~/hooks/use-throttle";
-import React from "react";
-import { usePathname } from "next/navigation";
 import {
 	smooth_scroll_store,
 	useSmoothScroll,
 } from "~/hooks/use-smooth-scroll";
-import { useStoreValue } from "zustand-x";
+import { useThrottle } from "~/hooks/use-throttle";
+import { cn } from "~/lib/utils";
+import { mobile_nav_store } from "../shell/mobile-header";
 
 function get_heading_ids(toc: Toc): string[] {
 	const heading_ids: string[] = [];

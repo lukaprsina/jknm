@@ -2,11 +2,11 @@
 
 import type { ImageProps } from "next/image";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { gallery_store } from "~/components/gallery-store";
-import image_sizes from "../../artifacts/image_sizes.json";
 import { env } from "~/env";
-import { useState, useEffect } from "react";
 import type { EditorJSImageData } from "~/lib/editor-utils";
+import image_sizes from "../../artifacts/image_sizes.json";
 
 interface ImageWithCaptionProps extends ImageProps {
 	caption?: React.ReactNode;

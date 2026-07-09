@@ -1,15 +1,14 @@
 "use client";
 
 import { use, useContext, useMemo } from "react";
-
-import type { MultiSelectProps } from "~/components/multi-select";
-import { MultiSelect } from "~/components/multi-select";
+import { useStoreValue } from "zustand-x";
+import { AllAuthorsContext } from "~/app/provider";
 
 import { EditorContext } from "~/components/editor/editor-context";
 import { editor_store } from "~/components/editor/editor-store";
+import type { MultiSelectProps } from "~/components/multi-select";
+import { MultiSelect } from "~/components/multi-select";
 import { ToolbarButtons } from "./toolbar-buttons";
-import { AllAuthorsContext } from "~/app/provider";
-import { useStoreValue } from "zustand-x";
 
 export function MyToolbar() {
 	const editor_context = useContext(EditorContext);
