@@ -5,7 +5,7 @@
       "source": "mattpocock/skills",
       "sourceType": "github",
       "skillPath": "skills/engineering/ask-matt/SKILL.md",
-      "computedHash": "36bdc2237661cbbe109823c6650223cc127bc7534f64edd88059152fa7300711"
+      "computedHash": "87033e097b8e3c55482fa6cbbddf52c23fe1391dddc0310a3ff124f460a354b9"
     },
     "code-review": {
       "source": "mattpocock/skills",
@@ -71,7 +71,7 @@
       "source": "mattpocock/skills",
       "sourceType": "github",
       "skillPath": "skills/engineering/prototype/SKILL.md",
-      "computedHash": "d69b75e7b60e183d39b8a33cb8b2096e614fd9b48a5249c1cc951340961f86fa"
+      "computedHash": "e1559acf38365b967536b76bc09a137853af7318a8752060a2a63be19ed7fc08"
     },
     "research": {
       "source": "mattpocock/skills",
@@ -83,7 +83,7 @@
       "source": "mattpocock/skills",
       "sourceType": "github",
       "skillPath": "skills/engineering/setup-matt-pocock-skills/SKILL.md",
-      "computedHash": "7c4f945086d19c8b0f8f8adcf1a705767d894efb2afac129707816fded507a64"
+      "computedHash": "86ab29418c1effacb79993a959491f5cc83e701bee2c95f98de04d7b8b1e5735"
     },
     "tdd": {
       "source": "mattpocock/skills",
@@ -107,7 +107,7 @@
       "source": "mattpocock/skills",
       "sourceType": "github",
       "skillPath": "skills/engineering/to-tickets/SKILL.md",
-      "computedHash": "8b9330e8ecec09a21b9b32e27a2d2475366c0afd993baf2477777cb5565f8111"
+      "computedHash": "2448277947976174aee763ad26ab6dd35309f918e5d28157065be45c7cb59b04"
     },
     "triage": {
       "source": "mattpocock/skills",
