@@ -1,17 +1,25 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { ReactNode } from "react";
 import sanitizeHtml from "sanitize-html";
-import MakeNewDraftButton from "~/components/article/make-new-draft-button";
+import { map_new_article_to_editor_draft } from "~/components/article/new-adapter";
 import { InfoCard } from "~/components/info-card";
 import { Shell } from "~/components/shell";
 import { buttonVariants } from "~/components/ui/button";
 import { CardContent, CardFooter } from "~/components/ui/card";
+import MakeNewDraftButton from "~/components/article/make-new-draft-button";
 import { article_variants, page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
-import { get_article_by_draft_id } from "~/server/article/get-article";
+import {
+	get_article_by_draft_id,
+	get_article_by_new_id,
+} from "~/server/article/get-article";
 import { getServerAuthSession } from "~/server/auth";
 import Editor from "./editor";
+
+const UUID_REGEX =
+	/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /* const Editor = dynamic(() => import("./editor"), {
   ssr: false,
@@ -38,17 +46,20 @@ export async function generateMetadata(
 		};
 
 	const decoded = decodeURIComponent(draft_id);
-	const novica_id = parseInt(decoded);
 
-	if (isNaN(novica_id))
-		return {
-			title: "Napaka",
-		};
+	let article_title: string | undefined;
+	if (/^\d+$/.test(decoded)) {
+		const { draft } = await get_article_by_draft_id({
+			draft_id: parseInt(decoded, 10),
+		});
+		article_title = draft?.title;
+	} else if (UUID_REGEX.test(decoded)) {
+		const article = await get_article_by_new_id({ id: decoded });
+		article_title = article?.title;
+	}
 
-	const { draft } = await get_article_by_draft_id({ draft_id: novica_id });
-
-	const title = draft
-		? sanitizeHtml(draft.title, {
+	const title = article_title
+		? sanitizeHtml(article_title, {
 				allowedTags: [],
 			})
 		: "Uredi novico";
@@ -67,9 +78,38 @@ export default async function EditorPage(props: EditorPageProps) {
 	if (!session) return notFound();
 
 	const decoded = decodeURIComponent(draft_id);
-	const novica_id = parseInt(decoded);
 
-	if (isNaN(novica_id)) {
+	const editor_shell = (children: ReactNode) => (
+		<div
+			className={cn(
+				article_variants(),
+				page_variants({ max_width: "wide" }),
+				"min-h-screen",
+			)}
+		>
+			{children}
+		</div>
+	);
+
+	// New (uuid) articles on the unified `articles` table.
+	if (UUID_REGEX.test(decoded)) {
+		const article = await get_article_by_new_id({ id: decoded });
+
+		return (
+			<Shell>
+				{editor_shell(
+					article ? (
+						<Editor draft={map_new_article_to_editor_draft(article)} />
+					) : (
+						<CreateNewArticle novica_ime={draft_id} />
+					),
+				)}
+			</Shell>
+		);
+	}
+
+	// Legacy numeric draft/published articles.
+	if (!/^\d+$/.test(decoded)) {
 		return (
 			<Shell>
 				<InfoCard title="Napaka" description="Neveljaven URL novičke." />
@@ -78,24 +118,18 @@ export default async function EditorPage(props: EditorPageProps) {
 	}
 
 	const { draft, published } = await get_article_by_draft_id({
-		draft_id: novica_id,
+		draft_id: parseInt(decoded, 10),
 	});
 
 	return (
 		<Shell draft_article={draft} published_article={published}>
-			<div
-				className={cn(
-					article_variants(),
-					page_variants({ max_width: "wide" }),
-					"min-h-screen",
-				)}
-			>
-				{draft ? (
+			{editor_shell(
+				draft ? (
 					<Editor draft={draft} published={published} />
 				) : (
 					<CreateNewArticle novica_ime={draft_id} />
-				)}
-			</div>
+				),
+			)}
 		</Shell>
 	);
 }

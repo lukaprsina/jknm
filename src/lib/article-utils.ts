@@ -63,7 +63,7 @@ export function get_s3_draft_directory(id: number) {
 	return `${id}`;
 }
 
-export function get_draft_article_link(id: number) {
+export function get_draft_article_link(id: number | string) {
 	return `/uredi/${id}`;
 }
 

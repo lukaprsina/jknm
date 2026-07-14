@@ -3,7 +3,7 @@ import type { ThumbnailType } from "~/lib/validators";
 import type { EditorJSImageData } from "../../lib/editor-utils";
 
 interface EditorStoreType {
-	draft_id: number;
+	draft_id: number | string;
 	title: string;
 	url: string;
 	s3_url: string;

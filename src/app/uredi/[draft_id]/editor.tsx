@@ -2,14 +2,14 @@
 
 import "./editor.css";
 
-import type {
-	DraftArticleWithAuthors,
-	PublishedArticleWithAuthors,
-} from "~/components/article/adapter";
 import {
 	DraftArticleContext,
 	PublishedArticleContext,
 } from "~/components/article/context";
+import type {
+	EditorDraftArticle,
+	PublishedArticleView,
+} from "~/components/article/new-adapter";
 import { EditorProvider } from "~/components/editor/editor-context";
 import { editor_store } from "~/components/editor/editor-store";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
@@ -23,8 +23,8 @@ export default function MyEditor({
 	draft,
 	published,
 }: {
-	draft: DraftArticleWithAuthors;
-	published?: PublishedArticleWithAuthors;
+	draft: EditorDraftArticle;
+	published?: PublishedArticleView;
 }) {
 	return (
 		<DraftArticleContext.Provider value={draft}>

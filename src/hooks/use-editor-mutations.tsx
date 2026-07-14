@@ -24,13 +24,19 @@ import {
 } from "~/lib/article-utils";
 import type { ThumbnailType } from "~/lib/validators";
 import { delete_both, delete_draft } from "~/server/article/delete";
+import {
+	publish_article,
+	save_article,
+} from "~/server/article/new-article";
 import { publish } from "~/server/article/publish";
 import { save_draft } from "~/server/article/save-draft";
 import { unpublish } from "~/server/article/unpublish";
 import type {
 	delete_both_validator,
 	delete_draft_validator,
+	publish_article_validator,
 	publish_validator,
+	save_article_validator,
 	save_draft_validator,
 	unpublish_validator,
 } from "~/server/article/validators";
@@ -38,7 +44,7 @@ import type {
 export function useEditorMutations() {
 	const query_client = useQueryClient();
 	const draft_article = useContext(DraftArticleContext);
-	const publish_article = useContext(PublishedArticleContext);
+	const publish_article_ctx = useContext(PublishedArticleContext);
 	const editor_context = useContext(EditorContext);
 	const duplicate_urls = use(DuplicateURLsContext);
 
@@ -75,6 +81,44 @@ export function useEditorMutations() {
 			editor_context.setSavingText(undefined);
 			editor_context.setDirty(false);
 
+			await query_client.invalidateQueries({
+				queryKey: ["infinite_published"],
+			});
+		},
+		onError: (error) => {
+			toaster.toast({
+				title: "Napaka pri objavljanju novičke",
+				description: error.message,
+			});
+		},
+	});
+
+	// --- Unified `articles` table (#20/#19) ---
+
+	const save_article_mutation = useMutation({
+		mutationFn: (input: z.infer<typeof save_article_validator>) =>
+			save_article(input),
+		onSettled: () => {
+			editor_context.setSavingText(undefined);
+			editor_context.setDirty(false);
+		},
+		onError: (error) => {
+			toaster.toast({
+				title: "Napaka pri shranjevanju osnutka",
+				description: error.message,
+			});
+		},
+	});
+
+	const publish_article_mutation = useMutation({
+		mutationFn: (input: z.infer<typeof publish_article_validator>) =>
+			publish_article(input),
+		onSuccess: (data) => {
+			router.push(`/novica/${data.slug}`);
+		},
+		onSettled: async () => {
+			editor_context.setSavingText(undefined);
+			editor_context.setDirty(false);
 			await query_client.invalidateQueries({
 				queryKey: ["infinite_published"],
 			});
@@ -161,9 +205,13 @@ export function useEditorMutations() {
 			const editor_content = await editor_context.editor?.save();
 			if (!editor_content) return;
 
-			console.log("MAKING A THUMBNAIIIL DRAFT", thumbnail_crop);
-			if (thumbnail_crop) {
-				// TODO: this is probably wrong. don't need to upload. its already on b2. same with publish
+			const article_id = draft_article.id;
+			const is_new_article = typeof article_id === "string";
+
+			// Legacy drafts upload a cropped thumbnail.png into their S3 folder.
+			// New (uuid) articles resolve the thumbnail from the referenced media
+			// row server-side, so nothing is uploaded here.
+			if (thumbnail_crop && !is_new_article) {
 				await upload_image_by_url({
 					url: thumbnail_crop.image_url,
 					custom_title: "thumbnail.png",
@@ -176,36 +224,44 @@ export function useEditorMutations() {
 
 			const state = editor_store.get("state");
 			const resolved_thumbnail_crop = thumbnail_crop ?? state.thumbnail_crop;
+
+			update_settings_from_editor({
+				title: updated?.title ?? "",
+				url: updated?.url ?? "",
+				s3_url:
+					typeof article_id === "number"
+						? get_s3_draft_directory(article_id)
+						: "",
+				thumbnail_crop: resolved_thumbnail_crop,
+				editor_content,
+				article_id,
+			});
+
+			if (typeof article_id === "string") {
+				save_article_mutation.mutate({
+					article_id,
+					article: {
+						title: updated?.title ?? state.title,
+						created_at,
+						content: editor_content,
+						thumbnail_crop:
+							resolved_thumbnail_crop ?? undefined,
+					},
+					author_ids: state.author_ids,
+				});
+				return;
+			}
+
 			const article: z.infer<typeof save_draft_validator>["article"] = {
 				title: updated?.title ?? state.title,
 				created_at,
 				content: editor_content,
 				thumbnail_crop:
-					resolved_thumbnail_crop === null
-						? undefined
-						: resolved_thumbnail_crop,
+					resolved_thumbnail_crop ?? undefined,
 			};
 
-			update_settings_from_editor({
-				title: updated?.title ?? "",
-				url: updated?.url ?? "",
-				s3_url: get_s3_draft_directory(draft_article.id),
-				thumbnail_crop: resolved_thumbnail_crop,
-				editor_content,
-				article_id: draft_article.id,
-				/* author_ids: draft_article.draft_articles_to_authors.map(
-          (a) => a.author_id,
-        ), */
-			});
-
-			/* console.log("editor mutation save_draft", {
-        draft_article,
-        draft_article,
-        state,
-      }); */
-
 			save_draft_mutation.mutate({
-				draft_id: draft_article.id,
+				draft_id: article_id,
 				article,
 				author_ids: state.author_ids,
 			});
@@ -218,11 +274,11 @@ export function useEditorMutations() {
 			const updated = validate_article(editor_content, toaster);
 			if (!updated) return;
 
+			const article_id = draft_article.id;
+			const is_new_article = typeof article_id === "string";
 			const created_at = fake_created_at ?? draft_article.created_at;
 
-			console.log("MAKING A THUMBNAIIIL PUBLISH", thumbnail_crop);
-			if (thumbnail_crop) {
-				// TODO
+			if (thumbnail_crop && !is_new_article) {
 				await upload_image_by_url({
 					url: thumbnail_crop.image_url,
 					custom_title: "thumbnail.png",
@@ -232,48 +288,80 @@ export function useEditorMutations() {
 
 			const state = editor_store.get("state");
 			const resolved_thumbnail_crop = thumbnail_crop ?? state.thumbnail_crop;
+
+			update_settings_from_editor({
+				title: updated.title,
+				url: updated.url,
+				s3_url:
+					typeof article_id === "number"
+						? get_s3_draft_directory(article_id)
+						: "",
+				thumbnail_crop: resolved_thumbnail_crop,
+				editor_content,
+				article_id,
+				author_ids: draft_article.draft_articles_to_authors.map(
+					(a) => a.author_id,
+				),
+			});
+
+			if (typeof article_id === "string") {
+				publish_article_mutation.mutate({
+					article_id,
+					article: {
+						title: updated.title,
+						created_at,
+						content: editor_content,
+						thumbnail_crop:
+							resolved_thumbnail_crop ?? undefined,
+					},
+					author_ids: state.author_ids,
+				});
+				return;
+			}
+
 			const article: z.infer<typeof publish_validator>["article"] = {
 				title: updated.title,
 				url: updated.url,
 				created_at,
 				content: editor_content,
 				thumbnail_crop:
-					resolved_thumbnail_crop === null
-						? undefined
-						: resolved_thumbnail_crop,
+					resolved_thumbnail_crop ?? undefined,
 			};
 
-			update_settings_from_editor({
-				title: updated.title,
-				url: updated.url,
-				s3_url: get_s3_draft_directory(draft_article.id),
-				thumbnail_crop: resolved_thumbnail_crop,
-				editor_content,
-				article_id: draft_article.id,
-				author_ids: draft_article.draft_articles_to_authors.map(
-					(a) => a.author_id,
-				),
-			});
-
 			publish_mutation.mutate({
-				draft_id: draft_article.id,
+				draft_id: article_id,
 				article,
 				author_ids: state.author_ids,
 			});
 		},
 		delete_draft: () => {
+			if (typeof draft_article.id !== "number") {
+				// Delete/archive for new-table articles is #21 scope.
+				toaster.toast({
+					title: "Brisanje še ni na voljo",
+					description: "Brisanje novih novičk še ni implementirano.",
+				});
+				return;
+			}
 			editor_context.setSavingText("Brišem osnutek...");
 			delete_draft_mutation.mutate({ draft_id: draft_article.id });
 		},
 		unpublish: () => {
-			if (!publish_article) {
+			if (!publish_article_ctx || typeof publish_article_ctx.id !== "number") {
 				return;
 			}
 
 			editor_context.setSavingText("Skrivam novičko ...");
-			unpublish_mutation.mutate({ published_id: publish_article.id });
+			unpublish_mutation.mutate({ published_id: publish_article_ctx.id });
 		},
 		delete_both: () => {
+			if (typeof draft_article.id !== "number") {
+				toaster.toast({
+					title: "Brisanje še ni na voljo",
+					description: "Brisanje novih novičk še ni implementirano.",
+				});
+				return;
+			}
 			editor_context.setSavingText("Brišem novičko ...");
 			delete_both_mutation.mutate({ draft_id: draft_article.id });
 		},

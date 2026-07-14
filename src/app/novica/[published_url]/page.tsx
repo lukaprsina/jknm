@@ -1,12 +1,16 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import sanitizeHtml from "sanitize-html";
+import { map_new_article_to_published_view } from "~/components/article/new-adapter";
 import { ArticleNotFound } from "~/components/component-not-found";
 import { PublishedContent, TabbedContent } from "~/components/content";
 import { Shell } from "~/components/shell";
 import ScrollToTop from "~/components/shell/scroll-to-top";
 import { ScrollProvider } from "~/contexts/scroll-context";
 import { read_date_from_url } from "~/lib/format-date";
-import { get_article_by_published_url } from "~/server/article/get-article";
+import {
+	get_article_by_published_url,
+	get_new_article_by_slug,
+} from "~/server/article/get-article";
 import { getServerAuthSession } from "~/server/auth";
 import { ImageGallery } from "./image-gallery";
 
@@ -32,12 +36,14 @@ export async function generateMetadata(
 	let title = published?.title;
 
 	if (!title) {
-		title = awaited_parent.title?.absolute;
+		const new_article = await get_new_article_by_slug(
+			decodeURIComponent(published_url),
+		);
+		title = new_article?.title;
 	}
 
-	if (!title) {
-		title = "Jamarski klub Novo mesto";
-	}
+	title ??= awaited_parent.title?.absolute;
+	title ??= "Jamarski klub Novo mesto";
 
 	return {
 		title: sanitizeHtml(title, {
@@ -56,7 +62,27 @@ export default async function NovicaPage(props: NovicaProps) {
 
 	const { draft, published } = await get_articles(published_url, searchParams);
 
-	if (!published) {
+	if (published) {
+		return (
+			<Shell draft_article={draft} published_article={published}>
+				<ScrollProvider>
+					{session ? (
+						<TabbedContent draft={draft} published={published} />
+					) : (
+						<PublishedContent article={published} />
+					)}
+					<ImageGallery />
+					<ScrollToTop />
+				</ScrollProvider>
+			</Shell>
+		);
+	}
+
+	// Fall back to a new-table article addressed by its slug (#20).
+	const decoded = decodeURIComponent(published_url);
+	const new_article = await get_new_article_by_slug(decoded);
+
+	if (!new_article) {
 		return (
 			<Shell>
 				<ArticleNotFound />
@@ -64,14 +90,12 @@ export default async function NovicaPage(props: NovicaProps) {
 		);
 	}
 
+	const new_view = map_new_article_to_published_view(new_article, decoded);
+
 	return (
-		<Shell draft_article={draft} published_article={published}>
+		<Shell>
 			<ScrollProvider>
-				{session ? (
-					<TabbedContent draft={draft} published={published} />
-				) : (
-					<PublishedContent article={published} />
-				)}
+				<PublishedContent article={new_view} />
 				<ImageGallery />
 				<ScrollToTop />
 			</ScrollProvider>

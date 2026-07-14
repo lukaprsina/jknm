@@ -23,7 +23,7 @@ export function update_settings_from_editor({
 	s3_url: string;
 	thumbnail_crop: ThumbnailType | null;
 	editor_content: OutputData;
-	article_id: number;
+	article_id: number | string;
 	author_ids?: number[];
 }) {
 	const image_data = extract_media_refs_from_content(editor_content, [

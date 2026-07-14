@@ -1,7 +1,7 @@
 import type {
-	DraftArticleWithAuthors,
-	PublishedArticleWithAuthors,
-} from "~/components/article/adapter";
+	EditorDraftArticle,
+	PublishedArticleView,
+} from "~/components/article/new-adapter";
 import { ArticleNotFound } from "~/components/component-not-found";
 import { EditorToReact } from "~/components/editor/editor-to-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -12,7 +12,7 @@ import { getServerAuthSession } from "~/server/auth";
 export function PublishedContent({
 	article,
 }: {
-	article?: PublishedArticleWithAuthors;
+	article?: PublishedArticleView;
 }) {
 	if (!article?.content) {
 		return <ArticleNotFound />;
@@ -29,8 +29,8 @@ export async function TabbedContent({
 	draft,
 	published,
 }: {
-	draft?: DraftArticleWithAuthors;
-	published?: PublishedArticleWithAuthors;
+	draft?: EditorDraftArticle;
+	published?: PublishedArticleView;
 }) {
 	const session = await getServerAuthSession();
 

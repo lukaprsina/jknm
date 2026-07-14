@@ -20,9 +20,9 @@ import {
 import { human_file_size } from "~/lib/human-file-size";
 import { cn } from "~/lib/utils";
 import type {
-	DraftArticleWithAuthors,
-	PublishedArticleWithAuthors,
-} from "../article/adapter";
+	EditorDraftArticle,
+	PublishedArticleView,
+} from "../article/new-adapter";
 /* const ArticleDescription = dynamic(
   () => import("~/components/article/description"),
   {
@@ -37,7 +37,7 @@ export function EditorToReact({
 	article,
 	session,
 }: {
-	article: DraftArticleWithAuthors | PublishedArticleWithAuthors | undefined;
+	article: EditorDraftArticle | PublishedArticleView | undefined;
 	session: Session | null;
 }) {
 	const [heading, setHeading] = useState<string | undefined>();

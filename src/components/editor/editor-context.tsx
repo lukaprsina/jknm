@@ -95,7 +95,12 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 					update_settings_from_editor({
 						title: updated?.title ?? "",
 						url: updated?.url ?? "",
-						s3_url: get_s3_draft_directory(article.id),
+						// New (uuid) articles have no per-draft S3 directory — media is
+						// decoupled (#18). Only legacy numeric drafts use one.
+						s3_url:
+							typeof article.id === "number"
+								? get_s3_draft_directory(article.id)
+								: "",
 						thumbnail_crop: article.thumbnail_crop,
 						editor_content,
 						article_id: article.id,
