@@ -2,8 +2,8 @@ import type { OutputData } from "@editorjs/editorjs";
 import type { useToast } from "~/hooks/use-toast";
 import { convert_title_to_url } from "~/lib/article-utils";
 import {
+	extract_media_refs_from_content,
 	get_heading_from_editor,
-	get_image_data_from_editor,
 } from "~/lib/editor-utils";
 import type { ThumbnailType } from "~/lib/validators";
 import { editor_store } from "./editor-store";
@@ -26,7 +26,9 @@ export function update_settings_from_editor({
 	article_id: number;
 	author_ids?: number[];
 }) {
-	const image_data = get_image_data_from_editor(editor_content);
+	const image_data = extract_media_refs_from_content(editor_content, [
+		"image",
+	]).map((ref) => ref.data);
 	// const store_crop = editor_store.get.thumbnail_crop();
 	/* console.log("update_settings_from_editor", {
     title,

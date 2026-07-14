@@ -52,11 +52,9 @@ export interface EditorJSFileData {
 const MEDIA_BLOCK_TYPES = ["image", "attaches"] as const;
 export type MediaBlockType = (typeof MEDIA_BLOCK_TYPES)[number];
 
-export interface MediaBlockRef {
-	id: string | undefined;
-	type: MediaBlockType;
-	data: EditorJSImageData | EditorJSFileData;
-}
+export type MediaBlockRef =
+	| { id: string | undefined; type: "image"; data: EditorJSImageData }
+	| { id: string | undefined; type: "attaches"; data: EditorJSFileData };
 
 /**
  * Extracts media-carrying blocks (image/attaches) from EditorJS content.
@@ -65,21 +63,34 @@ export interface MediaBlockRef {
  */
 export function extract_media_refs_from_content(
 	content: OutputData,
+	types: readonly ["image"],
+): Extract<MediaBlockRef, { type: "image" }>[];
+export function extract_media_refs_from_content(
+	content: OutputData,
+	types: readonly ["attaches"],
+): Extract<MediaBlockRef, { type: "attaches" }>[];
+export function extract_media_refs_from_content(
+	content: OutputData,
+	types?: readonly MediaBlockType[],
+): MediaBlockRef[];
+export function extract_media_refs_from_content(
+	content: OutputData,
 	types: readonly MediaBlockType[] = MEDIA_BLOCK_TYPES,
 ): MediaBlockRef[] {
 	return content.blocks
 		.filter((block) => types.includes(block.type as MediaBlockType))
-		.map((block) => ({
-			id: block.id,
-			type: block.type as MediaBlockType,
-			data: block.data as EditorJSImageData | EditorJSFileData,
-		}));
-}
-
-export function get_image_data_from_editor(
-	editor_content: OutputData,
-): EditorJSImageData[] {
-	return extract_media_refs_from_content(editor_content, ["image"]).map(
-		(ref) => ref.data as EditorJSImageData,
-	);
+		.map((block) => {
+			if (block.type === "image") {
+				return {
+					id: block.id,
+					type: "image",
+					data: block.data as EditorJSImageData,
+				};
+			}
+			return {
+				id: block.id,
+				type: "attaches",
+				data: block.data as EditorJSFileData,
+			};
+		});
 }

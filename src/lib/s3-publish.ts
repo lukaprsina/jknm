@@ -33,7 +33,7 @@ export function rename_urls_in_content(
 		if (!ref.id) {
 			continue;
 		}
-		const file_data = ref.data as { file: { url: string } };
+		const file_data = ref.data;
 		const url_parts = new URL(file_data.file.url);
 		const source_bucket = get_source_bucket(url_parts);
 		if (!source_bucket) {

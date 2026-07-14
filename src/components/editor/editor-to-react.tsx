@@ -14,8 +14,8 @@ import { gallery_store } from "~/components/gallery-store";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import type { EditorJSImageData } from "~/lib/editor-utils";
 import {
+	extract_media_refs_from_content,
 	get_heading_from_editor,
-	get_image_data_from_editor,
 } from "~/lib/editor-utils";
 import { human_file_size } from "~/lib/human-file-size";
 import { cn } from "~/lib/utils";
@@ -55,7 +55,9 @@ export function EditorToReact({
 
 		setHeading(title);
 
-		const image_data = get_image_data_from_editor(article.content);
+		const image_data = extract_media_refs_from_content(article.content, [
+			"image",
+		]).map((ref) => ref.data);
 		gallery_store.set("images", image_data);
 
 		return {
