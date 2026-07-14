@@ -17,10 +17,80 @@ import { crop_image } from "~/lib/s3-utils";
 import { thumbnail_validator } from "~/lib/validators";
 import { getServerAuthSession } from "~/server/auth";
 import { db } from "~/server/db";
+import type { MediaVariantData } from "~/server/db/schema";
 import { Media } from "~/server/db/schema";
 
 function media_url(key: string) {
 	return `https://${MEDIA_PUBLIC_DOMAIN}/${key}`;
+}
+
+const VARIANT_WIDTHS = [400, 800, 1600];
+const VARIANT_FORMATS = ["avif", "jpeg"] as const;
+const BLUR_WIDTH = 16;
+
+type Bucket = Awaited<ReturnType<B2["bucket"]>>;
+
+async function generate_image_variants({
+	buffer,
+	original_width,
+	id,
+	bucket_obj,
+}: {
+	buffer: Buffer;
+	original_width: number;
+	id: string;
+	bucket_obj: Bucket;
+}) {
+	const widths = VARIANT_WIDTHS.filter((width) => width < original_width);
+
+	const variants: MediaVariantData[] = [];
+	for (const width of widths) {
+		for (const format of VARIANT_FORMATS) {
+			const resized = sharp(buffer).resize({ width });
+			const output_buffer = await (format === "avif"
+				? resized.avif({ quality: 50 })
+				: resized.jpeg({ quality: 75 })
+			).toBuffer();
+			const output_metadata = await sharp(output_buffer).metadata();
+
+			const key = `${id}/${width}.${format}`;
+			await bucket_obj.upload(key, output_buffer, {
+				contentType: `image/${format}`,
+				contentLength: output_buffer.byteLength,
+			});
+
+			variants.push({
+				format,
+				width,
+				height: output_metadata.height ?? 0,
+				url: media_url(key),
+				size_bytes: output_buffer.byteLength,
+			});
+		}
+	}
+
+	const srcsets =
+		variants.length > 0
+			? {
+					avif: variants
+						.filter((v) => v.format === "avif")
+						.map((v) => `${v.url} ${v.width}w`)
+						.join(", "),
+					jpeg: variants
+						.filter((v) => v.format === "jpeg")
+						.map((v) => `${v.url} ${v.width}w`)
+						.join(", "),
+					sizes: "(max-width: 800px) 100vw, 800px",
+				}
+			: undefined;
+
+	const blur_buffer = await sharp(buffer)
+		.resize({ width: BLUR_WIDTH })
+		.jpeg({ quality: 40 })
+		.toBuffer();
+	const blur_placeholder = `data:image/jpeg;base64,${blur_buffer.toString("base64")}`;
+
+	return { variants, srcsets, blur_placeholder };
 }
 
 export async function POST(request: NextRequest) {
@@ -100,10 +170,25 @@ export async function POST(request: NextRequest) {
 
 	let width: number | undefined;
 	let height: number | undefined;
+	let variants: MediaVariantData[] = [];
+	let srcsets: { avif: string; jpeg: string; sizes: string } | undefined;
+	let blur_placeholder: string | undefined;
 	if (file_type === "image") {
 		const image_metadata = await sharp(buffer).metadata();
 		width = image_metadata.width;
 		height = image_metadata.height;
+
+		if (width) {
+			const generated = await generate_image_variants({
+				buffer,
+				original_width: width,
+				id,
+				bucket_obj,
+			});
+			variants = generated.variants;
+			srcsets = generated.srcsets;
+			blur_placeholder = generated.blur_placeholder;
+		}
 	}
 
 	await db.insert(Media).values({
@@ -117,7 +202,9 @@ export async function POST(request: NextRequest) {
 			height: height ?? 0,
 			size_bytes: buffer.byteLength,
 		},
-		variants: [],
+		variants,
+		srcsets,
+		blur_placeholder,
 		upload_status: "completed",
 	});
 
