@@ -2,6 +2,7 @@ import { CopyObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import type { OutputData } from "@editorjs/editorjs";
 import { klona } from "klona";
 import { env } from "~/env";
+import { extract_media_refs_from_content } from "~/lib/editor-utils";
 import { list_objects, s3_copy_between_buckets } from "~/lib/s3-utils";
 
 export function get_s3_prefix(url: string, bucket: string) {
@@ -21,20 +22,18 @@ export interface S3CopySourceInfo {
 	source_path: string;
 }
 
-const ALLOWED_BLOCK_TYPES = ["image", "attaches"];
 export function rename_urls_in_content(
 	editor_content: OutputData,
 	destination_url: string,
 	bucket: string,
 ): { sources: S3CopySourceInfo[]; new_content: OutputData } {
-	// console.log("Renaming files in editor", { editor_content, article_url });
 	const sources: S3CopySourceInfo[] = [];
 	const new_content = klona(editor_content);
-	for (const block of new_content.blocks) {
-		if (!block.id || !ALLOWED_BLOCK_TYPES.includes(block.type)) {
+	for (const ref of extract_media_refs_from_content(new_content)) {
+		if (!ref.id) {
 			continue;
 		}
-		const file_data = block.data as { file: { url: string } };
+		const file_data = ref.data as { file: { url: string } };
 		const url_parts = new URL(file_data.file.url);
 		const source_bucket = get_source_bucket(url_parts);
 		if (!source_bucket) {

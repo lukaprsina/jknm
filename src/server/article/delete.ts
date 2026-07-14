@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import { revalidatePath, revalidateTag } from "next/cache";
 import type { z } from "zod";
 import { env } from "~/env";
+import { ALGOLIA_PUBLISHED_ARTICLE_INDEX } from "~/lib/algoliasearch";
 import {
 	get_s3_draft_directory,
 	get_s3_published_directory,
@@ -108,7 +109,7 @@ export async function delete_both(
 				);
 
 				await algolia.deleteObject({
-					indexName: "published_article",
+					indexName: ALGOLIA_PUBLISHED_ARTICLE_INDEX,
 					objectID: published.id.toString(),
 				});
 			} catch (error) {

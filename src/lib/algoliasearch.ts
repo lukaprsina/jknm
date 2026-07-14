@@ -2,6 +2,8 @@ import type { PublishedArticleWithAuthors } from "~/components/article/adapter";
 import { convert_content_to_text } from "~/lib/content-to-text";
 import type { PublishedArticleHit } from "~/lib/validators";
 
+export const ALGOLIA_PUBLISHED_ARTICLE_INDEX = "published_article";
+
 export function convert_article_to_algolia_object(
 	article: PublishedArticleWithAuthors,
 ) {

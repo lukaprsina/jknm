@@ -49,24 +49,12 @@ export function useEditorMutations() {
 		throw new Error("Missing context");
 	}
 
-	/* const sync_duplicate_urls = api.article.sync_duplicate_urls.useMutation({
-    onError: (error) => {
-      toaster.toast({
-        title: "Napaka pri sinhronizaciji URL-jev",
-        description: error.message,
-      });
-    },
-  }); */
-
 	const save_draft_mutation = useMutation({
 		mutationFn: (input: z.infer<typeof save_draft_validator>) =>
 			save_draft(input),
 		onSettled: async () => {
 			editor_context.setSavingText(undefined);
 			editor_context.setDirty(false);
-
-			/* await trpc_utils.article.invalidate();
-      await trpc_utils.article.get_infinite_published.invalidate(); */
 		},
 		onError: (error) => {
 			toaster.toast({
@@ -79,7 +67,6 @@ export function useEditorMutations() {
 	const publish_mutation = useMutation({
 		mutationFn: (input: z.infer<typeof publish_validator>) => publish(input),
 		onSuccess: (data) => {
-			// sync_duplicate_urls.mutate();
 			router.push(
 				get_published_article_link(data.url, data.created_at, duplicate_urls),
 			);
@@ -91,9 +78,6 @@ export function useEditorMutations() {
 			await query_client.invalidateQueries({
 				queryKey: ["infinite_published"],
 			});
-			/* await trpc_utils.article.invalidate();
-      await trpc_utils.article.get_duplicate_urls.invalidate();
-      await trpc_utils.article.get_infinite_published.invalidate(); */
 		},
 		onError: (error) => {
 			toaster.toast({
@@ -124,8 +108,6 @@ export function useEditorMutations() {
 			await query_client.invalidateQueries({
 				queryKey: ["infinite_published"],
 			});
-			/* await trpc_utils.article.invalidate();
-      await trpc_utils.article.get_infinite_published.invalidate(); */
 		},
 		onError: (error) => {
 			toaster.toast({
@@ -143,8 +125,6 @@ export function useEditorMutations() {
 			await query_client.invalidateQueries({
 				queryKey: ["infinite_published"],
 			});
-			/* await trpc_utils.article.invalidate();
-      await trpc_utils.article.get_infinite_published.invalidate(); */
 			location.reload();
 		},
 		onError: (error) => {
@@ -162,8 +142,6 @@ export function useEditorMutations() {
 			await query_client.invalidateQueries({
 				queryKey: ["infinite_published"],
 			});
-			/* await trpc_utils.article.invalidate();
-      await trpc_utils.article.get_infinite_published.invalidate(); */
 			router.replace(`/`);
 		},
 		onError: (error) => {

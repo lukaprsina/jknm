@@ -16,6 +16,7 @@ import {
 } from "~/components/ui/command";
 import { DialogDescription, DialogTitle } from "~/components/ui/dialog";
 import { env } from "~/env";
+import { ALGOLIA_PUBLISHED_ARTICLE_INDEX } from "~/lib/algoliasearch";
 import type { PublishedArticleHit } from "~/lib/validators";
 import { useSearchContext } from "./search-context";
 
@@ -60,7 +61,7 @@ export function Searchbar() {
 						hitsPerPage: 3,
 					},
 					{
-						indexName: "published_article",
+						indexName: ALGOLIA_PUBLISHED_ARTICLE_INDEX,
 						query: debounced_value,
 						hitsPerPage: 15,
 					},

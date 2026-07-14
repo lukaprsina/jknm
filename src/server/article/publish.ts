@@ -6,7 +6,10 @@ import { klona } from "klona";
 import { revalidatePath } from "next/cache";
 import type { z } from "zod";
 import { env } from "~/env";
-import { convert_article_to_algolia_object } from "~/lib/algoliasearch";
+import {
+	ALGOLIA_PUBLISHED_ARTICLE_INDEX,
+	convert_article_to_algolia_object,
+} from "~/lib/algoliasearch";
 import {
 	convert_title_to_url,
 	get_s3_draft_directory,
@@ -188,7 +191,7 @@ export async function publish(input: z.infer<typeof publish_validator>) {
 		);
 
 		await algolia.addOrUpdateObject({
-			indexName: "published_article",
+			indexName: ALGOLIA_PUBLISHED_ARTICLE_INDEX,
 			objectID: published_article_with_authors.id.toString(),
 			body: convert_article_to_algolia_object(published_article_with_authors),
 		});

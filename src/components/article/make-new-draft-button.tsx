@@ -35,15 +35,6 @@ export default function MakeNewDraftButton({
 			setOpen(false);
 		},
 	});
-	// const trpc_utils = api.useUtils();
-
-	// TODO
-	/* const create_draft = api.article.get_or_create_draft.useMutation({
-    onSuccess: async (data) => {
-      await trpc_utils.article.invalidate();
-      router.push(get_draft_article_link(data.id));
-    },
-  }); */
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
@@ -54,9 +45,6 @@ export default function MakeNewDraftButton({
 							{...props}
 							onClick={() => {
 								create_draft_mutation.mutate({ title: title ?? "Nova novica" });
-								/* create_draft.mutate({
-                  article: get_content_from_title(title),
-                }); */
 							}}
 						/>
 					</PopoverTrigger>
