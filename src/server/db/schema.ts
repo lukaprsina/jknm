@@ -418,7 +418,7 @@ export const Article = pgTable(
 		id: uuid("id")
 			.primaryKey()
 			.$defaultFn(() => crypto.randomUUID()),
-		legacy_id: integer("legacy_id"),
+		legacy_id: integer("legacy_id").unique(),
 		status: article_status_enum("status").notNull().default("draft"),
 		title: varchar("title", { length: 255 }).notNull(),
 		excerpt: text("excerpt").default(""),
@@ -451,7 +451,6 @@ export const Article = pgTable(
 		),
 	},
 	(articles) => ({
-		legacy_id_idx: index("articles_legacy_id_idx").on(articles.legacy_id),
 		status_published_year_idx: index(
 			"articles_status_published_year_idx",
 		).on(articles.status, articles.published_year),
