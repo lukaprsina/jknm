@@ -1,10 +1,8 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { extract_media_refs_from_content } from "~/lib/editor-utils";
-import type { db } from "~/server/db";
+import type { DbTransaction } from "~/server/db";
 import type { ArticleContentType } from "~/server/db/schema";
 import { Media, MediaToArticles } from "~/server/db/schema";
-
-type DbTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
 /**
  * Reconcile `media_to_articles` rows so they mirror the media blocks

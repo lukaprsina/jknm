@@ -1,7 +1,7 @@
 "use server";
 
 import { algoliasearch as searchClient } from "algoliasearch";
-import { and, asc, eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { revalidatePath, revalidateTag } from "next/cache";
 import type { z } from "zod";
 import { env } from "~/env";
@@ -13,21 +13,20 @@ import { convert_title_to_url } from "~/lib/article-utils";
 import { assert_one } from "~/lib/assert-length";
 import type { ThumbnailType } from "~/lib/validators";
 import { getServerAuthSession } from "../auth";
-import { db } from "../db";
+import { type DbTransaction, db } from "../db";
 import {
 	Article,
 	ArticleSlug,
 	ArticlesToAuthors,
 	Media,
 } from "../db/schema";
+import { find_article_with_relations } from "./article-queries";
 import { reconcile_media_to_articles } from "./reconcile-media";
 import {
 	create_article_validator,
 	publish_article_validator,
 	save_article_validator,
 } from "./validators";
-
-type DbTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
 const MAX_SLUG_SUFFIX = 99;
 
@@ -187,13 +186,17 @@ export async function save_article(
 		assert_one(updated);
 
 		await replace_article_authors(tx, input.article_id, input.author_ids);
+		// Reconcile against the *persisted* content, not the input: the update
+		// above preserves the stored content when `input.article.content` is
+		// omitted, so keying reconcile off the input would wipe every media link
+		// on a content-less save.
 		await reconcile_media_to_articles(
 			tx,
 			input.article_id,
-			input.article.content,
+			updated[0].content_json,
 		);
 
-		return get_article_with_relations(tx, input.article_id);
+		return find_article_with_relations(tx, eq(Article.id, input.article_id));
 	});
 
 	revalidateTag("drafts", "max");
@@ -226,7 +229,7 @@ export async function publish_article(
 
 		const thumbnail = await resolve_thumbnail(tx, input.article.thumbnail_crop);
 
-		await tx
+		const updated = await tx
 			.update(Article)
 			.set({
 				title: input.article.title,
@@ -238,13 +241,18 @@ export async function publish_article(
 					: {}),
 				...thumbnail,
 			})
-			.where(eq(Article.id, input.article_id));
+			.where(eq(Article.id, input.article_id))
+			.returning();
+
+		assert_one(updated);
 
 		await replace_article_authors(tx, input.article_id, input.author_ids);
+		// Reconcile against the *persisted* content (see `save_article`) so a
+		// publish that omits `content` doesn't wipe existing media links.
 		await reconcile_media_to_articles(
 			tx,
 			input.article_id,
-			input.article.content,
+			updated[0].content_json,
 		);
 
 		// Reuse an existing primary slug if present, otherwise mint one.
@@ -269,7 +277,10 @@ export async function publish_article(
 			primary = inserted[0];
 		}
 
-		const article = await get_article_with_relations(tx, input.article_id);
+		const article = await find_article_with_relations(
+			tx,
+			eq(Article.id, input.article_id),
+		);
 		if (!article) throw new Error("Published article not found");
 
 		const algolia = searchClient(
@@ -293,18 +304,4 @@ export async function publish_article(
 	revalidateTag("drafts", "max");
 	revalidatePath("/");
 	return transaction;
-}
-
-function get_article_with_relations(tx: DbTransaction, article_id: string) {
-	return tx.query.Article.findFirst({
-		where: eq(Article.id, article_id),
-		with: {
-			articles_to_authors: {
-				with: { author: true },
-				orderBy: asc(ArticlesToAuthors.order),
-			},
-			article_slugs: true,
-			thumbnail_media: true,
-		},
-	});
 }

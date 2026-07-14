@@ -22,3 +22,6 @@ const conn =
 if (env.NODE_ENV !== "production") globalForDb.conn = conn;
 
 export const db = drizzle(conn, { schema });
+
+/** An open Drizzle transaction handle, as passed to `db.transaction(cb)`. */
+export type DbTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0];

@@ -1,6 +1,5 @@
 "use server";
 
-import type { SQL } from "drizzle-orm";
 import { and, asc, between, eq } from "drizzle-orm";
 import type { z } from "zod";
 import { getServerAuthSession } from "../auth";
@@ -8,11 +7,11 @@ import { db } from "../db";
 import {
 	Article,
 	ArticleSlug,
-	ArticlesToAuthors,
 	DraftArticle,
 	PublishedArticle,
 	PublishedArticlesToAuthors,
 } from "../db/schema";
+import { find_article_with_relations } from "./article-queries";
 import {
 	get_article_by_draft_id_validator,
 	get_article_by_new_id_validator,
@@ -152,20 +151,6 @@ export async function get_article_by_draft_id(
 
 // --- Unified `articles` table (#20) ---
 
-function new_article_query(where: SQL) {
-	return db.query.Article.findFirst({
-		where,
-		with: {
-			articles_to_authors: {
-				with: { author: true },
-				orderBy: asc(ArticlesToAuthors.order),
-			},
-			article_slugs: true,
-			thumbnail_media: true,
-		},
-	});
-}
-
 export async function get_article_by_new_id(
 	input: z.infer<typeof get_article_by_new_id_validator>,
 ) {
@@ -174,7 +159,7 @@ export async function get_article_by_new_id(
 		throw new Error(validated_input.error.message);
 	}
 
-	return new_article_query(eq(Article.id, input.id));
+	return find_article_with_relations(db, eq(Article.id, input.id));
 }
 
 export async function get_new_article_by_slug(slug: string) {
@@ -185,5 +170,5 @@ export async function get_new_article_by_slug(slug: string) {
 
 	if (!slug_row) return undefined;
 
-	return new_article_query(eq(Article.id, slug_row.article_id));
+	return find_article_with_relations(db, eq(Article.id, slug_row.article_id));
 }
