@@ -424,9 +424,7 @@ export const Article = pgTable(
 		excerpt: text("excerpt").default(""),
 		content_json: jsonb("content_json").$type<ArticleContentType>(),
 		content_markdown: text("content_markdown"),
-		thumbnail_media_id: uuid("thumbnail_media_id").references(
-			() => Media.id,
-		),
+		thumbnail_media_id: uuid("thumbnail_media_id").references(() => Media.id),
 		thumbnail_x: real("thumbnail_x"),
 		thumbnail_y: real("thumbnail_y"),
 		thumbnail_width: real("thumbnail_width"),
@@ -451,9 +449,10 @@ export const Article = pgTable(
 		),
 	},
 	(articles) => ({
-		status_published_year_idx: index(
-			"articles_status_published_year_idx",
-		).on(articles.status, articles.published_year),
+		status_published_year_idx: index("articles_status_published_year_idx").on(
+			articles.status,
+			articles.published_year,
+		),
 	}),
 );
 

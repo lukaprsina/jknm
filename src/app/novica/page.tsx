@@ -15,11 +15,11 @@ export default async function Page(props: {
 		if (key === "id") {
 			const value = searchParams[key];
 			if (typeof value === "string") {
-				id = parseInt(value);
+				id = parseInt(value, 10);
 			} else if (Array.isArray(value)) {
 				const first = value[0];
 				if (first) {
-					id = parseInt(first);
+					id = parseInt(first, 10);
 				}
 			}
 		}

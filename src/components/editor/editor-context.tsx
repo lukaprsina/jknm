@@ -6,7 +6,7 @@ import DragDrop from "editorjs-drag-drop";
 // @ts-expect-error no types
 import Undo from "editorjs-undo";
 import type { ReactNode } from "react";
-import React, {
+import {
 	createContext,
 	useCallback,
 	useContext,

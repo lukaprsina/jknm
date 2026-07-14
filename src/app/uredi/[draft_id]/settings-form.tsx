@@ -82,19 +82,15 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
 					</Button>
 					<div className="flex items-center justify-end gap-1">
 						{published_article ? (
-							<>
-								<Button
-									onClick={form.handleSubmit(
-										(_: z.infer<typeof form_schema>) => {
-											editor_mutations.unpublish();
-											closeDialog();
-										},
-									)}
-									variant="secondary"
-								>
-									Skrij novičko
-								</Button>
-							</>
+							<Button
+								onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
+									editor_mutations.unpublish();
+									closeDialog();
+								})}
+								variant="secondary"
+							>
+								Skrij novičko
+							</Button>
 						) : null}
 						<Button
 							onClick={form.handleSubmit(

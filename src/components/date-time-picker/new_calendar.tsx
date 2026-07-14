@@ -230,7 +230,7 @@ function Calendar({
 					>
 						{navView === "days"
 							? children
-							: displayYears.from + " - " + displayYears.to}
+							: `${displayYears.from} - ${displayYears.to}`}
 					</Button>
 				),
 				MonthGrid: ({ className, children, ...props }) => {

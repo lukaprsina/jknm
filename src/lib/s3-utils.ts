@@ -216,7 +216,7 @@ export async function delete_s3_directory(bucket: string, prefix: string) {
 
 		const keys = objects.map((object) => {
 			if (typeof object.Key === "undefined") {
-				throw new Error("Invalid key " + object.Key);
+				throw new Error(`Invalid key ${object.Key}`);
 			}
 
 			return object.Key;
@@ -247,8 +247,8 @@ export async function clean_s3_directory(
 
 		const object_names = objects.map((object) => {
 			const parts = object.Key?.split("/");
-			if (!parts || parts.length !== 2) {
-				throw new Error("clean_s3_directory: Invalid key " + object.Key);
+			if (parts?.length !== 2) {
+				throw new Error(`clean_s3_directory: Invalid key ${object.Key}`);
 			}
 
 			return parts.at(-1);

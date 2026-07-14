@@ -1,4 +1,3 @@
- 
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -24,10 +23,7 @@ import {
 } from "~/lib/article-utils";
 import type { ThumbnailType } from "~/lib/validators";
 import { delete_both, delete_draft } from "~/server/article/delete";
-import {
-	publish_article,
-	save_article,
-} from "~/server/article/new-article";
+import { publish_article, save_article } from "~/server/article/new-article";
 import { publish } from "~/server/article/publish";
 import { save_draft } from "~/server/article/save-draft";
 import { unpublish } from "~/server/article/unpublish";
@@ -244,8 +240,7 @@ export function useEditorMutations() {
 						title: updated?.title ?? state.title,
 						created_at,
 						content: editor_content,
-						thumbnail_crop:
-							resolved_thumbnail_crop ?? undefined,
+						thumbnail_crop: resolved_thumbnail_crop ?? undefined,
 					},
 					author_ids: state.author_ids,
 				});
@@ -256,8 +251,7 @@ export function useEditorMutations() {
 				title: updated?.title ?? state.title,
 				created_at,
 				content: editor_content,
-				thumbnail_crop:
-					resolved_thumbnail_crop ?? undefined,
+				thumbnail_crop: resolved_thumbnail_crop ?? undefined,
 			};
 
 			save_draft_mutation.mutate({
@@ -311,8 +305,7 @@ export function useEditorMutations() {
 						title: updated.title,
 						created_at,
 						content: editor_content,
-						thumbnail_crop:
-							resolved_thumbnail_crop ?? undefined,
+						thumbnail_crop: resolved_thumbnail_crop ?? undefined,
 					},
 					author_ids: state.author_ids,
 				});
@@ -324,8 +317,7 @@ export function useEditorMutations() {
 				url: updated.url,
 				created_at,
 				content: editor_content,
-				thumbnail_crop:
-					resolved_thumbnail_crop ?? undefined,
+				thumbnail_crop: resolved_thumbnail_crop ?? undefined,
 			};
 
 			publish_mutation.mutate({

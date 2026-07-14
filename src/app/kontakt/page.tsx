@@ -1,5 +1,4 @@
 import Link from "next/link";
-import React from "react";
 import { Shell } from "~/components/shell";
 import { page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";

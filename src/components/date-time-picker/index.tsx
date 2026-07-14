@@ -1,6 +1,5 @@
 import { add, format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-import * as React from "react";
 import { Calendar } from "~/components/date-time-picker/new_calendar";
 import { Button } from "~/components/ui/button";
 import {

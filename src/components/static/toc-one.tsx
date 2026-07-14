@@ -1,7 +1,7 @@
 import type { Toc } from "@stefanprobst/rehype-extract-toc";
 import { useEffect, useState } from "react";
 
-const useTocHighlight = (toc: Toc) => {
+const useTocHighlight = (_toc: Toc) => {
 	const [activeId, setActiveId] = useState<string | null>(null);
 
 	useEffect(() => {
@@ -24,7 +24,7 @@ const useTocHighlight = (toc: Toc) => {
 		return () => {
 			elements.forEach((element) => observer.unobserve(element));
 		};
-	}, [toc]);
+	}, []);
 
 	return activeId;
 };

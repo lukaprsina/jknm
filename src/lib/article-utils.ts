@@ -1,4 +1,4 @@
-import path from "path";
+import path from "node:path";
 import sanitize_filename from "sanitize-filename";
 import sanitizeHtml from "sanitize-html";
 import { v4 as uuid4 } from "uuid";

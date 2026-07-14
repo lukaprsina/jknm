@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { createStore, useStoreValue } from "zustand-x";
 import { EditorToReact } from "~/components/editor/editor-to-react";
 
@@ -128,14 +128,14 @@ export function PreveriClient({
 				<div className="flex gap-2">
 					<Button
 						type="button"
-						disabled={isNaN(page_info.previous)}
+						disabled={Number.isNaN(page_info.previous)}
 						onClick={() => preveri_store.set("index", page_info.previous)}
 					>
 						Prejšnja: {page_info.previous}
 					</Button>
 					<Button
 						type="button"
-						disabled={isNaN(page_info.next)}
+						disabled={Number.isNaN(page_info.next)}
 						onClick={() => preveri_store.set("index", page_info.next)}
 					>
 						Naslednja: {page_info.next}
@@ -147,7 +147,7 @@ export function PreveriClient({
 						id="stran"
 						value={inputPage}
 						onChange={(event) => {
-							const number = parseInt(event.target.value);
+							const number = parseInt(event.target.value, 10);
 							setInputPage(number);
 						}}
 					/>
@@ -163,13 +163,11 @@ export function PreveriClient({
 				</div>
 			</form>
 			<div className="grid h-full w-full grid-cols-2 gap-2">
-				<>
-					<iframe
-						className="h-full w-full overflow-y-hidden rounded-xl"
-						src={iframe_src(preveri_store_index)}
-					/>
-					{page}
-				</>
+				<iframe
+					className="h-full w-full overflow-y-hidden rounded-xl"
+					src={iframe_src(preveri_store_index)}
+				/>
+				{page}
 			</div>
 		</>
 	);

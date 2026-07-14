@@ -74,7 +74,7 @@ export function Searchbar() {
 			const published_article =
 				results[1] as SearchResponse<PublishedArticleHit>;
 
-			setNoResults(static_pages.nbHits == 0 && published_article.nbHits == 0);
+			setNoResults(static_pages.nbHits === 0 && published_article.nbHits === 0);
 			setStaticPages(static_pages.hits);
 			setPublishedArticles(published_article.hits);
 		};

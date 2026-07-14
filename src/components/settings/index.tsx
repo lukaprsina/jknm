@@ -4,7 +4,6 @@ import { LogOut, RefreshCcw, SettingsIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
-import React from "react";
 import { Button } from "~/components/ui/button";
 import {
 	DropdownMenu,

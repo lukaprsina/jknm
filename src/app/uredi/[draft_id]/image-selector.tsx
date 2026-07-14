@@ -68,7 +68,7 @@ export function ImageSelector({
 
 	useEffect(() => {
 		setCrop(formImage);
-	}, [formImage, imageIndex]);
+	}, [formImage]);
 
 	useEffect(() => {
 		if (!formImage || typeof imageIndex === "number") return;

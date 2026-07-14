@@ -1,7 +1,6 @@
 // https://github.com/shadcn-ui/ui/pull/4421
 
 import { CalendarIcon } from "lucide-react";
-import * as React from "react";
 import { Calendar } from "~/components/date-time-picker/new_calendar";
 import { TimePickerDemo } from "~/components/date-time-picker/time-demo";
 import { Button } from "~/components/ui/button";

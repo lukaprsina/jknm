@@ -1,8 +1,8 @@
 import type { ThumbnailType } from "~/lib/validators";
 import type {
 	Article,
-	ArticlesToAuthors,
 	ArticleSlug,
+	ArticlesToAuthors,
 	Author,
 	Media,
 } from "~/server/db/schema";

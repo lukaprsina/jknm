@@ -147,7 +147,8 @@ export async function POST(request: NextRequest) {
 
 	if (typeof file !== "object" || !file) return NextResponse.error();
 
-	const mime_type = file.type || (mime.getType(title) ?? "application/octet-stream");
+	const mime_type =
+		file.type || (mime.getType(title) ?? "application/octet-stream");
 	const extension = mime.getExtension(mime_type) ?? "bin";
 	const id = crypto.randomUUID();
 	const key = `${id}/original.${extension}`;

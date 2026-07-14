@@ -14,12 +14,7 @@ import { assert_one } from "~/lib/assert-length";
 import type { ThumbnailType } from "~/lib/validators";
 import { getServerAuthSession } from "../auth";
 import { type DbTransaction, db } from "../db";
-import {
-	Article,
-	ArticleSlug,
-	ArticlesToAuthors,
-	Media,
-} from "../db/schema";
+import { Article, ArticleSlug, ArticlesToAuthors, Media } from "../db/schema";
 import { find_article_with_relations } from "./article-queries";
 import { reconcile_media_to_articles } from "./reconcile-media";
 import {

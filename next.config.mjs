@@ -5,7 +5,6 @@
 await import("./src/env.js");
 
 import withMDX from "@next/mdx";
-import rehypeMinifyWhitespace from "rehype-minify-whitespace";
 
 /* import remarkGfm from "remark-gfm";
 import createMDX from "@next/mdx";

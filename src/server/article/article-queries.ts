@@ -1,6 +1,6 @@
 import { asc, type SQL } from "drizzle-orm";
 import type { DbTransaction, db } from "../db";
-import { Article, ArticlesToAuthors } from "../db/schema";
+import { ArticlesToAuthors } from "../db/schema";
 
 /**
  * Fetch a unified `articles` row with the relations the editor and read paths

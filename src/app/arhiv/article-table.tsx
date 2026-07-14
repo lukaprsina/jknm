@@ -203,7 +203,7 @@ function ArticleTableRow({
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function DeleteDialog({ article_id }: { article_id: number }) {
+function _DeleteDialog({ article_id }: { article_id: number }) {
 	// const trpc_utils = api.useUtils();
 
 	/* const article_delete = api.article.delete_both.useMutation({

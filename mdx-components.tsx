@@ -22,7 +22,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 		strong: (props) => <b {...props} />,
 		a: ({ href, ref: _, ...props }) => {
 			if (typeof href === "undefined") throw new Error("href is undefined");
-			 
+
 			return <Link target="_blank" href={href} {...props} />;
 		},
 		TableOfContents,

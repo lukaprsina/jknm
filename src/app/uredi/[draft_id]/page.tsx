@@ -3,12 +3,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import sanitizeHtml from "sanitize-html";
+import MakeNewDraftButton from "~/components/article/make-new-draft-button";
 import { map_new_article_to_editor_draft } from "~/components/article/new-adapter";
 import { InfoCard } from "~/components/info-card";
 import { Shell } from "~/components/shell";
 import { buttonVariants } from "~/components/ui/button";
 import { CardContent, CardFooter } from "~/components/ui/card";
-import MakeNewDraftButton from "~/components/article/make-new-draft-button";
 import { article_variants, page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
 import {

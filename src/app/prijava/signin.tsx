@@ -3,7 +3,6 @@
 import Link from "next/link";
 import type { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
-import { useEffect } from "react";
 import { InfoCard } from "~/components/info-card";
 import { Logo } from "~/components/shell/logo";
 import { Button, buttonVariants } from "~/components/ui/button";
@@ -50,18 +49,16 @@ export default function SignIn({ session }: { session: Session | null }) {
 	}
 
 	return (
-		<>
-			<InfoCard title="Prijavljeni ste" description="Lahko se odjavite.">
-				<CardFooter className="flex items-baseline gap-2 pt-4">
-					<Button variant="secondary" onClick={async () => await signOut()}>
-						Odjava
-					</Button>
-					<Link href="/" className={cn(buttonVariants(), "no-underline")}>
-						Nazaj na domačo stran
-					</Link>
-				</CardFooter>
-			</InfoCard>
-		</>
+		<InfoCard title="Prijavljeni ste" description="Lahko se odjavite.">
+			<CardFooter className="flex items-baseline gap-2 pt-4">
+				<Button variant="secondary" onClick={async () => await signOut()}>
+					Odjava
+				</Button>
+				<Link href="/" className={cn(buttonVariants(), "no-underline")}>
+					Nazaj na domačo stran
+				</Link>
+			</CardFooter>
+		</InfoCard>
 	);
 }
 

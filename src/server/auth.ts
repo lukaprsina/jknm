@@ -1,7 +1,6 @@
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import type { DefaultSession, NextAuthOptions } from "next-auth";
 import { getServerSession } from "next-auth";
-import type { Adapter } from "next-auth/adapters";
 import type { GoogleProfile } from "next-auth/providers/google";
 import GoogleProvider from "next-auth/providers/google";
 // import CredentialsProvider from "next-auth/providers/credentials";
@@ -52,7 +51,7 @@ export const authOptions: NextAuthOptions = {
 		}),
 		signIn: ({ account, profile }) => {
 			// if (account?.provider == "credentials") return true;
-			if (account?.provider != "google") return false;
+			if (account?.provider !== "google") return false;
 			if (!(profile as GoogleProfile).email_verified) return false;
 			// TODO: info@jknm.si
 			if (!profile?.email?.endsWith("@jknm.si")) return false;

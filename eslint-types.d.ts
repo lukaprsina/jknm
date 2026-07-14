@@ -58,3 +58,10 @@ declare module "@next/eslint-plugin-next" {
 	};
 	export const rules: Record<string, Rule.RuleModule>;
 }
+
+declare module "eslint-plugin-drizzle" {
+	import type { Rule } from "eslint-types";
+
+	const plugin: { rules: Record<string, Rule.RuleModule> };
+	export default plugin;
+}

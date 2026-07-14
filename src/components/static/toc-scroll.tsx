@@ -3,13 +3,7 @@
 import type { Toc } from "@stefanprobst/rehype-extract-toc";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, {
-	Fragment,
-	useCallback,
-	useEffect,
-	useRef,
-	useState,
-} from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useStoreValue } from "zustand-x";
 import { ScrollArea } from "~/components/ui/scroll-area";

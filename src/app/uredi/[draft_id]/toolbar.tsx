@@ -42,7 +42,7 @@ export function MyToolbar() {
 				<div className="flex items-center gap-2">
 					<MultiSelect
 						onValueChange={(value) => {
-							const ids = value.map((v) => parseInt(v));
+							const ids = value.map((v) => parseInt(v, 10));
 							// console.log("toolbar -> onValueChange", ids);
 							editor_store.set("author_ids", ids);
 						}}

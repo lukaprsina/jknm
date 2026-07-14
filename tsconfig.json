@@ -36,7 +36,7 @@
 		"**/*.cjs",
 		"**/*.js",
 		".next/types/**/*.ts",
-		".eslint.config.js",
+		"eslint.config.mjs",
 		"next-env.d.ts",
 		"next.config.mjs",
 		"src/components/shell/article-autocomplete.tsx.old",

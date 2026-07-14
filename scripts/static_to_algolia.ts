@@ -1,8 +1,8 @@
+import fs from "node:fs/promises";
+import path from "node:path";
 import { algoliasearch as searchClient } from "algoliasearch";
-import fs from "fs/promises";
 import { glob } from "glob";
 import type { RootContent } from "mdast";
-import path from "path";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
 import { is } from "unist-util-is";

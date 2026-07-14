@@ -1,4 +1,3 @@
-import React from "react";
 import type { InfiniteHitsProps } from "react-instantsearch";
 import { ArticleAlgoliaCard } from "~/components/article/adapter";
 import { useInfiniteAlgoliaArticles } from "~/hooks/use-infinite-algolia";

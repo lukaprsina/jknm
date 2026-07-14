@@ -8,7 +8,7 @@ import HTMLReactParser from "html-react-parser";
 import Image from "next/image";
 import Link from "next/link";
 import type { Session } from "next-auth";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import ArticleDescription from "~/components/article/description";
 import { gallery_store } from "~/components/gallery-store";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
@@ -211,7 +211,7 @@ export const AttachesRenderer: RenderFn<EditorJSAttachesData> = ({
 		let visible_extension = data.file.extension.trim().toUpperCase();
 
 		if (data.file.extension.length > EXTENSION_MAX_LENGTH) {
-			visible_extension = extension.substring(0, EXTENSION_MAX_LENGTH) + "…";
+			visible_extension = `${extension.substring(0, EXTENSION_MAX_LENGTH)}…`;
 		}
 
 		return visible_extension;
