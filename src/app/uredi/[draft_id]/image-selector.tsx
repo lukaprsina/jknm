@@ -17,22 +17,14 @@ import { Card } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 import type { ThumbnailType } from "~/lib/validators";
 import "react-image-crop/dist/ReactCrop.css";
-import { useMutation } from "@tanstack/react-query";
 import { PlusIcon, TrashIcon } from "lucide-react";
-import type { z } from "zod";
 import { useStoreValue } from "zustand-x";
 import { DraftArticleContext } from "~/components/article/context";
 import { upload_image_by_file } from "~/components/aws-s3/upload-file";
 import { AspectRatio } from "~/components/ui/aspect-ratio";
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { env } from "~/env";
-import { useToast } from "~/hooks/use-toast";
-import { get_s3_draft_directory } from "~/lib/article-utils";
 import type { EditorJSImageData } from "~/lib/editor-utils";
-import { get_s3_prefix } from "~/lib/s3-publish";
-import { delete_custom_thumbnail } from "~/server/article/delete";
-import type { delete_custom_thumbnail_validator } from "~/server/article/validators";
 
 export function ImageSelector({
 	image: formImage,
@@ -49,41 +41,21 @@ export function ImageSelector({
 	const [customThumbnailExists, setCustomThumbnailExists] = useState<boolean>(
 		formImage?.uploaded_custom_thumbnail ?? false,
 	);
+	// Media is immutable/decoupled (#8, #18): every upload gets a fresh URL,
+	// so it's tracked directly instead of derived from a fixed draft-bucket key.
+	const [customThumbnailUrl, setCustomThumbnailUrl] = useState<string>(
+		formImage?.uploaded_custom_thumbnail ? (formImage.image_url ?? "") : "",
+	);
 	const [doCenterCrop, setDoCenterCrop] = useState<boolean>(false);
 	const [imageIndex, setImageIndex] = useState<number | undefined>(undefined);
-	const toaster = useToast();
-
-	const delete_custom_thumbnail_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof delete_custom_thumbnail_validator>) =>
-			delete_custom_thumbnail(input),
-		onSuccess: () => {
-			setCustomThumbnailExists(false);
-			setFormImage(undefined);
-		},
-		onError: (error) => {
-			toaster.toast({
-				title: "Napaka pri brisanju slike",
-				description: error.message,
-			});
-		},
-	});
-
-	const custom_thumbnail_url = useMemo(() => {
-		if (!draft_article) return "";
-
-		return get_s3_prefix(
-			`${get_s3_draft_directory(draft_article.id)}/thumbnail-uploaded.png`,
-			env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
-		);
-	}, [draft_article]);
 
 	const images = useMemo(() => {
 		const temp = [...store_images];
 
-		if (customThumbnailExists && draft_article) {
+		if (customThumbnailExists && draft_article && customThumbnailUrl) {
 			const editor_image = {
 				file: {
-					url: custom_thumbnail_url,
+					url: customThumbnailUrl,
 				},
 				caption: "",
 			} satisfies EditorJSImageData;
@@ -92,12 +64,7 @@ export function ImageSelector({
 		}
 
 		return temp;
-	}, [
-		customThumbnailExists,
-		custom_thumbnail_url,
-		draft_article,
-		store_images,
-	]);
+	}, [customThumbnailExists, customThumbnailUrl, draft_article, store_images]);
 
 	useEffect(() => {
 		setCrop(formImage);
@@ -187,9 +154,6 @@ export function ImageSelector({
 						file,
 						custom_title: "thumbnail-uploaded.png",
 						crop: formImage,
-						allow_overwrite: "allow_overwrite",
-						draft: true,
-						directory: get_s3_draft_directory(editor_store.get("draft_id")),
 					});
 
 					if (
@@ -199,6 +163,7 @@ export function ImageSelector({
 						return;
 					}
 
+					setCustomThumbnailUrl(response.file.url);
 					setCustomThumbnailExists(true);
 					setUploadedVersion(Date.now());
 				}}
@@ -215,7 +180,10 @@ export function ImageSelector({
 								height = 0;
 							}
 
-							if (image.file.url.endsWith("thumbnail-uploaded.png")) {
+							if (
+								customThumbnailExists &&
+								image.file.url === customThumbnailUrl
+							) {
 								is_custom_image = true;
 								width = 300;
 								height = (300 * 9) / 16;
@@ -251,9 +219,11 @@ export function ImageSelector({
 											type="button"
 											className="absolute right-0 top-0 m-4 shadow-2xl"
 											onClick={() => {
-												delete_custom_thumbnail_mutation.mutate({
-													draft_id: editor_store.get("draft_id"),
-												});
+												// Media is immutable (#8) — nothing to delete on B2,
+												// just clear the local selection.
+												setCustomThumbnailExists(false);
+												setCustomThumbnailUrl("");
+												setFormImage(undefined);
 											}}
 										>
 											<TrashIcon />

@@ -168,9 +168,6 @@ export function useEditorMutations() {
 					url: thumbnail_crop.image_url,
 					custom_title: "thumbnail.png",
 					crop: thumbnail_crop,
-					allow_overwrite: "allow_overwrite",
-					draft: true,
-					directory: get_s3_draft_directory(draft_article.id),
 				});
 			}
 
@@ -230,9 +227,6 @@ export function useEditorMutations() {
 					url: thumbnail_crop.image_url,
 					custom_title: "thumbnail.png",
 					crop: thumbnail_crop,
-					allow_overwrite: "allow_overwrite",
-					draft: true,
-					directory: get_s3_draft_directory(draft_article.id),
 				});
 			}
 
