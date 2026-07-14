@@ -1,14 +1,19 @@
 import { relations, sql } from "drizzle-orm";
+import type { AnyPgColumn } from "drizzle-orm/pg-core";
 import {
+	boolean,
 	index,
 	integer,
 	json,
+	jsonb,
 	pgEnum,
 	pgTable,
 	primaryKey,
+	real,
 	serial,
 	text,
 	timestamp,
+	uuid,
 	varchar,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
@@ -137,6 +142,7 @@ export const Author = pgTable("author", {
 	google_id: varchar("google_id", { length: 255 }),
 	email: text("email"),
 	image: varchar("image", { length: 255 }),
+	user_id: varchar("user_id", { length: 255 }).references(() => users.id),
 });
 
 export const PublishedArticlesToAuthors = pgTable(
@@ -345,5 +351,223 @@ export const verificationTokens = pgTable(
 	},
 	(vt) => ({
 		compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+	}),
+);
+
+// --- Unified articles/media schema (#17) ---
+// Additive alongside PublishedArticle/DraftArticle; nothing above is read from yet.
+
+export const article_status_enum = pgEnum("article_status", [
+	"draft",
+	"published",
+	"archived",
+	"deleted",
+]);
+
+export const media_upload_status_enum = pgEnum("media_upload_status", [
+	"pending",
+	"processing",
+	"completed",
+	"failed",
+]);
+
+export interface MediaOriginalData {
+	url: string;
+	width: number;
+	height: number;
+	size_bytes: number;
+}
+
+export interface MediaVariantData {
+	format: "avif" | "jpeg";
+	width: number;
+	height: number;
+	url: string;
+	size_bytes: number;
+}
+
+export interface MediaSrcsetsData {
+	avif: string;
+	jpeg: string;
+	sizes: string;
+}
+
+export const Media = pgTable("media", {
+	id: uuid("id").primaryKey(),
+	filename: varchar("filename", { length: 255 }).notNull(),
+	content_type: varchar("content_type", { length: 255 }).notNull(),
+	size_bytes: integer("size_bytes").notNull(),
+	original: jsonb("original").$type<MediaOriginalData>().notNull(),
+	variants: jsonb("variants").$type<MediaVariantData[]>().notNull().default([]),
+	srcsets: jsonb("srcsets").$type<MediaSrcsetsData>(),
+	blur_placeholder: text("blur_placeholder"),
+	upload_status: media_upload_status_enum("upload_status")
+		.notNull()
+		.default("pending"),
+	created_at: timestamp("created_at", { withTimezone: true })
+		.default(sql`CURRENT_TIMESTAMP`)
+		.notNull(),
+	updated_at: timestamp("updated_at", { withTimezone: true })
+		.$onUpdate(() => new Date())
+		.notNull(),
+});
+
+export const Article = pgTable(
+	"articles",
+	{
+		id: uuid("id")
+			.primaryKey()
+			.$defaultFn(() => crypto.randomUUID()),
+		legacy_id: integer("legacy_id"),
+		status: article_status_enum("status").notNull().default("draft"),
+		title: varchar("title", { length: 255 }).notNull(),
+		excerpt: text("excerpt").default(""),
+		content_json: jsonb("content_json").$type<ArticleContentType>(),
+		content_markdown: text("content_markdown"),
+		thumbnail_media_id: uuid("thumbnail_media_id").references(
+			() => Media.id,
+		),
+		thumbnail_x: real("thumbnail_x"),
+		thumbnail_y: real("thumbnail_y"),
+		thumbnail_width: real("thumbnail_width"),
+		thumbnail_height: real("thumbnail_height"),
+		supersedes_id: uuid("supersedes_id").references(
+			(): AnyPgColumn => Article.id,
+		),
+		created_by: varchar("created_by", { length: 255 }).references(
+			() => users.id,
+		),
+		created_at: timestamp("created_at", { withTimezone: true })
+			.default(sql`CURRENT_TIMESTAMP`)
+			.notNull(),
+		updated_at: timestamp("updated_at", { withTimezone: true })
+			.$onUpdate(() => new Date())
+			.notNull(),
+		published_at: timestamp("published_at", { withTimezone: true }),
+		archived_at: timestamp("archived_at", { withTimezone: true }),
+		deleted_at: timestamp("deleted_at", { withTimezone: true }),
+		published_year: integer("published_year").generatedAlwaysAs(
+			() => sql`EXTRACT(YEAR FROM (published_at AT TIME ZONE 'UTC'))`,
+		),
+	},
+	(articles) => ({
+		legacy_id_idx: index("articles_legacy_id_idx").on(articles.legacy_id),
+		status_published_year_idx: index(
+			"articles_status_published_year_idx",
+		).on(articles.status, articles.published_year),
+	}),
+);
+
+export const ArticleRelations = relations(Article, ({ one, many }) => ({
+	thumbnail_media: one(Media, {
+		fields: [Article.thumbnail_media_id],
+		references: [Media.id],
+	}),
+	supersedes: one(Article, {
+		fields: [Article.supersedes_id],
+		references: [Article.id],
+		relationName: "supersedes",
+	}),
+	created_by_user: one(users, {
+		fields: [Article.created_by],
+		references: [users.id],
+	}),
+	articles_to_authors: many(ArticlesToAuthors),
+	article_slugs: many(ArticleSlug),
+	media_to_articles: many(MediaToArticles),
+}));
+
+export const ArticleSlug = pgTable(
+	"article_slugs",
+	{
+		id: serial("id").primaryKey(),
+		slug: varchar("slug", { length: 255 }).notNull().unique(),
+		article_id: uuid("article_id")
+			.notNull()
+			.references(() => Article.id, { onDelete: "cascade" }),
+		is_primary: boolean("is_primary").notNull().default(false),
+		created_at: timestamp("created_at", { withTimezone: true })
+			.default(sql`CURRENT_TIMESTAMP`)
+			.notNull(),
+	},
+	(article_slugs) => ({
+		article_id_idx: index("article_slugs_article_id_idx").on(
+			article_slugs.article_id,
+		),
+	}),
+);
+
+export const ArticleSlugRelations = relations(ArticleSlug, ({ one }) => ({
+	article: one(Article, {
+		fields: [ArticleSlug.article_id],
+		references: [Article.id],
+	}),
+}));
+
+export const MediaToArticles = pgTable(
+	"media_to_articles",
+	{
+		article_id: uuid("article_id")
+			.notNull()
+			.references(() => Article.id, { onDelete: "cascade" }),
+		media_id: uuid("media_id")
+			.notNull()
+			.references(() => Media.id, { onDelete: "cascade" }),
+		order: integer("order").default(0).notNull(),
+	},
+	(media_to_articles) => ({
+		compoundKey: primaryKey({
+			columns: [media_to_articles.article_id, media_to_articles.media_id],
+		}),
+	}),
+);
+
+export const MediaToArticlesRelations = relations(
+	MediaToArticles,
+	({ one }) => ({
+		article: one(Article, {
+			fields: [MediaToArticles.article_id],
+			references: [Article.id],
+		}),
+		media: one(Media, {
+			fields: [MediaToArticles.media_id],
+			references: [Media.id],
+		}),
+	}),
+);
+
+export const MediaRelations = relations(Media, ({ many }) => ({
+	media_to_articles: many(MediaToArticles),
+}));
+
+export const ArticlesToAuthors = pgTable(
+	"articles_to_authors",
+	{
+		article_id: uuid("article_id")
+			.notNull()
+			.references(() => Article.id, { onDelete: "cascade" }),
+		author_id: integer("author_id")
+			.notNull()
+			.references(() => Author.id, { onDelete: "cascade" }),
+		order: integer("order").default(0).notNull(),
+	},
+	(articles_to_authors) => ({
+		compoundKey: primaryKey({
+			columns: [articles_to_authors.article_id, articles_to_authors.author_id],
+		}),
+	}),
+);
+
+export const ArticlesToAuthorsRelations = relations(
+	ArticlesToAuthors,
+	({ one }) => ({
+		article: one(Article, {
+			fields: [ArticlesToAuthors.article_id],
+			references: [Article.id],
+		}),
+		author: one(Author, {
+			fields: [ArticlesToAuthors.author_id],
+			references: [Author.id],
+		}),
 	}),
 );
