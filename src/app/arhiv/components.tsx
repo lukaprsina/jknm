@@ -25,6 +25,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
+import { ALGOLIA_PUBLISHED_ARTICLE_INDEX } from "~/lib/algoliasearch";
 import { cn } from "~/lib/utils";
 
 export const DEFAULT_REFINEMENT = "published_article_created_at_desc";
@@ -151,7 +152,7 @@ export function MySearchBox2(props: UseSearchBoxProps) {
 			if (trimmed === "") {
 				sort_refine(DEFAULT_REFINEMENT);
 			} else {
-				sort_refine("published_article");
+				sort_refine(ALGOLIA_PUBLISHED_ARTICLE_INDEX);
 			}
 
 			setInputValue(new_query);

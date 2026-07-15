@@ -7,7 +7,10 @@ import { asc, sql } from "drizzle-orm";
 import path from "path";
 import sharp from "sharp";
 import { env } from "~/env";
-import { convert_article_to_algolia_object } from "~/lib/algoliasearch";
+import {
+	ALGOLIA_PUBLISHED_ARTICLE_INDEX,
+	convert_article_to_algolia_object,
+} from "~/lib/algoliasearch";
 import { convert_content_to_text } from "~/lib/content-to-text";
 import { crop_image, delete_s3_directory } from "~/lib/s3-utils";
 import type { PublishedArticleHit } from "~/lib/validators";
@@ -264,7 +267,7 @@ export async function sync_with_algolia() {
 		},
 	});
 
-	const indexName = "published_article";
+	const indexName = ALGOLIA_PUBLISHED_ARTICLE_INDEX;
 	const client = searchClient(
 		env.NEXT_PUBLIC_ALGOLIA_ID,
 		env.ALGOLIA_ADMIN_KEY,

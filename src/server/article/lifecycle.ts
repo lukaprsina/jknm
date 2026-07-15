@@ -7,10 +7,10 @@ import type { z } from "zod";
 import { env } from "~/env";
 import { ALGOLIA_PUBLISHED_ARTICLE_INDEX } from "~/lib/algoliasearch";
 import { assert_one } from "~/lib/assert-length";
-import { getServerAuthSession } from "../auth";
 import { type DbTransaction, db } from "../db";
 import { Article, ArticlesToAuthors } from "../db/schema";
 import { find_article_with_relations } from "./article-queries";
+import { run_authorized_mutation } from "./authorized-mutation";
 import {
 	assert_can_archive,
 	assert_can_delete,
@@ -50,7 +50,10 @@ export async function remove_from_algolia(article_id: string) {
  * unlist a published row from search do that themselves, since only they
  * know whether the row was actually public.
  */
-export async function soft_delete_article(tx: DbTransaction, article_id: string) {
+export async function soft_delete_article(
+	tx: DbTransaction,
+	article_id: string,
+) {
 	const updated = await tx
 		.update(Article)
 		.set({ status: "deleted", deleted_at: new Date() })
@@ -68,17 +71,14 @@ export async function soft_delete_article(tx: DbTransaction, article_id: string)
 export async function archive_article(
 	input: z.infer<typeof archive_article_validator>,
 ) {
-	const session = await getServerAuthSession();
-	if (!session) throw new Error("Unauthorized");
-
-	const validated_input = archive_article_validator.safeParse(input);
-	if (!validated_input.success) {
-		throw new Error(validated_input.error.message);
-	}
+	const { input: validated_input } = await run_authorized_mutation(
+		archive_article_validator,
+		input,
+	);
 
 	const transaction = await db.transaction(async (tx) => {
 		const existing = await tx.query.Article.findFirst({
-			where: eq(Article.id, input.article_id),
+			where: eq(Article.id, validated_input.article_id),
 			columns: { id: true, status: true },
 		});
 		if (!existing) throw new Error("Article not found");
@@ -91,11 +91,14 @@ export async function archive_article(
 		const updated = await tx
 			.update(Article)
 			.set({ status: "archived", archived_at: new Date() })
-			.where(eq(Article.id, input.article_id))
+			.where(eq(Article.id, validated_input.article_id))
 			.returning();
 
 		assert_one(updated);
-		return find_article_with_relations(tx, eq(Article.id, input.article_id));
+		return find_article_with_relations(
+			tx,
+			eq(Article.id, validated_input.article_id),
+		);
 	});
 
 	revalidateTag("drafts", "max");
@@ -112,17 +115,14 @@ export async function archive_article(
 export async function delete_article(
 	input: z.infer<typeof delete_article_validator>,
 ) {
-	const session = await getServerAuthSession();
-	if (!session) throw new Error("Unauthorized");
-
-	const validated_input = delete_article_validator.safeParse(input);
-	if (!validated_input.success) {
-		throw new Error(validated_input.error.message);
-	}
+	const { input: validated_input } = await run_authorized_mutation(
+		delete_article_validator,
+		input,
+	);
 
 	const transaction = await db.transaction(async (tx) => {
 		const existing = await tx.query.Article.findFirst({
-			where: eq(Article.id, input.article_id),
+			where: eq(Article.id, validated_input.article_id),
 			columns: { id: true, status: true },
 		});
 		if (!existing) throw new Error("Article not found");
@@ -132,7 +132,7 @@ export async function delete_article(
 			await remove_from_algolia(existing.id);
 		}
 
-		return soft_delete_article(tx, input.article_id);
+		return soft_delete_article(tx, validated_input.article_id);
 	});
 
 	revalidateTag("drafts", "max");
@@ -151,18 +151,15 @@ export async function delete_article(
 export async function create_superseding_draft(
 	input: z.infer<typeof create_superseding_draft_validator>,
 ) {
-	const session = await getServerAuthSession();
-	if (!session) throw new Error("Unauthorized");
-
-	const validated_input = create_superseding_draft_validator.safeParse(input);
-	if (!validated_input.success) {
-		throw new Error(validated_input.error.message);
-	}
+	const { session, input: validated_input } = await run_authorized_mutation(
+		create_superseding_draft_validator,
+		input,
+	);
 
 	const transaction = await db.transaction(async (tx) => {
 		const source = await find_article_with_relations(
 			tx,
-			eq(Article.id, input.article_id),
+			eq(Article.id, validated_input.article_id),
 		);
 		if (!source) throw new Error("Article not found");
 		assert_can_supersede(source.status);
