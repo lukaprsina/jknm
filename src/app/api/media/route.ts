@@ -12,17 +12,13 @@ import type {
 	FileUploadResponse,
 	ImageUploadJSON,
 } from "~/lib/media-upload";
-import { MEDIA_PUBLIC_DOMAIN } from "~/lib/media-upload";
+import { media_url } from "~/lib/media-upload";
 import { crop_image } from "~/lib/s3-utils";
 import { thumbnail_validator } from "~/lib/validators";
 import { getServerAuthSession } from "~/server/auth";
 import { db } from "~/server/db";
 import type { MediaVariantData } from "~/server/db/schema";
 import { Media } from "~/server/db/schema";
-
-function media_url(key: string) {
-	return `https://${MEDIA_PUBLIC_DOMAIN}/${key}`;
-}
 
 const VARIANT_WIDTHS = [400, 800, 1600];
 const VARIANT_FORMATS = ["avif", "jpeg"] as const;

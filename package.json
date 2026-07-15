@@ -12,6 +12,7 @@
 		"db:studio": "drizzle-kit studio",
 		"dev": "next dev",
 		"lint": "eslint .",
+		"migrate-legacy": "bun run scripts/migrate-legacy-articles.ts",
 		"start": "next start",
 		"test": "vitest run",
 		"test:watch": "vitest",

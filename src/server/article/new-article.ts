@@ -13,13 +13,7 @@ import { convert_title_to_url } from "~/lib/article-utils";
 import { assert_one } from "~/lib/assert-length";
 import type { ThumbnailType } from "~/lib/validators";
 import { type DbTransaction, db } from "../db";
-import {
-	Article,
-	ArticleSlug,
-	ArticlesToAuthors,
-	Media,
-	PublishedArticle,
-} from "../db/schema";
+import { Article, ArticleSlug, ArticlesToAuthors, Media } from "../db/schema";
 import { find_article_with_relations } from "./article-queries";
 import { run_authorized_mutation } from "./authorized-mutation";
 import { remove_from_algolia, soft_delete_article } from "./lifecycle";
@@ -28,41 +22,20 @@ import {
 	decide_slug_transition,
 } from "./lifecycle-rules";
 import { reconcile_media_to_articles } from "./reconcile-media";
+import { find_available_slug } from "./slug";
 import {
 	create_article_validator,
 	publish_article_validator,
 	save_article_validator,
 } from "./validators";
 
-const MAX_SLUG_SUFFIX = 99;
-
 /**
- * Generate a slug that doesn't collide with an existing `article_slugs` row
- * *or* a legacy `published_article.url` (the two live on the same
- * `/novica/<slug>` route, and the legacy table is checked first there — see
- * `page.tsx` — so a new slug that shadows a legacy url would be permanently
- * unreachable): `base`, then `base-2` .. `base-99`, then a timestamp-suffixed
- * fallback. Runs inside the publish transaction to avoid a race.
+ * Generate a slug for a newly-titled article, deriving the base from the
+ * title and delegating collision-suffixing to `find_available_slug`. Runs
+ * inside the publish transaction to avoid a race.
  */
 async function generate_unique_article_slug(tx: DbTransaction, title: string) {
-	const base = convert_title_to_url(title);
-
-	for (let suffix = 1; suffix <= MAX_SLUG_SUFFIX; suffix += 1) {
-		const candidate = suffix === 1 ? base : `${base}-${suffix}`;
-		const [existing_slug, existing_legacy_url] = await Promise.all([
-			tx.query.ArticleSlug.findFirst({
-				where: eq(ArticleSlug.slug, candidate),
-				columns: { id: true },
-			}),
-			tx.query.PublishedArticle.findFirst({
-				where: eq(PublishedArticle.url, candidate),
-				columns: { id: true },
-			}),
-		]);
-		if (!existing_slug && !existing_legacy_url) return candidate;
-	}
-
-	return `${base}-${Date.now()}`;
+	return find_available_slug(tx, convert_title_to_url(title));
 }
 
 async function resolve_first_publish_slug(
