@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import sanitizeHtml from "sanitize-html";
+import { CreateSupersedingDraftButton } from "~/components/article/create-superseding-draft-button";
 import MakeNewDraftButton from "~/components/article/make-new-draft-button";
 import { map_new_article_to_editor_draft } from "~/components/article/new-adapter";
 import { InfoCard } from "~/components/info-card";
@@ -95,15 +96,41 @@ export default async function EditorPage(props: EditorPageProps) {
 	if (UUID_REGEX.test(decoded)) {
 		const article = await get_article_by_new_id({ id: decoded });
 
+		if (!article) {
+			return (
+				<Shell>{editor_shell(<CreateNewArticle novica_ime={draft_id} />)}</Shell>
+			);
+		}
+
+		// `published`/`archived` rows are never edited directly (#21) — editing
+		// spawns a new superseding draft instead, so the live/archived version
+		// stays untouched until that draft is published.
+		if (article.status === "published" || article.status === "archived") {
+			return (
+				<Shell>
+					{editor_shell(
+						<PublishedOrArchivedArticleGate
+							article_id={article.id}
+							title={article.title}
+							status={article.status}
+						/>,
+					)}
+				</Shell>
+			);
+		}
+
+		// `deleted` is terminal — no restore action.
+		if (article.status === "deleted") {
+			return (
+				<Shell>
+					{editor_shell(<DeletedArticleGate title={article.title} />)}
+				</Shell>
+			);
+		}
+
 		return (
 			<Shell>
-				{editor_shell(
-					article ? (
-						<Editor draft={map_new_article_to_editor_draft(article)} />
-					) : (
-						<CreateNewArticle novica_ime={draft_id} />
-					),
-				)}
+				{editor_shell(<Editor draft={map_new_article_to_editor_draft(article)} />)}
 			</Shell>
 		);
 	}
@@ -154,6 +181,73 @@ function CreateNewArticle({ novica_ime }: { novica_ime: string }) {
 				<MakeNewDraftButton title={novica_ime}>
 					Ustvari novico
 				</MakeNewDraftButton>
+			</CardFooter>
+		</InfoCard>
+	);
+}
+
+function PublishedOrArchivedArticleGate({
+	article_id,
+	title,
+	status,
+}: {
+	article_id: string;
+	title: string;
+	status: "published" | "archived";
+}) {
+	const is_archived = status === "archived";
+
+	return (
+		<InfoCard
+			title={
+				<span>
+					<strong>{title}</strong>{" "}
+					{is_archived ? "je arhivirana." : "je objavljena."}
+				</span>
+			}
+			description={
+				is_archived
+					? "Arhivirane novičke ni mogoče urejati neposredno."
+					: "Objavljene novičke ni mogoče urejati neposredno, da ostane vidna, dokler ne objavite popravkov."
+			}
+		>
+			<CardFooter className="flex justify-between">
+				<Link className={buttonVariants({ variant: "secondary" })} href="/">
+					Domov
+				</Link>
+				<CreateSupersedingDraftButton
+					article_id={article_id}
+					confirm={
+						is_archived
+							? {
+									title: "Obnovi iz arhiva",
+									description:
+										"Ustvarjen bo nov osnutek na podlagi arhivirane novičke. Arhivirana novička ostane nespremenjena, dokler osnutka ne objavite.",
+								}
+							: undefined
+					}
+				>
+					{is_archived ? "Obnovi iz arhiva" : "Uredi novičko"}
+				</CreateSupersedingDraftButton>
+			</CardFooter>
+		</InfoCard>
+	);
+}
+
+function DeletedArticleGate({ title }: { title: string }) {
+	return (
+		<InfoCard
+			title={
+				<span>
+					<strong>{title}</strong> je bila izbrisana.
+				</span>
+			}
+			description="Izbrisanih novičk ni mogoče obnoviti."
+		>
+			<CardFooter>
+				<Link className={buttonVariants({ variant: "secondary" })} href="/">
+					Domov
+				</Link>
 			</CardFooter>
 		</InfoCard>
 	);

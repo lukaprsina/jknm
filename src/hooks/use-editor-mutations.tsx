@@ -23,11 +23,13 @@ import {
 } from "~/lib/article-utils";
 import type { ThumbnailType } from "~/lib/validators";
 import { delete_both, delete_draft } from "~/server/article/delete";
+import { delete_article } from "~/server/article/lifecycle";
 import { publish_article, save_article } from "~/server/article/new-article";
 import { publish } from "~/server/article/publish";
 import { save_draft } from "~/server/article/save-draft";
 import { unpublish } from "~/server/article/unpublish";
 import type {
+	delete_article_validator,
 	delete_both_validator,
 	delete_draft_validator,
 	publish_article_validator,
@@ -178,6 +180,23 @@ export function useEditorMutations() {
 	const delete_both_mutation = useMutation({
 		mutationFn: (input: z.infer<typeof delete_both_validator>) =>
 			delete_both(input),
+		onSettled: async () => {
+			await query_client.invalidateQueries({
+				queryKey: ["infinite_published"],
+			});
+			router.replace(`/`);
+		},
+		onError: (error) => {
+			toaster.toast({
+				title: "Napaka pri brisanju novičke",
+				description: error.message,
+			});
+		},
+	});
+
+	const delete_article_mutation = useMutation({
+		mutationFn: (input: z.infer<typeof delete_article_validator>) =>
+			delete_article(input),
 		onSettled: async () => {
 			await query_client.invalidateQueries({
 				queryKey: ["infinite_published"],
@@ -347,14 +366,13 @@ export function useEditorMutations() {
 			unpublish_mutation.mutate({ published_id: publish_article_ctx.id });
 		},
 		delete_both: () => {
-			if (typeof draft_article.id !== "number") {
-				toaster.toast({
-					title: "Brisanje še ni na voljo",
-					description: "Brisanje novih novičk še ni implementirano.",
-				});
+			editor_context.setSavingText("Brišem novičko ...");
+
+			if (typeof draft_article.id === "string") {
+				delete_article_mutation.mutate({ article_id: draft_article.id });
 				return;
 			}
-			editor_context.setSavingText("Brišem novičko ...");
+
 			delete_both_mutation.mutate({ draft_id: draft_article.id });
 		},
 	};

@@ -79,3 +79,17 @@ export const publish_article_validator = z.object({
 export const get_article_by_new_id_validator = z.object({
 	id: z.string().uuid(),
 });
+
+// --- Status lifecycle: archive / delete / unarchive / supersede-publish (#21) ---
+
+export const archive_article_validator = z.object({
+	article_id: z.string().uuid(),
+});
+
+export const delete_article_validator = z.object({
+	article_id: z.string().uuid(),
+});
+
+export const create_superseding_draft_validator = z.object({
+	article_id: z.string().uuid(),
+});

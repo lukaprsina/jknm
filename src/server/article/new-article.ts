@@ -16,6 +16,8 @@ import { getServerAuthSession } from "../auth";
 import { type DbTransaction, db } from "../db";
 import { Article, ArticleSlug, ArticlesToAuthors, Media } from "../db/schema";
 import { find_article_with_relations } from "./article-queries";
+import { remove_from_algolia, soft_delete_article } from "./lifecycle";
+import { assert_can_supersede, decide_slug_transition } from "./lifecycle-rules";
 import { reconcile_media_to_articles } from "./reconcile-media";
 import {
 	create_article_validator,
@@ -43,6 +45,103 @@ async function generate_unique_article_slug(tx: DbTransaction, title: string) {
 	}
 
 	return `${base}-${Date.now()}`;
+}
+
+async function resolve_first_publish_slug(
+	tx: DbTransaction,
+	article_id: string,
+	title: string,
+) {
+	const existing_primary = await tx.query.ArticleSlug.findFirst({
+		where: and(
+			eq(ArticleSlug.article_id, article_id),
+			eq(ArticleSlug.is_primary, true),
+		),
+	});
+	if (existing_primary) return existing_primary;
+
+	const slug = await generate_unique_article_slug(tx, title);
+	const inserted = await tx
+		.insert(ArticleSlug)
+		.values({ slug, article_id, is_primary: true })
+		.returning();
+	assert_one(inserted);
+	return inserted[0];
+}
+
+/**
+ * Supersede-publish's slug rule (#21): if the superseded article's title is
+ * unchanged, its primary slug is inherited (re-pointed to the newly
+ * published row, same slug text). If retitled, a new primary slug is minted
+ * for the new row and the old one is demoted to non-primary — kept,
+ * resolvable, not deleted. Also retires the superseded row via the shared
+ * `soft_delete_article`.
+ */
+async function resolve_supersede_publish_slug(
+	tx: DbTransaction,
+	article_id: string,
+	supersedes_id: string,
+	new_title: string,
+) {
+	const superseded = await tx.query.Article.findFirst({
+		where: eq(Article.id, supersedes_id),
+		columns: { id: true, title: true, status: true },
+	});
+	if (!superseded) throw new Error("Superseded article not found");
+	assert_can_supersede(superseded.status);
+
+	const old_primary_slug =
+		(await tx.query.ArticleSlug.findFirst({
+			where: and(
+				eq(ArticleSlug.article_id, supersedes_id),
+				eq(ArticleSlug.is_primary, true),
+			),
+		})) ?? null;
+
+	const decision = decide_slug_transition({
+		old_title: superseded.title,
+		new_title,
+		old_primary_slug,
+	});
+
+	let primary: typeof ArticleSlug.$inferSelect;
+
+	if (decision.action === "reuse") {
+		const updated = await tx
+			.update(ArticleSlug)
+			.set({ article_id })
+			.where(eq(ArticleSlug.id, decision.slug_id))
+			.returning();
+		assert_one(updated);
+		primary = updated[0];
+	} else {
+		if (decision.action === "mint_new_and_demote") {
+			// Re-point to the new (now-published) article, same as `reuse` —
+			// the superseded row is about to be soft-deleted (invisible to
+			// everyone), so the demoted slug must follow the content to stay
+			// "resolvable, not 404ing" as required by #21.
+			await tx
+				.update(ArticleSlug)
+				.set({ is_primary: false, article_id })
+				.where(eq(ArticleSlug.id, decision.demote_slug_id));
+		}
+
+		const slug = await generate_unique_article_slug(tx, new_title);
+		const inserted = await tx
+			.insert(ArticleSlug)
+			.values({ slug, article_id, is_primary: true })
+			.returning();
+		assert_one(inserted);
+		primary = inserted[0];
+	}
+
+	if (superseded.status === "published") {
+		await remove_from_algolia(superseded.id);
+	}
+
+	await soft_delete_article(tx, supersedes_id);
+
+	return primary;
 }
 
 /**
@@ -200,9 +299,12 @@ export async function save_article(
 }
 
 /**
- * First publish of a draft on the unified `articles` table (#20): flip status
- * to `published`, assign a primary slug, reconcile media/authors, and push to
- * Algolia. Supersede/republish is out of scope (#21).
+ * Publish a draft on the unified `articles` table: flip status to
+ * `published`, assign a primary slug, reconcile media/authors, and push to
+ * Algolia. Handles both first-publish (#20, no `supersedes_id`) and
+ * supersede-publish (#21, `supersedes_id` set): the latter also retires the
+ * superseded row and applies the slug-inherit-or-demote rule — see
+ * `resolve_supersede_publish_slug`.
  */
 export async function publish_article(
 	input: z.infer<typeof publish_article_validator>,
@@ -218,7 +320,7 @@ export async function publish_article(
 	const transaction = await db.transaction(async (tx) => {
 		const existing = await tx.query.Article.findFirst({
 			where: eq(Article.id, input.article_id),
-			columns: { id: true, published_at: true },
+			columns: { id: true, published_at: true, supersedes_id: true },
 		});
 		if (!existing) throw new Error("Article not found");
 
@@ -250,27 +352,14 @@ export async function publish_article(
 			updated[0].content_json,
 		);
 
-		// Reuse an existing primary slug if present, otherwise mint one.
-		let primary = await tx.query.ArticleSlug.findFirst({
-			where: and(
-				eq(ArticleSlug.article_id, input.article_id),
-				eq(ArticleSlug.is_primary, true),
-			),
-		});
-
-		if (!primary) {
-			const slug = await generate_unique_article_slug(tx, input.article.title);
-			const inserted = await tx
-				.insert(ArticleSlug)
-				.values({
-					slug,
-					article_id: input.article_id,
-					is_primary: true,
-				})
-				.returning();
-			assert_one(inserted);
-			primary = inserted[0];
-		}
+		const primary = existing.supersedes_id
+			? await resolve_supersede_publish_slug(
+					tx,
+					input.article_id,
+					existing.supersedes_id,
+					input.article.title,
+				)
+			: await resolve_first_publish_slug(tx, input.article_id, input.article.title);
 
 		const article = await find_article_with_relations(
 			tx,
@@ -297,6 +386,7 @@ export async function publish_article(
 	});
 
 	revalidateTag("drafts", "max");
+	revalidateTag("archive", "max");
 	revalidatePath("/");
 	return transaction;
 }

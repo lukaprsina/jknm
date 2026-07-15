@@ -11,6 +11,7 @@ import {
 	get_article_by_published_url,
 	get_new_article_by_slug,
 } from "~/server/article/get-article";
+import { is_visible_to } from "~/server/article/lifecycle-rules";
 import { getServerAuthSession } from "~/server/auth";
 import { ImageGallery } from "./image-gallery";
 
@@ -36,10 +37,13 @@ export async function generateMetadata(
 	let title = published?.title;
 
 	if (!title) {
+		const session = await getServerAuthSession();
 		const new_article = await get_new_article_by_slug(
 			decodeURIComponent(published_url),
 		);
-		title = new_article?.title;
+		if (new_article && is_visible_to(new_article.status, Boolean(session))) {
+			title = new_article.title;
+		}
 	}
 
 	title ??= awaited_parent.title?.absolute;
@@ -82,7 +86,9 @@ export default async function NovicaPage(props: NovicaProps) {
 	const decoded = decodeURIComponent(published_url);
 	const new_article = await get_new_article_by_slug(decoded);
 
-	if (!new_article) {
+	// `archived`/`deleted` articles 404 on their public route for non-admins
+	// (#21); `deleted` is terminal and 404s for everyone.
+	if (!new_article || !is_visible_to(new_article.status, Boolean(session))) {
 		return (
 			<Shell>
 				<ArticleNotFound />

@@ -3,6 +3,7 @@ import {
 	HydrationBoundary,
 	QueryClient,
 } from "@tanstack/react-query";
+import { ArchivedArticles } from "~/components/archived-articles";
 import { DraftArticles } from "~/components/draft-articles";
 import { Shell } from "~/components/shell";
 import { article_variants, page_variants } from "~/lib/page-variants";
@@ -43,6 +44,7 @@ export default async function HomePageServer() {
 			<Shell without_footer>
 				<div className={cn(page_variants({ max_width: "wide" }))}>
 					<DraftArticles />
+					<ArchivedArticles />
 					<div>
 						<InfiniteArticles />
 					</div>

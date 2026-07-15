@@ -2,8 +2,11 @@
 
 import type { OutputData } from "@editorjs/editorjs";
 import { DownloadIcon, SaveIcon, UploadIcon, XIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useCallback, useContext, useEffect, useRef } from "react";
+import { ArchiveArticleButton } from "~/components/article/archive-article-button";
 import { DraftArticleContext } from "~/components/article/context";
+import { DeleteArticleButton } from "~/components/article/delete-article-button";
 import { EditorContext } from "~/components/editor/editor-context";
 import {
 	AlertDialog,
@@ -198,9 +201,37 @@ export function KeyboardShortcut({ children }: { children: React.ReactNode }) {
 
 export function ClearButton() {
 	const editor_context = useContext(EditorContext);
+	const draft_article = useContext(DraftArticleContext);
 	const editor_mutations = useEditorMutations();
+	const router = useRouter();
 
-	if (!editor_context) return null;
+	if (!editor_context || !draft_article) return null;
+
+	// New (uuid) drafts get the #21 lifecycle actions (archive/delete) instead
+	// of the legacy draft/published delete dialog.
+	if (typeof draft_article.id === "string") {
+		const article_id = draft_article.id;
+		return (
+			<>
+				<ArchiveArticleButton
+					article_id={article_id}
+					variant="ghost"
+					size="icon"
+					aria-label="Arhiviraj novičko"
+					title="Arhiviraj novičko"
+					on_archived={() => router.push("/")}
+				/>
+				<DeleteArticleButton
+					article_id={article_id}
+					variant="ghost"
+					size="icon"
+					aria-label="Izbriši novičko"
+					title="Izbriši novičko"
+					on_deleted={() => router.push("/")}
+				/>
+			</>
+		);
+	}
 
 	return (
 		<AlertDialog>
