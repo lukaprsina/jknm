@@ -14,10 +14,19 @@ import { assert_one } from "~/lib/assert-length";
 import type { ThumbnailType } from "~/lib/validators";
 import { getServerAuthSession } from "../auth";
 import { type DbTransaction, db } from "../db";
-import { Article, ArticleSlug, ArticlesToAuthors, Media } from "../db/schema";
+import {
+	Article,
+	ArticleSlug,
+	ArticlesToAuthors,
+	Media,
+	PublishedArticle,
+} from "../db/schema";
 import { find_article_with_relations } from "./article-queries";
 import { remove_from_algolia, soft_delete_article } from "./lifecycle";
-import { assert_can_supersede, decide_slug_transition } from "./lifecycle-rules";
+import {
+	assert_can_supersede,
+	decide_slug_transition,
+} from "./lifecycle-rules";
 import { reconcile_media_to_articles } from "./reconcile-media";
 import {
 	create_article_validator,
@@ -28,20 +37,29 @@ import {
 const MAX_SLUG_SUFFIX = 99;
 
 /**
- * Generate a slug that doesn't collide with an existing `article_slugs` row:
- * `base`, then `base-2` .. `base-99`, then a timestamp-suffixed fallback.
- * Runs inside the publish transaction to avoid a race.
+ * Generate a slug that doesn't collide with an existing `article_slugs` row
+ * *or* a legacy `published_article.url` (the two live on the same
+ * `/novica/<slug>` route, and the legacy table is checked first there — see
+ * `page.tsx` — so a new slug that shadows a legacy url would be permanently
+ * unreachable): `base`, then `base-2` .. `base-99`, then a timestamp-suffixed
+ * fallback. Runs inside the publish transaction to avoid a race.
  */
 async function generate_unique_article_slug(tx: DbTransaction, title: string) {
 	const base = convert_title_to_url(title);
 
 	for (let suffix = 1; suffix <= MAX_SLUG_SUFFIX; suffix += 1) {
 		const candidate = suffix === 1 ? base : `${base}-${suffix}`;
-		const existing = await tx.query.ArticleSlug.findFirst({
-			where: eq(ArticleSlug.slug, candidate),
-			columns: { id: true },
-		});
-		if (!existing) return candidate;
+		const [existing_slug, existing_legacy_url] = await Promise.all([
+			tx.query.ArticleSlug.findFirst({
+				where: eq(ArticleSlug.slug, candidate),
+				columns: { id: true },
+			}),
+			tx.query.PublishedArticle.findFirst({
+				where: eq(PublishedArticle.url, candidate),
+				columns: { id: true },
+			}),
+		]);
+		if (!existing_slug && !existing_legacy_url) return candidate;
 	}
 
 	return `${base}-${Date.now()}`;
@@ -83,10 +101,18 @@ async function resolve_supersede_publish_slug(
 	supersedes_id: string,
 	new_title: string,
 ) {
-	const superseded = await tx.query.Article.findFirst({
-		where: eq(Article.id, supersedes_id),
-		columns: { id: true, title: true, status: true },
-	});
+	// Lock the superseded row so two concurrent supersede-publishes of the
+	// same source (e.g. two superseding drafts opened from the same archived
+	// article in separate tabs) serialize instead of racing on its primary
+	// slug: the second transaction blocks here until the first commits, then
+	// sees `status: "deleted"` and fails `assert_can_supersede` cleanly
+	// instead of overwriting the winner's slug re-point.
+	const superseded_rows = await tx
+		.select({ id: Article.id, title: Article.title, status: Article.status })
+		.from(Article)
+		.where(eq(Article.id, supersedes_id))
+		.for("update");
+	const superseded = superseded_rows[0];
 	if (!superseded) throw new Error("Superseded article not found");
 	assert_can_supersede(superseded.status);
 
@@ -359,7 +385,11 @@ export async function publish_article(
 					existing.supersedes_id,
 					input.article.title,
 				)
-			: await resolve_first_publish_slug(tx, input.article_id, input.article.title);
+			: await resolve_first_publish_slug(
+					tx,
+					input.article_id,
+					input.article.title,
+				);
 
 		const article = await find_article_with_relations(
 			tx,
