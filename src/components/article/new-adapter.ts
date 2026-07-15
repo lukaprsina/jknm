@@ -39,6 +39,14 @@ export type PublishedArticleView = Omit<PublishedArticleWithAuthors, "id"> & {
 	id: number | string;
 };
 
+/**
+ * Minimal shape the edit-pencil (`EditingButtons`/`EditButton`) needs — just
+ * enough to tell a legacy `PublishedArticle` (numeric id, spawns a legacy
+ * draft via `create_draft`) from a new-table `Article` (uuid id, spawns a
+ * superseding draft via `create_superseding_draft`).
+ */
+export type EditableArticleRef = { id: number | string };
+
 function reconstruct_thumbnail_crop(
 	article: NewArticleWithRelations,
 ): ThumbnailType | null {

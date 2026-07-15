@@ -26,10 +26,8 @@ import {
 } from "~/components/ui/sheet";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { cn } from "~/lib/utils";
-import type {
-	DraftArticleWithAuthors,
-	PublishedArticleWithAuthors,
-} from "../article/adapter";
+import type { DraftArticleWithAuthors } from "../article/adapter";
+import type { EditableArticleRef } from "../article/new-adapter";
 import { shell_store } from "./desktop-header";
 import EditingButtons from "./editing-buttons";
 import {
@@ -58,7 +56,7 @@ export function MobileHeader({
 	className,
 	...props
 }: ComponentProps<"div"> & {
-	published_article?: PublishedArticleWithAuthors;
+	published_article?: EditableArticleRef;
 	draft_article?: DraftArticleWithAuthors;
 	session: Session | null;
 }) {
@@ -111,7 +109,7 @@ export function MobileSheet({
 	draft_article,
 	session,
 }: {
-	published_article?: PublishedArticleWithAuthors;
+	published_article?: EditableArticleRef;
 	draft_article?: DraftArticleWithAuthors;
 	session: Session | null;
 }) {

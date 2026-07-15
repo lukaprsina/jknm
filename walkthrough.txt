@@ -1,0 +1,14 @@
+Walkthrough (each step exercises a specific ticket):
+
+1. Homepage → "Ustvari novico" → routes to /uredi/<uuid> (create_article, #20).
+2. In the editor, insert an image → confirms decoupled upload (#18) works before any save.
+3. Save the draft → check media_to_articles has a row for that image, correct order (#19).
+4. Remove the image block, save again → confirms the link is deleted, not just added (#19's real gap fix).
+5. Publish → check the article is reachable at its new slug under /novica/<slug>, and appears in Algolia under its UUID objectID (#20). Publish a second article with the same title to confirm base/base-2 suffixing.
+6. From the admin list, Archive it → public route should 404 for a signed-out visitor, article shows under "Arhiv" with the right origin badge (#21).
+7. Click the pencil to unarchive → spawns a new draft with supersedes_id; the archived row should be untouched until you publish that draft.
+8. Publish the superseding draft → old row should flip to deleted (soft, not a hard delete), same slug reused if you didn't retitle it.
+9. On a live published article, edit directly (without archiving first) → "revise while live": publishing this draft shouldn't take the original offline until you actually hit publish.
+10. Delete an article → confirms terminal soft-delete, no restore UI.
+
+If you don't have B2/Algolia credentials for local testing, the archive/delete/supersede transitions are still fully testable — only the upload and publish-to-Algolia steps need those.

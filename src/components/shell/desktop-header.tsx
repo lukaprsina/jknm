@@ -9,10 +9,8 @@ import { Separator } from "~/components/ui/separator";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 // import Logo from "~/assets/logo-barvni.svg";
 import { cn } from "~/lib/utils";
-import type {
-	DraftArticleWithAuthors,
-	PublishedArticleWithAuthors,
-} from "../article/adapter";
+import type { DraftArticleWithAuthors } from "../article/adapter";
+import type { EditableArticleRef } from "../article/new-adapter";
 import EditingButtons from "./editing-buttons";
 import {
 	ContactIcon,
@@ -46,7 +44,7 @@ export function DesktopHeader({
 	session,
 	...props
 }: React.ComponentProps<"div"> & {
-	published_article?: PublishedArticleWithAuthors;
+	published_article?: EditableArticleRef;
 	draft_article?: DraftArticleWithAuthors;
 	session: Session | null;
 }) {

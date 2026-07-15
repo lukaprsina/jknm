@@ -1,10 +1,8 @@
 import type React from "react";
 import { cn } from "~/lib/utils";
 import { getServerAuthSession } from "~/server/auth";
-import type {
-	DraftArticleWithAuthors,
-	PublishedArticleWithAuthors,
-} from "../article/adapter";
+import type { DraftArticleWithAuthors } from "../article/adapter";
+import type { EditableArticleRef } from "../article/new-adapter";
 import { Separator } from "../ui/separator";
 import { DesktopHeader } from "./desktop-header";
 import { Footer } from "./footer";
@@ -16,7 +14,7 @@ import { Searchbar } from "./searchbar";
 
 interface ShellProps {
 	children: React.ReactNode;
-	published_article?: PublishedArticleWithAuthors;
+	published_article?: EditableArticleRef;
 	draft_article?: DraftArticleWithAuthors;
 	without_footer?: boolean;
 	without_header?: boolean;

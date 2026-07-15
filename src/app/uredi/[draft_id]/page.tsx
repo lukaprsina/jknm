@@ -98,7 +98,9 @@ export default async function EditorPage(props: EditorPageProps) {
 
 		if (!article) {
 			return (
-				<Shell>{editor_shell(<CreateNewArticle novica_ime={draft_id} />)}</Shell>
+				<Shell>
+					{editor_shell(<CreateNewArticle novica_ime={draft_id} />)}
+				</Shell>
 			);
 		}
 
@@ -130,7 +132,12 @@ export default async function EditorPage(props: EditorPageProps) {
 
 		return (
 			<Shell>
-				{editor_shell(<Editor draft={map_new_article_to_editor_draft(article)} />)}
+				{editor_shell(
+					<Editor
+						key={article.id}
+						draft={map_new_article_to_editor_draft(article)}
+					/>,
+				)}
 			</Shell>
 		);
 	}
@@ -152,7 +159,7 @@ export default async function EditorPage(props: EditorPageProps) {
 		<Shell draft_article={draft} published_article={published}>
 			{editor_shell(
 				draft ? (
-					<Editor draft={draft} published={published} />
+					<Editor key={draft.id} draft={draft} published={published} />
 				) : (
 					<CreateNewArticle novica_ime={draft_id} />
 				),

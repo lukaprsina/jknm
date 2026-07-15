@@ -99,7 +99,7 @@ export default async function NovicaPage(props: NovicaProps) {
 	const new_view = map_new_article_to_published_view(new_article, decoded);
 
 	return (
-		<Shell>
+		<Shell published_article={new_view}>
 			<ScrollProvider>
 				<PublishedContent article={new_view} />
 				<ImageGallery />
