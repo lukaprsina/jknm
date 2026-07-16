@@ -4,20 +4,20 @@ import sharp from "sharp";
 import { env } from "~/env";
 import { extract_media_refs_from_content } from "~/lib/editor-utils";
 import { media_url } from "~/lib/media-upload";
-import type { ThumbnailType } from "~/lib/validators";
 import type { DbTransaction } from "~/server/db";
 import type { ArticleContentType } from "~/server/db/schema";
 import { Media } from "~/server/db/schema";
 
 /**
  * Collects the distinct legacy media urls referenced by a legacy article's
- * content(s) and thumbnail crop, across the published row and its
- * in-progress draft (if any) — so a thumbnail reused in the body only gets
- * migrated once.
+ * content(s), across the published row and its in-progress draft (if any).
+ * Thumbnails are migrated separately from their live `thumbnail.png`
+ * convention URL (see `resolve_published_thumbnail_url`/
+ * `resolve_draft_thumbnail_url`) rather than `thumbnail_crop.image_url`,
+ * which is stale editor metadata, not what's actually displayed.
  */
 export function collect_legacy_media_urls(
 	contents: (ArticleContentType | null | undefined)[],
-	thumbnail_crops: (ThumbnailType | null | undefined)[],
 ) {
 	const urls = new Set<string>();
 
@@ -26,10 +26,6 @@ export function collect_legacy_media_urls(
 		for (const ref of extract_media_refs_from_content(content)) {
 			if (ref.data.file.url) urls.add(ref.data.file.url);
 		}
-	}
-
-	for (const crop of thumbnail_crops) {
-		if (crop?.image_url) urls.add(crop.image_url);
 	}
 
 	return [...urls];
@@ -47,10 +43,13 @@ export async function migrate_one_media_object(
 	tx: DbTransaction,
 	b2: Awaited<ReturnType<typeof B2.authorize>>,
 	old_url: string,
+	log_label: string,
 ) {
 	const response = await fetch(old_url);
 	if (!response.ok) {
-		console.warn(`Failed to fetch legacy media ${old_url}: ${response.status}`);
+		console.warn(
+			`${log_label} Failed to fetch legacy media ${old_url}: ${response.status}`,
+		);
 		return null;
 	}
 
@@ -84,10 +83,16 @@ export async function migrate_one_media_object(
 	const key = `${id}/original.${extension}`;
 
 	const bucket_obj = await b2.bucket(env.NEXT_PUBLIC_AWS_MEDIA_BUCKET_NAME);
-	await bucket_obj.upload(key, buffer, {
-		contentType: content_type,
-		contentLength: buffer.byteLength,
-	});
+	try {
+		await bucket_obj.upload(key, buffer, {
+			contentType: content_type,
+			contentLength: buffer.byteLength,
+		});
+	} catch (error) {
+		throw new Error(`${log_label} Failed to upload legacy media ${old_url}`, {
+			cause: error,
+		});
+	}
 
 	const url = media_url(key);
 
@@ -116,6 +121,7 @@ export async function migrate_one_media_object(
 export async function migrate_legacy_media(
 	tx: DbTransaction,
 	old_urls: string[],
+	log_label: string,
 ) {
 	const url_to_media = new Map<string, typeof Media.$inferSelect>();
 	if (old_urls.length === 0) return url_to_media;
@@ -126,7 +132,7 @@ export async function migrate_legacy_media(
 	});
 
 	for (const old_url of old_urls) {
-		const media = await migrate_one_media_object(tx, b2, old_url);
+		const media = await migrate_one_media_object(tx, b2, old_url, log_label);
 		if (media) url_to_media.set(old_url, media);
 	}
 

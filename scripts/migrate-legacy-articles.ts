@@ -50,7 +50,9 @@ import {
 	build_published_article_values,
 	legacy_id_for_draft,
 	legacy_id_for_published,
-	resolve_legacy_thumbnail,
+	resolve_convention_thumbnail,
+	resolve_draft_thumbnail_url,
+	resolve_published_thumbnail_url,
 	rewrite_media_urls_in_content,
 } from "./migrate-legacy-articles-transform";
 import {
@@ -69,8 +71,14 @@ const FAILURES_LOG_PATH = path.join(
 
 interface Failure {
 	legacy_id: number;
+	title: string;
 	kind: "published" | "draft";
 	error: string;
+}
+
+/** `url` is cheap to compute (string formatting only) — always build it, keep it only if a thumbnail was actually set. */
+function url_if_cropped(has_crop: unknown, url: string) {
+	return has_crop ? url : undefined;
 }
 
 async function already_migrated(legacy_id: number) {
@@ -166,8 +174,9 @@ async function push_to_algolia(tx: DbTransaction, article_id: string) {
  * are idempotent (`addOrUpdateObject` / a no-op `deleteObject`), so re-doing
  * this unconditionally is harmless.
  */
-async function migrate_published_article(published_id: number) {
+async function migrate_published_article(published_id: number, title: string) {
 	const legacy_id = legacy_id_for_published(published_id);
+	const log_label = `#${published_id} "${title}"`;
 	const existing = await db.query.Article.findFirst({
 		where: eq(Article.legacy_id, legacy_id),
 		columns: { id: true, status: true },
@@ -196,11 +205,31 @@ async function migrate_published_article(published_id: number) {
 			with: { draft_articles_to_authors: true },
 		});
 
-		const legacy_urls = collect_legacy_media_urls(
-			[published.content, draft?.content],
-			[published.thumbnail_crop, draft?.thumbnail_crop],
+		const published_thumbnail_url = url_if_cropped(
+			published.thumbnail_crop,
+			resolve_published_thumbnail_url(published.url, published.created_at),
 		);
-		const url_to_media = await migrate_legacy_media(tx, legacy_urls);
+		const draft_thumbnail_url =
+			draft &&
+			url_if_cropped(
+				draft.thumbnail_crop,
+				resolve_draft_thumbnail_url(draft.id),
+			);
+
+		const legacy_urls = collect_legacy_media_urls([
+			published.content,
+			draft?.content,
+		]);
+		const urls_to_migrate = [
+			...legacy_urls,
+			...(published_thumbnail_url ? [published_thumbnail_url] : []),
+			...(draft_thumbnail_url ? [draft_thumbnail_url] : []),
+		];
+		const url_to_media = await migrate_legacy_media(
+			tx,
+			urls_to_migrate,
+			log_label,
+		);
 		const { url_to_new_url, url_to_media_id } = build_url_maps(url_to_media);
 
 		const rewritten_published_content = rewrite_media_urls_in_content(
@@ -217,7 +246,7 @@ async function migrate_published_article(published_id: number) {
 				updated_at: published.updated_at,
 			},
 			rewritten_published_content,
-			resolve_legacy_thumbnail(published.thumbnail_crop, url_to_media_id),
+			resolve_convention_thumbnail(published_thumbnail_url, url_to_media_id),
 		);
 
 		const inserted_published = await tx
@@ -262,7 +291,7 @@ async function migrate_published_article(published_id: number) {
 					updated_at: draft.updated_at,
 				},
 				rewritten_draft_content,
-				resolve_legacy_thumbnail(draft.thumbnail_crop, url_to_media_id),
+				resolve_convention_thumbnail(draft_thumbnail_url, url_to_media_id),
 				published_row.id,
 			);
 
@@ -288,8 +317,10 @@ async function migrate_published_article(published_id: number) {
 }
 
 /** Migrates one standalone draft (`draft_article.published_id IS NULL`). */
-async function migrate_standalone_draft(draft_id: number) {
+async function migrate_standalone_draft(draft_id: number, title: string) {
 	if (await already_migrated(legacy_id_for_draft(draft_id))) return;
+
+	const log_label = `#${draft_id} "${title}"`;
 
 	await db.transaction(async (tx) => {
 		const draft = await tx.query.DraftArticle.findFirst({
@@ -298,11 +329,21 @@ async function migrate_standalone_draft(draft_id: number) {
 		});
 		if (!draft) throw new Error(`draft_article ${draft_id} not found`);
 
-		const legacy_urls = collect_legacy_media_urls(
-			[draft.content],
-			[draft.thumbnail_crop],
+		const draft_thumbnail_url = url_if_cropped(
+			draft.thumbnail_crop,
+			resolve_draft_thumbnail_url(draft.id),
 		);
-		const url_to_media = await migrate_legacy_media(tx, legacy_urls);
+
+		const legacy_urls = collect_legacy_media_urls([draft.content]);
+		const urls_to_migrate = [
+			...legacy_urls,
+			...(draft_thumbnail_url ? [draft_thumbnail_url] : []),
+		];
+		const url_to_media = await migrate_legacy_media(
+			tx,
+			urls_to_migrate,
+			log_label,
+		);
 		const { url_to_new_url, url_to_media_id } = build_url_maps(url_to_media);
 
 		const rewritten_content = rewrite_media_urls_in_content(
@@ -319,7 +360,7 @@ async function migrate_standalone_draft(draft_id: number) {
 				updated_at: draft.updated_at,
 			},
 			rewritten_content,
-			resolve_legacy_thumbnail(draft.thumbnail_crop, url_to_media_id),
+			resolve_convention_thumbnail(draft_thumbnail_url, url_to_media_id),
 			null,
 		);
 
@@ -343,14 +384,19 @@ async function try_migrate(
 	failures: Failure[],
 	kind: Failure["kind"],
 	legacy_id: number,
+	title: string,
 	run: () => Promise<void>,
 ) {
 	try {
 		await run();
 	} catch (error) {
-		console.error(`Failed to migrate ${kind} legacy id ${legacy_id}`, error);
+		console.error(
+			`#${legacy_id} "${title}" Failed to migrate ${kind} legacy id ${legacy_id}`,
+			error,
+		);
 		failures.push({
 			legacy_id,
+			title,
 			kind,
 			error: error instanceof Error ? error.message : String(error),
 		});
@@ -390,24 +436,22 @@ async function main() {
 			});
 		}
 
-		const published_ids = (
-			await db.query.PublishedArticle.findMany({
-				columns: { id: true },
-				orderBy: asc(PublishedArticle.id),
-			})
-		).map((row) => row.id);
+		const published_articles = await db.query.PublishedArticle.findMany({
+			columns: { id: true, title: true },
+			orderBy: asc(PublishedArticle.id),
+		});
 
 		const standalone_drafts = await db.query.DraftArticle.findMany({
 			where: isNull(DraftArticle.published_id),
-			columns: { id: true },
+			columns: { id: true, title: true },
 			orderBy: asc(DraftArticle.id),
 		});
 
-		const total = published_ids.length + standalone_drafts.length;
+		const total = published_articles.length + standalone_drafts.length;
 
-		for (const id of published_ids) {
-			await try_migrate(failures, "published", id, () =>
-				migrate_published_article(id),
+		for (const { id, title } of published_articles) {
+			await try_migrate(failures, "published", id, title, () =>
+				migrate_published_article(id, title),
 			);
 			processed += 1;
 			if (processed % PROGRESS_LOG_INTERVAL === 0) {
@@ -416,8 +460,8 @@ async function main() {
 		}
 
 		for (const draft of standalone_drafts) {
-			await try_migrate(failures, "draft", draft.id, () =>
-				migrate_standalone_draft(draft.id),
+			await try_migrate(failures, "draft", draft.id, draft.title, () =>
+				migrate_standalone_draft(draft.id, draft.title),
 			);
 			processed += 1;
 			if (processed % PROGRESS_LOG_INTERVAL === 0) {
@@ -431,17 +475,21 @@ async function main() {
 		const article_id = article_id_filter;
 		const published = await db.query.PublishedArticle.findFirst({
 			where: eq(PublishedArticle.id, article_id),
-			columns: { id: true },
+			columns: { id: true, title: true },
 		});
 
 		if (published) {
-			await try_migrate(failures, "published", article_id, () =>
-				migrate_published_article(article_id),
+			await try_migrate(
+				failures,
+				"published",
+				article_id,
+				published.title,
+				() => migrate_published_article(article_id, published.title),
 			);
 		} else {
 			const draft = await db.query.DraftArticle.findFirst({
 				where: eq(DraftArticle.id, article_id),
-				columns: { id: true, published_id: true },
+				columns: { id: true, title: true, published_id: true },
 			});
 			if (!draft)
 				throw new Error(`No legacy article found with id ${article_id}`);
@@ -450,8 +498,8 @@ async function main() {
 					`draft_article ${article_id} is an in-progress draft of published_article ${draft.published_id} — migrate via that id instead`,
 				);
 			}
-			await try_migrate(failures, "draft", article_id, () =>
-				migrate_standalone_draft(article_id),
+			await try_migrate(failures, "draft", article_id, draft.title, () =>
+				migrate_standalone_draft(article_id, draft.title),
 			);
 		}
 		processed += 1;

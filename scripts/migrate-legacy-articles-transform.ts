@@ -1,7 +1,40 @@
 import { klona } from "klona";
+import { env } from "~/env";
+import {
+	get_s3_draft_directory,
+	get_s3_published_directory,
+} from "~/lib/article-utils";
 import { extract_media_refs_from_content } from "~/lib/editor-utils";
-import type { ThumbnailType } from "~/lib/validators";
+import { get_s3_prefix } from "~/lib/s3-publish";
 import type { Article, ArticleContentType } from "~/server/db/schema";
+
+/**
+ * The live, actually-displayed thumbnail for a published article — a fixed
+ * `<slug>-<date>/thumbnail.png` convention in the published bucket, the same
+ * one `PublishedArticleDrizzleCard` renders directly (see `~/components/article/adapter.tsx`).
+ */
+export function resolve_published_thumbnail_url(
+	article_url: string,
+	created_at: Date,
+) {
+	return get_s3_prefix(
+		`${get_s3_published_directory(article_url, created_at)}/thumbnail.png`,
+		env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+	);
+}
+
+/**
+ * The live, actually-displayed thumbnail for a draft (standalone or an
+ * in-progress edit of a published article) — a fixed `<draft_id>/thumbnail.png`
+ * convention in the draft bucket, the same one `DraftArticleDrizzleCard`
+ * renders directly.
+ */
+export function resolve_draft_thumbnail_url(draft_id: number) {
+	return get_s3_prefix(
+		`${get_s3_draft_directory(draft_id)}/thumbnail.png`,
+		env.NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME,
+	);
+}
 
 /**
  * `articles.legacy_id` is a single unique integer column, but
@@ -39,63 +72,46 @@ export function rewrite_media_urls_in_content(
 	return cloned;
 }
 
-/**
- * Some legacy articles' `thumbnail_crop.image_url` still points at the draft
- * bucket (`jknm-osnutki`) URL the image was uploaded under while drafting,
- * rather than the published-bucket URL the same image was copied to on
- * publish — the crop metadata was apparently never rewritten. That draft
- * object is frequently gone (404) by the time of migration, even though the
- * identical image is present (and already migrated) among the published
- * content's own images, under the same filename. Match on basename among
- * this article's already-migrated content media as a fallback before giving
- * up on the thumbnail entirely.
- */
-function find_thumbnail_by_basename(
-	thumbnail_url: string,
-	url_to_media_id: Map<string, string>,
-) {
-	const basename = thumbnail_url.split("/").pop();
-	if (!basename) return undefined;
+const CLEARED_THUMBNAIL = {
+	thumbnail_media_id: null,
+	thumbnail_x: null,
+	thumbnail_y: null,
+	thumbnail_width: null,
+	thumbnail_height: null,
+};
 
-	for (const [old_url, media_id] of url_to_media_id) {
-		if (old_url.split("/").pop() === basename) return media_id;
-	}
-	return undefined;
-}
+// `thumbnail.png` is already the final, live-displayed crop (rendered
+// directly with no further cropping) — migrated thumbnails always get this
+// "full image, no crop" window rather than reusing the old (untrustworthy)
+// crop percentages.
+const FULL_IMAGE_CROP = {
+	thumbnail_x: 0,
+	thumbnail_y: 0,
+	thumbnail_width: 100,
+	thumbnail_height: 100,
+};
 
 /**
- * Resolves a legacy percentage-based `thumbnail_crop` into the new schema's
- * `thumbnail_media_id` + percentage columns, using `url_map` (old url -> new
- * media id) instead of a DB lookup so it can run against media inserted
- * earlier in the same migration transaction. Unresolvable urls (thumbnail
- * image failed to migrate outright, or none set) clear the thumbnail.
+ * Resolves an article's thumbnail from its *live* `thumbnail.png` convention
+ * URL (see `resolve_published_thumbnail_url`/`resolve_draft_thumbnail_url`),
+ * not `thumbnail_crop.image_url` — that field is stale editor metadata
+ * (crop-source reference), not what's actually displayed, and is frequently
+ * wrong or dead (points at an unrelated article's id, or a since-deleted
+ * draft object) even for articles whose real thumbnail is live and working.
+ * `thumbnail_url` is `undefined` when the article has no thumbnail set at
+ * all; unresolvable/missing convention images also clear the thumbnail
+ * rather than fail the whole article.
  */
-export function resolve_legacy_thumbnail(
-	thumbnail_crop: ThumbnailType | null | undefined,
+export function resolve_convention_thumbnail(
+	thumbnail_url: string | undefined,
 	url_to_media_id: Map<string, string>,
 ) {
-	const cleared = {
-		thumbnail_media_id: null,
-		thumbnail_x: null,
-		thumbnail_y: null,
-		thumbnail_width: null,
-		thumbnail_height: null,
-	};
+	const media_id = thumbnail_url
+		? url_to_media_id.get(thumbnail_url)
+		: undefined;
+	if (!media_id) return CLEARED_THUMBNAIL;
 
-	if (!thumbnail_crop) return cleared;
-
-	const media_id =
-		url_to_media_id.get(thumbnail_crop.image_url) ??
-		find_thumbnail_by_basename(thumbnail_crop.image_url, url_to_media_id);
-	if (!media_id) return cleared;
-
-	return {
-		thumbnail_media_id: media_id,
-		thumbnail_x: thumbnail_crop.x,
-		thumbnail_y: thumbnail_crop.y,
-		thumbnail_width: thumbnail_crop.width,
-		thumbnail_height: thumbnail_crop.height,
-	};
+	return { thumbnail_media_id: media_id, ...FULL_IMAGE_CROP };
 }
 
 export interface LegacyPublishedInput {
@@ -112,12 +128,12 @@ export interface LegacyPublishedInput {
  * Status-preserving: always `"published"`, never promoted/demoted by the
  * migration itself. `content`/thumbnail fields are expected to already be
  * rewritten against the new media (see `rewrite_media_urls_in_content` /
- * `resolve_legacy_thumbnail`) before being passed in here.
+ * `resolve_convention_thumbnail`) before being passed in here.
  */
 export function build_published_article_values(
 	legacy: LegacyPublishedInput,
 	rewritten_content: ArticleContentType | null,
-	thumbnail: ReturnType<typeof resolve_legacy_thumbnail>,
+	thumbnail: ReturnType<typeof resolve_convention_thumbnail>,
 ): typeof Article.$inferInsert {
 	return {
 		legacy_id: legacy_id_for_published(legacy.legacy_id),
@@ -151,7 +167,7 @@ export interface LegacyDraftInput {
 export function build_draft_article_values(
 	legacy: LegacyDraftInput,
 	rewritten_content: ArticleContentType | null,
-	thumbnail: ReturnType<typeof resolve_legacy_thumbnail>,
+	thumbnail: ReturnType<typeof resolve_convention_thumbnail>,
 	supersedes_id: string | null,
 ): typeof Article.$inferInsert {
 	return {
