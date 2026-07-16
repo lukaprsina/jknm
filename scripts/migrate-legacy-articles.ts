@@ -3,20 +3,31 @@
  * the unified `articles` table + immutable `media` model + `article_slugs`
  * (issue #22). Per-article, own transaction, resumable via the
  * `articles.legacy_id` unique constraint — safe to re-run (full or
- * `--article-id`) after a partial run.
+ * `--article-id`) after a partial run: already-migrated articles are a cheap
+ * no-op (skip straight to an idempotent Algolia re-push), so a resume is just
+ * re-running the same command. Progress is logged every 20 articles.
  *
  * Usage:
- *   bun run scripts/migrate-legacy-articles.ts
+ *   bun run scripts/migrate-legacy-articles.ts                    # resume/continue
+ *   bun run scripts/migrate-legacy-articles.ts --wipe-algolia      # true first run
  *   bun run scripts/migrate-legacy-articles.ts --article-id=123
+ *
+ * `--wipe-algolia` clears the whole index before rebuilding it (per #22,
+ * "wipe rather than delete objects one by one") — only pass it once, for a
+ * genuinely fresh run or a deliberate clean rebuild. Omitting it (the
+ * default, and always the right choice when resuming) skips the wipe and
+ * just idempotently upserts, so a resumed run never briefly empties live
+ * search.
  *
  * `--article-id` takes a `published_article.id` (an integer — the new
  * `articles.id` uuid doesn't exist until after migration).
  */
-import { algoliasearch as searchClient } from "algoliasearch";
-import { asc, eq, isNull } from "drizzle-orm";
+
 import fs from "node:fs/promises";
 import path from "node:path";
 import { parseArgs } from "node:util";
+import { algoliasearch as searchClient } from "algoliasearch";
+import { asc, eq, isNull } from "drizzle-orm";
 import { env } from "~/env";
 import {
 	ALGOLIA_PUBLISHED_ARTICLE_INDEX,
@@ -42,8 +53,14 @@ import {
 	resolve_legacy_thumbnail,
 	rewrite_media_urls_in_content,
 } from "./migrate-legacy-articles-transform";
-import { collect_legacy_media_urls, migrate_legacy_media } from "./migrate-legacy-media";
-import { ensure_legacy_slug_available, insert_primary_slug } from "./migrate-legacy-slug";
+import {
+	collect_legacy_media_urls,
+	migrate_legacy_media,
+} from "./migrate-legacy-media";
+import {
+	ensure_legacy_slug_available,
+	insert_primary_slug,
+} from "./migrate-legacy-slug";
 
 const FAILURES_LOG_PATH = path.join(
 	import.meta.dirname,
@@ -87,17 +104,29 @@ async function insert_article_authors(
 ) {
 	if (author_ids.length === 0) return;
 	await tx.insert(ArticlesToAuthors).values(
-		author_ids.map((author_id, index) => ({ article_id, author_id, order: index })),
+		author_ids.map((author_id, index) => ({
+			article_id,
+			author_id,
+			order: index,
+		})),
 	);
 }
 
 async function push_to_algolia(tx: DbTransaction, article_id: string) {
-	const article = await find_article_with_relations(tx, eq(Article.id, article_id));
-	if (!article) throw new Error(`Migrated article ${article_id} not found after insert`);
+	const article = await find_article_with_relations(
+		tx,
+		eq(Article.id, article_id),
+	);
+	if (!article)
+		throw new Error(`Migrated article ${article_id} not found after insert`);
 	const primary_slug = article.article_slugs.find((s) => s.is_primary);
-	if (!primary_slug) throw new Error(`Migrated article ${article_id} has no primary slug`);
+	if (!primary_slug)
+		throw new Error(`Migrated article ${article_id} has no primary slug`);
 
-	const algolia = searchClient(env.NEXT_PUBLIC_ALGOLIA_ID, env.ALGOLIA_ADMIN_KEY);
+	const algolia = searchClient(
+		env.NEXT_PUBLIC_ALGOLIA_ID,
+		env.ALGOLIA_ADMIN_KEY,
+	);
 	await algolia.addOrUpdateObject({
 		indexName: ALGOLIA_PUBLISHED_ARTICLE_INDEX,
 		objectID: article.id,
@@ -159,7 +188,8 @@ async function migrate_published_article(published_id: number) {
 				},
 			},
 		});
-		if (!published) throw new Error(`published_article ${published_id} not found`);
+		if (!published)
+			throw new Error(`published_article ${published_id} not found`);
 
 		const draft = await tx.query.DraftArticle.findFirst({
 			where: eq(DraftArticle.published_id, published_id),
@@ -190,7 +220,10 @@ async function migrate_published_article(published_id: number) {
 			resolve_legacy_thumbnail(published.thumbnail_crop, url_to_media_id),
 		);
 
-		const inserted_published = await tx.insert(Article).values(published_values).returning();
+		const inserted_published = await tx
+			.insert(Article)
+			.values(published_values)
+			.returning();
 		assert_one(inserted_published);
 		const published_row = inserted_published[0];
 
@@ -199,9 +232,17 @@ async function migrate_published_article(published_id: number) {
 			published_row.id,
 			published.published_articles_to_authors.map((a) => a.author_id),
 		);
-		await reconcile_media_to_articles(tx, published_row.id, rewritten_published_content);
+		await reconcile_media_to_articles(
+			tx,
+			published_row.id,
+			rewritten_published_content,
+		);
 
-		const slug = await ensure_legacy_slug_available(tx, published.url, published.id);
+		const slug = await ensure_legacy_slug_available(
+			tx,
+			published.url,
+			published.id,
+		);
 		await insert_primary_slug(tx, published_row.id, slug);
 
 		await push_to_algolia(tx, published_row.id);
@@ -225,7 +266,10 @@ async function migrate_published_article(published_id: number) {
 				published_row.id,
 			);
 
-			const inserted_draft = await tx.insert(Article).values(draft_values).returning();
+			const inserted_draft = await tx
+				.insert(Article)
+				.values(draft_values)
+				.returning();
 			assert_one(inserted_draft);
 			const draft_row = inserted_draft[0];
 
@@ -234,7 +278,11 @@ async function migrate_published_article(published_id: number) {
 				draft_row.id,
 				draft.draft_articles_to_authors.map((a) => a.author_id),
 			);
-			await reconcile_media_to_articles(tx, draft_row.id, rewritten_draft_content);
+			await reconcile_media_to_articles(
+				tx,
+				draft_row.id,
+				rewritten_draft_content,
+			);
 		}
 	});
 }
@@ -250,11 +298,17 @@ async function migrate_standalone_draft(draft_id: number) {
 		});
 		if (!draft) throw new Error(`draft_article ${draft_id} not found`);
 
-		const legacy_urls = collect_legacy_media_urls([draft.content], [draft.thumbnail_crop]);
+		const legacy_urls = collect_legacy_media_urls(
+			[draft.content],
+			[draft.thumbnail_crop],
+		);
 		const url_to_media = await migrate_legacy_media(tx, legacy_urls);
 		const { url_to_new_url, url_to_media_id } = build_url_maps(url_to_media);
 
-		const rewritten_content = rewrite_media_urls_in_content(draft.content, url_to_new_url);
+		const rewritten_content = rewrite_media_urls_in_content(
+			draft.content,
+			url_to_new_url,
+		);
 		const draft_values = build_draft_article_values(
 			{
 				legacy_id: draft.id,
@@ -269,7 +323,10 @@ async function migrate_standalone_draft(draft_id: number) {
 			null,
 		);
 
-		const inserted_draft = await tx.insert(Article).values(draft_values).returning();
+		const inserted_draft = await tx
+			.insert(Article)
+			.values(draft_values)
+			.returning();
 		assert_one(inserted_draft);
 		const draft_row = inserted_draft[0];
 
@@ -300,9 +357,14 @@ async function try_migrate(
 	}
 }
 
+const PROGRESS_LOG_INTERVAL = 20;
+
 async function main() {
 	const { values } = parseArgs({
-		options: { "article-id": { type: "string" } },
+		options: {
+			"article-id": { type: "string" },
+			"wipe-algolia": { type: "boolean" },
+		},
 	});
 	const article_id_filter = values["article-id"]
 		? Number.parseInt(values["article-id"], 10)
@@ -313,30 +375,54 @@ async function main() {
 	let processed = 0;
 
 	if (full_run) {
-		// Full run: wipe the index once, then re-push every migrated published
-		// article, per #22 ("wipe rather than delete objects one by one").
-		const algolia = searchClient(env.NEXT_PUBLIC_ALGOLIA_ID, env.ALGOLIA_ADMIN_KEY);
-		await algolia.clearObjects({ indexName: ALGOLIA_PUBLISHED_ARTICLE_INDEX });
+		// The migration itself is resumable for free (`Article.legacy_id`'s
+		// uniqueness makes re-inserting a no-op), but wiping Algolia is not — it
+		// briefly empties live search until the rebuild catches back up. Only do
+		// it when explicitly asked (the true first run, or a deliberate clean
+		// rebuild); a resumed run just keeps upserting, which is idempotent.
+		if (values["wipe-algolia"]) {
+			const algolia = searchClient(
+				env.NEXT_PUBLIC_ALGOLIA_ID,
+				env.ALGOLIA_ADMIN_KEY,
+			);
+			await algolia.clearObjects({
+				indexName: ALGOLIA_PUBLISHED_ARTICLE_INDEX,
+			});
+		}
 
 		const published_ids = (
-			await db.query.PublishedArticle.findMany({ columns: { id: true } })
+			await db.query.PublishedArticle.findMany({
+				columns: { id: true },
+				orderBy: asc(PublishedArticle.id),
+			})
 		).map((row) => row.id);
+
+		const standalone_drafts = await db.query.DraftArticle.findMany({
+			where: isNull(DraftArticle.published_id),
+			columns: { id: true },
+			orderBy: asc(DraftArticle.id),
+		});
+
+		const total = published_ids.length + standalone_drafts.length;
+
 		for (const id of published_ids) {
 			await try_migrate(failures, "published", id, () =>
 				migrate_published_article(id),
 			);
 			processed += 1;
+			if (processed % PROGRESS_LOG_INTERVAL === 0) {
+				console.log(`Processed ${processed}/${total} legacy article(s)...`);
+			}
 		}
 
-		const standalone_drafts = await db.query.DraftArticle.findMany({
-			where: isNull(DraftArticle.published_id),
-			columns: { id: true },
-		});
 		for (const draft of standalone_drafts) {
 			await try_migrate(failures, "draft", draft.id, () =>
 				migrate_standalone_draft(draft.id),
 			);
 			processed += 1;
+			if (processed % PROGRESS_LOG_INTERVAL === 0) {
+				console.log(`Processed ${processed}/${total} legacy article(s)...`);
+			}
 		}
 	} else {
 		// `--article-id` targets one legacy article, which may be a
@@ -357,7 +443,8 @@ async function main() {
 				where: eq(DraftArticle.id, article_id),
 				columns: { id: true, published_id: true },
 			});
-			if (!draft) throw new Error(`No legacy article found with id ${article_id}`);
+			if (!draft)
+				throw new Error(`No legacy article found with id ${article_id}`);
 			if (draft.published_id !== null) {
 				throw new Error(
 					`draft_article ${article_id} is an in-progress draft of published_article ${draft.published_id} — migrate via that id instead`,
@@ -372,7 +459,9 @@ async function main() {
 
 	if (failures.length > 0) {
 		await fs.writeFile(FAILURES_LOG_PATH, JSON.stringify(failures, null, 2));
-		console.error(`${failures.length} failure(s) logged to ${FAILURES_LOG_PATH}`);
+		console.error(
+			`${failures.length} failure(s) logged to ${FAILURES_LOG_PATH}`,
+		);
 	}
 
 	console.log(`Done. ${processed} legacy article(s) processed.`);
