@@ -110,16 +110,21 @@ export async function POST(request: NextRequest) {
 		typeof external_url === "string" &&
 		typeof title === "string"
 	) {
-		let mime_type: string;
-		if (!title) {
-			title = "unknown_image.jpg";
-			mime_type = "image/jpeg";
-		} else {
-			mime_type = mime.getType(title) ?? "image/*";
-		}
+		if (!title) title = "unknown_image.jpg";
 
 		const url_image_response = await fetch(external_url);
 		const blob = await url_image_response.blob();
+		// The source's real content-type (from the fetch response) is
+		// authoritative — `title` is often a synthetic placeholder (e.g. a
+		// thumbnail crop's fixed "thumbnail.png") that doesn't reflect the
+		// actual file type and previously caused every cropped thumbnail to be
+		// stored as a `.png` no matter what format the source image really was.
+		const mime_type = blob.type || mime.getType(title) || "image/jpeg";
+		const real_extension = mime.getExtension(mime_type);
+		if (real_extension) {
+			const base_title = title.replace(/\.[^./]+$/, "");
+			title = `${base_title}.${real_extension}`;
+		}
 		const uncropped_file = new File([blob], title, { type: mime_type });
 
 		if (typeof crop_entry === "string") {

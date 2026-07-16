@@ -4,8 +4,8 @@ import sharp from "sharp";
 import { env } from "~/env";
 import { extract_media_refs_from_content } from "~/lib/editor-utils";
 import { media_url } from "~/lib/media-upload";
-import type { DbTransaction } from "~/server/db";
 import type { ThumbnailType } from "~/lib/validators";
+import type { DbTransaction } from "~/server/db";
 import type { ArticleContentType } from "~/server/db/schema";
 import { Media } from "~/server/db/schema";
 
@@ -57,8 +57,26 @@ export async function migrate_one_media_object(
 	const array_buffer = await response.arrayBuffer();
 	const buffer = Buffer.from(array_buffer);
 
-	const content_type =
+	let content_type =
 		response.headers.get("content-type") ?? "application/octet-stream";
+
+	let width = 0;
+	let height = 0;
+	if (content_type.startsWith("image/")) {
+		// The legacy bucket's own `Content-Type` header can't be trusted blindly
+		// — some legacy images were uploaded with a mismatched extension/type in
+		// the old app, which this migration would otherwise carry forward
+		// verbatim. Sniff the real format from the bytes themselves instead.
+		const metadata = await sharp(buffer)
+			.metadata()
+			.catch(() => undefined);
+		width = metadata?.width ?? 0;
+		height = metadata?.height ?? 0;
+		if (metadata?.format) {
+			content_type =
+				mime.getType(metadata.format) ?? `image/${metadata.format}`;
+		}
+	}
 	const extension = mime.getExtension(content_type) ?? "bin";
 	const filename = old_url.split("/").pop() ?? `media.${extension}`;
 
@@ -72,13 +90,6 @@ export async function migrate_one_media_object(
 	});
 
 	const url = media_url(key);
-	let width = 0;
-	let height = 0;
-	if (content_type.startsWith("image/")) {
-		const metadata = await sharp(buffer).metadata();
-		width = metadata.width ?? 0;
-		height = metadata.height ?? 0;
-	}
 
 	const [inserted] = await tx
 		.insert(Media)
