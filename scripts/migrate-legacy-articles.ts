@@ -128,24 +128,23 @@ async function push_to_algolia(tx: DbTransaction, article_id: string) {
  * published content or the draft content/thumbnail is migrated once and
  * shared between them.
  *
- * `reindex_existing` re-pushes an already-migrated published row to Algolia
- * instead of skipping it outright — needed on a full run, which wipes the
- * index up front (see `main`): without this, resuming a full run after a
- * partial one would permanently drop the already-migrated articles from
- * search, since they'd be skipped here (already migrated in the DB) but were
- * just wiped from the index.
+ * Re-pushes an already-migrated published row to Algolia rather than skipping
+ * it outright, on *every* call, not just full runs: a full run wipes the
+ * index up front (see `main`), so without this, resuming after a partial run
+ * would permanently drop already-migrated articles from search; a targeted
+ * `--article-id` re-run needs the same re-push to retire a stray legacy
+ * numeric-objectID entry left over from an earlier run (#23) — both pushes
+ * are idempotent (`addOrUpdateObject` / a no-op `deleteObject`), so re-doing
+ * this unconditionally is harmless.
  */
-async function migrate_published_article(
-	published_id: number,
-	reindex_existing: boolean,
-) {
+async function migrate_published_article(published_id: number) {
 	const legacy_id = legacy_id_for_published(published_id);
 	const existing = await db.query.Article.findFirst({
 		where: eq(Article.legacy_id, legacy_id),
 		columns: { id: true, status: true },
 	});
 	if (existing) {
-		if (reindex_existing && existing.status === "published") {
+		if (existing.status === "published") {
 			await db.transaction((tx) => push_to_algolia(tx, existing.id));
 		}
 		return;
@@ -324,7 +323,7 @@ async function main() {
 		).map((row) => row.id);
 		for (const id of published_ids) {
 			await try_migrate(failures, "published", id, () =>
-				migrate_published_article(id, true),
+				migrate_published_article(id),
 			);
 			processed += 1;
 		}
@@ -351,7 +350,7 @@ async function main() {
 
 		if (published) {
 			await try_migrate(failures, "published", article_id, () =>
-				migrate_published_article(article_id, false),
+				migrate_published_article(article_id),
 			);
 		} else {
 			const draft = await db.query.DraftArticle.findFirst({
