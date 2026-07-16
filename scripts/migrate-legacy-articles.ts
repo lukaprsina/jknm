@@ -105,8 +105,21 @@ async function push_to_algolia(tx: DbTransaction, article_id: string) {
 			article,
 			slug: primary_slug.slug,
 			authors: article.articles_to_authors,
+			thumbnail_media: article.thumbnail_media,
 		}),
 	});
+
+	// `legacy_id` is the old `published_article.id` for published-derived rows
+	// (negative for draft-derived rows, which never had an Algolia entry in
+	// the first place). Retire the old numeric-objectID entry so the article
+	// isn't duplicated in search under both ids (#23) — a no-op if it's
+	// already gone (fresh run after a full-index wipe, or a re-run).
+	if (article.legacy_id !== null && article.legacy_id > 0) {
+		await algolia.deleteObject({
+			indexName: ALGOLIA_PUBLISHED_ARTICLE_INDEX,
+			objectID: String(article.legacy_id),
+		});
+	}
 }
 
 /**

@@ -132,6 +132,10 @@ export function ArticleAlgoliaCard({
 	ref?: IntersectionRef;
 }) {
 	const duplicate_urls = use(DuplicateURLsContext);
+	// Legacy hits (numeric objectID) have no `image` and are resolved via the
+	// old S3 thumbnail.png path convention; new-model hits (uuid objectID)
+	// carry an absolute gradivo.jknm.org `image` URL directly.
+	const is_legacy_hit = /^\d+$/.test(hit.objectID);
 
 	return (
 		<ArticleCard
@@ -139,16 +143,19 @@ export function ArticleAlgoliaCard({
 			featured={false}
 			title={hit.title}
 			url={get_published_article_link(hit.url, hit.created_at, duplicate_urls)}
-			id={/^\d+$/.test(hit.objectID) ? parseInt(hit.objectID, 10) : undefined}
+			id={is_legacy_hit ? parseInt(hit.objectID, 10) : undefined}
 			content_preview={hit.content_preview?.slice(0, 1000)}
 			created_at={new Date(hit.created_at)}
 			has_thumbnail={hit.has_thumbnail}
 			author_ids={hit.author_ids}
-			image_url={get_s3_prefix(
-				`${get_s3_published_directory(hit.url, hit.created_at)}/thumbnail.png`,
-				env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
-			)}
-			// image_url={`https://cdn.${env.NEXT_PUBLIC_SITE_DOMAIN}/${get_s3_published_directory(hit.url, hit.created_at)}/thumbnail.png`}
+			image_url={
+				is_legacy_hit
+					? get_s3_prefix(
+							`${get_s3_published_directory(hit.url, hit.created_at)}/thumbnail.png`,
+							env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+						)
+					: hit.image
+			}
 		/>
 	);
 }

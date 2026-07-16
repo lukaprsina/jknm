@@ -390,6 +390,7 @@ export async function publish_article(
 				article,
 				slug: primary.slug,
 				authors: article.articles_to_authors,
+				thumbnail_media: article.thumbnail_media,
 			}),
 		});
 

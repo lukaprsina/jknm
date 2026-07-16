@@ -1,7 +1,7 @@
 import type { PublishedArticleWithAuthors } from "~/components/article/adapter";
 import { convert_content_to_text } from "~/lib/content-to-text";
 import type { PublishedArticleHit } from "~/lib/validators";
-import type { ArticleContentType, Author } from "~/server/db/schema";
+import type { ArticleContentType, Author, Media } from "~/server/db/schema";
 
 export const ALGOLIA_PUBLISHED_ARTICLE_INDEX = "published_article";
 
@@ -31,6 +31,7 @@ export function convert_new_article_to_algolia_object({
 	article,
 	slug,
 	authors,
+	thumbnail_media,
 }: {
 	article: {
 		id: string;
@@ -46,6 +47,7 @@ export function convert_new_article_to_algolia_object({
 		author_id: number;
 		author: typeof Author.$inferSelect;
 	}[];
+	thumbnail_media: typeof Media.$inferSelect | null;
 }) {
 	const effective_date = article.published_at ?? article.created_at;
 
@@ -59,12 +61,11 @@ export function convert_new_article_to_algolia_object({
 		year: effective_date.getFullYear().toString(),
 		author_ids: authors.map((a) => a.author_id),
 		first_author: authors.at(0)?.author.name,
-		// New articles share the `published_article` Algolia index with legacy
-		// ones, but `ArticleAlgoliaCard` derives its thumbnail from the old
-		// published S3 bucket path, which doesn't exist for decoupled new media.
-		// Report no thumbnail for now (rather than a broken image) until the
-		// search card is taught to read new-article media — separate follow-up.
-		has_thumbnail: false,
+		// New-model media lives at an absolute gradivo.jknm.org URL, unlike
+		// legacy hits (which carry no `image` and are resolved via the S3
+		// thumbnail.png path convention in `ArticleAlgoliaCard`).
+		has_thumbnail: Boolean(thumbnail_media),
+		image: thumbnail_media?.original.url,
 	} satisfies PublishedArticleHit;
 }
 /* .slice(
