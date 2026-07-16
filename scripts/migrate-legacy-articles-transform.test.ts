@@ -131,6 +131,53 @@ describe("resolve_legacy_thumbnail", () => {
 			thumbnail_height: 40,
 		});
 	});
+
+	test("falls back to a content image with the same basename when the crop's own url is unresolved", () => {
+		// e.g. a draft-bucket thumbnail url (jknm-osnutki/1308/4.jpg) that 404s,
+		// while the identical photo migrated fine as a published content image
+		// under a different (published-bucket) url ending in the same "4.jpg".
+		const thumbnail_crop = {
+			image_url: "https://jknm-osnutki.example/1308/4.jpg",
+			unit: "%" as const,
+			x: 0,
+			y: 25,
+			width: 100,
+			height: 75,
+		};
+		const url_to_media_id = new Map([
+			["https://jknm-novice.example/some-article/4.jpg", "media-uuid-4"],
+		]);
+
+		expect(resolve_legacy_thumbnail(thumbnail_crop, url_to_media_id)).toEqual({
+			thumbnail_media_id: "media-uuid-4",
+			thumbnail_x: 0,
+			thumbnail_y: 25,
+			thumbnail_width: 100,
+			thumbnail_height: 75,
+		});
+	});
+
+	test("still clears the thumbnail when no basename matches either", () => {
+		const thumbnail_crop = {
+			image_url: "https://jknm-osnutki.example/1308/4.jpg",
+			unit: "%" as const,
+			x: 0,
+			y: 25,
+			width: 100,
+			height: 75,
+		};
+		const url_to_media_id = new Map([
+			["https://jknm-novice.example/some-article/5.jpg", "media-uuid-5"],
+		]);
+
+		expect(resolve_legacy_thumbnail(thumbnail_crop, url_to_media_id)).toEqual({
+			thumbnail_media_id: null,
+			thumbnail_x: null,
+			thumbnail_y: null,
+			thumbnail_width: null,
+			thumbnail_height: null,
+		});
+	});
 });
 
 describe("build_published_article_values", () => {

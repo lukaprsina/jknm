@@ -40,11 +40,35 @@ export function rewrite_media_urls_in_content(
 }
 
 /**
+ * Some legacy articles' `thumbnail_crop.image_url` still points at the draft
+ * bucket (`jknm-osnutki`) URL the image was uploaded under while drafting,
+ * rather than the published-bucket URL the same image was copied to on
+ * publish — the crop metadata was apparently never rewritten. That draft
+ * object is frequently gone (404) by the time of migration, even though the
+ * identical image is present (and already migrated) among the published
+ * content's own images, under the same filename. Match on basename among
+ * this article's already-migrated content media as a fallback before giving
+ * up on the thumbnail entirely.
+ */
+function find_thumbnail_by_basename(
+	thumbnail_url: string,
+	url_to_media_id: Map<string, string>,
+) {
+	const basename = thumbnail_url.split("/").pop();
+	if (!basename) return undefined;
+
+	for (const [old_url, media_id] of url_to_media_id) {
+		if (old_url.split("/").pop() === basename) return media_id;
+	}
+	return undefined;
+}
+
+/**
  * Resolves a legacy percentage-based `thumbnail_crop` into the new schema's
  * `thumbnail_media_id` + percentage columns, using `url_map` (old url -> new
  * media id) instead of a DB lookup so it can run against media inserted
  * earlier in the same migration transaction. Unresolvable urls (thumbnail
- * image failed to migrate, or none set) clear the thumbnail.
+ * image failed to migrate outright, or none set) clear the thumbnail.
  */
 export function resolve_legacy_thumbnail(
 	thumbnail_crop: ThumbnailType | null | undefined,
@@ -60,7 +84,9 @@ export function resolve_legacy_thumbnail(
 
 	if (!thumbnail_crop) return cleared;
 
-	const media_id = url_to_media_id.get(thumbnail_crop.image_url);
+	const media_id =
+		url_to_media_id.get(thumbnail_crop.image_url) ??
+		find_thumbnail_by_basename(thumbnail_crop.image_url, url_to_media_id);
 	if (!media_id) return cleared;
 
 	return {
