@@ -4,6 +4,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@utility container {
+	margin-inline: auto;
+	padding-inline: 2rem;
+}
+
 @theme {
 	--font-sans:
 		var(--font-opensans), var(--font-geist-sans), ui-sans-serif, system-ui,
