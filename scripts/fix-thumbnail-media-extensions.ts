@@ -7,15 +7,22 @@
  * bytes — so a jpg or webp source could end up stored as `original.png` with
  * a lying `image/png` content-type, without ever actually being converted.
  *
+ * Candidates are every media row currently in use as a thumbnail
+ * (`articles.thumbnail_media_id`), not a guess at which filenames the bug
+ * produced — each is re-checked against its real bytes, so this is exact
+ * regardless of how a mismatch happened to occur.
+ *
  * Media rows are immutable-by-convention (see `MEDIA_PUBLIC_DOMAIN` comment
  * in `src/lib/media-upload.ts`), so a mismatch is fixed by re-uploading under
- * a fresh id with the correct extension, re-pointing every referencing
+ * a fresh id with the correct extension, re-pointing the referencing
  * `articles.thumbnail_media_id` at the new row, and only then deleting the
  * old row/object — never by mutating an existing media row's key in place.
  *
- * Thumbnails are only ever referenced via `articles.thumbnail_media_id` (no
- * literal URLs are embedded elsewhere for them, unlike content-block images),
- * so this re-pointing is safe and complete.
+ * Deliberately scoped to thumbnails, not all media: content-block images'
+ * urls are also embedded literally in `content_json` (see
+ * `reconcile_media_to_articles`), so renaming one would need a content
+ * rewrite too — out of scope here. Thumbnails have no such literal-URL
+ * dependency, so renaming is safe and complete.
  *
  * Usage:
  *   bun run scripts/fix-thumbnail-media-extensions.ts            # dry run
@@ -24,7 +31,7 @@
 
 import { parseArgs } from "node:util";
 import B2 from "b2-js";
-import { eq, inArray } from "drizzle-orm";
+import { eq, inArray, isNotNull } from "drizzle-orm";
 import mime from "mime/lite";
 import sharp from "sharp";
 import { env } from "~/env";
@@ -33,14 +40,21 @@ import { delete_objects } from "~/lib/s3-utils";
 import { db } from "~/server/db";
 import { Article, Media } from "~/server/db/schema";
 
-const HARDCODED_THUMBNAIL_FILENAMES = [
-	"thumbnail.png",
-	"thumbnail-uploaded.png",
-];
-
 async function find_candidate_media() {
+	// Scoped to media actually in use as a thumbnail (`articles.thumbnail_media_id`)
+	// rather than a guess about which filenames the bug produced — thumbnails
+	// are the only media rows safe to rename unconditionally, since (unlike
+	// content-block images) their url is never embedded literally elsewhere
+	// (no `content_json`/`media_to_articles` dependency to rewrite).
+	const thumbnail_ids = await db
+		.selectDistinct({ id: Article.thumbnail_media_id })
+		.from(Article)
+		.where(isNotNull(Article.thumbnail_media_id));
+	const ids = thumbnail_ids.map((row) => row.id).filter((id) => id !== null);
+	if (ids.length === 0) return [];
+
 	return db.query.Media.findMany({
-		where: inArray(Media.filename, HARDCODED_THUMBNAIL_FILENAMES),
+		where: inArray(Media.id, ids),
 	});
 }
 
@@ -126,9 +140,7 @@ async function main() {
 	const execute = values.execute ?? false;
 
 	const candidates = await find_candidate_media();
-	console.log(
-		`${candidates.length} candidate thumbnail media row(s) to check.`,
-	);
+	console.log(`${candidates.length} thumbnail media row(s) to check.`);
 
 	const b2 = await B2.authorize({
 		applicationKeyId: env.AWS_ACCESS_KEY_ID,
