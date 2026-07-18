@@ -15,6 +15,8 @@ export const gallery_store = createStore<GalleryStoreType>(initial_data, {
 	name: "gallery",
 }).extendActions(({ set, get }) => ({
 	add_image: (image: EditorJSImageData) => {
-		set("images", get("images").concat(image));
+		const images = get("images");
+		if (images.some((existing) => existing.file.url === image.file.url)) return;
+		set("images", images.concat(image));
 	},
 }));
