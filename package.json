@@ -122,7 +122,6 @@
 		"mime": "^4.1.0",
 		"next": "16.2.10",
 		"next-auth": "^4.24.14",
-		"nextjs-better-unstable-cache": "^1.1.3",
 		"node-dir": "^0.1.17",
 		"node-html-parser": "^9.0.0",
 		"postgres": "^3.4.9",

@@ -1,5 +1,5 @@
 import { desc, eq } from "drizzle-orm";
-import { memoize } from "nextjs-better-unstable-cache";
+import { unstable_cache } from "next/cache";
 import { ArchivedArticleCard } from "~/components/article/archived-card";
 import {
 	Accordion,
@@ -8,10 +8,11 @@ import {
 	AccordionTrigger,
 } from "~/components/ui/accordion";
 import { article_grid_variants, article_variants } from "~/lib/page-variants";
+import { revive_cache_dates } from "~/lib/revive-cache-dates";
 import { db } from "~/server/db";
 import { Article } from "~/server/db/schema";
 
-export const cachedArchived = memoize(
+export const cachedArchived = unstable_cache(
 	async () => {
 		return db.query.Article.findMany({
 			where: eq(Article.status, "archived"),
@@ -22,14 +23,12 @@ export const cachedArchived = memoize(
 			orderBy: desc(Article.archived_at),
 		});
 	},
-	{
-		revalidateTags: ["archive"],
-		logid: "archive",
-	},
+	["archive"],
+	{ tags: ["archive"], revalidate: false },
 );
 
 export async function ArchivedArticles() {
-	const archived = await cachedArchived();
+	const archived = revive_cache_dates(await cachedArchived());
 
 	let sklon: string | undefined;
 	if (archived.length === 1) {

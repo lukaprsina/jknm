@@ -1,17 +1,16 @@
 "use server";
 
-import { memoize } from "nextjs-better-unstable-cache";
+import { unstable_cache } from "next/cache";
+import { revive_cache_dates } from "~/lib/revive-cache-dates";
 import { find_published_articles_page } from "~/server/article/article-queries";
 import { db } from "~/server/db";
 
-const cachedPublishedPage = memoize(
+const cachedPublishedPage = unstable_cache(
 	async ({ pageParam, limit }: { pageParam: Date | undefined; limit: number }) => {
 		return find_published_articles_page(db, { limit, cursor: pageParam });
 	},
-	{
-		revalidateTags: ["homepage-feed"],
-		logid: "homepage-feed",
-	},
+	["homepage-feed"],
+	{ tags: ["homepage-feed"], revalidate: false },
 );
 
 export async function get_infinite_published2({
@@ -21,7 +20,7 @@ export async function get_infinite_published2({
 	pageParam: Date | undefined;
 	limit: number;
 }) {
-	const data = await cachedPublishedPage({ pageParam, limit });
+	const data = revive_cache_dates(await cachedPublishedPage({ pageParam, limit }));
 
 	return {
 		data,

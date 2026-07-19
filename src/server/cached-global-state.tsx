@@ -1,15 +1,12 @@
-import { memoize } from "nextjs-better-unstable-cache";
+import { unstable_cache } from "next/cache";
 import { db } from "~/server/db";
 
-export const cachedAllAuthors = memoize(
+export const cachedAllAuthors = unstable_cache(
 	async () => {
 		return db.query.Author.findMany();
 	},
-	{
-		revalidateTags: ["authors"],
-		// log: ["dedupe", "datacache", "verbose"],
-		logid: "authors",
-	},
+	["authors"],
+	{ tags: ["authors"], revalidate: false },
 );
 
 /* export const cachedAllAuthors = memoize(

@@ -1,4 +1,4 @@
-import { memoize } from "nextjs-better-unstable-cache";
+import { unstable_cache } from "next/cache";
 import { NewDraftArticleCard } from "~/components/article/new-card";
 import {
 	Accordion,
@@ -7,21 +7,20 @@ import {
 	AccordionTrigger,
 } from "~/components/ui/accordion";
 import { article_grid_variants, article_variants } from "~/lib/page-variants";
+import { revive_cache_dates } from "~/lib/revive-cache-dates";
 import { find_draft_articles } from "~/server/article/article-queries";
 import { db } from "~/server/db";
 
-export const cachedDrafts = memoize(
+export const cachedDrafts = unstable_cache(
 	async () => {
 		return find_draft_articles(db);
 	},
-	{
-		revalidateTags: ["drafts"],
-		logid: "drafts",
-	},
+	["drafts"],
+	{ tags: ["drafts"], revalidate: false },
 );
 
 export async function DraftArticles() {
-	const drafts = await cachedDrafts();
+	const drafts = revive_cache_dates(await cachedDrafts());
 
 	let sklon: string | undefined;
 	if (drafts.length === 1) {
