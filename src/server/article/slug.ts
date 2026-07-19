@@ -16,6 +16,11 @@ const MAX_SLUG_SUFFIX = 99;
  * own id — needed by the #22 legacy migration, which mints a slug for the
  * very `published_article` row it's migrating and must not treat that row's
  * own url as a collision with itself.
+ *
+ * NOTE for the eventual `published_article`/`draft_article` schema drop
+ * (ADR-0003 appendix, §8 item 7): this function is a live reader of
+ * `PublishedArticle`, not just a stale reference — dropping that table
+ * without removing this check first will break slug generation outright.
  */
 export async function find_available_slug(
 	tx: DbTransaction,

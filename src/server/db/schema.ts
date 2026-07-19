@@ -309,7 +309,9 @@ export const verificationTokens = pgTable(
 );
 
 // --- Unified articles/media schema (#17) ---
-// Additive alongside PublishedArticle/DraftArticle; nothing above is read from yet.
+// Additive alongside PublishedArticle/DraftArticle. Legacy write paths are gone
+// (#27), but PublishedArticle is still read: slug.ts's find_available_slug
+// checks it for collision-avoidance, and wake_supabase/route.ts pings it.
 
 export const article_status_enum = pgEnum("article_status", [
 	"draft",
