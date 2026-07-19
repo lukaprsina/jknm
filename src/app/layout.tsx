@@ -9,10 +9,7 @@ import { StrictMode } from "react";
 import { Toaster } from "~/components/ui/toaster";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { cn } from "~/lib/utils";
-import {
-	cachedAllAuthors,
-	cachedDuplicateUrls,
-} from "~/server/cached-global-state";
+import { cachedAllAuthors } from "~/server/cached-global-state";
 import Providers from "./provider";
 
 export const metadata: Metadata = {
@@ -31,11 +28,7 @@ const open_sans = Open_Sans({
 export default async function RootLayout({
 	children,
 }: Readonly<{ children: React.ReactNode }>) {
-	// await api.draft_article.get_duplicate_urls.prefetch();
-	const [all_authors, duplicate_urls] = await Promise.all([
-		cachedAllAuthors(),
-		cachedDuplicateUrls(),
-	]);
+	const all_authors = await cachedAllAuthors();
 
 	return (
 		<StrictMode>
@@ -50,7 +43,7 @@ export default async function RootLayout({
 				>
 					{/* <TRPCReactProvider> */}
 					{/* <HydrateClient> */}
-					<Providers all_authors={all_authors} duplicate_urls={duplicate_urls}>
+					<Providers all_authors={all_authors}>
 						<TooltipProvider>
 							{children}
 							<Toaster />

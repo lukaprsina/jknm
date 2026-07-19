@@ -12,18 +12,6 @@ export const cachedAllAuthors = memoize(
 	},
 );
 
-export const cachedDuplicateUrls = memoize(
-	async () => {
-		const urls = await db.query.DuplicatedArticleUrls.findMany();
-		return urls.map((data) => data.url);
-	},
-	{
-		revalidateTags: ["duplicate-urls"],
-		// log: ["dedupe", "datacache", "verbose"],
-		logid: "duplicate-urls",
-	},
-);
-
 /* export const cachedAllAuthors = memoize(
   async (author_type?: "member" | "guest") => {
     return author_type

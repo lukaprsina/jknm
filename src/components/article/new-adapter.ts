@@ -1,15 +1,12 @@
 import type { ThumbnailType } from "~/lib/validators";
 import type {
 	Article,
+	ArticleContentType,
 	ArticleSlug,
 	ArticlesToAuthors,
 	Author,
 	Media,
 } from "~/server/db/schema";
-import type {
-	DraftArticleWithAuthors,
-	PublishedArticleWithAuthors,
-} from "./adapter";
 
 /**
  * Shape returned by `get_article_by_new_id` / `get_new_article_by_slug` — the
@@ -25,27 +22,41 @@ export type NewArticleWithRelations = typeof Article.$inferSelect & {
 	thumbnail_media: typeof Media.$inferSelect | null;
 };
 
-/**
- * Editor draft shape, widened so `id` can be the new uuid string as well as
- * the legacy numeric id. The rest of the editor tree reads
- * `title`/`content`/`created_at`/`draft_articles_to_authors`/`thumbnail_crop`
- * unchanged.
- */
-export type EditorDraftArticle = Omit<DraftArticleWithAuthors, "id"> & {
-	id: number | string;
-};
+/** Draft shape the editor tree reads from — a plain uuid-keyed `Article` row. */
+export interface EditorDraftArticle {
+	id: string;
+	title: string;
+	created_at: Date;
+	updated_at: Date;
+	content: ArticleContentType | null;
+	content_preview: string;
+	thumbnail_crop: ThumbnailType | null;
+	draft_articles_to_authors: {
+		author_id: number;
+		order: number;
+		author: typeof Author.$inferSelect;
+	}[];
+}
 
-export type PublishedArticleView = Omit<PublishedArticleWithAuthors, "id"> & {
-	id: number | string;
-};
+/** Published-view shape for the public article page — same fields as `EditorDraftArticle`, plus its slug. */
+export interface PublishedArticleView {
+	id: string;
+	title: string;
+	url: string;
+	created_at: Date;
+	updated_at: Date;
+	content: ArticleContentType | null;
+	content_preview: string;
+	thumbnail_crop: ThumbnailType | null;
+	published_articles_to_authors: {
+		author_id: number;
+		order: number;
+		author: typeof Author.$inferSelect;
+	}[];
+}
 
-/**
- * Minimal shape the edit-pencil (`EditingButtons`/`EditButton`) needs — just
- * enough to tell a legacy `PublishedArticle` (numeric id, spawns a legacy
- * draft via `create_draft`) from a new-table `Article` (uuid id, spawns a
- * superseding draft via `create_superseding_draft`).
- */
-export type EditableArticleRef = { id: number | string };
+/** Minimal shape the edit-pencil (`EditingButtons`/`EditButton`) needs. */
+export type EditableArticleRef = { id: string };
 
 /** The article's primary slug, falling back to any slug if none is flagged primary. */
 export function get_primary_slug(article: NewArticleWithRelations) {
@@ -78,16 +89,12 @@ function reconstruct_thumbnail_crop(
 	};
 }
 
-/**
- * Map a new `articles` row into a `DraftArticleWithAuthors`-shaped object (with
- * a widened uuid `id`) so the existing editor tree renders it unchanged.
- */
+/** Map a new `articles` row into the editor tree's draft shape. */
 export function map_new_article_to_editor_draft(
 	article: NewArticleWithRelations,
 ): EditorDraftArticle {
 	return {
 		id: article.id,
-		published_id: null,
 		title: article.title,
 		created_at: article.created_at,
 		updated_at: article.updated_at,
@@ -95,7 +102,6 @@ export function map_new_article_to_editor_draft(
 		content_preview: article.excerpt ?? "",
 		thumbnail_crop: reconstruct_thumbnail_crop(article),
 		draft_articles_to_authors: article.articles_to_authors.map((rel) => ({
-			draft_id: 0,
 			author_id: rel.author_id,
 			order: rel.order,
 			author: rel.author,
@@ -103,18 +109,13 @@ export function map_new_article_to_editor_draft(
 	};
 }
 
-/**
- * Map a new `articles` row into a published-view object for the public page.
- * `EditorToReact` treats it as a draft (no `old_id`), which is fine — it only
- * reads content/authors/created_at.
- */
+/** Map a new `articles` row into a published-view object for the public page. */
 export function map_new_article_to_published_view(
 	article: NewArticleWithRelations,
 	slug: string,
 ): PublishedArticleView {
 	return {
 		id: article.id,
-		old_id: null,
 		title: article.title,
 		url: slug,
 		created_at: article.created_at,
@@ -123,7 +124,6 @@ export function map_new_article_to_published_view(
 		content_preview: article.excerpt ?? "",
 		thumbnail_crop: reconstruct_thumbnail_crop(article),
 		published_articles_to_authors: article.articles_to_authors.map((rel) => ({
-			published_id: 0,
 			author_id: rel.author_id,
 			order: rel.order,
 			author: rel.author,

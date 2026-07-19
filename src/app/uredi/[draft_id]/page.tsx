@@ -12,10 +12,7 @@ import { buttonVariants } from "~/components/ui/button";
 import { CardContent, CardFooter } from "~/components/ui/card";
 import { article_variants, page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
-import {
-	get_article_by_draft_id,
-	get_article_by_new_id,
-} from "~/server/article/get-article";
+import { get_article_by_new_id } from "~/server/article/get-article";
 import { getServerAuthSession } from "~/server/auth";
 import Editor from "./editor";
 
@@ -49,12 +46,7 @@ export async function generateMetadata(
 	const decoded = decodeURIComponent(draft_id);
 
 	let article_title: string | undefined;
-	if (/^\d+$/.test(decoded)) {
-		const { draft } = await get_article_by_draft_id({
-			draft_id: parseInt(decoded, 10),
-		});
-		article_title = draft?.title;
-	} else if (UUID_REGEX.test(decoded)) {
+	if (UUID_REGEX.test(decoded)) {
 		const article = await get_article_by_new_id({ id: decoded });
 		article_title = article?.title;
 	}
@@ -92,58 +84,7 @@ export default async function EditorPage(props: EditorPageProps) {
 		</div>
 	);
 
-	// New (uuid) articles on the unified `articles` table.
-	if (UUID_REGEX.test(decoded)) {
-		const article = await get_article_by_new_id({ id: decoded });
-
-		if (!article) {
-			return (
-				<Shell>
-					{editor_shell(<CreateNewArticle novica_ime={draft_id} />)}
-				</Shell>
-			);
-		}
-
-		// `published`/`archived` rows are never edited directly (#21) — editing
-		// spawns a new superseding draft instead, so the live/archived version
-		// stays untouched until that draft is published.
-		if (article.status === "published" || article.status === "archived") {
-			return (
-				<Shell>
-					{editor_shell(
-						<PublishedOrArchivedArticleGate
-							article_id={article.id}
-							title={article.title}
-							status={article.status}
-						/>,
-					)}
-				</Shell>
-			);
-		}
-
-		// `deleted` is terminal — no restore action.
-		if (article.status === "deleted") {
-			return (
-				<Shell>
-					{editor_shell(<DeletedArticleGate title={article.title} />)}
-				</Shell>
-			);
-		}
-
-		return (
-			<Shell>
-				{editor_shell(
-					<Editor
-						key={article.id}
-						draft={map_new_article_to_editor_draft(article)}
-					/>,
-				)}
-			</Shell>
-		);
-	}
-
-	// Legacy numeric draft/published articles.
-	if (!/^\d+$/.test(decoded)) {
+	if (!UUID_REGEX.test(decoded)) {
 		return (
 			<Shell>
 				<InfoCard title="Napaka" description="Neveljaven URL novičke." />
@@ -151,18 +92,49 @@ export default async function EditorPage(props: EditorPageProps) {
 		);
 	}
 
-	const { draft, published } = await get_article_by_draft_id({
-		draft_id: parseInt(decoded, 10),
-	});
+	const article = await get_article_by_new_id({ id: decoded });
+
+	if (!article) {
+		return (
+			<Shell>
+				{editor_shell(<CreateNewArticle novica_ime={draft_id} />)}
+			</Shell>
+		);
+	}
+
+	// `published`/`archived` rows are never edited directly (#21) — editing
+	// spawns a new superseding draft instead, so the live/archived version
+	// stays untouched until that draft is published.
+	if (article.status === "published" || article.status === "archived") {
+		return (
+			<Shell>
+				{editor_shell(
+					<PublishedOrArchivedArticleGate
+						article_id={article.id}
+						title={article.title}
+						status={article.status}
+					/>,
+				)}
+			</Shell>
+		);
+	}
+
+	// `deleted` is terminal — no restore action.
+	if (article.status === "deleted") {
+		return (
+			<Shell>
+				{editor_shell(<DeletedArticleGate title={article.title} />)}
+			</Shell>
+		);
+	}
 
 	return (
-		<Shell draft_article={draft} published_article={published}>
+		<Shell>
 			{editor_shell(
-				draft ? (
-					<Editor key={draft.id} draft={draft} published={published} />
-				) : (
-					<CreateNewArticle novica_ime={draft_id} />
-				),
+				<Editor
+					key={article.id}
+					draft={map_new_article_to_editor_draft(article)}
+				/>,
 			)}
 		</Shell>
 	);

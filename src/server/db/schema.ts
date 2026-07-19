@@ -17,9 +17,7 @@ import {
 	varchar,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
-import { z } from "zod";
 import type { ThumbnailType } from "~/lib/validators";
-import { content_validator, thumbnail_validator } from "~/lib/validators";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -220,50 +218,6 @@ export const DraftArticlesToAuthorsRelations = relations(
 		}),
 	}),
 );
-
-export const CreateDraftArticleSchema = z.object({
-	published_id: z.number().optional(),
-	title: z.string(),
-});
-
-export const SaveDraftArticleSchema = z.object({
-	title: z.string(),
-	created_at: z.date().optional(),
-	updated_at: z.date().optional(),
-	content: content_validator.optional(),
-	content_preview: z.string().optional(),
-	thumbnail_crop: thumbnail_validator.optional(),
-	published_id: z.number().optional(),
-	draft_articles_to_authors: z
-		.array(
-			z.object({
-				draft_id: z.number().optional(),
-				author_id: z.number(),
-				order: z.number().optional(),
-			}),
-		)
-		.optional(),
-});
-
-export const PublishArticleSchema = z.object({
-	old_id: z.number().optional(),
-	title: z.string(),
-	url: z.string(),
-	created_at: z.date().optional(),
-	updated_at: z.date().optional(),
-	content: content_validator.optional(),
-	content_preview: z.string().optional(),
-	thumbnail_crop: thumbnail_validator.optional(),
-	published_articles_to_authors: z
-		.array(
-			z.object({
-				published_id: z.number().optional(),
-				author_id: z.number(),
-				order: z.number().optional(),
-			}),
-		)
-		.optional(),
-});
 
 export const users = pgTable("user", {
 	id: varchar("id", { length: 255 })

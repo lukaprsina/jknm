@@ -1,5 +1,5 @@
 import type { InfiniteHitsProps } from "react-instantsearch";
-import { ArticleAlgoliaCard } from "~/components/article/adapter";
+import { ArticleAlgoliaCard } from "~/components/article/card";
 import { useInfiniteAlgoliaArticles } from "~/hooks/use-infinite-algolia";
 import { article_grid_variants, article_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";

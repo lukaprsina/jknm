@@ -98,7 +98,7 @@ export function PreveriClient({
 				article.data,
 				get_primary_slug(article.data) ?? article.data.id,
 			);
-			return <EditorToReact article={view} session={null} />;
+			return <EditorToReact article={view} />;
 		}
 	}, [article]);
 

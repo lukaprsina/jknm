@@ -49,15 +49,11 @@ export const AllAuthorsContext = createContext<(typeof Author.$inferSelect)[]>(
 	[],
 );
 
-export const DuplicateURLsContext = createContext<string[]>([]);
-
 export default function Providers({
 	all_authors,
-	duplicate_urls,
 	children,
 }: {
 	all_authors: (typeof Author.$inferSelect)[];
-	duplicate_urls: string[];
 	children: React.ReactNode;
 }) {
 	// NOTE: Avoid useState when initializing the query client if you don't
@@ -69,9 +65,7 @@ export default function Providers({
 	return (
 		<QueryClientProvider client={queryClient}>
 			<AllAuthorsContext.Provider value={all_authors}>
-				<DuplicateURLsContext.Provider value={duplicate_urls}>
-					{children}
-				</DuplicateURLsContext.Provider>
+				{children}
 			</AllAuthorsContext.Provider>
 		</QueryClientProvider>
 	);

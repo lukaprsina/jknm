@@ -2,14 +2,9 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { use, useContext } from "react";
+import { useContext } from "react";
 import type { z } from "zod";
-import { DuplicateURLsContext } from "~/app/provider";
-import {
-	DraftArticleContext,
-	PublishedArticleContext,
-} from "~/components/article/context";
-import { upload_image_by_url } from "~/components/aws-s3/upload-file";
+import { DraftArticleContext } from "~/components/article/context";
 import { EditorContext } from "~/components/editor/editor-context";
 import {
 	update_settings_from_editor,
@@ -17,34 +12,19 @@ import {
 } from "~/components/editor/editor-lib";
 import { editor_store } from "~/components/editor/editor-store";
 import { useToast } from "~/hooks/use-toast";
-import {
-	get_published_article_link,
-	get_s3_draft_directory,
-} from "~/lib/article-utils";
 import type { ThumbnailType } from "~/lib/validators";
-import { delete_both, delete_draft } from "~/server/article/delete";
 import { delete_article } from "~/server/article/lifecycle";
 import { publish_article, save_article } from "~/server/article/new-article";
-import { publish } from "~/server/article/publish";
-import { save_draft } from "~/server/article/save-draft";
-import { unpublish } from "~/server/article/unpublish";
 import type {
 	delete_article_validator,
-	delete_both_validator,
-	delete_draft_validator,
 	publish_article_validator,
-	publish_validator,
 	save_article_validator,
-	save_draft_validator,
-	unpublish_validator,
 } from "~/server/article/validators";
 
 export function useEditorMutations() {
 	const query_client = useQueryClient();
 	const draft_article = useContext(DraftArticleContext);
-	const publish_article_ctx = useContext(PublishedArticleContext);
 	const editor_context = useContext(EditorContext);
-	const duplicate_urls = use(DuplicateURLsContext);
 
 	const toaster = useToast();
 	const router = useRouter();
@@ -52,46 +32,6 @@ export function useEditorMutations() {
 	if (!draft_article || !editor_context) {
 		throw new Error("Missing context");
 	}
-
-	const save_draft_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof save_draft_validator>) =>
-			save_draft(input),
-		onSettled: async () => {
-			editor_context.setSavingText(undefined);
-			editor_context.setDirty(false);
-		},
-		onError: (error) => {
-			toaster.toast({
-				title: "Napaka pri shranjevanju osnutka",
-				description: error.message,
-			});
-		},
-	});
-
-	const publish_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof publish_validator>) => publish(input),
-		onSuccess: (data) => {
-			router.push(
-				get_published_article_link(data.url, data.created_at, duplicate_urls),
-			);
-		},
-		onSettled: async () => {
-			editor_context.setSavingText(undefined);
-			editor_context.setDirty(false);
-
-			await query_client.invalidateQueries({
-				queryKey: ["infinite_published"],
-			});
-		},
-		onError: (error) => {
-			toaster.toast({
-				title: "Napaka pri objavljanju novičke",
-				description: error.message,
-			});
-		},
-	});
-
-	// --- Unified `articles` table (#20/#19) ---
 
 	const save_article_mutation = useMutation({
 		mutationFn: (input: z.infer<typeof save_article_validator>) =>
@@ -129,71 +69,6 @@ export function useEditorMutations() {
 		},
 	});
 
-	const delete_draft_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof delete_draft_validator>) =>
-			delete_draft(input),
-		onSuccess: (data) => {
-			if (data.url) {
-				router.push(
-					get_published_article_link(
-						data.url,
-						data.draft.created_at,
-						duplicate_urls,
-					),
-				);
-			} else {
-				router.push(`/`);
-			}
-		},
-		onSettled: async () => {
-			editor_context.setSavingText(undefined);
-			await query_client.invalidateQueries({
-				queryKey: ["infinite_published"],
-			});
-		},
-		onError: (error) => {
-			toaster.toast({
-				title: "Napaka pri brisanju osnutka",
-				description: error.message,
-			});
-		},
-	});
-
-	const unpublish_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof unpublish_validator>) =>
-			unpublish(input),
-		onSettled: async () => {
-			editor_context.setSavingText(undefined);
-			await query_client.invalidateQueries({
-				queryKey: ["infinite_published"],
-			});
-			location.reload();
-		},
-		onError: (error) => {
-			toaster.toast({
-				title: "Napaka pri skrivanju novičke",
-				description: error.message,
-			});
-		},
-	});
-
-	const delete_both_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof delete_both_validator>) =>
-			delete_both(input),
-		onSettled: async () => {
-			await query_client.invalidateQueries({
-				queryKey: ["infinite_published"],
-			});
-			router.replace(`/`);
-		},
-		onError: (error) => {
-			toaster.toast({
-				title: "Napaka pri brisanju novičke",
-				description: error.message,
-			});
-		},
-	});
-
 	const delete_article_mutation = useMutation({
 		mutationFn: (input: z.infer<typeof delete_article_validator>) =>
 			delete_article(input),
@@ -221,18 +96,6 @@ export function useEditorMutations() {
 			if (!editor_content) return;
 
 			const article_id = draft_article.id;
-			const is_new_article = typeof article_id === "string";
-
-			// Legacy drafts upload a cropped thumbnail.png into their S3 folder.
-			// New (uuid) articles resolve the thumbnail from the referenced media
-			// row server-side, so nothing is uploaded here.
-			if (thumbnail_crop && !is_new_article) {
-				await upload_image_by_url({
-					url: thumbnail_crop.image_url,
-					custom_title: "thumbnail.png",
-					crop: thumbnail_crop,
-				});
-			}
 
 			const updated = validate_article(editor_content, toaster);
 			const created_at = fake_created_at ?? draft_article.created_at;
@@ -243,39 +106,20 @@ export function useEditorMutations() {
 			update_settings_from_editor({
 				title: updated?.title ?? "",
 				url: updated?.url ?? "",
-				s3_url:
-					typeof article_id === "number"
-						? get_s3_draft_directory(article_id)
-						: "",
+				s3_url: "",
 				thumbnail_crop: resolved_thumbnail_crop,
 				editor_content,
 				article_id,
 			});
 
-			if (typeof article_id === "string") {
-				save_article_mutation.mutate({
-					article_id,
-					article: {
-						title: updated?.title ?? state.title,
-						created_at,
-						content: editor_content,
-						thumbnail_crop: resolved_thumbnail_crop ?? undefined,
-					},
-					author_ids: state.author_ids,
-				});
-				return;
-			}
-
-			const article: z.infer<typeof save_draft_validator>["article"] = {
-				title: updated?.title ?? state.title,
-				created_at,
-				content: editor_content,
-				thumbnail_crop: resolved_thumbnail_crop ?? undefined,
-			};
-
-			save_draft_mutation.mutate({
-				draft_id: article_id,
-				article,
+			save_article_mutation.mutate({
+				article_id,
+				article: {
+					title: updated?.title ?? state.title,
+					created_at,
+					content: editor_content,
+					thumbnail_crop: resolved_thumbnail_crop ?? undefined,
+				},
 				author_ids: state.author_ids,
 			});
 		},
@@ -288,16 +132,7 @@ export function useEditorMutations() {
 			if (!updated) return;
 
 			const article_id = draft_article.id;
-			const is_new_article = typeof article_id === "string";
 			const created_at = fake_created_at ?? draft_article.created_at;
-
-			if (thumbnail_crop && !is_new_article) {
-				await upload_image_by_url({
-					url: thumbnail_crop.image_url,
-					custom_title: "thumbnail.png",
-					crop: thumbnail_crop,
-				});
-			}
 
 			const state = editor_store.get("state");
 			const resolved_thumbnail_crop = thumbnail_crop ?? state.thumbnail_crop;
@@ -305,10 +140,7 @@ export function useEditorMutations() {
 			update_settings_from_editor({
 				title: updated.title,
 				url: updated.url,
-				s3_url:
-					typeof article_id === "number"
-						? get_s3_draft_directory(article_id)
-						: "",
+				s3_url: "",
 				thumbnail_crop: resolved_thumbnail_crop,
 				editor_content,
 				article_id,
@@ -317,63 +149,20 @@ export function useEditorMutations() {
 				),
 			});
 
-			if (typeof article_id === "string") {
-				publish_article_mutation.mutate({
-					article_id,
-					article: {
-						title: updated.title,
-						created_at,
-						content: editor_content,
-						thumbnail_crop: resolved_thumbnail_crop ?? undefined,
-					},
-					author_ids: state.author_ids,
-				});
-				return;
-			}
-
-			const article: z.infer<typeof publish_validator>["article"] = {
-				title: updated.title,
-				url: updated.url,
-				created_at,
-				content: editor_content,
-				thumbnail_crop: resolved_thumbnail_crop ?? undefined,
-			};
-
-			publish_mutation.mutate({
-				draft_id: article_id,
-				article,
+			publish_article_mutation.mutate({
+				article_id,
+				article: {
+					title: updated.title,
+					created_at,
+					content: editor_content,
+					thumbnail_crop: resolved_thumbnail_crop ?? undefined,
+				},
 				author_ids: state.author_ids,
 			});
 		},
-		delete_draft: () => {
-			if (typeof draft_article.id !== "number") {
-				// Delete/archive for new-table articles is #21 scope.
-				toaster.toast({
-					title: "Brisanje še ni na voljo",
-					description: "Brisanje novih novičk še ni implementirano.",
-				});
-				return;
-			}
-			editor_context.setSavingText("Brišem osnutek...");
-			delete_draft_mutation.mutate({ draft_id: draft_article.id });
-		},
-		unpublish: () => {
-			if (!publish_article_ctx || typeof publish_article_ctx.id !== "number") {
-				return;
-			}
-
-			editor_context.setSavingText("Skrivam novičko ...");
-			unpublish_mutation.mutate({ published_id: publish_article_ctx.id });
-		},
-		delete_both: () => {
+		delete_article: () => {
 			editor_context.setSavingText("Brišem novičko ...");
-
-			if (typeof draft_article.id === "string") {
-				delete_article_mutation.mutate({ article_id: draft_article.id });
-				return;
-			}
-
-			delete_both_mutation.mutate({ draft_id: draft_article.id });
+			delete_article_mutation.mutate({ article_id: draft_article.id });
 		},
 	};
 }

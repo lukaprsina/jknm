@@ -7,7 +7,6 @@ import Blocks from "editorjs-blocks-react-renderer";
 import HTMLReactParser from "html-react-parser";
 import Image from "next/image";
 import Link from "next/link";
-import type { Session } from "next-auth";
 import { useMemo, useState } from "react";
 import ArticleDescription from "~/components/article/description";
 import { gallery_store } from "~/components/gallery-store";
@@ -35,10 +34,8 @@ import type {
 
 export function EditorToReact({
 	article,
-	session,
 }: {
 	article: EditorDraftArticle | PublishedArticleView | undefined;
-	session: Session | null;
 }) {
 	const [heading, setHeading] = useState<string | undefined>();
 
@@ -70,7 +67,7 @@ export function EditorToReact({
 	const author_ids = useMemo(() => {
 		if (!article) return [];
 
-		return "old_id" in article
+		return "published_articles_to_authors" in article
 			? article.published_articles_to_authors.map((a) => a.author_id)
 			: article.draft_articles_to_authors.map((a) => a.author_id);
 	}, [article]);
@@ -94,11 +91,6 @@ export function EditorToReact({
 						type="page"
 						author_ids={author_ids}
 						created_at={article.created_at}
-						old_id={
-							session && "old_id" in article
-								? article.old_id?.toString()
-								: undefined
-						}
 					/>
 				</CardHeader>
 				<CardContent>
@@ -121,11 +113,6 @@ export function EditorToReact({
 					type="page"
 					author_ids={author_ids}
 					created_at={article.created_at}
-					old_id={
-						session && "old_id" in article
-							? article.old_id?.toString()
-							: undefined
-					}
 				/>
 				<Blocks
 					data={editor_data}

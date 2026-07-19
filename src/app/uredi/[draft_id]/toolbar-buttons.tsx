@@ -1,7 +1,7 @@
 "use client";
 
 import type { OutputData } from "@editorjs/editorjs";
-import { DownloadIcon, SaveIcon, UploadIcon, XIcon } from "lucide-react";
+import { DownloadIcon, SaveIcon, UploadIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useContext, useEffect, useRef } from "react";
 import { ArchiveArticleButton } from "~/components/article/archive-article-button";
@@ -202,68 +202,29 @@ export function KeyboardShortcut({ children }: { children: React.ReactNode }) {
 export function ClearButton() {
 	const editor_context = useContext(EditorContext);
 	const draft_article = useContext(DraftArticleContext);
-	const editor_mutations = useEditorMutations();
 	const router = useRouter();
 
 	if (!editor_context || !draft_article) return null;
 
-	// New (uuid) drafts get the #21 lifecycle actions (archive/delete) instead
-	// of the legacy draft/published delete dialog.
-	if (typeof draft_article.id === "string") {
-		const article_id = draft_article.id;
-		return (
-			<>
-				<ArchiveArticleButton
-					article_id={article_id}
-					variant="ghost"
-					size="icon"
-					aria-label="Arhiviraj novičko"
-					title="Arhiviraj novičko"
-					on_archived={() => router.push("/")}
-				/>
-				<DeleteArticleButton
-					article_id={article_id}
-					variant="ghost"
-					size="icon"
-					aria-label="Izbriši novičko"
-					title="Izbriši novičko"
-					on_deleted={() => router.push("/")}
-				/>
-			</>
-		);
-	}
-
+	const article_id = draft_article.id;
 	return (
-		<AlertDialog>
-			<Tooltip>
-				<TooltipTrigger asChild>
-					<AlertDialogTrigger asChild>
-						<Button variant="ghost" size="icon">
-							<XIcon />
-						</Button>
-					</AlertDialogTrigger>
-				</TooltipTrigger>
-				<TooltipContent>Izbriši osnutek</TooltipContent>
-			</Tooltip>
-			<AlertDialogContent>
-				<AlertDialogHeader>
-					<AlertDialogTitle>Izbriši osnutek</AlertDialogTitle>
-				</AlertDialogHeader>
-				<AlertDialogDescription>
-					Ste prepričani, da želite izbrisati osnutek na objavljeno različico
-					novičke?
-				</AlertDialogDescription>
-				<AlertDialogFooter>
-					<AlertDialogCancel>Prekliči</AlertDialogCancel>
-					<AlertDialogAction
-						onClick={() => {
-							editor_mutations.delete_draft();
-						}}
-					>
-						OK
-					</AlertDialogAction>
-				</AlertDialogFooter>
-			</AlertDialogContent>
-		</AlertDialog>
+		<>
+			<ArchiveArticleButton
+				article_id={article_id}
+				variant="ghost"
+				size="icon"
+				aria-label="Arhiviraj novičko"
+				title="Arhiviraj novičko"
+				on_archived={() => router.push("/")}
+			/>
+			<DeleteArticleButton
+				article_id={article_id}
+				variant="ghost"
+				size="icon"
+				aria-label="Izbriši novičko"
+				title="Izbriši novičko"
+				on_deleted={() => router.push("/")}
+			/>
+		</>
 	);
 }

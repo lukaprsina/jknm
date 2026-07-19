@@ -5,7 +5,6 @@ import { PencilIcon, PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import type { Session } from "next-auth";
-import { useCallback } from "react";
 import type { z } from "zod";
 import type { ButtonProps } from "~/components/ui/button";
 import { Button } from "~/components/ui/button";
@@ -15,13 +14,8 @@ import {
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { get_draft_article_link } from "~/lib/article-utils";
-import { create_draft } from "~/server/article/create-draft";
 import { create_superseding_draft } from "~/server/article/lifecycle";
-import type {
-	create_draft_validator,
-	create_superseding_draft_validator,
-} from "~/server/article/validators";
-import type { DraftArticleWithAuthors } from "../article/adapter";
+import type { create_superseding_draft_validator } from "~/server/article/validators";
 import MakeNewDraftButton from "../article/make-new-draft-button";
 import type { EditableArticleRef } from "../article/new-adapter";
 import { SettingsDropdown } from "../settings";
@@ -31,29 +25,15 @@ export default function EditingButtons({
 	session,
 }: {
 	published_article?: EditableArticleRef;
-	draft_article?: DraftArticleWithAuthors;
 	session: Session | null;
 }) {
-	/* useEffect(() => {
-    console.log("EditingButtons", { published_article, session });
-  }, [published_article, session]); */
-
 	if (!session) return null;
 
 	return (
 		<>
-			{published_article &&
-				(typeof published_article.id === "number" ? (
-					<EditButton
-						variant="ghost"
-						published_article_id={published_article.id}
-					/>
-				) : (
-					<NewArticleEditButton
-						variant="ghost"
-						article_id={published_article.id}
-					/>
-				))}
+			{published_article && (
+				<EditButton variant="ghost" article_id={published_article.id} />
+			)}
 			<MakeNewDraftButton
 				className="dark:bg-primary/80 dark:text-primary-foreground"
 				variant="ghost"
@@ -66,73 +46,11 @@ export default function EditingButtons({
 	);
 }
 
-export function EditButton({
-	new_tab,
-	published_article_id,
-	...props
-}: ButtonProps & {
-	new_tab?: boolean;
-	published_article_id: number;
-}) {
-	const router = useRouter();
-
-	const handle_navigation = useCallback(
-		(id: number) => {
-			const new_url = get_draft_article_link(id);
-
-			if (new_tab) {
-				window.open(new_url, "_blank");
-			} else {
-				router.push(new_url);
-			}
-		},
-		[new_tab, router],
-	);
-
-	const create_draft_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof create_draft_validator>) =>
-			create_draft(input),
-		onSuccess: (data) => {
-			handle_navigation(data.id);
-		},
-	});
-	/* const get_or_create_draft = api.article.get_or_create_draft.useMutation({
-    onSuccess: async (data) => {
-      await trpc_utils.article.invalidate();
-      handle_navigation(data.id);
-    },
-  }); */
-
-	return (
-		<Tooltip>
-			<TooltipTrigger asChild>
-				<Button
-					className="flex flex-shrink-0 dark:bg-primary/80 dark:text-primary-foreground"
-					size="icon"
-					onClick={() => {
-						create_draft_mutation.mutate({
-							published_id: published_article_id,
-						});
-						/* get_or_create_draft.mutate({
-              published_id: published_article_id,
-            }); */
-					}}
-					{...props}
-				>
-					<PencilIcon size={20} />
-				</Button>
-			</TooltipTrigger>
-			<TooltipContent>Uredi</TooltipContent>
-		</Tooltip>
-	);
-}
-
 /**
- * Pencil for a published new-table `Article` — spawns a superseding draft
- * (#21's "revise while live") rather than the legacy `create_draft`, since
- * new-table published rows aren't edited directly.
+ * Pencil for a published `Article` — spawns a superseding draft (#21's
+ * "revise while live") rather than editing the live row directly.
  */
-function NewArticleEditButton({
+export function EditButton({
 	new_tab,
 	article_id,
 	...props

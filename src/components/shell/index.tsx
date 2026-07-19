@@ -1,7 +1,6 @@
 import type React from "react";
 import { cn } from "~/lib/utils";
 import { getServerAuthSession } from "~/server/auth";
-import type { DraftArticleWithAuthors } from "../article/adapter";
 import type { EditableArticleRef } from "../article/new-adapter";
 import { Separator } from "../ui/separator";
 import { DesktopHeader } from "./desktop-header";
@@ -15,7 +14,6 @@ import { Searchbar } from "./searchbar";
 interface ShellProps {
 	children: React.ReactNode;
 	published_article?: EditableArticleRef;
-	draft_article?: DraftArticleWithAuthors;
 	without_footer?: boolean;
 	without_header?: boolean;
 	show_aside?: boolean;
@@ -24,7 +22,6 @@ interface ShellProps {
 
 export async function Shell({
 	published_article,
-	draft_article,
 	children,
 	without_footer,
 	without_header,
@@ -41,13 +38,11 @@ export async function Shell({
 					<header className="h-20 w-full text-gray-800 md:h-auto">
 						<DesktopHeader
 							published_article={published_article}
-							draft_article={draft_article}
 							className="hidden md:flex"
 							session={session}
 						/>
 						<MobileHeader
 							published_article={published_article}
-							draft_article={draft_article}
 							className="flex md:hidden"
 							session={session}
 						/>

@@ -1,15 +1,23 @@
 "use client";
 
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
+import type { Hit as SearchHit } from "instantsearch.js";
 import { LinkIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import type { IntersectionRef } from "~/app/infinite-no-trpc";
 import { CardContent, CardHeader } from "~/components/ui/card";
+import { env } from "~/env";
 import { useToast } from "~/hooks/use-toast";
+import {
+	get_published_article_link,
+	get_s3_published_directory,
+} from "~/lib/article-utils";
 import { get_base_url } from "~/lib/get-base-url";
+import { get_s3_prefix } from "~/lib/s3-publish";
 import { cn } from "~/lib/utils";
+import type { PublishedArticleHit } from "~/lib/validators";
 import { MagicCard } from "../magic-card";
 import { Button } from "../ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
@@ -151,5 +159,40 @@ export function ArticleCard({
 				</div>
 			</MagicCard>
 		</Link>
+	);
+}
+
+export function ArticleAlgoliaCard({
+	hit,
+	ref,
+}: {
+	hit: SearchHit<PublishedArticleHit>;
+	ref?: IntersectionRef;
+}) {
+	// Legacy hits (numeric objectID) have no `image` and are resolved via the
+	// old S3 thumbnail.png path convention; new-model hits (uuid objectID)
+	// carry an absolute gradivo.jknm.org `image` URL directly.
+	const is_legacy_hit = /^\d+$/.test(hit.objectID);
+
+	return (
+		<ArticleCard
+			ref={ref}
+			featured={false}
+			title={hit.title}
+			url={get_published_article_link(hit.url)}
+			id={is_legacy_hit ? parseInt(hit.objectID, 10) : undefined}
+			content_preview={hit.content_preview?.slice(0, 1000)}
+			created_at={new Date(hit.created_at)}
+			has_thumbnail={hit.has_thumbnail}
+			author_ids={hit.author_ids}
+			image_url={
+				is_legacy_hit
+					? get_s3_prefix(
+							`${get_s3_published_directory(hit.url, hit.created_at)}/thumbnail.png`,
+							env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
+						)
+					: hit.image
+			}
+		/>
 	);
 }

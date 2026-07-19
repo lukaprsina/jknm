@@ -3,7 +3,7 @@ import type { ThumbnailType } from "~/lib/validators";
 import type { EditorJSImageData } from "../../lib/editor-utils";
 
 interface EditorStoreType {
-	draft_id: number | string;
+	draft_id: string;
 	title: string;
 	url: string;
 	s3_url: string;
@@ -13,7 +13,7 @@ interface EditorStoreType {
 }
 
 const initial_data = {
-	draft_id: -1,
+	draft_id: "",
 	title: "",
 	url: "",
 	s3_url: "",

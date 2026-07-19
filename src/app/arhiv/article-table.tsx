@@ -1,27 +1,12 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Hit as SearchHit } from "instantsearch.js";
-import { ChevronDownIcon, ChevronUpIcon, TrashIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import type { Session } from "next-auth";
-import { use } from "react";
 import type { UseInfiniteHitsProps } from "react-instantsearch";
 import { useSortBy } from "react-instantsearch";
-import type { z } from "zod";
 import { Authors } from "~/components/authors";
-import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-	AlertDialogTrigger,
-} from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
 import {
 	Table,
@@ -32,20 +17,11 @@ import {
 	TableHeader,
 	TableRow,
 } from "~/components/ui/table";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "~/components/ui/tooltip";
 import { useInfiniteAlgoliaArticles } from "~/hooks/use-infinite-algolia";
-import { useToast } from "~/hooks/use-toast";
 import { get_published_article_link } from "~/lib/article-utils";
 import { format_date_for_human } from "~/lib/format-date";
 import type { PublishedArticleHit } from "~/lib/validators";
-import { delete_both } from "~/server/article/delete";
-import type { delete_both_validator } from "~/server/article/validators";
 import type { IntersectionRef } from "../infinite-no-trpc";
-import { DuplicateURLsContext } from "../provider";
 import { MyStats, SORT_BY_ITEMS } from "./components";
 
 export function ArticleTable({
@@ -175,22 +151,12 @@ function ArticleTableRow({
 	hit: SearchHit<PublishedArticleHit>;
 	session: Session | null;
 }) {
-	const duplicate_urls = use(DuplicateURLsContext);
-
 	return (
 		<TableRow ref={ref} key={hit.objectID}>
 			<TableCell>{hit.objectID}</TableCell>
 			<TableCell className="font-medium">
 				<Button variant="link" asChild>
-					<Link
-						href={get_published_article_link(
-							hit.url,
-							hit.created_at,
-							duplicate_urls,
-						)}
-					>
-						{hit.title}
-					</Link>
+					<Link href={get_published_article_link(hit.url)}>{hit.title}</Link>
 				</Button>
 			</TableCell>
 			<TableCell>
@@ -199,71 +165,5 @@ function ArticleTableRow({
 			<TableCell>{format_date_for_human(new Date(hit.created_at))}</TableCell>
 			<TableCell>{format_date_for_human(new Date(hit.updated_at))}</TableCell>
 		</TableRow>
-	);
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function _DeleteDialog({ article_id }: { article_id: number }) {
-	// const trpc_utils = api.useUtils();
-
-	/* const article_delete = api.article.delete_both.useMutation({
-    onSuccess: async () => {
-      await trpc_utils.article.invalidate();
-    },
-  }); */
-	const toaster = useToast();
-	const router = useRouter();
-	const query_client = useQueryClient();
-
-	const delete_both_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof delete_both_validator>) =>
-			delete_both(input),
-		onSettled: async () => {
-			await query_client.invalidateQueries({
-				queryKey: ["infinite_published"],
-			});
-			/* await trpc_utils.article.invalidate();
-      await trpc_utils.article.get_infinite_published.invalidate(); */
-			router.replace(`/`);
-		},
-		onError: (error) => {
-			toaster.toast({
-				title: "Napaka pri brisanju novičke",
-				description: error.message,
-			});
-		},
-	});
-
-	return (
-		<AlertDialog>
-			<Tooltip>
-				<TooltipTrigger asChild>
-					<AlertDialogTrigger asChild>
-						<Button variant="outline" size="icon">
-							<TrashIcon size={18} />
-						</Button>
-					</AlertDialogTrigger>
-				</TooltipTrigger>
-				<TooltipContent>Ibriši novico</TooltipContent>
-			</Tooltip>
-			<AlertDialogContent>
-				<AlertDialogHeader>
-					<AlertDialogTitle>Izbriši novico</AlertDialogTitle>
-					<AlertDialogDescription>
-						Ste prepričani, da želite zbrisati novico?
-					</AlertDialogDescription>
-				</AlertDialogHeader>
-				<AlertDialogFooter>
-					<AlertDialogCancel>Prekliči</AlertDialogCancel>
-					<AlertDialogAction
-						onClick={() => {
-							delete_both_mutation.mutate({ draft_id: article_id });
-						}}
-					>
-						OK
-					</AlertDialogAction>
-				</AlertDialogFooter>
-			</AlertDialogContent>
-		</AlertDialog>
 	);
 }

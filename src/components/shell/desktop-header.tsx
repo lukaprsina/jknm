@@ -9,7 +9,6 @@ import { Separator } from "~/components/ui/separator";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 // import Logo from "~/assets/logo-barvni.svg";
 import { cn } from "~/lib/utils";
-import type { DraftArticleWithAuthors } from "../article/adapter";
 import type { EditableArticleRef } from "../article/new-adapter";
 import EditingButtons from "./editing-buttons";
 import {
@@ -39,13 +38,11 @@ export const shell_store = createStore<ShellStore>(
 
 export function DesktopHeader({
 	published_article,
-	draft_article,
 	className,
 	session,
 	...props
 }: React.ComponentProps<"div"> & {
 	published_article?: EditableArticleRef;
-	draft_article?: DraftArticleWithAuthors;
 	session: Session | null;
 }) {
 	const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
@@ -128,7 +125,6 @@ export function DesktopHeader({
 						<div className="flex justify-end">
 							<EditingButtons
 								published_article={published_article}
-								draft_article={draft_article}
 								session={session}
 							/>
 						</div>

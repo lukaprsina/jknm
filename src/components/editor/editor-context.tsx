@@ -17,7 +17,6 @@ import {
 	useState,
 } from "react";
 import { useToast } from "~/hooks/use-toast";
-import { get_s3_draft_directory } from "~/lib/article-utils";
 import { DraftArticleContext } from "../article/context";
 import { update_settings_from_editor, validate_article } from "./editor-lib";
 import { editor_store } from "./editor-store";
@@ -96,11 +95,8 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 						title: updated?.title ?? "",
 						url: updated?.url ?? "",
 						// New (uuid) articles have no per-draft S3 directory — media is
-						// decoupled (#18). Only legacy numeric drafts use one.
-						s3_url:
-							typeof article.id === "number"
-								? get_s3_draft_directory(article.id)
-								: "",
+						// decoupled (#18).
+						s3_url: "",
 						thumbnail_crop: article.thumbnail_crop,
 						editor_content,
 						article_id: article.id,

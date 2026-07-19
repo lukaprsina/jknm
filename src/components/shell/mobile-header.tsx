@@ -26,7 +26,6 @@ import {
 } from "~/components/ui/sheet";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { cn } from "~/lib/utils";
-import type { DraftArticleWithAuthors } from "../article/adapter";
 import type { EditableArticleRef } from "../article/new-adapter";
 import { shell_store } from "./desktop-header";
 import EditingButtons from "./editing-buttons";
@@ -51,13 +50,11 @@ export const mobile_nav_store = createStore(
 
 export function MobileHeader({
 	published_article,
-	draft_article,
 	session,
 	className,
 	...props
 }: ComponentProps<"div"> & {
 	published_article?: EditableArticleRef;
-	draft_article?: DraftArticleWithAuthors;
 	session: Session | null;
 }) {
 	const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
@@ -86,11 +83,7 @@ export function MobileHeader({
 			<Link className="text-2xl font-bold" href="/">
 				Jamarski klub Novo mesto
 			</Link>
-			<MobileSheet
-				published_article={published_article}
-				draft_article={draft_article}
-				session={session}
-			/>
+			<MobileSheet published_article={published_article} session={session} />
 		</div>
 	);
 }
@@ -106,11 +99,9 @@ const MOBILE_NAV_LINKS = [
 
 export function MobileSheet({
 	published_article,
-	draft_article,
 	session,
 }: {
 	published_article?: EditableArticleRef;
-	draft_article?: DraftArticleWithAuthors;
 	session: Session | null;
 }) {
 	const open = useStoreValue(mobile_nav_store, "open");
@@ -153,7 +144,6 @@ export function MobileSheet({
 					<div className="flex justify-end">
 						<EditingButtons
 							published_article={published_article}
-							draft_article={draft_article}
 							session={session}
 						/>
 					</div>

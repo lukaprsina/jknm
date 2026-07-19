@@ -2,10 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {
-	DraftArticleContext,
-	PublishedArticleContext,
-} from "~/components/article/context";
+import { DraftArticleContext } from "~/components/article/context";
 import DatePicker from "~/components/date-time-picker/new_date_picker";
 import { editor_store } from "~/components/editor/editor-store";
 import { Button } from "~/components/ui/button";
@@ -29,7 +26,6 @@ export const form_schema = z.object({
 
 export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
 	const draft_article = useContext(DraftArticleContext);
-	const published_article = useContext(PublishedArticleContext);
 	const editor_mutations = useEditorMutations();
 
 	const form = useForm<z.infer<typeof form_schema>>({
@@ -73,7 +69,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
 				<div className="flex items-center justify-between gap-2">
 					<Button
 						onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
-							editor_mutations.delete_both();
+							editor_mutations.delete_article();
 							closeDialog();
 						})}
 						variant="destructive"
@@ -81,17 +77,6 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
 						Izbriši novičko
 					</Button>
 					<div className="flex items-center justify-end gap-1">
-						{published_article ? (
-							<Button
-								onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
-									editor_mutations.unpublish();
-									closeDialog();
-								})}
-								variant="secondary"
-							>
-								Skrij novičko
-							</Button>
-						) : null}
 						<Button
 							onClick={form.handleSubmit(
 								async (values: z.infer<typeof form_schema>) => {

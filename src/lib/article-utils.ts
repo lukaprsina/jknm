@@ -59,31 +59,16 @@ export function get_s3_published_directory(
 	return `${article_url}-${format_date_for_url(date)}`;
 }
 
+// Kept for scripts/migrate-legacy-articles.ts (out of scope, #27), which
+// still needs to build legacy draft S3 paths for the one-time migration.
 export function get_s3_draft_directory(id: number) {
 	return `${id}`;
 }
 
-export function get_draft_article_link(id: number | string) {
+export function get_draft_article_link(id: string) {
 	return `/uredi/${id}`;
 }
 
-export function get_published_article_link(
-	url: string,
-	created_at: Date | number,
-	duplicate_article_urls: string[] | undefined,
-) {
-	const date = new Date(created_at);
-
-	const name = duplicate_article_urls?.includes(url)
-		? `${url}?dan=${format_date_for_url(date)}`
-		: url;
-
-	/* console.log("get_published_article_link", {
-    url,
-    date,
-    duplicate_article_urls,
-    name,
-  }); */
-
-	return `/novica/${name}`;
+export function get_published_article_link(slug: string) {
+	return `/novica/${slug}`;
 }
