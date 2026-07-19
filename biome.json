@@ -12,7 +12,6 @@
 			"!!vendor",
 			"!**/*.md",
 			"!skills-lock.json",
-			"!src/app/converter",
 			"!scripts/articles.json"
 		]
 	},

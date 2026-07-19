@@ -11,8 +11,6 @@ export default tseslint.config(
 			"next-env.d.ts",
 			"vendor/**",
 			"drizzle/**",
-			// one-time 2008-site migration script, untouched (CONTEXT.md)
-			"src/app/converter/**",
 		],
 	},
 	...nextCoreWebVitals,

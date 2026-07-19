@@ -12,7 +12,7 @@ A rewrite is underway (tracked as a `/wayfinder` map — GitHub issue [#1](https
 
 ## Code structure
 
-- `src/app/` — Next App Router. `(static)` = static content pages, `novica` = article pages, `uredi` = the admin editor, `arhiv`/`avtorji`/`kontakt`/`preveri` = archive/authors/contact/verify, `api/` = route handlers, `converter/` = **one-time 2008-site migration script, untouched, out of scope for anything**.
+- `src/app/` — Next App Router. `(static)` = static content pages, `novica` = article pages, `uredi` = the admin editor, `arhiv`/`avtorji`/`kontakt`/`preveri` = archive/authors/contact/verify, `api/` = route handlers. The one-time 2008-site migration script (`converter/`) has been deleted (#26); `scripts/migrate-legacy-articles.ts` remains for the still-pending production data migration.
 - `src/server/` — backend logic called from tRPC routers: `article/` (create-draft, save-draft, publish, unpublish, delete, sync-duplicate-urls), `author/` (insert, rename, delete, sync from Google), `db/schema.ts` (Drizzle schema), `auth.ts`.
 - Current schema splits articles into **separate `published_article` / `draft_article` tables** with a copy-on-publish/unpublish dance — this is the exact leak the rewrite's media/status-lifecycle tickets are replacing with a single status-enum model.
 
