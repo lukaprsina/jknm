@@ -1,10 +1,13 @@
 "use client";
 
-import { SaveIcon } from "lucide-react";
+import { SaveIcon, Undo2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useContext, useEffect } from "react";
 import { ArchiveArticleButton } from "~/components/article/archive-article-button";
-import { DraftArticleContext } from "~/components/article/context";
+import {
+	DraftArticleContext,
+	useIsSupersedingDraft,
+} from "~/components/article/context";
 import { DeleteArticleButton } from "~/components/article/delete-article-button";
 import { EditorContext } from "~/components/editor/editor-context";
 import { Button } from "~/components/ui/button";
@@ -14,6 +17,7 @@ import {
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { useEditorMutations } from "~/hooks/use-editor-mutations";
+import { SUPERSEDING_DRAFT_DIALOGS } from "~/server/article/lifecycle-rules";
 import { SettingsDialog } from "./settings-dialog";
 import { UploadDialog } from "./upload-dialog";
 
@@ -92,27 +96,54 @@ export function KeyboardShortcut({ children }: { children: React.ReactNode }) {
 export function ClearButton() {
 	const editor_context = useContext(EditorContext);
 	const draft_article = useContext(DraftArticleContext);
+	const editor_mutations = useEditorMutations();
+	const is_superseding = useIsSupersedingDraft();
 	const router = useRouter();
 
 	if (!editor_context || !draft_article) return null;
 
 	const article_id = draft_article.id;
+	const archive_label = is_superseding
+		? "Arhiviraj objavljeno novičko"
+		: "Arhiviraj novičko";
+	const delete_label = is_superseding
+		? "Izbriši objavljeno novičko"
+		: "Izbriši novičko";
+
 	return (
 		<>
 			<ArchiveArticleButton
 				article_id={article_id}
 				variant="ghost"
 				size="icon"
-				aria-label="Arhiviraj novičko"
-				title="Arhiviraj novičko"
+				aria-label={archive_label}
+				title={archive_label}
+				dialog={is_superseding ? SUPERSEDING_DRAFT_DIALOGS.archive : undefined}
 				on_archived={() => router.push("/")}
 			/>
+			{is_superseding && (
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<Button
+							variant="ghost"
+							size="icon"
+							aria-label="Zavrzi osnutek"
+							title="Zavrzi osnutek"
+							onClick={() => editor_mutations.discard_draft()}
+						>
+							<Undo2Icon />
+						</Button>
+					</TooltipTrigger>
+					<TooltipContent>Zavrzi osnutek</TooltipContent>
+				</Tooltip>
+			)}
 			<DeleteArticleButton
 				article_id={article_id}
 				variant="ghost"
 				size="icon"
-				aria-label="Izbriši novičko"
-				title="Izbriši novičko"
+				aria-label={delete_label}
+				title={delete_label}
+				dialog={is_superseding ? SUPERSEDING_DRAFT_DIALOGS.delete : undefined}
 				on_deleted={() => router.push("/")}
 			/>
 		</>

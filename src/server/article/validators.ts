@@ -41,6 +41,10 @@ export const delete_article_validator = z.object({
 	article_id: z.string().uuid(),
 });
 
+export const discard_draft_validator = z.object({
+	article_id: z.string().uuid(),
+});
+
 export const create_superseding_draft_validator = z.object({
 	article_id: z.string().uuid(),
 });

@@ -26,6 +26,11 @@ A rewrite is underway (tracked as a `/wayfinder` map — GitHub issue [#1](https
 
 Convex itself and PlateJS are explicitly **out of scope** for this rewrite (see map [#1](https://github.com/lukaprsina/jknm/issues/1) "Out of scope") — Drizzle/Postgres and EditorJS stay. Auth is different: NextAuth/Auth.js is now in maintenance mode (the better-auth team took over its upkeep in 2025), so the auth *decision* is already settled — better-auth is the successor, no real alternative — but the *migration itself* is deferred to its own standalone ticket outside this map (see [#6](https://github.com/lukaprsina/jknm/issues/6)), since it doesn't block the backend/media work this rewrite targets. Treat `jknm-convex` as a reference to read from, not a dependency or a merge target.
 
+## Glossary
+
+- **Standalone draft** — a `draft`-status `articles` row with `supersedes_id = null`. Never been published; archiving or deleting it acts on itself.
+- **Superseding draft** — a `draft`-status row with `supersedes_id` pointing at a `published`/`archived` row (spawned by the pencil-to-edit or "restore from archive" actions). The live/archived source stays untouched and visible until the draft is published. Because of this, archive/delete on a superseding draft act on the **source**, not the draft — see `resolve_lifecycle_target` in `src/server/article/lifecycle-rules.ts`. To cancel the revision without touching the source, discard the draft instead (`discard_draft`).
+
 ## Why this file is small, and why `AGENTS.md` stays split
 
 This repo follows the `docs/agents/` layout (mattpocock/skills-style) instead of one large `AGENTS.md`: domain context lives here, issue-tracker conventions in `docs/agents/issue-tracker.md`, label vocabulary in `docs/agents/triage-labels.md`. Decisions with real rationale get their own ADR under `docs/adr/` rather than a bullet point here.

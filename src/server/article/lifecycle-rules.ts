@@ -10,6 +10,24 @@ type ArticleStatus = (typeof Article.$inferSelect)["status"];
  * the DB.
  */
 
+/**
+ * Confirm-dialog copy for archiving/deleting a superseding draft, shared by
+ * the toolbar (`toolbar-buttons.tsx`) and settings dialog (`settings-form.tsx`)
+ * so the wording can't drift between the two surfaces.
+ */
+export const SUPERSEDING_DRAFT_DIALOGS = {
+	archive: {
+		title: "Arhiviraj novičko?",
+		description:
+			"Objavljena novička bo arhivirana in umaknjena z glavne strani. Ta osnutek bo zavržen.",
+	},
+	delete: {
+		title: "Izbriši novičko?",
+		description:
+			"To bo izbrisalo objavljeno novičko za vse obiskovalce, ne samo ta osnutek.",
+	},
+} as const;
+
 export function assert_can_archive(status: ArticleStatus) {
 	if (status !== "draft" && status !== "published") {
 		throw new Error(`Cannot archive an article with status "${status}"`);
@@ -20,6 +38,50 @@ export function assert_can_delete(status: ArticleStatus) {
 	if (status === "deleted") {
 		throw new Error("Article is already deleted");
 	}
+}
+
+/**
+ * "Zavrzi osnutek" guard: only a superseding draft (one with `supersedes_id`
+ * set) can be discarded this way — it's the "cancel this edit, leave the
+ * live/archived source untouched" action, distinct from `delete_article`
+ * which for a superseding draft deletes the source instead. A standalone
+ * draft has no source to fall back to, so it must go through delete.
+ */
+export function assert_can_discard(article: {
+	status: ArticleStatus;
+	supersedes_id: string | null;
+}) {
+	if (article.status !== "draft") {
+		throw new Error(`Cannot discard an article with status "${article.status}"`);
+	}
+	if (!article.supersedes_id) {
+		throw new Error(
+			"Only a superseding draft can be discarded; use delete for a standalone draft",
+		);
+	}
+}
+
+export interface LifecycleRow {
+	id: string;
+	status: ArticleStatus;
+	supersedes_id: string | null;
+}
+
+/**
+ * Archive/delete on a superseding draft act on the article it supersedes
+ * (the live/archived source) rather than the throwaway draft itself — the
+ * draft is then cascade-deleted since it's now moot. A standalone
+ * draft/published/archived row is its own target.
+ */
+export function resolve_lifecycle_target(
+	article: LifecycleRow,
+	source: LifecycleRow | null,
+): { target: LifecycleRow; cascade_delete_draft_id: string | null } {
+	if (!article.supersedes_id) {
+		return { target: article, cascade_delete_draft_id: null };
+	}
+	if (!source) throw new Error("Source article not found");
+	return { target: source, cascade_delete_draft_id: article.id };
 }
 
 /**

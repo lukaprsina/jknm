@@ -29,11 +29,14 @@ export function DeleteArticleButton({
 	article_id,
 	on_deleted,
 	children,
+	dialog,
 	...props
 }: ButtonProps & {
 	article_id: string;
 	on_deleted?: () => void;
 	children?: ReactNode;
+	/** Overrides the confirm dialog copy — e.g. for deleting from a superseding draft. */
+	dialog?: { title: string; description: string };
 }) {
 	const toaster = useToast();
 
@@ -56,10 +59,10 @@ export function DeleteArticleButton({
 			</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>
-					<AlertDialogTitle>Izbriši novičko</AlertDialogTitle>
+					<AlertDialogTitle>{dialog?.title ?? "Izbriši novičko"}</AlertDialogTitle>
 					<AlertDialogDescription>
-						Ste prepričani, da želite izbrisati to novičko? Izbrisanih novičk ni
-						mogoče obnoviti.
+						{dialog?.description ??
+							"Ste prepričani, da želite izbrisati to novičko? Izbrisanih novičk ni mogoče obnoviti."}
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>

@@ -29,11 +29,14 @@ export function ArchiveArticleButton({
 	article_id,
 	on_archived,
 	children,
+	dialog,
 	...props
 }: ButtonProps & {
 	article_id: string;
 	on_archived?: () => void;
 	children?: ReactNode;
+	/** Overrides the confirm dialog copy — e.g. for archiving from a superseding draft. */
+	dialog?: { title: string; description: string };
 }) {
 	const toaster = useToast();
 
@@ -56,10 +59,10 @@ export function ArchiveArticleButton({
 			</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>
-					<AlertDialogTitle>Arhiviraj novičko</AlertDialogTitle>
+					<AlertDialogTitle>{dialog?.title ?? "Arhiviraj novičko"}</AlertDialogTitle>
 					<AlertDialogDescription>
-						Ste prepričani, da želite arhivirati to novičko? Javna stran ne bo
-						več dosegljiva, novičko pa lahko kadarkoli obnovite iz arhiva.
+						{dialog?.description ??
+							"Ste prepričani, da želite arhivirati to novičko? Javna stran ne bo več dosegljiva, novičko pa lahko kadarkoli obnovite iz arhiva."}
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>

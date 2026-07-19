@@ -2,10 +2,12 @@ import { describe, expect, test } from "vitest";
 import {
 	assert_can_archive,
 	assert_can_delete,
+	assert_can_discard,
 	assert_can_supersede,
 	decide_slug_transition,
 	get_archive_origin_badge,
 	is_visible_to,
+	resolve_lifecycle_target,
 } from "./lifecycle-rules";
 
 describe("assert_can_archive", () => {
@@ -31,6 +33,56 @@ describe("assert_can_delete", () => {
 
 	test("rejects deleted -> deleted", () => {
 		expect(() => assert_can_delete("deleted")).toThrow();
+	});
+});
+
+describe("assert_can_discard", () => {
+	test("allows discarding a superseding draft", () => {
+		expect(() =>
+			assert_can_discard({ status: "draft", supersedes_id: "source-id" }),
+		).not.toThrow();
+	});
+
+	test("rejects discarding a standalone draft (no source to fall back to)", () => {
+		expect(() =>
+			assert_can_discard({ status: "draft", supersedes_id: null }),
+		).toThrow();
+	});
+
+	test.each(["published", "archived", "deleted"] as const)(
+		"rejects discarding a non-draft (%s)",
+		(status) => {
+			expect(() =>
+				assert_can_discard({ status, supersedes_id: "source-id" }),
+			).toThrow();
+		},
+	);
+});
+
+describe("resolve_lifecycle_target", () => {
+	test("a standalone draft/published/archived row targets itself", () => {
+		const article = { id: "a", status: "published" as const, supersedes_id: null };
+
+		expect(resolve_lifecycle_target(article, null)).toEqual({
+			target: article,
+			cascade_delete_draft_id: null,
+		});
+	});
+
+	test("a superseding draft targets its source, and flags itself for cascade delete", () => {
+		const draft = { id: "draft-id", status: "draft" as const, supersedes_id: "source-id" };
+		const source = { id: "source-id", status: "published" as const, supersedes_id: null };
+
+		expect(resolve_lifecycle_target(draft, source)).toEqual({
+			target: source,
+			cascade_delete_draft_id: "draft-id",
+		});
+	});
+
+	test("throws if the superseding draft's source can't be found", () => {
+		const draft = { id: "draft-id", status: "draft" as const, supersedes_id: "source-id" };
+
+		expect(() => resolve_lifecycle_target(draft, null)).toThrow();
 	});
 });
 

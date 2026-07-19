@@ -5,7 +5,11 @@ import type { ReactNode } from "react";
 import sanitizeHtml from "sanitize-html";
 import { CreateSupersedingDraftButton } from "~/components/article/create-superseding-draft-button";
 import MakeNewDraftButton from "~/components/article/make-new-draft-button";
-import { map_new_article_to_editor_draft } from "~/components/article/new-adapter";
+import {
+	get_primary_slug,
+	map_new_article_to_editor_draft,
+	map_new_article_to_published_view,
+} from "~/components/article/new-adapter";
 import { InfoCard } from "~/components/info-card";
 import { Shell } from "~/components/shell";
 import { buttonVariants } from "~/components/ui/button";
@@ -128,12 +132,27 @@ export default async function EditorPage(props: EditorPageProps) {
 		);
 	}
 
+	// A superseding draft's source (the live/archived article it's revising)
+	// is passed through as `published` so the editor knows archive/delete
+	// there should act on the source, not this throwaway draft (#21).
+	const source = article.supersedes_id
+		? await get_article_by_new_id({ id: article.supersedes_id })
+		: undefined;
+
 	return (
 		<Shell>
 			{editor_shell(
 				<Editor
 					key={article.id}
 					draft={map_new_article_to_editor_draft(article)}
+					published={
+						source
+							? map_new_article_to_published_view(
+									source,
+									get_primary_slug(source) ?? "",
+								)
+							: undefined
+					}
 				/>,
 			)}
 		</Shell>

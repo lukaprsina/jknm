@@ -2,9 +2,23 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { DraftArticleContext } from "~/components/article/context";
+import {
+	DraftArticleContext,
+	useIsSupersedingDraft,
+} from "~/components/article/context";
 import DatePicker from "~/components/date-time-picker/new_date_picker";
 import { editor_store } from "~/components/editor/editor-store";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
 import {
 	Form,
@@ -17,6 +31,7 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { useEditorMutations } from "~/hooks/use-editor-mutations";
 import { thumbnail_validator } from "~/lib/validators";
+import { SUPERSEDING_DRAFT_DIALOGS } from "~/server/article/lifecycle-rules";
 import { ImageSelector } from "./image-selector";
 
 export const form_schema = z.object({
@@ -27,6 +42,16 @@ export const form_schema = z.object({
 export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
 	const draft_article = useContext(DraftArticleContext);
 	const editor_mutations = useEditorMutations();
+	// "Zavrzi osnutek" is the low-stakes alternative to delete that only
+	// discards the draft; see `useIsSupersedingDraft`.
+	const is_superseding = useIsSupersedingDraft();
+	const delete_dialog = is_superseding
+		? SUPERSEDING_DRAFT_DIALOGS.delete
+		: {
+				title: "Izbriši novičko",
+				description:
+					"Ste prepričani, da želite izbrisati to novičko? Izbrisanih novičk ni mogoče obnoviti.",
+			};
 
 	const form = useForm<z.infer<typeof form_schema>>({
 		resolver: zodResolver(form_schema),
@@ -67,15 +92,48 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
 				/>
 				<Separator />
 				<div className="flex items-center justify-between gap-2">
-					<Button
-						onClick={form.handleSubmit((_: z.infer<typeof form_schema>) => {
-							editor_mutations.delete_article();
-							closeDialog();
-						})}
-						variant="destructive"
-					>
-						Izbriši novičko
-					</Button>
+					<div className="flex items-center gap-1">
+						{is_superseding && (
+							<Button
+								type="button"
+								variant="ghost"
+								onClick={() => {
+									editor_mutations.discard_draft();
+									closeDialog();
+								}}
+							>
+								Zavrzi osnutek
+							</Button>
+						)}
+						<AlertDialog>
+							<AlertDialogTrigger asChild>
+								<Button type="button" variant="destructive">
+									{is_superseding
+										? "Izbriši objavljeno novičko"
+										: "Izbriši novičko"}
+								</Button>
+							</AlertDialogTrigger>
+							<AlertDialogContent>
+								<AlertDialogHeader>
+									<AlertDialogTitle>{delete_dialog.title}</AlertDialogTitle>
+									<AlertDialogDescription>
+										{delete_dialog.description}
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+								<AlertDialogFooter>
+									<AlertDialogCancel>Prekliči</AlertDialogCancel>
+									<AlertDialogAction
+										onClick={() => {
+											editor_mutations.delete_article();
+											closeDialog();
+										}}
+									>
+										Izbriši
+									</AlertDialogAction>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
+					</div>
 					<div className="flex items-center justify-end gap-1">
 						<Button
 							onClick={form.handleSubmit(

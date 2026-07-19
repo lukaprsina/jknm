@@ -14,13 +14,16 @@ import { run_authorized_mutation } from "./authorized-mutation";
 import {
 	assert_can_archive,
 	assert_can_delete,
+	assert_can_discard,
 	assert_can_supersede,
+	resolve_lifecycle_target,
 } from "./lifecycle-rules";
 import { reconcile_media_to_articles } from "./reconcile-media";
 import {
 	archive_article_validator,
 	create_superseding_draft_validator,
 	delete_article_validator,
+	discard_draft_validator,
 } from "./validators";
 
 /**
@@ -64,9 +67,41 @@ export async function soft_delete_article(
 	return updated[0];
 }
 
+const LIFECYCLE_ROW_COLUMNS = {
+	id: true,
+	status: true,
+	supersedes_id: true,
+} as const;
+
+/**
+ * Resolves the real archive/delete target for `article_id`: itself, unless
+ * it's a superseding draft, in which case the target is the article it
+ * supersedes (see `resolve_lifecycle_target`).
+ */
+async function find_lifecycle_target(tx: DbTransaction, article_id: string) {
+	const existing = await tx.query.Article.findFirst({
+		where: eq(Article.id, article_id),
+		columns: LIFECYCLE_ROW_COLUMNS,
+	});
+	if (!existing) throw new Error("Article not found");
+
+	const source = existing.supersedes_id
+		? await tx.query.Article.findFirst({
+				where: eq(Article.id, existing.supersedes_id),
+				columns: LIFECYCLE_ROW_COLUMNS,
+			})
+		: null;
+
+	return resolve_lifecycle_target(existing, source ?? null);
+}
+
 /**
  * `draft`/`published` -> `archived`. Single mechanism for both "hide a
  * mistake" and "archive stale content" — no separate `hidden` status.
+ *
+ * Called on a superseding draft, this archives the article it supersedes
+ * (not the throwaway draft) and cascade-deletes the draft, since staying in
+ * an editor for an article that just got archived doesn't make sense.
  */
 export async function archive_article(
 	input: z.infer<typeof archive_article_validator>,
@@ -77,28 +112,29 @@ export async function archive_article(
 	);
 
 	const transaction = await db.transaction(async (tx) => {
-		const existing = await tx.query.Article.findFirst({
-			where: eq(Article.id, validated_input.article_id),
-			columns: { id: true, status: true },
-		});
-		if (!existing) throw new Error("Article not found");
-		assert_can_archive(existing.status);
+		const { target, cascade_delete_draft_id } = await find_lifecycle_target(
+			tx,
+			validated_input.article_id,
+		);
+		assert_can_archive(target.status);
 
-		if (existing.status === "published") {
-			await remove_from_algolia(existing.id);
+		if (target.status === "published") {
+			await remove_from_algolia(target.id);
 		}
 
 		const updated = await tx
 			.update(Article)
 			.set({ status: "archived", archived_at: new Date() })
-			.where(eq(Article.id, validated_input.article_id))
+			.where(eq(Article.id, target.id))
 			.returning();
 
 		assert_one(updated);
-		return find_article_with_relations(
-			tx,
-			eq(Article.id, validated_input.article_id),
-		);
+
+		if (cascade_delete_draft_id) {
+			await soft_delete_article(tx, cascade_delete_draft_id);
+		}
+
+		return find_article_with_relations(tx, eq(Article.id, target.id));
 	});
 
 	revalidateTag("drafts", "max");
@@ -111,6 +147,12 @@ export async function archive_article(
  * `draft`/`published`/`archived` -> `deleted`. Direct, no confirmation-flow
  * complexity beyond the UI's plain confirm dialog. Terminal: no restore
  * action is exposed.
+ *
+ * Called on a superseding draft, this deletes the article it supersedes
+ * (not just the throwaway draft) and cascade-deletes the draft along with
+ * it — "delete" means take the article down, wherever it's being edited
+ * from. To discard just the draft and leave the source untouched, use
+ * `discard_draft` instead.
  */
 export async function delete_article(
 	input: z.infer<typeof delete_article_validator>,
@@ -121,22 +163,57 @@ export async function delete_article(
 	);
 
 	const transaction = await db.transaction(async (tx) => {
-		const existing = await tx.query.Article.findFirst({
-			where: eq(Article.id, validated_input.article_id),
-			columns: { id: true, status: true },
-		});
-		if (!existing) throw new Error("Article not found");
-		assert_can_delete(existing.status);
+		const { target, cascade_delete_draft_id } = await find_lifecycle_target(
+			tx,
+			validated_input.article_id,
+		);
+		assert_can_delete(target.status);
 
-		if (existing.status === "published") {
-			await remove_from_algolia(existing.id);
+		if (target.status === "published") {
+			await remove_from_algolia(target.id);
 		}
 
-		return soft_delete_article(tx, validated_input.article_id);
+		const deleted = await soft_delete_article(tx, target.id);
+
+		if (cascade_delete_draft_id) {
+			await soft_delete_article(tx, cascade_delete_draft_id);
+		}
+
+		return deleted;
 	});
 
 	revalidateTag("drafts", "max");
 	revalidateTag("archive", "max");
+	revalidatePath("/");
+	return transaction;
+}
+
+/**
+ * "Zavrzi osnutek": cancels an in-progress superseding draft without
+ * touching the article it supersedes — soft-deletes just this row. This is
+ * the low-stakes counterpart to `delete_article`, which for a superseding
+ * draft deletes the source instead.
+ */
+export async function discard_draft(
+	input: z.infer<typeof discard_draft_validator>,
+) {
+	const { input: validated_input } = await run_authorized_mutation(
+		discard_draft_validator,
+		input,
+	);
+
+	const transaction = await db.transaction(async (tx) => {
+		const existing = await tx.query.Article.findFirst({
+			where: eq(Article.id, validated_input.article_id),
+			columns: LIFECYCLE_ROW_COLUMNS,
+		});
+		if (!existing) throw new Error("Article not found");
+		assert_can_discard(existing);
+
+		return soft_delete_article(tx, existing.id);
+	});
+
+	revalidateTag("drafts", "max");
 	revalidatePath("/");
 	return transaction;
 }

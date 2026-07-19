@@ -4,7 +4,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import type { z } from "zod";
-import { DraftArticleContext } from "~/components/article/context";
+import {
+	DraftArticleContext,
+	PublishedArticleContext,
+} from "~/components/article/context";
 import { EditorContext } from "~/components/editor/editor-context";
 import {
 	update_settings_from_editor,
@@ -12,11 +15,13 @@ import {
 } from "~/components/editor/editor-lib";
 import { editor_store } from "~/components/editor/editor-store";
 import { useToast } from "~/hooks/use-toast";
+import { get_published_article_link } from "~/lib/article-utils";
 import type { ThumbnailType } from "~/lib/validators";
-import { delete_article } from "~/server/article/lifecycle";
+import { delete_article, discard_draft } from "~/server/article/lifecycle";
 import { publish_article, save_article } from "~/server/article/new-article";
 import type {
 	delete_article_validator,
+	discard_draft_validator,
 	publish_article_validator,
 	save_article_validator,
 } from "~/server/article/validators";
@@ -24,6 +29,7 @@ import type {
 export function useEditorMutations() {
 	const query_client = useQueryClient();
 	const draft_article = useContext(DraftArticleContext);
+	const published_article = useContext(PublishedArticleContext);
 	const editor_context = useContext(EditorContext);
 
 	const toaster = useToast();
@@ -81,6 +87,29 @@ export function useEditorMutations() {
 		onError: (error) => {
 			toaster.toast({
 				title: "Napaka pri brisanju novičke",
+				description: error.message,
+			});
+		},
+	});
+
+	const discard_draft_mutation = useMutation({
+		mutationFn: (input: z.infer<typeof discard_draft_validator>) =>
+			discard_draft(input),
+		onSettled: async () => {
+			await query_client.invalidateQueries({
+				queryKey: ["infinite_published"],
+			});
+			// `url` is `""` when the source was archived straight from a draft
+			// and never had a slug minted — fall back to `/` in that case too.
+			router.replace(
+				published_article?.url
+					? get_published_article_link(published_article.url)
+					: "/",
+			);
+		},
+		onError: (error) => {
+			toaster.toast({
+				title: "Napaka pri zavračanju osnutka",
 				description: error.message,
 			});
 		},
@@ -163,6 +192,10 @@ export function useEditorMutations() {
 		delete_article: () => {
 			editor_context.setSavingText("Brišem novičko ...");
 			delete_article_mutation.mutate({ article_id: draft_article.id });
+		},
+		discard_draft: () => {
+			editor_context.setSavingText("Zavračam osnutek ...");
+			discard_draft_mutation.mutate({ article_id: draft_article.id });
 		},
 	};
 }
