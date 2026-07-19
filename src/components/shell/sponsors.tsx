@@ -43,59 +43,29 @@ export function Sponsors({
 	return (
 		<section
 			className={cn(
-				"not-prose rounded-xl border border-border/60 bg-muted/30 shadow-sm",
+				"not-prose rounded-xl bg-muted/30 shadow-sm",
 				compact ? "px-4 py-4" : "px-5 py-6 md:px-8 md:py-8",
 				className,
 			)}
 			{...props}
 		>
-			<div className="flex flex-col gap-4">
-				<div
-					className={cn(
-						"flex items-end justify-between gap-3",
-						compact && "items-center",
-					)}
-				>
-					<div>
-						<p className="text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground">
-							Sponzorji
-						</p>
-						<h2
-							className={cn(
-								"font-semibold text-foreground",
-								compact ? "text-sm" : "text-lg",
-							)}
-						>
-							Podpirajo našo dejavnost
-						</h2>
-					</div>
-				</div>
-
-				<div
-					className={cn(
-						"grid gap-3",
-						compact ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-3",
-					)}
-				>
-					{sponsor_logos.map((logo) => (
-						<div
-							key={logo.src.toString()}
-							className={cn(
-								"flex items-center justify-center rounded-2xl border border-border/50 bg-background/80 px-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)]",
-								compact ? "min-h-20 py-4" : "min-h-24 py-5",
-							)}
-						>
-							<Image
-								{...logo}
-								unoptimized
-								className={cn(
-									"h-auto max-h-14 w-auto object-contain transition-transform duration-200 ease-out hover:scale-[1.02]",
-									logo.className,
-								)}
-							/>
-						</div>
-					))}
-				</div>
+			<div
+				className={cn(
+					"grid place-items-center gap-3",
+					compact ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-3",
+				)}
+			>
+				{sponsor_logos.map((logo) => (
+					<Image
+						key={logo.src.toString()}
+						{...logo}
+						unoptimized
+						className={cn(
+							"h-auto max-h-14 w-auto object-contain transition-transform duration-200 ease-out hover:scale-[1.02]",
+							logo.className,
+						)}
+					/>
+				))}
 			</div>
 		</section>
 	);
