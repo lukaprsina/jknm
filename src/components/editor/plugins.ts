@@ -91,8 +91,7 @@ export function EDITOR_JS_PLUGINS(): Record<
 		code: Code,
 		// linkTool: LinkTool,
 		header: {
-			// @ts-expect-error no types
-			class: Header,
+			class: Header as unknown as ToolConstructable,
 			inlineToolbar: true,
 			config: {
 				defaultLevel: 2,
