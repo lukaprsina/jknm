@@ -117,7 +117,7 @@ export function map_new_article_to_published_view(
 		old_id: null,
 		title: article.title,
 		url: slug,
-		created_at: article.published_at ?? article.created_at,
+		created_at: article.created_at,
 		updated_at: article.updated_at,
 		content: article.content_json,
 		content_preview: article.excerpt ?? "",

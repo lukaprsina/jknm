@@ -33,7 +33,7 @@ export function NewPublishedArticleCard({
 				article.content_json?.blocks,
 				true,
 			).slice(0, 1000)}
-			created_at={article.published_at ?? article.created_at}
+			created_at={article.created_at}
 			has_thumbnail={Boolean(article.thumbnail_media)}
 			image_url={article.thumbnail_media?.original.url}
 			author_ids={article.articles_to_authors.map((rel) => rel.author_id)}

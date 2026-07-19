@@ -51,16 +51,14 @@ export function convert_new_article_to_algolia_object({
 	}[];
 	thumbnail_media: typeof Media.$inferSelect | null;
 }) {
-	const effective_date = article.published_at ?? article.created_at;
-
 	return {
 		objectID: article.id,
 		title: article.title,
 		url: slug,
-		created_at: effective_date.getTime(),
+		created_at: article.created_at.getTime(),
 		updated_at: article.updated_at.getTime(),
 		content_preview: convert_content_to_text(article.content_json?.blocks),
-		year: effective_date.getFullYear().toString(),
+		year: article.created_at.getFullYear().toString(),
 		author_ids: authors.map((a) => a.author_id),
 		first_author: authors.at(0)?.author.name,
 		// New-model media lives at an absolute gradivo.jknm.org URL, unlike
