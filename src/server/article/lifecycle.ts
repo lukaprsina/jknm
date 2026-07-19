@@ -221,9 +221,19 @@ export async function discard_draft(
 /**
  * Spawns a new draft superseding an `archived` or `published` article:
  * unarchive (source `archived`) and "revise while staying live" (source
- * `published`) are the same mechanism, just triggered from different UI
- * states. The source row is untouched until the new draft is published
- * (supersede-publish, see `publish_article`).
+ * `published`) share this one mechanism, triggered from different UI states,
+ * but they diverge on what happens to the source row:
+ *
+ * - A `published` source stays untouched and visible until the new draft is
+ *   published ("revise while staying live", supersede-publish, see
+ *   `publish_article`) — taking it down while it's still being edited isn't
+ *   what "unarchive" is for.
+ * - An `archived` source is soft-deleted immediately: there's no visibility
+ *   to protect (it was already hidden from the public), so leaving it
+ *   lingering in the Arhiv section while an identical draft also shows in
+ *   Osnutki is just confusing duplication. The draft still carries
+ *   `supersedes_id`, but `resolve_lifecycle_target` treats a draft whose
+ *   source is already `deleted` as standalone from here on.
  */
 export async function create_superseding_draft(
 	input: z.infer<typeof create_superseding_draft_validator>,
@@ -273,10 +283,15 @@ export async function create_superseding_draft(
 
 		await reconcile_media_to_articles(tx, draft.id, draft.content_json);
 
+		if (source.status === "archived") {
+			await soft_delete_article(tx, source.id);
+		}
+
 		return draft;
 	});
 
 	revalidateTag("drafts", "max");
+	revalidateTag("archive", "max");
 	revalidatePath("/");
 	return transaction;
 }

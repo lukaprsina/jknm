@@ -184,7 +184,7 @@ issue #20.
 - `src/server/article/lifecycle-rules.ts` (pure functions, no DB) — status
   transition guards (`assert_can_archive`, `assert_can_delete`,
   `assert_can_supersede`), `decide_slug_transition`, `is_visible_to`,
-  `get_archive_origin_badge`. Unit-tested in
+  `get_archive_origin_label`. Unit-tested in
   `src/server/article/lifecycle-rules.test.ts`.
 - `src/server/article/reconcile-media.ts` — diffs `media_to_articles`
   against `content_json`'s referenced URLs; new-schema-only, no legacy

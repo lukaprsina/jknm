@@ -1,6 +1,6 @@
 "use client";
 
-import { SaveIcon, Undo2Icon } from "lucide-react";
+import { FileXIcon, SaveIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useContext, useEffect } from "react";
 import { ArchiveArticleButton } from "~/components/article/archive-article-button";
@@ -131,7 +131,7 @@ export function ClearButton() {
 							title="Zavrzi osnutek"
 							onClick={() => editor_mutations.discard_draft()}
 						>
-							<Undo2Icon />
+							<FileXIcon />
 						</Button>
 					</TooltipTrigger>
 					<TooltipContent>Zavrzi osnutek</TooltipContent>

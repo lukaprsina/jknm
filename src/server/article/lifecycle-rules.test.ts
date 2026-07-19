@@ -5,7 +5,7 @@ import {
 	assert_can_discard,
 	assert_can_supersede,
 	decide_slug_transition,
-	get_archive_origin_badge,
+	get_archive_origin_label,
 	is_visible_to,
 	resolve_lifecycle_target,
 } from "./lifecycle-rules";
@@ -84,6 +84,16 @@ describe("resolve_lifecycle_target", () => {
 
 		expect(() => resolve_lifecycle_target(draft, null)).toThrow();
 	});
+
+	test("a draft whose source is already deleted (e.g. unarchive deleted it) targets itself, no cascade", () => {
+		const draft = { id: "draft-id", status: "draft" as const, supersedes_id: "source-id" };
+		const source = { id: "source-id", status: "deleted" as const, supersedes_id: null };
+
+		expect(resolve_lifecycle_target(draft, source)).toEqual({
+			target: draft,
+			cascade_delete_draft_id: null,
+		});
+	});
 });
 
 describe("assert_can_supersede", () => {
@@ -161,14 +171,14 @@ describe("is_visible_to", () => {
 	});
 });
 
-describe("get_archive_origin_badge", () => {
+describe("get_archive_origin_label", () => {
 	test("labels a previously published article", () => {
-		expect(get_archive_origin_badge({ published_at: new Date() })).toBe(
+		expect(get_archive_origin_label({ published_at: new Date() })).toBe(
 			"bil objavljen",
 		);
 	});
 
 	test("labels an article that was archived straight from draft", () => {
-		expect(get_archive_origin_badge({ published_at: null })).toBe("bil osnutek");
+		expect(get_archive_origin_label({ published_at: null })).toBe("bil osnutek");
 	});
 });

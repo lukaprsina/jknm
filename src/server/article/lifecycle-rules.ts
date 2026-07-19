@@ -71,7 +71,10 @@ export interface LifecycleRow {
  * Archive/delete on a superseding draft act on the article it supersedes
  * (the live/archived source) rather than the throwaway draft itself — the
  * draft is then cascade-deleted since it's now moot. A standalone
- * draft/published/archived row is its own target.
+ * draft/published/archived row is its own target — as is a draft whose
+ * source has already been deleted (unarchiving deletes the archived source
+ * immediately, so from that point on the draft is standalone in all but
+ * name; there's no live source left to retarget onto).
  */
 export function resolve_lifecycle_target(
 	article: LifecycleRow,
@@ -81,6 +84,9 @@ export function resolve_lifecycle_target(
 		return { target: article, cascade_delete_draft_id: null };
 	}
 	if (!source) throw new Error("Source article not found");
+	if (source.status === "deleted") {
+		return { target: article, cascade_delete_draft_id: null };
+	}
 	return { target: source, cascade_delete_draft_id: article.id };
 }
 
@@ -138,10 +144,10 @@ export function is_visible_to(status: ArticleStatus, is_admin: boolean) {
 }
 
 /**
- * The "Arhiv" accordion's origin badge: whether an archived article was ever
+ * The "Arhiv" accordion's origin label: whether an archived article was ever
  * live, or was archived straight from a draft.
  */
-export function get_archive_origin_badge({
+export function get_archive_origin_label({
 	published_at,
 }: {
 	published_at: Date | null;

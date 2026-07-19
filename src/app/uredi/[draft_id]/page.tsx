@@ -134,10 +134,14 @@ export default async function EditorPage(props: EditorPageProps) {
 
 	// A superseding draft's source (the live/archived article it's revising)
 	// is passed through as `published` so the editor knows archive/delete
-	// there should act on the source, not this throwaway draft (#21).
+	// there should act on the source, not this throwaway draft (#21). Once
+	// the source is itself `deleted` — unarchiving deletes the archived row
+	// immediately — there's no live source left to protect, so the draft is
+	// treated as standalone from here on (mirrors `resolve_lifecycle_target`).
 	const source = article.supersedes_id
 		? await get_article_by_new_id({ id: article.supersedes_id })
 		: undefined;
+	const is_source_live = source !== undefined && source.status !== "deleted";
 
 	return (
 		<Shell>
@@ -146,7 +150,7 @@ export default async function EditorPage(props: EditorPageProps) {
 					key={article.id}
 					draft={map_new_article_to_editor_draft(article)}
 					published={
-						source
+						is_source_live && source
 							? map_new_article_to_published_view(
 									source,
 									get_primary_slug(source) ?? "",
@@ -220,7 +224,7 @@ function PublishedOrArchivedArticleGate({
 							? {
 									title: "Obnovi iz arhiva",
 									description:
-										"Ustvarjen bo nov osnutek na podlagi arhivirane novičke. Arhivirana novička ostane nespremenjena, dokler osnutka ne objavite.",
+										"Ustvarjen bo nov osnutek na podlagi arhivirane novičke, arhivirana novička pa bo izbrisana.",
 								}
 							: undefined
 					}
