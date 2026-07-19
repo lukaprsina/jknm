@@ -1,12 +1,18 @@
 "use server";
 
-import { asc } from "drizzle-orm";
-import { withCursorPagination } from "~/lib/drizzle-pagination";
+import { memoize } from "nextjs-better-unstable-cache";
+import { find_published_articles_page } from "~/server/article/article-queries";
 import { db } from "~/server/db";
-import {
-	PublishedArticle,
-	PublishedArticlesToAuthors,
-} from "~/server/db/schema";
+
+const cachedPublishedPage = memoize(
+	async ({ pageParam, limit }: { pageParam: Date | undefined; limit: number }) => {
+		return find_published_articles_page(db, { limit, cursor: pageParam });
+	},
+	{
+		revalidateTags: ["homepage-feed"],
+		logid: "homepage-feed",
+	},
+);
 
 export async function get_infinite_published2({
 	pageParam,
@@ -15,27 +21,10 @@ export async function get_infinite_published2({
 	pageParam: Date | undefined;
 	limit: number;
 }) {
-	const direction = "desc";
-	const cursor = pageParam;
-
-	const data = await db.query.PublishedArticle.findMany({
-		with: {
-			published_articles_to_authors: {
-				with: {
-					author: true,
-				},
-				orderBy: asc(PublishedArticlesToAuthors.order),
-			},
-		},
-		...withCursorPagination({
-			limit,
-			cursors: [[PublishedArticle.created_at, direction, cursor]],
-		}),
-	});
+	const data = await cachedPublishedPage({ pageParam, limit });
 
 	return {
 		data,
 		next_cursor: data.at(-1)?.created_at,
-		// prev_cursor: data.at(0)?.created_at,
 	};
 }

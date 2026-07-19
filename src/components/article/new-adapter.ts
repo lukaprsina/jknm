@@ -47,6 +47,14 @@ export type PublishedArticleView = Omit<PublishedArticleWithAuthors, "id"> & {
  */
 export type EditableArticleRef = { id: number | string };
 
+/** The article's primary slug, falling back to any slug if none is flagged primary. */
+export function get_primary_slug(article: NewArticleWithRelations) {
+	return (
+		article.article_slugs.find((slug) => slug.is_primary) ??
+		article.article_slugs[0]
+	)?.slug;
+}
+
 function reconstruct_thumbnail_crop(
 	article: NewArticleWithRelations,
 ): ThumbnailType | null {

@@ -4,14 +4,17 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createStore, useStoreValue } from "zustand-x";
+import {
+	get_primary_slug,
+	map_new_article_to_published_view,
+} from "~/components/article/new-adapter";
 import { EditorToReact } from "~/components/editor/editor-to-react";
 
 import { InfoCard } from "~/components/info-card";
-import { EditButton } from "~/components/shell/editing-buttons";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { useToast } from "~/hooks/use-toast";
-import { get_article_by_published_id } from "~/server/article/get-article";
+import { get_article_by_new_id } from "~/server/article/get-article";
 
 export interface PreveriStoreType {
 	index: number;
@@ -30,13 +33,11 @@ export const preveri_store = createStore(initial_data, {
 
 export function PreveriClient({
 	articles,
-	// csv_articles,
 }: {
 	articles: {
-		id: number;
-		old_id: number | null;
+		id: string;
+		legacy_id: number | null;
 	}[];
-	// csv_articles: CSVType[];
 }) {
 	const toaster = useToast();
 	const [inputPage, setInputPage] = useState(1);
@@ -45,36 +46,29 @@ export function PreveriClient({
 
 	const page_info = useMemo(() => {
 		const article_index = articles.findIndex(
-			(article) => article.old_id === preveri_store_index,
+			(article) => article.legacy_id === preveri_store_index,
 		);
 
 		if (article_index === -1) {
 			return {
 				next: NaN,
 				previous: NaN,
-				current_id: NaN,
-			};
-		}
-
-		if (!articles[article_index]?.id) {
-			return {
-				next: NaN,
-				previous: NaN,
-				current_id: NaN,
+				current_id: undefined,
 			};
 		}
 
 		return {
-			next: articles[article_index + 1]?.old_id ?? NaN,
-			previous: articles[article_index - 1]?.old_id ?? NaN,
+			next: articles[article_index + 1]?.legacy_id ?? NaN,
+			previous: articles[article_index - 1]?.legacy_id ?? NaN,
 			current_id: articles[article_index]?.id,
 		};
 	}, [articles, preveri_store_index]);
 
+	const current_id = page_info.current_id;
 	const article = useQuery({
-		queryKey: ["preveri-client", page_info.current_id],
-		queryFn: () =>
-			get_article_by_published_id({ published_id: page_info.current_id }),
+		queryKey: ["preveri-client", current_id],
+		queryFn: () => get_article_by_new_id({ id: current_id ?? "" }),
+		enabled: Boolean(current_id),
 	});
 
 	const iframe_src = useCallback(
@@ -97,8 +91,14 @@ export function PreveriClient({
 					description={article.error.message}
 				/>
 			);
+		} else if (!article.data) {
+			return null;
 		} else {
-			return <EditorToReact article={article.data.published} session={null} />;
+			const view = map_new_article_to_published_view(
+				article.data,
+				get_primary_slug(article.data) ?? article.data.id,
+			);
+			return <EditorToReact article={view} session={null} />;
 		}
 	}, [article]);
 
@@ -110,7 +110,7 @@ export function PreveriClient({
 					event.preventDefault();
 					// console.log("form onsubmit");
 					const article_index = articles.findIndex(
-						(article) => article.old_id === inputPage,
+						(article) => article.legacy_id === inputPage,
 					);
 
 					if (article_index === -1) {
@@ -152,14 +152,6 @@ export function PreveriClient({
 						}}
 					/>
 					<Button type="submit">Pojdi</Button>
-					{article.data && (
-						<EditButton
-							type="button"
-							variant="outline"
-							published_article_id={article.data.published?.id ?? -1}
-							new_tab
-						/>
-					)}
 				</div>
 			</form>
 			<div className="grid h-full w-full grid-cols-2 gap-2">

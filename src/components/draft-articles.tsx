@@ -1,5 +1,5 @@
-import { asc, desc } from "drizzle-orm";
 import { memoize } from "nextjs-better-unstable-cache";
+import { NewDraftArticleCard } from "~/components/article/new-card";
 import {
 	Accordion,
 	AccordionContent,
@@ -7,49 +7,15 @@ import {
 	AccordionTrigger,
 } from "~/components/ui/accordion";
 import { article_grid_variants, article_variants } from "~/lib/page-variants";
+import { find_draft_articles } from "~/server/article/article-queries";
 import { db } from "~/server/db";
-import { DraftArticle, DraftArticlesToAuthors } from "~/server/db/schema";
-import { DraftArticleDrizzleCard } from "./article/adapter";
 
 export const cachedDrafts = memoize(
 	async () => {
-		const articles = await db.query.DraftArticle.findMany({
-			with: {
-				draft_articles_to_authors: {
-					with: {
-						author: true,
-					},
-					orderBy: asc(DraftArticlesToAuthors.order),
-				},
-			},
-			orderBy: desc(DraftArticle.updated_at),
-		});
-
-		console.log(
-			"drafts",
-			articles.map((a) => a.created_at),
-		);
-		for (const article of articles) {
-			if (typeof article.created_at.toLocaleDateString !== "function") {
-				console.log("draft-articles", {
-					article,
-					created_at_to_locale_date_string:
-						// eslint-disable-next-line @typescript-eslint/unbound-method
-						article.created_at.toLocaleDateString,
-					created_at_to_locale_date_string_type:
-						typeof article.created_at.toLocaleDateString,
-					created_at_type: typeof article.created_at,
-					created_at: article.created_at,
-				});
-				throw new Error("created_at is not a Date object");
-			}
-		}
-
-		return articles;
+		return find_draft_articles(db);
 	},
 	{
 		revalidateTags: ["drafts"],
-		// log: ["dedupe", "datacache", "verbose"],
 		logid: "drafts",
 	},
 );
@@ -84,7 +50,7 @@ export async function DraftArticles() {
 					{drafts.length !== 0 ? (
 						<div className={article_grid_variants()}>
 							{drafts.map((article) => (
-								<DraftArticleDrizzleCard key={article.id} article={article} />
+								<NewDraftArticleCard key={article.id} article={article} />
 							))}
 						</div>
 					) : (

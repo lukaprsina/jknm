@@ -4,7 +4,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Fragment, useEffect } from "react";
 import { useIntersectionObserver } from "usehooks-ts";
-import { PublishedArticleDrizzleCard } from "~/components/article/adapter";
+import { NewPublishedArticleCard } from "~/components/article/new-card";
 import { Sponsors } from "~/components/shell/sponsors";
 import { article_grid_variants, article_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
@@ -68,7 +68,7 @@ export function InfiniteArticles() {
 
 						return (
 							<Fragment key={article.id}>
-								<PublishedArticleDrizzleCard
+								<NewPublishedArticleCard
 									featured={group_index === 0 && index === 0}
 									article={article}
 									ref={ref}
