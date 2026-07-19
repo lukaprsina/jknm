@@ -24,20 +24,4 @@ const initial_data = {
 
 export const editor_store = createStore<EditorStoreType>(initial_data, {
 	name: "editor",
-	persist: {
-		enabled: true,
-	},
-}).extendActions(({ set }) => ({
-	reset: () =>
-		set("state", (draft) => {
-			draft.draft_id = initial_data.draft_id;
-			draft.title = initial_data.title;
-			draft.url = initial_data.url;
-			draft.s3_url = initial_data.s3_url;
-			draft.thumbnail_crop = initial_data.thumbnail_crop;
-			draft.image_data = initial_data.image_data;
-			draft.author_ids = initial_data.author_ids;
-
-			return draft;
-		}),
-}));
+});

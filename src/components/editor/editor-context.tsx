@@ -17,6 +17,8 @@ import {
 	useState,
 } from "react";
 import { useToast } from "~/hooks/use-toast";
+import { convert_title_to_url } from "~/lib/article-utils";
+import { extract_media_refs_from_content } from "~/lib/editor-utils";
 import { DraftArticleContext } from "../article/context";
 import { update_settings_from_editor, validate_article } from "./editor-lib";
 import { editor_store } from "./editor-store";
@@ -41,6 +43,32 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 	const editorJS = useRef<EditorJS | null>(null);
 	const [dirty, setDirty] = useState(false);
 	const toaster = useToast();
+
+	// Seeded synchronously during render (not in an effect/onReady) so the
+	// toolbar and settings panel never paint a previous draft's state —
+	// EditorJS's async `onReady` only needs to report content-derived fields.
+	const seeded_draft_id = useRef<string | null>(null);
+	if (article && seeded_draft_id.current !== article.id) {
+		seeded_draft_id.current = article.id;
+
+		editor_store.set("state", (draft) => {
+			draft.draft_id = article.id;
+			draft.title = article.title;
+			draft.url = convert_title_to_url(article.title);
+			draft.s3_url = "";
+			draft.thumbnail_crop = article.thumbnail_crop;
+			draft.image_data = article.content
+				? extract_media_refs_from_content(article.content, ["image"]).map(
+						(ref) => ref.data,
+					)
+				: [];
+			draft.author_ids = article.draft_articles_to_authors.map(
+				(a) => a.author_id,
+			);
+
+			return draft;
+		});
+	}
 
 	useEffect(() => {
 		const func = () => true;
@@ -73,36 +101,35 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 			inlineToolbar: true,
 			autofocus: true,
 			onReady: () => {
-				setTimeout(() => {
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-					new Undo({ editor: editorJS.current });
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-					new DragDrop(editorJS.current);
-				}, 500);
+				forceUpdate();
 
-				setTimeout(() => {
-					forceUpdate();
-				}, 1000);
+				// Undo/DragDrop need the editor's blocks painted in the DOM, which
+				// isn't guaranteed yet when `onReady` fires — wait two paints instead
+				// of guessing a fixed delay.
+				requestAnimationFrame(() => {
+					requestAnimationFrame(() => {
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+						new Undo({ editor: editorJS.current });
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+						new DragDrop(editorJS.current);
+					});
+				});
 
 				async function update_article() {
-					editor_store.set("reset");
 					const editor_content = await editorJS.current?.save();
 					if (!editor_content || !article) return;
 
 					const updated = validate_article(editor_content, toaster);
 
 					update_settings_from_editor({
-						title: updated?.title ?? "",
-						url: updated?.url ?? "",
+						title: updated?.title ?? article.title,
+						url: updated?.url ?? convert_title_to_url(article.title),
 						// New (uuid) articles have no per-draft S3 directory — media is
 						// decoupled (#18).
 						s3_url: "",
 						thumbnail_crop: article.thumbnail_crop,
 						editor_content,
 						article_id: article.id,
-						author_ids: article.draft_articles_to_authors.map(
-							(a) => a.author_id,
-						),
 					});
 				}
 

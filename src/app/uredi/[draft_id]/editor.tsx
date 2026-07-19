@@ -11,7 +11,6 @@ import type {
 	PublishedArticleView,
 } from "~/components/article/new-adapter";
 import { EditorProvider } from "~/components/editor/editor-context";
-import { editor_store } from "~/components/editor/editor-store";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { article_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
@@ -40,7 +39,6 @@ export default function MyEditor({
 								<div id="editorjs" />
 							</CardContent>
 						</Card>
-						<SettingsSummary />
 					</div>
 				</EditorProvider>
 			</PublishedArticleContext.Provider>
@@ -80,13 +78,4 @@ function DuplicateUrlWarning() {
         </ul>
       </Alert>
     ); */
-}
-function SettingsSummary() {
-	const data = editor_store.useStore();
-
-	return (
-		<pre className="my-8 h-full overflow-auto">
-			{JSON.stringify(data, null, 2)}
-		</pre>
-	);
 }

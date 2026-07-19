@@ -1,24 +1,12 @@
 "use client";
 
-import type { OutputData } from "@editorjs/editorjs";
-import { DownloadIcon, SaveIcon, UploadIcon } from "lucide-react";
+import { SaveIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useContext, useEffect, useRef } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { ArchiveArticleButton } from "~/components/article/archive-article-button";
 import { DraftArticleContext } from "~/components/article/context";
 import { DeleteArticleButton } from "~/components/article/delete-article-button";
 import { EditorContext } from "~/components/editor/editor-context";
-import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-	AlertDialogTrigger,
-} from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
 import {
 	Tooltip,
@@ -32,109 +20,11 @@ import { UploadDialog } from "./upload-dialog";
 export function ToolbarButtons() {
 	return (
 		<div className="flex flex-wrap items-center">
-			<ExportButton />
-			<ImportButton />
 			<SaveButton />
 			<UploadDialog />
 			<SettingsDialog />
 			<ClearButton />
 		</div>
-	);
-}
-
-export function ExportButton() {
-	const editor_context = useContext(EditorContext);
-	const draft_article = useContext(DraftArticleContext);
-
-	if (!editor_context || !draft_article) return null;
-
-	return (
-		<Tooltip>
-			<TooltipTrigger asChild>
-				<Button
-					variant="ghost"
-					size="icon"
-					onClick={async () => {
-						const editor_content = await editor_context.editor?.save();
-						const blob = new Blob([JSON.stringify(editor_content, null, 2)], {
-							type: "application/json",
-						});
-						const url = URL.createObjectURL(blob);
-						const a = document.createElement("a");
-						a.href = url;
-						a.download = `${draft_article.title}.json`;
-						a.click();
-						URL.revokeObjectURL(url);
-					}}
-				>
-					<DownloadIcon />
-				</Button>
-			</TooltipTrigger>
-			<TooltipContent>Izvozi</TooltipContent>
-		</Tooltip>
-	);
-}
-
-export function ImportButton() {
-	const editor_context = useContext(EditorContext);
-	const input_ref = useRef<HTMLInputElement>(null);
-	const form_ref = useRef<HTMLFormElement>(null);
-
-	if (!editor_context) return null;
-
-	return (
-		<>
-			<form ref={form_ref}>
-				<input
-					type="file"
-					className="hidden"
-					accept="application/json"
-					ref={input_ref}
-					onChange={async (event) => {
-						const files = event.target.files;
-						const file = files?.item(0);
-						// console.log("input onChange event", file);
-						if (!file) return;
-
-						const file_content = await file.text();
-						const parsed_file = JSON.parse(file_content) as OutputData;
-						// console.log("file", file, parsed_file);
-						await editor_context.editor?.render(parsed_file);
-					}}
-				/>
-			</form>
-			<AlertDialog>
-				<Tooltip>
-					<TooltipTrigger asChild>
-						<AlertDialogTrigger asChild>
-							<Button variant="ghost" size="icon">
-								<UploadIcon />
-							</Button>
-						</AlertDialogTrigger>
-					</TooltipTrigger>
-					<TooltipContent>Uvozi</TooltipContent>
-				</Tooltip>
-				<AlertDialogContent>
-					<AlertDialogHeader>
-						<AlertDialogTitle>Uvozi novico</AlertDialogTitle>
-						<AlertDialogDescription>
-							Ste prepričani, da želite uvoziti novico iz računalnika?
-						</AlertDialogDescription>
-					</AlertDialogHeader>
-					<AlertDialogFooter>
-						<AlertDialogCancel>Ne uvozi</AlertDialogCancel>
-						<AlertDialogAction
-							onClick={() => {
-								form_ref.current?.reset();
-								input_ref.current?.click();
-							}}
-						>
-							Uvozi novico
-						</AlertDialogAction>
-					</AlertDialogFooter>
-				</AlertDialogContent>
-			</AlertDialog>
-		</>
 	);
 }
 
