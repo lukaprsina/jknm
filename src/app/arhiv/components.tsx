@@ -63,78 +63,7 @@ export function MySortBy() {
 	);
 }
 
-/* const queryHook: UseSearchBoxProps["queryHook"] = (query, search) => {
-  search(query);
-};
-
-export function CustomSearchBox(props: UseSearchBoxProps) {
-  const { query, refine } = useSearchBox(props);
-  const { status } = useInstantSearch();
-  const [inputValue, setInputValue] = useState(query);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
-  const isSearchStalled = status === "stalled";
-
-  function setQuery(newQuery: string) {
-    setInputValue(newQuery);
-
-    refine(newQuery);
-  }
-
-  return (
-    <div>
-      <form
-        action=""
-        role="search"
-        noValidate
-        onSubmit={(event) => {
-          event.preventDefault();
-          event.stopPropagation();
-
-          if (inputRef.current) {
-            inputRef.current.blur();
-          }
-        }}
-        onReset={(event) => {
-          event.preventDefault();
-          event.stopPropagation();
-
-          setQuery("");
-
-          if (inputRef.current) {
-            inputRef.current.focus();
-          }
-        }}
-      >
-        <input
-          ref={inputRef}
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          placeholder="Search for products"
-          spellCheck={false}
-          maxLength={512}
-          type="search"
-          value={inputValue}
-          onChange={(event) => {
-            setQuery(event.currentTarget.value);
-          }}
-          autoFocus
-        />
-        <button type="submit">Submit</button>
-        <button
-          type="reset"
-          hidden={inputValue.length === 0 || isSearchStalled}
-        >
-          Reset
-        </button>
-        <span hidden={!isSearchStalled}>Searching…</span>
-      </form>
-    </div>
-  );
-} */
-
-/* 
+/*
 TODO:
 Warning: Can't perform a React state update on a component that hasn't mounted yet.
 This indicates that you have a side-effect in your render function that asynchronously

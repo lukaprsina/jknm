@@ -36,8 +36,6 @@ import type { GuestAuthor } from "./table";
 import { EditAuthorNameForm, InsertAuthorForm } from "./table-forms";
 
 export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
-	// const delete_guests = api.author.delete_guests.useMutation();
-	// const trpc_utils = api.useUtils();
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const toaster = useToast();
 	const query_client = useQueryClient();
@@ -105,8 +103,6 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
 						<AlertDialogCancel>Prekliči</AlertDialogCancel>
 						<AlertDialogAction
 							onClick={() => {
-								// delete_guests.mutate({ ids: [author.id] });
-								// await trpc_utils.author.invalidate();
 								delete_guests_mutation.mutate({ ids: [author.id] });
 								setDialogOpen(false);
 							}}
@@ -125,8 +121,6 @@ export function AuthorsTableHeaderButtons({
 }: {
 	rows: Row<GuestAuthor>[];
 }) {
-	/* const trpc_utils = api.useUtils();
-  const delete_guests = api.author.delete_guests.useMutation(); */
 	const toaster = useToast();
 	const query_client = useQueryClient();
 
@@ -218,10 +212,6 @@ export function AuthorsTableHeaderButtons({
 						{rows.length !== 0 && (
 							<AlertDialogAction
 								onClick={() => {
-									/* delete_guests.mutate({
-                    ids: rows.map((row) => row.original.id),
-                  });
-                  await trpc_utils.author.invalidate(); */
 									delete_guests_mutation.mutate({
 										ids: rows.map((row) => row.original.id),
 									});

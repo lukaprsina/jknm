@@ -128,7 +128,6 @@ export function AuthorsDataTable() {
 		pageSize: 8,
 	});
 
-	// const guest_authors = api.author.get_all.useQuery("guest");
 	const all_authors = use(AllAuthorsContext);
 	const guest_authors = useMemo(
 		() => all_authors.filter((author) => author.author_type === "guest"),

@@ -19,35 +19,6 @@ import {
 import type { AdapterAccount } from "next-auth/adapters";
 import type { ThumbnailType } from "~/lib/validators";
 
-/**
- * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
- * database instance for multiple projects.
- *
- * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
- */
-// export const createTable = pgTableCreator((name) => `jknm_${name}`);
-
-/* export const posts = pgTable(
-  "post",
-  {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    createdById: varchar("created_by", { length: 255 })
-      .notNull()
-      .references(() => users.id),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-      () => new Date()
-    ),
-  },
-  (example) => ({
-    createdByIdIdx: index("created_by_idx").on(example.createdById),
-    nameIndex: index("name_idx").on(example.name),
-  })
-); */
-
 export interface ArticleBlockType {
 	id?: string;
 	type: string;
@@ -75,7 +46,6 @@ export const PublishedArticle = pgTable(
 		content: json("content").$type<ArticleContentType>(),
 		content_preview: text("content_preview").default(""),
 		thumbnail_crop: json("thumbnail_crop").$type<ThumbnailType>(),
-		// image: varchar("image", { length: 255 }),
 	},
 	(published_article) => ({
 		created_at_index: index("p_created_at_idx").on(
@@ -112,7 +82,6 @@ export const DraftArticle = pgTable(
 		content: json("content").$type<ArticleContentType>(),
 		content_preview: text("content_preview").default(""),
 		thumbnail_crop: json("thumbnail_crop").$type<ThumbnailType>(),
-		// image: varchar("image", { length: 255 }),
 	},
 	(draft_article) => ({
 		created_at_index: index("d_created_at_idx").on(draft_article.created_at),

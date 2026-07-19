@@ -34,8 +34,6 @@ export function EditAuthorNameForm({
 	author: GuestAuthor;
 	close_dialog: () => void;
 }) {
-	// const rename_guest = api.author.rename_guest.useMutation();
-	// const trpc_utils = api.useUtils();
 	const router = useRouter();
 	const query_client = useQueryClient();
 	const toaster = useToast();
@@ -47,8 +45,6 @@ export function EditAuthorNameForm({
 			await query_client.invalidateQueries({
 				queryKey: ["infinite_published"],
 			});
-			/* await trpc_utils.article.invalidate();
-      await trpc_utils.article.get_infinite_published.invalidate(); */
 			router.replace(`/`);
 		},
 		onError: (error) => {
@@ -75,11 +71,6 @@ export function EditAuthorNameForm({
 						id: author.id,
 						name: form.getValues("name"),
 					});
-					/* rename_guest.mutate({
-            id: author.id,
-            name: form.getValues("name"),
-          });
-          await trpc_utils.author.invalidate(); */
 
 					close_dialog();
 				})}
@@ -116,8 +107,6 @@ export const insert_form_schema = z.object({
 });
 
 export function InsertAuthorForm() {
-	// const insert_guest = api.author.insert_guest.useMutation();
-	// const trpc_utils = api.useUtils();
 	const toaster = useToast();
 	const query_client = useQueryClient();
 
@@ -150,7 +139,6 @@ export function InsertAuthorForm() {
 				className="space-y-4"
 				onSubmit={form.handleSubmit(() => {
 					insert_guest_mutation.mutate({ name: form.getValues("name") });
-					// await trpc_utils.author.invalidate();
 				})}
 			>
 				<FormField
