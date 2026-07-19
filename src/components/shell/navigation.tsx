@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import slugify from "slugify";
 import {
 	NavigationMenu,
@@ -7,7 +6,6 @@ import {
 	NavigationMenuItem,
 	NavigationMenuList,
 } from "~/components/ui/navigation-menu";
-import { smooth_scroll_store } from "~/hooks/use-smooth-scroll";
 import toc from "~/toc.json";
 import { NavigationMenuTrigger } from "../navigation-menu-trigger";
 import { ListItem } from "./header";
@@ -79,8 +77,6 @@ function NavDropdown({
 	href: string;
 	headings: string[];
 }) {
-	const pathname = usePathname();
-
 	// console.log({ title, href, headings });
 
 	if (headings.length === 0) {
@@ -110,17 +106,7 @@ function NavDropdown({
 							<ListItem
 								key={heading}
 								list_title={heading}
-								// TODO na isti strani
 								href={`/${href}#${slug}`}
-								onClick={(event) => {
-									if (!heading) return;
-
-									if (pathname === `/${href}`) {
-										event.preventDefault();
-									}
-
-									smooth_scroll_store.set("set_both", `/${href}`, heading);
-								}}
 							/>
 						);
 					})}

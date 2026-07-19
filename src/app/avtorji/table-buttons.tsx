@@ -1,8 +1,9 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import type { Row } from "@tanstack/react-table";
 import { PencilIcon, PlusIcon, TrashIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import type { z } from "zod";
 import {
@@ -38,15 +39,13 @@ import { EditAuthorNameForm, InsertAuthorForm } from "./table-forms";
 export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const toaster = useToast();
-	const query_client = useQueryClient();
+	const router = useRouter();
 
 	const delete_guests_mutation = useMutation({
 		mutationFn: (input: z.infer<typeof delete_guests_validator>) =>
 			delete_guests(input),
-		onSettled: async () => {
-			await query_client.invalidateQueries({
-				queryKey: ["infinite_published"],
-			});
+		onSettled: () => {
+			router.refresh();
 		},
 		onError: (error) => {
 			toaster.toast({
@@ -122,15 +121,13 @@ export function AuthorsTableHeaderButtons({
 	rows: Row<GuestAuthor>[];
 }) {
 	const toaster = useToast();
-	const query_client = useQueryClient();
+	const router = useRouter();
 
 	const delete_guests_mutation = useMutation({
 		mutationFn: (input: z.infer<typeof delete_guests_validator>) =>
 			delete_guests(input),
-		onSettled: async () => {
-			await query_client.invalidateQueries({
-				queryKey: ["infinite_published"],
-			});
+		onSettled: () => {
+			router.refresh();
 		},
 		onError: (error) => {
 			toaster.toast({
@@ -166,7 +163,7 @@ export function AuthorsTableHeaderButtons({
 	}, [rows]);
 
 	return (
-		<div className="flex flex-grow gap-1">
+		<div className="flex grow gap-1">
 			<Dialog>
 				<Tooltip>
 					<TooltipTrigger asChild>

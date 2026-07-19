@@ -2,16 +2,11 @@
 
 import type { Toc } from "@stefanprobst/rehype-extract-toc";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useStoreValue } from "zustand-x";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
-import {
-	smooth_scroll_store,
-	useSmoothScroll,
-} from "~/hooks/use-smooth-scroll";
 import { useThrottle } from "~/hooks/use-throttle";
 import { cn } from "~/lib/utils";
 import { mobile_nav_store } from "../shell/mobile-header";
@@ -102,8 +97,6 @@ function TocTree({
 	activeAnchors: string[];
 	tableOfContents: Toc;
 }) {
-	const pathname = usePathname();
-
 	return (
 		<Fragment>
 			{tableOfContents.map((entry) => {
@@ -121,12 +114,7 @@ function TocTree({
 							style={{ paddingLeft: `${entry.depth * 16}px` }}
 							href={`#${entry.id}`}
 							key={entry.id}
-							onClick={(e) => {
-								if (!entry.id) return;
-								// TODO: href se ne spremeni
-								e.preventDefault();
-								smooth_scroll_store.set("set_both", pathname, entry.id);
-							}}
+							onClick={() => mobile_nav_store.set("open", false)}
 						>
 							{entry.value}
 						</Link>
@@ -181,7 +169,6 @@ export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
 	const [mainRef, setMainRef] = useState<HTMLElement | null>(null);
 	const md_breakpoint = useBreakpoint("md");
 	const mobile_sheet_open = useStoreValue(mobile_nav_store, "open");
-	useSmoothScroll();
 
 	useEffect(() => {
 		setMainRef(document.getElementById("shell-main"));

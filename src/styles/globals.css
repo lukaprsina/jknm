@@ -180,3 +180,14 @@
 .prose figcaption {
 	margin-top: 4px;
 }
+
+/* keep anchor-scrolled headings clear of the sticky navbar */
+.prose :where(h1, h2, h3, h4, h5, h6)[id] {
+	scroll-margin-top: 88px;
+}
+
+@media (min-width: 768px) {
+	.prose :where(h1, h2, h3, h4, h5, h6)[id] {
+		scroll-margin-top: 104px;
+	}
+}

@@ -7,7 +7,7 @@ import Blocks from "editorjs-blocks-react-renderer";
 import HTMLReactParser from "html-react-parser";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ArticleDescription from "~/components/article/description";
 import { gallery_store } from "~/components/gallery-store";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
@@ -31,6 +31,23 @@ import type {
     ),
   },
 ); */
+
+// Editor content is rendered from stored HTML (paragraph/list/quote/etc.
+// all pass through html-react-parser), so patching every renderer isn't
+// practical — force target="_blank" on the mounted DOM instead.
+function ArticleLinksInNewTab({ children }: { children: React.ReactNode }) {
+	const ref = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		const links = ref.current?.querySelectorAll("a[href]") ?? [];
+		for (const link of links) {
+			link.setAttribute("target", "_blank");
+			link.setAttribute("rel", "noopener noreferrer");
+		}
+	});
+
+	return <div ref={ref}>{children}</div>;
+}
 
 export function EditorToReact({
 	article,
@@ -94,13 +111,15 @@ export function EditorToReact({
 					/>
 				</CardHeader>
 				<CardContent>
-					<Blocks
-						data={editor_data}
-						renderers={{
-							image: NextImageRenderer,
-							attaches: AttachesRenderer,
-						}}
-					/>
+					<ArticleLinksInNewTab>
+						<Blocks
+							data={editor_data}
+							renderers={{
+								image: NextImageRenderer,
+								attaches: AttachesRenderer,
+							}}
+						/>
+					</ArticleLinksInNewTab>
 				</CardContent>
 			</Card>
 			<div className="pt-8 md:hidden">
@@ -114,13 +133,15 @@ export function EditorToReact({
 					author_ids={author_ids}
 					created_at={article.created_at}
 				/>
-				<Blocks
-					data={editor_data}
-					renderers={{
-						image: NextImageRenderer,
-						attaches: AttachesRenderer,
-					}}
-				/>
+				<ArticleLinksInNewTab>
+					<Blocks
+						data={editor_data}
+						renderers={{
+							image: NextImageRenderer,
+							attaches: AttachesRenderer,
+						}}
+					/>
+				</ArticleLinksInNewTab>
 			</div>
 		</>
 	);

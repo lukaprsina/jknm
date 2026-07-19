@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -35,21 +35,17 @@ export function EditAuthorNameForm({
 	close_dialog: () => void;
 }) {
 	const router = useRouter();
-	const query_client = useQueryClient();
 	const toaster = useToast();
 
 	const rename_guest_mutation = useMutation({
 		mutationFn: (input: z.infer<typeof rename_guest_validator>) =>
 			rename_guest(input),
-		onSettled: async () => {
-			await query_client.invalidateQueries({
-				queryKey: ["infinite_published"],
-			});
-			router.replace(`/`);
+		onSettled: () => {
+			router.refresh();
 		},
 		onError: (error) => {
 			toaster.toast({
-				title: "Napaka pri preimenovanju novic",
+				title: "Napaka pri preimenovanju avtorja",
 				description: error.message,
 			});
 		},
@@ -108,15 +104,13 @@ export const insert_form_schema = z.object({
 
 export function InsertAuthorForm() {
 	const toaster = useToast();
-	const query_client = useQueryClient();
+	const router = useRouter();
 
 	const insert_guest_mutation = useMutation({
 		mutationFn: (input: z.infer<typeof insert_guest_validator>) =>
 			insert_guest(input),
-		onSettled: async () => {
-			await query_client.invalidateQueries({
-				queryKey: ["infinite_published"],
-			});
+		onSettled: () => {
+			router.refresh();
 		},
 		onError: (error) => {
 			toaster.toast({

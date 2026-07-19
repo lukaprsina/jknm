@@ -5,7 +5,6 @@ import type {
 	PaginationState,
 	Row,
 	SortingState,
-	VisibilityState,
 } from "@tanstack/react-table";
 import {
 	flexRender,
@@ -15,7 +14,7 @@ import {
 	getSortedRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
-import { use, useMemo, useState } from "react";
+import { use, useMemo, useRef, useState } from "react";
 
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -39,94 +38,79 @@ export interface GuestAuthor {
 	name: string;
 }
 
-export const columns: ColumnDef<GuestAuthor>[] = [
-	{
-		id: "select",
-		header: ({ table }) => (
-			<Checkbox
-				checked={
-					table.getIsAllPageRowsSelected() ||
-					(table.getIsSomePageRowsSelected() && "indeterminate")
-				}
-				onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-				aria-label="Select all"
-			/>
-		),
-		cell: ({ row, table }) => (
-			<Checkbox
-				checked={row.getIsSelected()}
-				onCheckedChange={(value) => {
-					row.toggleSelected(!!value);
-				}}
-				/* onClick={(event) => {
-          if (event.shiftKey) {
-            const { rows, rowsById } = table.getRowModel();
-            const rowsToToggle = get_row_range(
-              rows,
-              parseInt(row.id),
-              parseInt(LAST_SELECTED_ID),
-            );
-            const isLastSelected = rowsById[LAST_SELECTED_ID]?.getIsSelected();
-            rowsToToggle.forEach((row) => row.toggleSelected(isLastSelected));
-          }
-
-          LAST_SELECTED_ID = row.id;
-        }} */
-				onClick={(event) => {
-					if (event.shiftKey) {
-						const { rows, rowsById } = table.getRowModel();
-						const { rowSelection } = table.getState();
-						const lastSelectedRowIndex = Math.max(
-							...Object.keys(rowSelection).map(Number),
-						);
-						const rowsToToggle = get_row_range(
-							rows,
-							row.index,
-							lastSelectedRowIndex,
-						);
-						const isCellSelected = rowsById[row.id]?.getIsSelected();
-						rowsToToggle.forEach((_row) =>
-							_row.toggleSelected(!isCellSelected),
-						);
-					} else {
-						row.toggleSelected();
-					}
-				}}
-				aria-label="Select row"
-			/>
-		),
-		enableSorting: false,
-		enableHiding: false,
-	},
-	{
-		accessorKey: "id",
-		header: "ID",
-		cell: ({ row }) => <div>{row.getValue("id")}</div>,
-	},
-	{
-		accessorKey: "name",
-		header: "Ime in priimek",
-		cell: ({ row }) => <div>{row.getValue("name")}</div>,
-	},
-	{
-		id: "actions",
-		enableHiding: false,
-		cell: ({ row }) => {
-			const author = row.original;
-
-			return <AuthorsTableCellButtons author={author} />;
-		},
-	},
-];
-
 export function AuthorsDataTable() {
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = useState({});
 	const [pagination, setPagination] = useState<PaginationState>({
 		pageIndex: 0,
 		pageSize: 8,
 	});
+	const lastSelectedIndexRef = useRef<number | null>(null);
+
+	const columns = useMemo<ColumnDef<GuestAuthor>[]>(
+		() => [
+			{
+				id: "select",
+				header: ({ table }) => (
+					<Checkbox
+						checked={
+							table.getIsAllPageRowsSelected() ||
+							(table.getIsSomePageRowsSelected() && "indeterminate")
+						}
+						onCheckedChange={(value) =>
+							table.toggleAllPageRowsSelected(!!value)
+						}
+						aria-label="Select all"
+					/>
+				),
+				cell: ({ row, table }) => (
+					<Checkbox
+						checked={row.getIsSelected()}
+						onCheckedChange={(value) => row.toggleSelected(!!value)}
+						onClick={(event) => {
+							if (
+								event.shiftKey &&
+								lastSelectedIndexRef.current !== null
+							) {
+								const { rows, rowsById } = table.getRowModel();
+								const rowsToToggle = get_row_range(
+									rows,
+									row.index,
+									lastSelectedIndexRef.current,
+								);
+								const isCellSelected = rowsById[row.id]?.getIsSelected();
+								rowsToToggle.forEach((_row) => {
+									_row.toggleSelected(!isCellSelected);
+								});
+							}
+							lastSelectedIndexRef.current = row.index;
+						}}
+						aria-label="Select row"
+					/>
+				),
+				enableSorting: false,
+			},
+			{
+				accessorKey: "id",
+				header: "ID",
+				cell: ({ row }) => <div>{row.getValue("id")}</div>,
+			},
+			{
+				accessorKey: "name",
+				header: "Ime in priimek",
+				cell: ({ row }) => <div>{row.getValue("name")}</div>,
+			},
+			{
+				id: "actions",
+				cell: ({ row }) => {
+					const author = row.original;
+
+					return <AuthorsTableCellButtons author={author} />;
+				},
+			},
+		],
+		[],
+	);
 
 	const all_authors = use(AllAuthorsContext);
 	const guest_authors = useMemo(
@@ -142,12 +126,10 @@ export function AuthorsDataTable() {
 		getPaginationRowModel: getPaginationRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
-		onColumnVisibilityChange: setColumnVisibility,
 		onRowSelectionChange: setRowSelection,
 		onPaginationChange: setPagination,
 		state: {
 			sorting,
-			columnVisibility,
 			rowSelection,
 			pagination,
 		},
