@@ -18,14 +18,10 @@ import { article_variants, page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
 import { get_article_by_new_id } from "~/server/article/get-article";
 import { getServerAuthSession } from "~/server/auth";
-import Editor from "./editor";
+import Editor from "./editor-loader";
 
 const UUID_REGEX =
 	/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-/* const Editor = dynamic(() => import("./editor"), {
-  ssr: false,
-}); */
 
 interface EditorPageProps {
 	params: Promise<{

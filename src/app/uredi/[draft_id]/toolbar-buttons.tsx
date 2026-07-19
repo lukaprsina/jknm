@@ -73,7 +73,7 @@ export function SaveButton() {
 						size="icon"
 						onClick={() => editor_mutations.save_draft()}
 					>
-						<SaveIcon />
+						<SaveIcon size={18} />
 					</Button>
 				</TooltipTrigger>
 				<TooltipContent>
@@ -131,7 +131,7 @@ export function ClearButton() {
 							title="Zavrzi osnutek"
 							onClick={() => editor_mutations.discard_draft()}
 						>
-							<FileXIcon />
+							<FileXIcon size={18} />
 						</Button>
 					</TooltipTrigger>
 					<TooltipContent>Zavrzi osnutek</TooltipContent>

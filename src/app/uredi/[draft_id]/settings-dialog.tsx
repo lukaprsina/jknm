@@ -1,5 +1,3 @@
-"use state";
-
 import { Settings2Icon } from "lucide-react";
 import { useContext, useState } from "react";
 import { EditorContext } from "~/components/editor/editor-context";
@@ -30,7 +28,7 @@ export function SettingsDialog() {
 				<TooltipTrigger asChild>
 					<DialogTrigger asChild>
 						<Button variant="ghost" size="icon">
-							<Settings2Icon />
+							<Settings2Icon size={18} />
 						</Button>
 					</DialogTrigger>
 				</TooltipTrigger>

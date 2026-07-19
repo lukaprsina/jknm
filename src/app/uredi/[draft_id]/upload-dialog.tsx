@@ -48,7 +48,7 @@ export function UploadDialog() {
 						size="icon"
 						variant="ghost"
 					>
-						<ArrowUpToLineIcon />
+						<ArrowUpToLineIcon size={18} />
 					</Button>
 				</TooltipTrigger>
 				<TooltipContent>
