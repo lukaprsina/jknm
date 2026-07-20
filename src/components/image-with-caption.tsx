@@ -2,8 +2,8 @@
 
 import type { ImageProps } from "next/image";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { gallery_store } from "~/components/gallery-store";
+import { useMemo } from "react";
+import { gallery_store, useRegisterGalleryImage } from "~/components/gallery-store";
 import type { EditorJSImageData } from "~/lib/editor-utils";
 import image_sizes_json from "../../artifacts/image_sizes.json";
 
@@ -31,37 +31,31 @@ export function ImageWithCaption({
 	caption,
 	...props
 }: ImageWithCaptionProps) {
-	const [imageData, setImageData] = useState<EditorJSImageData | undefined>(
-		undefined,
+	const src_string = typeof src === "string" ? src : undefined;
+
+	const image_size = useMemo(
+		() => image_sizes.find((size) => size.path === src_string),
+		[src_string],
 	);
 
-	useEffect(() => {
-		if (typeof src !== "string") throw new Error("Image src should be string");
-
-		const new_src = `https://${CONTENT_DOMAIN}/${src}`;
-		const image_size = image_sizes.find((size) => size.path === src);
-		if (!image_size) throw new Error("Image size not found");
-
-		setImageData({
+	const imageData: EditorJSImageData | undefined = useMemo(() => {
+		if (!src_string || !image_size) return undefined;
+		return {
 			file: {
-				url: new_src,
+				url: `https://${CONTENT_DOMAIN}/${src_string}`,
 				width: image_size.size.width,
 				height: image_size.size.height,
 			},
 			caption: caption as string,
-		});
-	}, [caption, src]);
+		};
+	}, [src_string, image_size, caption]);
 
-	useEffect(() => {
-		if (!imageData) return;
-		gallery_store.set("add_image", imageData);
-	}, [imageData]);
+	useRegisterGalleryImage(imageData);
 
-	if (typeof src !== "string") throw new Error("Image src should be string");
-	const image_size = image_sizes.find((size) => size.path === src);
-	if (!image_size) throw new Error(`Image size not found for ${src}`);
+	if (!src_string) throw new Error("Image src should be string");
+	if (!image_size) throw new Error(`Image size not found for ${src_string}`);
 
-	const new_src = `https://${CONTENT_DOMAIN}/${src}`;
+	const new_src = `https://${CONTENT_DOMAIN}/${src_string}`;
 	const avif_src = image_size.has_avif
 		? new_src.replace(/\.[^./]+$/, ".avif")
 		: undefined;
@@ -78,8 +72,7 @@ export function ImageWithCaption({
 					height={image_size.size.height}
 					{...props}
 					onClick={() => {
-						if (!imageData) return;
-						gallery_store.set("default_image", imageData);
+						if (imageData) gallery_store.getState().openImage(imageData);
 					}}
 				/>
 			</picture>

@@ -1,22 +1,74 @@
-import { createStore } from "zustand-x";
+"use client";
+
+import { useEffect } from "react";
+import { create } from "zustand";
 import type { EditorJSImageData } from "~/lib/editor-utils";
 
-export interface GalleryStoreType {
+interface GalleryState {
 	images: EditorJSImageData[];
-	default_image: EditorJSImageData | undefined;
+	open_image: EditorJSImageData | undefined;
 }
 
-const initial_data = {
-	images: [],
-	default_image: undefined,
-} satisfies GalleryStoreType;
+interface GalleryActions {
+	/** Full replace — used by callers that already compute their complete image set up front. */
+	registerImages: (images: EditorJSImageData[]) => void;
+	/** Dedup-by-url append — used by callers that register one image at a time as they render. */
+	addImage: (image: EditorJSImageData) => void;
+	removeImage: (url: string) => void;
+	openImage: (image: EditorJSImageData) => void;
+	closeGallery: () => void;
+}
 
-export const gallery_store = createStore<GalleryStoreType>(initial_data, {
-	name: "gallery",
-}).extendActions(({ set, get }) => ({
-	add_image: (image: EditorJSImageData) => {
-		const images = get("images");
-		if (images.some((existing) => existing.file.url === image.file.url)) return;
-		set("images", images.concat(image));
+type GalleryStore = GalleryState & GalleryActions;
+
+function dedupe_by_url(images: EditorJSImageData[]): EditorJSImageData[] {
+	const seen = new Set<string>();
+	return images.filter((image) => {
+		if (seen.has(image.file.url)) return false;
+		seen.add(image.file.url);
+		return true;
+	});
+}
+
+export const gallery_store = create<GalleryStore>((set, get) => ({
+	images: [],
+	open_image: undefined,
+	registerImages: (images) => set({ images: dedupe_by_url(images) }),
+	addImage: (image) => {
+		if (get().images.some((existing) => existing.file.url === image.file.url))
+			return;
+		set((state) => ({ images: [...state.images, image] }));
 	},
+	removeImage: (url) =>
+		set((state) => ({
+			images: state.images.filter((image) => image.file.url !== url),
+		})),
+	openImage: (image) => set({ open_image: image }),
+	closeGallery: () => set({ open_image: undefined }),
 }));
+
+export function useGalleryImages(): EditorJSImageData[] {
+	return gallery_store((state) => state.images);
+}
+
+export function useOpenImage(): EditorJSImageData | undefined {
+	return gallery_store((state) => state.open_image);
+}
+
+/**
+ * Registers a single image into the gallery on mount and removes exactly that
+ * image on unmount — for callers (like MDX content) that render images one at
+ * a time and never have the full set up front, so `registerImages` isn't an
+ * option. Keeps the leak-across-navigation fix (unmount removes what mounted)
+ * without requiring an upfront full-list computation.
+ */
+export function useRegisterGalleryImage(
+	image: EditorJSImageData | undefined,
+): void {
+	useEffect(() => {
+		if (!image) return;
+
+		gallery_store.getState().addImage(image);
+		return () => gallery_store.getState().removeImage(image.file.url);
+	}, [image]);
+}

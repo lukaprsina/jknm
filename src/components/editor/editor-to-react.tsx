@@ -69,17 +69,27 @@ export function EditorToReact({
 
 		setHeading(title);
 
-		const image_data = extract_media_refs_from_content(article.content, [
-			"image",
-		]).map((ref) => ref.data);
-		gallery_store.set("images", image_data);
-
 		return {
 			version: article.content.version ?? "unknown version",
 			blocks: article.content.blocks.slice(1), // remove first heading
 			time: article.content.time ?? Date.now(),
 		};
 	}, [article?.content]);
+
+	const gallery_images = useMemo(() => {
+		if (!article?.content) return [];
+
+		return extract_media_refs_from_content(article.content, ["image"])
+			.map((ref) => ref.data)
+			.map((data) => {
+				const { width, height } = get_effective_dimensions(data.file);
+				return { ...data, file: { ...data.file, width, height } };
+			});
+	}, [article?.content]);
+
+	useEffect(() => {
+		gallery_store.getState().registerImages(gallery_images);
+	}, [gallery_images]);
 
 	const author_ids = useMemo(() => {
 		if (!article) return [];
@@ -148,46 +158,58 @@ export function EditorToReact({
 }
 
 const DOUBLE_IMAGES = true as boolean;
+const SMALL_IMAGE_THRESHOLD = 500;
+
+// Small inline images render too tiny at their real pixel size, so the editor
+// preview doubles them for display. The gallery lightbox mirrors this so a
+// thumbnail and its opened lightbox image feel like the same size.
+function get_effective_dimensions(file: {
+	width?: number;
+	height?: number;
+}): { width: number; height: number; dimensions_exist: boolean } {
+	if (!file.width || !file.height)
+		return { width: 1500, height: 1000, dimensions_exist: false };
+
+	const should_double =
+		DOUBLE_IMAGES &&
+		file.width < SMALL_IMAGE_THRESHOLD &&
+		file.height < SMALL_IMAGE_THRESHOLD;
+
+	return {
+		width: should_double ? file.width * 2 : file.width,
+		height: should_double ? file.height * 2 : file.height,
+		dimensions_exist: true,
+	};
+}
 
 export const NextImageRenderer: RenderFn<EditorJSImageData> = ({
 	data,
 	className,
 }) => {
-	const image_props = useMemo(() => {
-		if (!data.file.width || !data.file.height)
-			return { width: 1500, height: 1000, dimensions_exist: false };
-
-		if (DOUBLE_IMAGES && data.file.width < 500 && data.file.height < 500) {
-			return {
-				width: data.file.width * 2,
-				height: data.file.height * 2,
-				dimensions_exist: true,
-			};
-		} else {
-			return {
-				width: data.file.width,
-				height: data.file.height,
-				dimensions_exist: true,
-			};
-		}
-	}, [data.file.height, data.file.width]);
-
-	/*useEffect(() => {
-    console.log("editor-to-react", data, image_props);
-  }, [data, image_props]);*/
+	const image_props = useMemo(
+		() => get_effective_dimensions(data.file),
+		[data.file],
+	);
 
 	return (
 		<figure className="max-h-[1500] max-w-[1500]">
 			<Image
 				onClick={() => {
-					gallery_store.set("default_image", data);
+					gallery_store.getState().openImage({
+						...data,
+						file: {
+							...data.file,
+							width: image_props.width,
+							height: image_props.height,
+						},
+					});
 				}}
 				className={cn(
 					"cursor-pointer",
 					className,
 					!image_props.dimensions_exist && "object-contain",
 				)}
-				alt={data.caption}
+				alt={data.caption || "Slika"}
 				src={data.file.url}
 				width={image_props.width}
 				height={image_props.height}
