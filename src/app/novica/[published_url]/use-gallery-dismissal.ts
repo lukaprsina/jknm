@@ -1,5 +1,6 @@
 "use client";
 
+import type { RefObject } from "react";
 import { useEffect } from "react";
 import type { CarouselApi } from "~/components/ui/carousel";
 
@@ -12,6 +13,7 @@ import type { CarouselApi } from "~/components/ui/carousel";
  */
 export function useGalleryDismissal(
 	emblaApi: CarouselApi | undefined,
+	carousel_ref: RefObject<HTMLElement | null>,
 	onDismiss: () => void,
 ): void {
 	useEffect(() => {
@@ -47,7 +49,17 @@ export function useGalleryDismissal(
 			event.preventDefault();
 		};
 
-		const handle_wheel = () => onDismiss();
+		// Ignore wheel/trackpad gestures that originate on the carousel itself
+		// (image pan, swipe) — only a wheel over the backdrop should dismiss.
+		const handle_wheel = (event: WheelEvent) => {
+			if (
+				event.target instanceof Node &&
+				carousel_ref.current?.contains(event.target)
+			) {
+				return;
+			}
+			onDismiss();
+		};
 
 		window.addEventListener("keydown", handle_keydown);
 		window.addEventListener("wheel", handle_wheel);
@@ -57,5 +69,5 @@ export function useGalleryDismissal(
 			window.removeEventListener("keydown", handle_keydown);
 			window.removeEventListener("wheel", handle_wheel);
 		};
-	}, [emblaApi, onDismiss]);
+	}, [emblaApi, carousel_ref, onDismiss]);
 }

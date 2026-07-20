@@ -9,7 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ArticleDescription from "~/components/article/description";
-import { gallery_store } from "~/components/gallery-store";
+import { gallery_store, useGalleryImages } from "~/components/gallery-store";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import type { EditorJSImageData } from "~/lib/editor-utils";
 import {
@@ -190,19 +190,28 @@ export const NextImageRenderer: RenderFn<EditorJSImageData> = ({
 		() => get_effective_dimensions(data.file),
 		[data.file],
 	);
+	const gallery_images = useGalleryImages();
 
 	return (
 		<figure className="max-h-[1500] max-w-[1500]">
 			<Image
 				onClick={() => {
-					gallery_store.getState().openImage({
-						...data,
-						file: {
-							...data.file,
-							width: image_props.width,
-							height: image_props.height,
+					// registerImages already computed this image's effective
+					// dimensions when building the gallery's image list — reuse
+					// that instead of recomputing get_effective_dimensions here.
+					const registered = gallery_images.find(
+						(image) => image.file.url === data.file.url,
+					);
+					gallery_store.getState().openImage(
+						registered ?? {
+							...data,
+							file: {
+								...data.file,
+								width: image_props.width,
+								height: image_props.height,
+							},
 						},
-					});
+					);
 				}}
 				className={cn(
 					"cursor-pointer",

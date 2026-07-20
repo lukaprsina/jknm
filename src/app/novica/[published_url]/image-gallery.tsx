@@ -37,6 +37,9 @@ function GalleryPortal({ open_image }: { open_image: EditorJSImageData }) {
 					gallery_store.getState().closeGallery();
 				}
 			}}
+			// useGalleryDismissal already closes on Escape via a window
+			// listener; this is only here to satisfy the a11y lint rule
+			// pairing onClick with a keyboard handler on this dialog div.
 			onKeyDown={(event) => {
 				if (event.key === "Escape") gallery_store.getState().closeGallery();
 			}}
@@ -62,7 +65,9 @@ function MyCarousel({ open_image }: { open_image: EditorJSImageData }) {
 		if (index >= 0) emblaApi.scrollTo(index, true);
 	}, [emblaApi, open_image, images]);
 
-	useGalleryDismissal(emblaApi, () => gallery_store.getState().closeGallery());
+	useGalleryDismissal(emblaApi, container_ref, () =>
+		gallery_store.getState().closeGallery(),
+	);
 
 	return (
 		<Carousel
@@ -119,15 +124,25 @@ function CloseButton({ className }: { className?: string }) {
 	);
 }
 
+// A static sizing hint for next/image's width/height attrs (used for the
+// aspect-ratio box before the real image loads), independent of the CSS
+// clamp below — the actual rendered size is always governed by the dvh-based
+// maxHeight in style, so this only needs to be a reasonable upper bound, not
+// kept in sync with CAPTION_RESERVE_PX.
 const GALLERY_IMAGE_BOUNDS = { maxWidth: 1920, maxHeight: 1080 };
 // Leaves room below the image for the caption and surrounding chrome so the
-// image never gets clipped by the viewport edge.
+// image never gets clipped by the viewport edge. This is the runtime clamp
+// that actually determines rendered size; GALLERY_IMAGE_BOUNDS above is only
+// a pre-load sizing hint and intentionally not derived from this value.
 const CAPTION_RESERVE_PX = 96;
 
 function GalleryImage({ image }: { image: EditorJSImageData }) {
+	// Fall back to the gallery bounds' own aspect ratio (16:9) rather than an
+	// arbitrary one, so a missing-dimensions image doesn't reserve a
+	// mismatched aspect box before the real image loads.
 	const natural = {
-		width: image.file.width ?? 1500,
-		height: image.file.height ?? 1000,
+		width: image.file.width ?? GALLERY_IMAGE_BOUNDS.maxWidth,
+		height: image.file.height ?? GALLERY_IMAGE_BOUNDS.maxHeight,
 	};
 	const { width, height } = fitToViewport(natural, GALLERY_IMAGE_BOUNDS);
 
