@@ -3,16 +3,10 @@
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import type { Session } from "next-auth";
-import {
-	type ComponentProps,
-	Fragment,
-	useEffect,
-	useMemo,
-	useRef,
-} from "react";
+import { type ComponentProps, useEffect, useRef } from "react";
 import { create } from "zustand";
+import { useHasToc } from "~/components/toc/toc-store";
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import {
@@ -110,18 +104,7 @@ export function MobileSheet({
 	session: Session | null;
 }) {
 	const open = useMobileNavOpen();
-	const pathname = usePathname();
-
-	const links: { title: string; href: string; active?: boolean }[] =
-		useMemo(() => {
-			return MOBILE_NAV_LINKS.map((link) => {
-				if (pathname.includes(link.href)) {
-					return { ...link, active: true };
-				}
-
-				return link;
-			});
-		}, [pathname]);
+	const has_toc = useHasToc();
 
 	return (
 		<Sheet
@@ -164,20 +147,19 @@ export function MobileSheet({
 						<ContactIcon />
 						<IntranetIcon />
 					</div>
-					{links.map((link) => (
-						<Fragment key={link.href}>
-							<Link
-								className="block"
-								href={`/${link.href}`}
-								onClick={() => {
-									mobile_nav_store.setState({ open: false });
-								}}
-							>
-								{link.title}
-							</Link>
-							{link.active && <div id="mobile-toc" />}
-						</Fragment>
+					{MOBILE_NAV_LINKS.map((link) => (
+						<Link
+							key={link.href}
+							className="block"
+							href={`/${link.href}`}
+							onClick={() => {
+								mobile_nav_store.setState({ open: false });
+							}}
+						>
+							{link.title}
+						</Link>
 					))}
+					{has_toc && <div id="mobile-toc" className="mt-4" />}
 					<div className="mt-6 pr-6">
 						<Sponsors compact />
 					</div>

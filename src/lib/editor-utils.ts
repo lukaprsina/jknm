@@ -1,4 +1,7 @@
 import type { OutputData } from "@editorjs/editorjs";
+import sanitizeHtml from "sanitize-html";
+import { convert_title_to_url } from "./article-utils";
+import { TOC_HEADING_LEVELS, type TocEntry } from "./toc";
 
 interface HeadingReturnType {
 	title?: string;
@@ -93,4 +96,42 @@ export function extract_media_refs_from_content(
 				data: block.data as EditorJSFileData,
 			};
 		});
+}
+
+export interface HeadingEntry extends TocEntry {
+	/** Index into `content.blocks`, used to line up ids with the rendered header block. */
+	block_index: number;
+}
+
+/**
+ * Extracts headings from EditorJS content as a flat, deduped, slugged TOC
+ * (mirrors `rehype-slug`: first occurrence unsuffixed, later duplicates get
+ * a numeric suffix). The article's H1 (block 0) is out of scope here --
+ * callers already strip it before rendering.
+ */
+export function extract_headings_from_content(
+	content: OutputData,
+	levels: readonly number[] = TOC_HEADING_LEVELS,
+): HeadingEntry[] {
+	const seen = new Map<string, number>();
+	const headings: HeadingEntry[] = [];
+
+	content.blocks.forEach((block, block_index) => {
+		if (block.type !== "header") return;
+
+		const data = block.data as { text: string; level: number };
+		if (!levels.includes(data.level)) return;
+
+		const title = sanitizeHtml(data.text, { allowedTags: [] }).trim();
+		if (!title) return;
+
+		let id = convert_title_to_url(title, () => `section-${block_index}`);
+		const occurrence = seen.get(id) ?? 0;
+		seen.set(id, occurrence + 1);
+		if (occurrence > 0) id = `${id}-${occurrence}`;
+
+		headings.push({ id, title, depth: data.level, block_index });
+	});
+
+	return headings;
 }

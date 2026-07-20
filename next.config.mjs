@@ -4,34 +4,20 @@
  */
 await import("./src/env.js");
 
-import withMDX from "@next/mdx";
-
-/* import remarkGfm from "remark-gfm";
+// @next/mdx's loader takes plugin functions (remarkGfm, rehype-slug, ...) as
+// options, which Turbopack can't serialize across its Rust/JS boundary --
+// hence `--webpack` on the dev/build scripts in package.json. Compile speed
+// isn't a concern here (five small static pages).
 import createMDX from "@next/mdx";
+import remarkGfm from "remark-gfm";
 import withSlugs from "rehype-slug";
 import withToc from "@stefanprobst/rehype-extract-toc";
-import withTocExport from "@stefanprobst/rehype-extract-toc/mdx"; */
-// import remarkFrontmatter from "remark-frontmatter";
-// import remarkMdxFrontmatter from "remark-mdx-frontmatter";
-
-/* const mdx_rs =
-  process.env.NEXT_MODE === "no-turbo"
-    ? null
-    : {
-        mdxRs: {
-          mdxType: "gfm" as const,
-        },
-      }; */
+import withTocExport from "@stefanprobst/rehype-extract-toc/mdx";
 
 /** @type {import("next").NextConfig} */
 const config = {
 	pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
 	experimental: {
-		// reactCompiler: false,
-		// ...mdx_rs, // TODO
-		mdxRs: {
-			mdxType: "gfm",
-		},
 		serverActions: {
 			bodySizeLimit: "100mb",
 		},
@@ -75,16 +61,11 @@ const config = {
 	},
 };
 
-/* const withMDX = createMDX({
-  options: {
-    remarkPlugins: [remarkGfm],
-    rehypePlugins: [withSlugs, withToc, withTocExport],
-  },
-}); */
-
-export default withMDX({
+const withMDX = createMDX({
 	options: {
-		// rehypePlugins: [rehypeMinifyWhitespace],
+		remarkPlugins: [remarkGfm],
+		rehypePlugins: [withSlugs, withToc, withTocExport],
 	},
-})(config);
-// export default config;
+});
+
+export default withMDX(config);

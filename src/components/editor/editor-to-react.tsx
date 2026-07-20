@@ -7,12 +7,14 @@ import Blocks from "editorjs-blocks-react-renderer";
 import HTMLReactParser from "html-react-parser";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { createElement, useEffect, useMemo, useRef, useState } from "react";
 import ArticleDescription from "~/components/article/description";
 import { gallery_store, useGalleryImages } from "~/components/gallery-store";
+import { TableOfContents } from "~/components/toc/table-of-contents";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import type { EditorJSImageData } from "~/lib/editor-utils";
 import {
+	extract_headings_from_content,
 	extract_media_refs_from_content,
 	get_heading_from_editor,
 } from "~/lib/editor-utils";
@@ -22,15 +24,6 @@ import type {
 	EditorDraftArticle,
 	PublishedArticleView,
 } from "../article/new-adapter";
-/* const ArticleDescription = dynamic(
-  () => import("~/components/article/description"),
-  {
-    ssr: false,
-    loading: () => (
-      <Skeleton className="h-[1em] w-[300px] bg-[hsl(0_0%_90%)]" />
-    ),
-  },
-); */
 
 // Editor content is rendered from stored HTML (paragraph/list/quote/etc.
 // all pass through html-react-parser), so patching every renderer isn't
@@ -49,6 +42,56 @@ function ArticleLinksInNewTab({ children }: { children: React.ReactNode }) {
 	return <div ref={ref}>{children}</div>;
 }
 
+function ArticleBody({
+	blocks_data,
+}: {
+	blocks_data: NonNullable<ReturnType<typeof useEditorData>["blocks_data"]>;
+}) {
+	return (
+		<ArticleLinksInNewTab>
+			<Blocks
+				data={blocks_data}
+				renderers={{
+					image: NextImageRenderer,
+					attaches: AttachesRenderer,
+					header: HeaderRenderer,
+				}}
+			/>
+		</ArticleLinksInNewTab>
+	);
+}
+
+function useEditorData(article: { content: EditorDraftArticle["content"] } | undefined) {
+	const headings = useMemo(() => {
+		if (!article?.content) return [];
+		return extract_headings_from_content(article.content);
+	}, [article?.content]);
+
+	const blocks_data = useMemo(() => {
+		if (!article?.content) return;
+
+		const heading_by_block_index = new Map(
+			headings.map((heading) => [heading.block_index, heading.id]),
+		);
+
+		const blocks = article.content.blocks
+			.slice(1) // remove first heading (the article H1, rendered separately below)
+			.map((block, index) => {
+				const toc_id = heading_by_block_index.get(index + 1);
+				if (!toc_id) return block;
+				return { ...block, data: { ...block.data, toc_id } };
+			});
+
+		return {
+			version: article.content.version ?? "unknown version",
+			blocks,
+			time: article.content.time ?? Date.now(),
+		};
+	}, [article?.content, headings]);
+
+	return { blocks_data, headings };
+}
+
 export function EditorToReact({
 	article,
 }: {
@@ -56,7 +99,9 @@ export function EditorToReact({
 }) {
 	const [heading, setHeading] = useState<string | undefined>();
 
-	const editor_data = useMemo(() => {
+	const { blocks_data, headings } = useEditorData(article);
+
+	useEffect(() => {
 		if (!article?.content) return;
 
 		const heading_info = get_heading_from_editor(article.content);
@@ -68,12 +113,6 @@ export function EditorToReact({
 		}
 
 		setHeading(title);
-
-		return {
-			version: article.content.version ?? "unknown version",
-			blocks: article.content.blocks.slice(1), // remove first heading
-			time: article.content.time ?? Date.now(),
-		};
 	}, [article?.content]);
 
 	const gallery_images = useMemo(() => {
@@ -99,14 +138,11 @@ export function EditorToReact({
 			: article.draft_articles_to_authors.map((a) => a.author_id);
 	}, [article]);
 
-	/*useEffect(() => {
-    console.log("editor-to-react", { article, author_ids });
-  }, [article, author_ids]);*/
-
-	if (!editor_data || !article) return;
+	if (!blocks_data || !article) return;
 
 	return (
 		<>
+			<TableOfContents entries={headings} />
 			<Card className="hidden pt-8 md:block">
 				<CardHeader>
 					<h1
@@ -121,15 +157,7 @@ export function EditorToReact({
 					/>
 				</CardHeader>
 				<CardContent>
-					<ArticleLinksInNewTab>
-						<Blocks
-							data={editor_data}
-							renderers={{
-								image: NextImageRenderer,
-								attaches: AttachesRenderer,
-							}}
-						/>
-					</ArticleLinksInNewTab>
+					<ArticleBody blocks_data={blocks_data} />
 				</CardContent>
 			</Card>
 			<div className="pt-8 md:hidden">
@@ -143,15 +171,7 @@ export function EditorToReact({
 					author_ids={author_ids}
 					created_at={article.created_at}
 				/>
-				<ArticleLinksInNewTab>
-					<Blocks
-						data={editor_data}
-						renderers={{
-							image: NextImageRenderer,
-							attaches: AttachesRenderer,
-						}}
-					/>
-				</ArticleLinksInNewTab>
+				<ArticleBody blocks_data={blocks_data} />
 			</div>
 		</>
 	);
@@ -229,6 +249,22 @@ export const NextImageRenderer: RenderFn<EditorJSImageData> = ({
 	);
 };
 
+const HEADING_TAGS = { 2: "h2", 3: "h3" } as const;
+
+export const HeaderRenderer: RenderFn<{
+	text: string;
+	level: number;
+	toc_id?: string;
+}> = ({ data, className }) => {
+	const tag = HEADING_TAGS[data.level as 2 | 3] ?? `h${data.level}`;
+
+	return createElement(tag, {
+		id: data.toc_id,
+		className,
+		dangerouslySetInnerHTML: { __html: data.text },
+	});
+};
+
 interface EditorJSAttachesData {
 	file: {
 		url: string;
@@ -250,7 +286,7 @@ export const AttachesRenderer: RenderFn<EditorJSAttachesData> = ({
 		let visible_extension = data.file.extension.trim().toUpperCase();
 
 		if (data.file.extension.length > EXTENSION_MAX_LENGTH) {
-			visible_extension = `${extension.substring(0, EXTENSION_MAX_LENGTH)}…`;
+			visible_extension = `${data.file.extension.substring(0, EXTENSION_MAX_LENGTH).toUpperCase()}…`;
 		}
 
 		return visible_extension;
