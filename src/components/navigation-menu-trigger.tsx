@@ -1,15 +1,26 @@
 "use client";
 
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
+import Link from "next/link";
 import React from "react";
 import useForwardedRef from "~/hooks/use-forwarded-ref";
 import { cn } from "~/lib/utils";
 import { navigationMenuTriggerStyle } from "./ui/navigation-menu";
 
+type NavigationMenuTriggerProps = Omit<
+	React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Trigger>,
+	"asChild"
+> & {
+	href: string;
+	// Whether this trigger has an attached NavigationMenuContent dropdown.
+	// Plain (contentless) triggers always navigate on click.
+	hasContent?: boolean;
+};
+
 export const NavigationMenuTrigger = React.forwardRef<
 	React.ElementRef<typeof NavigationMenuPrimitive.Trigger>,
-	React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Trigger>
->(({ className, children, onClick, ...props }, ref) => {
+	NavigationMenuTriggerProps
+>(({ className, children, href, hasContent = false, onClick, ...props }, ref) => {
 	// Fix: When hovering the trigger and clicking, it opens and closes.
 	// This adds a timer which ignores the click, modified from
 	// https://github.com/radix-ui/primitives/issues/1630#issuecomment-1545995075
@@ -64,19 +75,28 @@ export const NavigationMenuTrigger = React.forwardRef<
 	return (
 		<NavigationMenuPrimitive.Trigger
 			ref={forwarded_ref}
+			asChild
 			className={cn(navigationMenuTriggerStyle(), "group", className)}
 			onClick={(e) => {
-				if (disable) e.preventDefault();
+				const isOpen = forwarded_ref.current?.dataset.state === "open";
+				if (hasContent && isOpen) {
+					// Dropdown already open: let the click navigate instead of
+					// closing it, even if it's within the hover-race guard window
+					// below (the click is deliberate, not a hover artifact).
+				} else if (disable) {
+					// Hover just opened this trigger; ignore the immediately
+					// following click so it doesn't toggle straight back closed.
+					e.preventDefault();
+				} else if (hasContent) {
+					// Dropdown is closed: open it instead of navigating.
+					e.preventDefault();
+				}
 
 				if (onClick) onClick(e);
 			}}
 			{...props}
 		>
-			{children}{" "}
-			{/* <ChevronDownIcon
-        className="relative top-[1px] ml-1 h-3 w-3 transition duration-300 group-data-[state=open]:rotate-180"
-        aria-hidden="true"
-      /> */}
+			<Link href={`/${href}`}>{children}</Link>
 		</NavigationMenuPrimitive.Trigger>
 	);
 });

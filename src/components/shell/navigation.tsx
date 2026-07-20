@@ -1,4 +1,3 @@
-import Link from "next/link";
 import slugify from "slugify";
 import {
 	NavigationMenu,
@@ -82,8 +81,8 @@ function NavDropdown({
 	if (headings.length === 0) {
 		return (
 			<NavigationMenuItem value={href}>
-				<NavigationMenuTrigger className="bg-transparent text-base">
-					<Link href={`/${href}`}>{title}</Link>
+				<NavigationMenuTrigger className="bg-transparent text-base" href={href}>
+					{title}
 				</NavigationMenuTrigger>
 			</NavigationMenuItem>
 		);
@@ -91,7 +90,11 @@ function NavDropdown({
 
 	return (
 		<NavigationMenuItem value={href}>
-			<NavigationMenuTrigger className="bg-transparent text-base">
+			<NavigationMenuTrigger
+				className="bg-transparent text-base"
+				href={href}
+				hasContent
+			>
 				{title}
 			</NavigationMenuTrigger>
 			<NavigationMenuContent className="z-50">

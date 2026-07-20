@@ -4,7 +4,7 @@
 - #22 migration: before backfilling legacy `published_article.url` values into `article_slugs`, check for existing new-table slugs that already match a legacy `url` (now prevented going forward by `generate_unique_article_slug` checking `published_article.url`, but any new-table article published *before* that check landed could already hold a slug matching a legacy url). If found, the legacy article's url must NOT be force-suffixed — decide precedence explicitly (legacy url wins, since it's an existing public link) rather than letting #9's collision-suffixing logic silently rewrite it.
 - submit sitemap to bing webmaster and indexnow. AIs use that.
 - run `bun run scripts/fix-thumbnail-media-extensions.ts` after the migration is done.
-
+- improve mobile
 ## issues
 
 ⨯ ReferenceError: Element is not defined
