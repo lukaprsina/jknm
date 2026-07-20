@@ -15,7 +15,7 @@ function TocList({ entries }: { entries: TocEntry[] }) {
 	return (
 		<ScrollProvider containerRef={container_ref}>
 			<ScrollArea className="h-full max-h-[calc(100vh-8rem)] w-[300px] text-sm">
-				<div ref={container_ref} className="flex flex-col gap-1 py-4 pr-4">
+				<div ref={container_ref} className="flex flex-col py-4 pr-4">
 					{entries.map((entry) => (
 						<TOCItem
 							key={entry.id}
@@ -40,13 +40,13 @@ function TocList({ entries }: { entries: TocEntry[] }) {
  * nothing for an empty TOC, and flips `toc_visibility_store` so the shell
  * layout and mobile sheet can react to whether this page has one at all. */
 export function TableOfContents({ entries }: { entries: TocEntry[] }) {
-	// `#shell-aside` is always mounted by `TocAwareLayout`, so it's already in
-	// the DOM by the time this runs client-side; guarded for the SSR pass,
-	// where `document` doesn't exist yet even inside a "use client" component.
-	const [aside_element] = useState<HTMLElement | null>(() =>
-		typeof document === "undefined"
-			? null
-			: document.getElementById("shell-aside"),
+	// Both portal targets are read from the DOM only inside effects, never
+	// during render: reading `document` synchronously in the first client
+	// render (the one hydration diffs against) would disagree with the SSR
+	// pass, where `document` doesn't exist at all -- exactly the
+	// server/client branch React's hydration-mismatch warning calls out.
+	const [aside_element, set_aside_element] = useState<HTMLElement | null>(
+		null,
 	);
 	const [mobile_element, set_mobile_element] = useState<HTMLElement | null>(
 		null,
@@ -54,7 +54,35 @@ export function TableOfContents({ entries }: { entries: TocEntry[] }) {
 	const mobile_sheet_open = useMobileNavOpen();
 
 	useEffect(() => {
-		set_mobile_element(mobile_sheet_open ? document.getElementById("mobile-toc") : null);
+		set_aside_element(document.getElementById("shell-aside"));
+	}, []);
+
+	useEffect(() => {
+		if (!mobile_sheet_open) {
+			set_mobile_element(null);
+			return;
+		}
+
+		// `#mobile-toc` is rendered by `<MobileSheet>` (a separate component
+		// subtree gated on the same store), which mounts it asynchronously
+		// via Radix's sheet-open animation -- it isn't guaranteed to exist in
+		// the DOM yet by the time this effect runs, so watch for it instead
+		// of a single getElementById attempt.
+		const existing = document.getElementById("mobile-toc");
+		if (existing) {
+			set_mobile_element(existing);
+			return;
+		}
+
+		const observer = new MutationObserver(() => {
+			const element = document.getElementById("mobile-toc");
+			if (element) {
+				set_mobile_element(element);
+				observer.disconnect();
+			}
+		});
+		observer.observe(document.body, { childList: true, subtree: true });
+		return () => observer.disconnect();
 	}, [mobile_sheet_open]);
 
 	useEffect(() => {

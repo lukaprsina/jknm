@@ -4,15 +4,10 @@
  */
 await import("./src/env.js");
 
-// @next/mdx's loader takes plugin functions (remarkGfm, rehype-slug, ...) as
-// options, which Turbopack can't serialize across its Rust/JS boundary --
-// hence `--webpack` on the dev/build scripts in package.json. Compile speed
-// isn't a concern here (five small static pages).
+// Plugins are passed as strings (not imported functions) so Turbopack can
+// serialize them across its Rust/JS boundary -- see
+// https://nextjs.org/docs/app/guides/mdx#using-plugins-with-turbopack
 import createMDX from "@next/mdx";
-import remarkGfm from "remark-gfm";
-import withSlugs from "rehype-slug";
-import withToc from "@stefanprobst/rehype-extract-toc";
-import withTocExport from "@stefanprobst/rehype-extract-toc/mdx";
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -63,8 +58,12 @@ const config = {
 
 const withMDX = createMDX({
 	options: {
-		remarkPlugins: [remarkGfm],
-		rehypePlugins: [withSlugs, withToc, withTocExport],
+		remarkPlugins: ["remark-gfm"],
+		rehypePlugins: [
+			"rehype-slug",
+			"@stefanprobst/rehype-extract-toc",
+			"@stefanprobst/rehype-extract-toc/mdx",
+		],
 	},
 });
 
