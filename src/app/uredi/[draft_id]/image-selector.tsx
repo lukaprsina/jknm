@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 import Image from "next/image";
 import type React from "react";
@@ -12,13 +12,12 @@ import {
 } from "react";
 import type { Crop } from "react-image-crop";
 import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
-import { editor_store } from "~/components/editor/editor-store";
+import { useEditorImageData } from "~/components/editor/editor-store";
 import { Card } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 import type { ThumbnailType } from "~/lib/validators";
 import "react-image-crop/dist/ReactCrop.css";
 import { PlusIcon, TrashIcon } from "lucide-react";
-import { useStoreValue } from "zustand-x";
 import { DraftArticleContext } from "~/components/article/context";
 import { upload_image_by_file } from "~/components/aws-s3/upload-file";
 import { AspectRatio } from "~/components/ui/aspect-ratio";
@@ -34,7 +33,7 @@ export function ImageSelector({
 	setImage: (image: ThumbnailType | undefined) => void;
 }) {
 	const draft_article = useContext(DraftArticleContext);
-	const store_images = useStoreValue(editor_store, "image_data");
+	const store_images = useEditorImageData();
 	const input_ref = useRef<HTMLInputElement>(null);
 	const [crop, setCrop] = useState<Crop>();
 	const [uploadedVersion, setUploadedVersion] = useState<number>(Date.now());

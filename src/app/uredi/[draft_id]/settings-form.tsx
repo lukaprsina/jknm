@@ -56,7 +56,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
 	const form = useForm<z.infer<typeof form_schema>>({
 		resolver: zodResolver(form_schema),
 		defaultValues: {
-			thumbnail_crop: editor_store.get("thumbnail_crop") ?? undefined,
+			thumbnail_crop: editor_store.getState().thumbnail_crop ?? undefined,
 			created_at: draft_article?.created_at,
 		},
 	});

@@ -3,7 +3,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { createStore, useStoreValue } from "zustand-x";
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import {
 	get_primary_slug,
 	map_new_article_to_published_view,
@@ -20,16 +21,13 @@ export interface PreveriStoreType {
 	index: number;
 }
 
-const initial_data = {
-	index: 1,
-} satisfies PreveriStoreType;
+export const preveri_store = create<PreveriStoreType>()(
+	persist(() => ({ index: 1 }), { name: "preveri" }),
+);
 
-export const preveri_store = createStore(initial_data, {
-	name: "preveri",
-	persist: {
-		enabled: true,
-	},
-});
+export function usePreveriIndex(): number {
+	return preveri_store((state) => state.index);
+}
 
 export function PreveriClient({
 	articles,
@@ -42,7 +40,7 @@ export function PreveriClient({
 	const toaster = useToast();
 	const [inputPage, setInputPage] = useState(1);
 	const router = useRouter();
-	const preveri_store_index = useStoreValue(preveri_store, "index");
+	const preveri_store_index = usePreveriIndex();
 
 	const page_info = useMemo(() => {
 		const article_index = articles.findIndex(
@@ -121,7 +119,7 @@ export function PreveriClient({
 						return;
 					}
 
-					preveri_store.set("index", inputPage);
+					preveri_store.setState({ index: inputPage });
 				}}
 				className="my-8 flex items-center gap-4"
 			>
@@ -129,14 +127,14 @@ export function PreveriClient({
 					<Button
 						type="button"
 						disabled={Number.isNaN(page_info.previous)}
-						onClick={() => preveri_store.set("index", page_info.previous)}
+						onClick={() => preveri_store.setState({ index: page_info.previous })}
 					>
 						Prejšnja: {page_info.previous}
 					</Button>
 					<Button
 						type="button"
 						disabled={Number.isNaN(page_info.next)}
-						onClick={() => preveri_store.set("index", page_info.next)}
+						onClick={() => preveri_store.setState({ index: page_info.next })}
 					>
 						Naslednja: {page_info.next}
 					</Button>

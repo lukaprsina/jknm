@@ -12,7 +12,7 @@ import {
 	useMemo,
 	useRef,
 } from "react";
-import { createStore, useStoreValue } from "zustand-x";
+import { create } from "zustand";
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import {
@@ -39,14 +39,17 @@ import {
 import { Logo } from "./logo";
 import { Sponsors } from "./sponsors";
 
-export const mobile_nav_store = createStore(
-	{
-		open: false,
-	},
-	{
-		name: "mobile-nav",
-	},
-);
+export interface MobileNavStore {
+	open: boolean;
+}
+
+export const mobile_nav_store = create<MobileNavStore>(() => ({
+	open: false,
+}));
+
+export function useMobileNavOpen(): boolean {
+	return mobile_nav_store((state) => state.open);
+}
 
 export function MobileHeader({
 	published_article,
@@ -62,13 +65,15 @@ export function MobileHeader({
 
 	useEffect(() => {
 		if (md_breakpoint) {
-			mobile_nav_store.set("open", false);
+			mobile_nav_store.setState({ open: false });
 			return;
 		}
 
 		if (!sticky_navbar_ref.current) return;
 
-		shell_store.set("navbar_height", sticky_navbar_ref.current.clientHeight);
+		shell_store.setState({
+			navbar_height: sticky_navbar_ref.current.clientHeight,
+		});
 	}, [md_breakpoint]);
 
 	return (
@@ -104,7 +109,7 @@ export function MobileSheet({
 	published_article?: EditableArticleRef;
 	session: Session | null;
 }) {
-	const open = useStoreValue(mobile_nav_store, "open");
+	const open = useMobileNavOpen();
 	const pathname = usePathname();
 
 	const links: { title: string; href: string; active?: boolean }[] =
@@ -123,8 +128,7 @@ export function MobileSheet({
 			open={open}
 			modal={false}
 			onOpenChange={(new_state) => {
-				console.log("setting mobile nav open", new_state);
-				mobile_nav_store.set("open", new_state);
+				mobile_nav_store.setState({ open: new_state });
 			}}
 		>
 			<SheetTrigger asChild>
@@ -166,7 +170,7 @@ export function MobileSheet({
 								className="block"
 								href={`/${link.href}`}
 								onClick={() => {
-									mobile_nav_store.set("open", false);
+									mobile_nav_store.setState({ open: false });
 								}}
 							>
 								{link.title}

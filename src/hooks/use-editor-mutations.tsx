@@ -129,7 +129,7 @@ export function useEditorMutations() {
 			const updated = validate_article(editor_content, toaster);
 			const created_at = fake_created_at ?? draft_article.created_at;
 
-			const state = editor_store.get("state");
+			const state = editor_store.getState();
 			const resolved_thumbnail_crop = thumbnail_crop ?? state.thumbnail_crop;
 
 			update_settings_from_editor({
@@ -163,7 +163,7 @@ export function useEditorMutations() {
 			const article_id = draft_article.id;
 			const created_at = fake_created_at ?? draft_article.created_at;
 
-			const state = editor_store.get("state");
+			const state = editor_store.getState();
 			const resolved_thumbnail_crop = thumbnail_crop ?? state.thumbnail_crop;
 
 			update_settings_from_editor({

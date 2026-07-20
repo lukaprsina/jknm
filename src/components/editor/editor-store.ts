@@ -1,8 +1,8 @@
-import { createStore } from "zustand-x";
+import { create } from "zustand";
 import type { ThumbnailType } from "~/lib/validators";
 import type { EditorJSImageData } from "../../lib/editor-utils";
 
-interface EditorStoreType {
+export interface EditorStoreType {
 	draft_id: string;
 	title: string;
 	url: string;
@@ -12,7 +12,7 @@ interface EditorStoreType {
 	author_ids: number[];
 }
 
-const initial_data = {
+const initial_data: EditorStoreType = {
 	draft_id: "",
 	title: "",
 	url: "",
@@ -20,8 +20,14 @@ const initial_data = {
 	thumbnail_crop: null,
 	image_data: [],
 	author_ids: [],
-} satisfies EditorStoreType;
+};
 
-export const editor_store = createStore<EditorStoreType>(initial_data, {
-	name: "editor",
-});
+export const editor_store = create<EditorStoreType>(() => initial_data);
+
+export function useAuthorIds(): number[] {
+	return editor_store((state) => state.author_ids);
+}
+
+export function useEditorImageData(): EditorJSImageData[] {
+	return editor_store((state) => state.image_data);
+}

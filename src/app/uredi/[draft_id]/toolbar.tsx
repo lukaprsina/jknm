@@ -1,11 +1,10 @@
 "use client";
 
 import { use, useContext, useMemo } from "react";
-import { useStoreValue } from "zustand-x";
 import { AllAuthorsContext } from "~/app/provider";
 
 import { EditorContext } from "~/components/editor/editor-context";
-import { editor_store } from "~/components/editor/editor-store";
+import { editor_store, useAuthorIds } from "~/components/editor/editor-store";
 import type { MultiSelectProps } from "~/components/multi-select";
 import { MultiSelect } from "~/components/multi-select";
 import { ToolbarButtons } from "./toolbar-buttons";
@@ -13,7 +12,7 @@ import { ToolbarButtons } from "./toolbar-buttons";
 export function MyToolbar() {
 	const editor_context = useContext(EditorContext);
 	const all_authors = use(AllAuthorsContext);
-	const author_ids = useStoreValue(editor_store, "author_ids");
+	const author_ids = useAuthorIds();
 
 	const selected_author_ids = useMemo(() => {
 		// console.log("toolbar -> author_ids", author_ids, typeof author_ids);
@@ -44,7 +43,7 @@ export function MyToolbar() {
 						onValueChange={(value) => {
 							const ids = value.map((v) => parseInt(v, 10));
 							// console.log("toolbar -> onValueChange", ids);
-							editor_store.set("author_ids", ids);
+							editor_store.setState({ author_ids: ids });
 						}}
 						defaultValue={selected_author_ids}
 						options={authors}

@@ -29,28 +29,15 @@ export function update_settings_from_editor({
 	const image_data = extract_media_refs_from_content(editor_content, [
 		"image",
 	]).map((ref) => ref.data);
-	// const store_crop = editor_store.get.thumbnail_crop();
-	/* console.log("update_settings_from_editor", {
-    title,
-    url,
-    s3_url,
-    thumbnail_crop,
-    editor_content,
-    article_id,
-    author_ids,
-  }); */
 
-	editor_store.set("state", (draft) => {
-		draft.draft_id = article_id;
-		draft.image_data = image_data;
-		draft.title = title;
-		draft.url = url;
-		draft.s3_url = s3_url;
-
-		if (thumbnail_crop) draft.thumbnail_crop = thumbnail_crop;
-		if (author_ids) draft.author_ids = author_ids;
-
-		return draft;
+	editor_store.setState({
+		draft_id: article_id,
+		image_data,
+		title,
+		url,
+		s3_url,
+		...(thumbnail_crop && { thumbnail_crop }),
+		...(author_ids && { author_ids }),
 	});
 }
 

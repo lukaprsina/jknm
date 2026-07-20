@@ -51,22 +51,18 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 	if (article && seeded_draft_id.current !== article.id) {
 		seeded_draft_id.current = article.id;
 
-		editor_store.set("state", (draft) => {
-			draft.draft_id = article.id;
-			draft.title = article.title;
-			draft.url = convert_title_to_url(article.title);
-			draft.s3_url = "";
-			draft.thumbnail_crop = article.thumbnail_crop;
-			draft.image_data = article.content
+		editor_store.setState({
+			draft_id: article.id,
+			title: article.title,
+			url: convert_title_to_url(article.title),
+			s3_url: "",
+			thumbnail_crop: article.thumbnail_crop,
+			image_data: article.content
 				? extract_media_refs_from_content(article.content, ["image"]).map(
 						(ref) => ref.data,
 					)
-				: [];
-			draft.author_ids = article.draft_articles_to_authors.map(
-				(a) => a.author_id,
-			);
-
-			return draft;
+				: [],
+			author_ids: article.draft_articles_to_authors.map((a) => a.author_id),
 		});
 	}
 

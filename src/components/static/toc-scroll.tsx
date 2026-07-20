@@ -4,12 +4,11 @@ import type { Toc } from "@stefanprobst/rehype-extract-toc";
 import Link from "next/link";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { useStoreValue } from "zustand-x";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { useThrottle } from "~/hooks/use-throttle";
 import { cn } from "~/lib/utils";
-import { mobile_nav_store } from "../shell/mobile-header";
+import { mobile_nav_store, useMobileNavOpen } from "../shell/mobile-header";
 
 function get_heading_ids(toc: Toc): string[] {
 	const heading_ids: string[] = [];
@@ -114,7 +113,7 @@ function TocTree({
 							style={{ paddingLeft: `${entry.depth * 16}px` }}
 							href={`#${entry.id}`}
 							key={entry.id}
-							onClick={() => mobile_nav_store.set("open", false)}
+							onClick={() => mobile_nav_store.setState({ open: false })}
 						>
 							{entry.value}
 						</Link>
@@ -168,7 +167,7 @@ export function TableOfContents({ tableOfContents }: { tableOfContents: Toc }) {
 	const [mobileRef, setMobileRef] = useState<HTMLElement | null>(null);
 	const [mainRef, setMainRef] = useState<HTMLElement | null>(null);
 	const md_breakpoint = useBreakpoint("md");
-	const mobile_sheet_open = useStoreValue(mobile_nav_store, "open");
+	const mobile_sheet_open = useMobileNavOpen();
 
 	useEffect(() => {
 		setMainRef(document.getElementById("shell-main"));
