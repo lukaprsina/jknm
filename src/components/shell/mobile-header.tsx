@@ -147,8 +147,8 @@ export function MobileSheet({
 							session={session}
 						/>
 					</div>
-					<SheetTitle>Jamarski klub Novo mesto</SheetTitle>
 					<VisuallyHidden>
+						<SheetTitle>Jamarski klub Novo mesto</SheetTitle>
 						<SheetDescription>Mobile navigation bar</SheetDescription>
 					</VisuallyHidden>
 				</SheetHeader>
