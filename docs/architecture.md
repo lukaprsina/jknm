@@ -55,7 +55,7 @@ Migrated from NextAuth v4 in #32.
   Next.js guidance recommends.
 - No `SessionProvider` and no `useSession`; session data is passed down from RSC as props.
   Client code only calls the imperative wrappers in `src/lib/auth-client.ts`.
-- `src/server/auth/` is the only place the library is named on the server:
+- `src/server/auth/` holds all server-side library contact bar the route handler:
   - `index.ts` — the `betterAuth` instance and `getServerAuthSession()`.
   - `sign-in-gate.ts` — the whole "who may enter" rule as one pure predicate. It is wired in
     via a custom `getUserInfo` on the Google provider, because better-auth has no equivalent

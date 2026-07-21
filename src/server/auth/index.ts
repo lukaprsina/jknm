@@ -11,7 +11,6 @@ import { to_app_session } from "./session-shape";
 import { is_allowed_sign_in } from "./sign-in-gate";
 
 export type { Session } from "./session-shape";
-export { is_allowed_sign_in } from "./sign-in-gate";
 
 export const auth = betterAuth({
 	baseURL: env.BETTER_AUTH_URL,

@@ -66,9 +66,13 @@ export const env = createEnv({
 		NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME: z.string(),
 		NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME: z.string(),
 		NEXT_PUBLIC_AWS_MEDIA_BUCKET_NAME: z.string(),
+		// Despite the name, this is no longer an auth variable: #32 left the auth
+		// client same-origin, so nothing here configures it. Its only consumer is
+		// `get_base_url()`. Renaming it means a coordinated Vercel change, so #32
+		// left it alone deliberately.
 		NEXT_PUBLIC_NEXTAUTH_URL: z.preprocess(
-			// This makes Vercel deployments not fail if you don't set NEXT_PUBLIC_NEXTAUTH_URL
-			// Since NextAuth.js automatically uses the VERCEL_URL if present.
+			// This makes Vercel deployments not fail if you don't set it, since
+			// VERCEL_URL is present on every deployment.
 			(str) => process.env.VERCEL_URL ?? str,
 			// VERCEL_URL doesn't include `https` so it cant be validated as a URL
 			process.env.VERCEL ? z.string() : z.string().url(),
