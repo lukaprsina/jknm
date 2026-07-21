@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { sign_out } from "~/lib/auth-client";
 import { Button } from "../ui/button";
 
 export function SignOut() {
@@ -10,7 +10,7 @@ export function SignOut() {
 	return (
 		<Button
 			onClick={async () => {
-				await signOut();
+				await sign_out();
 				router.push("/");
 			}}
 		>

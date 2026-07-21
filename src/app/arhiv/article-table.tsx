@@ -3,7 +3,6 @@
 import type { Hit as SearchHit } from "instantsearch.js";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import Link from "next/link";
-import type { Session } from "next-auth";
 import type { UseInfiniteHitsProps } from "react-instantsearch";
 import { useSortBy } from "react-instantsearch";
 import { Authors } from "~/components/authors";
@@ -21,6 +20,7 @@ import { useInfiniteAlgoliaArticles } from "~/hooks/use-infinite-algolia";
 import { get_published_article_link } from "~/lib/article-utils";
 import { format_date_for_human } from "~/lib/format-date";
 import type { PublishedArticleHit } from "~/lib/validators";
+import type { Session } from "~/server/auth";
 import type { IntersectionRef } from "../infinite-no-trpc";
 import { MyStats, SORT_BY_ITEMS } from "./components";
 

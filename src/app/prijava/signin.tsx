@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import type { Session } from "next-auth";
-import { signIn, signOut } from "next-auth/react";
 import { InfoCard } from "~/components/info-card";
 import { Logo } from "~/components/shell/logo";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { CardFooter } from "~/components/ui/card";
+import { sign_in_with_google, sign_out } from "~/lib/auth-client";
 import { article_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
+import type { Session } from "~/server/auth";
 
 declare global {
 	interface Window {
@@ -51,7 +51,7 @@ export default function SignIn({ session }: { session: Session | null }) {
 	return (
 		<InfoCard title="Prijavljeni ste" description="Lahko se odjavite.">
 			<CardFooter className="flex items-baseline gap-2 pt-4">
-				<Button variant="secondary" onClick={async () => await signOut()}>
+				<Button variant="secondary" onClick={async () => await sign_out()}>
 					Odjava
 				</Button>
 				<Link href="/" className={cn(buttonVariants(), "no-underline")}>
@@ -67,7 +67,7 @@ function GoogleSignInButton() {
 		<button
 			className="gsi-material-button"
 			onClick={async () => {
-				await signIn("google", { callbackUrl: "/" });
+				await sign_in_with_google({ callback_url: "/" });
 			}}
 		>
 			<div className="gsi-material-button-state"></div>

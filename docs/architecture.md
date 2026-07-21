@@ -11,7 +11,7 @@ live in `docs/adr/`; domain vocabulary lives in `CONTEXT.md`.
 ## Stack
 
 Next.js 16.2.10 (App Router) · Drizzle + Postgres (via Supabase) · **Server Actions +
-TanStack Query** · NextAuth **v4** (Google) · EditorJS (admin article editor) ·
+TanStack Query** · better-auth (Google) · EditorJS (admin article editor) ·
 Backblaze B2 (media storage, S3-compatible) · Algolia (search) · Resend (email) ·
 Tailwind v4 · hosted on Vercel.
 
@@ -46,29 +46,36 @@ consolidating invalidation (#31), not replacing the caching primitive.
 
 ## Auth
 
-NextAuth **v4** (`NextAuthOptions` + `getServerSession`, not the v5 pattern), Google provider
-only, gated on verified `@jknm.si` emails. Database sessions via `DrizzleAdapter`.
+**better-auth** 1.6.23, Google provider only, gated on verified `@jknm.si` emails. Database
+sessions via `drizzleAdapter` (cookie caching deliberately off, so sign-out means sign-out).
+Migrated from NextAuth v4 in #32.
 
-- No `middleware.ts` anywhere — access is enforced per-page/per-action via
-  `getServerAuthSession()` + `redirect()`/`notFound()`.
+- No `middleware.ts`/`proxy.ts` anywhere — access is enforced per-page/per-action via
+  `getServerAuthSession()` + `redirect()`/`notFound()`, which is also what better-auth's own
+  Next.js guidance recommends.
 - No `SessionProvider` and no `useSession`; session data is passed down from RSC as props.
-  Client code only calls imperative `signIn`/`signOut`.
-- Surface: 1 config (`src/server/auth.ts`), 1 route handler, **15** `getServerAuthSession()`
-  reads, 4 client `signIn`/`signOut` call sites.
-- **The wrapper leaks.** `getServerAuthSession()` was meant to be the only place the app
-  touches its auth library, but `next-auth`'s `Session` type is imported directly by
-  **7** modules (`arhiv/article-table`, `arhiv/search`, `prijava/signin`, `shell/desktop-header`,
-  `shell/editing-buttons`, `shell/mobile-header`, `server/article/authorized-mutation`).
-  `src/server/db/schema.ts` also imports `next-auth/adapters` for the `AdapterAccount` type.
-- The sign-in gate (Google + verified email + `@jknm.si`) lives inside a NextAuth config
-  callback and has **no test covering it**.
-- Migration to better-auth is decided (#6) and specified (#32), not started.
+  Client code only calls the imperative wrappers in `src/lib/auth-client.ts`.
+- `src/server/auth/` is the only place the library is named on the server:
+  - `index.ts` — the `betterAuth` instance and `getServerAuthSession()`.
+  - `sign-in-gate.ts` — the whole "who may enter" rule as one pure predicate. It is wired in
+    via a custom `getUserInfo` on the Google provider, because better-auth has no equivalent
+    of NextAuth's `signIn` callback and the other two candidate hooks silently fail (see #32).
+    That custom callback *replaces* Google's built-in `hd` check, which is why `hd` is not set.
+  - `session-shape.ts` — adapts better-auth's `{ session, user }` into the app's established
+    `{ user, expires }` shape, so all **15** `getServerAuthSession()` reads and every component
+    taking a `Session` prop were left untouched by the migration.
+- `Session` is exported from `~/server/auth`, not from the library. Swapping the library again
+  does not mean editing UI components.
+- Surface: 1 route handler (`api/auth/[...all]`), 15 server reads, 4 client call sites.
+- Env: `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` (must be explicit — an inferred base URL makes
+  Google answer `redirect_uri_mismatch`), `GOOGLE_CLIENT_ID`/`_SECRET`. The Google redirect URI
+  `{BETTER_AUTH_URL}/api/auth/callback/google` is unchanged from NextAuth v4.
 
 ## Code structure
 
 - `src/app/` — App Router. `(static)` = static content pages, `novica` = article pages,
   `uredi` = admin editor, `arhiv`/`avtorji`/`kontakt`/`preveri` = archive/authors/contact/verify,
-  `api/` = route handlers (NextAuth, media upload, contact email, Supabase keep-alive).
+  `api/` = route handlers (better-auth, media upload, contact email, Supabase keep-alive).
   The 2008-site converter was deleted (#26); `scripts/migrate-legacy-articles.ts` remains for
   the still-pending production data migration.
 - `src/server/article/` — `new-article.ts` (`create_article`, `save_article`, `publish_article`),

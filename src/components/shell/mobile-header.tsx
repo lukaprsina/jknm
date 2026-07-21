@@ -3,7 +3,6 @@
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
-import type { Session } from "next-auth";
 import { type ComponentProps, useEffect, useRef } from "react";
 import { create } from "zustand";
 import { useHasToc } from "~/components/toc/toc-store";
@@ -20,6 +19,7 @@ import {
 } from "~/components/ui/sheet";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { cn } from "~/lib/utils";
+import type { Session } from "~/server/auth";
 import type { EditableArticleRef } from "../article/new-adapter";
 import { shell_store } from "./desktop-header";
 import EditingButtons from "./editing-buttons";

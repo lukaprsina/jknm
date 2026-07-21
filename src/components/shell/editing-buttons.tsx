@@ -3,8 +3,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { PencilIcon, PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-
-import type { Session } from "next-auth";
 import type { z } from "zod";
 import type { ButtonProps } from "~/components/ui/button";
 import { Button } from "~/components/ui/button";
@@ -16,6 +14,7 @@ import {
 import { get_draft_article_link } from "~/lib/article-utils";
 import { create_superseding_draft } from "~/server/article/lifecycle";
 import type { create_superseding_draft_validator } from "~/server/article/validators";
+import type { Session } from "~/server/auth";
 import MakeNewDraftButton from "../article/make-new-draft-button";
 import type { EditableArticleRef } from "../article/new-adapter";
 import { SettingsDropdown } from "../settings";

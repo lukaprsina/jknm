@@ -1,5 +1,5 @@
-import type { Session } from "next-auth";
 import type { z } from "zod";
+import type { Session } from "../auth";
 import { getServerAuthSession } from "../auth";
 
 /**

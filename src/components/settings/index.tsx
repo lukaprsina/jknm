@@ -3,7 +3,6 @@
 import { LogOut, RefreshCcw, SettingsIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
 import { Button } from "~/components/ui/button";
 import {
 	DropdownMenu,
@@ -13,6 +12,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { sign_out } from "~/lib/auth-client";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 // import { AuthorsDialog } from "./authors";
 // import { useState } from "react";
@@ -51,7 +51,7 @@ export function SettingsDropdown() {
 					<DropdownMenuSeparator />
 					<DropdownMenuItem
 						onClick={async () => {
-							await signOut();
+							await sign_out();
 							router.push("/");
 						}}
 					>

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import type { Session } from "next-auth";
 import type React from "react";
 import { useCallback, useEffect, useRef } from "react";
 import { create } from "zustand";
@@ -9,6 +8,7 @@ import { Separator } from "~/components/ui/separator";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 // import Logo from "~/assets/logo-barvni.svg";
 import { cn } from "~/lib/utils";
+import type { Session } from "~/server/auth";
 import type { EditableArticleRef } from "../article/new-adapter";
 import EditingButtons from "./editing-buttons";
 import {

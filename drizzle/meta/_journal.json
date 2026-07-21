@@ -29,6 +29,13 @@
 			"when": 1784047588346,
 			"tag": "0003_typical_manta",
 			"breakpoints": true
+		},
+		{
+			"idx": 4,
+			"version": "7",
+			"when": 1784651639388,
+			"tag": "0004_better_auth_migration",
+			"breakpoints": true
 		}
 	]
 }
