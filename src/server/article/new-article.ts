@@ -399,6 +399,8 @@ export async function publish_article(
 
 	revalidateTag("drafts", "max");
 	revalidateTag("archive", "max");
+	revalidateTag("homepage-feed", "max");
+	revalidateTag("all-published", "max");
 	revalidatePath("/");
 	return transaction;
 }

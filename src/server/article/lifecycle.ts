@@ -139,6 +139,8 @@ export async function archive_article(
 
 	revalidateTag("drafts", "max");
 	revalidateTag("archive", "max");
+	revalidateTag("homepage-feed", "max");
+	revalidateTag("all-published", "max");
 	revalidatePath("/");
 	return transaction;
 }
@@ -184,6 +186,8 @@ export async function delete_article(
 
 	revalidateTag("drafts", "max");
 	revalidateTag("archive", "max");
+	revalidateTag("homepage-feed", "max");
+	revalidateTag("all-published", "max");
 	revalidatePath("/");
 	return transaction;
 }
