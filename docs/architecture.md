@@ -41,7 +41,7 @@ Five cache tags are declared, all with `revalidate: false`: `homepage-feed`, `al
 `drafts`, `archive`, `authors`.
 
 **Staying on `unstable_cache`** — migrating to Cache Components (`use cache`) was investigated
-and rejected; see `docs/research/nextjs16-caching-verdict.md`. What remains planned is
+and rejected (ADR-0005). What remains planned is
 consolidating invalidation (#31), not replacing the caching primitive.
 
 ## Auth
