@@ -5,17 +5,22 @@
 - submit sitemap to bing webmaster and indexnow. AIs use that.
 - run `bun run scripts/fix-thumbnail-media-extensions.ts` after the migration is done.
 - improve mobile
-## issues
+- osnutka dva reš
+- statične bold zgodovina **
+- before dropping the legacy tables: write a script verifying every migrated article is
+  equivalent where it matters (title, slug, authors, content, thumbnail, media links) between
+  `published_article`/`draft_article` and `articles`.
+- homepage article summary is bold and different font
 
-⨯ ReferenceError: Element is not defined
-    at module evaluation (src\components\editor\editor-context.tsx:3:1)
-    at module evaluation (src\app\uredi\[draft_id]\editor.tsx:13:1)
-  1 | "use client";
-  2 |
-> 3 | import EditorJS from "@editorjs/editorjs";
-    | ^
-  4 | // @ts-expect-error no types
-  5 | import DragDrop from "editorjs-drag-drop";
-  6 | // @ts-expect-error no types {
-  digest: '2609235270'
-}
+## Planned, sequenced (see docs/adr/0002)
+
+1. `content_markdown` save-path wiring (above) — correctness, independent.
+2. **better-auth** migration (#6) — shallow seam, must precede 3.
+3. **Caching + structure + oRPC rewrite** — remove `unstable_cache` and
+   `revive-cache-dates`, collapse the dual `invalidateQueries`/`revalidateTag`
+   invalidation into one helper, restructure `src/server`, land oRPC. One
+   restructuring, not three.
+4. Drop legacy tables — gated on moving `find_available_slug` off
+   `published_article.url` and on the equivalence script above.
+5. Fossil sweep — rename `infinite-no-trpc.tsx`, delete the commented tRPC query in
+   `uredi/[draft_id]/editor.tsx`, drop unused `react-query-persist` deps.
