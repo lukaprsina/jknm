@@ -29,15 +29,20 @@ oRPC is a decided-but-unimplemented future step (see ADR-0002).
   a filename fossil from the tRPC era) and the `/preveri` admin tool.
 - **Cache invalidation is split-brained**: each mutation hand-fires *both*
   `queryClient.invalidateQueries` (client cache) and `revalidateTag`/`revalidatePath`
-  (server cache), duplicated across 16+ call sites. Consolidating this is planned alongside
-  the `unstable_cache` removal.
+  (server cache), duplicated across 16+ call sites. Consolidating this is #31.
 
 ## Caching
 
 `unstable_cache` at 5 sites (`infinite-server.tsx`, `preveri/page.tsx`, `draft-articles.tsx`,
 `archived-articles.tsx`, `cached-global-state.tsx`), plus `src/lib/revive-cache-dates.ts` —
 a workaround that exists purely because `unstable_cache` JSON-mangles `Date` values.
-Replacing this with Next 16's `cacheLife`/`updateTag`/`refresh` primitives is planned.
+
+Five cache tags are declared, all with `revalidate: false`: `homepage-feed`, `all-published`,
+`drafts`, `archive`, `authors`.
+
+**Staying on `unstable_cache`** — migrating to Cache Components (`use cache`) was investigated
+and rejected; see `docs/research/nextjs16-caching-verdict.md`. What remains planned is
+consolidating invalidation (#31), not replacing the caching primitive.
 
 ## Auth
 
@@ -48,9 +53,16 @@ only, gated on verified `@jknm.si` emails. Database sessions via `DrizzleAdapter
   `getServerAuthSession()` + `redirect()`/`notFound()`.
 - No `SessionProvider` and no `useSession`; session data is passed down from RSC as props.
   Client code only calls imperative `signIn`/`signOut`.
-- Surface: 1 config (`src/server/auth.ts`), 1 route handler, ~11 server session reads,
-  4 client `signIn`/`signOut` call sites. Migration to better-auth is decided (#6) but not
-  started.
+- Surface: 1 config (`src/server/auth.ts`), 1 route handler, **15** `getServerAuthSession()`
+  reads, 4 client `signIn`/`signOut` call sites.
+- **The wrapper leaks.** `getServerAuthSession()` was meant to be the only place the app
+  touches its auth library, but `next-auth`'s `Session` type is imported directly by
+  **7** modules (`arhiv/article-table`, `arhiv/search`, `prijava/signin`, `shell/desktop-header`,
+  `shell/editing-buttons`, `shell/mobile-header`, `server/article/authorized-mutation`).
+  `src/server/db/schema.ts` also imports `next-auth/adapters` for the `AdapterAccount` type.
+- The sign-in gate (Google + verified email + `@jknm.si`) lives inside a NextAuth config
+  callback and has **no test covering it**.
+- Migration to better-auth is decided (#6) and specified (#32), not started.
 
 ## Code structure
 
