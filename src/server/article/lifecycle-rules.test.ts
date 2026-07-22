@@ -6,14 +6,18 @@ import {
 	assert_can_supersede,
 	decide_slug_transition,
 	get_archive_origin_label,
+	is_supersede_publish,
 	is_visible_to,
 	resolve_lifecycle_target,
 } from "./lifecycle-rules";
 
 describe("assert_can_archive", () => {
-	test.each(["draft", "published"] as const)("allows %s -> archived", (status) => {
-		expect(() => assert_can_archive(status)).not.toThrow();
-	});
+	test.each(["draft", "published"] as const)(
+		"allows %s -> archived",
+		(status) => {
+			expect(() => assert_can_archive(status)).not.toThrow();
+		},
+	);
 
 	test.each(["archived", "deleted"] as const)(
 		"rejects %s -> archived",
@@ -61,7 +65,11 @@ describe("assert_can_discard", () => {
 
 describe("resolve_lifecycle_target", () => {
 	test("a standalone draft/published/archived row targets itself", () => {
-		const article = { id: "a", status: "published" as const, supersedes_id: null };
+		const article = {
+			id: "a",
+			status: "published" as const,
+			supersedes_id: null,
+		};
 
 		expect(resolve_lifecycle_target(article, null)).toEqual({
 			target: article,
@@ -70,8 +78,16 @@ describe("resolve_lifecycle_target", () => {
 	});
 
 	test("a superseding draft targets its source, and flags itself for cascade delete", () => {
-		const draft = { id: "draft-id", status: "draft" as const, supersedes_id: "source-id" };
-		const source = { id: "source-id", status: "published" as const, supersedes_id: null };
+		const draft = {
+			id: "draft-id",
+			status: "draft" as const,
+			supersedes_id: "source-id",
+		};
+		const source = {
+			id: "source-id",
+			status: "published" as const,
+			supersedes_id: null,
+		};
 
 		expect(resolve_lifecycle_target(draft, source)).toEqual({
 			target: source,
@@ -80,14 +96,26 @@ describe("resolve_lifecycle_target", () => {
 	});
 
 	test("throws if the superseding draft's source can't be found", () => {
-		const draft = { id: "draft-id", status: "draft" as const, supersedes_id: "source-id" };
+		const draft = {
+			id: "draft-id",
+			status: "draft" as const,
+			supersedes_id: "source-id",
+		};
 
 		expect(() => resolve_lifecycle_target(draft, null)).toThrow();
 	});
 
 	test("a draft whose source is already deleted (e.g. unarchive deleted it) targets itself, no cascade", () => {
-		const draft = { id: "draft-id", status: "draft" as const, supersedes_id: "source-id" };
-		const source = { id: "source-id", status: "deleted" as const, supersedes_id: null };
+		const draft = {
+			id: "draft-id",
+			status: "draft" as const,
+			supersedes_id: "source-id",
+		};
+		const source = {
+			id: "source-id",
+			status: "deleted" as const,
+			supersedes_id: null,
+		};
 
 		expect(resolve_lifecycle_target(draft, source)).toEqual({
 			target: draft,
@@ -112,6 +140,27 @@ describe("assert_can_supersede", () => {
 	);
 });
 
+describe("is_supersede_publish", () => {
+	test.each(["archived", "published"] as const)(
+		"is a supersede-publish when the source is still %s",
+		(status) => {
+			expect(is_supersede_publish({ status })).toBe(true);
+		},
+	);
+
+	test("is not a supersede-publish when the source has no supersedes_id (standalone draft)", () => {
+		expect(is_supersede_publish(null)).toBe(false);
+	});
+
+	test("falls back to a standalone first-publish when the source is already deleted (e.g. unarchive retired it)", () => {
+		expect(is_supersede_publish({ status: "deleted" })).toBe(false);
+	});
+
+	test("rejects a source still in draft, which should never happen but must not be treated as supersedable", () => {
+		expect(is_supersede_publish({ status: "draft" })).toBe(false);
+	});
+});
+
 describe("decide_slug_transition", () => {
 	test("reuses the old primary slug (re-pointed to the new article) when the title is unchanged", () => {
 		const decision = decide_slug_transition({
@@ -130,7 +179,10 @@ describe("decide_slug_transition", () => {
 			old_primary_slug: { id: 7 },
 		});
 
-		expect(decision).toEqual({ action: "mint_new_and_demote", demote_slug_id: 7 });
+		expect(decision).toEqual({
+			action: "mint_new_and_demote",
+			demote_slug_id: 7,
+		});
 	});
 
 	test("mints a fresh slug when the superseded article never had a primary slug", () => {
@@ -179,6 +231,8 @@ describe("get_archive_origin_label", () => {
 	});
 
 	test("labels an article that was archived straight from draft", () => {
-		expect(get_archive_origin_label({ published_at: null })).toBe("bil osnutek");
+		expect(get_archive_origin_label({ published_at: null })).toBe(
+			"bil osnutek",
+		);
 	});
 });

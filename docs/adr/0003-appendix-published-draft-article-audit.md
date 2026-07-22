@@ -1,5 +1,16 @@
 # Appendix: `published_article`/`draft_article` deprecation audit
 
+> **Status: historical snapshot — fully executed. Do not read as current state.**
+>
+> This is a point-in-time inventory taken 2026-07-18. Since then the cutover (#23/#24), the
+> legacy-stack deletion (#26/#27), and the physical schema drop (`drizzle/0006_clammy_echo.sql`,
+> 2026-07-22) have all landed: `published_article`, `draft_article`, their join tables, and
+> `duplicate_article_urls` no longer exist, and the one-shot `scripts/migrate-legacy-*` tooling
+> that produced the migrated data is deleted. Everything in this document is kept for
+> archaeology: why the tables looked the way they did and what had to be ported.
+>
+> For current architecture see `docs/architecture.md`.
+
 This is a research note, not an ADR — no ADR in this directory covers the
 articles-table consolidation yet (the decision itself was made and largely
 *executed* through GitHub issues #8/#9/#13/#16–#22, not through a `docs/adr/`

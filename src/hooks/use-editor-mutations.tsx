@@ -3,7 +3,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
-import type { z } from "zod";
 import {
 	DraftArticleContext,
 	PublishedArticleContext,
@@ -16,15 +15,15 @@ import {
 import { editor_store } from "~/components/editor/editor-store";
 import { useToast } from "~/hooks/use-toast";
 import { get_published_article_link } from "~/lib/article-utils";
+import { apply_client_invalidations } from "~/lib/cache-invalidation-client";
+import { unwrap_server_function } from "~/lib/orpc-action";
 import type { ThumbnailType } from "~/lib/validators";
-import { delete_article, discard_draft } from "~/server/article/lifecycle";
-import { publish_article, save_article } from "~/server/article/new-article";
-import type {
-	delete_article_validator,
-	discard_draft_validator,
-	publish_article_validator,
-	save_article_validator,
-} from "~/server/article/validators";
+import {
+	deleteArticle,
+	discardDraft,
+	publishArticle,
+	saveArticle,
+} from "~/server/orpc/article/procedures";
 
 export function useEditorMutations() {
 	const query_client = useQueryClient();
@@ -40,8 +39,8 @@ export function useEditorMutations() {
 	}
 
 	const save_article_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof save_article_validator>) =>
-			save_article(input),
+		mutationFn: (input: Parameters<typeof saveArticle>[0]) =>
+			unwrap_server_function(saveArticle(input)),
 		onSettled: () => {
 			editor_context.setSavingText(undefined);
 			editor_context.setDirty(false);
@@ -55,17 +54,15 @@ export function useEditorMutations() {
 	});
 
 	const publish_article_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof publish_article_validator>) =>
-			publish_article(input),
+		mutationFn: (input: Parameters<typeof publishArticle>[0]) =>
+			unwrap_server_function(publishArticle(input)),
 		onSuccess: (data) => {
 			router.push(`/novica/${data.slug}`);
 		},
 		onSettled: async () => {
 			editor_context.setSavingText(undefined);
 			editor_context.setDirty(false);
-			await query_client.invalidateQueries({
-				queryKey: ["infinite_published"],
-			});
+			await apply_client_invalidations(query_client, "article.published");
 		},
 		onError: (error) => {
 			toaster.toast({
@@ -76,12 +73,10 @@ export function useEditorMutations() {
 	});
 
 	const delete_article_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof delete_article_validator>) =>
-			delete_article(input),
+		mutationFn: (input: Parameters<typeof deleteArticle>[0]) =>
+			unwrap_server_function(deleteArticle(input)),
 		onSettled: async () => {
-			await query_client.invalidateQueries({
-				queryKey: ["infinite_published"],
-			});
+			await apply_client_invalidations(query_client, "article.deleted");
 			router.replace(`/`);
 		},
 		onError: (error) => {
@@ -93,12 +88,13 @@ export function useEditorMutations() {
 	});
 
 	const discard_draft_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof discard_draft_validator>) =>
-			discard_draft(input),
+		mutationFn: (input: Parameters<typeof discardDraft>[0]) =>
+			unwrap_server_function(discardDraft(input)),
 		onSettled: async () => {
-			await query_client.invalidateQueries({
-				queryKey: ["infinite_published"],
-			});
+			await apply_client_invalidations(
+				query_client,
+				"article.draft_discarded",
+			);
 			// `url` is `""` when the source was archived straight from a draft
 			// and never had a slug minted — fall back to `/` in that case too.
 			router.replace(
@@ -129,7 +125,7 @@ export function useEditorMutations() {
 			const updated = validate_article(editor_content, toaster);
 			const created_at = fake_created_at ?? draft_article.created_at;
 
-			const state = editor_store.get("state");
+			const state = editor_store.getState();
 			const resolved_thumbnail_crop = thumbnail_crop ?? state.thumbnail_crop;
 
 			update_settings_from_editor({
@@ -163,7 +159,7 @@ export function useEditorMutations() {
 			const article_id = draft_article.id;
 			const created_at = fake_created_at ?? draft_article.created_at;
 
-			const state = editor_store.get("state");
+			const state = editor_store.getState();
 			const resolved_thumbnail_crop = thumbnail_crop ?? state.thumbnail_crop;
 
 			update_settings_from_editor({

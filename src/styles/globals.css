@@ -9,12 +9,14 @@
 	padding-inline: 2rem;
 }
 
-@theme {
+@theme inline {
 	--font-sans:
 		var(--font-opensans), var(--font-geist-sans), ui-sans-serif, system-ui,
 		sans-serif;
 	--font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+}
 
+@theme {
 	--color-background: hsl(var(--background));
 	--color-foreground: hsl(var(--foreground));
 	--color-card: hsl(var(--card));
@@ -131,6 +133,16 @@
 
 	body {
 		@apply bg-background text-foreground;
+	}
+
+	html {
+		scroll-behavior: smooth;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		html {
+			scroll-behavior: auto;
+		}
 	}
 }
 

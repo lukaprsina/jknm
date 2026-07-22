@@ -7,12 +7,14 @@ import Blocks from "editorjs-blocks-react-renderer";
 import HTMLReactParser from "html-react-parser";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { createElement, useEffect, useMemo, useRef } from "react";
 import ArticleDescription from "~/components/article/description";
-import { gallery_store } from "~/components/gallery-store";
+import { gallery_store, useGalleryImages } from "~/components/gallery-store";
+import { TableOfContents } from "~/components/toc/table-of-contents";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import type { EditorJSImageData } from "~/lib/editor-utils";
 import {
+	extract_headings_from_content,
 	extract_media_refs_from_content,
 	get_heading_from_editor,
 } from "~/lib/editor-utils";
@@ -22,15 +24,6 @@ import type {
 	EditorDraftArticle,
 	PublishedArticleView,
 } from "../article/new-adapter";
-/* const ArticleDescription = dynamic(
-  () => import("~/components/article/description"),
-  {
-    ssr: false,
-    loading: () => (
-      <Skeleton className="h-[1em] w-[300px] bg-[hsl(0_0%_90%)]" />
-    ),
-  },
-); */
 
 // Editor content is rendered from stored HTML (paragraph/list/quote/etc.
 // all pass through html-react-parser), so patching every renderer isn't
@@ -49,15 +42,70 @@ function ArticleLinksInNewTab({ children }: { children: React.ReactNode }) {
 	return <div ref={ref}>{children}</div>;
 }
 
+function ArticleBody({
+	blocks_data,
+}: {
+	blocks_data: NonNullable<ReturnType<typeof useEditorData>["blocks_data"]>;
+}) {
+	return (
+		<ArticleLinksInNewTab>
+			<Blocks
+				data={blocks_data}
+				renderers={{
+					image: NextImageRenderer,
+					attaches: AttachesRenderer,
+					header: HeaderRenderer,
+				}}
+			/>
+		</ArticleLinksInNewTab>
+	);
+}
+
+function useEditorData(
+	article: { content: EditorDraftArticle["content"] } | undefined,
+) {
+	const headings = useMemo(() => {
+		if (!article?.content) return [];
+		return extract_headings_from_content(article.content);
+	}, [article?.content]);
+
+	const blocks_data = useMemo(() => {
+		if (!article?.content) return;
+
+		const heading_by_block_index = new Map(
+			headings.map((heading) => [heading.block_index, heading.id]),
+		);
+
+		const blocks = article.content.blocks
+			.slice(1) // remove first heading (the article H1, rendered separately below)
+			.map((block, index) => {
+				const toc_id = heading_by_block_index.get(index + 1);
+				if (!toc_id) return block;
+				return { ...block, data: { ...block.data, toc_id } };
+			});
+
+		return {
+			version: article.content.version ?? "unknown version",
+			blocks,
+			time: article.content.time ?? Date.now(),
+		};
+	}, [article?.content, headings]);
+
+	return { blocks_data, headings };
+}
+
 export function EditorToReact({
 	article,
 }: {
 	article: EditorDraftArticle | PublishedArticleView | undefined;
 }) {
-	const [heading, setHeading] = useState<string | undefined>();
+	const { blocks_data, headings } = useEditorData(article);
 
-	const editor_data = useMemo(() => {
-		if (!article?.content) return;
+	// Derived synchronously from `article.content` (available at first paint,
+	// SSR included) rather than via useEffect+useState, which left every
+	// article flashing "Untitled" until the effect ran post-hydration.
+	const heading = useMemo(() => {
+		if (!article?.content) return undefined;
 
 		const heading_info = get_heading_from_editor(article.content);
 
@@ -67,19 +115,23 @@ export function EditorToReact({
 			title = "Invalid heading";
 		}
 
-		setHeading(title);
-
-		const image_data = extract_media_refs_from_content(article.content, [
-			"image",
-		]).map((ref) => ref.data);
-		gallery_store.set("images", image_data);
-
-		return {
-			version: article.content.version ?? "unknown version",
-			blocks: article.content.blocks.slice(1), // remove first heading
-			time: article.content.time ?? Date.now(),
-		};
+		return title;
 	}, [article?.content]);
+
+	const gallery_images = useMemo(() => {
+		if (!article?.content) return [];
+
+		return extract_media_refs_from_content(article.content, ["image"])
+			.map((ref) => ref.data)
+			.map((data) => {
+				const { width, height } = get_effective_dimensions(data.file);
+				return { ...data, file: { ...data.file, width, height } };
+			});
+	}, [article?.content]);
+
+	useEffect(() => {
+		gallery_store.getState().registerImages(gallery_images);
+	}, [gallery_images]);
 
 	const author_ids = useMemo(() => {
 		if (!article) return [];
@@ -89,14 +141,11 @@ export function EditorToReact({
 			: article.draft_articles_to_authors.map((a) => a.author_id);
 	}, [article]);
 
-	/*useEffect(() => {
-    console.log("editor-to-react", { article, author_ids });
-  }, [article, author_ids]);*/
-
-	if (!editor_data || !article) return;
+	if (!blocks_data || !article) return;
 
 	return (
 		<>
+			<TableOfContents entries={headings} />
 			<Card className="hidden pt-8 md:block">
 				<CardHeader>
 					<h1
@@ -111,15 +160,7 @@ export function EditorToReact({
 					/>
 				</CardHeader>
 				<CardContent>
-					<ArticleLinksInNewTab>
-						<Blocks
-							data={editor_data}
-							renderers={{
-								image: NextImageRenderer,
-								attaches: AttachesRenderer,
-							}}
-						/>
-					</ArticleLinksInNewTab>
+					<ArticleBody blocks_data={blocks_data} />
 				</CardContent>
 			</Card>
 			<div className="pt-8 md:hidden">
@@ -133,61 +174,75 @@ export function EditorToReact({
 					author_ids={author_ids}
 					created_at={article.created_at}
 				/>
-				<ArticleLinksInNewTab>
-					<Blocks
-						data={editor_data}
-						renderers={{
-							image: NextImageRenderer,
-							attaches: AttachesRenderer,
-						}}
-					/>
-				</ArticleLinksInNewTab>
+				<ArticleBody blocks_data={blocks_data} />
 			</div>
 		</>
 	);
 }
 
 const DOUBLE_IMAGES = true as boolean;
+const SMALL_IMAGE_THRESHOLD = 500;
+
+// Small inline images render too tiny at their real pixel size, so the editor
+// preview doubles them for display. The gallery lightbox mirrors this so a
+// thumbnail and its opened lightbox image feel like the same size.
+function get_effective_dimensions(file: { width?: number; height?: number }): {
+	width: number;
+	height: number;
+	dimensions_exist: boolean;
+} {
+	if (!file.width || !file.height)
+		return { width: 1500, height: 1000, dimensions_exist: false };
+
+	const should_double =
+		DOUBLE_IMAGES &&
+		file.width < SMALL_IMAGE_THRESHOLD &&
+		file.height < SMALL_IMAGE_THRESHOLD;
+
+	return {
+		width: should_double ? file.width * 2 : file.width,
+		height: should_double ? file.height * 2 : file.height,
+		dimensions_exist: true,
+	};
+}
 
 export const NextImageRenderer: RenderFn<EditorJSImageData> = ({
 	data,
 	className,
 }) => {
-	const image_props = useMemo(() => {
-		if (!data.file.width || !data.file.height)
-			return { width: 1500, height: 1000, dimensions_exist: false };
-
-		if (DOUBLE_IMAGES && data.file.width < 500 && data.file.height < 500) {
-			return {
-				width: data.file.width * 2,
-				height: data.file.height * 2,
-				dimensions_exist: true,
-			};
-		} else {
-			return {
-				width: data.file.width,
-				height: data.file.height,
-				dimensions_exist: true,
-			};
-		}
-	}, [data.file.height, data.file.width]);
-
-	/*useEffect(() => {
-    console.log("editor-to-react", data, image_props);
-  }, [data, image_props]);*/
+	const image_props = useMemo(
+		() => get_effective_dimensions(data.file),
+		[data.file],
+	);
+	const gallery_images = useGalleryImages();
 
 	return (
 		<figure className="max-h-[1500] max-w-[1500]">
 			<Image
 				onClick={() => {
-					gallery_store.set("default_image", data);
+					// registerImages already computed this image's effective
+					// dimensions when building the gallery's image list — reuse
+					// that instead of recomputing get_effective_dimensions here.
+					const registered = gallery_images.find(
+						(image) => image.file.url === data.file.url,
+					);
+					gallery_store.getState().openImage(
+						registered ?? {
+							...data,
+							file: {
+								...data.file,
+								width: image_props.width,
+								height: image_props.height,
+							},
+						},
+					);
 				}}
 				className={cn(
 					"cursor-pointer",
 					className,
 					!image_props.dimensions_exist && "object-contain",
 				)}
-				alt={data.caption}
+				alt={data.caption || "Slika"}
 				src={data.file.url}
 				width={image_props.width}
 				height={image_props.height}
@@ -196,6 +251,22 @@ export const NextImageRenderer: RenderFn<EditorJSImageData> = ({
 			<figcaption>{HTMLReactParser(data.caption)}</figcaption>
 		</figure>
 	);
+};
+
+const HEADING_TAGS = { 2: "h2", 3: "h3" } as const;
+
+export const HeaderRenderer: RenderFn<{
+	text: string;
+	level: number;
+	toc_id?: string;
+}> = ({ data, className }) => {
+	const tag = HEADING_TAGS[data.level as 2 | 3] ?? `h${data.level}`;
+
+	return createElement(tag, {
+		id: data.toc_id,
+		className,
+		dangerouslySetInnerHTML: { __html: data.text },
+	});
 };
 
 interface EditorJSAttachesData {
@@ -219,7 +290,7 @@ export const AttachesRenderer: RenderFn<EditorJSAttachesData> = ({
 		let visible_extension = data.file.extension.trim().toUpperCase();
 
 		if (data.file.extension.length > EXTENSION_MAX_LENGTH) {
-			visible_extension = `${extension.substring(0, EXTENSION_MAX_LENGTH)}…`;
+			visible_extension = `${data.file.extension.substring(0, EXTENSION_MAX_LENGTH).toUpperCase()}…`;
 		}
 
 		return visible_extension;

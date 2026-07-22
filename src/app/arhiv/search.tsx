@@ -2,7 +2,6 @@
 
 import { liteClient as algolia_search } from "algoliasearch/lite";
 import dynamic from "next/dynamic";
-import type { Session } from "next-auth";
 import { useState } from "react";
 import { InstantSearch } from "react-instantsearch";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -10,6 +9,7 @@ import { Tabs, TabsContent } from "~/components/ui/tabs";
 import { env } from "~/env";
 import { article_grid_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
+import type { Session } from "~/server/auth";
 import { ArticleTable } from "./article-table";
 import { DEFAULT_REFINEMENT } from "./components";
 

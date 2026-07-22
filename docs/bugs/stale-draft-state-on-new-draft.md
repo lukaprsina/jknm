@@ -4,6 +4,16 @@ No existing convention for bug-investigation notes was found under `docs/adr/` o
 `docs/agents/` (those hold ADRs and agent-audit reports respectively), so this
 note lives at `docs/bugs/` per the fallback instruction.
 
+> **Note (post-#29):** `editor_store` has since been migrated from `zustand-x`
+> to plain `zustand` (issue #29) and never actually carried `persist` or
+> `extendActions` by the time of that migration — the code excerpts below
+> (`createStore(...).extendActions(...)`, `persist: { enabled: true }`,
+> `editor_store.set("reset")`) predate the file they describe and no longer
+> match `editor-store.ts`. The **diagnosis in §1/§2 is still valid** (module-
+> singleton store not scoped/reset per draft) and the **fix plan in §3 still
+> applies** to the current plain-zustand store — only the literal code
+> snippets are stale.
+
 ## 1. Root cause
 
 `editor_store` (`src/components/editor/editor-store.ts:25-43`) is a **module-scope

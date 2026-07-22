@@ -9,7 +9,7 @@ import { Shell } from "~/components/shell";
 import { article_variants, page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
 import { getServerAuthSession } from "~/server/auth";
-import { InfiniteArticles } from "./infinite-no-trpc";
+import { InfiniteArticles } from "./infinite-articles";
 import { get_infinite_published2 } from "./infinite-server";
 
 export default async function HomePageServer() {

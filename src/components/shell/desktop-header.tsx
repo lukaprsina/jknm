@@ -1,16 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import type { Session } from "next-auth";
 import type React from "react";
 import { useCallback, useEffect, useRef } from "react";
-import { createStore, useStoreValue } from "zustand-x";
+import { create } from "zustand";
 import { Separator } from "~/components/ui/separator";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 // import Logo from "~/assets/logo-barvni.svg";
 import { cn } from "~/lib/utils";
-import type { EditableArticleRef } from "../article/new-adapter";
-import EditingButtons from "./editing-buttons";
 import {
 	ContactIcon,
 	FacebookIcon,
@@ -26,52 +23,42 @@ export interface ShellStore {
 	navbar_height: number | undefined;
 }
 
-export const shell_store = createStore<ShellStore>(
-	{
-		is_header_sticky: false,
-		navbar_height: undefined,
-	},
-	{
-		name: "shell-store",
-	},
-);
+export const shell_store = create<ShellStore>(() => ({
+	is_header_sticky: false,
+	navbar_height: undefined,
+}));
+
+export function useIsHeaderSticky(): boolean {
+	return shell_store((state) => state.is_header_sticky);
+}
+
+export function useNavbarHeight(): number | undefined {
+	return shell_store((state) => state.navbar_height);
+}
 
 export function DesktopHeader({
-	published_article,
 	className,
-	session,
+	editor_controls,
 	...props
 }: React.ComponentProps<"div"> & {
-	published_article?: EditableArticleRef;
-	session: Session | null;
+	/** Admin-only editor chrome, rendered opaquely so no `Session` reaches the client. */
+	editor_controls: React.ReactNode;
 }) {
 	const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
 	const header_ref = useRef<HTMLDivElement | null>(null);
-	const is_header_sticky = useStoreValue(shell_store, "is_header_sticky");
-	const navbar_height = useStoreValue(shell_store, "navbar_height");
+	const is_header_sticky = useIsHeaderSticky();
+	const navbar_height = useNavbarHeight();
 	const md_breakpoint = useBreakpoint("md");
 
 	const handle_scroll = useCallback(() => {
 		if (!header_ref.current) return;
 
-		// console.log("handle scroll", window.scrollY);
-
 		// TODO: + 2 is a hack for the separator
 		const should_be_sticky =
 			window.scrollY > header_ref.current.clientHeight + 2;
 
-		// console.log("handle scroll", window.scrollY);
-
-		/* console.log("handle scroll", {
-      clientHeight: sticky_navbar.current.clientHeight,
-      clientHeight2: header_ref.current.clientHeight,
-      new_sticky: should_be_sticky,
-      old_sticky: shell_store.get.is_header_sticky(),
-    }); */
-
-		if (should_be_sticky !== shell_store.get("is_header_sticky")) {
-			// console.log("setting sticky", { should_be_sticky, md_breakpoint });
-			shell_store.set("is_header_sticky", should_be_sticky);
+		if (should_be_sticky !== shell_store.getState().is_header_sticky) {
+			shell_store.setState({ is_header_sticky: should_be_sticky });
 		}
 	}, []);
 
@@ -79,13 +66,9 @@ export function DesktopHeader({
 		if (!sticky_navbar_ref.current) return;
 
 		if (md_breakpoint) {
-			/* console.log(
-        "desktop setting navbar height",
-        sticky_navbar_ref.current.clientHeight,
-        { md_breakpoint },
-      ); */
-
-			shell_store.set("navbar_height", sticky_navbar_ref.current.clientHeight);
+			shell_store.setState({
+				navbar_height: sticky_navbar_ref.current.clientHeight,
+			});
 		}
 	}, [md_breakpoint]);
 
@@ -122,12 +105,7 @@ export function DesktopHeader({
 						</Link>
 					</div>
 					<div className="flex-1 flex flex-col items-end justify-between">
-						<div className="flex justify-end">
-							<EditingButtons
-								published_article={published_article}
-								session={session}
-							/>
-						</div>
+						<div className="flex justify-end">{editor_controls}</div>
 						<div className="flex flex-col items-end gap-4">
 							{/* <NoviceAutocomplete detached="" /> */}
 							<div className="flex items-center gap-4">

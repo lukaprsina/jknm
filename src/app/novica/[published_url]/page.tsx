@@ -25,7 +25,9 @@ export async function generateMetadata(
 
 	const { published_url } = params;
 
-	const article = await get_new_article_by_slug(decodeURIComponent(published_url));
+	const article = await get_new_article_by_slug(
+		decodeURIComponent(published_url),
+	);
 	const awaited_parent = await parent;
 
 	let title: string | undefined;
@@ -53,7 +55,9 @@ export default async function NovicaPage(props: NovicaProps) {
 
 	const session = await getServerAuthSession();
 
-	const article = await get_new_article_by_slug(decodeURIComponent(published_url));
+	const article = await get_new_article_by_slug(
+		decodeURIComponent(published_url),
+	);
 
 	if (!article || !is_visible_to(article.status, Boolean(session))) {
 		return (

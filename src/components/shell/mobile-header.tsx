@@ -3,16 +3,9 @@
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import type { Session } from "next-auth";
-import {
-	type ComponentProps,
-	Fragment,
-	useEffect,
-	useMemo,
-	useRef,
-} from "react";
-import { createStore, useStoreValue } from "zustand-x";
+import { type ComponentProps, type ReactNode, useEffect, useRef } from "react";
+import { create } from "zustand";
+import { useHasToc } from "~/components/toc/toc-store";
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import {
@@ -26,9 +19,7 @@ import {
 } from "~/components/ui/sheet";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { cn } from "~/lib/utils";
-import type { EditableArticleRef } from "../article/new-adapter";
 import { shell_store } from "./desktop-header";
-import EditingButtons from "./editing-buttons";
 import {
 	ContactIcon,
 	FacebookIcon,
@@ -39,36 +30,40 @@ import {
 import { Logo } from "./logo";
 import { Sponsors } from "./sponsors";
 
-export const mobile_nav_store = createStore(
-	{
-		open: false,
-	},
-	{
-		name: "mobile-nav",
-	},
-);
+export interface MobileNavStore {
+	open: boolean;
+}
+
+export const mobile_nav_store = create<MobileNavStore>(() => ({
+	open: false,
+}));
+
+export function useMobileNavOpen(): boolean {
+	return mobile_nav_store((state) => state.open);
+}
 
 export function MobileHeader({
-	published_article,
-	session,
+	editor_controls,
 	className,
 	...props
 }: ComponentProps<"div"> & {
-	published_article?: EditableArticleRef;
-	session: Session | null;
+	/** Admin-only editor chrome, rendered opaquely so no `Session` reaches the client. */
+	editor_controls: ReactNode;
 }) {
 	const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
 	const md_breakpoint = useBreakpoint("md");
 
 	useEffect(() => {
 		if (md_breakpoint) {
-			mobile_nav_store.set("open", false);
+			mobile_nav_store.setState({ open: false });
 			return;
 		}
 
 		if (!sticky_navbar_ref.current) return;
 
-		shell_store.set("navbar_height", sticky_navbar_ref.current.clientHeight);
+		shell_store.setState({
+			navbar_height: sticky_navbar_ref.current.clientHeight,
+		});
 	}, [md_breakpoint]);
 
 	return (
@@ -83,7 +78,7 @@ export function MobileHeader({
 			<Link className="text-2xl font-bold" href="/">
 				Jamarski klub Novo mesto
 			</Link>
-			<MobileSheet published_article={published_article} session={session} />
+			<MobileSheet editor_controls={editor_controls} />
 		</div>
 	);
 }
@@ -98,33 +93,19 @@ const MOBILE_NAV_LINKS = [
 ];
 
 export function MobileSheet({
-	published_article,
-	session,
+	editor_controls,
 }: {
-	published_article?: EditableArticleRef;
-	session: Session | null;
+	editor_controls: ReactNode;
 }) {
-	const open = useStoreValue(mobile_nav_store, "open");
-	const pathname = usePathname();
-
-	const links: { title: string; href: string; active?: boolean }[] =
-		useMemo(() => {
-			return MOBILE_NAV_LINKS.map((link) => {
-				if (pathname.includes(link.href)) {
-					return { ...link, active: true };
-				}
-
-				return link;
-			});
-		}, [pathname]);
+	const open = useMobileNavOpen();
+	const has_toc = useHasToc();
 
 	return (
 		<Sheet
 			open={open}
 			modal={false}
 			onOpenChange={(new_state) => {
-				console.log("setting mobile nav open", new_state);
-				mobile_nav_store.set("open", new_state);
+				mobile_nav_store.setState({ open: new_state });
 			}}
 		>
 			<SheetTrigger asChild>
@@ -141,14 +122,9 @@ export function MobileSheet({
 							</Link>
 						</SheetClose>
 					</div>
-					<div className="flex justify-end">
-						<EditingButtons
-							published_article={published_article}
-							session={session}
-						/>
-					</div>
-					<SheetTitle>Jamarski klub Novo mesto</SheetTitle>
+					<div className="flex justify-end">{editor_controls}</div>
 					<VisuallyHidden>
+						<SheetTitle>Jamarski klub Novo mesto</SheetTitle>
 						<SheetDescription>Mobile navigation bar</SheetDescription>
 					</VisuallyHidden>
 				</SheetHeader>
@@ -160,20 +136,19 @@ export function MobileSheet({
 						<ContactIcon />
 						<IntranetIcon />
 					</div>
-					{links.map((link) => (
-						<Fragment key={link.href}>
-							<Link
-								className="block"
-								href={`/${link.href}`}
-								onClick={() => {
-									mobile_nav_store.set("open", false);
-								}}
-							>
-								{link.title}
-							</Link>
-							{link.active && <div id="mobile-toc" />}
-						</Fragment>
+					{MOBILE_NAV_LINKS.map((link) => (
+						<Link
+							key={link.href}
+							className="block"
+							href={`/${link.href}`}
+							onClick={() => {
+								mobile_nav_store.setState({ open: false });
+							}}
+						>
+							{link.title}
+						</Link>
 					))}
+					{has_toc && <div id="mobile-toc" className="mt-4" />}
 					<div className="mt-6 pr-6">
 						<Sponsors compact />
 					</div>

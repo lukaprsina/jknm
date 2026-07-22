@@ -1,10 +1,27 @@
 "use client";
 
-import { LogOut, RefreshCcw, SettingsIcon, UsersIcon } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+	CheckCircle2,
+	LogOut,
+	RefreshCcw,
+	SearchIcon,
+	SettingsIcon,
+	UsersIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { useState } from "react";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "~/components/ui/dialog";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -13,12 +30,35 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import {
+	Empty,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyMedia,
+	EmptyTitle,
+} from "~/components/ui/empty";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "~/components/ui/table";
+import { useToast } from "~/hooks/use-toast";
+import { sign_out } from "~/lib/auth-client";
+import { apply_client_invalidations } from "~/lib/cache-invalidation-client";
+import { unwrap_server_function } from "~/lib/orpc-action";
+import type { MemberSyncChange } from "~/server/author/sync-members-diff";
+import {
+	previewMemberSync,
+	syncMembers,
+} from "~/server/orpc/author/procedures";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-// import { AuthorsDialog } from "./authors";
-// import { useState } from "react";
 
 export function SettingsDropdown() {
 	const router = useRouter();
+	const [sync_dialog_open, set_sync_dialog_open] = useState(false);
 
 	return (
 		<>
@@ -36,22 +76,20 @@ export function SettingsDropdown() {
 				<DropdownMenuContent className="w-56">
 					<DropdownMenuLabel>Nastavitve</DropdownMenuLabel>
 					<DropdownMenuSeparator />
-					<DropdownMenuItem
-						asChild /* onClick={() => setAuthorDialogOpen(true)} */
-					>
+					<DropdownMenuItem asChild>
 						<Link href="/avtorji">
 							<UsersIcon className="mr-2 h-4 w-4" />
 							<span>Avtorji</span>
 						</Link>
 					</DropdownMenuItem>
-					<DropdownMenuItem>
+					<DropdownMenuItem onClick={() => set_sync_dialog_open(true)}>
 						<RefreshCcw className="mr-2 h-4 w-4" size={18} />
-						<span>Popravi</span>
+						<span>Uskladi člane</span>
 					</DropdownMenuItem>
 					<DropdownMenuSeparator />
 					<DropdownMenuItem
 						onClick={async () => {
-							await signOut();
+							await sign_out();
 							router.push("/");
 						}}
 					>
@@ -60,96 +98,215 @@ export function SettingsDropdown() {
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
-			{/* <AuthorsDialog
-        open={authorDialogOpen}
-        onClose={() => setAuthorDialogOpen(false)}
-      /> */}
+			<MemberSyncDialog
+				open={sync_dialog_open}
+				onOpenChange={set_sync_dialog_open}
+			/>
 		</>
 	);
 }
 
-/* 
-<DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <User className="mr-2 h-4 w-4" />
-            <span>Avtorji</span>
-            <DropdownMenuShortcut>⇧⌘A</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <CreditCard className="mr-2 h-4 w-4" />
-            <span>Billing</span>
-            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Keyboard className="mr-2 h-4 w-4" />
-            <span>Keyboard shortcuts</span>
-            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <Users className="mr-2 h-4 w-4" />
-            <span>Team</span>
-          </DropdownMenuItem>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <UserPlus className="mr-2 h-4 w-4" />
-              <span>Invite users</span>
-            </DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <DropdownMenuItem>
-                  <Mail className="mr-2 h-4 w-4" />
-                  <span>Email</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <MessageSquare className="mr-2 h-4 w-4" />
-                  <span>Message</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  <span>More...</span>
-                </DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-          </DropdownMenuSub>
-          <DropdownMenuItem>
-            <Plus className="mr-2 h-4 w-4" />
-            <span>New Team</span>
-            <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Github className="mr-2 h-4 w-4" />
-          <span>GitHub</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <LifeBuoy className="mr-2 h-4 w-4" />
-          <span>Support</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem disabled>
-          <Cloud className="mr-2 h-4 w-4" />
-          <span>API</span>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>Log out</span>
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-        </DropdownMenuItem>
-*/
+const CHANGE_KIND_LABEL: Record<MemberSyncChange["kind"], string> = {
+	new: "Nov",
+	changed: "Spremenjen",
+	missing: "Manjka",
+};
+
+const CHANGE_KIND_VARIANT: Record<
+	MemberSyncChange["kind"],
+	"default" | "secondary" | "destructive"
+> = {
+	new: "default",
+	changed: "secondary",
+	missing: "destructive",
+};
+
+const CHANGE_KIND_CLASS_NAME: Record<MemberSyncChange["kind"], string> = {
+	new: "",
+	changed: "border-transparent bg-amber-500 text-white hover:bg-amber-500/80",
+	missing: "",
+};
+
+interface ChangeRow {
+	key: string;
+	name: string;
+	details: string[];
+}
+
+function to_change_row(change: MemberSyncChange): ChangeRow {
+	switch (change.kind) {
+		case "new":
+			return {
+				key: change.google.google_id,
+				name: change.google.name,
+				details: [change.google.email ?? "—"],
+			};
+		case "changed":
+			return {
+				key: change.google.google_id,
+				name: change.google.name,
+				details: change.diffs.map(
+					(diff) =>
+						`${diff.field}: ${diff.before ?? "—"} → ${diff.after ?? "—"}`,
+				),
+			};
+		case "missing":
+			return {
+				key: `db-${change.before.id}`,
+				name: change.before.name,
+				details: ["Ni več v Google Admin"],
+			};
+	}
+}
+
+function MemberSyncDialog({
+	open,
+	onOpenChange,
+}: {
+	open: boolean;
+	onOpenChange: (open: boolean) => void;
+}) {
+	const toaster = useToast();
+	const router = useRouter();
+	const query_client = useQueryClient();
+
+	const preview_mutation = useMutation({
+		mutationFn: () => unwrap_server_function(previewMemberSync()),
+		onError: (error) => {
+			console.log("Error previewing member sync:", error);
+			toaster.toast({
+				title: "Napaka pri branju sprememb",
+				description: error.message,
+			});
+		},
+	});
+
+	const sync_mutation = useMutation({
+		mutationFn: () => unwrap_server_function(syncMembers()),
+		onSuccess: async () => {
+			await apply_client_invalidations(query_client, "author.synced");
+			router.refresh();
+			onOpenChange(false);
+		},
+		onError: (error) => {
+			toaster.toast({
+				title: "Napaka pri usklajevanju članov",
+				description: error.message,
+			});
+		},
+	});
+
+	return (
+		<Dialog
+			open={open}
+			onOpenChange={(next_open) => {
+				onOpenChange(next_open);
+				if (!next_open) {
+					preview_mutation.reset();
+				}
+			}}
+		>
+			<DialogContent
+				className="max-w-3xl"
+				aria-describedby="Uskladi člane z Google Admin"
+			>
+				<DialogHeader>
+					<DialogTitle>Uskladi člane z Google Admin</DialogTitle>
+					<DialogDescription>
+						Primerjava trenutnega stanja z Google Admin. Prikazani so samo
+						člani, ki bi se spremenili.
+					</DialogDescription>
+				</DialogHeader>
+
+				{preview_mutation.isIdle && (
+					<Empty>
+						<EmptyHeader>
+							<EmptyMedia variant="icon">
+								<SearchIcon />
+							</EmptyMedia>
+							<EmptyTitle>Preveri spremembe</EmptyTitle>
+							<EmptyDescription>
+								Primerjaj trenutno stanje z Google Admin.
+							</EmptyDescription>
+						</EmptyHeader>
+						<Button onClick={() => preview_mutation.mutate()}>Preveri</Button>
+					</Empty>
+				)}
+				{preview_mutation.isPending && <p>Nalaganje…</p>}
+				{preview_mutation.isError && (
+					<p className="text-destructive">
+						Napaka: {preview_mutation.error.message}
+					</p>
+				)}
+				{preview_mutation.data?.length === 0 && (
+					<Empty>
+						<EmptyHeader>
+							<EmptyMedia variant="icon">
+								<CheckCircle2 />
+							</EmptyMedia>
+							<EmptyTitle>Ni sprememb</EmptyTitle>
+							<EmptyDescription>
+								Vsi člani so že usklajeni z Google Admin.
+							</EmptyDescription>
+						</EmptyHeader>
+					</Empty>
+				)}
+				{preview_mutation.data && preview_mutation.data.length > 0 && (
+					<div className="max-h-96 overflow-auto">
+						<Table className="min-w-[40rem]">
+							<TableHeader>
+								<TableRow>
+									<TableHead>Ime</TableHead>
+									<TableHead>Sprememba</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{preview_mutation.data.map((change) => {
+									const row = to_change_row(change);
+									return (
+										<TableRow key={row.key}>
+											<TableCell className="whitespace-nowrap align-top">
+												<div className="flex items-center gap-2">
+													<Badge
+														variant={CHANGE_KIND_VARIANT[change.kind]}
+														className={CHANGE_KIND_CLASS_NAME[change.kind]}
+													>
+														{CHANGE_KIND_LABEL[change.kind]}
+													</Badge>
+													{row.name}
+												</div>
+											</TableCell>
+											<TableCell className="text-muted-foreground">
+												{row.details.map((detail) => (
+													<div key={detail} className="whitespace-nowrap">
+														{detail}
+													</div>
+												))}
+											</TableCell>
+										</TableRow>
+									);
+								})}
+							</TableBody>
+						</Table>
+					</div>
+				)}
+
+				<DialogFooter>
+					<Button variant="outline" onClick={() => onOpenChange(false)}>
+						Prekliči
+					</Button>
+					<Button
+						disabled={
+							!preview_mutation.data ||
+							preview_mutation.data.length === 0 ||
+							sync_mutation.isPending
+						}
+						onClick={() => sync_mutation.mutate()}
+					>
+						{sync_mutation.isPending ? "Usklajujem…" : "Posodobi"}
+					</Button>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
+	);
+}

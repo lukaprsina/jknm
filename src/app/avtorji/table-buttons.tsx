@@ -5,7 +5,6 @@ import type { Row } from "@tanstack/react-table";
 import { PencilIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import type { z } from "zod";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -31,8 +30,8 @@ import {
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { useToast } from "~/hooks/use-toast";
-import { delete_guests } from "~/server/author/delete";
-import type { delete_guests_validator } from "~/server/author/validator";
+import { unwrap_server_function } from "~/lib/orpc-action";
+import { deleteGuests } from "~/server/orpc/author/procedures";
 import type { GuestAuthor } from "./table";
 import { EditAuthorNameForm, InsertAuthorForm } from "./table-forms";
 
@@ -42,8 +41,8 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
 	const router = useRouter();
 
 	const delete_guests_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof delete_guests_validator>) =>
-			delete_guests(input),
+		mutationFn: (input: Parameters<typeof deleteGuests>[0]) =>
+			unwrap_server_function(deleteGuests(input)),
 		onSettled: () => {
 			router.refresh();
 		},
@@ -124,8 +123,8 @@ export function AuthorsTableHeaderButtons({
 	const router = useRouter();
 
 	const delete_guests_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof delete_guests_validator>) =>
-			delete_guests(input),
+		mutationFn: (input: Parameters<typeof deleteGuests>[0]) =>
+			unwrap_server_function(deleteGuests(input)),
 		onSettled: () => {
 			router.refresh();
 		},

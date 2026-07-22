@@ -1,10 +1,11 @@
 import type { MDXComponents } from "mdx/types";
 import Link from "next/link";
-import React, { type HTMLProps, type ReactNode } from "react";
-import slugify from "slugify";
+import type { HTMLProps, ReactNode } from "react";
 import { ImageWithCaption } from "~/components/image-with-caption";
-import { TableOfContents } from "~/components/static/toc-scroll";
 
+// Heading ids are handled by `rehype-slug` in the MDX pipeline (see
+// next.config.mjs), which sets `id` in the hast tree before this file ever
+// runs -- so h1-h6 need no override here, the `id` prop just passes through.
 export function useMDXComponents(components: MDXComponents): MDXComponents {
 	return {
 		table: ({ children, ...props }: HTMLProps<HTMLTableElement>) => (
@@ -25,26 +26,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 
 			return <Link target="_blank" href={href} {...props} />;
 		},
-		TableOfContents,
 		Image: (props) => <ImageWithCaption {...props} />,
-		h1: (props: HTMLProps<HTMLHeadingElement>) => (
-			<HeadingWithSlug {...props} level={1} />
-		),
-		h2: (props: HTMLProps<HTMLHeadingElement>) => (
-			<HeadingWithSlug {...props} level={2} />
-		),
-		h3: (props: HTMLProps<HTMLHeadingElement>) => (
-			<HeadingWithSlug {...props} level={3} />
-		),
-		h4: (props: HTMLProps<HTMLHeadingElement>) => (
-			<HeadingWithSlug {...props} level={4} />
-		),
-		h5: (props: HTMLProps<HTMLHeadingElement>) => (
-			<HeadingWithSlug {...props} level={5} />
-		),
-		h6: (props: HTMLProps<HTMLHeadingElement>) => (
-			<HeadingWithSlug {...props} level={6} />
-		),
 		...components,
 	};
 }
@@ -57,58 +39,4 @@ function clean_children(children: ReactNode): ReactNode {
 				typeof child === "string" ? child.trim() : true,
 			)
 		: children;
-}
-
-function HeadingWithSlug({
-	level,
-	children,
-	...props
-}: HTMLProps<HTMLHeadingElement> & { level: number }) {
-	const id = slugify(
-		React.Children.toArray(children)
-			.filter((child) => typeof child === "string")
-			.join(" "),
-		{ lower: true, strict: true },
-	);
-
-	switch (level) {
-		case 1:
-			return (
-				<h1 id={id} {...props}>
-					{children}
-				</h1>
-			);
-		case 2:
-			return (
-				<h2 id={id} {...props}>
-					{children}
-				</h2>
-			);
-		case 3:
-			return (
-				<h3 id={id} {...props}>
-					{children}
-				</h3>
-			);
-		case 4:
-			return (
-				<h4 id={id} {...props}>
-					{children}
-				</h4>
-			);
-		case 5:
-			return (
-				<h5 id={id} {...props}>
-					{children}
-				</h5>
-			);
-		case 6:
-			return (
-				<h6 id={id} {...props}>
-					{children}
-				</h6>
-			);
-		default:
-			throw new Error("Invalid heading level");
-	}
 }

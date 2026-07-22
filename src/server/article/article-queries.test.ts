@@ -47,7 +47,10 @@ describe("find_published_articles_page", () => {
 
 		const page = await find_published_articles_page(db, { limit: 10 });
 
-		expect(page.map((a) => a.title)).toEqual(["Published new", "Published old"]);
+		expect(page.map((a) => a.title)).toEqual([
+			"Published new",
+			"Published old",
+		]);
 	});
 
 	test("cursors past the given created_at, continuing newest-first", async () => {

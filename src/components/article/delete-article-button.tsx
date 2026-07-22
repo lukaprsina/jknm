@@ -3,7 +3,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { TrashIcon } from "lucide-react";
 import type { ReactNode } from "react";
-import type { z } from "zod";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -18,8 +17,8 @@ import {
 import type { ButtonProps } from "~/components/ui/button";
 import { Button } from "~/components/ui/button";
 import { useToast } from "~/hooks/use-toast";
-import { delete_article } from "~/server/article/lifecycle";
-import type { delete_article_validator } from "~/server/article/validators";
+import { unwrap_server_function } from "~/lib/orpc-action";
+import { deleteArticle } from "~/server/orpc/article/procedures";
 
 /**
  * `draft`/`published`/`archived` -> `deleted`: direct, one plain confirm
@@ -41,8 +40,8 @@ export function DeleteArticleButton({
 	const toaster = useToast();
 
 	const mutation = useMutation({
-		mutationFn: (input: z.infer<typeof delete_article_validator>) =>
-			delete_article(input),
+		mutationFn: (input: Parameters<typeof deleteArticle>[0]) =>
+			unwrap_server_function(deleteArticle(input)),
 		onSuccess: () => on_deleted?.(),
 		onError: (error) => {
 			toaster.toast({
@@ -59,7 +58,9 @@ export function DeleteArticleButton({
 			</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>
-					<AlertDialogTitle>{dialog?.title ?? "Izbriši novičko"}</AlertDialogTitle>
+					<AlertDialogTitle>
+						{dialog?.title ?? "Izbriši novičko"}
+					</AlertDialogTitle>
 					<AlertDialogDescription>
 						{dialog?.description ??
 							"Ste prepričani, da želite izbrisati to novičko? Izbrisanih novičk ni mogoče obnoviti."}

@@ -7,6 +7,7 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "~/components/ui/accordion";
+import type { CacheTag } from "~/lib/cache-policy";
 import { article_grid_variants, article_variants } from "~/lib/page-variants";
 import { revive_cache_dates } from "~/lib/revive-cache-dates";
 import { db } from "~/server/db";
@@ -18,13 +19,19 @@ export const cachedArchived = unstable_cache(
 			where: eq(Article.status, "archived"),
 			with: {
 				articles_to_authors: { with: { author: true } },
+				article_slugs: true,
 				thumbnail_media: true,
 			},
 			orderBy: desc(Article.archived_at),
 		});
 	},
 	["archive"],
-	{ tags: ["archive"], revalidate: false },
+	{
+		tags: ["archive"] satisfies CacheTag[],
+		// Editor-facing and low-traffic, so a short window costs little and
+		// recovers quickly from a missed invalidation.
+		revalidate: 300,
+	},
 );
 
 export async function ArchivedArticles() {

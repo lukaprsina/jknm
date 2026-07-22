@@ -96,9 +96,7 @@ export default async function EditorPage(props: EditorPageProps) {
 
 	if (!article) {
 		return (
-			<Shell>
-				{editor_shell(<CreateNewArticle novica_ime={draft_id} />)}
-			</Shell>
+			<Shell>{editor_shell(<CreateNewArticle novica_ime={draft_id} />)}</Shell>
 		);
 	}
 

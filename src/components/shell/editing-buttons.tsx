@@ -3,9 +3,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { PencilIcon, PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-
-import type { Session } from "next-auth";
-import type { z } from "zod";
 import type { ButtonProps } from "~/components/ui/button";
 import { Button } from "~/components/ui/button";
 import {
@@ -14,20 +11,20 @@ import {
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { get_draft_article_link } from "~/lib/article-utils";
-import { create_superseding_draft } from "~/server/article/lifecycle";
-import type { create_superseding_draft_validator } from "~/server/article/validators";
+import { unwrap_server_function } from "~/lib/orpc-action";
+import { createSupersedingDraft } from "~/server/orpc/article/procedures";
 import MakeNewDraftButton from "../article/make-new-draft-button";
 import type { EditableArticleRef } from "../article/new-adapter";
 import { SettingsDropdown } from "../settings";
 
 export default function EditingButtons({
 	published_article,
-	session,
+	is_admin,
 }: {
 	published_article?: EditableArticleRef;
-	session: Session | null;
+	is_admin: boolean;
 }) {
-	if (!session) return null;
+	if (!is_admin) return null;
 
 	return (
 		<>
@@ -61,8 +58,8 @@ export function EditButton({
 	const router = useRouter();
 
 	const mutation = useMutation({
-		mutationFn: (input: z.infer<typeof create_superseding_draft_validator>) =>
-			create_superseding_draft(input),
+		mutationFn: (input: Parameters<typeof createSupersedingDraft>[0]) =>
+			unwrap_server_function(createSupersedingDraft(input)),
 		onSuccess: (draft) => {
 			const new_url = get_draft_article_link(draft.id);
 			if (new_tab) {

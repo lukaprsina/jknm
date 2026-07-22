@@ -1,75 +1,60 @@
 import type React from "react";
+import { Suspense } from "react";
 import { cn } from "~/lib/utils";
-import { getServerAuthSession } from "~/server/auth";
 import type { EditableArticleRef } from "../article/new-adapter";
 import { Separator } from "../ui/separator";
 import { DesktopHeader } from "./desktop-header";
+import { EditorControls } from "./editor-controls";
 import { Footer } from "./footer";
 import { MobileHeader } from "./mobile-header";
 import { SearchProvider } from "./search-context";
 import { Searchbar } from "./searchbar";
-
-// import { PinkBackground } from "./background"; // Added import
+import { TocAwareLayout } from "./toc-aware-layout";
 
 interface ShellProps {
 	children: React.ReactNode;
 	published_article?: EditableArticleRef;
 	without_footer?: boolean;
 	without_header?: boolean;
-	show_aside?: boolean;
 	className?: string;
 }
 
-export async function Shell({
+/**
+ * Deliberately synchronous: the shell itself depends on no server data, so it
+ * emits immediately and the session read streams in behind `<Suspense>`. The
+ * fallback is `null` because the editing buttons are admin-only chrome — for
+ * the anonymous majority the final render is also nothing, so there is no
+ * layout shift to guard against.
+ */
+export function Shell({
 	published_article,
 	children,
 	without_footer,
 	without_header,
-	show_aside,
 	className,
 }: ShellProps) {
-	const session = await getServerAuthSession();
+	const editor_controls = (
+		<Suspense fallback={null}>
+			<EditorControls published_article={published_article} />
+		</Suspense>
+	);
 
 	return (
 		<SearchProvider>
 			<div className={cn("w-full", className)}>
 				{!without_header ? (
-					/* bg-gradient-to-b from-[#BBB] to-gray-50  */
 					<header className="h-20 w-full text-gray-800 md:h-auto">
 						<DesktopHeader
-							published_article={published_article}
 							className="hidden md:flex"
-							session={session}
+							editor_controls={editor_controls}
 						/>
 						<MobileHeader
-							published_article={published_article}
 							className="flex md:hidden"
-							session={session}
+							editor_controls={editor_controls}
 						/>
 					</header>
 				) : undefined}
-				<div /* className={"flex justify-start gap-2 not_center:justify-center"} */
-				>
-					<aside
-						id="shell-aside"
-						className={cn(
-							// "fixed left-0 h-full w-[300px] flex-shrink-0",
-							"fixed flex h-full w-full items-center justify-center",
-							// ? "md:block" :
-							!show_aside && "hidden",
-						)}
-					/>
-					<main
-						className={cn(
-							"w-full",
-							show_aside &&
-								"md:ml-[300px] md:flex-1 md:flex-grow not_center:ml-0",
-						)}
-						id="shell-main"
-					>
-						{children}
-					</main>
-				</div>
+				<TocAwareLayout>{children}</TocAwareLayout>
 				{without_footer ? undefined : (
 					<>
 						<Separator />

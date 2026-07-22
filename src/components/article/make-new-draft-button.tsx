@@ -3,7 +3,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { z } from "zod";
 import type { ButtonProps } from "~/components/ui/button";
 import { Button } from "~/components/ui/button";
 import {
@@ -12,10 +11,10 @@ import {
 	PopoverTrigger,
 } from "~/components/ui/popover";
 import { get_draft_article_link } from "~/lib/article-utils";
+import { unwrap_server_function } from "~/lib/orpc-action";
 import { article_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
-import { create_article } from "~/server/article/new-article";
-import type { create_article_validator } from "~/server/article/validators";
+import { createArticle } from "~/server/orpc/article/procedures";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export default function MakeNewDraftButton({
@@ -25,8 +24,8 @@ export default function MakeNewDraftButton({
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
 	const create_draft_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof create_article_validator>) =>
-			create_article(input),
+		mutationFn: (input: Parameters<typeof createArticle>[0]) =>
+			unwrap_server_function(createArticle(input)),
 		onSuccess: (data) => {
 			router.push(get_draft_article_link(data.id));
 		},

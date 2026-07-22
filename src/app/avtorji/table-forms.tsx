@@ -15,12 +15,11 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { useToast } from "~/hooks/use-toast";
-import { insert_guest } from "~/server/author/insert";
-import { rename_guest } from "~/server/author/rename";
-import type {
-	insert_guest_validator,
-	rename_guest_validator,
-} from "~/server/author/validator";
+import { unwrap_server_function } from "~/lib/orpc-action";
+import {
+	insertGuest,
+	renameGuest,
+} from "~/server/orpc/author/procedures";
 import type { GuestAuthor } from "./table";
 
 export const edit_form_schema = z.object({
@@ -38,8 +37,8 @@ export function EditAuthorNameForm({
 	const toaster = useToast();
 
 	const rename_guest_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof rename_guest_validator>) =>
-			rename_guest(input),
+		mutationFn: (input: Parameters<typeof renameGuest>[0]) =>
+			unwrap_server_function(renameGuest(input)),
 		onSettled: () => {
 			router.refresh();
 		},
@@ -107,8 +106,8 @@ export function InsertAuthorForm() {
 	const router = useRouter();
 
 	const insert_guest_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof insert_guest_validator>) =>
-			insert_guest(input),
+		mutationFn: (input: Parameters<typeof insertGuest>[0]) =>
+			unwrap_server_function(insertGuest(input)),
 		onSettled: () => {
 			router.refresh();
 		},

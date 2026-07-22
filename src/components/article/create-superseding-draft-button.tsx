@@ -3,7 +3,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
-import type { z } from "zod";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -18,8 +17,8 @@ import {
 import type { ButtonProps } from "~/components/ui/button";
 import { Button } from "~/components/ui/button";
 import { get_draft_article_link } from "~/lib/article-utils";
-import { create_superseding_draft } from "~/server/article/lifecycle";
-import type { create_superseding_draft_validator } from "~/server/article/validators";
+import { unwrap_server_function } from "~/lib/orpc-action";
+import { createSupersedingDraft } from "~/server/orpc/article/procedures";
 
 /**
  * Spawns a new draft superseding an `archived` or `published` article and
@@ -39,8 +38,8 @@ export function CreateSupersedingDraftButton({
 	const router = useRouter();
 
 	const mutation = useMutation({
-		mutationFn: (input: z.infer<typeof create_superseding_draft_validator>) =>
-			create_superseding_draft(input),
+		mutationFn: (input: Parameters<typeof createSupersedingDraft>[0]) =>
+			unwrap_server_function(createSupersedingDraft(input)),
 		onSuccess: (draft) => {
 			router.push(get_draft_article_link(draft.id));
 		},

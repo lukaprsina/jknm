@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic"; // static by default, unless reading the
 
 export async function GET() {
 	try {
-		await db.query.PublishedArticle.findFirst();
+		await db.query.Article.findFirst();
 	} catch (e: unknown) {
 		if (e instanceof Error) {
 			return NextResponse.json({ message: e.message }, { status: 500 });

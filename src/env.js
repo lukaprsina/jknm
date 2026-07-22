@@ -31,17 +31,14 @@ export const env = createEnv({
 		NODE_ENV: z
 			.enum(["development", "test", "production"])
 			.default("development"),
-		NEXTAUTH_SECRET:
+		BETTER_AUTH_SECRET:
 			process.env.NODE_ENV === "production"
-				? z.string()
+				? z.string().min(32)
 				: z.string().optional(),
-		NEXTAUTH_URL: z.preprocess(
-			// This makes Vercel deployments not fail if you don't set NEXT_PUBLIC_NEXTAUTH_URL
-			// Since NextAuth.js automatically uses the VERCEL_URL if present.
-			(str) => process.env.VERCEL_URL ?? str,
-			// VERCEL_URL doesn't include `https` so it cant be validated as a URL
-			process.env.VERCEL ? z.string() : z.string().url(),
-		),
+		// better-auth discourages inferring the base URL from the request, and
+		// Google answers a wrong one with `redirect_uri_mismatch` — so this is
+		// explicit rather than preprocessed from VERCEL_URL.
+		BETTER_AUTH_URL: z.string().url(),
 		GOOGLE_CLIENT_ID: z.string(),
 		GOOGLE_CLIENT_SECRET: z.string(),
 		AWS_ACCESS_KEY_ID: z.string(),
@@ -69,9 +66,13 @@ export const env = createEnv({
 		NEXT_PUBLIC_AWS_DRAFT_BUCKET_NAME: z.string(),
 		NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME: z.string(),
 		NEXT_PUBLIC_AWS_MEDIA_BUCKET_NAME: z.string(),
+		// Despite the name, this is no longer an auth variable: #32 left the auth
+		// client same-origin, so nothing here configures it. Its only consumer is
+		// `get_base_url()`. Renaming it means a coordinated Vercel change, so #32
+		// left it alone deliberately.
 		NEXT_PUBLIC_NEXTAUTH_URL: z.preprocess(
-			// This makes Vercel deployments not fail if you don't set NEXT_PUBLIC_NEXTAUTH_URL
-			// Since NextAuth.js automatically uses the VERCEL_URL if present.
+			// This makes Vercel deployments not fail if you don't set it, since
+			// VERCEL_URL is present on every deployment.
 			(str) => process.env.VERCEL_URL ?? str,
 			// VERCEL_URL doesn't include `https` so it cant be validated as a URL
 			process.env.VERCEL ? z.string() : z.string().url(),
@@ -85,8 +86,8 @@ export const env = createEnv({
 	runtimeEnv: {
 		DATABASE_URL: process.env.DATABASE_URL,
 		NODE_ENV: process.env.NODE_ENV,
-		NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-		NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+		BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+		BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
 		GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
 		GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 		AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,

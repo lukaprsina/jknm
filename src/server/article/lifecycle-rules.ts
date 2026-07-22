@@ -52,7 +52,9 @@ export function assert_can_discard(article: {
 	supersedes_id: string | null;
 }) {
 	if (article.status !== "draft") {
-		throw new Error(`Cannot discard an article with status "${article.status}"`);
+		throw new Error(
+			`Cannot discard an article with status "${article.status}"`,
+		);
 	}
 	if (!article.supersedes_id) {
 		throw new Error(
@@ -101,6 +103,27 @@ export function assert_can_supersede(status: ArticleStatus) {
 			`Cannot create a superseding draft from an article with status "${status}"`,
 		);
 	}
+}
+
+/**
+ * Whether publishing a draft with `supersedes_id` set should retire and
+ * slug-inherit from `source` (a real supersede-publish), or fall back to a
+ * standalone first-publish.
+ *
+ * A superseding draft's source can already be `deleted` by the time the
+ * draft is published: unarchiving retires an `archived` source immediately,
+ * before the new draft is ever published (`create_superseding_draft`).
+ * `resolve_lifecycle_target` already treats that draft as standalone for
+ * archive/delete/discard — publish must agree, or publishing it throws via
+ * `assert_can_supersede` instead of falling back the same way.
+ */
+export function is_supersede_publish(
+	source: { status: ArticleStatus } | null,
+): boolean {
+	return (
+		source !== null &&
+		(source.status === "archived" || source.status === "published")
+	);
 }
 
 export type SlugTransitionDecision =

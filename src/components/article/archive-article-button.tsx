@@ -3,7 +3,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { ArchiveIcon } from "lucide-react";
 import type { ReactNode } from "react";
-import type { z } from "zod";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -18,8 +17,8 @@ import {
 import type { ButtonProps } from "~/components/ui/button";
 import { Button } from "~/components/ui/button";
 import { useToast } from "~/hooks/use-toast";
-import { archive_article } from "~/server/article/lifecycle";
-import type { archive_article_validator } from "~/server/article/validators";
+import { unwrap_server_function } from "~/lib/orpc-action";
+import { archiveArticle } from "~/server/orpc/article/procedures";
 
 /**
  * `draft`/`published` -> `archived` (#21): single mechanism for both "hide a
@@ -41,8 +40,8 @@ export function ArchiveArticleButton({
 	const toaster = useToast();
 
 	const mutation = useMutation({
-		mutationFn: (input: z.infer<typeof archive_article_validator>) =>
-			archive_article(input),
+		mutationFn: (input: Parameters<typeof archiveArticle>[0]) =>
+			unwrap_server_function(archiveArticle(input)),
 		onSuccess: () => on_archived?.(),
 		onError: (error) => {
 			toaster.toast({
@@ -59,7 +58,9 @@ export function ArchiveArticleButton({
 			</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>
-					<AlertDialogTitle>{dialog?.title ?? "Arhiviraj novičko"}</AlertDialogTitle>
+					<AlertDialogTitle>
+						{dialog?.title ?? "Arhiviraj novičko"}
+					</AlertDialogTitle>
 					<AlertDialogDescription>
 						{dialog?.description ??
 							"Ste prepričani, da želite arhivirati to novičko? Javna stran ne bo več dosegljiva, novičko pa lahko kadarkoli obnovite iz arhiva."}

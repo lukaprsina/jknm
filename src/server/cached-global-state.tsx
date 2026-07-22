@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache";
+import type { CacheTag } from "~/lib/cache-policy";
 import { db } from "~/server/db";
 
 export const cachedAllAuthors = unstable_cache(
@@ -6,5 +7,9 @@ export const cachedAllAuthors = unstable_cache(
 		return db.query.Author.findMany();
 	},
 	["authors"],
-	{ tags: ["authors"], revalidate: false },
+	{
+		tags: ["authors"] satisfies CacheTag[],
+		// Read on every page that renders bylines, and authors change rarely.
+		revalidate: 3600,
+	},
 );

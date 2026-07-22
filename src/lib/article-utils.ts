@@ -1,17 +1,23 @@
-import path from "node:path";
 import sanitize_filename from "sanitize-filename";
 import sanitizeHtml from "sanitize-html";
 import { v4 as uuid4 } from "uuid";
 import { format_date_for_url } from "./format-date";
 
+// This module is imported from client components too (e.g. editing-buttons.tsx),
+// so it can't pull in Node's `path` module -- a plain string split is all
+// `path.parse().name`/`.ext` were doing here anyway.
 export function convert_filename_to_url(dangerous_url: string) {
-	const fs_parsed = path.parse(dangerous_url);
-	const converted_name = convert_title_to_url(fs_parsed.name);
-	// return path.join(fs_parsed.dir, converted_name + fs_parsed.ext);
-	return converted_name + fs_parsed.ext;
+	const dot_index = dangerous_url.lastIndexOf(".");
+	const name =
+		dot_index > 0 ? dangerous_url.slice(0, dot_index) : dangerous_url;
+	const ext = dot_index > 0 ? dangerous_url.slice(dot_index) : "";
+	return convert_title_to_url(name) + ext;
 }
 
-export function convert_title_to_url(dangerous_url: string) {
+export function convert_title_to_url(
+	dangerous_url: string,
+	fallback: () => string = uuid4,
+) {
 	const clean = sanitizeHtml(dangerous_url, {
 		allowedTags: [],
 	});
@@ -47,7 +53,7 @@ export function convert_title_to_url(dangerous_url: string) {
 		.map((s) => s.trim())
 		.filter((s) => s.length > 0);
 
-	if (replaced_split.length === 0) return uuid4();
+	if (replaced_split.length === 0) return fallback();
 	return replaced_split.join("-");
 }
 
@@ -57,12 +63,6 @@ export function get_s3_published_directory(
 ) {
 	const date = new Date(created_at);
 	return `${article_url}-${format_date_for_url(date)}`;
-}
-
-// Kept for scripts/migrate-legacy-articles.ts (out of scope, #27), which
-// still needs to build legacy draft S3 paths for the one-time migration.
-export function get_s3_draft_directory(id: number) {
-	return `${id}`;
 }
 
 export function get_draft_article_link(id: string) {
