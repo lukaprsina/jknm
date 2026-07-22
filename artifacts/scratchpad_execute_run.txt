@@ -1,0 +1,1122 @@
+691 thumbnail media row(s) to check.
+OK, already correct (image/jpeg): 8987136f-1105-4296-bc92-323e8f00c9ba https://gradivo.jknm.org/8987136f-1105-4296-bc92-323e8f00c9ba/original.jpg
+OK, already correct (image/jpeg): 642cb7d2-309d-4aab-aacf-f8c49c78fb16 https://gradivo.jknm.org/642cb7d2-309d-4aab-aacf-f8c49c78fb16/original.jpg
+MISMATCH 67aa3b63-b2dd-4d10-9434-3fb98d9f92d8: stored application/octet-stream (https://gradivo.jknm.org/67aa3b63-b2dd-4d10-9434-3fb98d9f92d8/original.bin) -> real image/jpeg (.jpg)
+Fixed 67aa3b63-b2dd-4d10-9434-3fb98d9f92d8 -> 74293fc8-e1ed-44f3-8419-f8c795c62baa (74293fc8-e1ed-44f3-8419-f8c795c62baa/original.jpg)
+OK, already correct (image/jpeg): c0615916-7a20-48bf-8f00-250b3c7aa0a0 https://gradivo.jknm.org/c0615916-7a20-48bf-8f00-250b3c7aa0a0/original.jpg
+OK, already correct (image/jpeg): f2740e56-6573-40d4-a043-974521b11462 https://gradivo.jknm.org/f2740e56-6573-40d4-a043-974521b11462/original.jpg
+OK, already correct (image/jpeg): 3e6dbefe-1bfa-4c47-a375-83748867b466 https://gradivo.jknm.org/3e6dbefe-1bfa-4c47-a375-83748867b466/original.jpg
+OK, already correct (image/jpeg): 812f5775-0ecd-4c43-9616-a912e611ad47 https://gradivo.jknm.org/812f5775-0ecd-4c43-9616-a912e611ad47/original.jpg
+OK, already correct (image/jpeg): 4838cd46-ca9a-4614-bfd4-19bebcb271e1 https://gradivo.jknm.org/4838cd46-ca9a-4614-bfd4-19bebcb271e1/original.jpg
+OK, already correct (image/jpeg): 4473b120-e3ea-4c46-9d16-01597411f95d https://gradivo.jknm.org/4473b120-e3ea-4c46-9d16-01597411f95d/original.jpg
+OK, already correct (image/jpeg): 6d50803c-8b21-46b3-a099-82e2a2e2003d https://gradivo.jknm.org/6d50803c-8b21-46b3-a099-82e2a2e2003d/original.jpg
+OK, already correct (image/jpeg): 8a9e0b84-a038-46b3-ab50-8c801d55ad07 https://gradivo.jknm.org/8a9e0b84-a038-46b3-ab50-8c801d55ad07/original.jpg
+OK, already correct (image/jpeg): b6a3435b-7bef-479d-85ac-f1ac01ba2770 https://gradivo.jknm.org/b6a3435b-7bef-479d-85ac-f1ac01ba2770/original.jpg
+OK, already correct (image/jpeg): ee6becd4-469e-4073-b80f-f02ad3eae488 https://gradivo.jknm.org/ee6becd4-469e-4073-b80f-f02ad3eae488/original.jpg
+OK, already correct (image/jpeg): d73f33d6-5ea9-43ae-9d60-f1d0128f913e https://gradivo.jknm.org/d73f33d6-5ea9-43ae-9d60-f1d0128f913e/original.jpg
+OK, already correct (image/jpeg): af1fc19a-a275-4b31-9ccc-f195592aabc4 https://gradivo.jknm.org/af1fc19a-a275-4b31-9ccc-f195592aabc4/original.jpg
+OK, already correct (image/jpeg): e0fe5b44-99e1-41d2-94e6-fae67e5fcc73 https://gradivo.jknm.org/e0fe5b44-99e1-41d2-94e6-fae67e5fcc73/original.jpg
+OK, already correct (image/gif): f448aba8-1bc1-4534-b9ce-3bda06b6cece https://gradivo.jknm.org/f448aba8-1bc1-4534-b9ce-3bda06b6cece/original.gif
+OK, already correct (image/jpeg): e1aec2a0-b7cd-421e-b38a-84b48bf6c749 https://gradivo.jknm.org/e1aec2a0-b7cd-421e-b38a-84b48bf6c749/original.jpg
+OK, already correct (image/jpeg): f346bdd7-3406-4ad3-bd82-00670bd66df0 https://gradivo.jknm.org/f346bdd7-3406-4ad3-bd82-00670bd66df0/original.jpg
+OK, already correct (image/jpeg): 8a097362-08ac-4840-9d6b-b16b497543d5 https://gradivo.jknm.org/8a097362-08ac-4840-9d6b-b16b497543d5/original.jpg
+OK, already correct (image/jpeg): 58b5d9bb-5032-42be-8744-257b10d24361 https://gradivo.jknm.org/58b5d9bb-5032-42be-8744-257b10d24361/original.jpg
+OK, already correct (image/jpeg): 2f91551f-9056-4070-813e-08e93c368016 https://gradivo.jknm.org/2f91551f-9056-4070-813e-08e93c368016/original.jpg
+OK, already correct (image/jpeg): f0b7149b-9e38-4a7e-91fa-5e262a62e5b1 https://gradivo.jknm.org/f0b7149b-9e38-4a7e-91fa-5e262a62e5b1/original.jpg
+OK, already correct (image/jpeg): 8e2198ed-e175-4963-b0d3-7abd18d2ad53 https://gradivo.jknm.org/8e2198ed-e175-4963-b0d3-7abd18d2ad53/original.jpg
+OK, already correct (image/jpeg): 6af50a70-0f70-4288-9011-5681c14df231 https://gradivo.jknm.org/6af50a70-0f70-4288-9011-5681c14df231/original.jpg
+OK, already correct (image/jpeg): d6bc4474-efa1-4c17-afb7-b3e1579521e7 https://gradivo.jknm.org/d6bc4474-efa1-4c17-afb7-b3e1579521e7/original.jpg
+OK, already correct (image/jpeg): 9baecc31-504e-4bc7-bcc5-1f17872f59e1 https://gradivo.jknm.org/9baecc31-504e-4bc7-bcc5-1f17872f59e1/original.jpg
+OK, already correct (image/jpeg): 1eb650eb-c4ec-4668-ab5b-f6e51f8d4c92 https://gradivo.jknm.org/1eb650eb-c4ec-4668-ab5b-f6e51f8d4c92/original.jpg
+OK, already correct (image/jpeg): 167c4a18-f48e-4ab4-9503-39d5768edfa8 https://gradivo.jknm.org/167c4a18-f48e-4ab4-9503-39d5768edfa8/original.jpg
+OK, already correct (image/jpeg): 7e817163-0d0f-411e-9a95-a28236925cf6 https://gradivo.jknm.org/7e817163-0d0f-411e-9a95-a28236925cf6/original.jpg
+OK, already correct (image/jpeg): bbf7d167-490c-4bc3-8df7-bae92fd5de07 https://gradivo.jknm.org/bbf7d167-490c-4bc3-8df7-bae92fd5de07/original.jpg
+OK, already correct (image/jpeg): 0ea20d2b-9c52-4230-bec0-dff0683de860 https://gradivo.jknm.org/0ea20d2b-9c52-4230-bec0-dff0683de860/original.jpg
+OK, already correct (image/jpeg): dc5e5ce0-c668-46b6-b7e8-73a29f30c948 https://gradivo.jknm.org/dc5e5ce0-c668-46b6-b7e8-73a29f30c948/original.jpg
+OK, already correct (image/jpeg): a19f3e97-2107-4030-accd-0d7f56712e88 https://gradivo.jknm.org/a19f3e97-2107-4030-accd-0d7f56712e88/original.jpg
+OK, already correct (image/jpeg): 8c57932e-b7ef-41a0-a81f-70e720d9a8aa https://gradivo.jknm.org/8c57932e-b7ef-41a0-a81f-70e720d9a8aa/original.jpg
+OK, already correct (image/jpeg): 5649ab2a-9009-4a7e-9b2e-2302ca77ce97 https://gradivo.jknm.org/5649ab2a-9009-4a7e-9b2e-2302ca77ce97/original.jpg
+OK, already correct (image/jpeg): fec09f40-d3ff-4f56-98d2-b48857633e51 https://gradivo.jknm.org/fec09f40-d3ff-4f56-98d2-b48857633e51/original.jpg
+OK, already correct (image/jpeg): 82689b17-367c-4486-abb2-630c7a5338fd https://gradivo.jknm.org/82689b17-367c-4486-abb2-630c7a5338fd/original.jpg
+OK, already correct (image/jpeg): 73d19b72-4f8f-4644-ad5c-758fe2f3f8ed https://gradivo.jknm.org/73d19b72-4f8f-4644-ad5c-758fe2f3f8ed/original.jpg
+OK, already correct (image/jpeg): a07178d4-532f-4af0-a1d0-2545ec4ae925 https://gradivo.jknm.org/a07178d4-532f-4af0-a1d0-2545ec4ae925/original.jpg
+OK, already correct (image/jpeg): 9817f72f-24ec-4e95-b557-4b40b55c6061 https://gradivo.jknm.org/9817f72f-24ec-4e95-b557-4b40b55c6061/original.jpg
+OK, already correct (image/jpeg): c556ddb8-1952-46e3-9c29-f89890b354d2 https://gradivo.jknm.org/c556ddb8-1952-46e3-9c29-f89890b354d2/original.jpg
+OK, already correct (image/jpeg): bf4e2457-fefd-4abd-8194-3e5cc0c0fc08 https://gradivo.jknm.org/bf4e2457-fefd-4abd-8194-3e5cc0c0fc08/original.jpg
+OK, already correct (image/jpeg): 5b2ad125-9e5d-4c24-beb5-0a00dfbd9964 https://gradivo.jknm.org/5b2ad125-9e5d-4c24-beb5-0a00dfbd9964/original.jpg
+OK, already correct (image/jpeg): bb6e9e55-d0e1-4277-b65f-e43f8cc363fb https://gradivo.jknm.org/bb6e9e55-d0e1-4277-b65f-e43f8cc363fb/original.jpg
+OK, already correct (image/jpeg): 26366339-4fc6-454c-93bd-9d548f1ae145 https://gradivo.jknm.org/26366339-4fc6-454c-93bd-9d548f1ae145/original.jpg
+OK, already correct (image/jpeg): c023573d-3316-4984-8e37-7bf35cb24351 https://gradivo.jknm.org/c023573d-3316-4984-8e37-7bf35cb24351/original.jpg
+OK, already correct (image/jpeg): 6c0adc6d-37d2-4ac9-9a4e-81bcb572d6ea https://gradivo.jknm.org/6c0adc6d-37d2-4ac9-9a4e-81bcb572d6ea/original.jpg
+OK, already correct (image/jpeg): f7f5b873-9e24-4641-962c-fd441ac3866f https://gradivo.jknm.org/f7f5b873-9e24-4641-962c-fd441ac3866f/original.jpg
+OK, already correct (image/jpeg): 4e665d93-b90a-486a-8983-291f7dd19a8b https://gradivo.jknm.org/4e665d93-b90a-486a-8983-291f7dd19a8b/original.jpg
+OK, already correct (image/jpeg): 0c7eaff2-05b1-495f-b912-c9ef30e7d860 https://gradivo.jknm.org/0c7eaff2-05b1-495f-b912-c9ef30e7d860/original.jpg
+OK, already correct (image/jpeg): 09303b56-6580-4574-a902-0b606e99cf6f https://gradivo.jknm.org/09303b56-6580-4574-a902-0b606e99cf6f/original.jpg
+OK, already correct (image/jpeg): 3c47d834-cc19-4058-9c2b-d18658c6b881 https://gradivo.jknm.org/3c47d834-cc19-4058-9c2b-d18658c6b881/original.jpg
+OK, already correct (image/jpeg): ea613ca3-daa1-47a5-9074-116614879212 https://gradivo.jknm.org/ea613ca3-daa1-47a5-9074-116614879212/original.jpg
+OK, already correct (image/jpeg): b5543d5b-f3c0-4905-ae87-25e18da798b7 https://gradivo.jknm.org/b5543d5b-f3c0-4905-ae87-25e18da798b7/original.jpg
+OK, already correct (image/jpeg): ae542628-c2a7-4628-9ec5-8e22cc1ce78c https://gradivo.jknm.org/ae542628-c2a7-4628-9ec5-8e22cc1ce78c/original.jpg
+OK, already correct (image/jpeg): da6393d7-2ac0-4049-9d77-a5dc51114a7f https://gradivo.jknm.org/da6393d7-2ac0-4049-9d77-a5dc51114a7f/original.jpg
+OK, already correct (image/jpeg): 0817621b-c238-4939-9c50-f387a7a2b8d0 https://gradivo.jknm.org/0817621b-c238-4939-9c50-f387a7a2b8d0/original.jpg
+OK, already correct (image/jpeg): f82d7bf0-78ca-42de-a97c-d687eaf009a9 https://gradivo.jknm.org/f82d7bf0-78ca-42de-a97c-d687eaf009a9/original.jpg
+OK, already correct (image/jpeg): 6c4b2015-b1bd-4662-90e4-c5ebee6548a1 https://gradivo.jknm.org/6c4b2015-b1bd-4662-90e4-c5ebee6548a1/original.jpg
+OK, already correct (image/jpeg): 4c93bd65-faed-4a87-8ece-ed4d0333636a https://gradivo.jknm.org/4c93bd65-faed-4a87-8ece-ed4d0333636a/original.jpg
+OK, already correct (image/jpeg): 29469fad-a00a-42a4-8d06-e7cc695afab1 https://gradivo.jknm.org/29469fad-a00a-42a4-8d06-e7cc695afab1/original.jpg
+OK, already correct (image/jpeg): 20933f0a-c584-4e87-a488-aa4c5e7f4a06 https://gradivo.jknm.org/20933f0a-c584-4e87-a488-aa4c5e7f4a06/original.jpg
+OK, already correct (image/jpeg): 3b1d73df-7103-43c1-a1ad-52fbc248a29e https://gradivo.jknm.org/3b1d73df-7103-43c1-a1ad-52fbc248a29e/original.jpg
+OK, already correct (image/jpeg): fde6387a-33fe-4657-b4af-841709d6ff13 https://gradivo.jknm.org/fde6387a-33fe-4657-b4af-841709d6ff13/original.jpg
+OK, already correct (image/jpeg): 42c9c2f2-c1af-4e9e-839f-f7f5f6657d14 https://gradivo.jknm.org/42c9c2f2-c1af-4e9e-839f-f7f5f6657d14/original.jpg
+OK, already correct (image/jpeg): 5fba7c7e-a835-43f6-b8dd-f302c074b035 https://gradivo.jknm.org/5fba7c7e-a835-43f6-b8dd-f302c074b035/original.jpg
+OK, already correct (image/jpeg): f064f54b-1126-4216-b973-6bf4259175f7 https://gradivo.jknm.org/f064f54b-1126-4216-b973-6bf4259175f7/original.jpg
+OK, already correct (image/jpeg): e0b19c29-d3c5-4c0c-8767-8c311e3d6439 https://gradivo.jknm.org/e0b19c29-d3c5-4c0c-8767-8c311e3d6439/original.jpg
+OK, already correct (image/jpeg): 5400efed-9443-4248-9cd6-7411fce25df8 https://gradivo.jknm.org/5400efed-9443-4248-9cd6-7411fce25df8/original.jpg
+OK, already correct (image/jpeg): 327438e2-d75c-4a11-9fcd-5e81d73416c7 https://gradivo.jknm.org/327438e2-d75c-4a11-9fcd-5e81d73416c7/original.jpg
+OK, already correct (image/jpeg): 9efa6fa5-09e3-4c86-996e-09cb93a8afa1 https://gradivo.jknm.org/9efa6fa5-09e3-4c86-996e-09cb93a8afa1/original.jpg
+MISMATCH b426ed05-0c98-496f-9106-6ddd71451814: stored application/octet-stream (https://gradivo.jknm.org/b426ed05-0c98-496f-9106-6ddd71451814/original.bin) -> real image/jpeg (.jpg)
+Fixed b426ed05-0c98-496f-9106-6ddd71451814 -> 52ddb7d2-954e-4817-86cf-23d75c127e4e (52ddb7d2-954e-4817-86cf-23d75c127e4e/original.jpg)
+OK, already correct (image/jpeg): 099c8e1e-1227-46e1-a884-e7c3837d849f https://gradivo.jknm.org/099c8e1e-1227-46e1-a884-e7c3837d849f/original.jpg
+OK, already correct (image/jpeg): 8d2248a6-b4ec-4d5c-9df3-78c1c301df16 https://gradivo.jknm.org/8d2248a6-b4ec-4d5c-9df3-78c1c301df16/original.jpg
+MISMATCH 6d67a4c1-5f43-48bb-a32c-782b2f061229: stored application/octet-stream (https://gradivo.jknm.org/6d67a4c1-5f43-48bb-a32c-782b2f061229/original.bin) -> real image/jpeg (.jpg)
+Fixed 6d67a4c1-5f43-48bb-a32c-782b2f061229 -> 14d31f4a-5965-4407-846a-daea834f2a64 (14d31f4a-5965-4407-846a-daea834f2a64/original.jpg)
+OK, already correct (image/jpeg): 64dfef50-9211-49bc-8d73-1cec061ed34c https://gradivo.jknm.org/64dfef50-9211-49bc-8d73-1cec061ed34c/original.jpg
+OK, already correct (image/jpeg): be156f9d-8d51-45db-b443-3fb010683e2d https://gradivo.jknm.org/be156f9d-8d51-45db-b443-3fb010683e2d/original.jpg
+OK, already correct (image/jpeg): 2e4e573c-495f-45ff-8427-a56732655929 https://gradivo.jknm.org/2e4e573c-495f-45ff-8427-a56732655929/original.jpg
+OK, already correct (image/jpeg): 4deb3336-b464-49bd-ae50-5444d1fbd511 https://gradivo.jknm.org/4deb3336-b464-49bd-ae50-5444d1fbd511/original.jpg
+OK, already correct (image/jpeg): f6ad8f4d-0d8c-414f-89e8-9f57340450e4 https://gradivo.jknm.org/f6ad8f4d-0d8c-414f-89e8-9f57340450e4/original.jpg
+OK, already correct (image/jpeg): 159c4263-457b-484e-9aec-25aa0cc76fed https://gradivo.jknm.org/159c4263-457b-484e-9aec-25aa0cc76fed/original.jpg
+OK, already correct (image/jpeg): 5b0fb6ef-4eed-457f-a42e-8a1c61c411e4 https://gradivo.jknm.org/5b0fb6ef-4eed-457f-a42e-8a1c61c411e4/original.jpg
+OK, already correct (image/jpeg): 206cf9d6-3aae-4d49-94e9-4bb30a28a625 https://gradivo.jknm.org/206cf9d6-3aae-4d49-94e9-4bb30a28a625/original.jpg
+OK, already correct (image/jpeg): 1d1d6463-3a88-4e3b-bdeb-aaeeee6b2ab1 https://gradivo.jknm.org/1d1d6463-3a88-4e3b-bdeb-aaeeee6b2ab1/original.jpg
+OK, already correct (image/jpeg): 57d4d6e9-dd4c-4947-b3c3-cb1db5c792ee https://gradivo.jknm.org/57d4d6e9-dd4c-4947-b3c3-cb1db5c792ee/original.jpg
+OK, already correct (image/jpeg): c7441060-dc02-4006-8479-f679b1438169 https://gradivo.jknm.org/c7441060-dc02-4006-8479-f679b1438169/original.jpg
+OK, already correct (image/jpeg): 040b8d15-5572-4831-957e-9add069aba90 https://gradivo.jknm.org/040b8d15-5572-4831-957e-9add069aba90/original.jpg
+OK, already correct (image/jpeg): ec3661df-dfe5-4585-be2d-3792decc143f https://gradivo.jknm.org/ec3661df-dfe5-4585-be2d-3792decc143f/original.jpg
+OK, already correct (image/jpeg): fb22caf8-4630-49fb-9bc1-11dbceaecb3f https://gradivo.jknm.org/fb22caf8-4630-49fb-9bc1-11dbceaecb3f/original.jpg
+OK, already correct (image/jpeg): 8412b361-6cb6-4798-805c-062ea6bc6cf5 https://gradivo.jknm.org/8412b361-6cb6-4798-805c-062ea6bc6cf5/original.jpg
+OK, already correct (image/jpeg): 7a8ae923-4fb8-4427-8ace-00a55967ce59 https://gradivo.jknm.org/7a8ae923-4fb8-4427-8ace-00a55967ce59/original.jpg
+OK, already correct (image/jpeg): b70b3a55-902c-4192-accf-b3cf717c06e5 https://gradivo.jknm.org/b70b3a55-902c-4192-accf-b3cf717c06e5/original.jpg
+OK, already correct (image/jpeg): 27b432b6-450d-42e2-9153-c167b9675da7 https://gradivo.jknm.org/27b432b6-450d-42e2-9153-c167b9675da7/original.jpg
+OK, already correct (image/jpeg): e4ca7edc-f550-4a06-98aa-f9517a3521e7 https://gradivo.jknm.org/e4ca7edc-f550-4a06-98aa-f9517a3521e7/original.jpg
+OK, already correct (image/jpeg): c867f6e1-c19b-459b-aabc-69c6a1b2b5cb https://gradivo.jknm.org/c867f6e1-c19b-459b-aabc-69c6a1b2b5cb/original.jpg
+OK, already correct (image/jpeg): ae5a782a-ae63-45a2-a724-5cbaa8d8a429 https://gradivo.jknm.org/ae5a782a-ae63-45a2-a724-5cbaa8d8a429/original.jpg
+OK, already correct (image/jpeg): 6639ea89-ad22-4e91-bdaf-6eab91370385 https://gradivo.jknm.org/6639ea89-ad22-4e91-bdaf-6eab91370385/original.jpg
+OK, already correct (image/jpeg): 828faff4-6ed5-47c7-860e-82abc902e2e9 https://gradivo.jknm.org/828faff4-6ed5-47c7-860e-82abc902e2e9/original.jpg
+OK, already correct (image/jpeg): c9dec2d7-4b67-403b-b964-0c42f889f5e9 https://gradivo.jknm.org/c9dec2d7-4b67-403b-b964-0c42f889f5e9/original.jpg
+OK, already correct (image/jpeg): 0ab36b69-8e87-43b1-95cd-7d3ccaef48c3 https://gradivo.jknm.org/0ab36b69-8e87-43b1-95cd-7d3ccaef48c3/original.jpg
+OK, already correct (image/jpeg): f3e63b2b-0784-4de3-a3a0-94984af7140e https://gradivo.jknm.org/f3e63b2b-0784-4de3-a3a0-94984af7140e/original.jpg
+OK, already correct (image/jpeg): 9db16e78-d835-4a89-a506-ab720d946f14 https://gradivo.jknm.org/9db16e78-d835-4a89-a506-ab720d946f14/original.jpg
+OK, already correct (image/jpeg): b92c42a2-26ee-4c22-be7e-e4dbeab58064 https://gradivo.jknm.org/b92c42a2-26ee-4c22-be7e-e4dbeab58064/original.jpg
+OK, already correct (image/jpeg): 09b14d95-274f-479a-a025-d8f2bdf0913b https://gradivo.jknm.org/09b14d95-274f-479a-a025-d8f2bdf0913b/original.jpg
+OK, already correct (image/jpeg): fbc96a2c-d308-44e9-9b82-68dec0b1e00d https://gradivo.jknm.org/fbc96a2c-d308-44e9-9b82-68dec0b1e00d/original.jpg
+OK, already correct (image/jpeg): bb6b40a0-4f26-415f-8b30-893df9741fd6 https://gradivo.jknm.org/bb6b40a0-4f26-415f-8b30-893df9741fd6/original.jpg
+OK, already correct (image/jpeg): c7fbb5ff-acfa-4768-900b-f80bbfef2b46 https://gradivo.jknm.org/c7fbb5ff-acfa-4768-900b-f80bbfef2b46/original.jpg
+OK, already correct (image/jpeg): ce43fed7-a6e3-4ef7-ad44-4ce4c81fc379 https://gradivo.jknm.org/ce43fed7-a6e3-4ef7-ad44-4ce4c81fc379/original.jpg
+OK, already correct (image/jpeg): e51fd100-5770-44eb-a550-e8c562c25644 https://gradivo.jknm.org/e51fd100-5770-44eb-a550-e8c562c25644/original.jpg
+OK, already correct (image/jpeg): f6c47b22-228f-434e-b666-e7c9cbfc213c https://gradivo.jknm.org/f6c47b22-228f-434e-b666-e7c9cbfc213c/original.jpg
+OK, already correct (image/jpeg): 51b1cc14-23ab-437a-a562-ae1477755a80 https://gradivo.jknm.org/51b1cc14-23ab-437a-a562-ae1477755a80/original.jpg
+OK, already correct (image/jpeg): 61e505b1-7d6f-4b41-b1ce-32cca86ec332 https://gradivo.jknm.org/61e505b1-7d6f-4b41-b1ce-32cca86ec332/original.jpg
+OK, already correct (image/jpeg): d1a45db7-760b-47cf-9305-d651aed3312b https://gradivo.jknm.org/d1a45db7-760b-47cf-9305-d651aed3312b/original.jpg
+OK, already correct (image/jpeg): b382f843-9f47-43ca-af42-82a4e3e0d634 https://gradivo.jknm.org/b382f843-9f47-43ca-af42-82a4e3e0d634/original.jpg
+OK, already correct (image/jpeg): f6850a01-a031-418f-a7a1-b786f36c10b7 https://gradivo.jknm.org/f6850a01-a031-418f-a7a1-b786f36c10b7/original.jpg
+OK, already correct (image/jpeg): fc65515c-a656-455f-8ff1-2ae33f81f6be https://gradivo.jknm.org/fc65515c-a656-455f-8ff1-2ae33f81f6be/original.jpg
+OK, already correct (image/jpeg): cb748afe-3206-4440-b3e6-bce9324a53c9 https://gradivo.jknm.org/cb748afe-3206-4440-b3e6-bce9324a53c9/original.jpg
+OK, already correct (image/jpeg): fa62f080-09be-4102-ae3b-b85dc594da43 https://gradivo.jknm.org/fa62f080-09be-4102-ae3b-b85dc594da43/original.jpg
+OK, already correct (image/jpeg): 1e360e60-0f43-4547-9c58-e8160f63e044 https://gradivo.jknm.org/1e360e60-0f43-4547-9c58-e8160f63e044/original.jpg
+OK, already correct (image/jpeg): 13c902d1-a6e5-428d-a88c-7525bc226eca https://gradivo.jknm.org/13c902d1-a6e5-428d-a88c-7525bc226eca/original.jpg
+OK, already correct (image/jpeg): 846fbd98-6de1-4ac5-b5d4-6908a842a706 https://gradivo.jknm.org/846fbd98-6de1-4ac5-b5d4-6908a842a706/original.jpg
+OK, already correct (image/jpeg): 9886555d-37ea-4f3f-947d-6f2ec6f5a97e https://gradivo.jknm.org/9886555d-37ea-4f3f-947d-6f2ec6f5a97e/original.jpg
+OK, already correct (image/jpeg): ccd27ff3-2b4f-4e12-b3f9-59c41a250419 https://gradivo.jknm.org/ccd27ff3-2b4f-4e12-b3f9-59c41a250419/original.jpg
+OK, already correct (image/jpeg): 733c0f83-dabe-45df-b2a9-63621734de5f https://gradivo.jknm.org/733c0f83-dabe-45df-b2a9-63621734de5f/original.jpg
+OK, already correct (image/jpeg): b7a6f556-4854-4587-a87c-c4016a03608e https://gradivo.jknm.org/b7a6f556-4854-4587-a87c-c4016a03608e/original.jpg
+OK, already correct (image/jpeg): 88ceb37d-fc2f-47a5-b081-8fd74c4697dd https://gradivo.jknm.org/88ceb37d-fc2f-47a5-b081-8fd74c4697dd/original.jpg
+OK, already correct (image/jpeg): 47f7bfb9-88fe-431d-9426-e523e8551d57 https://gradivo.jknm.org/47f7bfb9-88fe-431d-9426-e523e8551d57/original.jpg
+OK, already correct (image/jpeg): d9d09a55-d179-414a-b269-2cb3893bff16 https://gradivo.jknm.org/d9d09a55-d179-414a-b269-2cb3893bff16/original.jpg
+OK, already correct (image/jpeg): e822c746-5da6-4d41-bb01-14a95e564d08 https://gradivo.jknm.org/e822c746-5da6-4d41-bb01-14a95e564d08/original.jpg
+OK, already correct (image/jpeg): 64879690-ff19-4b6c-9380-4917ddc5c11e https://gradivo.jknm.org/64879690-ff19-4b6c-9380-4917ddc5c11e/original.jpg
+OK, already correct (image/jpeg): fce22406-254b-420f-9a6e-fe8d40c39f4b https://gradivo.jknm.org/fce22406-254b-420f-9a6e-fe8d40c39f4b/original.jpg
+OK, already correct (image/jpeg): 30206dd7-1197-410c-b073-eb26ac69fe26 https://gradivo.jknm.org/30206dd7-1197-410c-b073-eb26ac69fe26/original.jpg
+OK, already correct (image/jpeg): 8d3462a0-a89b-455b-8ecf-ab7a5c514892 https://gradivo.jknm.org/8d3462a0-a89b-455b-8ecf-ab7a5c514892/original.jpg
+OK, already correct (image/jpeg): bac08ea4-62d9-41ed-98af-6f2c72b4a56f https://gradivo.jknm.org/bac08ea4-62d9-41ed-98af-6f2c72b4a56f/original.jpg
+OK, already correct (image/jpeg): 46dca862-b365-4eaf-a228-2e19e748f2fd https://gradivo.jknm.org/46dca862-b365-4eaf-a228-2e19e748f2fd/original.jpg
+OK, already correct (image/jpeg): 809fb51c-a2d9-43cf-83bd-fe881e3b04b8 https://gradivo.jknm.org/809fb51c-a2d9-43cf-83bd-fe881e3b04b8/original.jpg
+OK, already correct (image/jpeg): 2601997d-7e0a-473c-9f57-1db2013cc8a4 https://gradivo.jknm.org/2601997d-7e0a-473c-9f57-1db2013cc8a4/original.jpg
+OK, already correct (image/jpeg): 12f97644-74b8-468e-9460-a2d13c266c60 https://gradivo.jknm.org/12f97644-74b8-468e-9460-a2d13c266c60/original.jpg
+OK, already correct (image/jpeg): 13b69203-8587-4a6f-8c2b-1990d52eb143 https://gradivo.jknm.org/13b69203-8587-4a6f-8c2b-1990d52eb143/original.jpg
+OK, already correct (image/jpeg): 67f1a76a-1f2e-4f77-826f-657c9ee7573a https://gradivo.jknm.org/67f1a76a-1f2e-4f77-826f-657c9ee7573a/original.jpg
+OK, already correct (image/jpeg): b1bb36fc-44cd-4a8c-b22f-5d5186633e72 https://gradivo.jknm.org/b1bb36fc-44cd-4a8c-b22f-5d5186633e72/original.jpg
+OK, already correct (image/jpeg): b5d23fb2-6397-492f-b863-e6e24ef14234 https://gradivo.jknm.org/b5d23fb2-6397-492f-b863-e6e24ef14234/original.jpg
+OK, already correct (image/jpeg): 1cac8a51-dc44-4681-a94b-3c0e9ba579aa https://gradivo.jknm.org/1cac8a51-dc44-4681-a94b-3c0e9ba579aa/original.jpg
+OK, already correct (image/jpeg): a677d5a3-564d-4d65-87f5-3003cd063acd https://gradivo.jknm.org/a677d5a3-564d-4d65-87f5-3003cd063acd/original.jpg
+OK, already correct (image/jpeg): 3e20cdf7-b7cb-487e-b9f4-3cb51d004a7c https://gradivo.jknm.org/3e20cdf7-b7cb-487e-b9f4-3cb51d004a7c/original.jpg
+OK, already correct (image/jpeg): ee990b91-5b78-449d-81e2-5bb35305f101 https://gradivo.jknm.org/ee990b91-5b78-449d-81e2-5bb35305f101/original.jpg
+OK, already correct (image/jpeg): eb6b001b-b89d-4f4d-b68e-2b29065f88ff https://gradivo.jknm.org/eb6b001b-b89d-4f4d-b68e-2b29065f88ff/original.jpg
+OK, already correct (image/jpeg): b6fa4858-aec1-4b1f-af17-554929dfc8fd https://gradivo.jknm.org/b6fa4858-aec1-4b1f-af17-554929dfc8fd/original.jpg
+OK, already correct (image/jpeg): 0492704a-8a86-421c-be47-16f244d10a1a https://gradivo.jknm.org/0492704a-8a86-421c-be47-16f244d10a1a/original.jpg
+OK, already correct (image/jpeg): 5c5f5f6e-d2bb-4eda-8cbd-4e70f84cc2b1 https://gradivo.jknm.org/5c5f5f6e-d2bb-4eda-8cbd-4e70f84cc2b1/original.jpg
+OK, already correct (image/jpeg): 7d149232-d592-4ccd-97ab-de364ef4b385 https://gradivo.jknm.org/7d149232-d592-4ccd-97ab-de364ef4b385/original.jpg
+OK, already correct (image/jpeg): 7d535a70-1807-4f04-8201-e15f7a089ef7 https://gradivo.jknm.org/7d535a70-1807-4f04-8201-e15f7a089ef7/original.jpg
+OK, already correct (image/jpeg): 476618c1-a0d7-445d-b78b-9e608865fa87 https://gradivo.jknm.org/476618c1-a0d7-445d-b78b-9e608865fa87/original.jpg
+OK, already correct (image/jpeg): a381bbb0-6185-45ce-841a-98046950e425 https://gradivo.jknm.org/a381bbb0-6185-45ce-841a-98046950e425/original.jpg
+OK, already correct (image/jpeg): abf71f00-c36b-45fa-b78d-a931dd9824b3 https://gradivo.jknm.org/abf71f00-c36b-45fa-b78d-a931dd9824b3/original.jpg
+OK, already correct (image/jpeg): 6a38877c-8a5e-4860-9f2f-3475c615bd4f https://gradivo.jknm.org/6a38877c-8a5e-4860-9f2f-3475c615bd4f/original.jpg
+OK, already correct (image/jpeg): 571a707d-9e02-44a1-a15b-942550fff157 https://gradivo.jknm.org/571a707d-9e02-44a1-a15b-942550fff157/original.jpg
+OK, already correct (image/jpeg): 78db54d4-24b4-4d7c-a75d-4b36e10b4ac1 https://gradivo.jknm.org/78db54d4-24b4-4d7c-a75d-4b36e10b4ac1/original.jpg
+OK, already correct (image/jpeg): 9b75ec0c-52c9-4f07-b010-6977f05e723a https://gradivo.jknm.org/9b75ec0c-52c9-4f07-b010-6977f05e723a/original.jpg
+OK, already correct (image/jpeg): 8e2ce412-b324-406f-a89a-553c0adc79f1 https://gradivo.jknm.org/8e2ce412-b324-406f-a89a-553c0adc79f1/original.jpg
+OK, already correct (image/jpeg): 4efcef42-39b3-4b03-8a47-c3e0dc324222 https://gradivo.jknm.org/4efcef42-39b3-4b03-8a47-c3e0dc324222/original.jpg
+OK, already correct (image/jpeg): 849c83bb-7d04-44eb-925c-508f8392995b https://gradivo.jknm.org/849c83bb-7d04-44eb-925c-508f8392995b/original.jpg
+OK, already correct (image/jpeg): 48ec831e-ba52-49a5-9fcc-2850709e2d15 https://gradivo.jknm.org/48ec831e-ba52-49a5-9fcc-2850709e2d15/original.jpg
+OK, already correct (image/jpeg): 049a8177-ad7d-4611-b3e8-999e8240152f https://gradivo.jknm.org/049a8177-ad7d-4611-b3e8-999e8240152f/original.jpg
+OK, already correct (image/jpeg): a698b875-61d6-4a5d-841e-f041b0496ec2 https://gradivo.jknm.org/a698b875-61d6-4a5d-841e-f041b0496ec2/original.jpg
+OK, already correct (image/jpeg): 695f644d-8bc7-44c7-93a0-be3b4b63ec1a https://gradivo.jknm.org/695f644d-8bc7-44c7-93a0-be3b4b63ec1a/original.jpg
+OK, already correct (image/jpeg): 29cc7f3f-b371-4af4-a46b-6882a632e5cc https://gradivo.jknm.org/29cc7f3f-b371-4af4-a46b-6882a632e5cc/original.jpg
+OK, already correct (image/jpeg): 8a62f453-8494-4e87-8c23-cf340ee52702 https://gradivo.jknm.org/8a62f453-8494-4e87-8c23-cf340ee52702/original.jpg
+OK, already correct (image/jpeg): f7d72f9e-c3ec-4b0e-9d7c-066874a7de4b https://gradivo.jknm.org/f7d72f9e-c3ec-4b0e-9d7c-066874a7de4b/original.jpg
+OK, already correct (image/jpeg): 1c0bde0b-4e1c-48df-aee3-a746e0840bcf https://gradivo.jknm.org/1c0bde0b-4e1c-48df-aee3-a746e0840bcf/original.jpg
+OK, already correct (image/jpeg): 498523f8-94e8-418a-aff3-524ba0d7d221 https://gradivo.jknm.org/498523f8-94e8-418a-aff3-524ba0d7d221/original.jpg
+OK, already correct (image/jpeg): 13f137e3-cdee-445f-ade5-018a02612b2b https://gradivo.jknm.org/13f137e3-cdee-445f-ade5-018a02612b2b/original.jpg
+OK, already correct (image/jpeg): 31761875-5835-45cc-8c5c-69446a068f9c https://gradivo.jknm.org/31761875-5835-45cc-8c5c-69446a068f9c/original.jpg
+OK, already correct (image/jpeg): b77116ad-147a-4e0c-9d1d-e350bcd8c178 https://gradivo.jknm.org/b77116ad-147a-4e0c-9d1d-e350bcd8c178/original.jpg
+OK, already correct (image/jpeg): 239d6392-0d8b-41bd-8523-6fd6e140059e https://gradivo.jknm.org/239d6392-0d8b-41bd-8523-6fd6e140059e/original.jpg
+OK, already correct (image/jpeg): 149079aa-5f04-4b19-b565-ff8367a8bc87 https://gradivo.jknm.org/149079aa-5f04-4b19-b565-ff8367a8bc87/original.jpg
+OK, already correct (image/jpeg): cac34890-1d43-4f66-bbed-85c5702248c1 https://gradivo.jknm.org/cac34890-1d43-4f66-bbed-85c5702248c1/original.jpg
+OK, already correct (image/jpeg): c892fd70-ba1c-4d76-b814-44c169dc5f23 https://gradivo.jknm.org/c892fd70-ba1c-4d76-b814-44c169dc5f23/original.jpg
+OK, already correct (image/jpeg): fdffacb3-45c9-479d-bffc-f135be84d9a0 https://gradivo.jknm.org/fdffacb3-45c9-479d-bffc-f135be84d9a0/original.jpg
+OK, already correct (image/jpeg): 74066835-f61b-42e8-9a45-f634d9b77bea https://gradivo.jknm.org/74066835-f61b-42e8-9a45-f634d9b77bea/original.jpg
+OK, already correct (image/jpeg): e673e453-5330-448a-ad58-dffa2142ae00 https://gradivo.jknm.org/e673e453-5330-448a-ad58-dffa2142ae00/original.jpg
+OK, already correct (image/jpeg): 0683f333-bd28-4235-bd70-362681a359f7 https://gradivo.jknm.org/0683f333-bd28-4235-bd70-362681a359f7/original.jpg
+OK, already correct (image/jpeg): 0b00c71a-16f5-4000-8b2b-d346ca63cedf https://gradivo.jknm.org/0b00c71a-16f5-4000-8b2b-d346ca63cedf/original.jpg
+OK, already correct (image/jpeg): fbecbccc-e2ef-4f6b-919b-2320dfaeee3c https://gradivo.jknm.org/fbecbccc-e2ef-4f6b-919b-2320dfaeee3c/original.jpg
+OK, already correct (image/jpeg): 88c46ec5-dbcb-4626-aa25-92660aed1a4e https://gradivo.jknm.org/88c46ec5-dbcb-4626-aa25-92660aed1a4e/original.jpg
+OK, already correct (image/jpeg): c9247cdb-f4e0-4786-91a9-8d6c07debc96 https://gradivo.jknm.org/c9247cdb-f4e0-4786-91a9-8d6c07debc96/original.jpg
+OK, already correct (image/jpeg): c10d6710-0c68-4d15-adb3-40077006eeed https://gradivo.jknm.org/c10d6710-0c68-4d15-adb3-40077006eeed/original.jpg
+OK, already correct (image/jpeg): 996e8a9a-e35e-4c37-9f7c-695064a28255 https://gradivo.jknm.org/996e8a9a-e35e-4c37-9f7c-695064a28255/original.jpg
+OK, already correct (image/jpeg): 6d2bd92c-1f9d-4b44-bcf5-ccb48567e543 https://gradivo.jknm.org/6d2bd92c-1f9d-4b44-bcf5-ccb48567e543/original.jpg
+OK, already correct (image/jpeg): 8a964289-5b17-419a-8a30-6f6dcf9780da https://gradivo.jknm.org/8a964289-5b17-419a-8a30-6f6dcf9780da/original.jpg
+OK, already correct (image/jpeg): ad75b50e-9cb4-4101-9d7b-bb01772527ac https://gradivo.jknm.org/ad75b50e-9cb4-4101-9d7b-bb01772527ac/original.jpg
+OK, already correct (image/jpeg): 68d7aa5b-c6f8-4934-aa0f-131ca5f7adee https://gradivo.jknm.org/68d7aa5b-c6f8-4934-aa0f-131ca5f7adee/original.jpg
+OK, already correct (image/jpeg): 707b9703-2236-4817-8d09-2f4aa7944c9a https://gradivo.jknm.org/707b9703-2236-4817-8d09-2f4aa7944c9a/original.jpg
+OK, already correct (image/jpeg): 68d89dfc-0b86-4353-a76b-26a9354c1a50 https://gradivo.jknm.org/68d89dfc-0b86-4353-a76b-26a9354c1a50/original.jpg
+OK, already correct (image/jpeg): f0353a19-8b91-47a7-9b6a-7f17899f6ea9 https://gradivo.jknm.org/f0353a19-8b91-47a7-9b6a-7f17899f6ea9/original.jpg
+OK, already correct (image/jpeg): 5209c745-6a50-49c8-ba24-1d42fe2dd551 https://gradivo.jknm.org/5209c745-6a50-49c8-ba24-1d42fe2dd551/original.jpg
+OK, already correct (image/jpeg): 1d959a5f-f2be-4220-9921-feaa8725fb4c https://gradivo.jknm.org/1d959a5f-f2be-4220-9921-feaa8725fb4c/original.jpg
+OK, already correct (image/jpeg): ec07b728-14a6-4602-b308-c83bc7085e40 https://gradivo.jknm.org/ec07b728-14a6-4602-b308-c83bc7085e40/original.jpg
+OK, already correct (image/jpeg): a27c3123-78ba-443d-b3a7-3e9ee18c0a54 https://gradivo.jknm.org/a27c3123-78ba-443d-b3a7-3e9ee18c0a54/original.jpg
+OK, already correct (image/jpeg): 4f32a975-2a0f-48e8-91f1-8d8f3d00a19b https://gradivo.jknm.org/4f32a975-2a0f-48e8-91f1-8d8f3d00a19b/original.jpg
+OK, already correct (image/jpeg): f058f619-e379-4990-b160-b9cc140e5d78 https://gradivo.jknm.org/f058f619-e379-4990-b160-b9cc140e5d78/original.jpg
+OK, already correct (image/jpeg): 1a6ed9fa-a4c7-4756-8731-a9e0fbd21954 https://gradivo.jknm.org/1a6ed9fa-a4c7-4756-8731-a9e0fbd21954/original.jpg
+OK, already correct (image/jpeg): 54ae69a5-e6e6-4561-8d6a-519b0a21fc4b https://gradivo.jknm.org/54ae69a5-e6e6-4561-8d6a-519b0a21fc4b/original.jpg
+OK, already correct (image/jpeg): cd2d2de3-36d3-45fc-985c-a704bfe68a72 https://gradivo.jknm.org/cd2d2de3-36d3-45fc-985c-a704bfe68a72/original.jpg
+OK, already correct (image/jpeg): e3ba4303-a046-4d91-a037-0c3b868ec713 https://gradivo.jknm.org/e3ba4303-a046-4d91-a037-0c3b868ec713/original.jpg
+OK, already correct (image/jpeg): 94062fe8-6ebd-4dc2-8167-9c2b5686578b https://gradivo.jknm.org/94062fe8-6ebd-4dc2-8167-9c2b5686578b/original.jpg
+OK, already correct (image/jpeg): 720f2da2-7a6f-4be6-84af-6d4477571e9f https://gradivo.jknm.org/720f2da2-7a6f-4be6-84af-6d4477571e9f/original.jpg
+OK, already correct (image/jpeg): bfb4e108-a15c-4d1e-8cce-c65a3170da8b https://gradivo.jknm.org/bfb4e108-a15c-4d1e-8cce-c65a3170da8b/original.jpg
+OK, already correct (image/jpeg): ade72d85-4b92-44fa-97dd-5da08fd25b3a https://gradivo.jknm.org/ade72d85-4b92-44fa-97dd-5da08fd25b3a/original.jpg
+OK, already correct (image/jpeg): 85f12b60-93e8-487b-9f03-44f1cd88dacf https://gradivo.jknm.org/85f12b60-93e8-487b-9f03-44f1cd88dacf/original.jpg
+OK, already correct (image/jpeg): 79ba3c46-9b12-465f-be88-1794065531a1 https://gradivo.jknm.org/79ba3c46-9b12-465f-be88-1794065531a1/original.jpg
+OK, already correct (image/jpeg): 85324fd8-2c73-4b64-9b42-d4cc5ef7a91c https://gradivo.jknm.org/85324fd8-2c73-4b64-9b42-d4cc5ef7a91c/original.jpg
+OK, already correct (image/jpeg): 346cb0f9-998f-44b0-87ad-f41fb944aa80 https://gradivo.jknm.org/346cb0f9-998f-44b0-87ad-f41fb944aa80/original.jpg
+OK, already correct (image/jpeg): 38ff7971-ae2a-465d-9f00-e2d9d97b211a https://gradivo.jknm.org/38ff7971-ae2a-465d-9f00-e2d9d97b211a/original.jpg
+OK, already correct (image/jpeg): d2b7b743-98f8-4b5e-8387-cb2b7f3c146c https://gradivo.jknm.org/d2b7b743-98f8-4b5e-8387-cb2b7f3c146c/original.jpg
+OK, already correct (image/jpeg): 998f0153-eb2b-4075-9203-da999d9406d6 https://gradivo.jknm.org/998f0153-eb2b-4075-9203-da999d9406d6/original.jpg
+OK, already correct (image/jpeg): f445291c-6be7-49d4-9b5e-1e94bff37f23 https://gradivo.jknm.org/f445291c-6be7-49d4-9b5e-1e94bff37f23/original.jpg
+OK, already correct (image/jpeg): ee9cff7f-154c-4eb9-8321-099b85c8200b https://gradivo.jknm.org/ee9cff7f-154c-4eb9-8321-099b85c8200b/original.jpg
+OK, already correct (image/jpeg): 0c418955-c7f4-42cf-b411-e8a53d2d379e https://gradivo.jknm.org/0c418955-c7f4-42cf-b411-e8a53d2d379e/original.jpg
+OK, already correct (image/jpeg): 272559af-b59e-439a-8c9c-74d5433ada3f https://gradivo.jknm.org/272559af-b59e-439a-8c9c-74d5433ada3f/original.jpg
+OK, already correct (image/jpeg): 9aa80210-e12d-4263-b528-d08e02a8d1da https://gradivo.jknm.org/9aa80210-e12d-4263-b528-d08e02a8d1da/original.jpg
+OK, already correct (image/jpeg): f6742901-03ec-4bf6-a99d-2dd9b0968f61 https://gradivo.jknm.org/f6742901-03ec-4bf6-a99d-2dd9b0968f61/original.jpg
+OK, already correct (image/jpeg): 36093c9d-49d9-4f4c-a4b8-d74adeea443f https://gradivo.jknm.org/36093c9d-49d9-4f4c-a4b8-d74adeea443f/original.jpg
+OK, already correct (image/jpeg): b2289dee-ac94-45c0-95e4-8499271a5ea1 https://gradivo.jknm.org/b2289dee-ac94-45c0-95e4-8499271a5ea1/original.jpg
+OK, already correct (image/jpeg): 3084038f-472f-4533-b94d-73c7d04a8057 https://gradivo.jknm.org/3084038f-472f-4533-b94d-73c7d04a8057/original.jpg
+OK, already correct (image/jpeg): 33ff3a9b-8c66-41d0-bef3-2abebab93735 https://gradivo.jknm.org/33ff3a9b-8c66-41d0-bef3-2abebab93735/original.jpg
+OK, already correct (image/jpeg): 4208a155-176e-4b22-8ca8-f3149be059df https://gradivo.jknm.org/4208a155-176e-4b22-8ca8-f3149be059df/original.jpg
+OK, already correct (image/jpeg): 13bd33a4-9ac6-45af-a651-d26e572b852c https://gradivo.jknm.org/13bd33a4-9ac6-45af-a651-d26e572b852c/original.jpg
+OK, already correct (image/jpeg): 9bfe63d2-5967-4454-9b87-b7bcb36657c8 https://gradivo.jknm.org/9bfe63d2-5967-4454-9b87-b7bcb36657c8/original.jpg
+OK, already correct (image/jpeg): 7eb3a97e-8825-43c4-9922-d556749fc705 https://gradivo.jknm.org/7eb3a97e-8825-43c4-9922-d556749fc705/original.jpg
+OK, already correct (image/jpeg): ffc099c6-3947-44c2-b74e-52e02eb26752 https://gradivo.jknm.org/ffc099c6-3947-44c2-b74e-52e02eb26752/original.jpg
+OK, already correct (image/jpeg): 927865ce-8d6e-4f67-9ecc-635997a3d154 https://gradivo.jknm.org/927865ce-8d6e-4f67-9ecc-635997a3d154/original.jpg
+OK, already correct (image/jpeg): c197e0c0-aeff-4c0f-969a-213c99acf238 https://gradivo.jknm.org/c197e0c0-aeff-4c0f-969a-213c99acf238/original.jpg
+OK, already correct (image/jpeg): a20716ff-a48c-4e17-9d10-8abe144fb4e0 https://gradivo.jknm.org/a20716ff-a48c-4e17-9d10-8abe144fb4e0/original.jpg
+OK, already correct (image/jpeg): 6e1965c6-ad90-4635-a75e-dcfff5c9b264 https://gradivo.jknm.org/6e1965c6-ad90-4635-a75e-dcfff5c9b264/original.jpg
+OK, already correct (image/jpeg): 515eaf41-64ed-408d-91a0-9fde788dbc43 https://gradivo.jknm.org/515eaf41-64ed-408d-91a0-9fde788dbc43/original.jpg
+OK, already correct (image/jpeg): b5c40894-0bd1-4b79-9937-a9875c89660b https://gradivo.jknm.org/b5c40894-0bd1-4b79-9937-a9875c89660b/original.jpg
+OK, already correct (image/jpeg): 1f5aef5e-a9aa-45d5-90a6-a9f3505909a5 https://gradivo.jknm.org/1f5aef5e-a9aa-45d5-90a6-a9f3505909a5/original.jpg
+OK, already correct (image/jpeg): 8693699c-9833-4e10-822d-87c45f1ccaa2 https://gradivo.jknm.org/8693699c-9833-4e10-822d-87c45f1ccaa2/original.jpg
+OK, already correct (image/jpeg): 61482cbe-a679-4fb9-b852-377a58334633 https://gradivo.jknm.org/61482cbe-a679-4fb9-b852-377a58334633/original.jpg
+OK, already correct (image/jpeg): e4b6879d-ed88-4e27-9c84-f89b3f425198 https://gradivo.jknm.org/e4b6879d-ed88-4e27-9c84-f89b3f425198/original.jpg
+MISMATCH f6468c97-ca28-4330-9cdb-fab4c8b8bf0e: stored application/octet-stream (https://gradivo.jknm.org/f6468c97-ca28-4330-9cdb-fab4c8b8bf0e/original.bin) -> real image/jpeg (.jpg)
+Fixed f6468c97-ca28-4330-9cdb-fab4c8b8bf0e -> 39f6cbce-e0e3-471d-93e0-106b4f46a1be (39f6cbce-e0e3-471d-93e0-106b4f46a1be/original.jpg)
+OK, already correct (image/jpeg): 8736af43-5943-4545-ba82-2e9636d4ac0d https://gradivo.jknm.org/8736af43-5943-4545-ba82-2e9636d4ac0d/original.jpg
+OK, already correct (image/jpeg): bde2e61f-6209-48bc-a1e5-4b6fb85ad7ca https://gradivo.jknm.org/bde2e61f-6209-48bc-a1e5-4b6fb85ad7ca/original.jpg
+OK, already correct (image/jpeg): 034624f0-3077-4cac-b33d-55b35a183f6b https://gradivo.jknm.org/034624f0-3077-4cac-b33d-55b35a183f6b/original.jpg
+OK, already correct (image/jpeg): d7ddd323-ccd3-4b4d-aa79-f2ffe1961b0f https://gradivo.jknm.org/d7ddd323-ccd3-4b4d-aa79-f2ffe1961b0f/original.jpg
+OK, already correct (image/jpeg): e60d9b6d-a123-4128-85ce-cfe96d917b72 https://gradivo.jknm.org/e60d9b6d-a123-4128-85ce-cfe96d917b72/original.jpg
+OK, already correct (image/jpeg): 2a8e94a6-55f5-49be-9477-f654b9797a9a https://gradivo.jknm.org/2a8e94a6-55f5-49be-9477-f654b9797a9a/original.jpg
+OK, already correct (image/jpeg): d02694c2-4bff-43c2-b637-6d2c67b0a115 https://gradivo.jknm.org/d02694c2-4bff-43c2-b637-6d2c67b0a115/original.jpg
+OK, already correct (image/jpeg): 05179970-6bc6-4e2c-a20f-842d772eab2c https://gradivo.jknm.org/05179970-6bc6-4e2c-a20f-842d772eab2c/original.jpg
+OK, already correct (image/jpeg): f628c615-2170-4711-b625-588c52099264 https://gradivo.jknm.org/f628c615-2170-4711-b625-588c52099264/original.jpg
+OK, already correct (image/jpeg): ee44e120-7df6-455b-860e-eee77e878ccb https://gradivo.jknm.org/ee44e120-7df6-455b-860e-eee77e878ccb/original.jpg
+OK, already correct (image/jpeg): 865a30c9-6630-4aa7-a31f-5180fb876c69 https://gradivo.jknm.org/865a30c9-6630-4aa7-a31f-5180fb876c69/original.jpg
+OK, already correct (image/jpeg): 10a3143f-0359-45bc-a83b-330406b9ce78 https://gradivo.jknm.org/10a3143f-0359-45bc-a83b-330406b9ce78/original.jpg
+MISMATCH 8e0ab667-e8ed-4bb7-839c-65b009ab9c8b: stored application/octet-stream (https://gradivo.jknm.org/8e0ab667-e8ed-4bb7-839c-65b009ab9c8b/original.bin) -> real image/jpeg (.jpg)
+Fixed 8e0ab667-e8ed-4bb7-839c-65b009ab9c8b -> 755e4f0f-ab67-4ec4-ad12-a8578f436aab (755e4f0f-ab67-4ec4-ad12-a8578f436aab/original.jpg)
+MISMATCH 69cec7f8-fb0e-4a12-8b5d-c3032b0fb2f8: stored application/octet-stream (https://gradivo.jknm.org/69cec7f8-fb0e-4a12-8b5d-c3032b0fb2f8/original.bin) -> real image/jpeg (.jpg)
+Fixed 69cec7f8-fb0e-4a12-8b5d-c3032b0fb2f8 -> f03278da-2b4e-4cab-922b-104ddd3b384c (f03278da-2b4e-4cab-922b-104ddd3b384c/original.jpg)
+MISMATCH d777277b-3141-45f3-84ee-d27ddb18e629: stored application/octet-stream (https://gradivo.jknm.org/d777277b-3141-45f3-84ee-d27ddb18e629/original.bin) -> real image/jpeg (.jpg)
+Fixed d777277b-3141-45f3-84ee-d27ddb18e629 -> a2f98bdb-2807-4d1c-9bbe-f96f72cddc26 (a2f98bdb-2807-4d1c-9bbe-f96f72cddc26/original.jpg)
+MISMATCH 32612068-bf4c-4516-9c64-754c656e3e91: stored application/octet-stream (https://gradivo.jknm.org/32612068-bf4c-4516-9c64-754c656e3e91/original.bin) -> real image/jpeg (.jpg)
+Fixed 32612068-bf4c-4516-9c64-754c656e3e91 -> 288bcfe7-542b-445b-aaa6-41768e84cc7d (288bcfe7-542b-445b-aaa6-41768e84cc7d/original.jpg)
+MISMATCH 349c704a-933f-4ff7-8056-69b9ec9384b2: stored application/octet-stream (https://gradivo.jknm.org/349c704a-933f-4ff7-8056-69b9ec9384b2/original.bin) -> real image/jpeg (.jpg)
+Fixed 349c704a-933f-4ff7-8056-69b9ec9384b2 -> 6eb2fd79-188a-4864-a462-6f391fbf2cec (6eb2fd79-188a-4864-a462-6f391fbf2cec/original.jpg)
+MISMATCH ec8d4e3b-ec41-4a1b-9c04-96277f3e01fc: stored application/octet-stream (https://gradivo.jknm.org/ec8d4e3b-ec41-4a1b-9c04-96277f3e01fc/original.bin) -> real image/jpeg (.jpg)
+Fixed ec8d4e3b-ec41-4a1b-9c04-96277f3e01fc -> cda86377-fcdb-432e-b70f-63421927c5b3 (cda86377-fcdb-432e-b70f-63421927c5b3/original.jpg)
+MISMATCH 0d7c30b8-2f3a-42d9-a2de-f790261f45fd: stored application/octet-stream (https://gradivo.jknm.org/0d7c30b8-2f3a-42d9-a2de-f790261f45fd/original.bin) -> real image/jpeg (.jpg)
+Fixed 0d7c30b8-2f3a-42d9-a2de-f790261f45fd -> fb8065b4-caaa-4d9a-aa2f-819b3f2996b9 (fb8065b4-caaa-4d9a-aa2f-819b3f2996b9/original.jpg)
+MISMATCH ced6ae94-2332-4979-b6d7-4d93a15bcd74: stored application/octet-stream (https://gradivo.jknm.org/ced6ae94-2332-4979-b6d7-4d93a15bcd74/original.bin) -> real image/jpeg (.jpg)
+Fixed ced6ae94-2332-4979-b6d7-4d93a15bcd74 -> 396d9727-ecbd-4c80-8841-e005e3c84aa6 (396d9727-ecbd-4c80-8841-e005e3c84aa6/original.jpg)
+MISMATCH 96374aaa-5e77-4d32-8157-cdd3a3c98137: stored application/octet-stream (https://gradivo.jknm.org/96374aaa-5e77-4d32-8157-cdd3a3c98137/original.bin) -> real image/jpeg (.jpg)
+Fixed 96374aaa-5e77-4d32-8157-cdd3a3c98137 -> 384f2000-587d-48bd-adaa-180ebff9dd6f (384f2000-587d-48bd-adaa-180ebff9dd6f/original.jpg)
+MISMATCH 77421aea-fd71-453f-9d65-29e12efc839c: stored application/octet-stream (https://gradivo.jknm.org/77421aea-fd71-453f-9d65-29e12efc839c/original.bin) -> real image/jpeg (.jpg)
+Fixed 77421aea-fd71-453f-9d65-29e12efc839c -> 31f12f34-b38a-4309-a02b-eb3eedad6c27 (31f12f34-b38a-4309-a02b-eb3eedad6c27/original.jpg)
+MISMATCH 425b2ec3-725c-4240-be92-e14f0788945c: stored application/octet-stream (https://gradivo.jknm.org/425b2ec3-725c-4240-be92-e14f0788945c/original.bin) -> real image/jpeg (.jpg)
+Fixed 425b2ec3-725c-4240-be92-e14f0788945c -> 2820dfc1-95c2-4914-bd40-c20d99ac0c41 (2820dfc1-95c2-4914-bd40-c20d99ac0c41/original.jpg)
+MISMATCH feb744ef-fe4d-4694-afd9-f0692d6ecd6c: stored application/octet-stream (https://gradivo.jknm.org/feb744ef-fe4d-4694-afd9-f0692d6ecd6c/original.bin) -> real image/jpeg (.jpg)
+Fixed feb744ef-fe4d-4694-afd9-f0692d6ecd6c -> a7d7e387-3fbc-41d8-a338-db34029763a8 (a7d7e387-3fbc-41d8-a338-db34029763a8/original.jpg)
+MISMATCH a595f885-3e7e-41fd-bafb-451bca44090b: stored application/octet-stream (https://gradivo.jknm.org/a595f885-3e7e-41fd-bafb-451bca44090b/original.bin) -> real image/jpeg (.jpg)
+Fixed a595f885-3e7e-41fd-bafb-451bca44090b -> c6e3bc27-75ff-423f-9186-7153403411e5 (c6e3bc27-75ff-423f-9186-7153403411e5/original.jpg)
+MISMATCH b5274e98-d832-4721-af88-1b4fe61c8d83: stored application/octet-stream (https://gradivo.jknm.org/b5274e98-d832-4721-af88-1b4fe61c8d83/original.bin) -> real image/jpeg (.jpg)
+Fixed b5274e98-d832-4721-af88-1b4fe61c8d83 -> 532d2e4c-bad0-426f-8898-0213f1868a28 (532d2e4c-bad0-426f-8898-0213f1868a28/original.jpg)
+MISMATCH 2a651090-e48f-4437-a54e-e606302b1d1f: stored application/octet-stream (https://gradivo.jknm.org/2a651090-e48f-4437-a54e-e606302b1d1f/original.bin) -> real image/jpeg (.jpg)
+Fixed 2a651090-e48f-4437-a54e-e606302b1d1f -> 8fbfa7db-98cc-45fb-8c16-606883d4e1e6 (8fbfa7db-98cc-45fb-8c16-606883d4e1e6/original.jpg)
+MISMATCH 0532454a-f61c-4e69-bb27-12348fbcb83e: stored application/octet-stream (https://gradivo.jknm.org/0532454a-f61c-4e69-bb27-12348fbcb83e/original.bin) -> real image/jpeg (.jpg)
+Fixed 0532454a-f61c-4e69-bb27-12348fbcb83e -> 394d0769-51b1-4137-bfba-ec25c75fb66d (394d0769-51b1-4137-bfba-ec25c75fb66d/original.jpg)
+MISMATCH 65ed57f0-6410-4299-b20c-2c8eb4795f74: stored application/octet-stream (https://gradivo.jknm.org/65ed57f0-6410-4299-b20c-2c8eb4795f74/original.bin) -> real image/jpeg (.jpg)
+Fixed 65ed57f0-6410-4299-b20c-2c8eb4795f74 -> a0b2a935-66d7-494a-9c1a-5e3b7c473704 (a0b2a935-66d7-494a-9c1a-5e3b7c473704/original.jpg)
+MISMATCH cf8f9898-1809-44cc-96d1-9d64c8fce51a: stored application/octet-stream (https://gradivo.jknm.org/cf8f9898-1809-44cc-96d1-9d64c8fce51a/original.bin) -> real image/jpeg (.jpg)
+Fixed cf8f9898-1809-44cc-96d1-9d64c8fce51a -> d500ffe4-ba00-4bda-98ae-96c48ab7e775 (d500ffe4-ba00-4bda-98ae-96c48ab7e775/original.jpg)
+MISMATCH 5b89ff04-a6f6-4e8e-ab27-e339429418a6: stored application/octet-stream (https://gradivo.jknm.org/5b89ff04-a6f6-4e8e-ab27-e339429418a6/original.bin) -> real image/jpeg (.jpg)
+Fixed 5b89ff04-a6f6-4e8e-ab27-e339429418a6 -> f8c3ff71-bc90-4886-ba63-8737e4e80d7a (f8c3ff71-bc90-4886-ba63-8737e4e80d7a/original.jpg)
+MISMATCH 23e882e6-0cb5-4719-a8d7-52daf166ab49: stored application/octet-stream (https://gradivo.jknm.org/23e882e6-0cb5-4719-a8d7-52daf166ab49/original.bin) -> real image/jpeg (.jpg)
+Fixed 23e882e6-0cb5-4719-a8d7-52daf166ab49 -> e54e85c5-7fee-4d62-8e1d-58526d1c433f (e54e85c5-7fee-4d62-8e1d-58526d1c433f/original.jpg)
+MISMATCH 91bcbdfc-e284-4b9d-829e-3907821f6814: stored application/octet-stream (https://gradivo.jknm.org/91bcbdfc-e284-4b9d-829e-3907821f6814/original.bin) -> real image/jpeg (.jpg)
+Fixed 91bcbdfc-e284-4b9d-829e-3907821f6814 -> 7d8df4ef-b54f-4b54-9f42-a9ab80f984d8 (7d8df4ef-b54f-4b54-9f42-a9ab80f984d8/original.jpg)
+MISMATCH 5086e22b-2077-4e4d-bbf5-d510091bf148: stored application/octet-stream (https://gradivo.jknm.org/5086e22b-2077-4e4d-bbf5-d510091bf148/original.bin) -> real image/jpeg (.jpg)
+Fixed 5086e22b-2077-4e4d-bbf5-d510091bf148 -> 93912483-d58f-423d-82f6-9dac60fdb04d (93912483-d58f-423d-82f6-9dac60fdb04d/original.jpg)
+MISMATCH f9545520-b184-4fb9-9f23-7033c6e392ef: stored application/octet-stream (https://gradivo.jknm.org/f9545520-b184-4fb9-9f23-7033c6e392ef/original.bin) -> real image/jpeg (.jpg)
+Fixed f9545520-b184-4fb9-9f23-7033c6e392ef -> 7720f1ea-1a6e-41b5-b708-f0604ea85139 (7720f1ea-1a6e-41b5-b708-f0604ea85139/original.jpg)
+MISMATCH 45f30161-146f-4124-841e-33904dc74a86: stored application/octet-stream (https://gradivo.jknm.org/45f30161-146f-4124-841e-33904dc74a86/original.bin) -> real image/jpeg (.jpg)
+Fixed 45f30161-146f-4124-841e-33904dc74a86 -> 5e0bf854-f593-440e-a512-29d237414055 (5e0bf854-f593-440e-a512-29d237414055/original.jpg)
+MISMATCH 5cbbbbbb-052b-4434-9db1-5a773e76261d: stored application/octet-stream (https://gradivo.jknm.org/5cbbbbbb-052b-4434-9db1-5a773e76261d/original.bin) -> real image/jpeg (.jpg)
+Fixed 5cbbbbbb-052b-4434-9db1-5a773e76261d -> e86be0bd-6338-44c6-953c-9132b66703d4 (e86be0bd-6338-44c6-953c-9132b66703d4/original.jpg)
+MISMATCH cbc0c846-ed92-4257-bcd0-6ccdf85c64d9: stored application/octet-stream (https://gradivo.jknm.org/cbc0c846-ed92-4257-bcd0-6ccdf85c64d9/original.bin) -> real image/jpeg (.jpg)
+Fixed cbc0c846-ed92-4257-bcd0-6ccdf85c64d9 -> fbfb949b-4d20-4dfd-afdc-f9881337ad15 (fbfb949b-4d20-4dfd-afdc-f9881337ad15/original.jpg)
+MISMATCH 8f7a1791-3cad-459f-92b9-5b7caa3253a4: stored application/octet-stream (https://gradivo.jknm.org/8f7a1791-3cad-459f-92b9-5b7caa3253a4/original.bin) -> real image/jpeg (.jpg)
+Fixed 8f7a1791-3cad-459f-92b9-5b7caa3253a4 -> 7b8d4f54-18a3-4b56-9e6d-a864195804c0 (7b8d4f54-18a3-4b56-9e6d-a864195804c0/original.jpg)
+MISMATCH e852a6c7-d12c-445f-9909-47a874984e6f: stored application/octet-stream (https://gradivo.jknm.org/e852a6c7-d12c-445f-9909-47a874984e6f/original.bin) -> real image/jpeg (.jpg)
+Fixed e852a6c7-d12c-445f-9909-47a874984e6f -> 2ff1dd2a-605f-4e11-b423-6eab5dd6cfcb (2ff1dd2a-605f-4e11-b423-6eab5dd6cfcb/original.jpg)
+MISMATCH 9be24114-ff3d-443a-8798-dd59de0c8045: stored application/octet-stream (https://gradivo.jknm.org/9be24114-ff3d-443a-8798-dd59de0c8045/original.bin) -> real image/jpeg (.jpg)
+Fixed 9be24114-ff3d-443a-8798-dd59de0c8045 -> 7ded0af7-7b34-4c9d-860d-74a083954787 (7ded0af7-7b34-4c9d-860d-74a083954787/original.jpg)
+MISMATCH bf42b35b-5a85-4e36-81ca-7998462587a2: stored application/octet-stream (https://gradivo.jknm.org/bf42b35b-5a85-4e36-81ca-7998462587a2/original.bin) -> real image/jpeg (.jpg)
+Fixed bf42b35b-5a85-4e36-81ca-7998462587a2 -> 502347ed-8e58-470e-8e3d-e6487082e298 (502347ed-8e58-470e-8e3d-e6487082e298/original.jpg)
+MISMATCH 04421dfd-e4e6-4973-b7ff-30cc625ad6de: stored application/octet-stream (https://gradivo.jknm.org/04421dfd-e4e6-4973-b7ff-30cc625ad6de/original.bin) -> real image/jpeg (.jpg)
+Fixed 04421dfd-e4e6-4973-b7ff-30cc625ad6de -> b8bbb3ba-5b36-41a2-9550-d82793229861 (b8bbb3ba-5b36-41a2-9550-d82793229861/original.jpg)
+MISMATCH c09ffce3-0911-4bbe-8562-4f874fb2af58: stored application/octet-stream (https://gradivo.jknm.org/c09ffce3-0911-4bbe-8562-4f874fb2af58/original.bin) -> real image/jpeg (.jpg)
+Fixed c09ffce3-0911-4bbe-8562-4f874fb2af58 -> b46aa4cc-1ff3-4b42-af7b-853c7dd63e2a (b46aa4cc-1ff3-4b42-af7b-853c7dd63e2a/original.jpg)
+MISMATCH cd6455bb-1c70-4c2e-8b64-21f056ad189c: stored application/octet-stream (https://gradivo.jknm.org/cd6455bb-1c70-4c2e-8b64-21f056ad189c/original.bin) -> real image/jpeg (.jpg)
+Fixed cd6455bb-1c70-4c2e-8b64-21f056ad189c -> af625850-62ef-495f-bafe-2af70dbd7374 (af625850-62ef-495f-bafe-2af70dbd7374/original.jpg)
+MISMATCH 9428776f-cc63-467e-b8bf-0799be60de7e: stored application/octet-stream (https://gradivo.jknm.org/9428776f-cc63-467e-b8bf-0799be60de7e/original.bin) -> real image/jpeg (.jpg)
+Fixed 9428776f-cc63-467e-b8bf-0799be60de7e -> f69e0cc6-297a-4370-8b55-aadea2b6e851 (f69e0cc6-297a-4370-8b55-aadea2b6e851/original.jpg)
+OK, already correct (image/jpeg): 0f117f73-782c-4045-bda5-bcecb6f163db https://gradivo.jknm.org/0f117f73-782c-4045-bda5-bcecb6f163db/original.jpg
+MISMATCH 0cd32bb0-f37e-4ca4-85db-027abf909cea: stored application/octet-stream (https://gradivo.jknm.org/0cd32bb0-f37e-4ca4-85db-027abf909cea/original.bin) -> real image/jpeg (.jpg)
+Fixed 0cd32bb0-f37e-4ca4-85db-027abf909cea -> 6d2f6f2b-009e-442e-b49f-2f93af57f992 (6d2f6f2b-009e-442e-b49f-2f93af57f992/original.jpg)
+MISMATCH e65f3159-16db-4b66-ae39-e4c680b93f71: stored application/octet-stream (https://gradivo.jknm.org/e65f3159-16db-4b66-ae39-e4c680b93f71/original.bin) -> real image/jpeg (.jpg)
+Fixed e65f3159-16db-4b66-ae39-e4c680b93f71 -> d77b52d1-6071-4c4b-90fb-8a1ee3a32e8b (d77b52d1-6071-4c4b-90fb-8a1ee3a32e8b/original.jpg)
+OK, already correct (image/jpeg): 41ce849d-dfd8-41d4-8365-fdf8d9909af0 https://gradivo.jknm.org/41ce849d-dfd8-41d4-8365-fdf8d9909af0/original.jpg
+MISMATCH 84ad440a-ec9b-435a-92d6-1ff206b45e3a: stored application/octet-stream (https://gradivo.jknm.org/84ad440a-ec9b-435a-92d6-1ff206b45e3a/original.bin) -> real image/jpeg (.jpg)
+Fixed 84ad440a-ec9b-435a-92d6-1ff206b45e3a -> 137454d3-f85e-409d-bf19-f814f426df5a (137454d3-f85e-409d-bf19-f814f426df5a/original.jpg)
+MISMATCH f9b0f3a9-9387-4aba-a9b8-ba1f5170310c: stored application/octet-stream (https://gradivo.jknm.org/f9b0f3a9-9387-4aba-a9b8-ba1f5170310c/original.bin) -> real image/jpeg (.jpg)
+Fixed f9b0f3a9-9387-4aba-a9b8-ba1f5170310c -> 3cd3fbfe-989f-4e3f-b3f5-e793e7a0d323 (3cd3fbfe-989f-4e3f-b3f5-e793e7a0d323/original.jpg)
+MISMATCH 35f51fdb-4e95-4548-983b-c38bc7c053a9: stored application/octet-stream (https://gradivo.jknm.org/35f51fdb-4e95-4548-983b-c38bc7c053a9/original.bin) -> real image/jpeg (.jpg)
+Fixed 35f51fdb-4e95-4548-983b-c38bc7c053a9 -> b76ec977-ab84-484d-8b6a-cfa0820040b7 (b76ec977-ab84-484d-8b6a-cfa0820040b7/original.jpg)
+MISMATCH 56af26dd-1e29-491c-9023-554f4a2d1bde: stored application/octet-stream (https://gradivo.jknm.org/56af26dd-1e29-491c-9023-554f4a2d1bde/original.bin) -> real image/jpeg (.jpg)
+Fixed 56af26dd-1e29-491c-9023-554f4a2d1bde -> 35c066f7-1b97-4d9f-8980-ae120584dca5 (35c066f7-1b97-4d9f-8980-ae120584dca5/original.jpg)
+MISMATCH b70a5dc1-5e06-4015-8ef7-0aec8b65a473: stored application/octet-stream (https://gradivo.jknm.org/b70a5dc1-5e06-4015-8ef7-0aec8b65a473/original.bin) -> real image/jpeg (.jpg)
+Fixed b70a5dc1-5e06-4015-8ef7-0aec8b65a473 -> 877f73e3-c99b-415e-95d8-b41030af1102 (877f73e3-c99b-415e-95d8-b41030af1102/original.jpg)
+MISMATCH 1ee83298-073e-49b3-a424-9c36d18b6ee5: stored application/octet-stream (https://gradivo.jknm.org/1ee83298-073e-49b3-a424-9c36d18b6ee5/original.bin) -> real image/jpeg (.jpg)
+Fixed 1ee83298-073e-49b3-a424-9c36d18b6ee5 -> dbe92a8a-d19a-4962-a111-3d7165d0d123 (dbe92a8a-d19a-4962-a111-3d7165d0d123/original.jpg)
+MISMATCH b2ad8eb1-4016-45bf-8452-83c2fe564242: stored application/octet-stream (https://gradivo.jknm.org/b2ad8eb1-4016-45bf-8452-83c2fe564242/original.bin) -> real image/jpeg (.jpg)
+Fixed b2ad8eb1-4016-45bf-8452-83c2fe564242 -> e3db3391-a4cd-419e-82d1-045af092b3b0 (e3db3391-a4cd-419e-82d1-045af092b3b0/original.jpg)
+MISMATCH 839ae242-28b6-4c17-93aa-8c2b53b47215: stored application/octet-stream (https://gradivo.jknm.org/839ae242-28b6-4c17-93aa-8c2b53b47215/original.bin) -> real image/jpeg (.jpg)
+Fixed 839ae242-28b6-4c17-93aa-8c2b53b47215 -> 8693933b-bb23-4533-868c-3d64117986fa (8693933b-bb23-4533-868c-3d64117986fa/original.jpg)
+MISMATCH da00d29e-1c3c-4331-938a-4b66ba54b221: stored application/octet-stream (https://gradivo.jknm.org/da00d29e-1c3c-4331-938a-4b66ba54b221/original.bin) -> real image/jpeg (.jpg)
+Fixed da00d29e-1c3c-4331-938a-4b66ba54b221 -> 2b61678e-c6ab-4d70-8578-0ac129364081 (2b61678e-c6ab-4d70-8578-0ac129364081/original.jpg)
+OK, already correct (image/jpeg): 47748751-d7a5-429e-a8e9-a38ea240d8bf https://gradivo.jknm.org/47748751-d7a5-429e-a8e9-a38ea240d8bf/original.jpg
+MISMATCH 80afc7e7-727f-41c5-9422-31856c127402: stored application/octet-stream (https://gradivo.jknm.org/80afc7e7-727f-41c5-9422-31856c127402/original.bin) -> real image/jpeg (.jpg)
+Fixed 80afc7e7-727f-41c5-9422-31856c127402 -> 1ce5d3c6-7532-47bb-acca-5074569a5b17 (1ce5d3c6-7532-47bb-acca-5074569a5b17/original.jpg)
+MISMATCH 8837ba9b-012d-4273-969d-62bc353bb0c0: stored application/octet-stream (https://gradivo.jknm.org/8837ba9b-012d-4273-969d-62bc353bb0c0/original.bin) -> real image/jpeg (.jpg)
+Fixed 8837ba9b-012d-4273-969d-62bc353bb0c0 -> 05c25f69-6b84-46dc-b077-70ca2ab67b62 (05c25f69-6b84-46dc-b077-70ca2ab67b62/original.jpg)
+MISMATCH 284db27b-7861-48b9-ba46-d1ab56a4babf: stored application/octet-stream (https://gradivo.jknm.org/284db27b-7861-48b9-ba46-d1ab56a4babf/original.bin) -> real image/jpeg (.jpg)
+Fixed 284db27b-7861-48b9-ba46-d1ab56a4babf -> c3e87ffd-a719-402d-b3c3-d7faca6cbdea (c3e87ffd-a719-402d-b3c3-d7faca6cbdea/original.jpg)
+MISMATCH 282b4c8f-df2e-40cf-b523-e852471ed9bf: stored application/octet-stream (https://gradivo.jknm.org/282b4c8f-df2e-40cf-b523-e852471ed9bf/original.bin) -> real image/jpeg (.jpg)
+Fixed 282b4c8f-df2e-40cf-b523-e852471ed9bf -> dd312dc1-f81c-49b8-bada-8b5f025f7443 (dd312dc1-f81c-49b8-bada-8b5f025f7443/original.jpg)
+MISMATCH 84ce047b-080a-4407-9b08-35a23e7c1ebe: stored application/octet-stream (https://gradivo.jknm.org/84ce047b-080a-4407-9b08-35a23e7c1ebe/original.bin) -> real image/jpeg (.jpg)
+Fixed 84ce047b-080a-4407-9b08-35a23e7c1ebe -> 50e317f5-d547-41fd-95ea-5258d5fd87c7 (50e317f5-d547-41fd-95ea-5258d5fd87c7/original.jpg)
+MISMATCH 1a10c38b-53f8-4fac-95a2-e27453642e03: stored application/octet-stream (https://gradivo.jknm.org/1a10c38b-53f8-4fac-95a2-e27453642e03/original.bin) -> real image/jpeg (.jpg)
+Fixed 1a10c38b-53f8-4fac-95a2-e27453642e03 -> 265b3552-c854-4201-b698-405b4bc1e498 (265b3552-c854-4201-b698-405b4bc1e498/original.jpg)
+MISMATCH 64b10006-3c37-4395-9c02-c09af6ceec4b: stored application/octet-stream (https://gradivo.jknm.org/64b10006-3c37-4395-9c02-c09af6ceec4b/original.bin) -> real image/jpeg (.jpg)
+Fixed 64b10006-3c37-4395-9c02-c09af6ceec4b -> 525ce82e-0094-430a-a8c7-c3362f330a73 (525ce82e-0094-430a-a8c7-c3362f330a73/original.jpg)
+MISMATCH 17c94f9e-36b4-408a-af73-042b0fea4ff3: stored application/octet-stream (https://gradivo.jknm.org/17c94f9e-36b4-408a-af73-042b0fea4ff3/original.bin) -> real image/jpeg (.jpg)
+Fixed 17c94f9e-36b4-408a-af73-042b0fea4ff3 -> f6da9db8-f46e-4c07-a442-cc20df80eff4 (f6da9db8-f46e-4c07-a442-cc20df80eff4/original.jpg)
+MISMATCH 0d77ecd6-c762-4b6d-aa01-809517570770: stored application/octet-stream (https://gradivo.jknm.org/0d77ecd6-c762-4b6d-aa01-809517570770/original.bin) -> real image/jpeg (.jpg)
+Fixed 0d77ecd6-c762-4b6d-aa01-809517570770 -> 1097dba4-6f48-42cf-b777-9260ce554301 (1097dba4-6f48-42cf-b777-9260ce554301/original.jpg)
+MISMATCH db73599b-9574-4d69-8dda-9bd014e77a6e: stored application/octet-stream (https://gradivo.jknm.org/db73599b-9574-4d69-8dda-9bd014e77a6e/original.bin) -> real image/jpeg (.jpg)
+Fixed db73599b-9574-4d69-8dda-9bd014e77a6e -> bc1daa56-1968-4576-bf08-810034fc6786 (bc1daa56-1968-4576-bf08-810034fc6786/original.jpg)
+MISMATCH 3e55ffd9-db99-4427-adec-0ac552df0f19: stored application/octet-stream (https://gradivo.jknm.org/3e55ffd9-db99-4427-adec-0ac552df0f19/original.bin) -> real image/jpeg (.jpg)
+Fixed 3e55ffd9-db99-4427-adec-0ac552df0f19 -> 33c292c4-9d23-4af3-b3de-165edd7e3b29 (33c292c4-9d23-4af3-b3de-165edd7e3b29/original.jpg)
+MISMATCH 9cb80d48-3826-4744-b260-9a8f83b81ace: stored application/octet-stream (https://gradivo.jknm.org/9cb80d48-3826-4744-b260-9a8f83b81ace/original.bin) -> real image/jpeg (.jpg)
+Fixed 9cb80d48-3826-4744-b260-9a8f83b81ace -> fc2066d7-dcdb-4b23-8148-cf7ea086d6ec (fc2066d7-dcdb-4b23-8148-cf7ea086d6ec/original.jpg)
+MISMATCH f1c4f705-5fd0-427d-a971-2a0d6ce3f91f: stored application/octet-stream (https://gradivo.jknm.org/f1c4f705-5fd0-427d-a971-2a0d6ce3f91f/original.bin) -> real image/jpeg (.jpg)
+Fixed f1c4f705-5fd0-427d-a971-2a0d6ce3f91f -> b6640d51-69b1-4456-af12-8d2dd32b5940 (b6640d51-69b1-4456-af12-8d2dd32b5940/original.jpg)
+MISMATCH c817bb70-df73-4447-8728-9cadf42fe50d: stored application/octet-stream (https://gradivo.jknm.org/c817bb70-df73-4447-8728-9cadf42fe50d/original.bin) -> real image/jpeg (.jpg)
+Fixed c817bb70-df73-4447-8728-9cadf42fe50d -> 280421e6-8dd0-4e47-a5c5-3683cf4b327b (280421e6-8dd0-4e47-a5c5-3683cf4b327b/original.jpg)
+MISMATCH c7acac2d-ac00-441b-b66e-99b881b07d05: stored application/octet-stream (https://gradivo.jknm.org/c7acac2d-ac00-441b-b66e-99b881b07d05/original.bin) -> real image/jpeg (.jpg)
+Fixed c7acac2d-ac00-441b-b66e-99b881b07d05 -> e75926ec-4ddf-469f-97c4-824f437d9cfe (e75926ec-4ddf-469f-97c4-824f437d9cfe/original.jpg)
+MISMATCH e38723df-c2ce-4d95-a831-10c27e542847: stored application/octet-stream (https://gradivo.jknm.org/e38723df-c2ce-4d95-a831-10c27e542847/original.bin) -> real image/jpeg (.jpg)
+Fixed e38723df-c2ce-4d95-a831-10c27e542847 -> 82aeb693-b6ed-4421-b9f7-b4968162cb75 (82aeb693-b6ed-4421-b9f7-b4968162cb75/original.jpg)
+MISMATCH 16191a51-c050-4272-8ef4-edf2d89200ef: stored application/octet-stream (https://gradivo.jknm.org/16191a51-c050-4272-8ef4-edf2d89200ef/original.bin) -> real image/jpeg (.jpg)
+Fixed 16191a51-c050-4272-8ef4-edf2d89200ef -> 6b7aea0c-1641-431b-a502-3175bb1b6d95 (6b7aea0c-1641-431b-a502-3175bb1b6d95/original.jpg)
+MISMATCH cf62ccc6-db47-4b9c-9333-efc5a2883691: stored application/octet-stream (https://gradivo.jknm.org/cf62ccc6-db47-4b9c-9333-efc5a2883691/original.bin) -> real image/jpeg (.jpg)
+Fixed cf62ccc6-db47-4b9c-9333-efc5a2883691 -> 3ca69c5f-f23a-4bf3-b32e-604cc4edde8e (3ca69c5f-f23a-4bf3-b32e-604cc4edde8e/original.jpg)
+MISMATCH 9c847e6c-3aec-4532-a6a7-71c6f3c55377: stored application/octet-stream (https://gradivo.jknm.org/9c847e6c-3aec-4532-a6a7-71c6f3c55377/original.bin) -> real image/jpeg (.jpg)
+Fixed 9c847e6c-3aec-4532-a6a7-71c6f3c55377 -> 59cf3058-9d76-4ad4-bd9c-e311623f512a (59cf3058-9d76-4ad4-bd9c-e311623f512a/original.jpg)
+MISMATCH cbb82783-e836-4eb3-b0b2-223d0c67787e: stored application/octet-stream (https://gradivo.jknm.org/cbb82783-e836-4eb3-b0b2-223d0c67787e/original.bin) -> real image/jpeg (.jpg)
+Fixed cbb82783-e836-4eb3-b0b2-223d0c67787e -> dacbf92a-e5b5-4359-9595-a9a2c3ca91ec (dacbf92a-e5b5-4359-9595-a9a2c3ca91ec/original.jpg)
+MISMATCH 7a0cf10d-9e52-4978-83e7-38cfebf0ea01: stored application/octet-stream (https://gradivo.jknm.org/7a0cf10d-9e52-4978-83e7-38cfebf0ea01/original.bin) -> real image/jpeg (.jpg)
+Fixed 7a0cf10d-9e52-4978-83e7-38cfebf0ea01 -> 47720555-9f39-4cda-8a18-75ab7ce164d5 (47720555-9f39-4cda-8a18-75ab7ce164d5/original.jpg)
+MISMATCH 26d086ae-e799-4f2d-b7a7-0da13770e798: stored application/octet-stream (https://gradivo.jknm.org/26d086ae-e799-4f2d-b7a7-0da13770e798/original.bin) -> real image/jpeg (.jpg)
+Fixed 26d086ae-e799-4f2d-b7a7-0da13770e798 -> fdb772ff-2a70-446c-857e-670bf1e54065 (fdb772ff-2a70-446c-857e-670bf1e54065/original.jpg)
+MISMATCH 29f9305a-c0c3-433b-881b-5e09cafc8495: stored application/octet-stream (https://gradivo.jknm.org/29f9305a-c0c3-433b-881b-5e09cafc8495/original.bin) -> real image/jpeg (.jpg)
+Fixed 29f9305a-c0c3-433b-881b-5e09cafc8495 -> b25d298c-159f-4fb2-9d20-404f41145cef (b25d298c-159f-4fb2-9d20-404f41145cef/original.jpg)
+MISMATCH b050c524-b1bf-4fbe-a872-42a0bcadf799: stored application/octet-stream (https://gradivo.jknm.org/b050c524-b1bf-4fbe-a872-42a0bcadf799/original.bin) -> real image/jpeg (.jpg)
+Fixed b050c524-b1bf-4fbe-a872-42a0bcadf799 -> 6fae8b47-c09d-495b-ab8a-16693252275f (6fae8b47-c09d-495b-ab8a-16693252275f/original.jpg)
+MISMATCH 3643cef2-30ca-44e5-a8a4-b902ce42fb2e: stored application/octet-stream (https://gradivo.jknm.org/3643cef2-30ca-44e5-a8a4-b902ce42fb2e/original.bin) -> real image/jpeg (.jpg)
+Fixed 3643cef2-30ca-44e5-a8a4-b902ce42fb2e -> 3f920b42-92cc-486f-9663-c4b461bf635d (3f920b42-92cc-486f-9663-c4b461bf635d/original.jpg)
+MISMATCH ee3eb0b3-c174-495f-88ba-4605aaa06718: stored application/octet-stream (https://gradivo.jknm.org/ee3eb0b3-c174-495f-88ba-4605aaa06718/original.bin) -> real image/jpeg (.jpg)
+Fixed ee3eb0b3-c174-495f-88ba-4605aaa06718 -> 3c997750-0e60-4417-bf96-d160693d26bd (3c997750-0e60-4417-bf96-d160693d26bd/original.jpg)
+MISMATCH 00124cb9-458f-4252-a816-8d75023b9b91: stored application/octet-stream (https://gradivo.jknm.org/00124cb9-458f-4252-a816-8d75023b9b91/original.bin) -> real image/jpeg (.jpg)
+Fixed 00124cb9-458f-4252-a816-8d75023b9b91 -> a653dbdb-1d0a-4604-add1-da2c8264032d (a653dbdb-1d0a-4604-add1-da2c8264032d/original.jpg)
+MISMATCH f436eee5-2c2b-4fe4-91c9-a043ea0bfb19: stored application/octet-stream (https://gradivo.jknm.org/f436eee5-2c2b-4fe4-91c9-a043ea0bfb19/original.bin) -> real image/jpeg (.jpg)
+Fixed f436eee5-2c2b-4fe4-91c9-a043ea0bfb19 -> dbf7832e-131b-4327-9d75-79b53a98865f (dbf7832e-131b-4327-9d75-79b53a98865f/original.jpg)
+MISMATCH a92fde21-b2e4-46fd-8081-eed9ddbf7985: stored application/octet-stream (https://gradivo.jknm.org/a92fde21-b2e4-46fd-8081-eed9ddbf7985/original.bin) -> real image/jpeg (.jpg)
+Fixed a92fde21-b2e4-46fd-8081-eed9ddbf7985 -> ae3b5490-dabd-448c-916d-2ba960315798 (ae3b5490-dabd-448c-916d-2ba960315798/original.jpg)
+MISMATCH 169e8aa9-f851-4438-843c-3a46395e8bfe: stored application/octet-stream (https://gradivo.jknm.org/169e8aa9-f851-4438-843c-3a46395e8bfe/original.bin) -> real image/jpeg (.jpg)
+Fixed 169e8aa9-f851-4438-843c-3a46395e8bfe -> 9c64259d-8283-490f-bc59-d58c72a80ca9 (9c64259d-8283-490f-bc59-d58c72a80ca9/original.jpg)
+MISMATCH 250e1e40-8610-4aaa-be61-a49432bd2982: stored application/octet-stream (https://gradivo.jknm.org/250e1e40-8610-4aaa-be61-a49432bd2982/original.bin) -> real image/jpeg (.jpg)
+Fixed 250e1e40-8610-4aaa-be61-a49432bd2982 -> fc67c666-b4d2-4a10-bafb-8b0fdc5a4fe2 (fc67c666-b4d2-4a10-bafb-8b0fdc5a4fe2/original.jpg)
+MISMATCH a4b492bf-2481-4d35-9b73-2af367e543e7: stored application/octet-stream (https://gradivo.jknm.org/a4b492bf-2481-4d35-9b73-2af367e543e7/original.bin) -> real image/jpeg (.jpg)
+Fixed a4b492bf-2481-4d35-9b73-2af367e543e7 -> 4dce5e9e-76d8-405f-bd3d-ff33e950440a (4dce5e9e-76d8-405f-bd3d-ff33e950440a/original.jpg)
+MISMATCH 0d6e55ac-a97e-44f3-a82c-60e77a0e72bc: stored application/octet-stream (https://gradivo.jknm.org/0d6e55ac-a97e-44f3-a82c-60e77a0e72bc/original.bin) -> real image/jpeg (.jpg)
+Fixed 0d6e55ac-a97e-44f3-a82c-60e77a0e72bc -> 0e8f1301-9f36-4507-bcd4-98dc9c7a60ed (0e8f1301-9f36-4507-bcd4-98dc9c7a60ed/original.jpg)
+MISMATCH 97adea0b-238c-444d-a2de-070c97cf1c72: stored application/octet-stream (https://gradivo.jknm.org/97adea0b-238c-444d-a2de-070c97cf1c72/original.bin) -> real image/jpeg (.jpg)
+Fixed 97adea0b-238c-444d-a2de-070c97cf1c72 -> 2cfa8c9a-3898-4f51-817d-b125f70e1ca1 (2cfa8c9a-3898-4f51-817d-b125f70e1ca1/original.jpg)
+MISMATCH de327563-5562-4c59-9f2b-1a064b65db36: stored application/octet-stream (https://gradivo.jknm.org/de327563-5562-4c59-9f2b-1a064b65db36/original.bin) -> real image/jpeg (.jpg)
+Fixed de327563-5562-4c59-9f2b-1a064b65db36 -> b6b8df25-f47f-40c6-a43d-b5f157fdf0dd (b6b8df25-f47f-40c6-a43d-b5f157fdf0dd/original.jpg)
+MISMATCH e5022636-e184-4440-b4b8-514ca19a527c: stored application/octet-stream (https://gradivo.jknm.org/e5022636-e184-4440-b4b8-514ca19a527c/original.bin) -> real image/jpeg (.jpg)
+Fixed e5022636-e184-4440-b4b8-514ca19a527c -> 3a4f19ba-0b95-46f8-87df-2233f3709908 (3a4f19ba-0b95-46f8-87df-2233f3709908/original.jpg)
+MISMATCH 6dd38c6d-994a-42f4-bc31-06e526a4f830: stored application/octet-stream (https://gradivo.jknm.org/6dd38c6d-994a-42f4-bc31-06e526a4f830/original.bin) -> real image/jpeg (.jpg)
+Fixed 6dd38c6d-994a-42f4-bc31-06e526a4f830 -> f2598928-69ab-4b09-8006-9dccd699cba0 (f2598928-69ab-4b09-8006-9dccd699cba0/original.jpg)
+MISMATCH 5f6c05cf-c92a-4707-a13a-09418d855632: stored application/octet-stream (https://gradivo.jknm.org/5f6c05cf-c92a-4707-a13a-09418d855632/original.bin) -> real image/jpeg (.jpg)
+Fixed 5f6c05cf-c92a-4707-a13a-09418d855632 -> 63dbe1b8-b2e2-4316-aaa6-0ea4e2b7db34 (63dbe1b8-b2e2-4316-aaa6-0ea4e2b7db34/original.jpg)
+OK, already correct (image/jpeg): 57545342-4176-4e8e-9f2a-d2af5f35c072 https://gradivo.jknm.org/57545342-4176-4e8e-9f2a-d2af5f35c072/original.jpg
+MISMATCH 32e2ecb1-67f2-47dd-b5d1-a485e65ee564: stored application/octet-stream (https://gradivo.jknm.org/32e2ecb1-67f2-47dd-b5d1-a485e65ee564/original.bin) -> real image/jpeg (.jpg)
+Fixed 32e2ecb1-67f2-47dd-b5d1-a485e65ee564 -> 22f196b5-7db3-406a-ba6a-ffc0bcd235df (22f196b5-7db3-406a-ba6a-ffc0bcd235df/original.jpg)
+MISMATCH 0c8a2b37-4dea-45d4-810a-06ca4fb9a808: stored application/octet-stream (https://gradivo.jknm.org/0c8a2b37-4dea-45d4-810a-06ca4fb9a808/original.bin) -> real image/jpeg (.jpg)
+Fixed 0c8a2b37-4dea-45d4-810a-06ca4fb9a808 -> 8f2a3d99-d4bd-4fa7-bbcc-e0e6cf9d6be8 (8f2a3d99-d4bd-4fa7-bbcc-e0e6cf9d6be8/original.jpg)
+MISMATCH 6519c9ec-ca5b-4b45-b3aa-f44b8c7ad4ea: stored application/octet-stream (https://gradivo.jknm.org/6519c9ec-ca5b-4b45-b3aa-f44b8c7ad4ea/original.bin) -> real image/jpeg (.jpg)
+Fixed 6519c9ec-ca5b-4b45-b3aa-f44b8c7ad4ea -> a575b40e-5f69-476c-af74-128c9cf2d70f (a575b40e-5f69-476c-af74-128c9cf2d70f/original.jpg)
+MISMATCH 36ed9836-7708-4102-8fb0-59329134e865: stored application/octet-stream (https://gradivo.jknm.org/36ed9836-7708-4102-8fb0-59329134e865/original.bin) -> real image/jpeg (.jpg)
+Fixed 36ed9836-7708-4102-8fb0-59329134e865 -> ea70315b-cb09-4765-a075-83f7d7ba8926 (ea70315b-cb09-4765-a075-83f7d7ba8926/original.jpg)
+MISMATCH 51f0dcee-39fc-4455-929c-5461c5ec5c91: stored application/octet-stream (https://gradivo.jknm.org/51f0dcee-39fc-4455-929c-5461c5ec5c91/original.bin) -> real image/jpeg (.jpg)
+Fixed 51f0dcee-39fc-4455-929c-5461c5ec5c91 -> da4f2ced-b2ca-4cc6-80e5-f9c4c331ad8b (da4f2ced-b2ca-4cc6-80e5-f9c4c331ad8b/original.jpg)
+MISMATCH 0679c3c0-7fd1-4c2c-a413-fa2f6939cd1b: stored application/octet-stream (https://gradivo.jknm.org/0679c3c0-7fd1-4c2c-a413-fa2f6939cd1b/original.bin) -> real image/jpeg (.jpg)
+Fixed 0679c3c0-7fd1-4c2c-a413-fa2f6939cd1b -> 38e17434-1eed-4e3a-84f7-27fe57d93557 (38e17434-1eed-4e3a-84f7-27fe57d93557/original.jpg)
+MISMATCH d439105c-5953-4082-8a8a-89c973b92eda: stored application/octet-stream (https://gradivo.jknm.org/d439105c-5953-4082-8a8a-89c973b92eda/original.bin) -> real image/jpeg (.jpg)
+Fixed d439105c-5953-4082-8a8a-89c973b92eda -> 04e332b7-9e93-4a3b-aa8e-fd5700806d76 (04e332b7-9e93-4a3b-aa8e-fd5700806d76/original.jpg)
+MISMATCH d3db467f-b266-4828-9185-9499920fe9be: stored application/octet-stream (https://gradivo.jknm.org/d3db467f-b266-4828-9185-9499920fe9be/original.bin) -> real image/jpeg (.jpg)
+Fixed d3db467f-b266-4828-9185-9499920fe9be -> 9def7444-137d-4c49-83a7-16c9048fe3ad (9def7444-137d-4c49-83a7-16c9048fe3ad/original.jpg)
+MISMATCH 954142a9-06aa-43ce-9ef3-b85a11f069b2: stored application/octet-stream (https://gradivo.jknm.org/954142a9-06aa-43ce-9ef3-b85a11f069b2/original.bin) -> real image/jpeg (.jpg)
+Fixed 954142a9-06aa-43ce-9ef3-b85a11f069b2 -> 50c38aba-7e55-4487-b4dc-a929a16572fe (50c38aba-7e55-4487-b4dc-a929a16572fe/original.jpg)
+MISMATCH 21d42a7a-c8f4-4c77-8e8a-56f2ba7d3f2e: stored application/octet-stream (https://gradivo.jknm.org/21d42a7a-c8f4-4c77-8e8a-56f2ba7d3f2e/original.bin) -> real image/jpeg (.jpg)
+Fixed 21d42a7a-c8f4-4c77-8e8a-56f2ba7d3f2e -> 12611d6d-a875-476c-9b86-dca134e1408d (12611d6d-a875-476c-9b86-dca134e1408d/original.jpg)
+MISMATCH d3018438-08c9-4175-b6c2-08ade7f4cda8: stored application/octet-stream (https://gradivo.jknm.org/d3018438-08c9-4175-b6c2-08ade7f4cda8/original.bin) -> real image/jpeg (.jpg)
+Fixed d3018438-08c9-4175-b6c2-08ade7f4cda8 -> 7118cbd2-f6fd-443c-afe4-679f05be2d13 (7118cbd2-f6fd-443c-afe4-679f05be2d13/original.jpg)
+MISMATCH 31871af3-6002-4ad7-936a-c5c51fa3cd34: stored application/octet-stream (https://gradivo.jknm.org/31871af3-6002-4ad7-936a-c5c51fa3cd34/original.bin) -> real image/jpeg (.jpg)
+Fixed 31871af3-6002-4ad7-936a-c5c51fa3cd34 -> 3d3efc36-81da-472c-b475-87d2fff6f83c (3d3efc36-81da-472c-b475-87d2fff6f83c/original.jpg)
+MISMATCH 0524873e-de51-40a3-b951-eeea2e4f9197: stored application/octet-stream (https://gradivo.jknm.org/0524873e-de51-40a3-b951-eeea2e4f9197/original.bin) -> real image/jpeg (.jpg)
+Fixed 0524873e-de51-40a3-b951-eeea2e4f9197 -> fd01f979-8779-41b4-b2ab-a864d8ebd7c9 (fd01f979-8779-41b4-b2ab-a864d8ebd7c9/original.jpg)
+MISMATCH c151acaa-d73e-4fce-a37c-fb73f38099f4: stored application/octet-stream (https://gradivo.jknm.org/c151acaa-d73e-4fce-a37c-fb73f38099f4/original.bin) -> real image/jpeg (.jpg)
+Fixed c151acaa-d73e-4fce-a37c-fb73f38099f4 -> fa112e39-b7ae-4208-98ca-f67a3ef1eead (fa112e39-b7ae-4208-98ca-f67a3ef1eead/original.jpg)
+MISMATCH 98da1959-afac-4c7e-819f-031601239440: stored application/octet-stream (https://gradivo.jknm.org/98da1959-afac-4c7e-819f-031601239440/original.bin) -> real image/jpeg (.jpg)
+Fixed 98da1959-afac-4c7e-819f-031601239440 -> f43a9f7c-9cc1-4c8e-ba65-2b077795efc4 (f43a9f7c-9cc1-4c8e-ba65-2b077795efc4/original.jpg)
+MISMATCH 4b7be52c-5a2b-43a3-a265-4d97c0fc79c5: stored application/octet-stream (https://gradivo.jknm.org/4b7be52c-5a2b-43a3-a265-4d97c0fc79c5/original.bin) -> real image/jpeg (.jpg)
+Fixed 4b7be52c-5a2b-43a3-a265-4d97c0fc79c5 -> 5f64f73c-6021-4d14-98d8-f293dc3ccff2 (5f64f73c-6021-4d14-98d8-f293dc3ccff2/original.jpg)
+MISMATCH a355cadb-3b11-4f20-9eb3-31d7b6d89d9c: stored application/octet-stream (https://gradivo.jknm.org/a355cadb-3b11-4f20-9eb3-31d7b6d89d9c/original.bin) -> real image/jpeg (.jpg)
+Fixed a355cadb-3b11-4f20-9eb3-31d7b6d89d9c -> 62b424f6-0be6-4775-a12e-e2f3327a2d07 (62b424f6-0be6-4775-a12e-e2f3327a2d07/original.jpg)
+MISMATCH 1c273572-1ec4-47ad-a983-40e26c614dc9: stored application/octet-stream (https://gradivo.jknm.org/1c273572-1ec4-47ad-a983-40e26c614dc9/original.bin) -> real image/jpeg (.jpg)
+Fixed 1c273572-1ec4-47ad-a983-40e26c614dc9 -> 446f9a93-9a92-4d46-a197-42c63fc90c59 (446f9a93-9a92-4d46-a197-42c63fc90c59/original.jpg)
+MISMATCH eb2d7bc3-65e2-45e6-87d3-1a2c6d9163bc: stored application/octet-stream (https://gradivo.jknm.org/eb2d7bc3-65e2-45e6-87d3-1a2c6d9163bc/original.bin) -> real image/jpeg (.jpg)
+Fixed eb2d7bc3-65e2-45e6-87d3-1a2c6d9163bc -> bbde703e-b143-47c3-add6-a54a8e505d0e (bbde703e-b143-47c3-add6-a54a8e505d0e/original.jpg)
+MISMATCH d2c2b9d1-a82e-45e5-acba-433c96939fca: stored application/octet-stream (https://gradivo.jknm.org/d2c2b9d1-a82e-45e5-acba-433c96939fca/original.bin) -> real image/jpeg (.jpg)
+Fixed d2c2b9d1-a82e-45e5-acba-433c96939fca -> b9ce4fc9-6ae3-46c3-aa27-1124d9a4fbb3 (b9ce4fc9-6ae3-46c3-aa27-1124d9a4fbb3/original.jpg)
+MISMATCH 1be73476-9ee2-4842-8339-73a3eab3d48f: stored application/octet-stream (https://gradivo.jknm.org/1be73476-9ee2-4842-8339-73a3eab3d48f/original.bin) -> real image/jpeg (.jpg)
+Fixed 1be73476-9ee2-4842-8339-73a3eab3d48f -> 6298c625-4de6-4e0e-9f24-5aaada670b03 (6298c625-4de6-4e0e-9f24-5aaada670b03/original.jpg)
+MISMATCH 9cc959ac-43b2-4246-8aed-3478da19fdbd: stored application/octet-stream (https://gradivo.jknm.org/9cc959ac-43b2-4246-8aed-3478da19fdbd/original.bin) -> real image/jpeg (.jpg)
+Fixed 9cc959ac-43b2-4246-8aed-3478da19fdbd -> 6148f3ba-9c63-4979-9146-71df189a97df (6148f3ba-9c63-4979-9146-71df189a97df/original.jpg)
+MISMATCH d5a2bd18-52be-49ac-9207-a3a98d0fd2bf: stored application/octet-stream (https://gradivo.jknm.org/d5a2bd18-52be-49ac-9207-a3a98d0fd2bf/original.bin) -> real image/jpeg (.jpg)
+Fixed d5a2bd18-52be-49ac-9207-a3a98d0fd2bf -> 6aace58a-b61f-41f8-b153-bff3b0815db2 (6aace58a-b61f-41f8-b153-bff3b0815db2/original.jpg)
+MISMATCH 2a78f16d-1406-43a8-8eb3-78d3ae656b2c: stored application/octet-stream (https://gradivo.jknm.org/2a78f16d-1406-43a8-8eb3-78d3ae656b2c/original.bin) -> real image/jpeg (.jpg)
+Fixed 2a78f16d-1406-43a8-8eb3-78d3ae656b2c -> 56a2bf67-e35b-4bfb-89f4-569e2eb0cb1e (56a2bf67-e35b-4bfb-89f4-569e2eb0cb1e/original.jpg)
+MISMATCH 87286304-534e-468b-a810-92381c495cfe: stored application/octet-stream (https://gradivo.jknm.org/87286304-534e-468b-a810-92381c495cfe/original.bin) -> real image/jpeg (.jpg)
+Fixed 87286304-534e-468b-a810-92381c495cfe -> bbd5cf96-ed14-47f2-8a08-4b0ec2f91518 (bbd5cf96-ed14-47f2-8a08-4b0ec2f91518/original.jpg)
+MISMATCH ea016949-d0e1-4308-886e-2e2f5b73e4b5: stored application/octet-stream (https://gradivo.jknm.org/ea016949-d0e1-4308-886e-2e2f5b73e4b5/original.bin) -> real image/jpeg (.jpg)
+Fixed ea016949-d0e1-4308-886e-2e2f5b73e4b5 -> 9f66bed7-b39d-4ec9-98c6-eb1556ed800b (9f66bed7-b39d-4ec9-98c6-eb1556ed800b/original.jpg)
+MISMATCH 92885ed6-0594-404c-b25e-9e3b17a5bf9e: stored application/octet-stream (https://gradivo.jknm.org/92885ed6-0594-404c-b25e-9e3b17a5bf9e/original.bin) -> real image/jpeg (.jpg)
+Fixed 92885ed6-0594-404c-b25e-9e3b17a5bf9e -> d2dbc884-2cf3-4533-9908-8424f51c81db (d2dbc884-2cf3-4533-9908-8424f51c81db/original.jpg)
+MISMATCH 1f7e9287-5b39-4e00-9552-5e946dd1d880: stored application/octet-stream (https://gradivo.jknm.org/1f7e9287-5b39-4e00-9552-5e946dd1d880/original.bin) -> real image/jpeg (.jpg)
+Fixed 1f7e9287-5b39-4e00-9552-5e946dd1d880 -> a97daabe-2999-4862-807c-a1896bd92b4e (a97daabe-2999-4862-807c-a1896bd92b4e/original.jpg)
+MISMATCH 41c03f77-0170-4fdb-a97b-80a82f89d342: stored application/octet-stream (https://gradivo.jknm.org/41c03f77-0170-4fdb-a97b-80a82f89d342/original.bin) -> real image/jpeg (.jpg)
+Fixed 41c03f77-0170-4fdb-a97b-80a82f89d342 -> 3d849bca-03d0-4cc4-bb7b-38244caf22cc (3d849bca-03d0-4cc4-bb7b-38244caf22cc/original.jpg)
+MISMATCH 20830413-dfb4-423e-9e39-e8600dc32781: stored application/octet-stream (https://gradivo.jknm.org/20830413-dfb4-423e-9e39-e8600dc32781/original.bin) -> real image/jpeg (.jpg)
+Fixed 20830413-dfb4-423e-9e39-e8600dc32781 -> ca6bc610-371a-4dfb-8ebf-4d77352c82bd (ca6bc610-371a-4dfb-8ebf-4d77352c82bd/original.jpg)
+MISMATCH 7c1579a5-4ae5-4e71-a5ec-59b2f0c9c85b: stored application/octet-stream (https://gradivo.jknm.org/7c1579a5-4ae5-4e71-a5ec-59b2f0c9c85b/original.bin) -> real image/jpeg (.jpg)
+Fixed 7c1579a5-4ae5-4e71-a5ec-59b2f0c9c85b -> daf28ad9-e07b-45bd-8037-6e44c78489ab (daf28ad9-e07b-45bd-8037-6e44c78489ab/original.jpg)
+MISMATCH ce21fe1d-ceb9-4f34-ad89-4bc70b6fe662: stored application/octet-stream (https://gradivo.jknm.org/ce21fe1d-ceb9-4f34-ad89-4bc70b6fe662/original.bin) -> real image/jpeg (.jpg)
+Fixed ce21fe1d-ceb9-4f34-ad89-4bc70b6fe662 -> 8a5eb012-a010-4bf1-96a8-2f8c63bb05a3 (8a5eb012-a010-4bf1-96a8-2f8c63bb05a3/original.jpg)
+OK, already correct (image/jpeg): d6a390e4-f82c-4600-8415-17432929b005 https://gradivo.jknm.org/d6a390e4-f82c-4600-8415-17432929b005/original.jpg
+MISMATCH 05506868-c478-4e7e-9471-51b8a410f0b2: stored application/octet-stream (https://gradivo.jknm.org/05506868-c478-4e7e-9471-51b8a410f0b2/original.bin) -> real image/jpeg (.jpg)
+Fixed 05506868-c478-4e7e-9471-51b8a410f0b2 -> be097bd4-f8de-489d-8c4f-b6eb4f0e72cb (be097bd4-f8de-489d-8c4f-b6eb4f0e72cb/original.jpg)
+MISMATCH 9e028708-61ca-4afa-9d49-dd65047000e8: stored application/octet-stream (https://gradivo.jknm.org/9e028708-61ca-4afa-9d49-dd65047000e8/original.bin) -> real image/jpeg (.jpg)
+Fixed 9e028708-61ca-4afa-9d49-dd65047000e8 -> ea4ae475-44d7-4eb3-9206-b97c516e1f33 (ea4ae475-44d7-4eb3-9206-b97c516e1f33/original.jpg)
+MISMATCH 61cdd0f9-2925-43e7-9091-79d9b7240133: stored application/octet-stream (https://gradivo.jknm.org/61cdd0f9-2925-43e7-9091-79d9b7240133/original.bin) -> real image/jpeg (.jpg)
+Fixed 61cdd0f9-2925-43e7-9091-79d9b7240133 -> 1a65828b-f405-4512-b34b-7d910cd59d62 (1a65828b-f405-4512-b34b-7d910cd59d62/original.jpg)
+MISMATCH 598e1afc-a5f8-48f0-973c-7ffa080ff088: stored application/octet-stream (https://gradivo.jknm.org/598e1afc-a5f8-48f0-973c-7ffa080ff088/original.bin) -> real image/jpeg (.jpg)
+Fixed 598e1afc-a5f8-48f0-973c-7ffa080ff088 -> 3d97a636-0182-48d6-8ebb-65adf6280c68 (3d97a636-0182-48d6-8ebb-65adf6280c68/original.jpg)
+MISMATCH a84731f0-342b-4d66-b415-2f21cf14f450: stored application/octet-stream (https://gradivo.jknm.org/a84731f0-342b-4d66-b415-2f21cf14f450/original.bin) -> real image/jpeg (.jpg)
+Fixed a84731f0-342b-4d66-b415-2f21cf14f450 -> ea84a144-0ebe-472c-a990-0eda5a208f27 (ea84a144-0ebe-472c-a990-0eda5a208f27/original.jpg)
+MISMATCH eb426e5f-1a06-4cc4-a5cd-462d79263ac1: stored application/octet-stream (https://gradivo.jknm.org/eb426e5f-1a06-4cc4-a5cd-462d79263ac1/original.bin) -> real image/jpeg (.jpg)
+Fixed eb426e5f-1a06-4cc4-a5cd-462d79263ac1 -> 1172d643-d1aa-4d60-a67d-78dcdcf2bbc2 (1172d643-d1aa-4d60-a67d-78dcdcf2bbc2/original.jpg)
+MISMATCH 0022adb7-7bd4-420e-9726-075b197716a4: stored application/octet-stream (https://gradivo.jknm.org/0022adb7-7bd4-420e-9726-075b197716a4/original.bin) -> real image/jpeg (.jpg)
+Fixed 0022adb7-7bd4-420e-9726-075b197716a4 -> 11f99e6e-8724-467c-a5b3-fc1864b888ba (11f99e6e-8724-467c-a5b3-fc1864b888ba/original.jpg)
+MISMATCH d992bb65-145f-4627-9136-ea3d0f55ced1: stored application/octet-stream (https://gradivo.jknm.org/d992bb65-145f-4627-9136-ea3d0f55ced1/original.bin) -> real image/jpeg (.jpg)
+Fixed d992bb65-145f-4627-9136-ea3d0f55ced1 -> eb02cce2-9a8e-4a8e-969f-e664769b82f3 (eb02cce2-9a8e-4a8e-969f-e664769b82f3/original.jpg)
+MISMATCH 9db65666-32e4-43ff-97c4-fdb3c103ba6c: stored application/octet-stream (https://gradivo.jknm.org/9db65666-32e4-43ff-97c4-fdb3c103ba6c/original.bin) -> real image/jpeg (.jpg)
+Fixed 9db65666-32e4-43ff-97c4-fdb3c103ba6c -> 933ed558-58f1-4490-9d0e-d413bf7c0f8e (933ed558-58f1-4490-9d0e-d413bf7c0f8e/original.jpg)
+OK, already correct (image/jpeg): 4c4becef-9688-40e1-812c-76cc145892d2 https://gradivo.jknm.org/4c4becef-9688-40e1-812c-76cc145892d2/original.jpg
+MISMATCH 318a8c14-05e3-4c22-be2f-511e66715a20: stored application/octet-stream (https://gradivo.jknm.org/318a8c14-05e3-4c22-be2f-511e66715a20/original.bin) -> real image/jpeg (.jpg)
+Fixed 318a8c14-05e3-4c22-be2f-511e66715a20 -> 61f617d7-41c9-47bb-81da-ac5475bf0e29 (61f617d7-41c9-47bb-81da-ac5475bf0e29/original.jpg)
+MISMATCH 1d9f5046-1ec1-4a38-a6f8-bc7dadbbde7d: stored application/octet-stream (https://gradivo.jknm.org/1d9f5046-1ec1-4a38-a6f8-bc7dadbbde7d/original.bin) -> real image/jpeg (.jpg)
+Fixed 1d9f5046-1ec1-4a38-a6f8-bc7dadbbde7d -> 81ede424-c7a9-47fd-a23a-18d742eb50e6 (81ede424-c7a9-47fd-a23a-18d742eb50e6/original.jpg)
+MISMATCH 77e753b3-badb-4843-8129-562f66bd6017: stored application/octet-stream (https://gradivo.jknm.org/77e753b3-badb-4843-8129-562f66bd6017/original.bin) -> real image/jpeg (.jpg)
+Fixed 77e753b3-badb-4843-8129-562f66bd6017 -> 2d65b564-6c12-49fe-9aa7-237637f7823c (2d65b564-6c12-49fe-9aa7-237637f7823c/original.jpg)
+MISMATCH 0992230a-389c-4aa8-a1fe-32a2697659aa: stored application/octet-stream (https://gradivo.jknm.org/0992230a-389c-4aa8-a1fe-32a2697659aa/original.bin) -> real image/jpeg (.jpg)
+Fixed 0992230a-389c-4aa8-a1fe-32a2697659aa -> 22dd8061-acf3-4251-843f-e94632655ffd (22dd8061-acf3-4251-843f-e94632655ffd/original.jpg)
+MISMATCH c7b7ca54-4001-4a0e-94e0-d881f8ce12b0: stored application/octet-stream (https://gradivo.jknm.org/c7b7ca54-4001-4a0e-94e0-d881f8ce12b0/original.bin) -> real image/jpeg (.jpg)
+Fixed c7b7ca54-4001-4a0e-94e0-d881f8ce12b0 -> 1b0d9545-416b-4c7a-8834-5d0cf4b07175 (1b0d9545-416b-4c7a-8834-5d0cf4b07175/original.jpg)
+MISMATCH f69401f2-a8fc-4d78-b964-7134405442c6: stored application/octet-stream (https://gradivo.jknm.org/f69401f2-a8fc-4d78-b964-7134405442c6/original.bin) -> real image/jpeg (.jpg)
+Fixed f69401f2-a8fc-4d78-b964-7134405442c6 -> 546c46b4-72e9-4e89-880f-d93c9f3655a0 (546c46b4-72e9-4e89-880f-d93c9f3655a0/original.jpg)
+MISMATCH 5498c177-f7d6-491c-90d4-a350e929db26: stored application/octet-stream (https://gradivo.jknm.org/5498c177-f7d6-491c-90d4-a350e929db26/original.bin) -> real image/jpeg (.jpg)
+Fixed 5498c177-f7d6-491c-90d4-a350e929db26 -> 52c82da7-1b7b-4453-8f71-ca4a181c4baf (52c82da7-1b7b-4453-8f71-ca4a181c4baf/original.jpg)
+MISMATCH bba03daa-0527-4164-a9f6-2d8b1970bfd3: stored application/octet-stream (https://gradivo.jknm.org/bba03daa-0527-4164-a9f6-2d8b1970bfd3/original.bin) -> real image/jpeg (.jpg)
+Fixed bba03daa-0527-4164-a9f6-2d8b1970bfd3 -> e9f1cd51-5799-4dc4-8ee5-1eefa9e857f5 (e9f1cd51-5799-4dc4-8ee5-1eefa9e857f5/original.jpg)
+MISMATCH 133a2994-0106-434f-ac6b-6a7520c34884: stored application/octet-stream (https://gradivo.jknm.org/133a2994-0106-434f-ac6b-6a7520c34884/original.bin) -> real image/jpeg (.jpg)
+Fixed 133a2994-0106-434f-ac6b-6a7520c34884 -> 029e6d76-196c-4b5e-872b-d498ed701754 (029e6d76-196c-4b5e-872b-d498ed701754/original.jpg)
+MISMATCH 54ea4358-cea1-4a3b-b626-60748a0267e0: stored application/octet-stream (https://gradivo.jknm.org/54ea4358-cea1-4a3b-b626-60748a0267e0/original.bin) -> real image/jpeg (.jpg)
+Fixed 54ea4358-cea1-4a3b-b626-60748a0267e0 -> b7c4bbf6-1f08-41f5-aa8c-3b62b2a3e190 (b7c4bbf6-1f08-41f5-aa8c-3b62b2a3e190/original.jpg)
+MISMATCH ae90a0f5-1887-45ce-957e-e397164e0a7a: stored application/octet-stream (https://gradivo.jknm.org/ae90a0f5-1887-45ce-957e-e397164e0a7a/original.bin) -> real image/jpeg (.jpg)
+Fixed ae90a0f5-1887-45ce-957e-e397164e0a7a -> bac1a93c-8b94-408b-ace6-e2b8816b57e1 (bac1a93c-8b94-408b-ace6-e2b8816b57e1/original.jpg)
+MISMATCH 6e5f5719-e8f5-458e-bcb7-c39b305c93da: stored application/octet-stream (https://gradivo.jknm.org/6e5f5719-e8f5-458e-bcb7-c39b305c93da/original.bin) -> real image/jpeg (.jpg)
+Fixed 6e5f5719-e8f5-458e-bcb7-c39b305c93da -> 58eb4aa0-9da0-4cca-8afd-b6027c3f84ec (58eb4aa0-9da0-4cca-8afd-b6027c3f84ec/original.jpg)
+MISMATCH fd17436e-bbf5-471c-8c4d-9866dfa501b1: stored application/octet-stream (https://gradivo.jknm.org/fd17436e-bbf5-471c-8c4d-9866dfa501b1/original.bin) -> real image/jpeg (.jpg)
+Fixed fd17436e-bbf5-471c-8c4d-9866dfa501b1 -> 87d75e62-f631-4b1e-9989-6b6960403641 (87d75e62-f631-4b1e-9989-6b6960403641/original.jpg)
+MISMATCH 6b06f960-66d4-4135-87a1-acceec71f62a: stored application/octet-stream (https://gradivo.jknm.org/6b06f960-66d4-4135-87a1-acceec71f62a/original.bin) -> real image/jpeg (.jpg)
+Fixed 6b06f960-66d4-4135-87a1-acceec71f62a -> 8e77cda3-789a-4144-ad2e-1da79a85c4f3 (8e77cda3-789a-4144-ad2e-1da79a85c4f3/original.jpg)
+MISMATCH 1fbf78c1-0238-40d8-b519-8e443dbe9dd8: stored application/octet-stream (https://gradivo.jknm.org/1fbf78c1-0238-40d8-b519-8e443dbe9dd8/original.bin) -> real image/jpeg (.jpg)
+Fixed 1fbf78c1-0238-40d8-b519-8e443dbe9dd8 -> d6d51daa-5047-4ed9-a789-856385d67c7e (d6d51daa-5047-4ed9-a789-856385d67c7e/original.jpg)
+MISMATCH 4d193813-8abe-41d3-98fc-3439706c117c: stored application/octet-stream (https://gradivo.jknm.org/4d193813-8abe-41d3-98fc-3439706c117c/original.bin) -> real image/jpeg (.jpg)
+Fixed 4d193813-8abe-41d3-98fc-3439706c117c -> 909e6439-b62e-47be-bad7-075cbd923891 (909e6439-b62e-47be-bad7-075cbd923891/original.jpg)
+MISMATCH 596be49d-dab0-4571-a0ad-9d4fcd0b9652: stored application/octet-stream (https://gradivo.jknm.org/596be49d-dab0-4571-a0ad-9d4fcd0b9652/original.bin) -> real image/jpeg (.jpg)
+Fixed 596be49d-dab0-4571-a0ad-9d4fcd0b9652 -> 71502ca7-9fc4-408f-a9d8-4535c0e69300 (71502ca7-9fc4-408f-a9d8-4535c0e69300/original.jpg)
+MISMATCH 2fdcbb43-849b-4787-8e83-1d4e6492679b: stored application/octet-stream (https://gradivo.jknm.org/2fdcbb43-849b-4787-8e83-1d4e6492679b/original.bin) -> real image/jpeg (.jpg)
+Fixed 2fdcbb43-849b-4787-8e83-1d4e6492679b -> 5076fbc5-1cbb-4f3e-9586-687493a8a874 (5076fbc5-1cbb-4f3e-9586-687493a8a874/original.jpg)
+MISMATCH 4be0fee8-4374-4cf2-86fc-c84329489a25: stored application/octet-stream (https://gradivo.jknm.org/4be0fee8-4374-4cf2-86fc-c84329489a25/original.bin) -> real image/jpeg (.jpg)
+Fixed 4be0fee8-4374-4cf2-86fc-c84329489a25 -> 7e69ecb4-56ef-4eef-b58b-79e7a12133fd (7e69ecb4-56ef-4eef-b58b-79e7a12133fd/original.jpg)
+MISMATCH 2bd0f859-c16c-4174-90b7-55bb28d9af18: stored application/octet-stream (https://gradivo.jknm.org/2bd0f859-c16c-4174-90b7-55bb28d9af18/original.bin) -> real image/jpeg (.jpg)
+Fixed 2bd0f859-c16c-4174-90b7-55bb28d9af18 -> 0e7a4887-153c-4266-9ec3-5639fe4855b1 (0e7a4887-153c-4266-9ec3-5639fe4855b1/original.jpg)
+MISMATCH d18bde32-5f1a-42d0-a8aa-3d110b1a499b: stored application/octet-stream (https://gradivo.jknm.org/d18bde32-5f1a-42d0-a8aa-3d110b1a499b/original.bin) -> real image/jpeg (.jpg)
+Fixed d18bde32-5f1a-42d0-a8aa-3d110b1a499b -> 17620087-ddf6-4540-ad5c-6f92fd422f7e (17620087-ddf6-4540-ad5c-6f92fd422f7e/original.jpg)
+MISMATCH 295ca113-45f7-4269-b964-c431a14c5efa: stored application/octet-stream (https://gradivo.jknm.org/295ca113-45f7-4269-b964-c431a14c5efa/original.bin) -> real image/jpeg (.jpg)
+Fixed 295ca113-45f7-4269-b964-c431a14c5efa -> 21c50a04-78c0-4eb0-8678-b900bb1b2d7f (21c50a04-78c0-4eb0-8678-b900bb1b2d7f/original.jpg)
+MISMATCH b939def1-186c-4748-bdd6-cc602256f1d4: stored application/octet-stream (https://gradivo.jknm.org/b939def1-186c-4748-bdd6-cc602256f1d4/original.bin) -> real image/jpeg (.jpg)
+Fixed b939def1-186c-4748-bdd6-cc602256f1d4 -> b18321fe-1360-4f1e-a7cc-3c508da487ef (b18321fe-1360-4f1e-a7cc-3c508da487ef/original.jpg)
+MISMATCH f3976fd1-7c70-436c-8c80-48d542f67891: stored application/octet-stream (https://gradivo.jknm.org/f3976fd1-7c70-436c-8c80-48d542f67891/original.bin) -> real image/jpeg (.jpg)
+Fixed f3976fd1-7c70-436c-8c80-48d542f67891 -> 56891370-fe4b-4177-a4cd-eeccda9297f8 (56891370-fe4b-4177-a4cd-eeccda9297f8/original.jpg)
+MISMATCH df5ce50c-0c37-4910-b476-d31007c1ec51: stored application/octet-stream (https://gradivo.jknm.org/df5ce50c-0c37-4910-b476-d31007c1ec51/original.bin) -> real image/jpeg (.jpg)
+Fixed df5ce50c-0c37-4910-b476-d31007c1ec51 -> 3257d802-1df5-4431-8407-21c501091f59 (3257d802-1df5-4431-8407-21c501091f59/original.jpg)
+MISMATCH 781541b5-33c3-4796-a745-3d025229cb62: stored application/octet-stream (https://gradivo.jknm.org/781541b5-33c3-4796-a745-3d025229cb62/original.bin) -> real image/jpeg (.jpg)
+Fixed 781541b5-33c3-4796-a745-3d025229cb62 -> c80305d7-461d-43af-bba3-62120adf438f (c80305d7-461d-43af-bba3-62120adf438f/original.jpg)
+MISMATCH ca9198d7-aed5-45f4-8701-d35933ab370b: stored application/octet-stream (https://gradivo.jknm.org/ca9198d7-aed5-45f4-8701-d35933ab370b/original.bin) -> real image/jpeg (.jpg)
+Fixed ca9198d7-aed5-45f4-8701-d35933ab370b -> e72a376e-d4fa-4c76-858a-52f3a927abe1 (e72a376e-d4fa-4c76-858a-52f3a927abe1/original.jpg)
+MISMATCH d30f3a61-eac8-489a-9429-fe6261933055: stored application/octet-stream (https://gradivo.jknm.org/d30f3a61-eac8-489a-9429-fe6261933055/original.bin) -> real image/jpeg (.jpg)
+Fixed d30f3a61-eac8-489a-9429-fe6261933055 -> 094dbd91-d18d-4454-adfe-60ff93df6413 (094dbd91-d18d-4454-adfe-60ff93df6413/original.jpg)
+MISMATCH 40811f9e-c200-42d5-956b-cf930ecc198e: stored application/octet-stream (https://gradivo.jknm.org/40811f9e-c200-42d5-956b-cf930ecc198e/original.bin) -> real image/jpeg (.jpg)
+Fixed 40811f9e-c200-42d5-956b-cf930ecc198e -> a3dc1fdd-f4db-4fba-9126-264e22212cfd (a3dc1fdd-f4db-4fba-9126-264e22212cfd/original.jpg)
+MISMATCH 0204c39a-17e2-4bda-acb8-9f6dc848ee14: stored application/octet-stream (https://gradivo.jknm.org/0204c39a-17e2-4bda-acb8-9f6dc848ee14/original.bin) -> real image/jpeg (.jpg)
+Fixed 0204c39a-17e2-4bda-acb8-9f6dc848ee14 -> d28b5802-c524-4859-9618-4339669f616f (d28b5802-c524-4859-9618-4339669f616f/original.jpg)
+MISMATCH e1298299-5823-4213-a5df-325b36e0d760: stored application/octet-stream (https://gradivo.jknm.org/e1298299-5823-4213-a5df-325b36e0d760/original.bin) -> real image/jpeg (.jpg)
+Fixed e1298299-5823-4213-a5df-325b36e0d760 -> c68b20d2-a584-4729-8435-c53f94018c2f (c68b20d2-a584-4729-8435-c53f94018c2f/original.jpg)
+MISMATCH 667d76ca-7899-4c05-b75b-9e53c46de284: stored application/octet-stream (https://gradivo.jknm.org/667d76ca-7899-4c05-b75b-9e53c46de284/original.bin) -> real image/jpeg (.jpg)
+Fixed 667d76ca-7899-4c05-b75b-9e53c46de284 -> b43aa14b-9dcc-4bc2-8018-60275f40f981 (b43aa14b-9dcc-4bc2-8018-60275f40f981/original.jpg)
+MISMATCH 075227e8-3862-4575-9cb7-1c8152ebc4e7: stored application/octet-stream (https://gradivo.jknm.org/075227e8-3862-4575-9cb7-1c8152ebc4e7/original.bin) -> real image/jpeg (.jpg)
+Fixed 075227e8-3862-4575-9cb7-1c8152ebc4e7 -> 313840c8-4424-4419-8cff-ba72cb3e1d7e (313840c8-4424-4419-8cff-ba72cb3e1d7e/original.jpg)
+MISMATCH 2ac51eef-c5b3-4319-be08-98116b046fc5: stored application/octet-stream (https://gradivo.jknm.org/2ac51eef-c5b3-4319-be08-98116b046fc5/original.bin) -> real image/jpeg (.jpg)
+Fixed 2ac51eef-c5b3-4319-be08-98116b046fc5 -> 0905492e-8193-430d-84e1-51e31377a4f9 (0905492e-8193-430d-84e1-51e31377a4f9/original.jpg)
+MISMATCH be5af805-74fc-446c-aa38-716b4ab35533: stored application/octet-stream (https://gradivo.jknm.org/be5af805-74fc-446c-aa38-716b4ab35533/original.bin) -> real image/jpeg (.jpg)
+Fixed be5af805-74fc-446c-aa38-716b4ab35533 -> 2b44f12c-77e1-490c-9ee1-f996ce3099c9 (2b44f12c-77e1-490c-9ee1-f996ce3099c9/original.jpg)
+MISMATCH 84468187-bd06-4b31-88a8-1b0b2ea9e7df: stored application/octet-stream (https://gradivo.jknm.org/84468187-bd06-4b31-88a8-1b0b2ea9e7df/original.bin) -> real image/jpeg (.jpg)
+Fixed 84468187-bd06-4b31-88a8-1b0b2ea9e7df -> 29abde2a-7591-4194-a343-40768e91a03f (29abde2a-7591-4194-a343-40768e91a03f/original.jpg)
+MISMATCH a4165159-c886-49f6-9e9a-323640c2401d: stored application/octet-stream (https://gradivo.jknm.org/a4165159-c886-49f6-9e9a-323640c2401d/original.bin) -> real image/jpeg (.jpg)
+Fixed a4165159-c886-49f6-9e9a-323640c2401d -> 4a054d92-1aff-4fc5-8b44-f797d17bab05 (4a054d92-1aff-4fc5-8b44-f797d17bab05/original.jpg)
+MISMATCH 3d986634-36dc-4a83-baf7-43fb5a34e7e0: stored application/octet-stream (https://gradivo.jknm.org/3d986634-36dc-4a83-baf7-43fb5a34e7e0/original.bin) -> real image/jpeg (.jpg)
+Fixed 3d986634-36dc-4a83-baf7-43fb5a34e7e0 -> 599c7af3-beb0-4825-ae74-a0472ab4b662 (599c7af3-beb0-4825-ae74-a0472ab4b662/original.jpg)
+MISMATCH d18dceee-538c-466f-89bf-a08e34ff8df1: stored application/octet-stream (https://gradivo.jknm.org/d18dceee-538c-466f-89bf-a08e34ff8df1/original.bin) -> real image/jpeg (.jpg)
+Fixed d18dceee-538c-466f-89bf-a08e34ff8df1 -> b4cffc4e-9546-4783-a856-641a427fe7c9 (b4cffc4e-9546-4783-a856-641a427fe7c9/original.jpg)
+MISMATCH 8c504699-7dbc-436b-ac63-0fd91e4856dd: stored application/octet-stream (https://gradivo.jknm.org/8c504699-7dbc-436b-ac63-0fd91e4856dd/original.bin) -> real image/jpeg (.jpg)
+Fixed 8c504699-7dbc-436b-ac63-0fd91e4856dd -> b97ca6b5-07cf-43ad-a220-fde2c08b4dd5 (b97ca6b5-07cf-43ad-a220-fde2c08b4dd5/original.jpg)
+MISMATCH 4412f339-059a-403c-a5bd-7abe7a132bfa: stored application/octet-stream (https://gradivo.jknm.org/4412f339-059a-403c-a5bd-7abe7a132bfa/original.bin) -> real image/jpeg (.jpg)
+Fixed 4412f339-059a-403c-a5bd-7abe7a132bfa -> b9d7cf2b-bc0e-4c7e-b918-a9baa9e16919 (b9d7cf2b-bc0e-4c7e-b918-a9baa9e16919/original.jpg)
+MISMATCH 70dfce47-186b-4917-a7a7-940d0bb06ee8: stored application/octet-stream (https://gradivo.jknm.org/70dfce47-186b-4917-a7a7-940d0bb06ee8/original.bin) -> real image/jpeg (.jpg)
+Fixed 70dfce47-186b-4917-a7a7-940d0bb06ee8 -> da628970-1b32-4fde-9eda-929c4e4b9901 (da628970-1b32-4fde-9eda-929c4e4b9901/original.jpg)
+MISMATCH 3d9cca68-54cf-4c0a-b4b9-9999228ef070: stored application/octet-stream (https://gradivo.jknm.org/3d9cca68-54cf-4c0a-b4b9-9999228ef070/original.bin) -> real image/jpeg (.jpg)
+Fixed 3d9cca68-54cf-4c0a-b4b9-9999228ef070 -> 757e1316-5382-4c54-84e4-7ca7bd2daccc (757e1316-5382-4c54-84e4-7ca7bd2daccc/original.jpg)
+MISMATCH 984aeeb0-c489-4e5e-b1e8-ce13e540bdd0: stored application/octet-stream (https://gradivo.jknm.org/984aeeb0-c489-4e5e-b1e8-ce13e540bdd0/original.bin) -> real image/jpeg (.jpg)
+Fixed 984aeeb0-c489-4e5e-b1e8-ce13e540bdd0 -> 25fe1c98-9e16-4e41-9470-93da5bd48ce1 (25fe1c98-9e16-4e41-9470-93da5bd48ce1/original.jpg)
+MISMATCH c2ca3ecf-e3e1-478b-8a8e-fa312a6caabd: stored application/octet-stream (https://gradivo.jknm.org/c2ca3ecf-e3e1-478b-8a8e-fa312a6caabd/original.bin) -> real image/jpeg (.jpg)
+Fixed c2ca3ecf-e3e1-478b-8a8e-fa312a6caabd -> 8c732293-ff7e-471d-86d3-746cc1f100c5 (8c732293-ff7e-471d-86d3-746cc1f100c5/original.jpg)
+MISMATCH 887c0e5e-a849-480e-9bf8-924ace25469d: stored application/octet-stream (https://gradivo.jknm.org/887c0e5e-a849-480e-9bf8-924ace25469d/original.bin) -> real image/jpeg (.jpg)
+Fixed 887c0e5e-a849-480e-9bf8-924ace25469d -> 7220ef05-2105-4955-9067-f224300d8bc5 (7220ef05-2105-4955-9067-f224300d8bc5/original.jpg)
+MISMATCH 3b425654-3d70-4de8-9c27-f0e322fcced9: stored application/octet-stream (https://gradivo.jknm.org/3b425654-3d70-4de8-9c27-f0e322fcced9/original.bin) -> real image/jpeg (.jpg)
+Fixed 3b425654-3d70-4de8-9c27-f0e322fcced9 -> 4abc063d-2bee-4110-b9c8-a9d847254883 (4abc063d-2bee-4110-b9c8-a9d847254883/original.jpg)
+MISMATCH 2b8ddae5-0824-45e6-9979-1dce6abea442: stored application/octet-stream (https://gradivo.jknm.org/2b8ddae5-0824-45e6-9979-1dce6abea442/original.bin) -> real image/jpeg (.jpg)
+Fixed 2b8ddae5-0824-45e6-9979-1dce6abea442 -> d0ae528f-f62f-4990-a608-94a37a88f4d7 (d0ae528f-f62f-4990-a608-94a37a88f4d7/original.jpg)
+MISMATCH a45a8337-7150-4ac4-834c-93c118c0bcd2: stored application/octet-stream (https://gradivo.jknm.org/a45a8337-7150-4ac4-834c-93c118c0bcd2/original.bin) -> real image/jpeg (.jpg)
+Fixed a45a8337-7150-4ac4-834c-93c118c0bcd2 -> 9bfc8f69-2884-4282-a63c-d63d83bb5e23 (9bfc8f69-2884-4282-a63c-d63d83bb5e23/original.jpg)
+MISMATCH ec9c4ed6-38af-4b6f-9564-3666ef717342: stored application/octet-stream (https://gradivo.jknm.org/ec9c4ed6-38af-4b6f-9564-3666ef717342/original.bin) -> real image/jpeg (.jpg)
+Fixed ec9c4ed6-38af-4b6f-9564-3666ef717342 -> d9e29bbb-9cdb-4304-8c9e-79dc559c25d1 (d9e29bbb-9cdb-4304-8c9e-79dc559c25d1/original.jpg)
+MISMATCH 0bcf9c6e-90c7-40f7-ba3d-26ca8223226f: stored application/octet-stream (https://gradivo.jknm.org/0bcf9c6e-90c7-40f7-ba3d-26ca8223226f/original.bin) -> real image/jpeg (.jpg)
+Fixed 0bcf9c6e-90c7-40f7-ba3d-26ca8223226f -> 8e76e5ea-42fb-4d5a-9c66-0558b8e181b0 (8e76e5ea-42fb-4d5a-9c66-0558b8e181b0/original.jpg)
+MISMATCH b32685d3-d843-474d-beb2-78d5fe12efa4: stored application/octet-stream (https://gradivo.jknm.org/b32685d3-d843-474d-beb2-78d5fe12efa4/original.bin) -> real image/jpeg (.jpg)
+Fixed b32685d3-d843-474d-beb2-78d5fe12efa4 -> 03933440-f7cd-4387-a92e-68db78e31217 (03933440-f7cd-4387-a92e-68db78e31217/original.jpg)
+MISMATCH 58f0373f-0eda-4ee3-a335-db30fedf2e72: stored application/octet-stream (https://gradivo.jknm.org/58f0373f-0eda-4ee3-a335-db30fedf2e72/original.bin) -> real image/jpeg (.jpg)
+Fixed 58f0373f-0eda-4ee3-a335-db30fedf2e72 -> 25b40189-ad69-40cc-adbc-327842a817d3 (25b40189-ad69-40cc-adbc-327842a817d3/original.jpg)
+MISMATCH 3bd7d976-4b65-4464-a6db-248d970634df: stored application/octet-stream (https://gradivo.jknm.org/3bd7d976-4b65-4464-a6db-248d970634df/original.bin) -> real image/jpeg (.jpg)
+Fixed 3bd7d976-4b65-4464-a6db-248d970634df -> 8f8c2870-5737-432c-b245-e040500aa2e1 (8f8c2870-5737-432c-b245-e040500aa2e1/original.jpg)
+MISMATCH a5e47f4a-b2ee-4b67-b707-39c3d5029e2c: stored application/octet-stream (https://gradivo.jknm.org/a5e47f4a-b2ee-4b67-b707-39c3d5029e2c/original.bin) -> real image/jpeg (.jpg)
+Fixed a5e47f4a-b2ee-4b67-b707-39c3d5029e2c -> 2484771e-0eb0-4b4f-8b42-b7fde64d4a2f (2484771e-0eb0-4b4f-8b42-b7fde64d4a2f/original.jpg)
+MISMATCH ebb5e1d0-00d0-48a7-8572-6e42b4063b78: stored application/octet-stream (https://gradivo.jknm.org/ebb5e1d0-00d0-48a7-8572-6e42b4063b78/original.bin) -> real image/jpeg (.jpg)
+Fixed ebb5e1d0-00d0-48a7-8572-6e42b4063b78 -> eb78b674-e85b-4afa-8c10-789b42abdc91 (eb78b674-e85b-4afa-8c10-789b42abdc91/original.jpg)
+MISMATCH 3f289264-886f-4f01-ab7f-a7bca127f08a: stored application/octet-stream (https://gradivo.jknm.org/3f289264-886f-4f01-ab7f-a7bca127f08a/original.bin) -> real image/jpeg (.jpg)
+Fixed 3f289264-886f-4f01-ab7f-a7bca127f08a -> c198c359-f5a3-4e02-8fe5-83e2bebf4326 (c198c359-f5a3-4e02-8fe5-83e2bebf4326/original.jpg)
+MISMATCH ee467513-bef2-4f87-98ac-b55e5deb7772: stored application/octet-stream (https://gradivo.jknm.org/ee467513-bef2-4f87-98ac-b55e5deb7772/original.bin) -> real image/jpeg (.jpg)
+Fixed ee467513-bef2-4f87-98ac-b55e5deb7772 -> 77ec4130-e153-4865-ba04-1a7948d043f2 (77ec4130-e153-4865-ba04-1a7948d043f2/original.jpg)
+MISMATCH 84d3304c-9279-42e8-8563-7912f7d4b058: stored application/octet-stream (https://gradivo.jknm.org/84d3304c-9279-42e8-8563-7912f7d4b058/original.bin) -> real image/jpeg (.jpg)
+Fixed 84d3304c-9279-42e8-8563-7912f7d4b058 -> b465a062-932f-4196-b304-d4bcee1fcc4e (b465a062-932f-4196-b304-d4bcee1fcc4e/original.jpg)
+MISMATCH 5d42fde6-eb2c-44b6-a713-023f38931c37: stored application/octet-stream (https://gradivo.jknm.org/5d42fde6-eb2c-44b6-a713-023f38931c37/original.bin) -> real image/jpeg (.jpg)
+Fixed 5d42fde6-eb2c-44b6-a713-023f38931c37 -> 228255a8-8fc5-4163-b9c9-8855fe9cf7b9 (228255a8-8fc5-4163-b9c9-8855fe9cf7b9/original.jpg)
+MISMATCH 0ce6e1c4-89b9-4cef-9aee-e9c3f4722a63: stored application/octet-stream (https://gradivo.jknm.org/0ce6e1c4-89b9-4cef-9aee-e9c3f4722a63/original.bin) -> real image/jpeg (.jpg)
+Fixed 0ce6e1c4-89b9-4cef-9aee-e9c3f4722a63 -> a9bd00ef-315a-4efb-a184-0d12be989cf2 (a9bd00ef-315a-4efb-a184-0d12be989cf2/original.jpg)
+MISMATCH e560f595-c9e9-42c0-8f58-7f5a03dc185f: stored application/octet-stream (https://gradivo.jknm.org/e560f595-c9e9-42c0-8f58-7f5a03dc185f/original.bin) -> real image/jpeg (.jpg)
+Fixed e560f595-c9e9-42c0-8f58-7f5a03dc185f -> 0ef5df4f-120e-450b-b74c-92edaa7730be (0ef5df4f-120e-450b-b74c-92edaa7730be/original.jpg)
+MISMATCH ff845c7a-4ed2-4f1e-aee2-ee7f6dedbbfd: stored application/octet-stream (https://gradivo.jknm.org/ff845c7a-4ed2-4f1e-aee2-ee7f6dedbbfd/original.bin) -> real image/jpeg (.jpg)
+Fixed ff845c7a-4ed2-4f1e-aee2-ee7f6dedbbfd -> e7cbf7d0-3fc5-47f5-b637-acb09fdeeef1 (e7cbf7d0-3fc5-47f5-b637-acb09fdeeef1/original.jpg)
+MISMATCH c07f86a4-161b-4853-8756-1281ea260b76: stored application/octet-stream (https://gradivo.jknm.org/c07f86a4-161b-4853-8756-1281ea260b76/original.bin) -> real image/jpeg (.jpg)
+Fixed c07f86a4-161b-4853-8756-1281ea260b76 -> 64716810-4e1c-4a9c-a447-5653e181ed1e (64716810-4e1c-4a9c-a447-5653e181ed1e/original.jpg)
+MISMATCH 0471d4a2-9fbc-4726-8534-05c614ec2c43: stored application/octet-stream (https://gradivo.jknm.org/0471d4a2-9fbc-4726-8534-05c614ec2c43/original.bin) -> real image/jpeg (.jpg)
+Fixed 0471d4a2-9fbc-4726-8534-05c614ec2c43 -> 5d4314c8-a4d6-4d51-bf90-25c3c797f538 (5d4314c8-a4d6-4d51-bf90-25c3c797f538/original.jpg)
+MISMATCH 5bcc4e77-87c0-494c-9bb4-8926625ff677: stored application/octet-stream (https://gradivo.jknm.org/5bcc4e77-87c0-494c-9bb4-8926625ff677/original.bin) -> real image/jpeg (.jpg)
+Fixed 5bcc4e77-87c0-494c-9bb4-8926625ff677 -> 7e475488-116c-41f8-9ff0-90e9bd1ac386 (7e475488-116c-41f8-9ff0-90e9bd1ac386/original.jpg)
+MISMATCH b937fcc8-9382-49ad-9fac-ef6695d51b31: stored application/octet-stream (https://gradivo.jknm.org/b937fcc8-9382-49ad-9fac-ef6695d51b31/original.bin) -> real image/jpeg (.jpg)
+Fixed b937fcc8-9382-49ad-9fac-ef6695d51b31 -> ee624969-7aa0-4023-9857-76d077c7cdf7 (ee624969-7aa0-4023-9857-76d077c7cdf7/original.jpg)
+MISMATCH 5318169e-1c54-4c5e-8c9b-6105546117c7: stored application/octet-stream (https://gradivo.jknm.org/5318169e-1c54-4c5e-8c9b-6105546117c7/original.bin) -> real image/jpeg (.jpg)
+Fixed 5318169e-1c54-4c5e-8c9b-6105546117c7 -> 8dd220db-2d59-498a-8272-96eba9779f5f (8dd220db-2d59-498a-8272-96eba9779f5f/original.jpg)
+MISMATCH 50a34de2-6d4b-474c-b197-b526012fa5c9: stored application/octet-stream (https://gradivo.jknm.org/50a34de2-6d4b-474c-b197-b526012fa5c9/original.bin) -> real image/jpeg (.jpg)
+Fixed 50a34de2-6d4b-474c-b197-b526012fa5c9 -> 273c5b22-4bda-44df-ac25-b3b9de5748b1 (273c5b22-4bda-44df-ac25-b3b9de5748b1/original.jpg)
+MISMATCH 48037ca2-50d5-4f78-a70a-ab6aecc1ac4a: stored application/octet-stream (https://gradivo.jknm.org/48037ca2-50d5-4f78-a70a-ab6aecc1ac4a/original.bin) -> real image/jpeg (.jpg)
+Fixed 48037ca2-50d5-4f78-a70a-ab6aecc1ac4a -> 85dee8b3-0b15-44a4-a7a4-2de68db0686d (85dee8b3-0b15-44a4-a7a4-2de68db0686d/original.jpg)
+MISMATCH b97a15b7-c96f-4a28-a829-33e95f349bc1: stored application/octet-stream (https://gradivo.jknm.org/b97a15b7-c96f-4a28-a829-33e95f349bc1/original.bin) -> real image/jpeg (.jpg)
+Fixed b97a15b7-c96f-4a28-a829-33e95f349bc1 -> d915b777-9059-452e-a0d6-6dbaf57abc3d (d915b777-9059-452e-a0d6-6dbaf57abc3d/original.jpg)
+MISMATCH 7ff77306-28e3-4866-b4a5-0c0d26d26910: stored application/octet-stream (https://gradivo.jknm.org/7ff77306-28e3-4866-b4a5-0c0d26d26910/original.bin) -> real image/jpeg (.jpg)
+Fixed 7ff77306-28e3-4866-b4a5-0c0d26d26910 -> a7d5b020-b587-4a71-8fc5-a3af368350b1 (a7d5b020-b587-4a71-8fc5-a3af368350b1/original.jpg)
+MISMATCH 28037370-5c7b-4620-9577-018e5efa5bb4: stored application/octet-stream (https://gradivo.jknm.org/28037370-5c7b-4620-9577-018e5efa5bb4/original.bin) -> real image/jpeg (.jpg)
+Fixed 28037370-5c7b-4620-9577-018e5efa5bb4 -> 6abcdca7-1741-4670-b597-481a0290af4f (6abcdca7-1741-4670-b597-481a0290af4f/original.jpg)
+MISMATCH 8eeb5a9a-1aae-4c29-9ec1-911b01688db6: stored application/octet-stream (https://gradivo.jknm.org/8eeb5a9a-1aae-4c29-9ec1-911b01688db6/original.bin) -> real image/jpeg (.jpg)
+Fixed 8eeb5a9a-1aae-4c29-9ec1-911b01688db6 -> 05998a3e-1c4c-450e-97d2-fbfd0a1a51a8 (05998a3e-1c4c-450e-97d2-fbfd0a1a51a8/original.jpg)
+MISMATCH 3dca1067-7f0c-47d4-b59c-02c5cdaf9c11: stored application/octet-stream (https://gradivo.jknm.org/3dca1067-7f0c-47d4-b59c-02c5cdaf9c11/original.bin) -> real image/jpeg (.jpg)
+Fixed 3dca1067-7f0c-47d4-b59c-02c5cdaf9c11 -> 7e8e2c1b-7122-4a88-84ef-ebf6a3438957 (7e8e2c1b-7122-4a88-84ef-ebf6a3438957/original.jpg)
+MISMATCH 9624513e-e68f-4d73-9e99-5e530fb98f29: stored application/octet-stream (https://gradivo.jknm.org/9624513e-e68f-4d73-9e99-5e530fb98f29/original.bin) -> real image/jpeg (.jpg)
+Fixed 9624513e-e68f-4d73-9e99-5e530fb98f29 -> 51874f11-036c-4a31-8fb1-d71f288a1ae2 (51874f11-036c-4a31-8fb1-d71f288a1ae2/original.jpg)
+MISMATCH 711410b5-35cc-4ef9-aab6-6cc88fb8c1be: stored application/octet-stream (https://gradivo.jknm.org/711410b5-35cc-4ef9-aab6-6cc88fb8c1be/original.bin) -> real image/jpeg (.jpg)
+Fixed 711410b5-35cc-4ef9-aab6-6cc88fb8c1be -> 394d73e2-8b79-4b76-8a04-fbc58d419240 (394d73e2-8b79-4b76-8a04-fbc58d419240/original.jpg)
+MISMATCH 62d07ca9-cf4e-4923-b1aa-0b4f4137715b: stored application/octet-stream (https://gradivo.jknm.org/62d07ca9-cf4e-4923-b1aa-0b4f4137715b/original.bin) -> real image/jpeg (.jpg)
+Fixed 62d07ca9-cf4e-4923-b1aa-0b4f4137715b -> 8778f534-6bb1-492d-ad12-89741ce41514 (8778f534-6bb1-492d-ad12-89741ce41514/original.jpg)
+MISMATCH 10f83301-7315-4e33-9111-32fa6bcf121d: stored application/octet-stream (https://gradivo.jknm.org/10f83301-7315-4e33-9111-32fa6bcf121d/original.bin) -> real image/jpeg (.jpg)
+Fixed 10f83301-7315-4e33-9111-32fa6bcf121d -> 43a102be-27e4-49aa-8f4b-358303e291d4 (43a102be-27e4-49aa-8f4b-358303e291d4/original.jpg)
+MISMATCH 3f4df2db-f37a-4c52-b488-5aa368411f62: stored application/octet-stream (https://gradivo.jknm.org/3f4df2db-f37a-4c52-b488-5aa368411f62/original.bin) -> real image/jpeg (.jpg)
+Fixed 3f4df2db-f37a-4c52-b488-5aa368411f62 -> 1657e3e9-a466-42d5-84bb-22598be5555f (1657e3e9-a466-42d5-84bb-22598be5555f/original.jpg)
+MISMATCH 00c05b34-1f87-4660-a95d-8c4e0ae7f775: stored application/octet-stream (https://gradivo.jknm.org/00c05b34-1f87-4660-a95d-8c4e0ae7f775/original.bin) -> real image/jpeg (.jpg)
+Fixed 00c05b34-1f87-4660-a95d-8c4e0ae7f775 -> 1040e01f-873e-47df-915e-d09b73c9ad54 (1040e01f-873e-47df-915e-d09b73c9ad54/original.jpg)
+MISMATCH 39b1ddda-5d10-4d3c-af79-1132ca5da0a1: stored application/octet-stream (https://gradivo.jknm.org/39b1ddda-5d10-4d3c-af79-1132ca5da0a1/original.bin) -> real image/jpeg (.jpg)
+Fixed 39b1ddda-5d10-4d3c-af79-1132ca5da0a1 -> e93c97b0-a620-405f-b4b6-debd6f0c7435 (e93c97b0-a620-405f-b4b6-debd6f0c7435/original.jpg)
+MISMATCH 5824beef-993a-40b8-90cc-6e0f7c99d8c5: stored application/octet-stream (https://gradivo.jknm.org/5824beef-993a-40b8-90cc-6e0f7c99d8c5/original.bin) -> real image/png (.png)
+Fixed 5824beef-993a-40b8-90cc-6e0f7c99d8c5 -> fb04b780-4666-4a0a-8fba-53d4660f501d (fb04b780-4666-4a0a-8fba-53d4660f501d/original.png)
+MISMATCH 9cf23b42-da35-4355-bcb6-dd0e8a5d0f4b: stored application/octet-stream (https://gradivo.jknm.org/9cf23b42-da35-4355-bcb6-dd0e8a5d0f4b/original.bin) -> real image/jpeg (.jpg)
+Fixed 9cf23b42-da35-4355-bcb6-dd0e8a5d0f4b -> 7c583ac7-b010-4f62-8d69-a5a67b83fd87 (7c583ac7-b010-4f62-8d69-a5a67b83fd87/original.jpg)
+MISMATCH e34caa86-eb75-4ffb-b0fe-ad3f534cd032: stored application/octet-stream (https://gradivo.jknm.org/e34caa86-eb75-4ffb-b0fe-ad3f534cd032/original.bin) -> real image/jpeg (.jpg)
+Fixed e34caa86-eb75-4ffb-b0fe-ad3f534cd032 -> 5c8eebd3-c7f5-471d-929d-c17c1e1f25da (5c8eebd3-c7f5-471d-929d-c17c1e1f25da/original.jpg)
+MISMATCH 3aac0d1d-0067-4dbf-bfbd-ace68cb4e7e9: stored application/octet-stream (https://gradivo.jknm.org/3aac0d1d-0067-4dbf-bfbd-ace68cb4e7e9/original.bin) -> real image/jpeg (.jpg)
+Fixed 3aac0d1d-0067-4dbf-bfbd-ace68cb4e7e9 -> c16bdf06-c9af-4a55-a7f4-9b0074d96252 (c16bdf06-c9af-4a55-a7f4-9b0074d96252/original.jpg)
+MISMATCH 0efa7b74-8c2a-4b6c-b5dc-df859d975f3d: stored application/octet-stream (https://gradivo.jknm.org/0efa7b74-8c2a-4b6c-b5dc-df859d975f3d/original.bin) -> real image/jpeg (.jpg)
+Fixed 0efa7b74-8c2a-4b6c-b5dc-df859d975f3d -> 52ab694e-39f8-4869-b730-c0e73e8946b0 (52ab694e-39f8-4869-b730-c0e73e8946b0/original.jpg)
+MISMATCH 438ee91e-eecb-482a-94c8-a6632d6e9da4: stored application/octet-stream (https://gradivo.jknm.org/438ee91e-eecb-482a-94c8-a6632d6e9da4/original.bin) -> real image/jpeg (.jpg)
+Fixed 438ee91e-eecb-482a-94c8-a6632d6e9da4 -> 9ceb0b42-94fe-40c6-890b-3b1c646d47e6 (9ceb0b42-94fe-40c6-890b-3b1c646d47e6/original.jpg)
+MISMATCH f08824e5-0b1e-4dcf-8be9-adaaf08b9d7f: stored application/octet-stream (https://gradivo.jknm.org/f08824e5-0b1e-4dcf-8be9-adaaf08b9d7f/original.bin) -> real image/jpeg (.jpg)
+Fixed f08824e5-0b1e-4dcf-8be9-adaaf08b9d7f -> 707c0832-d1dc-4296-a3b3-bd4398ee1de5 (707c0832-d1dc-4296-a3b3-bd4398ee1de5/original.jpg)
+MISMATCH b937e21e-c731-4596-83c3-d1a6911d975a: stored application/octet-stream (https://gradivo.jknm.org/b937e21e-c731-4596-83c3-d1a6911d975a/original.bin) -> real image/jpeg (.jpg)
+Fixed b937e21e-c731-4596-83c3-d1a6911d975a -> ff62d081-31a0-40e9-bba4-9c6f5c653332 (ff62d081-31a0-40e9-bba4-9c6f5c653332/original.jpg)
+MISMATCH a01c0bd9-a370-4c26-9829-596c597b401a: stored application/octet-stream (https://gradivo.jknm.org/a01c0bd9-a370-4c26-9829-596c597b401a/original.bin) -> real image/jpeg (.jpg)
+Fixed a01c0bd9-a370-4c26-9829-596c597b401a -> c0999721-9414-4394-a985-62f60e3670ed (c0999721-9414-4394-a985-62f60e3670ed/original.jpg)
+MISMATCH 434354fa-5506-45d5-b4ff-3d0bd696aa7e: stored application/octet-stream (https://gradivo.jknm.org/434354fa-5506-45d5-b4ff-3d0bd696aa7e/original.bin) -> real image/jpeg (.jpg)
+Fixed 434354fa-5506-45d5-b4ff-3d0bd696aa7e -> c1afc67a-b751-4331-beaf-aa90d55d54bd (c1afc67a-b751-4331-beaf-aa90d55d54bd/original.jpg)
+MISMATCH dfcdaae4-2a1f-41c2-9589-873d0ba12c3f: stored application/octet-stream (https://gradivo.jknm.org/dfcdaae4-2a1f-41c2-9589-873d0ba12c3f/original.bin) -> real image/jpeg (.jpg)
+Fixed dfcdaae4-2a1f-41c2-9589-873d0ba12c3f -> 62e15293-7419-451e-977f-9e856635cf85 (62e15293-7419-451e-977f-9e856635cf85/original.jpg)
+MISMATCH 6b423619-0156-4e75-8bfd-8f772fbe31c9: stored application/octet-stream (https://gradivo.jknm.org/6b423619-0156-4e75-8bfd-8f772fbe31c9/original.bin) -> real image/jpeg (.jpg)
+Fixed 6b423619-0156-4e75-8bfd-8f772fbe31c9 -> 16211a9f-59f4-4505-bae3-9c91bd8f6ce3 (16211a9f-59f4-4505-bae3-9c91bd8f6ce3/original.jpg)
+MISMATCH f87b808f-1af6-4fd9-87a6-44107adef1bc: stored application/octet-stream (https://gradivo.jknm.org/f87b808f-1af6-4fd9-87a6-44107adef1bc/original.bin) -> real image/jpeg (.jpg)
+Fixed f87b808f-1af6-4fd9-87a6-44107adef1bc -> cd8b6a5e-1d7c-4826-9b87-07b8f7bb0803 (cd8b6a5e-1d7c-4826-9b87-07b8f7bb0803/original.jpg)
+MISMATCH 19f80da4-40ce-4b23-bfcc-2d74d9f88ee7: stored application/octet-stream (https://gradivo.jknm.org/19f80da4-40ce-4b23-bfcc-2d74d9f88ee7/original.bin) -> real image/jpeg (.jpg)
+Fixed 19f80da4-40ce-4b23-bfcc-2d74d9f88ee7 -> 0b341e37-228d-44d4-92c4-226af991a406 (0b341e37-228d-44d4-92c4-226af991a406/original.jpg)
+MISMATCH 8a4a0500-d362-4ea6-a533-c50f4616d9ed: stored application/octet-stream (https://gradivo.jknm.org/8a4a0500-d362-4ea6-a533-c50f4616d9ed/original.bin) -> real image/jpeg (.jpg)
+Fixed 8a4a0500-d362-4ea6-a533-c50f4616d9ed -> 0e367d5b-4825-436d-8894-55f71f6628af (0e367d5b-4825-436d-8894-55f71f6628af/original.jpg)
+MISMATCH 9661b0f7-7898-432f-bd66-ce74a618b674: stored application/octet-stream (https://gradivo.jknm.org/9661b0f7-7898-432f-bd66-ce74a618b674/original.bin) -> real image/jpeg (.jpg)
+Fixed 9661b0f7-7898-432f-bd66-ce74a618b674 -> 666b8658-2796-4163-b02c-a97608223a17 (666b8658-2796-4163-b02c-a97608223a17/original.jpg)
+MISMATCH ffc679eb-df4d-4e2b-82fa-347289a62710: stored application/octet-stream (https://gradivo.jknm.org/ffc679eb-df4d-4e2b-82fa-347289a62710/original.bin) -> real image/jpeg (.jpg)
+Fixed ffc679eb-df4d-4e2b-82fa-347289a62710 -> 151a6e48-9e07-43d5-a5aa-8c58e80a657c (151a6e48-9e07-43d5-a5aa-8c58e80a657c/original.jpg)
+MISMATCH 8e4144d3-8d44-4fbf-bd48-0e29f471a5ad: stored application/octet-stream (https://gradivo.jknm.org/8e4144d3-8d44-4fbf-bd48-0e29f471a5ad/original.bin) -> real image/jpeg (.jpg)
+Fixed 8e4144d3-8d44-4fbf-bd48-0e29f471a5ad -> aa1afd8c-8ad5-4494-ba6a-509fb25879aa (aa1afd8c-8ad5-4494-ba6a-509fb25879aa/original.jpg)
+MISMATCH 245e245e-af3b-4358-9c41-ae13a092e83d: stored application/octet-stream (https://gradivo.jknm.org/245e245e-af3b-4358-9c41-ae13a092e83d/original.bin) -> real image/jpeg (.jpg)
+Fixed 245e245e-af3b-4358-9c41-ae13a092e83d -> c3dd3887-ea79-40a2-8dcd-44eb1b99f69f (c3dd3887-ea79-40a2-8dcd-44eb1b99f69f/original.jpg)
+MISMATCH 74c65be2-0541-47da-bc94-08c7b13c2148: stored application/octet-stream (https://gradivo.jknm.org/74c65be2-0541-47da-bc94-08c7b13c2148/original.bin) -> real image/jpeg (.jpg)
+Fixed 74c65be2-0541-47da-bc94-08c7b13c2148 -> 6646cd98-93a7-47ef-b500-c2713d0d2b70 (6646cd98-93a7-47ef-b500-c2713d0d2b70/original.jpg)
+MISMATCH c53f59af-59fc-4513-bc8b-704fb85ee5a0: stored application/octet-stream (https://gradivo.jknm.org/c53f59af-59fc-4513-bc8b-704fb85ee5a0/original.bin) -> real image/jpeg (.jpg)
+Fixed c53f59af-59fc-4513-bc8b-704fb85ee5a0 -> 57190080-069d-4dc8-b605-3ff5e183f268 (57190080-069d-4dc8-b605-3ff5e183f268/original.jpg)
+MISMATCH c108d870-ad81-4b8c-b6ca-bd433f006af1: stored application/octet-stream (https://gradivo.jknm.org/c108d870-ad81-4b8c-b6ca-bd433f006af1/original.bin) -> real image/jpeg (.jpg)
+Fixed c108d870-ad81-4b8c-b6ca-bd433f006af1 -> ab4d2502-ba12-4f3c-8adf-24d69b29f280 (ab4d2502-ba12-4f3c-8adf-24d69b29f280/original.jpg)
+MISMATCH d0768158-1d2a-4fea-a20a-000b21d64cab: stored application/octet-stream (https://gradivo.jknm.org/d0768158-1d2a-4fea-a20a-000b21d64cab/original.bin) -> real image/jpeg (.jpg)
+Fixed d0768158-1d2a-4fea-a20a-000b21d64cab -> d2f8f25d-ad61-4d1f-96d1-bad60988552f (d2f8f25d-ad61-4d1f-96d1-bad60988552f/original.jpg)
+MISMATCH b8444cbf-ace7-47fa-8e2f-d3d0c17728ed: stored application/octet-stream (https://gradivo.jknm.org/b8444cbf-ace7-47fa-8e2f-d3d0c17728ed/original.bin) -> real image/jpeg (.jpg)
+Fixed b8444cbf-ace7-47fa-8e2f-d3d0c17728ed -> ee5c63e2-2b9b-4545-bda6-6a56d83d0c50 (ee5c63e2-2b9b-4545-bda6-6a56d83d0c50/original.jpg)
+MISMATCH 0988fcd6-4829-4e70-82b1-64f58a032629: stored application/octet-stream (https://gradivo.jknm.org/0988fcd6-4829-4e70-82b1-64f58a032629/original.bin) -> real image/jpeg (.jpg)
+Fixed 0988fcd6-4829-4e70-82b1-64f58a032629 -> 8be2d93e-2600-4857-b645-f27ce80d8309 (8be2d93e-2600-4857-b645-f27ce80d8309/original.jpg)
+MISMATCH 67ccbdf1-0372-4ecd-bea2-e518772b1507: stored application/octet-stream (https://gradivo.jknm.org/67ccbdf1-0372-4ecd-bea2-e518772b1507/original.bin) -> real image/jpeg (.jpg)
+Fixed 67ccbdf1-0372-4ecd-bea2-e518772b1507 -> ae7a2ec5-0e96-4028-b7bd-92c0d04c7549 (ae7a2ec5-0e96-4028-b7bd-92c0d04c7549/original.jpg)
+MISMATCH af8e8fae-6055-4db0-a1cb-3e470af35f8e: stored application/octet-stream (https://gradivo.jknm.org/af8e8fae-6055-4db0-a1cb-3e470af35f8e/original.bin) -> real image/jpeg (.jpg)
+Fixed af8e8fae-6055-4db0-a1cb-3e470af35f8e -> cd5d4a1e-fe0c-480b-bab5-f21a8065a3f9 (cd5d4a1e-fe0c-480b-bab5-f21a8065a3f9/original.jpg)
+MISMATCH 5b1c2888-1d33-4a3a-9b03-b70c54008bc7: stored application/octet-stream (https://gradivo.jknm.org/5b1c2888-1d33-4a3a-9b03-b70c54008bc7/original.bin) -> real image/jpeg (.jpg)
+Fixed 5b1c2888-1d33-4a3a-9b03-b70c54008bc7 -> 57c1c29c-f751-4b49-b9af-f87772eafcd9 (57c1c29c-f751-4b49-b9af-f87772eafcd9/original.jpg)
+MISMATCH 58c62126-eb9e-46bb-91f7-25e01e81053e: stored application/octet-stream (https://gradivo.jknm.org/58c62126-eb9e-46bb-91f7-25e01e81053e/original.bin) -> real image/jpeg (.jpg)
+Fixed 58c62126-eb9e-46bb-91f7-25e01e81053e -> a75c451f-b8b7-42a6-b35b-de9b401b493e (a75c451f-b8b7-42a6-b35b-de9b401b493e/original.jpg)
+MISMATCH 8375973d-58ca-4be0-b3dd-32d4153238e0: stored application/octet-stream (https://gradivo.jknm.org/8375973d-58ca-4be0-b3dd-32d4153238e0/original.bin) -> real image/jpeg (.jpg)
+Fixed 8375973d-58ca-4be0-b3dd-32d4153238e0 -> e6b68a5a-9660-4768-a7bc-8f839e47973e (e6b68a5a-9660-4768-a7bc-8f839e47973e/original.jpg)
+MISMATCH fb9f372f-5f60-459e-9b6b-28a96bfef76a: stored application/octet-stream (https://gradivo.jknm.org/fb9f372f-5f60-459e-9b6b-28a96bfef76a/original.bin) -> real image/jpeg (.jpg)
+Fixed fb9f372f-5f60-459e-9b6b-28a96bfef76a -> 417945c5-d9e4-4438-aaa6-60e8ff6f1a5a (417945c5-d9e4-4438-aaa6-60e8ff6f1a5a/original.jpg)
+MISMATCH 89d3aa69-ef25-4764-8047-1a6615f0eced: stored application/octet-stream (https://gradivo.jknm.org/89d3aa69-ef25-4764-8047-1a6615f0eced/original.bin) -> real image/jpeg (.jpg)
+Fixed 89d3aa69-ef25-4764-8047-1a6615f0eced -> bb1421be-4d2d-4918-8db6-382fc0eb2757 (bb1421be-4d2d-4918-8db6-382fc0eb2757/original.jpg)
+MISMATCH 9582b5a7-1376-4e37-8bbb-f2670eac0001: stored application/octet-stream (https://gradivo.jknm.org/9582b5a7-1376-4e37-8bbb-f2670eac0001/original.bin) -> real image/jpeg (.jpg)
+Fixed 9582b5a7-1376-4e37-8bbb-f2670eac0001 -> bc32f60b-bcc7-4e35-8a6c-9b5c2ef82de3 (bc32f60b-bcc7-4e35-8a6c-9b5c2ef82de3/original.jpg)
+MISMATCH f83e2dee-12de-4925-a09d-e1f6fd6727e4: stored application/octet-stream (https://gradivo.jknm.org/f83e2dee-12de-4925-a09d-e1f6fd6727e4/original.bin) -> real image/jpeg (.jpg)
+Fixed f83e2dee-12de-4925-a09d-e1f6fd6727e4 -> 28a7255b-263f-46b1-83bd-166a4b334158 (28a7255b-263f-46b1-83bd-166a4b334158/original.jpg)
+MISMATCH 040f257e-4339-44c0-b59c-232c90665f8b: stored application/octet-stream (https://gradivo.jknm.org/040f257e-4339-44c0-b59c-232c90665f8b/original.bin) -> real image/jpeg (.jpg)
+Fixed 040f257e-4339-44c0-b59c-232c90665f8b -> e831955d-133b-4eef-9f0b-e62c6708f70b (e831955d-133b-4eef-9f0b-e62c6708f70b/original.jpg)
+MISMATCH 155ae520-2207-4181-bcb2-653bb92d1203: stored application/octet-stream (https://gradivo.jknm.org/155ae520-2207-4181-bcb2-653bb92d1203/original.bin) -> real image/jpeg (.jpg)
+Fixed 155ae520-2207-4181-bcb2-653bb92d1203 -> 2f6b817c-c6a0-48e6-a96c-906b0dc6e2e3 (2f6b817c-c6a0-48e6-a96c-906b0dc6e2e3/original.jpg)
+MISMATCH 84a3e9d9-0623-4feb-a21f-eaf38e5f55a7: stored application/octet-stream (https://gradivo.jknm.org/84a3e9d9-0623-4feb-a21f-eaf38e5f55a7/original.bin) -> real image/jpeg (.jpg)
+Fixed 84a3e9d9-0623-4feb-a21f-eaf38e5f55a7 -> 6b4f50c7-b2b6-41bb-9a75-92ed2a33c344 (6b4f50c7-b2b6-41bb-9a75-92ed2a33c344/original.jpg)
+MISMATCH da61cd45-a1aa-44eb-b45a-eba1066936ae: stored application/octet-stream (https://gradivo.jknm.org/da61cd45-a1aa-44eb-b45a-eba1066936ae/original.bin) -> real image/jpeg (.jpg)
+Fixed da61cd45-a1aa-44eb-b45a-eba1066936ae -> 69ef4803-8e7a-423d-8a29-a99c16f66009 (69ef4803-8e7a-423d-8a29-a99c16f66009/original.jpg)
+MISMATCH 7dac22fc-4765-4cd6-8bd9-4207ca3a163f: stored application/octet-stream (https://gradivo.jknm.org/7dac22fc-4765-4cd6-8bd9-4207ca3a163f/original.bin) -> real image/jpeg (.jpg)
+Fixed 7dac22fc-4765-4cd6-8bd9-4207ca3a163f -> 724a1ad8-89b9-4738-be6c-dcef84410916 (724a1ad8-89b9-4738-be6c-dcef84410916/original.jpg)
+MISMATCH 04a1bc6f-4835-43f6-8dfb-3a9bcbf416c1: stored application/octet-stream (https://gradivo.jknm.org/04a1bc6f-4835-43f6-8dfb-3a9bcbf416c1/original.bin) -> real image/jpeg (.jpg)
+Fixed 04a1bc6f-4835-43f6-8dfb-3a9bcbf416c1 -> c4187460-3529-460e-aad3-671a1774fa4c (c4187460-3529-460e-aad3-671a1774fa4c/original.jpg)
+MISMATCH d7224eda-6453-46e7-af1f-5cb903ddf91f: stored application/octet-stream (https://gradivo.jknm.org/d7224eda-6453-46e7-af1f-5cb903ddf91f/original.bin) -> real image/jpeg (.jpg)
+Fixed d7224eda-6453-46e7-af1f-5cb903ddf91f -> da6f97a1-54b9-4d15-9ae2-88ea5996b980 (da6f97a1-54b9-4d15-9ae2-88ea5996b980/original.jpg)
+MISMATCH 571513d7-17d7-42a0-9d30-27ba445f99fd: stored application/octet-stream (https://gradivo.jknm.org/571513d7-17d7-42a0-9d30-27ba445f99fd/original.bin) -> real image/jpeg (.jpg)
+Fixed 571513d7-17d7-42a0-9d30-27ba445f99fd -> 6c3712f9-344c-4fb8-a24e-0c29893df9d6 (6c3712f9-344c-4fb8-a24e-0c29893df9d6/original.jpg)
+MISMATCH 9d557a5d-8efe-427f-beb6-77eeb92c7a39: stored application/octet-stream (https://gradivo.jknm.org/9d557a5d-8efe-427f-beb6-77eeb92c7a39/original.bin) -> real image/jpeg (.jpg)
+Fixed 9d557a5d-8efe-427f-beb6-77eeb92c7a39 -> 1bacd6e2-b0e9-43cc-9f02-f01b8da7cfe6 (1bacd6e2-b0e9-43cc-9f02-f01b8da7cfe6/original.jpg)
+MISMATCH c0efdece-7e3c-4009-a63e-3cac1806c1c5: stored application/octet-stream (https://gradivo.jknm.org/c0efdece-7e3c-4009-a63e-3cac1806c1c5/original.bin) -> real image/jpeg (.jpg)
+Fixed c0efdece-7e3c-4009-a63e-3cac1806c1c5 -> 8207af09-53c7-4b7c-b18f-f4bef1c8c772 (8207af09-53c7-4b7c-b18f-f4bef1c8c772/original.jpg)
+MISMATCH ef8371c0-a3a0-4274-bef2-7e5c9a82c651: stored application/octet-stream (https://gradivo.jknm.org/ef8371c0-a3a0-4274-bef2-7e5c9a82c651/original.bin) -> real image/jpeg (.jpg)
+Fixed ef8371c0-a3a0-4274-bef2-7e5c9a82c651 -> 7092c922-9e6e-4e8b-a1b9-9468b7d82631 (7092c922-9e6e-4e8b-a1b9-9468b7d82631/original.jpg)
+MISMATCH 3de27842-5356-40c7-8aad-d23939efbb68: stored application/octet-stream (https://gradivo.jknm.org/3de27842-5356-40c7-8aad-d23939efbb68/original.bin) -> real image/jpeg (.jpg)
+Fixed 3de27842-5356-40c7-8aad-d23939efbb68 -> 987fb559-cec6-4f9e-8e86-f88a01b3ece4 (987fb559-cec6-4f9e-8e86-f88a01b3ece4/original.jpg)
+MISMATCH 788b2564-9a4b-48d3-98a2-b89faef24df8: stored application/octet-stream (https://gradivo.jknm.org/788b2564-9a4b-48d3-98a2-b89faef24df8/original.bin) -> real image/jpeg (.jpg)
+Fixed 788b2564-9a4b-48d3-98a2-b89faef24df8 -> 19a68ce7-1e3a-46f8-a1ed-b15ead886664 (19a68ce7-1e3a-46f8-a1ed-b15ead886664/original.jpg)
+MISMATCH 59ef6817-6780-4d4b-9cdf-f9b0f99f99ae: stored application/octet-stream (https://gradivo.jknm.org/59ef6817-6780-4d4b-9cdf-f9b0f99f99ae/original.bin) -> real image/jpeg (.jpg)
+Fixed 59ef6817-6780-4d4b-9cdf-f9b0f99f99ae -> d6eaf15a-faca-4dca-aaec-1912545f5d8f (d6eaf15a-faca-4dca-aaec-1912545f5d8f/original.jpg)
+MISMATCH 5319012e-3fa2-472e-a880-fc2e2d9f231e: stored application/octet-stream (https://gradivo.jknm.org/5319012e-3fa2-472e-a880-fc2e2d9f231e/original.bin) -> real image/jpeg (.jpg)
+Fixed 5319012e-3fa2-472e-a880-fc2e2d9f231e -> 8279e966-be53-419f-afe5-328d623fc13e (8279e966-be53-419f-afe5-328d623fc13e/original.jpg)
+MISMATCH fedcd9d5-5ac4-449e-9ffe-811d7e20e3cb: stored application/octet-stream (https://gradivo.jknm.org/fedcd9d5-5ac4-449e-9ffe-811d7e20e3cb/original.bin) -> real image/jpeg (.jpg)
+Fixed fedcd9d5-5ac4-449e-9ffe-811d7e20e3cb -> 092267d1-b5c2-4da8-bbcc-659fc5767036 (092267d1-b5c2-4da8-bbcc-659fc5767036/original.jpg)
+MISMATCH 025d8f12-8b3f-4d1e-8164-566c1c659f97: stored application/octet-stream (https://gradivo.jknm.org/025d8f12-8b3f-4d1e-8164-566c1c659f97/original.bin) -> real image/jpeg (.jpg)
+Fixed 025d8f12-8b3f-4d1e-8164-566c1c659f97 -> 620647f0-df53-4ba0-ad2b-c56919454ed1 (620647f0-df53-4ba0-ad2b-c56919454ed1/original.jpg)
+MISMATCH a84311be-87cd-49af-944e-dca093c6cda1: stored application/octet-stream (https://gradivo.jknm.org/a84311be-87cd-49af-944e-dca093c6cda1/original.bin) -> real image/jpeg (.jpg)
+Fixed a84311be-87cd-49af-944e-dca093c6cda1 -> b9e38057-bd8f-47e5-b2ef-b9ca0ce2063a (b9e38057-bd8f-47e5-b2ef-b9ca0ce2063a/original.jpg)
+MISMATCH 46c6e711-9409-4e91-b433-4d10b119e89d: stored application/octet-stream (https://gradivo.jknm.org/46c6e711-9409-4e91-b433-4d10b119e89d/original.bin) -> real image/jpeg (.jpg)
+Fixed 46c6e711-9409-4e91-b433-4d10b119e89d -> 6751b3c8-3c4b-4819-92f6-8655c9011ac3 (6751b3c8-3c4b-4819-92f6-8655c9011ac3/original.jpg)
+MISMATCH cc757cbf-0684-4a50-b606-28d7546a77af: stored application/octet-stream (https://gradivo.jknm.org/cc757cbf-0684-4a50-b606-28d7546a77af/original.bin) -> real image/jpeg (.jpg)
+Fixed cc757cbf-0684-4a50-b606-28d7546a77af -> 44fac578-f9ac-45e2-9e78-0a976b55f3aa (44fac578-f9ac-45e2-9e78-0a976b55f3aa/original.jpg)
+MISMATCH 329ddbd7-e185-4d32-8955-4c1492a9451b: stored application/octet-stream (https://gradivo.jknm.org/329ddbd7-e185-4d32-8955-4c1492a9451b/original.bin) -> real image/jpeg (.jpg)
+Fixed 329ddbd7-e185-4d32-8955-4c1492a9451b -> 7f1f0e5b-d345-420d-9ad2-38adb859b19c (7f1f0e5b-d345-420d-9ad2-38adb859b19c/original.jpg)
+MISMATCH 511c0f6d-bf13-4a00-bac2-acdc4ff4da1e: stored application/octet-stream (https://gradivo.jknm.org/511c0f6d-bf13-4a00-bac2-acdc4ff4da1e/original.bin) -> real image/jpeg (.jpg)
+Fixed 511c0f6d-bf13-4a00-bac2-acdc4ff4da1e -> 38c14e4b-4661-4fd3-a62a-ecea655ef022 (38c14e4b-4661-4fd3-a62a-ecea655ef022/original.jpg)
+MISMATCH 1eaf547e-0689-4564-af5d-31801340d77e: stored application/octet-stream (https://gradivo.jknm.org/1eaf547e-0689-4564-af5d-31801340d77e/original.bin) -> real image/jpeg (.jpg)
+Fixed 1eaf547e-0689-4564-af5d-31801340d77e -> 502eb8bb-16a5-4dff-915a-d12e88599f75 (502eb8bb-16a5-4dff-915a-d12e88599f75/original.jpg)
+MISMATCH 6c31e194-9f13-40a1-8aac-feabda04a67f: stored application/octet-stream (https://gradivo.jknm.org/6c31e194-9f13-40a1-8aac-feabda04a67f/original.bin) -> real image/jpeg (.jpg)
+Fixed 6c31e194-9f13-40a1-8aac-feabda04a67f -> 1b84349b-270a-4526-9026-da2ad9f5a169 (1b84349b-270a-4526-9026-da2ad9f5a169/original.jpg)
+MISMATCH a2596f2b-da8a-4f64-845a-30f429d67a4d: stored application/octet-stream (https://gradivo.jknm.org/a2596f2b-da8a-4f64-845a-30f429d67a4d/original.bin) -> real image/jpeg (.jpg)
+Fixed a2596f2b-da8a-4f64-845a-30f429d67a4d -> d27fcfe4-00b9-4e21-b8e1-7b3b24117354 (d27fcfe4-00b9-4e21-b8e1-7b3b24117354/original.jpg)
+OK, already correct (image/jpeg): 97382a1e-a14e-464a-af96-ef517d1ae5b2 https://gradivo.jknm.org/97382a1e-a14e-464a-af96-ef517d1ae5b2/original.jpg
+MISMATCH 5919d3fc-30cc-46f4-af60-4f9253d7bb60: stored application/octet-stream (https://gradivo.jknm.org/5919d3fc-30cc-46f4-af60-4f9253d7bb60/original.bin) -> real image/jpeg (.jpg)
+Fixed 5919d3fc-30cc-46f4-af60-4f9253d7bb60 -> 87e4dd4b-28f7-4f1a-adda-a796dec93345 (87e4dd4b-28f7-4f1a-adda-a796dec93345/original.jpg)
+MISMATCH cf6a3fa7-e90f-46e1-9ca6-2ba16acd1075: stored application/octet-stream (https://gradivo.jknm.org/cf6a3fa7-e90f-46e1-9ca6-2ba16acd1075/original.bin) -> real image/jpeg (.jpg)
+Fixed cf6a3fa7-e90f-46e1-9ca6-2ba16acd1075 -> e4a7454c-f4fb-4ca4-b0c4-272e9e7cdb1d (e4a7454c-f4fb-4ca4-b0c4-272e9e7cdb1d/original.jpg)
+MISMATCH fd21ac07-307a-44ce-87cd-44f614f01bff: stored application/octet-stream (https://gradivo.jknm.org/fd21ac07-307a-44ce-87cd-44f614f01bff/original.bin) -> real image/jpeg (.jpg)
+Fixed fd21ac07-307a-44ce-87cd-44f614f01bff -> 3fd7a125-6113-4e6e-bcbe-e3c0fdcaf8e5 (3fd7a125-6113-4e6e-bcbe-e3c0fdcaf8e5/original.jpg)
+MISMATCH 005009f3-d2ec-4374-8623-9d664a31b758: stored application/octet-stream (https://gradivo.jknm.org/005009f3-d2ec-4374-8623-9d664a31b758/original.bin) -> real image/jpeg (.jpg)
+Fixed 005009f3-d2ec-4374-8623-9d664a31b758 -> 28d09434-0cf3-4a70-9058-e1a2de06ab09 (28d09434-0cf3-4a70-9058-e1a2de06ab09/original.jpg)
+MISMATCH 63157237-9f2a-4649-be7f-97c5af8a6451: stored application/octet-stream (https://gradivo.jknm.org/63157237-9f2a-4649-be7f-97c5af8a6451/original.bin) -> real image/jpeg (.jpg)
+Fixed 63157237-9f2a-4649-be7f-97c5af8a6451 -> 05d7fae1-dcc1-4a00-a8ba-d16b70425d22 (05d7fae1-dcc1-4a00-a8ba-d16b70425d22/original.jpg)
+MISMATCH a9b057cf-5675-42ef-b241-73f56c2d87df: stored application/octet-stream (https://gradivo.jknm.org/a9b057cf-5675-42ef-b241-73f56c2d87df/original.bin) -> real image/jpeg (.jpg)
+Fixed a9b057cf-5675-42ef-b241-73f56c2d87df -> 11e984b8-b43b-4f13-b475-ff5e7c3394f3 (11e984b8-b43b-4f13-b475-ff5e7c3394f3/original.jpg)
+MISMATCH 007dace3-9181-46a6-9cdf-d5e8d9fe9388: stored application/octet-stream (https://gradivo.jknm.org/007dace3-9181-46a6-9cdf-d5e8d9fe9388/original.bin) -> real image/jpeg (.jpg)
+Fixed 007dace3-9181-46a6-9cdf-d5e8d9fe9388 -> 1e4b498b-10a6-4604-9113-0199474e8e48 (1e4b498b-10a6-4604-9113-0199474e8e48/original.jpg)
+MISMATCH bcca0b5e-0cbe-43e6-8885-1a58a5bd985f: stored application/octet-stream (https://gradivo.jknm.org/bcca0b5e-0cbe-43e6-8885-1a58a5bd985f/original.bin) -> real image/jpeg (.jpg)
+Fixed bcca0b5e-0cbe-43e6-8885-1a58a5bd985f -> 915e00ea-71c7-4945-bd83-24ef69f5cf1c (915e00ea-71c7-4945-bd83-24ef69f5cf1c/original.jpg)
+MISMATCH 15d543ec-4a19-4450-8f10-792fb32687df: stored application/octet-stream (https://gradivo.jknm.org/15d543ec-4a19-4450-8f10-792fb32687df/original.bin) -> real image/jpeg (.jpg)
+Fixed 15d543ec-4a19-4450-8f10-792fb32687df -> 552bf0a1-7556-41a9-899b-ff18c8a5b234 (552bf0a1-7556-41a9-899b-ff18c8a5b234/original.jpg)
+MISMATCH 95aa7dd6-585e-4c74-a5e4-939bc3ae475d: stored application/octet-stream (https://gradivo.jknm.org/95aa7dd6-585e-4c74-a5e4-939bc3ae475d/original.bin) -> real image/jpeg (.jpg)
+Fixed 95aa7dd6-585e-4c74-a5e4-939bc3ae475d -> bc9b308a-d5a8-4624-abf4-8a10b3e04626 (bc9b308a-d5a8-4624-abf4-8a10b3e04626/original.jpg)
+MISMATCH c819c716-3d7b-4e8f-9bd3-198bb766f98e: stored application/octet-stream (https://gradivo.jknm.org/c819c716-3d7b-4e8f-9bd3-198bb766f98e/original.bin) -> real image/jpeg (.jpg)
+Fixed c819c716-3d7b-4e8f-9bd3-198bb766f98e -> 6e5f73ae-955d-4992-b9d1-4875db132270 (6e5f73ae-955d-4992-b9d1-4875db132270/original.jpg)
+MISMATCH c028fa44-7866-4144-be6c-c21239360c31: stored application/octet-stream (https://gradivo.jknm.org/c028fa44-7866-4144-be6c-c21239360c31/original.bin) -> real image/jpeg (.jpg)
+Fixed c028fa44-7866-4144-be6c-c21239360c31 -> e5a33117-1305-40a2-9c1a-6402e85bf366 (e5a33117-1305-40a2-9c1a-6402e85bf366/original.jpg)
+MISMATCH d75bd3f2-96c7-4ec3-a075-8f448af422e8: stored application/octet-stream (https://gradivo.jknm.org/d75bd3f2-96c7-4ec3-a075-8f448af422e8/original.bin) -> real image/jpeg (.jpg)
+Fixed d75bd3f2-96c7-4ec3-a075-8f448af422e8 -> e46f11e2-2cd1-4b60-b065-4505a44eb461 (e46f11e2-2cd1-4b60-b065-4505a44eb461/original.jpg)
+OK, already correct (image/jpeg): f2cff634-8db1-4186-aad3-fc228bec6f6c https://gradivo.jknm.org/f2cff634-8db1-4186-aad3-fc228bec6f6c/original.jpg
+MISMATCH 735127d0-4051-45b0-ba5e-026e1b6f5388: stored application/octet-stream (https://gradivo.jknm.org/735127d0-4051-45b0-ba5e-026e1b6f5388/original.bin) -> real image/jpeg (.jpg)
+Fixed 735127d0-4051-45b0-ba5e-026e1b6f5388 -> 2281e45c-d080-4a16-9e55-518d7894ad2e (2281e45c-d080-4a16-9e55-518d7894ad2e/original.jpg)
+MISMATCH 02e5808c-8a7a-4b14-8c3f-39c453247db9: stored application/octet-stream (https://gradivo.jknm.org/02e5808c-8a7a-4b14-8c3f-39c453247db9/original.bin) -> real image/jpeg (.jpg)
+Fixed 02e5808c-8a7a-4b14-8c3f-39c453247db9 -> 6448620a-f79f-421d-bf54-f19caf63946a (6448620a-f79f-421d-bf54-f19caf63946a/original.jpg)
+MISMATCH 317c5234-e59a-4d49-b304-1cb73a2ea03b: stored application/octet-stream (https://gradivo.jknm.org/317c5234-e59a-4d49-b304-1cb73a2ea03b/original.bin) -> real image/jpeg (.jpg)
+Fixed 317c5234-e59a-4d49-b304-1cb73a2ea03b -> bc0deaa6-a081-425d-a0b3-687998e8543d (bc0deaa6-a081-425d-a0b3-687998e8543d/original.jpg)
+MISMATCH e1a3430b-f4e6-45a3-94d1-7b733d513576: stored application/octet-stream (https://gradivo.jknm.org/e1a3430b-f4e6-45a3-94d1-7b733d513576/original.bin) -> real image/jpeg (.jpg)
+Fixed e1a3430b-f4e6-45a3-94d1-7b733d513576 -> 29fb4ccd-7a7f-490e-a110-c918815e8ad6 (29fb4ccd-7a7f-490e-a110-c918815e8ad6/original.jpg)
+MISMATCH a106cad2-8844-43ee-bebb-383611642870: stored application/octet-stream (https://gradivo.jknm.org/a106cad2-8844-43ee-bebb-383611642870/original.bin) -> real image/jpeg (.jpg)
+Fixed a106cad2-8844-43ee-bebb-383611642870 -> 41c51742-f4cd-43b0-b920-17605c4c8f3e (41c51742-f4cd-43b0-b920-17605c4c8f3e/original.jpg)
+MISMATCH 46e6bc05-1fdb-4647-a314-3721478b91af: stored application/octet-stream (https://gradivo.jknm.org/46e6bc05-1fdb-4647-a314-3721478b91af/original.bin) -> real image/jpeg (.jpg)
+Fixed 46e6bc05-1fdb-4647-a314-3721478b91af -> 5c9303e3-9b75-42ea-8739-d9af923f0de6 (5c9303e3-9b75-42ea-8739-d9af923f0de6/original.jpg)
+MISMATCH 55f338dd-46c8-4338-9ab2-04c3b401bfa1: stored application/octet-stream (https://gradivo.jknm.org/55f338dd-46c8-4338-9ab2-04c3b401bfa1/original.bin) -> real image/jpeg (.jpg)
+Fixed 55f338dd-46c8-4338-9ab2-04c3b401bfa1 -> d0316252-1e90-4d52-96ff-39edde90e1d6 (d0316252-1e90-4d52-96ff-39edde90e1d6/original.jpg)
+MISMATCH 3bd213ba-1b0f-4b05-8db9-02c9a9b4c17e: stored application/octet-stream (https://gradivo.jknm.org/3bd213ba-1b0f-4b05-8db9-02c9a9b4c17e/original.bin) -> real image/jpeg (.jpg)
+Fixed 3bd213ba-1b0f-4b05-8db9-02c9a9b4c17e -> c274e796-570a-45d2-9f10-afb5884e508e (c274e796-570a-45d2-9f10-afb5884e508e/original.jpg)
+MISMATCH a5dc8a7e-8834-4d41-aacb-1a8e4a097e71: stored application/octet-stream (https://gradivo.jknm.org/a5dc8a7e-8834-4d41-aacb-1a8e4a097e71/original.bin) -> real image/jpeg (.jpg)
+Fixed a5dc8a7e-8834-4d41-aacb-1a8e4a097e71 -> 33cb106d-8842-45df-9101-a1260f5c100c (33cb106d-8842-45df-9101-a1260f5c100c/original.jpg)
+MISMATCH b001b4c5-4a5a-4566-8a1e-59f534dc50a2: stored application/octet-stream (https://gradivo.jknm.org/b001b4c5-4a5a-4566-8a1e-59f534dc50a2/original.bin) -> real image/jpeg (.jpg)
+Fixed b001b4c5-4a5a-4566-8a1e-59f534dc50a2 -> 6e33ef09-ad08-48b2-acf9-60cfa8f2d042 (6e33ef09-ad08-48b2-acf9-60cfa8f2d042/original.jpg)
+OK, already correct (image/jpeg): 3f6cb254-bc7a-483f-8df5-852966b16378 https://gradivo.jknm.org/3f6cb254-bc7a-483f-8df5-852966b16378/original.jpg
+OK, already correct (image/jpeg): 27ff8ea5-9e9b-4465-b694-7ab76ac961d2 https://gradivo.jknm.org/27ff8ea5-9e9b-4465-b694-7ab76ac961d2/original.jpg
+MISMATCH 1e0dd70e-2a2e-486b-90bf-6bdacf43d20b: stored application/octet-stream (https://gradivo.jknm.org/1e0dd70e-2a2e-486b-90bf-6bdacf43d20b/original.bin) -> real image/jpeg (.jpg)
+Fixed 1e0dd70e-2a2e-486b-90bf-6bdacf43d20b -> 23b7244d-3049-4667-8e34-899998e01c90 (23b7244d-3049-4667-8e34-899998e01c90/original.jpg)
+MISMATCH aa76c1e8-c0b2-46b9-97ea-63a0d27c13c7: stored application/octet-stream (https://gradivo.jknm.org/aa76c1e8-c0b2-46b9-97ea-63a0d27c13c7/original.bin) -> real image/jpeg (.jpg)
+Fixed aa76c1e8-c0b2-46b9-97ea-63a0d27c13c7 -> 93488f89-d666-4a54-9eba-3c5044f9728f (93488f89-d666-4a54-9eba-3c5044f9728f/original.jpg)
+MISMATCH 5688fe51-05f5-44ad-bc54-bee170bde375: stored application/octet-stream (https://gradivo.jknm.org/5688fe51-05f5-44ad-bc54-bee170bde375/original.bin) -> real image/jpeg (.jpg)
+Fixed 5688fe51-05f5-44ad-bc54-bee170bde375 -> 39acb031-ff89-43d1-8599-8cc27f63ab0d (39acb031-ff89-43d1-8599-8cc27f63ab0d/original.jpg)
+MISMATCH aec41fdd-8407-4091-acb9-d00e9d041c42: stored application/octet-stream (https://gradivo.jknm.org/aec41fdd-8407-4091-acb9-d00e9d041c42/original.bin) -> real image/jpeg (.jpg)
+Fixed aec41fdd-8407-4091-acb9-d00e9d041c42 -> ba2a4822-bf52-4351-a2e9-fc20088d5372 (ba2a4822-bf52-4351-a2e9-fc20088d5372/original.jpg)
+MISMATCH 3b004d23-c49d-456c-b2ee-a1b9966ace5f: stored application/octet-stream (https://gradivo.jknm.org/3b004d23-c49d-456c-b2ee-a1b9966ace5f/original.bin) -> real image/jpeg (.jpg)
+Fixed 3b004d23-c49d-456c-b2ee-a1b9966ace5f -> 1d8d8071-4476-4972-a419-b69098d5ff75 (1d8d8071-4476-4972-a419-b69098d5ff75/original.jpg)
+MISMATCH c2c4a199-ce2a-490e-83c9-1d6c9eb7882a: stored application/octet-stream (https://gradivo.jknm.org/c2c4a199-ce2a-490e-83c9-1d6c9eb7882a/original.bin) -> real image/jpeg (.jpg)
+Fixed c2c4a199-ce2a-490e-83c9-1d6c9eb7882a -> 97690cc6-fcb3-42a9-8063-8a5aae4e5632 (97690cc6-fcb3-42a9-8063-8a5aae4e5632/original.jpg)
+MISMATCH 09edbafc-8066-4acd-bebe-1f0a9f5954e3: stored application/octet-stream (https://gradivo.jknm.org/09edbafc-8066-4acd-bebe-1f0a9f5954e3/original.bin) -> real image/jpeg (.jpg)
+Fixed 09edbafc-8066-4acd-bebe-1f0a9f5954e3 -> 417f359e-9908-43ff-b56f-b3d0b03dbfbb (417f359e-9908-43ff-b56f-b3d0b03dbfbb/original.jpg)
+MISMATCH b37a4ddf-6a9b-4bea-9d5b-3576c1ce8133: stored application/octet-stream (https://gradivo.jknm.org/b37a4ddf-6a9b-4bea-9d5b-3576c1ce8133/original.bin) -> real image/jpeg (.jpg)
+Fixed b37a4ddf-6a9b-4bea-9d5b-3576c1ce8133 -> a5b22a1c-0876-462b-9306-748b62f8a0bd (a5b22a1c-0876-462b-9306-748b62f8a0bd/original.jpg)
+MISMATCH 78f36283-9e96-4276-b888-d2fe3fc9fb9c: stored application/octet-stream (https://gradivo.jknm.org/78f36283-9e96-4276-b888-d2fe3fc9fb9c/original.bin) -> real image/jpeg (.jpg)
+Fixed 78f36283-9e96-4276-b888-d2fe3fc9fb9c -> 51eb5907-73d1-4ff6-9bdf-97572e551e54 (51eb5907-73d1-4ff6-9bdf-97572e551e54/original.jpg)
+MISMATCH c699fdb6-14f2-49c9-b287-aa77fa8768b5: stored application/octet-stream (https://gradivo.jknm.org/c699fdb6-14f2-49c9-b287-aa77fa8768b5/original.bin) -> real image/jpeg (.jpg)
+Fixed c699fdb6-14f2-49c9-b287-aa77fa8768b5 -> cc5e0da1-5e17-4143-9523-b31f07ea58b8 (cc5e0da1-5e17-4143-9523-b31f07ea58b8/original.jpg)
+MISMATCH dc173ecf-f948-4088-9edf-352d25b50ad8: stored application/octet-stream (https://gradivo.jknm.org/dc173ecf-f948-4088-9edf-352d25b50ad8/original.bin) -> real image/jpeg (.jpg)
+Fixed dc173ecf-f948-4088-9edf-352d25b50ad8 -> 3cbbc014-d0ef-40f6-a81e-6a453fd70f47 (3cbbc014-d0ef-40f6-a81e-6a453fd70f47/original.jpg)
+MISMATCH 4e4fabb5-f708-41c9-8894-3ea6a7dcae42: stored application/octet-stream (https://gradivo.jknm.org/4e4fabb5-f708-41c9-8894-3ea6a7dcae42/original.bin) -> real image/jpeg (.jpg)
+Fixed 4e4fabb5-f708-41c9-8894-3ea6a7dcae42 -> c4365194-6c44-4ef8-bd3b-57cc5b9939ed (c4365194-6c44-4ef8-bd3b-57cc5b9939ed/original.jpg)
+MISMATCH c0e720ce-add2-4c65-9e2e-209434543676: stored application/octet-stream (https://gradivo.jknm.org/c0e720ce-add2-4c65-9e2e-209434543676/original.bin) -> real image/jpeg (.jpg)
+Fixed c0e720ce-add2-4c65-9e2e-209434543676 -> d0b7798f-6f16-41ac-9ec4-20aaec21320d (d0b7798f-6f16-41ac-9ec4-20aaec21320d/original.jpg)
+MISMATCH 5f8e6970-0e7d-4680-8f50-30520830368a: stored application/octet-stream (https://gradivo.jknm.org/5f8e6970-0e7d-4680-8f50-30520830368a/original.bin) -> real image/jpeg (.jpg)
+Fixed 5f8e6970-0e7d-4680-8f50-30520830368a -> 63de69ca-57ae-44f0-b81f-b0d65b3e9f86 (63de69ca-57ae-44f0-b81f-b0d65b3e9f86/original.jpg)
+MISMATCH e86853d8-8eac-4f42-abe4-ed757cb8e030: stored application/octet-stream (https://gradivo.jknm.org/e86853d8-8eac-4f42-abe4-ed757cb8e030/original.bin) -> real image/jpeg (.jpg)
+Fixed e86853d8-8eac-4f42-abe4-ed757cb8e030 -> fab7910a-8b8b-4ed0-8db9-b38fc66e2c43 (fab7910a-8b8b-4ed0-8db9-b38fc66e2c43/original.jpg)
+MISMATCH d6c371d4-de4b-4522-863e-181270094db2: stored application/octet-stream (https://gradivo.jknm.org/d6c371d4-de4b-4522-863e-181270094db2/original.bin) -> real image/jpeg (.jpg)
+Fixed d6c371d4-de4b-4522-863e-181270094db2 -> 4867e41c-86cd-4506-abc7-c527c4d5f7ea (4867e41c-86cd-4506-abc7-c527c4d5f7ea/original.jpg)
+MISMATCH 47ba7b09-3090-47f6-9196-74f14a38f7ab: stored application/octet-stream (https://gradivo.jknm.org/47ba7b09-3090-47f6-9196-74f14a38f7ab/original.bin) -> real image/jpeg (.jpg)
+Fixed 47ba7b09-3090-47f6-9196-74f14a38f7ab -> 880fcaf8-5d7c-4463-ac99-875332e8763f (880fcaf8-5d7c-4463-ac99-875332e8763f/original.jpg)
+MISMATCH f5f0e252-1ff0-4856-bd0a-b0e29201b54d: stored application/octet-stream (https://gradivo.jknm.org/f5f0e252-1ff0-4856-bd0a-b0e29201b54d/original.bin) -> real image/jpeg (.jpg)
+Fixed f5f0e252-1ff0-4856-bd0a-b0e29201b54d -> 7ecaba67-1ba6-433d-94c1-0722a373642b (7ecaba67-1ba6-433d-94c1-0722a373642b/original.jpg)
+MISMATCH a73f2af7-e3d9-4952-8d09-f33092c35c36: stored application/octet-stream (https://gradivo.jknm.org/a73f2af7-e3d9-4952-8d09-f33092c35c36/original.bin) -> real image/jpeg (.jpg)
+Fixed a73f2af7-e3d9-4952-8d09-f33092c35c36 -> df583b78-09b7-43b8-b173-ddd7ca4e1b19 (df583b78-09b7-43b8-b173-ddd7ca4e1b19/original.jpg)
+MISMATCH 0904fef7-f602-443b-b3da-8ec07e3eb82c: stored application/octet-stream (https://gradivo.jknm.org/0904fef7-f602-443b-b3da-8ec07e3eb82c/original.bin) -> real image/jpeg (.jpg)
+Fixed 0904fef7-f602-443b-b3da-8ec07e3eb82c -> 0c3c49a6-ecf6-4fdf-adad-8891096a00d4 (0c3c49a6-ecf6-4fdf-adad-8891096a00d4/original.jpg)
+MISMATCH 2456b454-e0b7-4e4e-9961-683ba9c1528b: stored application/octet-stream (https://gradivo.jknm.org/2456b454-e0b7-4e4e-9961-683ba9c1528b/original.bin) -> real image/jpeg (.jpg)
+Fixed 2456b454-e0b7-4e4e-9961-683ba9c1528b -> 356539a4-3aae-4aeb-a11f-14ed7dbd2ea2 (356539a4-3aae-4aeb-a11f-14ed7dbd2ea2/original.jpg)
+MISMATCH b0af4ffd-0b57-44b5-bdde-e1adee5aeb5d: stored application/octet-stream (https://gradivo.jknm.org/b0af4ffd-0b57-44b5-bdde-e1adee5aeb5d/original.bin) -> real image/jpeg (.jpg)
+Fixed b0af4ffd-0b57-44b5-bdde-e1adee5aeb5d -> 9833baa4-4767-4ce1-8376-b2fa19dfdc96 (9833baa4-4767-4ce1-8376-b2fa19dfdc96/original.jpg)
+MISMATCH 4af93933-78e9-48db-bf7a-f794bc1a2291: stored application/octet-stream (https://gradivo.jknm.org/4af93933-78e9-48db-bf7a-f794bc1a2291/original.bin) -> real image/jpeg (.jpg)
+Fixed 4af93933-78e9-48db-bf7a-f794bc1a2291 -> 37e190a6-e3ee-4d4e-9cab-bd62fe059f2e (37e190a6-e3ee-4d4e-9cab-bd62fe059f2e/original.jpg)
+MISMATCH 5204cc58-7eb7-4381-b0da-4ab777b62edc: stored application/octet-stream (https://gradivo.jknm.org/5204cc58-7eb7-4381-b0da-4ab777b62edc/original.bin) -> real image/jpeg (.jpg)
+Fixed 5204cc58-7eb7-4381-b0da-4ab777b62edc -> 69fd0949-7d61-4ee9-b4cf-99f29d574587 (69fd0949-7d61-4ee9-b4cf-99f29d574587/original.jpg)
+MISMATCH 0a9f7355-3df6-402f-b8cb-5fc6f5a4aa8c: stored application/octet-stream (https://gradivo.jknm.org/0a9f7355-3df6-402f-b8cb-5fc6f5a4aa8c/original.bin) -> real image/jpeg (.jpg)
+Fixed 0a9f7355-3df6-402f-b8cb-5fc6f5a4aa8c -> 22797c6e-0996-4495-96dc-01663f69f253 (22797c6e-0996-4495-96dc-01663f69f253/original.jpg)
+MISMATCH cca5561e-a51c-4cae-8c77-455d45634a13: stored application/octet-stream (https://gradivo.jknm.org/cca5561e-a51c-4cae-8c77-455d45634a13/original.bin) -> real image/jpeg (.jpg)
+Fixed cca5561e-a51c-4cae-8c77-455d45634a13 -> f4ea8505-2a4d-4822-9738-3d5515bbd19e (f4ea8505-2a4d-4822-9738-3d5515bbd19e/original.jpg)
+MISMATCH 44435102-daac-4dc4-b63c-c14a95b574e9: stored application/octet-stream (https://gradivo.jknm.org/44435102-daac-4dc4-b63c-c14a95b574e9/original.bin) -> real image/jpeg (.jpg)
+Fixed 44435102-daac-4dc4-b63c-c14a95b574e9 -> 65d8f38e-6cd3-4c27-812b-d3dcd81b22de (65d8f38e-6cd3-4c27-812b-d3dcd81b22de/original.jpg)
+MISMATCH 2d94106e-e981-4f71-afe5-d5b3c1d493e9: stored application/octet-stream (https://gradivo.jknm.org/2d94106e-e981-4f71-afe5-d5b3c1d493e9/original.bin) -> real image/jpeg (.jpg)
+Fixed 2d94106e-e981-4f71-afe5-d5b3c1d493e9 -> 5d2e4d6c-9638-4f1e-a7ae-e107c45146af (5d2e4d6c-9638-4f1e-a7ae-e107c45146af/original.jpg)
+MISMATCH f4316cec-1f6b-4fd7-b38c-949affaf5d09: stored application/octet-stream (https://gradivo.jknm.org/f4316cec-1f6b-4fd7-b38c-949affaf5d09/original.bin) -> real image/jpeg (.jpg)
+Fixed f4316cec-1f6b-4fd7-b38c-949affaf5d09 -> fee48e56-26eb-4bf4-9e38-9c39ea24b651 (fee48e56-26eb-4bf4-9e38-9c39ea24b651/original.jpg)
+MISMATCH 928f64a9-cdc4-427b-9b22-0da93a82f9bd: stored application/octet-stream (https://gradivo.jknm.org/928f64a9-cdc4-427b-9b22-0da93a82f9bd/original.bin) -> real image/jpeg (.jpg)
+Fixed 928f64a9-cdc4-427b-9b22-0da93a82f9bd -> a4bf66ba-8fce-43d5-9f9f-1a35e6f1f29b (a4bf66ba-8fce-43d5-9f9f-1a35e6f1f29b/original.jpg)
+MISMATCH 4c32106d-03a3-48e0-8ac0-a85a1eec75af: stored application/octet-stream (https://gradivo.jknm.org/4c32106d-03a3-48e0-8ac0-a85a1eec75af/original.bin) -> real image/jpeg (.jpg)
+Fixed 4c32106d-03a3-48e0-8ac0-a85a1eec75af -> afde2795-29ce-4633-9b23-5a499fe92089 (afde2795-29ce-4633-9b23-5a499fe92089/original.jpg)
+MISMATCH cd386070-960e-496f-aea5-e5cc1fbe35e4: stored application/octet-stream (https://gradivo.jknm.org/cd386070-960e-496f-aea5-e5cc1fbe35e4/original.bin) -> real image/jpeg (.jpg)
+Fixed cd386070-960e-496f-aea5-e5cc1fbe35e4 -> 7f4074d3-d0e0-4ac1-8d9b-8865441c80d3 (7f4074d3-d0e0-4ac1-8d9b-8865441c80d3/original.jpg)
+MISMATCH b450370e-03af-4fed-8a43-00d7c24559a6: stored application/octet-stream (https://gradivo.jknm.org/b450370e-03af-4fed-8a43-00d7c24559a6/original.bin) -> real image/jpeg (.jpg)
+Fixed b450370e-03af-4fed-8a43-00d7c24559a6 -> 7ca76bfc-9ee1-4a78-8b5e-7d38b3f28d6d (7ca76bfc-9ee1-4a78-8b5e-7d38b3f28d6d/original.jpg)
+MISMATCH bd57299e-781b-48f8-90d7-eb52548cff48: stored application/octet-stream (https://gradivo.jknm.org/bd57299e-781b-48f8-90d7-eb52548cff48/original.bin) -> real image/jpeg (.jpg)
+Fixed bd57299e-781b-48f8-90d7-eb52548cff48 -> ee04392e-64c7-4217-8b3d-a68305443595 (ee04392e-64c7-4217-8b3d-a68305443595/original.jpg)
+MISMATCH e8e75b57-9447-4210-8093-e4164b0c65c7: stored application/octet-stream (https://gradivo.jknm.org/e8e75b57-9447-4210-8093-e4164b0c65c7/original.bin) -> real image/jpeg (.jpg)
+Fixed e8e75b57-9447-4210-8093-e4164b0c65c7 -> e4e566cc-cf15-4534-a585-217b7577c7eb (e4e566cc-cf15-4534-a585-217b7577c7eb/original.jpg)
+MISMATCH beefbe71-50ca-4422-ac4a-0f3cffe80489: stored application/octet-stream (https://gradivo.jknm.org/beefbe71-50ca-4422-ac4a-0f3cffe80489/original.bin) -> real image/jpeg (.jpg)
+Fixed beefbe71-50ca-4422-ac4a-0f3cffe80489 -> aaae04f9-a867-423e-b753-8b65da97caaa (aaae04f9-a867-423e-b753-8b65da97caaa/original.jpg)
+MISMATCH c6e3fddd-5e58-4e78-ba21-083846df687f: stored application/octet-stream (https://gradivo.jknm.org/c6e3fddd-5e58-4e78-ba21-083846df687f/original.bin) -> real image/jpeg (.jpg)
+Fixed c6e3fddd-5e58-4e78-ba21-083846df687f -> 43e42607-4119-4477-ab99-a177f0b7c96d (43e42607-4119-4477-ab99-a177f0b7c96d/original.jpg)
+MISMATCH 3fb013e6-fb85-4b61-8eef-e060502cd772: stored application/octet-stream (https://gradivo.jknm.org/3fb013e6-fb85-4b61-8eef-e060502cd772/original.bin) -> real image/jpeg (.jpg)
+Fixed 3fb013e6-fb85-4b61-8eef-e060502cd772 -> 30de4e6c-b0b5-4cc6-a841-5c7899e1e326 (30de4e6c-b0b5-4cc6-a841-5c7899e1e326/original.jpg)
+MISMATCH eec12fbe-eda9-4e8e-8cc1-9280f7a5d537: stored application/octet-stream (https://gradivo.jknm.org/eec12fbe-eda9-4e8e-8cc1-9280f7a5d537/original.bin) -> real image/jpeg (.jpg)
+Fixed eec12fbe-eda9-4e8e-8cc1-9280f7a5d537 -> 91caf2c2-d40c-4e33-88b6-751f532516aa (91caf2c2-d40c-4e33-88b6-751f532516aa/original.jpg)
+MISMATCH d915ef19-d272-4346-89ff-4c0b6f52df17: stored application/octet-stream (https://gradivo.jknm.org/d915ef19-d272-4346-89ff-4c0b6f52df17/original.bin) -> real image/jpeg (.jpg)
+Fixed d915ef19-d272-4346-89ff-4c0b6f52df17 -> 26f8be61-c4db-4e78-8d1c-00b970dc0a36 (26f8be61-c4db-4e78-8d1c-00b970dc0a36/original.jpg)
+MISMATCH ab1ef44d-823b-4743-95d6-92a0adbbaaea: stored application/octet-stream (https://gradivo.jknm.org/ab1ef44d-823b-4743-95d6-92a0adbbaaea/original.bin) -> real image/jpeg (.jpg)
+Fixed ab1ef44d-823b-4743-95d6-92a0adbbaaea -> 02a11168-fb81-4ec8-accb-eabd735a7926 (02a11168-fb81-4ec8-accb-eabd735a7926/original.jpg)
+MISMATCH a196e664-4fe7-4f7e-b512-aaa91f92d94f: stored application/octet-stream (https://gradivo.jknm.org/a196e664-4fe7-4f7e-b512-aaa91f92d94f/original.bin) -> real image/jpeg (.jpg)
+Fixed a196e664-4fe7-4f7e-b512-aaa91f92d94f -> e8b30f68-c90a-4309-ba5c-9488546b34f4 (e8b30f68-c90a-4309-ba5c-9488546b34f4/original.jpg)
+MISMATCH 16f93790-8518-498e-a185-4524a513d588: stored application/octet-stream (https://gradivo.jknm.org/16f93790-8518-498e-a185-4524a513d588/original.bin) -> real image/jpeg (.jpg)
+Fixed 16f93790-8518-498e-a185-4524a513d588 -> 68e4347a-a421-4189-9a76-243ccc5e1639 (68e4347a-a421-4189-9a76-243ccc5e1639/original.jpg)
+MISMATCH 24c536dd-6790-4bf8-854f-3fb02fb3ee18: stored application/octet-stream (https://gradivo.jknm.org/24c536dd-6790-4bf8-854f-3fb02fb3ee18/original.bin) -> real image/jpeg (.jpg)
+Fixed 24c536dd-6790-4bf8-854f-3fb02fb3ee18 -> 974f3dc7-31be-4c50-baf7-6609526255f1 (974f3dc7-31be-4c50-baf7-6609526255f1/original.jpg)
+MISMATCH 0234c1db-ed34-4632-8d04-1784699484a2: stored application/octet-stream (https://gradivo.jknm.org/0234c1db-ed34-4632-8d04-1784699484a2/original.bin) -> real image/jpeg (.jpg)
+Fixed 0234c1db-ed34-4632-8d04-1784699484a2 -> 4a9c28d4-d964-4fb4-94c0-2bb67ea959ba (4a9c28d4-d964-4fb4-94c0-2bb67ea959ba/original.jpg)
+MISMATCH aa4c2501-0fb9-4851-8951-25c491f34254: stored application/octet-stream (https://gradivo.jknm.org/aa4c2501-0fb9-4851-8951-25c491f34254/original.bin) -> real image/jpeg (.jpg)
+Fixed aa4c2501-0fb9-4851-8951-25c491f34254 -> 97c91ca0-3a98-4d81-951b-cf5d46d0a6ab (97c91ca0-3a98-4d81-951b-cf5d46d0a6ab/original.jpg)
+MISMATCH bf5d3fa3-6baf-43b9-8ec8-9a6151d412db: stored application/octet-stream (https://gradivo.jknm.org/bf5d3fa3-6baf-43b9-8ec8-9a6151d412db/original.bin) -> real image/jpeg (.jpg)
+Fixed bf5d3fa3-6baf-43b9-8ec8-9a6151d412db -> dbe36155-5640-4ff0-9745-bbd4f8f367da (dbe36155-5640-4ff0-9745-bbd4f8f367da/original.jpg)
+MISMATCH 798a60a2-11ba-4b74-864c-2e2ca681b28a: stored application/octet-stream (https://gradivo.jknm.org/798a60a2-11ba-4b74-864c-2e2ca681b28a/original.bin) -> real image/jpeg (.jpg)
+Fixed 798a60a2-11ba-4b74-864c-2e2ca681b28a -> 4cdcf9b2-5203-48c9-8036-742f9cfa9f7c (4cdcf9b2-5203-48c9-8036-742f9cfa9f7c/original.jpg)
+MISMATCH 72489c89-e362-44d9-af61-478fd448df2d: stored application/octet-stream (https://gradivo.jknm.org/72489c89-e362-44d9-af61-478fd448df2d/original.bin) -> real image/jpeg (.jpg)
+Fixed 72489c89-e362-44d9-af61-478fd448df2d -> 0850fa9c-be03-477d-a8b1-73db9b82c29f (0850fa9c-be03-477d-a8b1-73db9b82c29f/original.jpg)
+MISMATCH 88dcdded-d85f-47e3-b33b-7806e1865d46: stored application/octet-stream (https://gradivo.jknm.org/88dcdded-d85f-47e3-b33b-7806e1865d46/original.bin) -> real image/jpeg (.jpg)
+Fixed 88dcdded-d85f-47e3-b33b-7806e1865d46 -> 845fdb79-d575-4342-b75e-735f20b766f3 (845fdb79-d575-4342-b75e-735f20b766f3/original.jpg)
+MISMATCH 53c11a1f-e67d-4f85-a497-83778feb13e6: stored application/octet-stream (https://gradivo.jknm.org/53c11a1f-e67d-4f85-a497-83778feb13e6/original.bin) -> real image/jpeg (.jpg)
+Fixed 53c11a1f-e67d-4f85-a497-83778feb13e6 -> 2741977a-2a2a-4b25-aab9-e9d67c5bfb03 (2741977a-2a2a-4b25-aab9-e9d67c5bfb03/original.jpg)
+MISMATCH 9d590b7d-d394-4cda-8aaf-2b5db38a6277: stored application/octet-stream (https://gradivo.jknm.org/9d590b7d-d394-4cda-8aaf-2b5db38a6277/original.bin) -> real image/jpeg (.jpg)
+Fixed 9d590b7d-d394-4cda-8aaf-2b5db38a6277 -> 32cedb50-5521-4eba-ae35-0be44f7fc9f5 (32cedb50-5521-4eba-ae35-0be44f7fc9f5/original.jpg)
+MISMATCH 5fa5c3f8-170b-4e61-8f0f-e64146adcaae: stored application/octet-stream (https://gradivo.jknm.org/5fa5c3f8-170b-4e61-8f0f-e64146adcaae/original.bin) -> real image/jpeg (.jpg)
+Fixed 5fa5c3f8-170b-4e61-8f0f-e64146adcaae -> a0d4a4f6-642b-4e04-a28e-40ca4bdc7977 (a0d4a4f6-642b-4e04-a28e-40ca4bdc7977/original.jpg)
+MISMATCH f7d006f1-382f-4a58-86c1-23b6e69b261f: stored application/octet-stream (https://gradivo.jknm.org/f7d006f1-382f-4a58-86c1-23b6e69b261f/original.bin) -> real image/jpeg (.jpg)
+Fixed f7d006f1-382f-4a58-86c1-23b6e69b261f -> 69ad7e31-38ed-4744-9613-eafaaa3ed81e (69ad7e31-38ed-4744-9613-eafaaa3ed81e/original.jpg)
+MISMATCH a00287df-cade-487b-8aa7-da3b15aa02ac: stored application/octet-stream (https://gradivo.jknm.org/a00287df-cade-487b-8aa7-da3b15aa02ac/original.bin) -> real image/jpeg (.jpg)
+Fixed a00287df-cade-487b-8aa7-da3b15aa02ac -> d745d71b-5837-4412-8382-2ccf25eab005 (d745d71b-5837-4412-8382-2ccf25eab005/original.jpg)
+MISMATCH 9c1559d0-60e3-459f-80ca-bbcb8a574f01: stored application/octet-stream (https://gradivo.jknm.org/9c1559d0-60e3-459f-80ca-bbcb8a574f01/original.bin) -> real image/jpeg (.jpg)
+Fixed 9c1559d0-60e3-459f-80ca-bbcb8a574f01 -> 8e2a5546-32fc-4e85-80b8-d2f27838077b (8e2a5546-32fc-4e85-80b8-d2f27838077b/original.jpg)
+MISMATCH 61fe5c8c-6bb0-4661-bd04-eb60440bc3a7: stored application/octet-stream (https://gradivo.jknm.org/61fe5c8c-6bb0-4661-bd04-eb60440bc3a7/original.bin) -> real image/jpeg (.jpg)
+Fixed 61fe5c8c-6bb0-4661-bd04-eb60440bc3a7 -> 8ce8d69e-facd-4822-94e4-903df1022fca (8ce8d69e-facd-4822-94e4-903df1022fca/original.jpg)
+MISMATCH c742e62c-7375-41df-94fa-94c56da74f68: stored application/octet-stream (https://gradivo.jknm.org/c742e62c-7375-41df-94fa-94c56da74f68/original.bin) -> real image/jpeg (.jpg)
+Fixed c742e62c-7375-41df-94fa-94c56da74f68 -> 124faf0d-93f8-4b37-8b95-c8f68743008a (124faf0d-93f8-4b37-8b95-c8f68743008a/original.jpg)
+MISMATCH e0535ca5-9335-4dec-a9df-095aada9cbc4: stored application/octet-stream (https://gradivo.jknm.org/e0535ca5-9335-4dec-a9df-095aada9cbc4/original.bin) -> real image/jpeg (.jpg)
+Fixed e0535ca5-9335-4dec-a9df-095aada9cbc4 -> f88f1ad9-7a51-4ee7-9e52-d74a55880a52 (f88f1ad9-7a51-4ee7-9e52-d74a55880a52/original.jpg)
+MISMATCH f0dda035-953a-4213-a695-763b72ceb15c: stored application/octet-stream (https://gradivo.jknm.org/f0dda035-953a-4213-a695-763b72ceb15c/original.bin) -> real image/jpeg (.jpg)
+Fixed f0dda035-953a-4213-a695-763b72ceb15c -> 5f508d73-a71f-42f4-9606-ff35594175fb (5f508d73-a71f-42f4-9606-ff35594175fb/original.jpg)
+MISMATCH 9d808472-4a98-4d1c-a97d-079967c3746b: stored application/octet-stream (https://gradivo.jknm.org/9d808472-4a98-4d1c-a97d-079967c3746b/original.bin) -> real image/jpeg (.jpg)
+Fixed 9d808472-4a98-4d1c-a97d-079967c3746b -> 1e4a3327-d465-4bdb-93ad-91db46431fe1 (1e4a3327-d465-4bdb-93ad-91db46431fe1/original.jpg)
+MISMATCH 61b6efc3-02e4-45d9-bdd5-613a259f6e41: stored application/octet-stream (https://gradivo.jknm.org/61b6efc3-02e4-45d9-bdd5-613a259f6e41/original.bin) -> real image/jpeg (.jpg)
+Fixed 61b6efc3-02e4-45d9-bdd5-613a259f6e41 -> fcdefac1-3538-455e-af16-fc8a1c3e3b10 (fcdefac1-3538-455e-af16-fc8a1c3e3b10/original.jpg)
+MISMATCH 71e5d8b5-9fbf-4c47-abf0-23c6c6ec7a7d: stored application/octet-stream (https://gradivo.jknm.org/71e5d8b5-9fbf-4c47-abf0-23c6c6ec7a7d/original.bin) -> real image/jpeg (.jpg)
+Fixed 71e5d8b5-9fbf-4c47-abf0-23c6c6ec7a7d -> b9d9e368-daa9-4b51-bb58-eefc1647c684 (b9d9e368-daa9-4b51-bb58-eefc1647c684/original.jpg)
+MISMATCH dffd08b0-b5d0-4847-82bd-99854cbaf8ee: stored application/octet-stream (https://gradivo.jknm.org/dffd08b0-b5d0-4847-82bd-99854cbaf8ee/original.bin) -> real image/jpeg (.jpg)
+Fixed dffd08b0-b5d0-4847-82bd-99854cbaf8ee -> 0df17e2b-f5cf-4555-bf1d-57f2eb186710 (0df17e2b-f5cf-4555-bf1d-57f2eb186710/original.jpg)
+MISMATCH 28a5fd4d-8398-4e33-8d82-4469eef7098c: stored application/octet-stream (https://gradivo.jknm.org/28a5fd4d-8398-4e33-8d82-4469eef7098c/original.bin) -> real image/jpeg (.jpg)
+Fixed 28a5fd4d-8398-4e33-8d82-4469eef7098c -> 8f3e33e7-1a90-468e-86e4-9578c3215146 (8f3e33e7-1a90-468e-86e4-9578c3215146/original.jpg)
+MISMATCH 2ba11ef6-b018-4205-ac47-155a53db67e6: stored application/octet-stream (https://gradivo.jknm.org/2ba11ef6-b018-4205-ac47-155a53db67e6/original.bin) -> real image/jpeg (.jpg)
+Fixed 2ba11ef6-b018-4205-ac47-155a53db67e6 -> 2a2aa1ea-8fd9-4b8e-a260-513cf0ad4c47 (2a2aa1ea-8fd9-4b8e-a260-513cf0ad4c47/original.jpg)
+MISMATCH 06ccf46d-c0cd-4c61-888e-e517d764bd37: stored application/octet-stream (https://gradivo.jknm.org/06ccf46d-c0cd-4c61-888e-e517d764bd37/original.bin) -> real image/jpeg (.jpg)
+Fixed 06ccf46d-c0cd-4c61-888e-e517d764bd37 -> 62c6de30-04fb-435d-8bfc-932b5e828814 (62c6de30-04fb-435d-8bfc-932b5e828814/original.jpg)
+MISMATCH 46984b76-9d91-4931-8506-7c61f70f6884: stored application/octet-stream (https://gradivo.jknm.org/46984b76-9d91-4931-8506-7c61f70f6884/original.bin) -> real image/jpeg (.jpg)
+Fixed 46984b76-9d91-4931-8506-7c61f70f6884 -> 07a43667-289c-4931-833b-89d33210d074 (07a43667-289c-4931-833b-89d33210d074/original.jpg)
+MISMATCH 5d4bff9f-3e7f-4777-8af4-734a12cd3329: stored application/octet-stream (https://gradivo.jknm.org/5d4bff9f-3e7f-4777-8af4-734a12cd3329/original.bin) -> real image/jpeg (.jpg)
+Fixed 5d4bff9f-3e7f-4777-8af4-734a12cd3329 -> b4d990c3-0635-44fa-abb0-26c1f625737f (b4d990c3-0635-44fa-abb0-26c1f625737f/original.jpg)
+MISMATCH 13f853c4-268f-4eeb-9659-34912b656b65: stored application/octet-stream (https://gradivo.jknm.org/13f853c4-268f-4eeb-9659-34912b656b65/original.bin) -> real image/jpeg (.jpg)
+Fixed 13f853c4-268f-4eeb-9659-34912b656b65 -> b6e35652-8b41-4cd6-b6c4-cefedbf0a36c (b6e35652-8b41-4cd6-b6c4-cefedbf0a36c/original.jpg)
+OK, already correct (image/jpeg): d7571427-4124-4246-83c9-38fbc5a25cf7 https://gradivo.jknm.org/d7571427-4124-4246-83c9-38fbc5a25cf7/original.jpg
+MISMATCH 6498485f-a4c5-47c6-b27c-52b98ad57745: stored application/octet-stream (https://gradivo.jknm.org/6498485f-a4c5-47c6-b27c-52b98ad57745/original.bin) -> real image/jpeg (.jpg)
+Fixed 6498485f-a4c5-47c6-b27c-52b98ad57745 -> ea74e0b7-88df-4b67-9e9d-c9e7a2ba158a (ea74e0b7-88df-4b67-9e9d-c9e7a2ba158a/original.jpg)
+MISMATCH dc19a6b1-df4a-4e78-804b-ef5ec8a164c1: stored application/octet-stream (https://gradivo.jknm.org/dc19a6b1-df4a-4e78-804b-ef5ec8a164c1/original.bin) -> real image/jpeg (.jpg)
+Fixed dc19a6b1-df4a-4e78-804b-ef5ec8a164c1 -> 20d19772-01ec-4e84-b47c-6e6ec6c8f58d (20d19772-01ec-4e84-b47c-6e6ec6c8f58d/original.jpg)
+MISMATCH f8d1cf4f-28b2-4402-800c-08f90b0b5902: stored application/octet-stream (https://gradivo.jknm.org/f8d1cf4f-28b2-4402-800c-08f90b0b5902/original.bin) -> real image/jpeg (.jpg)
+Fixed f8d1cf4f-28b2-4402-800c-08f90b0b5902 -> 21483ecf-740d-4197-bc31-72a44591543e (21483ecf-740d-4197-bc31-72a44591543e/original.jpg)
+MISMATCH b1cbac66-166e-4992-adee-65e0de43816d: stored application/octet-stream (https://gradivo.jknm.org/b1cbac66-166e-4992-adee-65e0de43816d/original.bin) -> real image/jpeg (.jpg)
+Fixed b1cbac66-166e-4992-adee-65e0de43816d -> 87aa1246-c376-4a5c-a2b3-1d04315b4167 (87aa1246-c376-4a5c-a2b3-1d04315b4167/original.jpg)
+MISMATCH c3cbdb23-cc57-4133-987e-5685f65d220c: stored application/octet-stream (https://gradivo.jknm.org/c3cbdb23-cc57-4133-987e-5685f65d220c/original.bin) -> real image/jpeg (.jpg)
+Fixed c3cbdb23-cc57-4133-987e-5685f65d220c -> 31227bf0-cea5-445b-a70c-5a36ed1eb99c (31227bf0-cea5-445b-a70c-5a36ed1eb99c/original.jpg)
+MISMATCH f57307e7-f1f0-4c82-bdd9-0e4065ee1ef4: stored application/octet-stream (https://gradivo.jknm.org/f57307e7-f1f0-4c82-bdd9-0e4065ee1ef4/original.bin) -> real image/jpeg (.jpg)
+Fixed f57307e7-f1f0-4c82-bdd9-0e4065ee1ef4 -> f35b03a3-5a5b-40b2-8e67-a0bd9f737d1c (f35b03a3-5a5b-40b2-8e67-a0bd9f737d1c/original.jpg)
+MISMATCH be2fd7a0-6525-4b88-a9e3-75c40b3b3b32: stored application/octet-stream (https://gradivo.jknm.org/be2fd7a0-6525-4b88-a9e3-75c40b3b3b32/original.bin) -> real image/jpeg (.jpg)
+Fixed be2fd7a0-6525-4b88-a9e3-75c40b3b3b32 -> cc4af8f9-7263-4e23-8dfc-8b4487568290 (cc4af8f9-7263-4e23-8dfc-8b4487568290/original.jpg)
+MISMATCH 758d8a10-3587-4ab1-a27c-2ff6b78bca7d: stored application/octet-stream (https://gradivo.jknm.org/758d8a10-3587-4ab1-a27c-2ff6b78bca7d/original.bin) -> real image/jpeg (.jpg)
+Fixed 758d8a10-3587-4ab1-a27c-2ff6b78bca7d -> ef4681e2-66d1-4077-afc0-7c734af05352 (ef4681e2-66d1-4077-afc0-7c734af05352/original.jpg)
+MISMATCH 8f5d025d-9fe2-4ce5-896f-759e9d964876: stored application/octet-stream (https://gradivo.jknm.org/8f5d025d-9fe2-4ce5-896f-759e9d964876/original.bin) -> real image/jpeg (.jpg)
+Fixed 8f5d025d-9fe2-4ce5-896f-759e9d964876 -> cee8d8c8-5ed0-4d36-b3b2-76941990035c (cee8d8c8-5ed0-4d36-b3b2-76941990035c/original.jpg)
+MISMATCH b5aff24b-cc16-40dc-8a95-14f359b7c845: stored application/octet-stream (https://gradivo.jknm.org/b5aff24b-cc16-40dc-8a95-14f359b7c845/original.bin) -> real image/jpeg (.jpg)
+Fixed b5aff24b-cc16-40dc-8a95-14f359b7c845 -> fc18898d-cfe9-464a-9c6f-af05aeee52f7 (fc18898d-cfe9-464a-9c6f-af05aeee52f7/original.jpg)
+MISMATCH 15c8f022-43f7-4b72-9ee3-254c127e91cf: stored application/octet-stream (https://gradivo.jknm.org/15c8f022-43f7-4b72-9ee3-254c127e91cf/original.bin) -> real image/jpeg (.jpg)
+Fixed 15c8f022-43f7-4b72-9ee3-254c127e91cf -> 726aad68-5544-4b63-b3a5-bc552f5225e4 (726aad68-5544-4b63-b3a5-bc552f5225e4/original.jpg)
+MISMATCH b1b27728-2550-422c-94f7-3a886f78bdf5: stored application/octet-stream (https://gradivo.jknm.org/b1b27728-2550-422c-94f7-3a886f78bdf5/original.bin) -> real image/jpeg (.jpg)
+Fixed b1b27728-2550-422c-94f7-3a886f78bdf5 -> 1a943af3-dabd-4dd7-bf7b-b980c3bbd842 (1a943af3-dabd-4dd7-bf7b-b980c3bbd842/original.jpg)
+MISMATCH 8c71273b-94ef-4892-aa1c-1f5f017422e0: stored application/octet-stream (https://gradivo.jknm.org/8c71273b-94ef-4892-aa1c-1f5f017422e0/original.bin) -> real image/jpeg (.jpg)
+Fixed 8c71273b-94ef-4892-aa1c-1f5f017422e0 -> 5ed1ffed-8807-4963-9dae-65423c020b4c (5ed1ffed-8807-4963-9dae-65423c020b4c/original.jpg)
+MISMATCH 6024c4fd-a8f2-4225-9c7e-4f4e47728899: stored application/octet-stream (https://gradivo.jknm.org/6024c4fd-a8f2-4225-9c7e-4f4e47728899/original.bin) -> real image/jpeg (.jpg)
+Fixed 6024c4fd-a8f2-4225-9c7e-4f4e47728899 -> 2dfaf6e9-3c73-4bb8-9950-d94405fb99f3 (2dfaf6e9-3c73-4bb8-9950-d94405fb99f3/original.jpg)
+MISMATCH 76e133cc-e2d8-4039-b89d-cd993bddd99b: stored application/octet-stream (https://gradivo.jknm.org/76e133cc-e2d8-4039-b89d-cd993bddd99b/original.bin) -> real image/jpeg (.jpg)
+Fixed 76e133cc-e2d8-4039-b89d-cd993bddd99b -> 726ec7d1-939d-47d6-aa8d-cccc6398ddd7 (726ec7d1-939d-47d6-aa8d-cccc6398ddd7/original.jpg)
+MISMATCH fda2f4a0-4722-4085-ab5b-14ea91632f41: stored application/octet-stream (https://gradivo.jknm.org/fda2f4a0-4722-4085-ab5b-14ea91632f41/original.bin) -> real image/jpeg (.jpg)
+Fixed fda2f4a0-4722-4085-ab5b-14ea91632f41 -> 90a6859b-5c20-4806-9a81-695627ee9042 (90a6859b-5c20-4806-9a81-695627ee9042/original.jpg)
+MISMATCH 892fd38d-10c8-4a1c-8a01-ac01e4261dc2: stored application/octet-stream (https://gradivo.jknm.org/892fd38d-10c8-4a1c-8a01-ac01e4261dc2/original.bin) -> real image/jpeg (.jpg)
+Fixed 892fd38d-10c8-4a1c-8a01-ac01e4261dc2 -> e67ebda9-b965-4f7a-9288-4b5ee26952f1 (e67ebda9-b965-4f7a-9288-4b5ee26952f1/original.jpg)
+MISMATCH 85a57090-afd4-40b7-971e-cc60e828b4d1: stored application/octet-stream (https://gradivo.jknm.org/85a57090-afd4-40b7-971e-cc60e828b4d1/original.bin) -> real image/jpeg (.jpg)
+Fixed 85a57090-afd4-40b7-971e-cc60e828b4d1 -> 216ff776-ee78-49f9-9a33-a3bf879dddaa (216ff776-ee78-49f9-9a33-a3bf879dddaa/original.jpg)
+MISMATCH 6766a7cb-7fcd-4933-a30d-2bbfc023fb03: stored application/octet-stream (https://gradivo.jknm.org/6766a7cb-7fcd-4933-a30d-2bbfc023fb03/original.bin) -> real image/jpeg (.jpg)
+Fixed 6766a7cb-7fcd-4933-a30d-2bbfc023fb03 -> 1286dfd2-78b3-4b25-90f1-d05eb9ecca94 (1286dfd2-78b3-4b25-90f1-d05eb9ecca94/original.jpg)
+MISMATCH 48a27106-8bff-4887-a1e7-8aa117f8168c: stored application/octet-stream (https://gradivo.jknm.org/48a27106-8bff-4887-a1e7-8aa117f8168c/original.bin) -> real image/jpeg (.jpg)
+Fixed 48a27106-8bff-4887-a1e7-8aa117f8168c -> 2996f8ec-b21f-4608-a56b-f50091d73264 (2996f8ec-b21f-4608-a56b-f50091d73264/original.jpg)
+MISMATCH b1b4f1e0-61bf-40e3-b10e-3f92a639b6a3: stored application/octet-stream (https://gradivo.jknm.org/b1b4f1e0-61bf-40e3-b10e-3f92a639b6a3/original.bin) -> real image/jpeg (.jpg)
+Fixed b1b4f1e0-61bf-40e3-b10e-3f92a639b6a3 -> 68654124-e9e2-407c-9ee8-ac776f0aa6ae (68654124-e9e2-407c-9ee8-ac776f0aa6ae/original.jpg)
+MISMATCH 5ca56456-5c56-4762-ab3f-6e5fb1cb622e: stored application/octet-stream (https://gradivo.jknm.org/5ca56456-5c56-4762-ab3f-6e5fb1cb622e/original.bin) -> real image/jpeg (.jpg)
+Fixed 5ca56456-5c56-4762-ab3f-6e5fb1cb622e -> 9b6888e7-cd3c-4172-80cb-8110a3aee9dd (9b6888e7-cd3c-4172-80cb-8110a3aee9dd/original.jpg)
+MISMATCH fcf3b488-9e7f-44f6-bab7-f2ed10315afc: stored application/octet-stream (https://gradivo.jknm.org/fcf3b488-9e7f-44f6-bab7-f2ed10315afc/original.bin) -> real image/jpeg (.jpg)
+Fixed fcf3b488-9e7f-44f6-bab7-f2ed10315afc -> a994955a-9724-4201-8cad-fc5ef7f24f42 (a994955a-9724-4201-8cad-fc5ef7f24f42/original.jpg)
+MISMATCH f6da6575-6d4e-4d16-9691-5301767e6dd0: stored application/octet-stream (https://gradivo.jknm.org/f6da6575-6d4e-4d16-9691-5301767e6dd0/original.bin) -> real image/jpeg (.jpg)
+Fixed f6da6575-6d4e-4d16-9691-5301767e6dd0 -> 600d5060-f368-464e-9ef2-ffc3b98a291d (600d5060-f368-464e-9ef2-ffc3b98a291d/original.jpg)
+MISMATCH c45363b7-7768-43e9-ac57-faf51ba7c0c5: stored application/octet-stream (https://gradivo.jknm.org/c45363b7-7768-43e9-ac57-faf51ba7c0c5/original.bin) -> real image/jpeg (.jpg)
+Fixed c45363b7-7768-43e9-ac57-faf51ba7c0c5 -> 86620104-fc48-4dcb-b07b-86b92ea1970d (86620104-fc48-4dcb-b07b-86b92ea1970d/original.jpg)
+MISMATCH ed37add1-d95e-41a5-978a-d6161d30671b: stored application/octet-stream (https://gradivo.jknm.org/ed37add1-d95e-41a5-978a-d6161d30671b/original.bin) -> real image/jpeg (.jpg)
+Fixed ed37add1-d95e-41a5-978a-d6161d30671b -> de470900-cab1-44fb-83fe-8cbbb1bd8001 (de470900-cab1-44fb-83fe-8cbbb1bd8001/original.jpg)
+MISMATCH 88d40555-3f17-4e53-b1bc-3ee2cb7e772e: stored application/octet-stream (https://gradivo.jknm.org/88d40555-3f17-4e53-b1bc-3ee2cb7e772e/original.bin) -> real image/jpeg (.jpg)
+Fixed 88d40555-3f17-4e53-b1bc-3ee2cb7e772e -> 88c06bbd-75db-42aa-9486-28ac6ee79f71 (88c06bbd-75db-42aa-9486-28ac6ee79f71/original.jpg)
+MISMATCH 16188a37-cd5d-4a99-a60d-aaa5b7e2d5b9: stored application/octet-stream (https://gradivo.jknm.org/16188a37-cd5d-4a99-a60d-aaa5b7e2d5b9/original.bin) -> real image/jpeg (.jpg)
+Fixed 16188a37-cd5d-4a99-a60d-aaa5b7e2d5b9 -> d92041df-c79c-4557-86f7-5a8094f49c30 (d92041df-c79c-4557-86f7-5a8094f49c30/original.jpg)
+MISMATCH a11e4369-a110-4a33-858a-07e34d0a4a53: stored application/octet-stream (https://gradivo.jknm.org/a11e4369-a110-4a33-858a-07e34d0a4a53/original.bin) -> real image/jpeg (.jpg)
+Fixed a11e4369-a110-4a33-858a-07e34d0a4a53 -> 00d1356c-07f5-4bf7-b94c-dd3a3fc2ab91 (00d1356c-07f5-4bf7-b94c-dd3a3fc2ab91/original.jpg)
+MISMATCH 22fa4217-6d08-4302-ba22-99b8598f1462: stored application/octet-stream (https://gradivo.jknm.org/22fa4217-6d08-4302-ba22-99b8598f1462/original.bin) -> real image/jpeg (.jpg)
+Fixed 22fa4217-6d08-4302-ba22-99b8598f1462 -> 21789b2f-1e6d-4bd9-8418-1e0334ba3bf9 (21789b2f-1e6d-4bd9-8418-1e0334ba3bf9/original.jpg)
+MISMATCH db08eee5-5f36-4b54-94b4-5f54785c2b31: stored application/octet-stream (https://gradivo.jknm.org/db08eee5-5f36-4b54-94b4-5f54785c2b31/original.bin) -> real image/jpeg (.jpg)
+Fixed db08eee5-5f36-4b54-94b4-5f54785c2b31 -> 750ecb0d-eb0e-4ee3-b6dc-5e657b945880 (750ecb0d-eb0e-4ee3-b6dc-5e657b945880/original.jpg)
+MISMATCH 526aee7e-8cd1-4191-a971-50792b165bc6: stored application/octet-stream (https://gradivo.jknm.org/526aee7e-8cd1-4191-a971-50792b165bc6/original.bin) -> real image/jpeg (.jpg)
+Fixed 526aee7e-8cd1-4191-a971-50792b165bc6 -> 5e23794d-6c73-4a20-8a92-db2ddbf77bd8 (5e23794d-6c73-4a20-8a92-db2ddbf77bd8/original.jpg)
+MISMATCH a60c4008-e97a-4888-9178-c930f224365d: stored application/octet-stream (https://gradivo.jknm.org/a60c4008-e97a-4888-9178-c930f224365d/original.bin) -> real image/jpeg (.jpg)
+Fixed a60c4008-e97a-4888-9178-c930f224365d -> 4c173262-e35f-4f82-870c-68ee74c53d6f (4c173262-e35f-4f82-870c-68ee74c53d6f/original.jpg)
+MISMATCH 071faed8-c3af-4fba-abd6-8b8acc17734e: stored application/octet-stream (https://gradivo.jknm.org/071faed8-c3af-4fba-abd6-8b8acc17734e/original.bin) -> real image/jpeg (.jpg)
+Fixed 071faed8-c3af-4fba-abd6-8b8acc17734e -> 611f99e0-1e48-478e-9bc6-eafc70435518 (611f99e0-1e48-478e-9bc6-eafc70435518/original.jpg)
+MISMATCH 9ac32dd9-e162-44e4-9585-6de1824b1b26: stored application/octet-stream (https://gradivo.jknm.org/9ac32dd9-e162-44e4-9585-6de1824b1b26/original.bin) -> real image/jpeg (.jpg)
+Fixed 9ac32dd9-e162-44e4-9585-6de1824b1b26 -> c84914fc-c679-458e-bf95-bdeca67cd46f (c84914fc-c679-458e-bf95-bdeca67cd46f/original.jpg)
+MISMATCH 9ad9f75a-4de5-4332-b878-4142a3dbfb21: stored application/octet-stream (https://gradivo.jknm.org/9ad9f75a-4de5-4332-b878-4142a3dbfb21/original.bin) -> real image/jpeg (.jpg)
+Fixed 9ad9f75a-4de5-4332-b878-4142a3dbfb21 -> 9d1fc694-bf9f-4f9e-befa-c3811fb88cd8 (9d1fc694-bf9f-4f9e-befa-c3811fb88cd8/original.jpg)
+MISMATCH 1ccb4e53-abd9-4f19-ab1c-4f9560a532b7: stored application/octet-stream (https://gradivo.jknm.org/1ccb4e53-abd9-4f19-ab1c-4f9560a532b7/original.bin) -> real image/jpeg (.jpg)
+Fixed 1ccb4e53-abd9-4f19-ab1c-4f9560a532b7 -> ee3d6815-fab9-4b9e-b724-304dc6732d50 (ee3d6815-fab9-4b9e-b724-304dc6732d50/original.jpg)
+MISMATCH 4b0813c5-d7b4-4039-8805-e92790b9ee7b: stored application/octet-stream (https://gradivo.jknm.org/4b0813c5-d7b4-4039-8805-e92790b9ee7b/original.bin) -> real image/jpeg (.jpg)
+Fixed 4b0813c5-d7b4-4039-8805-e92790b9ee7b -> 140e2ae3-e554-41fa-86f5-66c628494a53 (140e2ae3-e554-41fa-86f5-66c628494a53/original.jpg)
+MISMATCH 5cb78bd5-3efd-4d74-aa65-de455bc3682e: stored application/octet-stream (https://gradivo.jknm.org/5cb78bd5-3efd-4d74-aa65-de455bc3682e/original.bin) -> real image/jpeg (.jpg)
+Fixed 5cb78bd5-3efd-4d74-aa65-de455bc3682e -> 440a6d4e-ee8a-4999-b836-24e7e7e4c6b4 (440a6d4e-ee8a-4999-b836-24e7e7e4c6b4/original.jpg)
+MISMATCH e69d0c71-8132-4c26-9aec-0a612dcedbae: stored application/octet-stream (https://gradivo.jknm.org/e69d0c71-8132-4c26-9aec-0a612dcedbae/original.bin) -> real image/jpeg (.jpg)
+Fixed e69d0c71-8132-4c26-9aec-0a612dcedbae -> 2f81100c-e98f-4e7d-9989-4a2151fb0c51 (2f81100c-e98f-4e7d-9989-4a2151fb0c51/original.jpg)
+MISMATCH cd77013e-e4e9-4d35-bc3d-cea5a2f2b5bd: stored application/octet-stream (https://gradivo.jknm.org/cd77013e-e4e9-4d35-bc3d-cea5a2f2b5bd/original.bin) -> real image/jpeg (.jpg)
+Fixed cd77013e-e4e9-4d35-bc3d-cea5a2f2b5bd -> 35112f8f-72d5-4660-8bf5-70c87d8cf6d5 (35112f8f-72d5-4660-8bf5-70c87d8cf6d5/original.jpg)
+MISMATCH 2648ef93-1b36-443f-a2ac-80cfaeb49f9c: stored application/octet-stream (https://gradivo.jknm.org/2648ef93-1b36-443f-a2ac-80cfaeb49f9c/original.bin) -> real image/jpeg (.jpg)
+Fixed 2648ef93-1b36-443f-a2ac-80cfaeb49f9c -> 1620636e-3985-48f2-bcec-f80f8dbb45ef (1620636e-3985-48f2-bcec-f80f8dbb45ef/original.jpg)
+MISMATCH bb8042bc-b4d5-47fd-8277-e98e73428c60: stored application/octet-stream (https://gradivo.jknm.org/bb8042bc-b4d5-47fd-8277-e98e73428c60/original.bin) -> real image/jpeg (.jpg)
+Fixed bb8042bc-b4d5-47fd-8277-e98e73428c60 -> 2239ff81-e7e1-4969-9e1c-3f00bb0ab16b (2239ff81-e7e1-4969-9e1c-3f00bb0ab16b/original.jpg)
+MISMATCH d9e6caad-39b6-401b-8db3-9473d400f838: stored application/octet-stream (https://gradivo.jknm.org/d9e6caad-39b6-401b-8db3-9473d400f838/original.bin) -> real image/jpeg (.jpg)
+Fixed d9e6caad-39b6-401b-8db3-9473d400f838 -> 7443d531-0545-462e-8837-50da8a839470 (7443d531-0545-462e-8837-50da8a839470/original.jpg)
+MISMATCH da47a73b-3fd2-4c28-9d75-3dc0504c1a31: stored application/octet-stream (https://gradivo.jknm.org/da47a73b-3fd2-4c28-9d75-3dc0504c1a31/original.bin) -> real image/jpeg (.jpg)
+Fixed da47a73b-3fd2-4c28-9d75-3dc0504c1a31 -> 11d75df5-8eea-45aa-8d4c-1d0684d33d7c (11d75df5-8eea-45aa-8d4c-1d0684d33d7c/original.jpg)
+MISMATCH 5fabdd64-bdfe-4d95-a4ae-80f29f2e847b: stored application/octet-stream (https://gradivo.jknm.org/5fabdd64-bdfe-4d95-a4ae-80f29f2e847b/original.bin) -> real image/jpeg (.jpg)
+Fixed 5fabdd64-bdfe-4d95-a4ae-80f29f2e847b -> 2bb24c3a-1bd1-42af-8e62-6f5ba4310108 (2bb24c3a-1bd1-42af-8e62-6f5ba4310108/original.jpg)
+MISMATCH 0e413178-afab-423b-b230-a1faf8a86162: stored application/octet-stream (https://gradivo.jknm.org/0e413178-afab-423b-b230-a1faf8a86162/original.bin) -> real image/jpeg (.jpg)
+Fixed 0e413178-afab-423b-b230-a1faf8a86162 -> 2c326948-e3e3-4d2f-aa98-a3f550e9bc1a (2c326948-e3e3-4d2f-aa98-a3f550e9bc1a/original.jpg)
+MISMATCH 103a4ac9-af43-4069-bc39-81b66b9feb60: stored application/octet-stream (https://gradivo.jknm.org/103a4ac9-af43-4069-bc39-81b66b9feb60/original.bin) -> real image/jpeg (.jpg)
+Fixed 103a4ac9-af43-4069-bc39-81b66b9feb60 -> e208de21-6673-43d5-ae04-5f55e347dc21 (e208de21-6673-43d5-ae04-5f55e347dc21/original.jpg)
+MISMATCH cf0c1d2e-0e00-4494-bf7e-fbe1db5aa87d: stored application/octet-stream (https://gradivo.jknm.org/cf0c1d2e-0e00-4494-bf7e-fbe1db5aa87d/original.bin) -> real image/jpeg (.jpg)
+Fixed cf0c1d2e-0e00-4494-bf7e-fbe1db5aa87d -> e75b3688-bbed-474b-85de-5a23668263b1 (e75b3688-bbed-474b-85de-5a23668263b1/original.jpg)
+MISMATCH 7ee9398f-9483-4b69-af3f-184188570d23: stored application/octet-stream (https://gradivo.jknm.org/7ee9398f-9483-4b69-af3f-184188570d23/original.bin) -> real image/jpeg (.jpg)
+Fixed 7ee9398f-9483-4b69-af3f-184188570d23 -> 5b933767-d160-44d9-9bd3-bcd0070ece17 (5b933767-d160-44d9-9bd3-bcd0070ece17/original.jpg)
+MISMATCH 8b95da99-496d-4589-b429-0df9e846e51b: stored application/octet-stream (https://gradivo.jknm.org/8b95da99-496d-4589-b429-0df9e846e51b/original.bin) -> real image/jpeg (.jpg)
+Fixed 8b95da99-496d-4589-b429-0df9e846e51b -> 6ae9218b-6cd2-4c0d-8ceb-5ebcddd66d70 (6ae9218b-6cd2-4c0d-8ceb-5ebcddd66d70/original.jpg)
+MISMATCH 9f52da72-a8be-4ab2-aba1-6b1503398e94: stored application/octet-stream (https://gradivo.jknm.org/9f52da72-a8be-4ab2-aba1-6b1503398e94/original.bin) -> real image/jpeg (.jpg)
+Fixed 9f52da72-a8be-4ab2-aba1-6b1503398e94 -> 937cdcce-9096-41f8-9234-99657fa7ded4 (937cdcce-9096-41f8-9234-99657fa7ded4/original.jpg)
+MISMATCH 0f54509b-f0a4-47de-8dd7-5f1dedd30f66: stored application/octet-stream (https://gradivo.jknm.org/0f54509b-f0a4-47de-8dd7-5f1dedd30f66/original.bin) -> real image/jpeg (.jpg)
+Fixed 0f54509b-f0a4-47de-8dd7-5f1dedd30f66 -> bbeabdb9-156c-436a-b4d7-b046c36015ce (bbeabdb9-156c-436a-b4d7-b046c36015ce/original.jpg)
+MISMATCH a5036887-ed75-46cd-827c-25e258836033: stored application/octet-stream (https://gradivo.jknm.org/a5036887-ed75-46cd-827c-25e258836033/original.bin) -> real image/jpeg (.jpg)
+Fixed a5036887-ed75-46cd-827c-25e258836033 -> ff0cefc9-a230-4a72-89b8-f3abf3c26153 (ff0cefc9-a230-4a72-89b8-f3abf3c26153/original.jpg)
+MISMATCH 03ff477f-641e-4527-a370-be106c1d1b72: stored application/octet-stream (https://gradivo.jknm.org/03ff477f-641e-4527-a370-be106c1d1b72/original.bin) -> real image/jpeg (.jpg)
+Fixed 03ff477f-641e-4527-a370-be106c1d1b72 -> 334df366-494f-4d62-bbba-4da014cc101c (334df366-494f-4d62-bbba-4da014cc101c/original.jpg)
+MISMATCH c0eaa134-6394-4a5a-b89e-749c9187854d: stored application/octet-stream (https://gradivo.jknm.org/c0eaa134-6394-4a5a-b89e-749c9187854d/original.bin) -> real image/jpeg (.jpg)
+Fixed c0eaa134-6394-4a5a-b89e-749c9187854d -> 28422594-0074-44e9-8c78-5666a2cb9915 (28422594-0074-44e9-8c78-5666a2cb9915/original.jpg)
+MISMATCH df452fb6-cd87-46bf-81b5-e05030d76112: stored application/octet-stream (https://gradivo.jknm.org/df452fb6-cd87-46bf-81b5-e05030d76112/original.bin) -> real image/jpeg (.jpg)
+Fixed df452fb6-cd87-46bf-81b5-e05030d76112 -> 748eabe5-8910-471d-9166-d2b35b16e739 (748eabe5-8910-471d-9166-d2b35b16e739/original.jpg)
+MISMATCH a2f3db54-cb21-47b1-8cc0-456d1e34f9e0: stored application/octet-stream (https://gradivo.jknm.org/a2f3db54-cb21-47b1-8cc0-456d1e34f9e0/original.bin) -> real image/jpeg (.jpg)
+Fixed a2f3db54-cb21-47b1-8cc0-456d1e34f9e0 -> e445ee25-1aa3-4519-bd5e-cffcf92c3392 (e445ee25-1aa3-4519-bd5e-cffcf92c3392/original.jpg)
+MISMATCH c089b989-6362-4279-a083-7d1a6627bc15: stored application/octet-stream (https://gradivo.jknm.org/c089b989-6362-4279-a083-7d1a6627bc15/original.bin) -> real image/jpeg (.jpg)
+Fixed c089b989-6362-4279-a083-7d1a6627bc15 -> a00d4ad2-c9b2-45f4-b51d-a71ef2f17e7b (a00d4ad2-c9b2-45f4-b51d-a71ef2f17e7b/original.jpg)
+MISMATCH 39a45fef-6b96-42e9-a613-2578bb83e79c: stored application/octet-stream (https://gradivo.jknm.org/39a45fef-6b96-42e9-a613-2578bb83e79c/original.bin) -> real image/jpeg (.jpg)
+Fixed 39a45fef-6b96-42e9-a613-2578bb83e79c -> 5ae5dad4-e49b-4848-9d40-eb41fe2d59dc (5ae5dad4-e49b-4848-9d40-eb41fe2d59dc/original.jpg)
+MISMATCH a2d64b6e-ada7-411e-82a5-0c8b3dd9f2a0: stored application/octet-stream (https://gradivo.jknm.org/a2d64b6e-ada7-411e-82a5-0c8b3dd9f2a0/original.bin) -> real image/jpeg (.jpg)
+Fixed a2d64b6e-ada7-411e-82a5-0c8b3dd9f2a0 -> 86d295aa-9da2-4a01-a947-a0cbfb026b7b (86d295aa-9da2-4a01-a947-a0cbfb026b7b/original.jpg)
+MISMATCH fabe1567-298c-4603-8401-f482f974f84b: stored application/octet-stream (https://gradivo.jknm.org/fabe1567-298c-4603-8401-f482f974f84b/original.bin) -> real image/jpeg (.jpg)
+Fixed fabe1567-298c-4603-8401-f482f974f84b -> d66ed556-8593-44f2-986e-9143132ed5cf (d66ed556-8593-44f2-986e-9143132ed5cf/original.jpg)
+MISMATCH 56f58781-7266-4c53-ab25-5df8c6bc0bdf: stored application/octet-stream (https://gradivo.jknm.org/56f58781-7266-4c53-ab25-5df8c6bc0bdf/original.bin) -> real image/jpeg (.jpg)
+Fixed 56f58781-7266-4c53-ab25-5df8c6bc0bdf -> bede0ae8-8ad7-4925-84d2-19827ec99b69 (bede0ae8-8ad7-4925-84d2-19827ec99b69/original.jpg)
+MISMATCH 453a172e-86c6-49a4-a165-d39aaa333b7e: stored application/octet-stream (https://gradivo.jknm.org/453a172e-86c6-49a4-a165-d39aaa333b7e/original.bin) -> real image/jpeg (.jpg)
+Fixed 453a172e-86c6-49a4-a165-d39aaa333b7e -> 03c6cfc7-153a-4d62-8f76-4a74a8ffd0ac (03c6cfc7-153a-4d62-8f76-4a74a8ffd0ac/original.jpg)
+MISMATCH c61101ff-d66f-47b5-b514-b416aa511a46: stored application/octet-stream (https://gradivo.jknm.org/c61101ff-d66f-47b5-b514-b416aa511a46/original.bin) -> real image/jpeg (.jpg)
+Fixed c61101ff-d66f-47b5-b514-b416aa511a46 -> 8082ec76-e746-4669-a10c-c309cdc9109a (8082ec76-e746-4669-a10c-c309cdc9109a/original.jpg)
+MISMATCH d3a223e4-4ba0-40a1-bfac-7802625a246a: stored application/octet-stream (https://gradivo.jknm.org/d3a223e4-4ba0-40a1-bfac-7802625a246a/original.bin) -> real image/jpeg (.jpg)
+Fixed d3a223e4-4ba0-40a1-bfac-7802625a246a -> 61fd677e-40fa-41bd-8fb3-85906e61400d (61fd677e-40fa-41bd-8fb3-85906e61400d/original.jpg)
+MISMATCH 9fd2fb24-4d8b-49ad-b81e-1d57429974d7: stored application/octet-stream (https://gradivo.jknm.org/9fd2fb24-4d8b-49ad-b81e-1d57429974d7/original.bin) -> real image/jpeg (.jpg)
+Fixed 9fd2fb24-4d8b-49ad-b81e-1d57429974d7 -> a3d355cb-1e7a-432c-9662-99d5efe7eb58 (a3d355cb-1e7a-432c-9662-99d5efe7eb58/original.jpg)
+EXIT: 0

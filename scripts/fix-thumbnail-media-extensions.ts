@@ -21,8 +21,10 @@
  * Deliberately scoped to thumbnails, not all media: content-block images'
  * urls are also embedded literally in `content_json` (see
  * `reconcile_media_to_articles`), so renaming one would need a content
- * rewrite too — out of scope here. Thumbnails have no such literal-URL
- * dependency, so renaming is safe and complete.
+ * rewrite too — out of scope here. A thumbnail can, however, be an *existing*
+ * content-block image reused as-is (see `image-selector.tsx`), in which case
+ * its media row still has that literal-URL dependency via `media_to_articles`
+ * — `fix_one` checks for and preserves that row/object instead of deleting it.
  *
  * Usage:
  *   bun run scripts/fix-thumbnail-media-extensions.ts            # dry run
@@ -38,7 +40,7 @@ import { env } from "~/env";
 import { media_url } from "~/lib/media-upload";
 import { delete_objects } from "~/lib/s3-utils";
 import { db } from "~/server/db";
-import { Article, Media } from "~/server/db/schema";
+import { Article, Media, MediaToArticles } from "~/server/db/schema";
 
 async function find_candidate_media() {
 	// Scoped to media actually in use as a thumbnail (`articles.thumbnail_media_id`)
@@ -109,7 +111,13 @@ async function fix_one(
 	});
 	const url = media_url(key);
 
-	await db.transaction(async (tx) => {
+	// A thumbnail can be an existing content-block image reused as-is (see
+	// image-selector.tsx), in which case the old media row is also linked via
+	// `media_to_articles` (derived from a literal URL in some article's
+	// `content_json`, per reconcile-media.ts). That row/object must survive —
+	// deleting it would cascade-delete the link and break the inline image,
+	// with no way to recover once the B2 object is gone.
+	const still_embedded = await db.transaction(async (tx) => {
 		await tx.insert(Media).values({
 			id: new_id,
 			filename: media.filename.replace(/\.[^./]+$/, `.${extension}`),
@@ -126,8 +134,23 @@ async function fix_one(
 			.set({ thumbnail_media_id: new_id })
 			.where(eq(Article.thumbnail_media_id, media.id));
 
+		const [embed] = await tx
+			.select({ media_id: MediaToArticles.media_id })
+			.from(MediaToArticles)
+			.where(eq(MediaToArticles.media_id, media.id))
+			.limit(1);
+		if (embed) return true;
+
 		await tx.delete(Media).where(eq(Media.id, media.id));
+		return false;
 	});
+
+	if (still_embedded) {
+		console.log(
+			`Fixed ${media.id} -> ${new_id} (${key}); old row kept, still embedded in article content`,
+		);
+		return;
+	}
 
 	const old_key = new URL(media.original.url).pathname.replace(/^\//, "");
 	await delete_objects(env.NEXT_PUBLIC_AWS_MEDIA_BUCKET_NAME, [old_key]);
