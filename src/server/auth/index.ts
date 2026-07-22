@@ -3,6 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import type { GoogleProfile } from "better-auth/social-providers";
 import { decodeJwt } from "jose";
 import { headers } from "next/headers";
+import { cache } from "react";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
@@ -86,9 +87,20 @@ export const auth = betterAuth({
  * The app's only server-side session read. Adapts better-auth's
  * `{ session, user }` into the `{ user, expires }` shape every call site was
  * already written against — see `./session-shape.ts`.
+ *
+ * Memoized per request with React `cache`: since #31 step 3 the shell renders
+ * the session read twice (once per header breakpoint), and
+ * `/novica/[published_url]` reads it in both `generateMetadata` and the page
+ * body. Without this each of those is a separate session-table query.
+ *
+ * The memoization is an optimization only: no caller depends on it, and route
+ * handlers and server actions are correct either way, so whether `cache`
+ * actually dedupes outside a render scope is deliberately not relied upon.
  */
-export async function getServerAuthSession() {
-	return to_app_session(
-		await auth.api.getSession({ headers: await headers() }),
-	);
-}
+export const getServerAuthSession = cache(
+	async function getServerAuthSession() {
+		return to_app_session(
+			await auth.api.getSession({ headers: await headers() }),
+		);
+	},
+);

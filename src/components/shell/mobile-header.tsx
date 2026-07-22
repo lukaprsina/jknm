@@ -3,7 +3,7 @@
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
-import { type ComponentProps, useEffect, useRef } from "react";
+import { type ComponentProps, type ReactNode, useEffect, useRef } from "react";
 import { create } from "zustand";
 import { useHasToc } from "~/components/toc/toc-store";
 import { Button } from "~/components/ui/button";
@@ -19,10 +19,7 @@ import {
 } from "~/components/ui/sheet";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { cn } from "~/lib/utils";
-import type { Session } from "~/server/auth";
-import type { EditableArticleRef } from "../article/new-adapter";
 import { shell_store } from "./desktop-header";
-import EditingButtons from "./editing-buttons";
 import {
 	ContactIcon,
 	FacebookIcon,
@@ -46,13 +43,12 @@ export function useMobileNavOpen(): boolean {
 }
 
 export function MobileHeader({
-	published_article,
-	session,
+	editor_controls,
 	className,
 	...props
 }: ComponentProps<"div"> & {
-	published_article?: EditableArticleRef;
-	session: Session | null;
+	/** Admin-only editor chrome, rendered opaquely so no `Session` reaches the client. */
+	editor_controls: ReactNode;
 }) {
 	const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
 	const md_breakpoint = useBreakpoint("md");
@@ -82,7 +78,7 @@ export function MobileHeader({
 			<Link className="text-2xl font-bold" href="/">
 				Jamarski klub Novo mesto
 			</Link>
-			<MobileSheet published_article={published_article} session={session} />
+			<MobileSheet editor_controls={editor_controls} />
 		</div>
 	);
 }
@@ -97,11 +93,9 @@ const MOBILE_NAV_LINKS = [
 ];
 
 export function MobileSheet({
-	published_article,
-	session,
+	editor_controls,
 }: {
-	published_article?: EditableArticleRef;
-	session: Session | null;
+	editor_controls: ReactNode;
 }) {
 	const open = useMobileNavOpen();
 	const has_toc = useHasToc();
@@ -128,12 +122,7 @@ export function MobileSheet({
 							</Link>
 						</SheetClose>
 					</div>
-					<div className="flex justify-end">
-						<EditingButtons
-							published_article={published_article}
-							session={session}
-						/>
-					</div>
+					<div className="flex justify-end">{editor_controls}</div>
 					<VisuallyHidden>
 						<SheetTitle>Jamarski klub Novo mesto</SheetTitle>
 						<SheetDescription>Mobile navigation bar</SheetDescription>

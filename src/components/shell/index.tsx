@@ -1,9 +1,10 @@
 import type React from "react";
+import { Suspense } from "react";
 import { cn } from "~/lib/utils";
-import { getServerAuthSession } from "~/server/auth";
 import type { EditableArticleRef } from "../article/new-adapter";
 import { Separator } from "../ui/separator";
 import { DesktopHeader } from "./desktop-header";
+import { EditorControls } from "./editor-controls";
 import { Footer } from "./footer";
 import { MobileHeader } from "./mobile-header";
 import { SearchProvider } from "./search-context";
@@ -18,14 +19,25 @@ interface ShellProps {
 	className?: string;
 }
 
-export async function Shell({
+/**
+ * Deliberately synchronous: the shell itself depends on no server data, so it
+ * emits immediately and the session read streams in behind `<Suspense>`. The
+ * fallback is `null` because the editing buttons are admin-only chrome — for
+ * the anonymous majority the final render is also nothing, so there is no
+ * layout shift to guard against.
+ */
+export function Shell({
 	published_article,
 	children,
 	without_footer,
 	without_header,
 	className,
 }: ShellProps) {
-	const session = await getServerAuthSession();
+	const editor_controls = (
+		<Suspense fallback={null}>
+			<EditorControls published_article={published_article} />
+		</Suspense>
+	);
 
 	return (
 		<SearchProvider>
@@ -33,14 +45,12 @@ export async function Shell({
 				{!without_header ? (
 					<header className="h-20 w-full text-gray-800 md:h-auto">
 						<DesktopHeader
-							published_article={published_article}
 							className="hidden md:flex"
-							session={session}
+							editor_controls={editor_controls}
 						/>
 						<MobileHeader
-							published_article={published_article}
 							className="flex md:hidden"
-							session={session}
+							editor_controls={editor_controls}
 						/>
 					</header>
 				) : undefined}

@@ -8,9 +8,6 @@ import { Separator } from "~/components/ui/separator";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 // import Logo from "~/assets/logo-barvni.svg";
 import { cn } from "~/lib/utils";
-import type { Session } from "~/server/auth";
-import type { EditableArticleRef } from "../article/new-adapter";
-import EditingButtons from "./editing-buttons";
 import {
 	ContactIcon,
 	FacebookIcon,
@@ -40,13 +37,12 @@ export function useNavbarHeight(): number | undefined {
 }
 
 export function DesktopHeader({
-	published_article,
 	className,
-	session,
+	editor_controls,
 	...props
 }: React.ComponentProps<"div"> & {
-	published_article?: EditableArticleRef;
-	session: Session | null;
+	/** Admin-only editor chrome, rendered opaquely so no `Session` reaches the client. */
+	editor_controls: React.ReactNode;
 }) {
 	const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
 	const header_ref = useRef<HTMLDivElement | null>(null);
@@ -109,12 +105,7 @@ export function DesktopHeader({
 						</Link>
 					</div>
 					<div className="flex-1 flex flex-col items-end justify-between">
-						<div className="flex justify-end">
-							<EditingButtons
-								published_article={published_article}
-								session={session}
-							/>
-						</div>
+						<div className="flex justify-end">{editor_controls}</div>
 						<div className="flex flex-col items-end gap-4">
 							{/* <NoviceAutocomplete detached="" /> */}
 							<div className="flex items-center gap-4">

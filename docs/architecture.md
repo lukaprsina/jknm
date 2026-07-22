@@ -59,6 +59,16 @@ view.
 and rejected (ADR-0005). What remains planned is
 consolidating invalidation (#31), not replacing the caching primitive.
 
+**There is no ISR, and it is currently unreachable.** `next build` reports all 18 routes as
+`ƒ (Dynamic)`. Per `headers.md`, `headers()` opts a route into dynamic rendering, and a
+`<Suspense>` boundary only partitions a static shell from a dynamic hole **under PPR** — which
+in Next 16 has no standalone flag and ships only with `cacheComponents`, the thing ADR-0005
+rejects. So #31 step 3's Suspense extraction is a genuine prerequisite for ISR but not
+sufficient for it, and `nextjs16-caching-verdict.md` item 4 ("no Cache Components required") is
+wrong on this point. Measured: stubbing the session read out of the shell entirely flips 7
+routes to `○ (Static)`; `/novica/[published_url]` stays dynamic regardless, because the page
+reads the session itself for its `is_visible_to` gate.
+
 ## Auth
 
 **better-auth** 1.6.23, Google provider only, gated on verified `@jknm.si` emails. Database
@@ -69,19 +79,23 @@ Migrated from NextAuth v4 in #32.
   `getServerAuthSession()` + `redirect()`/`notFound()`, which is also what better-auth's own
   Next.js guidance recommends.
 - No `SessionProvider` and no `useSession`; session data is passed down from RSC as props.
-  Client code only calls the imperative wrappers in `src/lib/auth-client.ts`.
+  Client code only calls the imperative wrappers in `src/lib/auth-client.ts`. The shell is the
+  exception and passes only a **primitive**: since #31 step 3 the session read lives in
+  `components/shell/editor-controls.tsx`, and the two headers receive the result as an opaque
+  `editor_controls` slot, so no `Session` reaches those client components at all.
 - `src/server/auth/` holds all server-side library contact bar the route handler:
-  - `index.ts` — the `betterAuth` instance and `getServerAuthSession()`.
+  - `index.ts` — the `betterAuth` instance and `getServerAuthSession()`, the latter memoized
+    per request with React `cache` (the shell renders it once per header breakpoint).
   - `sign-in-gate.ts` — the whole "who may enter" rule as one pure predicate. It is wired in
     via a custom `getUserInfo` on the Google provider, because better-auth has no equivalent
     of NextAuth's `signIn` callback and the other two candidate hooks silently fail (see #32).
     That custom callback *replaces* Google's built-in `hd` check, which is why `hd` is not set.
   - `session-shape.ts` — adapts better-auth's `{ session, user }` into the app's established
-    `{ user, expires }` shape, so all **15** `getServerAuthSession()` reads and every component
+    `{ user, expires }` shape, so all **16** `getServerAuthSession()` reads and every component
     taking a `Session` prop were left untouched by the migration.
 - `Session` is exported from `~/server/auth`, not from the library. Swapping the library again
   does not mean editing UI components.
-- Surface: 1 route handler (`api/auth/[...all]`), 15 server reads, 4 client call sites.
+- Surface: 1 route handler (`api/auth/[...all]`), 16 server reads, 4 client call sites.
 - Env: `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` (must be explicit — an inferred base URL makes
   Google answer `redirect_uri_mismatch`), `GOOGLE_CLIENT_ID`/`_SECRET`. The Google redirect URI
   `{BETTER_AUTH_URL}/api/auth/callback/google` is unchanged from NextAuth v4.

@@ -14,19 +14,18 @@ import {
 import { get_draft_article_link } from "~/lib/article-utils";
 import { create_superseding_draft } from "~/server/article/lifecycle";
 import type { create_superseding_draft_validator } from "~/server/article/validators";
-import type { Session } from "~/server/auth";
 import MakeNewDraftButton from "../article/make-new-draft-button";
 import type { EditableArticleRef } from "../article/new-adapter";
 import { SettingsDropdown } from "../settings";
 
 export default function EditingButtons({
 	published_article,
-	session,
+	is_admin,
 }: {
 	published_article?: EditableArticleRef;
-	session: Session | null;
+	is_admin: boolean;
 }) {
-	if (!session) return null;
+	if (!is_admin) return null;
 
 	return (
 		<>
