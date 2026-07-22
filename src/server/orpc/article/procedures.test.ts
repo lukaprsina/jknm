@@ -1,7 +1,15 @@
 import { call, ORPCError } from "@orpc/server";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import type { Session } from "~/server/auth";
-import { archiveArticle } from "./procedures";
+
+// `.actionable()` (`@orpc/next/extensions/actionable`, wired in `../base`)
+// imports Next's `unstable_rethrow` from `next/navigation` at module scope,
+// which Vitest's plain node environment (no Next.js runtime) can't resolve.
+// It only special-cases `redirect`/`notFound` errors — a no-op stand-in is
+// accurate here since these tests throw neither.
+vi.mock("next/navigation", () => ({ unstable_rethrow: () => {} }));
+
+const { archiveArticle } = await import("./procedures");
 
 /**
  * Seam 3 (issue #31): oRPC procedures are directly callable server-side, so

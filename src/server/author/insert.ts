@@ -1,5 +1,3 @@
-"use server";
-
 import type { z } from "zod";
 import { apply_server_invalidations } from "../cache-invalidation";
 import { db } from "../db";

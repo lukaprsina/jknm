@@ -17,7 +17,8 @@ import {
 import type { ButtonProps } from "~/components/ui/button";
 import { Button } from "~/components/ui/button";
 import { useToast } from "~/hooks/use-toast";
-import { orpc } from "~/lib/orpc-client";
+import { unwrap_server_function } from "~/lib/orpc-action";
+import { deleteArticle } from "~/server/orpc/article/procedures";
 
 /**
  * `draft`/`published`/`archived` -> `deleted`: direct, one plain confirm
@@ -38,17 +39,17 @@ export function DeleteArticleButton({
 }) {
 	const toaster = useToast();
 
-	const mutation = useMutation(
-		orpc.article.delete.mutationOptions({
-			onSuccess: () => on_deleted?.(),
-			onError: (error) => {
-				toaster.toast({
-					title: "Napaka pri brisanju novičke",
-					description: error.message,
-				});
-			},
-		}),
-	);
+	const mutation = useMutation({
+		mutationFn: (input: Parameters<typeof deleteArticle>[0]) =>
+			unwrap_server_function(deleteArticle(input)),
+		onSuccess: () => on_deleted?.(),
+		onError: (error) => {
+			toaster.toast({
+				title: "Napaka pri brisanju novičke",
+				description: error.message,
+			});
+		},
+	});
 
 	return (
 		<AlertDialog>

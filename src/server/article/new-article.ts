@@ -1,5 +1,3 @@
-"use server";
-
 import { algoliasearch as searchClient } from "algoliasearch";
 import { and, eq, sql } from "drizzle-orm";
 import type { z } from "zod";

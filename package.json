@@ -49,6 +49,7 @@
 		"@mdx-js/react": "^3.1.1",
 		"@next/mdx": "16.2.10",
 		"@orpc/client": "2.0.0-beta.18",
+		"@orpc/next": "2.0.0-beta.18",
 		"@orpc/server": "2.0.0-beta.18",
 		"@orpc/tanstack-query": "2.0.0-beta.18",
 		"@radix-ui/react-accordion": "^1.2.15",

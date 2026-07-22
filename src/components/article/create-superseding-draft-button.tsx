@@ -17,7 +17,8 @@ import {
 import type { ButtonProps } from "~/components/ui/button";
 import { Button } from "~/components/ui/button";
 import { get_draft_article_link } from "~/lib/article-utils";
-import { orpc } from "~/lib/orpc-client";
+import { unwrap_server_function } from "~/lib/orpc-action";
+import { createSupersedingDraft } from "~/server/orpc/article/procedures";
 
 /**
  * Spawns a new draft superseding an `archived` or `published` article and
@@ -36,13 +37,13 @@ export function CreateSupersedingDraftButton({
 }) {
 	const router = useRouter();
 
-	const mutation = useMutation(
-		orpc.article.createSupersedingDraft.mutationOptions({
-			onSuccess: (draft) => {
-				router.push(get_draft_article_link(draft.id));
-			},
-		}),
-	);
+	const mutation = useMutation({
+		mutationFn: (input: Parameters<typeof createSupersedingDraft>[0]) =>
+			unwrap_server_function(createSupersedingDraft(input)),
+		onSuccess: (draft) => {
+			router.push(get_draft_article_link(draft.id));
+		},
+	});
 
 	const trigger = (
 		<Button

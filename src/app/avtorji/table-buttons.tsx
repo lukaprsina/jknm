@@ -30,7 +30,8 @@ import {
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { useToast } from "~/hooks/use-toast";
-import { orpc } from "~/lib/orpc-client";
+import { unwrap_server_function } from "~/lib/orpc-action";
+import { deleteGuests } from "~/server/orpc/author/procedures";
 import type { GuestAuthor } from "./table";
 import { EditAuthorNameForm, InsertAuthorForm } from "./table-forms";
 
@@ -39,19 +40,19 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
 	const toaster = useToast();
 	const router = useRouter();
 
-	const delete_guests_mutation = useMutation(
-		orpc.author.deleteGuests.mutationOptions({
-			onSettled: () => {
-				router.refresh();
-			},
-			onError: (error) => {
-				toaster.toast({
-					title: "Napaka pri brisanju avtorjev",
-					description: error.message,
-				});
-			},
-		}),
-	);
+	const delete_guests_mutation = useMutation({
+		mutationFn: (input: Parameters<typeof deleteGuests>[0]) =>
+			unwrap_server_function(deleteGuests(input)),
+		onSettled: () => {
+			router.refresh();
+		},
+		onError: (error) => {
+			toaster.toast({
+				title: "Napaka pri brisanju avtorjev",
+				description: error.message,
+			});
+		},
+	});
 
 	return (
 		<div className="flex gap-1">
@@ -121,19 +122,19 @@ export function AuthorsTableHeaderButtons({
 	const toaster = useToast();
 	const router = useRouter();
 
-	const delete_guests_mutation = useMutation(
-		orpc.author.deleteGuests.mutationOptions({
-			onSettled: () => {
-				router.refresh();
-			},
-			onError: (error) => {
-				toaster.toast({
-					title: "Napaka pri brisanju avtorjev",
-					description: error.message,
-				});
-			},
-		}),
-	);
+	const delete_guests_mutation = useMutation({
+		mutationFn: (input: Parameters<typeof deleteGuests>[0]) =>
+			unwrap_server_function(deleteGuests(input)),
+		onSettled: () => {
+			router.refresh();
+		},
+		onError: (error) => {
+			toaster.toast({
+				title: "Napaka pri brisanju avtorjev",
+				description: error.message,
+			});
+		},
+	});
 
 	const message = useMemo(() => {
 		const length = rows.length;

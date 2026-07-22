@@ -1,4 +1,7 @@
+import "@orpc/next/extensions/actionable";
+
 import { ORPCError, os } from "@orpc/server";
+import { getServerAuthSession } from "~/server/auth";
 import type { ORPCContext } from "./context";
 
 /**
@@ -27,3 +30,15 @@ export const requireAuth = base.middleware(async ({ context, next }) => {
 
 /** Base for every authenticated procedure: session guaranteed non-null. */
 export const authed = base.use(requireAuth);
+
+/**
+ * Shared `.actionable()` options: mutations need to run as real Next.js
+ * Server Actions, not calls through the `/api/orpc` Route Handler — Next 16's
+ * `updateTag` (what `apply_server_invalidations` uses) throws when called
+ * from anywhere else. `.actionable()` (`@orpc/next`) turns a procedure into a
+ * server function callable directly from a client component, resolving
+ * `context.session` itself the same way the HTTP route does.
+ */
+export const actionableOptions = {
+	context: async () => ({ session: await getServerAuthSession() }),
+};

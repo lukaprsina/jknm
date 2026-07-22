@@ -17,7 +17,8 @@ import {
 import type { ButtonProps } from "~/components/ui/button";
 import { Button } from "~/components/ui/button";
 import { useToast } from "~/hooks/use-toast";
-import { orpc } from "~/lib/orpc-client";
+import { unwrap_server_function } from "~/lib/orpc-action";
+import { archiveArticle } from "~/server/orpc/article/procedures";
 
 /**
  * `draft`/`published` -> `archived` (#21): single mechanism for both "hide a
@@ -38,17 +39,17 @@ export function ArchiveArticleButton({
 }) {
 	const toaster = useToast();
 
-	const mutation = useMutation(
-		orpc.article.archive.mutationOptions({
-			onSuccess: () => on_archived?.(),
-			onError: (error) => {
-				toaster.toast({
-					title: "Napaka pri arhiviranju novičke",
-					description: error.message,
-				});
-			},
-		}),
-	);
+	const mutation = useMutation({
+		mutationFn: (input: Parameters<typeof archiveArticle>[0]) =>
+			unwrap_server_function(archiveArticle(input)),
+		onSuccess: () => on_archived?.(),
+		onError: (error) => {
+			toaster.toast({
+				title: "Napaka pri arhiviranju novičke",
+				description: error.message,
+			});
+		},
+	});
 
 	return (
 		<AlertDialog>

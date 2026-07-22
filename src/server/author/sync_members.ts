@@ -1,14 +1,11 @@
-"use server";
-
 import type { JWTInput } from "google-auth-library";
 import { google } from "googleapis";
-import { z } from "zod";
+import type { z } from "zod";
 import { env } from "~/env";
 import { apply_server_invalidations } from "../cache-invalidation";
 import { db } from "../db";
 import { Author } from "../db/schema";
-
-export const sync_members_validator = z.object({ name: z.string() });
+import type { sync_members_validator } from "./validator";
 
 // TODO
 export async function sync_members(

@@ -15,7 +15,11 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { useToast } from "~/hooks/use-toast";
-import { orpc } from "~/lib/orpc-client";
+import { unwrap_server_function } from "~/lib/orpc-action";
+import {
+	insertGuest,
+	renameGuest,
+} from "~/server/orpc/author/procedures";
 import type { GuestAuthor } from "./table";
 
 export const edit_form_schema = z.object({
@@ -32,19 +36,19 @@ export function EditAuthorNameForm({
 	const router = useRouter();
 	const toaster = useToast();
 
-	const rename_guest_mutation = useMutation(
-		orpc.author.renameGuest.mutationOptions({
-			onSettled: () => {
-				router.refresh();
-			},
-			onError: (error) => {
-				toaster.toast({
-					title: "Napaka pri preimenovanju avtorja",
-					description: error.message,
-				});
-			},
-		}),
-	);
+	const rename_guest_mutation = useMutation({
+		mutationFn: (input: Parameters<typeof renameGuest>[0]) =>
+			unwrap_server_function(renameGuest(input)),
+		onSettled: () => {
+			router.refresh();
+		},
+		onError: (error) => {
+			toaster.toast({
+				title: "Napaka pri preimenovanju avtorja",
+				description: error.message,
+			});
+		},
+	});
 
 	const form = useForm<z.infer<typeof edit_form_schema>>({
 		resolver: zodResolver(edit_form_schema),
@@ -101,19 +105,19 @@ export function InsertAuthorForm() {
 	const toaster = useToast();
 	const router = useRouter();
 
-	const insert_guest_mutation = useMutation(
-		orpc.author.insertGuest.mutationOptions({
-			onSettled: () => {
-				router.refresh();
-			},
-			onError: (error) => {
-				toaster.toast({
-					title: "Napaka pri dodajanju novega avtorja",
-					description: error.message,
-				});
-			},
-		}),
-	);
+	const insert_guest_mutation = useMutation({
+		mutationFn: (input: Parameters<typeof insertGuest>[0]) =>
+			unwrap_server_function(insertGuest(input)),
+		onSettled: () => {
+			router.refresh();
+		},
+		onError: (error) => {
+			toaster.toast({
+				title: "Napaka pri dodajanju novega avtorja",
+				description: error.message,
+			});
+		},
+	});
 
 	const form = useForm<z.infer<typeof insert_form_schema>>({
 		resolver: zodResolver(insert_form_schema),

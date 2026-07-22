@@ -16,8 +16,14 @@ import { editor_store } from "~/components/editor/editor-store";
 import { useToast } from "~/hooks/use-toast";
 import { get_published_article_link } from "~/lib/article-utils";
 import { apply_client_invalidations } from "~/lib/cache-invalidation-client";
-import { orpc } from "~/lib/orpc-client";
+import { unwrap_server_function } from "~/lib/orpc-action";
 import type { ThumbnailType } from "~/lib/validators";
+import {
+	deleteArticle,
+	discardDraft,
+	publishArticle,
+	saveArticle,
+} from "~/server/orpc/article/procedures";
 
 export function useEditorMutations() {
 	const query_client = useQueryClient();
@@ -32,78 +38,78 @@ export function useEditorMutations() {
 		throw new Error("Missing context");
 	}
 
-	const save_article_mutation = useMutation(
-		orpc.article.save.mutationOptions({
-			onSettled: () => {
-				editor_context.setSavingText(undefined);
-				editor_context.setDirty(false);
-			},
-			onError: (error) => {
-				toaster.toast({
-					title: "Napaka pri shranjevanju osnutka",
-					description: error.message,
-				});
-			},
-		}),
-	);
+	const save_article_mutation = useMutation({
+		mutationFn: (input: Parameters<typeof saveArticle>[0]) =>
+			unwrap_server_function(saveArticle(input)),
+		onSettled: () => {
+			editor_context.setSavingText(undefined);
+			editor_context.setDirty(false);
+		},
+		onError: (error) => {
+			toaster.toast({
+				title: "Napaka pri shranjevanju osnutka",
+				description: error.message,
+			});
+		},
+	});
 
-	const publish_article_mutation = useMutation(
-		orpc.article.publish.mutationOptions({
-			onSuccess: (data) => {
-				router.push(`/novica/${data.slug}`);
-			},
-			onSettled: async () => {
-				editor_context.setSavingText(undefined);
-				editor_context.setDirty(false);
-				await apply_client_invalidations(query_client, "article.published");
-			},
-			onError: (error) => {
-				toaster.toast({
-					title: "Napaka pri objavljanju novičke",
-					description: error.message,
-				});
-			},
-		}),
-	);
+	const publish_article_mutation = useMutation({
+		mutationFn: (input: Parameters<typeof publishArticle>[0]) =>
+			unwrap_server_function(publishArticle(input)),
+		onSuccess: (data) => {
+			router.push(`/novica/${data.slug}`);
+		},
+		onSettled: async () => {
+			editor_context.setSavingText(undefined);
+			editor_context.setDirty(false);
+			await apply_client_invalidations(query_client, "article.published");
+		},
+		onError: (error) => {
+			toaster.toast({
+				title: "Napaka pri objavljanju novičke",
+				description: error.message,
+			});
+		},
+	});
 
-	const delete_article_mutation = useMutation(
-		orpc.article.delete.mutationOptions({
-			onSettled: async () => {
-				await apply_client_invalidations(query_client, "article.deleted");
-				router.replace(`/`);
-			},
-			onError: (error) => {
-				toaster.toast({
-					title: "Napaka pri brisanju novičke",
-					description: error.message,
-				});
-			},
-		}),
-	);
+	const delete_article_mutation = useMutation({
+		mutationFn: (input: Parameters<typeof deleteArticle>[0]) =>
+			unwrap_server_function(deleteArticle(input)),
+		onSettled: async () => {
+			await apply_client_invalidations(query_client, "article.deleted");
+			router.replace(`/`);
+		},
+		onError: (error) => {
+			toaster.toast({
+				title: "Napaka pri brisanju novičke",
+				description: error.message,
+			});
+		},
+	});
 
-	const discard_draft_mutation = useMutation(
-		orpc.article.discardDraft.mutationOptions({
-			onSettled: async () => {
-				await apply_client_invalidations(
-					query_client,
-					"article.draft_discarded",
-				);
-				// `url` is `""` when the source was archived straight from a draft
-				// and never had a slug minted — fall back to `/` in that case too.
-				router.replace(
-					published_article?.url
-						? get_published_article_link(published_article.url)
-						: "/",
-				);
-			},
-			onError: (error) => {
-				toaster.toast({
-					title: "Napaka pri zavračanju osnutka",
-					description: error.message,
-				});
-			},
-		}),
-	);
+	const discard_draft_mutation = useMutation({
+		mutationFn: (input: Parameters<typeof discardDraft>[0]) =>
+			unwrap_server_function(discardDraft(input)),
+		onSettled: async () => {
+			await apply_client_invalidations(
+				query_client,
+				"article.draft_discarded",
+			);
+			// `url` is `""` when the source was archived straight from a draft
+			// and never had a slug minted — fall back to `/` in that case too.
+			router.replace(
+				published_article?.url
+					? get_published_article_link(published_article.url)
+					: "/",
+			);
+		},
+		onError: (error) => {
+			toaster.toast({
+				title: "Napaka pri zavračanju osnutka",
+				description: error.message,
+			});
+		},
+	});
 
 	return {
 		save_draft: async (

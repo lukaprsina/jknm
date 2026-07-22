@@ -21,17 +21,24 @@ Tailwind v4 · hosted on Vercel.
 the rewrite; oRPC replaced the hand-rolled Server Action + `run_authorized_mutation`
 pattern that stood in for it.
 
-- **Writes** — client mutations call `orpc.<domain>.<action>.mutationOptions()`
-  (`src/lib/orpc-client.ts`) as the base for `useMutation`. Procedures
-  (`src/server/orpc/*/procedures.ts`) are thin: the `authed` builder
-  (`src/server/orpc/base.ts`, `context.session` from `src/server/orpc/context.ts`) handles
-  auth, `.input(validator)` handles validation, and the handler calls straight into the
-  same framework-agnostic business-logic functions in `src/server/article/`,
-  `src/server/author/` that existed before (now taking already-validated input, plus an
-  explicit `session` param where identity is needed). The old shared guard,
-  `run_authorized_mutation`, is deleted. RSC/Server Actions that need to call a procedure
-  in-process (no HTTP hop) use `src/lib/orpc-client.server.ts`'s `serverClient`; the browser
-  HTTP mount lives at `src/app/api/orpc/[[...rest]]/route.ts`.
+- **Writes** — client mutations call the procedure directly as a real Next.js Server
+  Action: `src/server/orpc/*/procedures.ts` exports end each chain with
+  `.actionable(actionableOptions)` (`@orpc/next`'s extension, wired in `src/server/orpc/base.ts`),
+  so the same procedure object is both a typed oRPC procedure and an importable server
+  function. Client components `useMutation({ mutationFn: () =>
+  unwrap_server_function(theProcedure(input)), ... })` (`src/lib/orpc-action.ts` unwraps the
+  `[error, data]` tuple server functions resolve to, back into throw-on-error for TanStack
+  Query). This — not the HTTP route — is required: Next 16's `updateTag` (what
+  `apply_server_invalidations` uses) only works inside a genuine Server Action, not a Route
+  Handler. Procedures themselves are thin: the `authed` builder (`context.session` from
+  `src/server/orpc/context.ts`) handles auth, `.input(validator)` handles validation, and the
+  handler calls straight into the same framework-agnostic business-logic functions in
+  `src/server/article/`, `src/server/author/` that existed before (now taking already-validated
+  input, plus an explicit `session` param where identity is needed). The old shared guard,
+  `run_authorized_mutation`, is deleted. The HTTP mount (`src/app/api/orpc/[[...rest]]/route.ts`,
+  `src/server/orpc/router.ts`) and the in-process `serverClient`
+  (`src/lib/orpc-client.server.ts`) still exist but are currently unused by any call site —
+  reads go straight to RSC/Drizzle, not through oRPC.
 - **Reads** — mostly RSC calling query helpers / Drizzle directly. Client-side TanStack Query
   is used in only **two** places: the infinite homepage feed (`src/app/infinite-no-trpc.tsx`,
   a filename fossil from the tRPC era) and the `/preveri` admin tool.

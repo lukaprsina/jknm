@@ -11,9 +11,10 @@ import {
 	PopoverTrigger,
 } from "~/components/ui/popover";
 import { get_draft_article_link } from "~/lib/article-utils";
-import { orpc } from "~/lib/orpc-client";
+import { unwrap_server_function } from "~/lib/orpc-action";
 import { article_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
+import { createArticle } from "~/server/orpc/article/procedures";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export default function MakeNewDraftButton({
@@ -22,16 +23,16 @@ export default function MakeNewDraftButton({
 }: ButtonProps & { title?: string }) {
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
-	const create_draft_mutation = useMutation(
-		orpc.article.create.mutationOptions({
-			onSuccess: (data) => {
-				router.push(get_draft_article_link(data.id));
-			},
-			onSettled: () => {
-				setOpen(false);
-			},
-		}),
-	);
+	const create_draft_mutation = useMutation({
+		mutationFn: (input: Parameters<typeof createArticle>[0]) =>
+			unwrap_server_function(createArticle(input)),
+		onSuccess: (data) => {
+			router.push(get_draft_article_link(data.id));
+		},
+		onSettled: () => {
+			setOpen(false);
+		},
+	});
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>

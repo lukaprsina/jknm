@@ -11,7 +11,8 @@ import {
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { get_draft_article_link } from "~/lib/article-utils";
-import { orpc } from "~/lib/orpc-client";
+import { unwrap_server_function } from "~/lib/orpc-action";
+import { createSupersedingDraft } from "~/server/orpc/article/procedures";
 import MakeNewDraftButton from "../article/make-new-draft-button";
 import type { EditableArticleRef } from "../article/new-adapter";
 import { SettingsDropdown } from "../settings";
@@ -56,18 +57,18 @@ export function EditButton({
 }) {
 	const router = useRouter();
 
-	const mutation = useMutation(
-		orpc.article.createSupersedingDraft.mutationOptions({
-			onSuccess: (draft) => {
-				const new_url = get_draft_article_link(draft.id);
-				if (new_tab) {
-					window.open(new_url, "_blank");
-				} else {
-					router.push(new_url);
-				}
-			},
-		}),
-	);
+	const mutation = useMutation({
+		mutationFn: (input: Parameters<typeof createSupersedingDraft>[0]) =>
+			unwrap_server_function(createSupersedingDraft(input)),
+		onSuccess: (draft) => {
+			const new_url = get_draft_article_link(draft.id);
+			if (new_tab) {
+				window.open(new_url, "_blank");
+			} else {
+				router.push(new_url);
+			}
+		},
+	});
 
 	return (
 		<Tooltip>

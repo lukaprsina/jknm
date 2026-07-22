@@ -1,5 +1,3 @@
-"use server";
-
 import { and, eq, inArray } from "drizzle-orm";
 import type { z } from "zod";
 import { apply_server_invalidations } from "../cache-invalidation";

@@ -8,3 +8,5 @@ export const rename_guest_validator = z.object({
 	id: z.number(),
 	name: z.string(),
 });
+
+export const sync_members_validator = z.object({ name: z.string() });
