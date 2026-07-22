@@ -10,20 +10,28 @@ live in `docs/adr/`; domain vocabulary lives in `CONTEXT.md`.
 
 ## Stack
 
-Next.js 16.2.10 (App Router) · Drizzle + Postgres (via Supabase) · **Server Actions +
-TanStack Query** · better-auth (Google) · EditorJS (admin article editor) ·
+Next.js 16.2.10 (App Router) · Drizzle + Postgres (via Supabase) · **oRPC + TanStack
+Query** · better-auth (Google) · EditorJS (admin article editor) ·
 Backblaze B2 (media storage, S3-compatible) · Algolia (search) · Resend (email) ·
 Tailwind v4 · hosted on Vercel.
 
 ## Data transport
 
-There is **no tRPC and no oRPC** in this repo. tRPC was removed earlier in the rewrite;
-oRPC is a decided-but-unimplemented future step (see ADR-0002).
+**oRPC** (`src/server/orpc/`) is live (ADR-0002, #31 step 4). tRPC was removed earlier in
+the rewrite; oRPC replaced the hand-rolled Server Action + `run_authorized_mutation`
+pattern that stood in for it.
 
-- **Writes** — module-level `"use server"` Server Actions in `src/server/`, imported
-  directly and called as `mutationFn` inside TanStack Query hooks. `run_authorized_mutation`
-  (`src/server/article/authorized-mutation.ts`) is the shared auth guard — the closest thing
-  to a `protectedProcedure`.
+- **Writes** — client mutations call `orpc.<domain>.<action>.mutationOptions()`
+  (`src/lib/orpc-client.ts`) as the base for `useMutation`. Procedures
+  (`src/server/orpc/*/procedures.ts`) are thin: the `authed` builder
+  (`src/server/orpc/base.ts`, `context.session` from `src/server/orpc/context.ts`) handles
+  auth, `.input(validator)` handles validation, and the handler calls straight into the
+  same framework-agnostic business-logic functions in `src/server/article/`,
+  `src/server/author/` that existed before (now taking already-validated input, plus an
+  explicit `session` param where identity is needed). The old shared guard,
+  `run_authorized_mutation`, is deleted. RSC/Server Actions that need to call a procedure
+  in-process (no HTTP hop) use `src/lib/orpc-client.server.ts`'s `serverClient`; the browser
+  HTTP mount lives at `src/app/api/orpc/[[...rest]]/route.ts`.
 - **Reads** — mostly RSC calling query helpers / Drizzle directly. Client-side TanStack Query
   is used in only **two** places: the infinite homepage feed (`src/app/infinite-no-trpc.tsx`,
   a filename fossil from the tRPC era) and the `/preveri` admin tool.
