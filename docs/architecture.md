@@ -49,14 +49,12 @@ union and the cache sites cannot drift: a tag declared at a site but absent from
 fails typecheck, and one added to `CACHE_TAGS` that no event invalidates fails the reachability
 test.
 
-`article` was added after step 3's Suspense extraction turned up a gap the ISR work exposed:
-`get_new_article_by_slug` (`/novica/[published_url]`'s only data read) was uncached, called
-**twice** per request (`generateMetadata` and the page body), against a pause-prone free-tier
-DB. It is now `cache()`-deduped per request and `unstable_cache`-backed across requests,
-invalidated by the events that touch the published set (`article.published`/`archived`/
-`unarchived`/`deleted`) **and** every `author.*` event — the cached read embeds each article's
-byline, so renaming or deleting an author would otherwise leave stale bylines cached for up to
-the revalidate window.
+`article` covers `get_new_article_by_slug` (`/novica/[published_url]`'s only data read),
+`cache()`-deduped per request (it's called from both `generateMetadata` and the page body) and
+`unstable_cache`-backed across requests. Invalidated by the events that touch the published set
+(`article.published`/`archived`/`unarchived`/`deleted`) and every `author.*` event, since the
+cached read embeds each article's byline. See [ADR-0006](adr/0006-no-isr-on-article-pages.md)
+for why this exists instead of ISR.
 
 Every site has a **finite `revalidate` window** (#31 step 2) — 3600s for the public reads
 (`homepage-feed`, `authors`, `article`), 300s for the editor-facing ones (`drafts`, `archive`,
@@ -67,26 +65,13 @@ the refresh runs. The window only bounds how long a *missing* invalidation could
 view.
 
 **Staying on `unstable_cache`** — migrating to Cache Components (`use cache`) was investigated
-and rejected (ADR-0005). What remains planned is
+and rejected ([ADR-0005](adr/0005-stay-on-unstable-cache.md)). What remains planned is
 consolidating invalidation (#31), not replacing the caching primitive.
 
-**There is no ISR, and it is currently unreachable.** `next build` reports all 18 routes as
-`ƒ (Dynamic)`. Per `headers.md`, `headers()` opts a route into dynamic rendering, and a
-`<Suspense>` boundary only partitions a static shell from a dynamic hole **under PPR** — which
-in Next 16 has no standalone flag and ships only with `cacheComponents`, the thing ADR-0005
-rejects. So #31 step 3's Suspense extraction is a genuine prerequisite for ISR but not
-sufficient for it, and `nextjs16-caching-verdict.md` item 4 ("no Cache Components required") is
-wrong on this point. Measured: stubbing the session read out of the shell entirely flips 7
-routes to `○ (Static)`; `/novica/[published_url]` stays dynamic regardless, because the page
-reads the session itself for its `is_visible_to` gate.
-
-**Decision: don't chase ISR here.** Reaching it would mean either dropping admin visibility of
-archived articles at their public URL, or reversing ADR-0005 to enable `cacheComponents` —
-both real costs, for a win (CDN edge caching, request collapsing under load) that matters most
-under exactly the traffic this site doesn't have (`CONTEXT.md`: "Public traffic is small").
-Instead the DB-protection half of the motivation — the article read being uncached and called
-twice per request — is covered by the `article` tag above, at none of that cost. Revisit
-alongside caching generally at the ADR-0004 VPS move, per ADR-0005.
+**There is no ISR.** All 18 routes are `ƒ (Dynamic)` per `next build`. Not pursuing this is a
+deliberate decision, not a gap — see [ADR-0006](adr/0006-no-isr-on-article-pages.md) for why
+it's blocked on Next 16 regardless of the Suspense work below, and why that's an acceptable
+trade at this site's traffic.
 
 ## Auth
 
