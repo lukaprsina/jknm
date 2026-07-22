@@ -170,6 +170,7 @@ function MemberSyncDialog({
 	const preview_mutation = useMutation({
 		mutationFn: () => unwrap_server_function(previewMemberSync()),
 		onError: (error) => {
+			console.log("Error previewing member sync:", error);
 			toaster.toast({
 				title: "Napaka pri branju sprememb",
 				description: error.message,

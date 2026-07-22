@@ -63,10 +63,10 @@ function rethrow_logged(context: string, error: unknown): never {
 
 export const previewMemberSync = authed
 	.handler(async () => {
-		const { preview_member_sync } = await import(
-			"~/server/author/sync_members"
-		);
 		try {
+			const { preview_member_sync } = await import(
+				"~/server/author/sync_members"
+			);
 			return await preview_member_sync();
 		} catch (error) {
 			rethrow_logged("previewMemberSync", error);
@@ -76,8 +76,8 @@ export const previewMemberSync = authed
 
 export const syncMembers = authed
 	.handler(async () => {
-		const { sync_members } = await import("~/server/author/sync_members");
 		try {
+			const { sync_members } = await import("~/server/author/sync_members");
 			return await sync_members();
 		} catch (error) {
 			rethrow_logged("syncMembers", error);
