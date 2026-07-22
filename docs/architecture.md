@@ -35,10 +35,9 @@ pattern that stood in for it.
   handler calls straight into the same framework-agnostic business-logic functions in
   `src/server/article/`, `src/server/author/` that existed before (now taking already-validated
   input, plus an explicit `session` param where identity is needed). The old shared guard,
-  `run_authorized_mutation`, is deleted. The HTTP mount (`src/app/api/orpc/[[...rest]]/route.ts`,
-  `src/server/orpc/router.ts`) and the in-process `serverClient`
-  (`src/lib/orpc-client.server.ts`) still exist but are currently unused by any call site —
-  reads go straight to RSC/Drizzle, not through oRPC.
+  `run_authorized_mutation`, is deleted. There is no HTTP mount or router — `.actionable()`
+  is the only transport, so each procedure is imported and called directly; reads go
+  straight to RSC/Drizzle, not through oRPC.
 - **Reads** — mostly RSC calling query helpers / Drizzle directly. Client-side TanStack Query
   is used in only **two** places: the infinite homepage feed (`src/app/infinite-no-trpc.tsx`,
   a filename fossil from the tRPC era) and the `/preveri` admin tool.
