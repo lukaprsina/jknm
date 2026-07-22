@@ -40,7 +40,8 @@ export async function find_available_slug(
 			}),
 		]);
 		const legacy_collision =
-			existing_legacy_url && existing_legacy_url.id !== exclude_legacy_published_id;
+			existing_legacy_url &&
+			existing_legacy_url.id !== exclude_legacy_published_id;
 		if (!existing_slug && !legacy_collision) return candidate;
 	}
 

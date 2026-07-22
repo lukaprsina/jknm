@@ -1,7 +1,17 @@
-import { Card, CardContent, CardFooter, CardHeader } from "~/components/ui/card";
+import {
+	Card,
+	CardContent,
+	CardFooter,
+	CardHeader,
+} from "~/components/ui/card";
 import { format_date_for_human } from "~/lib/format-date";
 import { get_archive_origin_label } from "~/server/article/lifecycle-rules";
-import type { Article, ArticlesToAuthors, Author, Media } from "~/server/db/schema";
+import type {
+	Article,
+	ArticlesToAuthors,
+	Author,
+	Media,
+} from "~/server/db/schema";
 import { CreateSupersedingDraftButton } from "./create-superseding-draft-button";
 import { DeleteArticleButton } from "./delete-article-button";
 
@@ -12,8 +22,14 @@ type ArchivedArticleRow = typeof Article.$inferSelect & {
 	thumbnail_media: typeof Media.$inferSelect | null;
 };
 
-export function ArchivedArticleCard({ article }: { article: ArchivedArticleRow }) {
-	const origin = get_archive_origin_label({ published_at: article.published_at });
+export function ArchivedArticleCard({
+	article,
+}: {
+	article: ArchivedArticleRow;
+}) {
+	const origin = get_archive_origin_label({
+		published_at: article.published_at,
+	});
 
 	return (
 		<Card className="flex h-full flex-col">
@@ -39,7 +55,11 @@ export function ArchivedArticleCard({ article }: { article: ArchivedArticleRow }
 				>
 					Obnovi
 				</CreateSupersedingDraftButton>
-				<DeleteArticleButton article_id={article.id} variant="ghost" size="icon" />
+				<DeleteArticleButton
+					article_id={article.id}
+					variant="ghost"
+					size="icon"
+				/>
 			</CardFooter>
 		</Card>
 	);

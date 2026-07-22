@@ -3,7 +3,10 @@
 import type { ImageProps } from "next/image";
 import Image from "next/image";
 import { useMemo } from "react";
-import { gallery_store, useRegisterGalleryImage } from "~/components/gallery-store";
+import {
+	gallery_store,
+	useRegisterGalleryImage,
+} from "~/components/gallery-store";
 import type { EditorJSImageData } from "~/lib/editor-utils";
 import image_sizes_json from "../../artifacts/image_sizes.json";
 

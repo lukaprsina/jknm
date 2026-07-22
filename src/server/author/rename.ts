@@ -1,9 +1,9 @@
 "use server";
 
 import { eq } from "drizzle-orm";
-import { revalidatePath, revalidateTag } from "next/cache";
 import type { z } from "zod";
 import { getServerAuthSession } from "../auth";
+import { apply_server_invalidations } from "../cache-invalidation";
 import { db } from "../db";
 import { Author } from "../db/schema";
 import { rename_guest_validator } from "./validator";
@@ -27,8 +27,7 @@ export async function rename_guest(
 		.where(eq(Author.id, input.id))
 		.returning();
 
-	revalidateTag("authors", "max");
-	revalidatePath("/");
+	apply_server_invalidations("author.renamed");
 
 	return result;
 }

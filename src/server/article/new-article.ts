@@ -2,7 +2,6 @@
 
 import { algoliasearch as searchClient } from "algoliasearch";
 import { and, eq, sql } from "drizzle-orm";
-import { revalidatePath, revalidateTag } from "next/cache";
 import type { z } from "zod";
 import { env } from "~/env";
 import {
@@ -12,6 +11,7 @@ import {
 import { convert_title_to_url } from "~/lib/article-utils";
 import { assert_one } from "~/lib/assert-length";
 import type { ThumbnailType } from "~/lib/validators";
+import { apply_server_invalidations } from "../cache-invalidation";
 import { type DbTransaction, db } from "../db";
 import { Article, ArticleSlug, ArticlesToAuthors, Media } from "../db/schema";
 import { find_article_with_relations } from "./article-queries";
@@ -237,8 +237,7 @@ export async function create_article(
 	assert_one(created_articles);
 	const created_article = created_articles[0];
 
-	revalidateTag("drafts", "max");
-	revalidatePath("/");
+	apply_server_invalidations("article.created");
 	return created_article;
 }
 
@@ -296,8 +295,7 @@ export async function save_article(
 		);
 	});
 
-	revalidateTag("drafts", "max");
-	revalidatePath("/");
+	apply_server_invalidations("article.saved");
 	return transaction;
 }
 
@@ -397,10 +395,6 @@ export async function publish_article(
 		return { article, slug: primary.slug };
 	});
 
-	revalidateTag("drafts", "max");
-	revalidateTag("archive", "max");
-	revalidateTag("homepage-feed", "max");
-	revalidateTag("all-published", "max");
-	revalidatePath("/");
+	apply_server_invalidations("article.published");
 	return transaction;
 }

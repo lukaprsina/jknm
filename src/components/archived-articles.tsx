@@ -7,6 +7,7 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "~/components/ui/accordion";
+import type { CacheTag } from "~/lib/cache-policy";
 import { article_grid_variants, article_variants } from "~/lib/page-variants";
 import { revive_cache_dates } from "~/lib/revive-cache-dates";
 import { db } from "~/server/db";
@@ -24,7 +25,7 @@ export const cachedArchived = unstable_cache(
 		});
 	},
 	["archive"],
-	{ tags: ["archive"], revalidate: false },
+	{ tags: ["archive"] satisfies CacheTag[], revalidate: false },
 );
 
 export async function ArchivedArticles() {

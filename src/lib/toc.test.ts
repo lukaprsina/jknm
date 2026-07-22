@@ -14,9 +14,7 @@ describe("flatten_toc", () => {
 						value: "Prvo poglavje",
 						depth: 2,
 						id: "prvo-poglavje",
-						children: [
-							{ value: "Podpoglavje", depth: 3, id: "podpoglavje" },
-						],
+						children: [{ value: "Podpoglavje", depth: 3, id: "podpoglavje" }],
 					},
 					{ value: "Drugo poglavje", depth: 2, id: "drugo-poglavje" },
 				],

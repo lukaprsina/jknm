@@ -6,6 +6,7 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "~/components/ui/accordion";
+import type { CacheTag } from "~/lib/cache-policy";
 import { article_grid_variants, article_variants } from "~/lib/page-variants";
 import { revive_cache_dates } from "~/lib/revive-cache-dates";
 import { find_draft_articles } from "~/server/article/article-queries";
@@ -16,7 +17,7 @@ export const cachedDrafts = unstable_cache(
 		return find_draft_articles(db);
 	},
 	["drafts"],
-	{ tags: ["drafts"], revalidate: false },
+	{ tags: ["drafts"] satisfies CacheTag[], revalidate: false },
 );
 
 export async function DraftArticles() {

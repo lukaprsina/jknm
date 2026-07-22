@@ -59,9 +59,7 @@ function isEqualShallow(a: unknown, b: unknown): boolean {
 }
 
 const ObserverContext = createContext<Observer | null>(null);
-const ScrollContext = createContext<RefObject<HTMLElement | null> | null>(
-	null,
-);
+const ScrollContext = createContext<RefObject<HTMLElement | null> | null>(null);
 
 export interface AnchorProviderProps {
 	toc: TOCItemType[];
@@ -259,10 +257,7 @@ class Observer {
 	watch(options?: IntersectionObserverInit) {
 		if (this.observer) return;
 
-		this.observer = new IntersectionObserver(
-			this.callback.bind(this),
-			options,
-		);
+		this.observer = new IntersectionObserver(this.callback.bind(this), options);
 		this.observeItems();
 	}
 

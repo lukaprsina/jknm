@@ -61,7 +61,9 @@ function ArticleBody({
 	);
 }
 
-function useEditorData(article: { content: EditorDraftArticle["content"] } | undefined) {
+function useEditorData(
+	article: { content: EditorDraftArticle["content"] } | undefined,
+) {
 	const headings = useMemo(() => {
 		if (!article?.content) return [];
 		return extract_headings_from_content(article.content);
@@ -183,10 +185,11 @@ const SMALL_IMAGE_THRESHOLD = 500;
 // Small inline images render too tiny at their real pixel size, so the editor
 // preview doubles them for display. The gallery lightbox mirrors this so a
 // thumbnail and its opened lightbox image feel like the same size.
-function get_effective_dimensions(file: {
-	width?: number;
-	height?: number;
-}): { width: number; height: number; dimensions_exist: boolean } {
+function get_effective_dimensions(file: { width?: number; height?: number }): {
+	width: number;
+	height: number;
+	dimensions_exist: boolean;
+} {
 	if (!file.width || !file.height)
 		return { width: 1500, height: 1000, dimensions_exist: false };
 

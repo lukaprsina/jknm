@@ -8,7 +8,8 @@ import { format_date_for_url } from "./format-date";
 // `path.parse().name`/`.ext` were doing here anyway.
 export function convert_filename_to_url(dangerous_url: string) {
 	const dot_index = dangerous_url.lastIndexOf(".");
-	const name = dot_index > 0 ? dangerous_url.slice(0, dot_index) : dangerous_url;
+	const name =
+		dot_index > 0 ? dangerous_url.slice(0, dot_index) : dangerous_url;
 	const ext = dot_index > 0 ? dangerous_url.slice(dot_index) : "";
 	return convert_title_to_url(name) + ext;
 }

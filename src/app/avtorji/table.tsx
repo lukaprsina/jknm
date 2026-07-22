@@ -68,10 +68,7 @@ export function AuthorsDataTable() {
 						checked={row.getIsSelected()}
 						onCheckedChange={(value) => row.toggleSelected(!!value)}
 						onClick={(event) => {
-							if (
-								event.shiftKey &&
-								lastSelectedIndexRef.current !== null
-							) {
+							if (event.shiftKey && lastSelectedIndexRef.current !== null) {
 								const { rows, rowsById } = table.getRowModel();
 								const rowsToToggle = get_row_range(
 									rows,

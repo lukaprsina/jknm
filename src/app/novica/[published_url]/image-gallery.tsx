@@ -4,7 +4,11 @@ import { XIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { gallery_store, useGalleryImages, useOpenImage } from "~/components/gallery-store";
+import {
+	gallery_store,
+	useGalleryImages,
+	useOpenImage,
+} from "~/components/gallery-store";
 import { Button } from "~/components/ui/button";
 import type { CarouselApi } from "~/components/ui/carousel";
 import {

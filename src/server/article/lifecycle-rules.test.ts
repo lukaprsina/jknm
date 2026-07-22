@@ -11,9 +11,12 @@ import {
 } from "./lifecycle-rules";
 
 describe("assert_can_archive", () => {
-	test.each(["draft", "published"] as const)("allows %s -> archived", (status) => {
-		expect(() => assert_can_archive(status)).not.toThrow();
-	});
+	test.each(["draft", "published"] as const)(
+		"allows %s -> archived",
+		(status) => {
+			expect(() => assert_can_archive(status)).not.toThrow();
+		},
+	);
 
 	test.each(["archived", "deleted"] as const)(
 		"rejects %s -> archived",
@@ -61,7 +64,11 @@ describe("assert_can_discard", () => {
 
 describe("resolve_lifecycle_target", () => {
 	test("a standalone draft/published/archived row targets itself", () => {
-		const article = { id: "a", status: "published" as const, supersedes_id: null };
+		const article = {
+			id: "a",
+			status: "published" as const,
+			supersedes_id: null,
+		};
 
 		expect(resolve_lifecycle_target(article, null)).toEqual({
 			target: article,
@@ -70,8 +77,16 @@ describe("resolve_lifecycle_target", () => {
 	});
 
 	test("a superseding draft targets its source, and flags itself for cascade delete", () => {
-		const draft = { id: "draft-id", status: "draft" as const, supersedes_id: "source-id" };
-		const source = { id: "source-id", status: "published" as const, supersedes_id: null };
+		const draft = {
+			id: "draft-id",
+			status: "draft" as const,
+			supersedes_id: "source-id",
+		};
+		const source = {
+			id: "source-id",
+			status: "published" as const,
+			supersedes_id: null,
+		};
 
 		expect(resolve_lifecycle_target(draft, source)).toEqual({
 			target: source,
@@ -80,14 +95,26 @@ describe("resolve_lifecycle_target", () => {
 	});
 
 	test("throws if the superseding draft's source can't be found", () => {
-		const draft = { id: "draft-id", status: "draft" as const, supersedes_id: "source-id" };
+		const draft = {
+			id: "draft-id",
+			status: "draft" as const,
+			supersedes_id: "source-id",
+		};
 
 		expect(() => resolve_lifecycle_target(draft, null)).toThrow();
 	});
 
 	test("a draft whose source is already deleted (e.g. unarchive deleted it) targets itself, no cascade", () => {
-		const draft = { id: "draft-id", status: "draft" as const, supersedes_id: "source-id" };
-		const source = { id: "source-id", status: "deleted" as const, supersedes_id: null };
+		const draft = {
+			id: "draft-id",
+			status: "draft" as const,
+			supersedes_id: "source-id",
+		};
+		const source = {
+			id: "source-id",
+			status: "deleted" as const,
+			supersedes_id: null,
+		};
 
 		expect(resolve_lifecycle_target(draft, source)).toEqual({
 			target: draft,
@@ -130,7 +157,10 @@ describe("decide_slug_transition", () => {
 			old_primary_slug: { id: 7 },
 		});
 
-		expect(decision).toEqual({ action: "mint_new_and_demote", demote_slug_id: 7 });
+		expect(decision).toEqual({
+			action: "mint_new_and_demote",
+			demote_slug_id: 7,
+		});
 	});
 
 	test("mints a fresh slug when the superseded article never had a primary slug", () => {
@@ -179,6 +209,8 @@ describe("get_archive_origin_label", () => {
 	});
 
 	test("labels an article that was archived straight from draft", () => {
-		expect(get_archive_origin_label({ published_at: null })).toBe("bil osnutek");
+		expect(get_archive_origin_label({ published_at: null })).toBe(
+			"bil osnutek",
+		);
 	});
 });

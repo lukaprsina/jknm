@@ -45,9 +45,7 @@ export function TableOfContents({ entries }: { entries: TocEntry[] }) {
 	// render (the one hydration diffs against) would disagree with the SSR
 	// pass, where `document` doesn't exist at all -- exactly the
 	// server/client branch React's hydration-mismatch warning calls out.
-	const [aside_element, set_aside_element] = useState<HTMLElement | null>(
-		null,
-	);
+	const [aside_element, set_aside_element] = useState<HTMLElement | null>(null);
 	const [mobile_element, set_mobile_element] = useState<HTMLElement | null>(
 		null,
 	);

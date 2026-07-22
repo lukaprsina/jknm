@@ -59,7 +59,9 @@ export function ArchiveArticleButton({
 			</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>
-					<AlertDialogTitle>{dialog?.title ?? "Arhiviraj novičko"}</AlertDialogTitle>
+					<AlertDialogTitle>
+						{dialog?.title ?? "Arhiviraj novičko"}
+					</AlertDialogTitle>
 					<AlertDialogDescription>
 						{dialog?.description ??
 							"Ste prepričani, da želite arhivirati to novičko? Javna stran ne bo več dosegljiva, novičko pa lahko kadarkoli obnovite iz arhiva."}

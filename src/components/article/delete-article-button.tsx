@@ -59,7 +59,9 @@ export function DeleteArticleButton({
 			</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>
-					<AlertDialogTitle>{dialog?.title ?? "Izbriši novičko"}</AlertDialogTitle>
+					<AlertDialogTitle>
+						{dialog?.title ?? "Izbriši novičko"}
+					</AlertDialogTitle>
 					<AlertDialogDescription>
 						{dialog?.description ??
 							"Ste prepričani, da želite izbrisati to novičko? Izbrisanih novičk ni mogoče obnoviti."}

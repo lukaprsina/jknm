@@ -16,6 +16,7 @@ import {
 import { editor_store } from "~/components/editor/editor-store";
 import { useToast } from "~/hooks/use-toast";
 import { get_published_article_link } from "~/lib/article-utils";
+import { apply_client_invalidations } from "~/lib/cache-invalidation-client";
 import type { ThumbnailType } from "~/lib/validators";
 import { delete_article, discard_draft } from "~/server/article/lifecycle";
 import { publish_article, save_article } from "~/server/article/new-article";
@@ -63,9 +64,7 @@ export function useEditorMutations() {
 		onSettled: async () => {
 			editor_context.setSavingText(undefined);
 			editor_context.setDirty(false);
-			await query_client.invalidateQueries({
-				queryKey: ["infinite_published"],
-			});
+			await apply_client_invalidations(query_client, "article.published");
 		},
 		onError: (error) => {
 			toaster.toast({
@@ -79,9 +78,7 @@ export function useEditorMutations() {
 		mutationFn: (input: z.infer<typeof delete_article_validator>) =>
 			delete_article(input),
 		onSettled: async () => {
-			await query_client.invalidateQueries({
-				queryKey: ["infinite_published"],
-			});
+			await apply_client_invalidations(query_client, "article.deleted");
 			router.replace(`/`);
 		},
 		onError: (error) => {
@@ -96,9 +93,7 @@ export function useEditorMutations() {
 		mutationFn: (input: z.infer<typeof discard_draft_validator>) =>
 			discard_draft(input),
 		onSettled: async () => {
-			await query_client.invalidateQueries({
-				queryKey: ["infinite_published"],
-			});
+			await apply_client_invalidations(query_client, "article.draft_discarded");
 			// `url` is `""` when the source was archived straight from a draft
 			// and never had a slug minted — fall back to `/` in that case too.
 			router.replace(

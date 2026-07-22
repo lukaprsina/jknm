@@ -2,10 +2,10 @@
 
 import type { JWTInput } from "google-auth-library";
 import { google } from "googleapis";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 import { env } from "~/env";
 import { getServerAuthSession } from "../auth";
+import { apply_server_invalidations } from "../cache-invalidation";
 import { db } from "../db";
 import { Author } from "../db/schema";
 
@@ -88,8 +88,7 @@ export async function sync_members(
 		.values(mapped_users)
 		.returning();
 
-	revalidateTag("authors", "max");
-	revalidatePath("/");
+	apply_server_invalidations("author.synced");
 
 	console.log("Inserted google authors", google_result.length);
 	return google_result;

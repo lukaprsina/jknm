@@ -1,5 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { Shell } from "~/components/shell";
+import type { CacheTag } from "~/lib/cache-policy";
 import { article_variants, page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
 import { find_articles_for_verification } from "~/server/article/article-queries";
@@ -11,7 +12,7 @@ const cachedAllPublished = unstable_cache(
 		return find_articles_for_verification(db);
 	},
 	["all-published"],
-	{ tags: ["all-published"], revalidate: false },
+	{ tags: ["all-published"] satisfies CacheTag[], revalidate: false },
 );
 
 export default async function PreveriPage() {

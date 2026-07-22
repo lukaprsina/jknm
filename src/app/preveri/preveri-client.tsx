@@ -127,7 +127,9 @@ export function PreveriClient({
 					<Button
 						type="button"
 						disabled={Number.isNaN(page_info.previous)}
-						onClick={() => preveri_store.setState({ index: page_info.previous })}
+						onClick={() =>
+							preveri_store.setState({ index: page_info.previous })
+						}
 					>
 						Prejšnja: {page_info.previous}
 					</Button>

@@ -27,9 +27,14 @@ oRPC is a decided-but-unimplemented future step (see ADR-0002).
 - **Reads** — mostly RSC calling query helpers / Drizzle directly. Client-side TanStack Query
   is used in only **two** places: the infinite homepage feed (`src/app/infinite-no-trpc.tsx`,
   a filename fossil from the tRPC era) and the `/preveri` admin tool.
-- **Cache invalidation is split-brained**: each mutation hand-fires *both*
-  `queryClient.invalidateQueries` (client cache) and `revalidateTag`/`revalidatePath`
-  (server cache), duplicated across 16+ call sites. Consolidating this is #31.
+- **Cache invalidation goes through one typed mapping** (`src/lib/cache-policy.ts`, #31
+  step 1). Mutations emit a `DomainEvent` and never name tags or paths; the pure
+  `invalidations_for` returns a descriptor that two dumb adapters consume —
+  `src/server/cache-invalidation.ts` (`revalidateTag`/`revalidatePath`) and
+  `src/lib/cache-invalidation-client.ts` (`invalidateQueries`). Those two files are the
+  only places in `src/` that call the underlying primitives. A reachability test asserts
+  every declared cache tag is invalidated by at least one event, so the
+  `homepage-feed`/`all-published` dead-tag bug cannot recur.
 
 ## Caching
 
@@ -38,7 +43,11 @@ oRPC is a decided-but-unimplemented future step (see ADR-0002).
 a workaround that exists purely because `unstable_cache` JSON-mangles `Date` values.
 
 Five cache tags are declared, all with `revalidate: false`: `homepage-feed`, `all-published`,
-`drafts`, `archive`, `authors`.
+`drafts`, `archive`, `authors`. Each site declares its tags `satisfies CacheTag[]`
+(`src/lib/cache-policy.ts`), so the union and the cache sites cannot drift: a tag declared at a
+site but absent from `CACHE_TAGS` fails typecheck, and one added to `CACHE_TAGS` that no event
+invalidates fails the reachability test. Bounding the `revalidate` windows is #31 step 2, still
+pending.
 
 **Staying on `unstable_cache`** — migrating to Cache Components (`use cache`) was investigated
 and rejected (ADR-0005). What remains planned is

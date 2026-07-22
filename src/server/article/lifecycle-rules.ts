@@ -52,7 +52,9 @@ export function assert_can_discard(article: {
 	supersedes_id: string | null;
 }) {
 	if (article.status !== "draft") {
-		throw new Error(`Cannot discard an article with status "${article.status}"`);
+		throw new Error(
+			`Cannot discard an article with status "${article.status}"`,
+		);
 	}
 	if (!article.supersedes_id) {
 		throw new Error(

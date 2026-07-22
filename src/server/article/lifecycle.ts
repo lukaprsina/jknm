@@ -2,11 +2,11 @@
 
 import { algoliasearch as searchClient } from "algoliasearch";
 import { eq } from "drizzle-orm";
-import { revalidatePath, revalidateTag } from "next/cache";
 import type { z } from "zod";
 import { env } from "~/env";
 import { ALGOLIA_PUBLISHED_ARTICLE_INDEX } from "~/lib/algoliasearch";
 import { assert_one } from "~/lib/assert-length";
+import { apply_server_invalidations } from "../cache-invalidation";
 import { type DbTransaction, db } from "../db";
 import { Article, ArticlesToAuthors } from "../db/schema";
 import { find_article_with_relations } from "./article-queries";
@@ -137,11 +137,7 @@ export async function archive_article(
 		return find_article_with_relations(tx, eq(Article.id, target.id));
 	});
 
-	revalidateTag("drafts", "max");
-	revalidateTag("archive", "max");
-	revalidateTag("homepage-feed", "max");
-	revalidateTag("all-published", "max");
-	revalidatePath("/");
+	apply_server_invalidations("article.archived");
 	return transaction;
 }
 
@@ -184,11 +180,7 @@ export async function delete_article(
 		return deleted;
 	});
 
-	revalidateTag("drafts", "max");
-	revalidateTag("archive", "max");
-	revalidateTag("homepage-feed", "max");
-	revalidateTag("all-published", "max");
-	revalidatePath("/");
+	apply_server_invalidations("article.deleted");
 	return transaction;
 }
 
@@ -217,8 +209,7 @@ export async function discard_draft(
 		return soft_delete_article(tx, existing.id);
 	});
 
-	revalidateTag("drafts", "max");
-	revalidatePath("/");
+	apply_server_invalidations("article.draft_discarded");
 	return transaction;
 }
 
@@ -247,7 +238,7 @@ export async function create_superseding_draft(
 		input,
 	);
 
-	const transaction = await db.transaction(async (tx) => {
+	const { draft, source_status } = await db.transaction(async (tx) => {
 		const source = await find_article_with_relations(
 			tx,
 			eq(Article.id, validated_input.article_id),
@@ -291,11 +282,15 @@ export async function create_superseding_draft(
 			await soft_delete_article(tx, source.id);
 		}
 
-		return draft;
+		return { draft, source_status: source.status };
 	});
 
-	revalidateTag("drafts", "max");
-	revalidateTag("archive", "max");
-	revalidatePath("/");
-	return transaction;
+	// One action, two events: an `archived` source was just retired (the
+	// archive listing changed), a `published` one stays live and untouched.
+	apply_server_invalidations(
+		source_status === "archived"
+			? "article.unarchived"
+			: "article.superseding_draft_created",
+	);
+	return draft;
 }

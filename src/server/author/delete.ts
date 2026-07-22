@@ -1,9 +1,9 @@
 "use server";
 
 import { and, eq, inArray } from "drizzle-orm";
-import { revalidatePath, revalidateTag } from "next/cache";
 import type { z } from "zod";
 import { getServerAuthSession } from "../auth";
+import { apply_server_invalidations } from "../cache-invalidation";
 import { db } from "../db";
 import { Author } from "../db/schema";
 import { delete_guests_validator } from "./validator";
@@ -26,8 +26,7 @@ export async function delete_guests(
 		.where(and(eq(Author.author_type, "guest"), inArray(Author.id, input.ids)))
 		.returning();
 
-	revalidateTag("authors", "max");
-	revalidatePath("/");
+	apply_server_invalidations("author.deleted");
 
 	return result;
 }

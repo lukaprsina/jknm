@@ -60,7 +60,9 @@ export function find_draft_articles(executor: typeof db | DbTransaction) {
  * still-in-progress drafts and deleted rows, mirroring the legacy
  * `published_article`-only set this replaces.
  */
-export function find_articles_for_verification(executor: typeof db | DbTransaction) {
+export function find_articles_for_verification(
+	executor: typeof db | DbTransaction,
+) {
 	return executor.query.Article.findMany({
 		columns: { id: true, legacy_id: true },
 		where: notInArray(Article.status, ["draft", "deleted"]),
