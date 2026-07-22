@@ -13,8 +13,6 @@
 		"dev": "next dev",
 		"dev:staging": "env-cmd -f .env.staging next dev",
 		"lint": "eslint .",
-		"migrate-legacy": "bun run scripts/migrate-legacy-articles.ts",
-		"migrate-legacy:staging": "dotenv -e .env -e .env.staging --override -- bun run scripts/migrate-legacy-articles.ts",
 		"start": "next start",
 		"test": "vitest run",
 		"test:watch": "vitest",

@@ -146,7 +146,9 @@ The unified model is **live**: a single `articles` table with a
 `draft`/`published`/`archived`/`deleted` status enum, plus `media`, `article_slugs`,
 `media_to_articles`, `articles_to_authors`. Reads and writes all go through it.
 
-The legacy `published_article` / `draft_article` tables still **physically exist** with two
-remaining readers: `find_available_slug` (`src/server/article/slug.ts`) uses
-`published_article.url` for legacy slug-collision avoidance, and the `wake_supabase` route
-pings it. Dropping the tables is gated on removing that slug read — see ADR-0003.
+The legacy `published_article` / `draft_article` tables (plus their join tables and
+`duplicate_article_urls`) are **gone** — dropped in `drizzle/0006_clammy_echo.sql` once
+`find_available_slug` (`src/server/article/slug.ts`) no longer needed the
+`published_article.url` collision check and `wake_supabase` was repointed at `Article`. The
+one-shot `scripts/migrate-legacy-*` tooling that produced the migrated data is deleted along
+with them — see ADR-0003 for the historical audit.

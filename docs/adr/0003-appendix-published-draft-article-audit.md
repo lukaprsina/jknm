@@ -1,17 +1,13 @@
 # Appendix: `published_article`/`draft_article` deprecation audit
 
-> **Status: historical snapshot — mostly executed. Do not read as current state.**
+> **Status: historical snapshot — fully executed. Do not read as current state.**
 >
-> This is a point-in-time inventory taken 2026-07-18. Since then the cutover (#23/#24) and the
-> legacy-stack deletion (#26/#27) have landed: the legacy *write* paths catalogued in §2.1 and
-> the publish/unpublish control flow in §3.1–3.2 **no longer exist in the codebase**, and the
-> read paths in §2.6 have been cut over.
->
-> Exactly one item here is still live: `find_available_slug` in `src/server/article/slug.ts`
-> still reads `published_article.url` for legacy slug-collision avoidance (§8 item 7). That read
-> is the sole remaining blocker on physically dropping the two legacy tables — plus a trivial
-> `wake_supabase` keep-alive ping. Everything else in this document is kept for archaeology:
-> why the tables looked the way they did and what had to be ported.
+> This is a point-in-time inventory taken 2026-07-18. Since then the cutover (#23/#24), the
+> legacy-stack deletion (#26/#27), and the physical schema drop (`drizzle/0006_clammy_echo.sql`,
+> 2026-07-22) have all landed: `published_article`, `draft_article`, their join tables, and
+> `duplicate_article_urls` no longer exist, and the one-shot `scripts/migrate-legacy-*` tooling
+> that produced the migrated data is deleted. Everything in this document is kept for
+> archaeology: why the tables looked the way they did and what had to be ported.
 >
 > For current architecture see `docs/architecture.md`.
 

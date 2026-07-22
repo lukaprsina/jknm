@@ -4,7 +4,6 @@ import {
 	boolean,
 	index,
 	integer,
-	json,
 	jsonb,
 	pgEnum,
 	pgTable,
@@ -17,7 +16,6 @@ import {
 	uuid,
 	varchar,
 } from "drizzle-orm/pg-core";
-import type { ThumbnailType } from "~/lib/validators";
 
 export interface ArticleBlockType {
 	id?: string;
@@ -29,75 +27,6 @@ export interface ArticleContentType {
 	blocks: ArticleBlockType[];
 	version?: string;
 }
-
-export const PublishedArticle = pgTable(
-	"published_article",
-	{
-		id: serial("id").primaryKey(),
-		old_id: integer("old_id"),
-		title: varchar("title", { length: 255 }).notNull(),
-		url: varchar("url", { length: 255 }).notNull(),
-		created_at: timestamp("created_at", { withTimezone: true })
-			.default(sql`CURRENT_TIMESTAMP`)
-			.notNull(),
-		updated_at: timestamp("updated_at", { withTimezone: true })
-			.$onUpdate(() => new Date())
-			.notNull(),
-		content: json("content").$type<ArticleContentType>(),
-		content_preview: text("content_preview").default(""),
-		thumbnail_crop: json("thumbnail_crop").$type<ThumbnailType>(),
-	},
-	(published_article) => ({
-		created_at_index: index("p_created_at_idx").on(
-			published_article.created_at,
-		),
-	}),
-);
-
-export const PublishedArticleRelations = relations(
-	PublishedArticle,
-	({ many }) => ({
-		published_articles_to_authors: many(PublishedArticlesToAuthors),
-	}),
-);
-
-export const DuplicatedArticleUrls = pgTable("duplicate_article_urls", {
-	url: varchar("url", { length: 255 }).primaryKey(),
-});
-
-export const DraftArticle = pgTable(
-	"draft_article",
-	{
-		id: serial("id").primaryKey(),
-		published_id: integer("published_id")
-			.unique()
-			.references(() => PublishedArticle.id),
-		title: varchar("title", { length: 255 }).notNull(),
-		created_at: timestamp("created_at", { withTimezone: true })
-			.default(sql`CURRENT_TIMESTAMP`)
-			.notNull(),
-		updated_at: timestamp("updated_at", { withTimezone: true })
-			.$onUpdate(() => new Date())
-			.notNull(),
-		content: json("content").$type<ArticleContentType>(),
-		content_preview: text("content_preview").default(""),
-		thumbnail_crop: json("thumbnail_crop").$type<ThumbnailType>(),
-	},
-	(draft_article) => ({
-		created_at_index: index("d_created_at_idx").on(draft_article.created_at),
-	}),
-);
-
-export const DraftArticleRelations = relations(
-	DraftArticle,
-	({ one, many }) => ({
-		draft_articles_to_authors: many(DraftArticlesToAuthors),
-		published_article: one(PublishedArticle, {
-			fields: [DraftArticle.published_id],
-			references: [PublishedArticle.id],
-		}),
-	}),
-);
 
 export const author_type_enum = pgEnum("author_type", ["member", "guest"]);
 
@@ -120,82 +49,6 @@ export const Author = pgTable(
 		google_id_unique: uniqueIndex("author_google_id_idx").on(
 			author.google_id,
 		),
-	}),
-);
-
-export const PublishedArticlesToAuthors = pgTable(
-	"p_articles_to_authors",
-	{
-		published_id: integer("published_id")
-			.notNull()
-			.references(() => PublishedArticle.id, {
-				onDelete: "cascade",
-			}),
-		author_id: integer("author_id")
-			.notNull()
-			.references(() => Author.id, {
-				onDelete: "cascade",
-			}),
-		order: integer("order").default(0).notNull(),
-	},
-	(published_articles_to_authors) => ({
-		compoundKey: primaryKey({
-			columns: [
-				published_articles_to_authors.published_id,
-				published_articles_to_authors.author_id,
-			],
-		}),
-	}),
-);
-
-export const PublishedArticlesToAuthorsRelations = relations(
-	PublishedArticlesToAuthors,
-	({ one }) => ({
-		article: one(PublishedArticle, {
-			fields: [PublishedArticlesToAuthors.published_id],
-			references: [PublishedArticle.id],
-		}),
-		author: one(Author, {
-			fields: [PublishedArticlesToAuthors.author_id],
-			references: [Author.id],
-		}),
-	}),
-);
-
-export const DraftArticlesToAuthors = pgTable(
-	"d_articles_to_authors",
-	{
-		draft_id: integer("draft_id")
-			.notNull()
-			.references(() => DraftArticle.id, { onDelete: "cascade" }),
-		author_id: integer("author_id")
-			.notNull()
-			.references(() => Author.id, {
-				onDelete: "cascade",
-			}),
-		order: integer("order").default(0).notNull(),
-	},
-	(draft_articles_to_authors) => ({
-		compoundKey: primaryKey({
-			columns: [
-				draft_articles_to_authors.draft_id,
-				draft_articles_to_authors.author_id,
-			],
-		}),
-	}),
-);
-
-export const DraftArticlesToAuthorsRelations = relations(
-	DraftArticlesToAuthors,
-	({ one }) => ({
-		article: one(DraftArticle, {
-			fields: [DraftArticlesToAuthors.draft_id],
-			references: [DraftArticle.id],
-		}),
-		author: one(Author, {
-			fields: [DraftArticlesToAuthors.author_id],
-			references: [Author.id],
-		}),
 	}),
 );
 
@@ -319,9 +172,6 @@ export const verification = pgTable("verification", {
 });
 
 // --- Unified articles/media schema (#17) ---
-// Additive alongside PublishedArticle/DraftArticle. Legacy write paths are gone
-// (#27), but PublishedArticle is still read: slug.ts's find_available_slug
-// checks it for collision-avoidance, and wake_supabase/route.ts pings it.
 
 export const article_status_enum = pgEnum("article_status", [
 	"draft",

@@ -7,9 +7,6 @@
 - improve mobile
 - osnutka dva reš
 - statične bold zgodovina **
-- before dropping the legacy tables: write a script verifying every migrated article is
-  equivalent where it matters (title, slug, authors, content, thumbnail, media links) between
-  `published_article`/`draft_article` and `articles`.
 - homepage article summary is bold and different font
 - https://gemini.google.com/app/fe2c72a3af40444e (seo for domain switch)
 
@@ -21,7 +18,7 @@
    `revive-cache-dates`, collapse the dual `invalidateQueries`/`revalidateTag`
    invalidation into one helper, restructure `src/server`, land oRPC. One
    restructuring, not three.
-4. Drop legacy tables — gated on moving `find_available_slug` off
-   `published_article.url` and on the equivalence script above.
+4. ~~Drop legacy tables~~ — done 2026-07-22 (`drizzle/0006_clammy_echo.sql`), verified against
+   all 693 rows with `scripts/verify-legacy-migration.ts` before dropping.
 5. Fossil sweep — rename `infinite-no-trpc.tsx`, delete the commented tRPC query in
    `uredi/[draft_id]/editor.tsx`, drop unused `react-query-persist` deps.

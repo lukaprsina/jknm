@@ -65,12 +65,6 @@ export function get_s3_published_directory(
 	return `${article_url}-${format_date_for_url(date)}`;
 }
 
-// Kept for scripts/migrate-legacy-articles.ts (out of scope, #27), which
-// still needs to build legacy draft S3 paths for the one-time migration.
-export function get_s3_draft_directory(id: number) {
-	return `${id}`;
-}
-
 export function get_draft_article_link(id: string) {
 	return `/uredi/${id}`;
 }
