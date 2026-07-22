@@ -15,12 +15,7 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { useToast } from "~/hooks/use-toast";
-import { insert_guest } from "~/server/author/insert";
-import { rename_guest } from "~/server/author/rename";
-import type {
-	insert_guest_validator,
-	rename_guest_validator,
-} from "~/server/author/validator";
+import { orpc } from "~/lib/orpc-client";
 import type { GuestAuthor } from "./table";
 
 export const edit_form_schema = z.object({
@@ -37,19 +32,19 @@ export function EditAuthorNameForm({
 	const router = useRouter();
 	const toaster = useToast();
 
-	const rename_guest_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof rename_guest_validator>) =>
-			rename_guest(input),
-		onSettled: () => {
-			router.refresh();
-		},
-		onError: (error) => {
-			toaster.toast({
-				title: "Napaka pri preimenovanju avtorja",
-				description: error.message,
-			});
-		},
-	});
+	const rename_guest_mutation = useMutation(
+		orpc.author.renameGuest.mutationOptions({
+			onSettled: () => {
+				router.refresh();
+			},
+			onError: (error) => {
+				toaster.toast({
+					title: "Napaka pri preimenovanju avtorja",
+					description: error.message,
+				});
+			},
+		}),
+	);
 
 	const form = useForm<z.infer<typeof edit_form_schema>>({
 		resolver: zodResolver(edit_form_schema),
@@ -106,19 +101,19 @@ export function InsertAuthorForm() {
 	const toaster = useToast();
 	const router = useRouter();
 
-	const insert_guest_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof insert_guest_validator>) =>
-			insert_guest(input),
-		onSettled: () => {
-			router.refresh();
-		},
-		onError: (error) => {
-			toaster.toast({
-				title: "Napaka pri dodajanju novega avtorja",
-				description: error.message,
-			});
-		},
-	});
+	const insert_guest_mutation = useMutation(
+		orpc.author.insertGuest.mutationOptions({
+			onSettled: () => {
+				router.refresh();
+			},
+			onError: (error) => {
+				toaster.toast({
+					title: "Napaka pri dodajanju novega avtorja",
+					description: error.message,
+				});
+			},
+		}),
+	);
 
 	const form = useForm<z.infer<typeof insert_form_schema>>({
 		resolver: zodResolver(insert_form_schema),

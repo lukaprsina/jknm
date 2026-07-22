@@ -3,7 +3,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { TrashIcon } from "lucide-react";
 import type { ReactNode } from "react";
-import type { z } from "zod";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -18,8 +17,7 @@ import {
 import type { ButtonProps } from "~/components/ui/button";
 import { Button } from "~/components/ui/button";
 import { useToast } from "~/hooks/use-toast";
-import { delete_article } from "~/server/article/lifecycle";
-import type { delete_article_validator } from "~/server/article/validators";
+import { orpc } from "~/lib/orpc-client";
 
 /**
  * `draft`/`published`/`archived` -> `deleted`: direct, one plain confirm
@@ -40,17 +38,17 @@ export function DeleteArticleButton({
 }) {
 	const toaster = useToast();
 
-	const mutation = useMutation({
-		mutationFn: (input: z.infer<typeof delete_article_validator>) =>
-			delete_article(input),
-		onSuccess: () => on_deleted?.(),
-		onError: (error) => {
-			toaster.toast({
-				title: "Napaka pri brisanju novičke",
-				description: error.message,
-			});
-		},
-	});
+	const mutation = useMutation(
+		orpc.article.delete.mutationOptions({
+			onSuccess: () => on_deleted?.(),
+			onError: (error) => {
+				toaster.toast({
+					title: "Napaka pri brisanju novičke",
+					description: error.message,
+				});
+			},
+		}),
+	);
 
 	return (
 		<AlertDialog>

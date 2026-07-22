@@ -10,11 +10,10 @@ import type { ORPCContext } from "./context";
 export const base = os.$context<ORPCContext>();
 
 /**
- * Replaces `run_authorized_mutation`'s session half (see
- * src/server/article/authorized-mutation.ts). Only gates on `context.session`
- * — it never reads `next/headers` itself, so it composes and tests without a
- * request scope. Input validation is a separate, composable concern: attach
- * `.input(validator)` per procedure instead of bundling it into this guard.
+ * Only gates on `context.session` — never reads `next/headers` itself, so it
+ * composes and tests without a request scope. Input validation is a separate,
+ * composable concern: attach `.input(validator)` per procedure instead of
+ * bundling it into this guard.
  */
 export const requireAuth = base.middleware(async ({ context, next }) => {
 	if (!context.session) {

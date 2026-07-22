@@ -3,7 +3,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { ArchiveIcon } from "lucide-react";
 import type { ReactNode } from "react";
-import type { z } from "zod";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -18,8 +17,7 @@ import {
 import type { ButtonProps } from "~/components/ui/button";
 import { Button } from "~/components/ui/button";
 import { useToast } from "~/hooks/use-toast";
-import { archive_article } from "~/server/article/lifecycle";
-import type { archive_article_validator } from "~/server/article/validators";
+import { orpc } from "~/lib/orpc-client";
 
 /**
  * `draft`/`published` -> `archived` (#21): single mechanism for both "hide a
@@ -40,17 +38,17 @@ export function ArchiveArticleButton({
 }) {
 	const toaster = useToast();
 
-	const mutation = useMutation({
-		mutationFn: (input: z.infer<typeof archive_article_validator>) =>
-			archive_article(input),
-		onSuccess: () => on_archived?.(),
-		onError: (error) => {
-			toaster.toast({
-				title: "Napaka pri arhiviranju novičke",
-				description: error.message,
-			});
-		},
-	});
+	const mutation = useMutation(
+		orpc.article.archive.mutationOptions({
+			onSuccess: () => on_archived?.(),
+			onError: (error) => {
+				toaster.toast({
+					title: "Napaka pri arhiviranju novičke",
+					description: error.message,
+				});
+			},
+		}),
+	);
 
 	return (
 		<AlertDialog>

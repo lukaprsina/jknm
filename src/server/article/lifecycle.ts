@@ -6,11 +6,11 @@ import type { z } from "zod";
 import { env } from "~/env";
 import { ALGOLIA_PUBLISHED_ARTICLE_INDEX } from "~/lib/algoliasearch";
 import { assert_one } from "~/lib/assert-length";
+import type { Session } from "../auth";
 import { apply_server_invalidations } from "../cache-invalidation";
 import { type DbTransaction, db } from "../db";
 import { Article, ArticlesToAuthors } from "../db/schema";
 import { find_article_with_relations } from "./article-queries";
-import { run_authorized_mutation } from "./authorized-mutation";
 import {
 	assert_can_archive,
 	assert_can_delete,
@@ -19,7 +19,7 @@ import {
 	resolve_lifecycle_target,
 } from "./lifecycle-rules";
 import { reconcile_media_to_articles } from "./reconcile-media";
-import {
+import type {
 	archive_article_validator,
 	create_superseding_draft_validator,
 	delete_article_validator,
@@ -106,15 +106,10 @@ async function find_lifecycle_target(tx: DbTransaction, article_id: string) {
 export async function archive_article(
 	input: z.infer<typeof archive_article_validator>,
 ) {
-	const { input: validated_input } = await run_authorized_mutation(
-		archive_article_validator,
-		input,
-	);
-
 	const transaction = await db.transaction(async (tx) => {
 		const { target, cascade_delete_draft_id } = await find_lifecycle_target(
 			tx,
-			validated_input.article_id,
+			input.article_id,
 		);
 		assert_can_archive(target.status);
 
@@ -155,15 +150,10 @@ export async function archive_article(
 export async function delete_article(
 	input: z.infer<typeof delete_article_validator>,
 ) {
-	const { input: validated_input } = await run_authorized_mutation(
-		delete_article_validator,
-		input,
-	);
-
 	const transaction = await db.transaction(async (tx) => {
 		const { target, cascade_delete_draft_id } = await find_lifecycle_target(
 			tx,
-			validated_input.article_id,
+			input.article_id,
 		);
 		assert_can_delete(target.status);
 
@@ -193,14 +183,9 @@ export async function delete_article(
 export async function discard_draft(
 	input: z.infer<typeof discard_draft_validator>,
 ) {
-	const { input: validated_input } = await run_authorized_mutation(
-		discard_draft_validator,
-		input,
-	);
-
 	const transaction = await db.transaction(async (tx) => {
 		const existing = await tx.query.Article.findFirst({
-			where: eq(Article.id, validated_input.article_id),
+			where: eq(Article.id, input.article_id),
 			columns: LIFECYCLE_ROW_COLUMNS,
 		});
 		if (!existing) throw new Error("Article not found");
@@ -232,16 +217,12 @@ export async function discard_draft(
  */
 export async function create_superseding_draft(
 	input: z.infer<typeof create_superseding_draft_validator>,
+	session: Session,
 ) {
-	const { session, input: validated_input } = await run_authorized_mutation(
-		create_superseding_draft_validator,
-		input,
-	);
-
 	const { draft, source_status, reused } = await db.transaction(async (tx) => {
 		const source = await find_article_with_relations(
 			tx,
-			eq(Article.id, validated_input.article_id),
+			eq(Article.id, input.article_id),
 		);
 		if (!source) throw new Error("Article not found");
 		assert_can_supersede(source.status);

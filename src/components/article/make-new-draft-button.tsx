@@ -3,7 +3,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { z } from "zod";
 import type { ButtonProps } from "~/components/ui/button";
 import { Button } from "~/components/ui/button";
 import {
@@ -12,10 +11,9 @@ import {
 	PopoverTrigger,
 } from "~/components/ui/popover";
 import { get_draft_article_link } from "~/lib/article-utils";
+import { orpc } from "~/lib/orpc-client";
 import { article_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
-import { create_article } from "~/server/article/new-article";
-import type { create_article_validator } from "~/server/article/validators";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export default function MakeNewDraftButton({
@@ -24,16 +22,16 @@ export default function MakeNewDraftButton({
 }: ButtonProps & { title?: string }) {
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
-	const create_draft_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof create_article_validator>) =>
-			create_article(input),
-		onSuccess: (data) => {
-			router.push(get_draft_article_link(data.id));
-		},
-		onSettled: () => {
-			setOpen(false);
-		},
-	});
+	const create_draft_mutation = useMutation(
+		orpc.article.create.mutationOptions({
+			onSuccess: (data) => {
+				router.push(get_draft_article_link(data.id));
+			},
+			onSettled: () => {
+				setOpen(false);
+			},
+		}),
+	);
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>

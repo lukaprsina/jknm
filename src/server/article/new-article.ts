@@ -11,11 +11,11 @@ import {
 import { convert_title_to_url } from "~/lib/article-utils";
 import { assert_one } from "~/lib/assert-length";
 import type { ThumbnailType } from "~/lib/validators";
+import type { Session } from "../auth";
 import { apply_server_invalidations } from "../cache-invalidation";
 import { type DbTransaction, db } from "../db";
 import { Article, ArticleSlug, ArticlesToAuthors, Media } from "../db/schema";
 import { find_article_with_relations } from "./article-queries";
-import { run_authorized_mutation } from "./authorized-mutation";
 import { remove_from_algolia, soft_delete_article } from "./lifecycle";
 import {
 	assert_can_supersede,
@@ -24,7 +24,7 @@ import {
 } from "./lifecycle-rules";
 import { reconcile_media_to_articles } from "./reconcile-media";
 import { find_available_slug } from "./slug";
-import {
+import type {
 	create_article_validator,
 	publish_article_validator,
 	save_article_validator,
@@ -208,16 +208,12 @@ async function replace_article_authors(
  */
 export async function create_article(
 	input: z.infer<typeof create_article_validator>,
+	session: Session,
 ) {
-	const { session, input: validated_input } = await run_authorized_mutation(
-		create_article_validator,
-		input,
-	);
-
 	const created_articles = await db
 		.insert(Article)
 		.values({
-			title: validated_input.title,
+			title: input.title,
 			status: "draft",
 			content_json: {
 				blocks: [
@@ -249,51 +245,36 @@ export async function create_article(
 export async function save_article(
 	input: z.infer<typeof save_article_validator>,
 ) {
-	const { input: validated_input } = await run_authorized_mutation(
-		save_article_validator,
-		input,
-	);
-
 	const transaction = await db.transaction(async (tx) => {
-		const thumbnail = await resolve_thumbnail(
-			tx,
-			validated_input.article.thumbnail_crop,
-		);
+		const thumbnail = await resolve_thumbnail(tx, input.article.thumbnail_crop);
 
 		const updated = await tx
 			.update(Article)
 			.set({
-				title: validated_input.article.title,
-				content_json: validated_input.article.content ?? undefined,
-				...(validated_input.article.created_at
-					? { created_at: validated_input.article.created_at }
+				title: input.article.title,
+				content_json: input.article.content ?? undefined,
+				...(input.article.created_at
+					? { created_at: input.article.created_at }
 					: {}),
 				...thumbnail,
 			})
-			.where(eq(Article.id, validated_input.article_id))
+			.where(eq(Article.id, input.article_id))
 			.returning();
 
 		assert_one(updated);
 
-		await replace_article_authors(
-			tx,
-			validated_input.article_id,
-			validated_input.author_ids,
-		);
+		await replace_article_authors(tx, input.article_id, input.author_ids);
 		// Reconcile against the *persisted* content, not the input: the update
 		// above preserves the stored content when `input.article.content` is
 		// omitted, so keying reconcile off the input would wipe every media link
 		// on a content-less save.
 		await reconcile_media_to_articles(
 			tx,
-			validated_input.article_id,
+			input.article_id,
 			updated[0].content_json,
 		);
 
-		return find_article_with_relations(
-			tx,
-			eq(Article.id, validated_input.article_id),
-		);
+		return find_article_with_relations(tx, eq(Article.id, input.article_id));
 	});
 
 	apply_server_invalidations("article.saved");
@@ -311,14 +292,9 @@ export async function save_article(
 export async function publish_article(
 	input: z.infer<typeof publish_article_validator>,
 ) {
-	const { input: validated_input } = await run_authorized_mutation(
-		publish_article_validator,
-		input,
-	);
-
 	const transaction = await db.transaction(async (tx) => {
 		const existing = await tx.query.Article.findFirst({
-			where: eq(Article.id, validated_input.article_id),
+			where: eq(Article.id, input.article_id),
 			columns: { id: true, published_at: true, supersedes_id: true },
 		});
 		if (!existing) throw new Error("Article not found");
@@ -335,36 +311,36 @@ export async function publish_article(
 
 		const thumbnail = await resolve_thumbnail(
 			tx,
-			validated_input.article.thumbnail_crop,
+			input.article.thumbnail_crop,
 		);
 
 		const updated = await tx
 			.update(Article)
 			.set({
-				title: validated_input.article.title,
-				content_json: validated_input.article.content ?? undefined,
+				title: input.article.title,
+				content_json: input.article.content ?? undefined,
 				status: "published",
 				published_at: existing.published_at ?? new Date(),
-				...(validated_input.article.created_at
-					? { created_at: validated_input.article.created_at }
+				...(input.article.created_at
+					? { created_at: input.article.created_at }
 					: {}),
 				...thumbnail,
 			})
-			.where(eq(Article.id, validated_input.article_id))
+			.where(eq(Article.id, input.article_id))
 			.returning();
 
 		assert_one(updated);
 
 		await replace_article_authors(
 			tx,
-			validated_input.article_id,
-			validated_input.author_ids,
+			input.article_id,
+			input.author_ids,
 		);
 		// Reconcile against the *persisted* content (see `save_article`) so a
 		// publish that omits `content` doesn't wipe existing media links.
 		await reconcile_media_to_articles(
 			tx,
-			validated_input.article_id,
+			input.article_id,
 			updated[0].content_json,
 		);
 
@@ -372,19 +348,19 @@ export async function publish_article(
 			existing.supersedes_id && is_supersede_publish(source)
 				? await resolve_supersede_publish_slug(
 						tx,
-						validated_input.article_id,
+						input.article_id,
 						existing.supersedes_id,
-						validated_input.article.title,
+						input.article.title,
 					)
 				: await resolve_first_publish_slug(
 						tx,
-						validated_input.article_id,
-						validated_input.article.title,
+						input.article_id,
+						input.article.title,
 					);
 
 		const article = await find_article_with_relations(
 			tx,
-			eq(Article.id, validated_input.article_id),
+			eq(Article.id, input.article_id),
 		);
 		if (!article) throw new Error("Published article not found");
 

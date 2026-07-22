@@ -5,7 +5,6 @@ import type { Row } from "@tanstack/react-table";
 import { PencilIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import type { z } from "zod";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -31,8 +30,7 @@ import {
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { useToast } from "~/hooks/use-toast";
-import { delete_guests } from "~/server/author/delete";
-import type { delete_guests_validator } from "~/server/author/validator";
+import { orpc } from "~/lib/orpc-client";
 import type { GuestAuthor } from "./table";
 import { EditAuthorNameForm, InsertAuthorForm } from "./table-forms";
 
@@ -41,19 +39,19 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
 	const toaster = useToast();
 	const router = useRouter();
 
-	const delete_guests_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof delete_guests_validator>) =>
-			delete_guests(input),
-		onSettled: () => {
-			router.refresh();
-		},
-		onError: (error) => {
-			toaster.toast({
-				title: "Napaka pri brisanju avtorjev",
-				description: error.message,
-			});
-		},
-	});
+	const delete_guests_mutation = useMutation(
+		orpc.author.deleteGuests.mutationOptions({
+			onSettled: () => {
+				router.refresh();
+			},
+			onError: (error) => {
+				toaster.toast({
+					title: "Napaka pri brisanju avtorjev",
+					description: error.message,
+				});
+			},
+		}),
+	);
 
 	return (
 		<div className="flex gap-1">
@@ -123,19 +121,19 @@ export function AuthorsTableHeaderButtons({
 	const toaster = useToast();
 	const router = useRouter();
 
-	const delete_guests_mutation = useMutation({
-		mutationFn: (input: z.infer<typeof delete_guests_validator>) =>
-			delete_guests(input),
-		onSettled: () => {
-			router.refresh();
-		},
-		onError: (error) => {
-			toaster.toast({
-				title: "Napaka pri brisanju avtorjev",
-				description: error.message,
-			});
-		},
-	});
+	const delete_guests_mutation = useMutation(
+		orpc.author.deleteGuests.mutationOptions({
+			onSettled: () => {
+				router.refresh();
+			},
+			onError: (error) => {
+				toaster.toast({
+					title: "Napaka pri brisanju avtorjev",
+					description: error.message,
+				});
+			},
+		}),
+	);
 
 	const message = useMemo(() => {
 		const length = rows.length;

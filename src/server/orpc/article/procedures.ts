@@ -28,7 +28,9 @@ import { authed } from "../base";
 
 export const createArticle = authed
 	.input(create_article_validator)
-	.handler(async ({ input }) => create_article(input));
+	.handler(async ({ input, context }) =>
+		create_article(input, context.session),
+	);
 
 export const saveArticle = authed
 	.input(save_article_validator)
@@ -52,7 +54,9 @@ export const discardDraft = authed
 
 export const createSupersedingDraft = authed
 	.input(create_superseding_draft_validator)
-	.handler(async ({ input }) => create_superseding_draft(input));
+	.handler(async ({ input, context }) =>
+		create_superseding_draft(input, context.session),
+	);
 
 export const articleRouter = {
 	create: createArticle,
