@@ -11,6 +11,7 @@
   equivalent where it matters (title, slug, authors, content, thumbnail, media links) between
   `published_article`/`draft_article` and `articles`.
 - homepage article summary is bold and different font
+- https://gemini.google.com/app/fe2c72a3af40444e (seo for domain switch)
 
 ## Planned, sequenced (see docs/adr/0002)
 

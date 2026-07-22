@@ -4,3 +4,6 @@
 [submodule "vendor/better-auth"]
 	path = vendor/better-auth
 	url = https://github.com/better-auth/better-auth
+[submodule "vendor/orpc"]
+	path = vendor/orpc
+	url = https://github.com/middleapi/orpc
