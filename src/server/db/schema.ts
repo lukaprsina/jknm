@@ -13,6 +13,7 @@ import {
 	serial,
 	text,
 	timestamp,
+	uniqueIndex,
 	uuid,
 	varchar,
 } from "drizzle-orm/pg-core";
@@ -101,15 +102,26 @@ export const DraftArticleRelations = relations(
 export const author_type_enum = pgEnum("author_type", ["member", "guest"]);
 
 // guests have name only
-export const Author = pgTable("author", {
-	id: serial("id").primaryKey(),
-	author_type: author_type_enum("author_type").notNull(),
-	name: varchar("name", { length: 255 }).notNull(),
-	google_id: varchar("google_id", { length: 255 }),
-	email: text("email"),
-	image: varchar("image", { length: 255 }),
-	user_id: varchar("user_id", { length: 255 }).references(() => users.id),
-});
+export const Author = pgTable(
+	"author",
+	{
+		id: serial("id").primaryKey(),
+		author_type: author_type_enum("author_type").notNull(),
+		name: varchar("name", { length: 255 }).notNull(),
+		google_id: varchar("google_id", { length: 255 }),
+		email: text("email"),
+		image: varchar("image", { length: 255 }),
+		user_id: varchar("user_id", { length: 255 }).references(() => users.id),
+	},
+	(author) => ({
+		// The upsert target for sync_members: one Author row per Google member.
+		// Guests keep a NULL google_id, and Postgres unique indexes allow any
+		// number of NULLs, so this doesn't constrain them.
+		google_id_unique: uniqueIndex("author_google_id_idx").on(
+			author.google_id,
+		),
+	}),
+);
 
 export const PublishedArticlesToAuthors = pgTable(
 	"p_articles_to_authors",

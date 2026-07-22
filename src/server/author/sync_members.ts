@@ -1,16 +1,18 @@
+import { eq, sql } from "drizzle-orm";
 import type { JWTInput } from "google-auth-library";
 import { google } from "googleapis";
-import type { z } from "zod";
 import { env } from "~/env";
 import { apply_server_invalidations } from "../cache-invalidation";
 import { db } from "../db";
 import { Author } from "../db/schema";
-import type { sync_members_validator } from "./validator";
+import {
+	compute_member_sync_diff,
+	type DbMember,
+	type GoogleMember,
+	type MemberSyncChange,
+} from "./sync-members-diff";
 
-// TODO
-export async function sync_members(
-	input: z.infer<typeof sync_members_validator>,
-) {
+async function fetch_google_members(): Promise<GoogleMember[]> {
 	const credentials = env.JKNM_SERVICE_ACCOUNT_CREDENTIALS;
 	if (!credentials) {
 		throw new Error("No credentials for Google Admin found");
@@ -36,46 +38,93 @@ export async function sync_members(
 		throw new Error("No Google Admin users found");
 	}
 
-	const mapped_users: (typeof Author.$inferInsert)[] = [];
-	const uniqueGoogleIds = new Set<string>();
+	const members: GoogleMember[] = [];
+	const seen_google_ids = new Set<string>();
 
-	result.data.users.forEach((user) => {
+	for (const user of result.data.users) {
 		const name = user.name?.fullName;
+		if (!name) throw new Error(`No full name for Google user ${user.id}`);
 
-		if (!name) {
-			throw new Error(`No full name for Google user ${user.id}`);
-			// console.error(`No full name for Google user ${user.id}`);
-			// return;
-		}
-
-		const googleId = user.id ?? undefined;
-
-		if (!googleId) {
-			throw new Error(`No Google ID for user ${name}`);
-		}
-		if (uniqueGoogleIds.has(googleId)) {
+		const google_id = user.id ?? undefined;
+		if (!google_id) throw new Error(`No Google ID for user ${name}`);
+		if (seen_google_ids.has(google_id)) {
 			throw new Error(`Duplicate Google ID for user ${name}`);
 		}
+		seen_google_ids.add(google_id);
 
-		uniqueGoogleIds.add(googleId);
-
-		mapped_users.push({
-			author_type: "member",
-			google_id: googleId,
-			email: user.primaryEmail ?? undefined,
+		members.push({
+			google_id,
 			name,
-			image: user.thumbnailPhotoUrl ?? undefined,
-		} satisfies typeof Author.$inferInsert);
-	});
-	// .filter((user) => typeof user !== "undefined");
+			email: user.primaryEmail ?? null,
+			image: user.thumbnailPhotoUrl ?? null,
+		});
+	}
 
-	const google_result = await db
+	return members;
+}
+
+async function fetch_db_members(): Promise<DbMember[]> {
+	return db
+		.select({
+			id: Author.id,
+			google_id: Author.google_id,
+			name: Author.name,
+			email: Author.email,
+			image: Author.image,
+		})
+		.from(Author)
+		.where(eq(Author.author_type, "member"));
+}
+
+/**
+ * Read-only: fetches the current Google Workspace member list and diffs it
+ * against the DB, for the admin dialog's sanity-check view. Never writes.
+ */
+export async function preview_member_sync(): Promise<MemberSyncChange[]> {
+	const [google_members, db_members] = await Promise.all([
+		fetch_google_members(),
+		fetch_db_members(),
+	]);
+
+	return compute_member_sync_diff(google_members, db_members);
+}
+
+/**
+ * Re-fetches Google Workspace itself rather than trusting a client-supplied
+ * preview, then upserts every member keyed on `google_id`
+ * (author_google_id_idx). Members whose google_id has disappeared from
+ * Google (`missing` in the diff) are left untouched — Google marks departed
+ * accounts `suspended` rather than removing them, so this DB has never
+ * actually seen a real removal.
+ */
+export async function sync_members() {
+	const google_members = await fetch_google_members();
+
+	const result = await db
 		.insert(Author)
-		.values(mapped_users)
+		.values(
+			google_members.map(
+				(member) =>
+					({
+						author_type: "member",
+						google_id: member.google_id,
+						name: member.name,
+						email: member.email,
+						image: member.image,
+					}) satisfies typeof Author.$inferInsert,
+			),
+		)
+		.onConflictDoUpdate({
+			target: Author.google_id,
+			set: {
+				name: sql`excluded.name`,
+				email: sql`excluded.email`,
+				image: sql`excluded.image`,
+			},
+		})
 		.returning();
 
 	apply_server_invalidations("author.synced");
 
-	console.log("Inserted google authors", google_result.length);
-	return google_result;
+	return result;
 }

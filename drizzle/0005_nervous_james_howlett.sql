@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "author_google_id_idx" ON "author" USING btree ("google_id");

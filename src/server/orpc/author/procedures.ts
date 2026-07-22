@@ -7,7 +7,6 @@ import {
 	delete_guests_validator,
 	insert_guest_validator,
 	rename_guest_validator,
-	sync_members_validator,
 } from "~/server/author/validator";
 import { actionableOptions, authed } from "../base";
 
@@ -16,20 +15,19 @@ import { actionableOptions, authed } from "../base";
  * src/server/orpc/article/procedures.ts for the same `.actionable()`
  * rationale (real Server Actions, required by `updateTag`).
  *
- * `syncMembers` dynamic-imports `sync_members.ts` inside its handler instead
- * of importing it at module scope like the others: that file imports
- * `googleapis` (via `google-auth-library`), which has thrown at *import*
- * evaluation time — not just when called — under Vitest's node environment
- * (`buffer-equal-constant-time`/`jwa`), a pre-existing library
- * incompatibility. Deferring the import confines any crash to `syncMembers`
- * itself, which is what actually needs fixing (tracked separately — it's
- * marked `// TODO` in `sync_members.ts`). `syncMembers` has no wired UI call
- * site yet, so this is precautionary.
+ * `previewMemberSync`/`syncMembers` dynamic-import `sync_members.ts` inside
+ * their handlers instead of importing it at module scope like the others:
+ * that file imports `googleapis` (via `google-auth-library`), which throws
+ * at *import* evaluation time — not just when called — under Vitest's node
+ * environment (`buffer-equal-constant-time`/`jwa`), a pre-existing library
+ * incompatibility (Node 26 dropped `Buffer.SlowBuffer`, which that package
+ * still reaches for). Deferring the import confines the crash to these two
+ * procedures, which never run under Vitest.
  *
- * No Seam 3 smoke test for this procedure for the same reason: calling it
- * would still throw. The article-domain smoke tests
- * (`~/server/orpc/article/procedures.test.ts`) cover the same `authed`/
- * `.input()` wiring this module shares.
+ * No Seam 3 smoke test for these two procedures for the same reason: calling
+ * them would still throw under Vitest. The article-domain smoke tests
+ * (`~/server/orpc/article/procedures.test.ts`) cover the same `authed`
+ * wiring this module shares.
  */
 
 export const insertGuest = authed
@@ -47,10 +45,18 @@ export const deleteGuests = authed
 	.handler(async ({ input }) => delete_guests(input))
 	.actionable(actionableOptions);
 
+export const previewMemberSync = authed
+	.handler(async () => {
+		const { preview_member_sync } = await import(
+			"~/server/author/sync_members"
+		);
+		return preview_member_sync();
+	})
+	.actionable(actionableOptions);
+
 export const syncMembers = authed
-	.input(sync_members_validator)
-	.handler(async ({ input }) => {
+	.handler(async () => {
 		const { sync_members } = await import("~/server/author/sync_members");
-		return sync_members(input);
+		return sync_members();
 	})
 	.actionable(actionableOptions);

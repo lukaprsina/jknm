@@ -39,8 +39,14 @@ pattern that stood in for it.
   is the only transport, so each procedure is imported and called directly; reads go
   straight to RSC/Drizzle, not through oRPC.
 - **Reads** — mostly RSC calling query helpers / Drizzle directly. Client-side TanStack Query
-  is used in only **two** places: the infinite homepage feed (`src/app/infinite-no-trpc.tsx`,
-  a filename fossil from the tRPC era) and the `/preveri` admin tool.
+  is used in three places: the infinite homepage feed (`src/app/infinite-no-trpc.tsx`,
+  a filename fossil from the tRPC era), the `/preveri` admin tool, and the member-sync
+  preview in `src/components/settings/index.tsx`.
+  - The member-sync preview (`previewMemberSync`) is a deliberate exception to "reads go
+    through RSC, not oRPC": it's a read, but it calls the Google Admin API, which is too
+    slow to run on every render of the settings menu — it only runs when the sync dialog is
+    opened, from a client component, so it's wired as an `.actionable()` procedure like the
+    writes are, not as an RSC data fetch.
 - **Cache invalidation goes through one typed mapping** (`src/lib/cache-policy.ts`, #31
   step 1). Mutations emit a `DomainEvent` and never name tags or paths; the pure
   `invalidations_for` returns a descriptor that two dumb adapters consume —
