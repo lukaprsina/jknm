@@ -6,7 +6,7 @@ import { LinkIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import type { IntersectionRef } from "~/app/infinite-no-trpc";
+import type { IntersectionRef } from "~/app/infinite-articles";
 import { CardContent, CardHeader } from "~/components/ui/card";
 import { env } from "~/env";
 import { useToast } from "~/hooks/use-toast";

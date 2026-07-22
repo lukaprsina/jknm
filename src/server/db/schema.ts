@@ -239,7 +239,6 @@ export const Article = pgTable(
 		title: varchar("title", { length: 255 }).notNull(),
 		excerpt: text("excerpt").default(""),
 		content_json: jsonb("content_json").$type<ArticleContentType>(),
-		content_markdown: text("content_markdown"),
 		thumbnail_media_id: uuid("thumbnail_media_id").references(() => Media.id),
 		thumbnail_x: real("thumbnail_x"),
 		thumbnail_y: real("thumbnail_y"),

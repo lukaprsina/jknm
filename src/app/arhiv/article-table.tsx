@@ -21,7 +21,7 @@ import { get_published_article_link } from "~/lib/article-utils";
 import { format_date_for_human } from "~/lib/format-date";
 import type { PublishedArticleHit } from "~/lib/validators";
 import type { Session } from "~/server/auth";
-import type { IntersectionRef } from "../infinite-no-trpc";
+import type { IntersectionRef } from "../infinite-articles";
 import { MyStats, SORT_BY_ITEMS } from "./components";
 
 export function ArticleTable({

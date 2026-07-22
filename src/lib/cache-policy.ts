@@ -73,7 +73,7 @@ export interface InvalidationDescriptor {
 /** Every article view is reachable from `/`, so far. */
 const ROOT_PATHS = ["/"] as const;
 
-/** The homepage feed's TanStack Query key (`app/infinite-no-trpc.tsx`). */
+/** The homepage feed's TanStack Query key (`app/infinite-articles.tsx`). */
 const HOMEPAGE_FEED_KEYS = [["infinite_published"]] as const;
 
 /**

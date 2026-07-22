@@ -1,6 +1,6 @@
 "use client";
 
-import type { IntersectionRef } from "~/app/infinite-no-trpc";
+import type { IntersectionRef } from "~/app/infinite-articles";
 import { get_draft_article_link } from "~/lib/article-utils";
 import { convert_content_to_text } from "~/lib/content-to-text";
 import { ArticleCard } from "./card";
