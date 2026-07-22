@@ -1,5 +1,6 @@
 "use server";
 
+import { ORPCError } from "@orpc/server";
 import { delete_guests } from "~/server/author/delete";
 import { insert_guest } from "~/server/author/insert";
 import { rename_guest } from "~/server/author/rename";
@@ -45,18 +46,41 @@ export const deleteGuests = authed
 	.handler(async ({ input }) => delete_guests(input))
 	.actionable(actionableOptions);
 
+/**
+ * oRPC masks every thrown error into a generic "Internal Server Error"
+ * before it reaches the client (see `toORPCError` in `@orpc/client`) — so
+ * without this, a real cause (missing credentials, a Google API failure)
+ * is both invisible to the admin and never logged anywhere. Logging here
+ * and rethrowing with the original message preserved keeps that cause
+ * visible on both sides.
+ */
+function rethrow_logged(context: string, error: unknown): never {
+	console.error(`[${context}]`, error);
+	throw new ORPCError("INTERNAL_SERVER_ERROR", {
+		message: error instanceof Error ? error.message : String(error),
+	});
+}
+
 export const previewMemberSync = authed
 	.handler(async () => {
 		const { preview_member_sync } = await import(
 			"~/server/author/sync_members"
 		);
-		return preview_member_sync();
+		try {
+			return await preview_member_sync();
+		} catch (error) {
+			rethrow_logged("previewMemberSync", error);
+		}
 	})
 	.actionable(actionableOptions);
 
 export const syncMembers = authed
 	.handler(async () => {
 		const { sync_members } = await import("~/server/author/sync_members");
-		return sync_members();
+		try {
+			return await sync_members();
+		} catch (error) {
+			rethrow_logged("syncMembers", error);
+		}
 	})
 	.actionable(actionableOptions);

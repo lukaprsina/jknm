@@ -1,10 +1,11 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
 	CheckCircle2,
 	LogOut,
 	RefreshCcw,
+	SearchIcon,
 	SettingsIcon,
 	UsersIcon,
 } from "lucide-react";
@@ -166,20 +167,20 @@ function MemberSyncDialog({
 	const router = useRouter();
 	const query_client = useQueryClient();
 
-	const preview_query = useQuery({
-		queryKey: ["member-sync-preview"],
-		queryFn: () => unwrap_server_function(previewMemberSync()),
-		enabled: open,
+	const preview_mutation = useMutation({
+		mutationFn: () => unwrap_server_function(previewMemberSync()),
+		onError: (error) => {
+			toaster.toast({
+				title: "Napaka pri branju sprememb",
+				description: error.message,
+			});
+		},
 	});
 
-	// Write operation mutation
 	const sync_mutation = useMutation({
 		mutationFn: () => unwrap_server_function(syncMembers()),
 		onSuccess: async () => {
 			await apply_client_invalidations(query_client, "author.synced");
-			await query_client.invalidateQueries({
-				queryKey: ["member-sync-preview"],
-			});
 			router.refresh();
 			onOpenChange(false);
 		},
@@ -192,7 +193,15 @@ function MemberSyncDialog({
 	});
 
 	return (
-		<Dialog open={open} onOpenChange={onOpenChange}>
+		<Dialog
+			open={open}
+			onOpenChange={(next_open) => {
+				onOpenChange(next_open);
+				if (!next_open) {
+					preview_mutation.reset();
+				}
+			}}
+		>
 			<DialogContent
 				className="max-w-2xl"
 				aria-describedby="Uskladi člane z Google Admin"
@@ -205,13 +214,27 @@ function MemberSyncDialog({
 					</DialogDescription>
 				</DialogHeader>
 
-				{preview_query.isPending && <p>Nalaganje…</p>}
-				{preview_query.isError && (
+				{preview_mutation.isIdle && (
+					<Empty>
+						<EmptyHeader>
+							<EmptyMedia variant="icon">
+								<SearchIcon />
+							</EmptyMedia>
+							<EmptyTitle>Preveri spremembe</EmptyTitle>
+							<EmptyDescription>
+								Primerjaj trenutno stanje z Google Admin.
+							</EmptyDescription>
+						</EmptyHeader>
+						<Button onClick={() => preview_mutation.mutate()}>Preveri</Button>
+					</Empty>
+				)}
+				{preview_mutation.isPending && <p>Nalaganje…</p>}
+				{preview_mutation.isError && (
 					<p className="text-destructive">
-						Napaka: {preview_query.error.message}
+						Napaka: {preview_mutation.error.message}
 					</p>
 				)}
-				{preview_query.data?.length === 0 && (
+				{preview_mutation.data?.length === 0 && (
 					<Empty>
 						<EmptyHeader>
 							<EmptyMedia variant="icon">
@@ -224,7 +247,7 @@ function MemberSyncDialog({
 						</EmptyHeader>
 					</Empty>
 				)}
-				{preview_query.data && preview_query.data.length > 0 && (
+				{preview_mutation.data && preview_mutation.data.length > 0 && (
 					<ScrollArea className="max-h-96">
 						<Table>
 							<TableHeader>
@@ -235,7 +258,7 @@ function MemberSyncDialog({
 								</TableRow>
 							</TableHeader>
 							<TableBody>
-								{preview_query.data.map((change) => {
+								{preview_mutation.data.map((change) => {
 									const row = to_change_row(change);
 									return (
 										<TableRow key={row.key}>
@@ -262,8 +285,8 @@ function MemberSyncDialog({
 					</Button>
 					<Button
 						disabled={
-							!preview_query.data ||
-							preview_query.data.length === 0 ||
+							!preview_mutation.data ||
+							preview_mutation.data.length === 0 ||
 							sync_mutation.isPending
 						}
 						onClick={() => sync_mutation.mutate()}
