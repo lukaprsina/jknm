@@ -105,6 +105,27 @@ export function assert_can_supersede(status: ArticleStatus) {
 	}
 }
 
+/**
+ * Whether publishing a draft with `supersedes_id` set should retire and
+ * slug-inherit from `source` (a real supersede-publish), or fall back to a
+ * standalone first-publish.
+ *
+ * A superseding draft's source can already be `deleted` by the time the
+ * draft is published: unarchiving retires an `archived` source immediately,
+ * before the new draft is ever published (`create_superseding_draft`).
+ * `resolve_lifecycle_target` already treats that draft as standalone for
+ * archive/delete/discard — publish must agree, or publishing it throws via
+ * `assert_can_supersede` instead of falling back the same way.
+ */
+export function is_supersede_publish(
+	source: { status: ArticleStatus } | null,
+): boolean {
+	return (
+		source !== null &&
+		(source.status === "archived" || source.status === "published")
+	);
+}
+
 export type SlugTransitionDecision =
 	| { action: "reuse"; slug_id: number }
 	| { action: "mint_new_and_demote"; demote_slug_id: number }

@@ -20,6 +20,7 @@ import { remove_from_algolia, soft_delete_article } from "./lifecycle";
 import {
 	assert_can_supersede,
 	decide_slug_transition,
+	is_supersede_publish,
 } from "./lifecycle-rules";
 import { reconcile_media_to_articles } from "./reconcile-media";
 import { find_available_slug } from "./slug";
@@ -322,6 +323,16 @@ export async function publish_article(
 		});
 		if (!existing) throw new Error("Article not found");
 
+		// Only a plain read to decide which publish path this is; the locking
+		// re-read inside `resolve_supersede_publish_slug` is what actually
+		// guards the race on the source's slug.
+		const source = existing.supersedes_id
+			? ((await tx.query.Article.findFirst({
+					where: eq(Article.id, existing.supersedes_id),
+					columns: { status: true },
+				})) ?? null)
+			: null;
+
 		const thumbnail = await resolve_thumbnail(
 			tx,
 			validated_input.article.thumbnail_crop,
@@ -357,18 +368,19 @@ export async function publish_article(
 			updated[0].content_json,
 		);
 
-		const primary = existing.supersedes_id
-			? await resolve_supersede_publish_slug(
-					tx,
-					validated_input.article_id,
-					existing.supersedes_id,
-					validated_input.article.title,
-				)
-			: await resolve_first_publish_slug(
-					tx,
-					validated_input.article_id,
-					validated_input.article.title,
-				);
+		const primary =
+			existing.supersedes_id && is_supersede_publish(source)
+				? await resolve_supersede_publish_slug(
+						tx,
+						validated_input.article_id,
+						existing.supersedes_id,
+						validated_input.article.title,
+					)
+				: await resolve_first_publish_slug(
+						tx,
+						validated_input.article_id,
+						validated_input.article.title,
+					);
 
 		const article = await find_article_with_relations(
 			tx,

@@ -6,6 +6,7 @@ import {
 	assert_can_supersede,
 	decide_slug_transition,
 	get_archive_origin_label,
+	is_supersede_publish,
 	is_visible_to,
 	resolve_lifecycle_target,
 } from "./lifecycle-rules";
@@ -137,6 +138,27 @@ describe("assert_can_supersede", () => {
 			expect(() => assert_can_supersede(status)).toThrow();
 		},
 	);
+});
+
+describe("is_supersede_publish", () => {
+	test.each(["archived", "published"] as const)(
+		"is a supersede-publish when the source is still %s",
+		(status) => {
+			expect(is_supersede_publish({ status })).toBe(true);
+		},
+	);
+
+	test("is not a supersede-publish when the source has no supersedes_id (standalone draft)", () => {
+		expect(is_supersede_publish(null)).toBe(false);
+	});
+
+	test("falls back to a standalone first-publish when the source is already deleted (e.g. unarchive retired it)", () => {
+		expect(is_supersede_publish({ status: "deleted" })).toBe(false);
+	});
+
+	test("rejects a source still in draft, which should never happen but must not be treated as supersedable", () => {
+		expect(is_supersede_publish({ status: "draft" })).toBe(false);
+	});
 });
 
 describe("decide_slug_transition", () => {
