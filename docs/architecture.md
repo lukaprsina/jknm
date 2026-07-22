@@ -38,17 +38,28 @@ oRPC is a decided-but-unimplemented future step (see ADR-0002).
 
 ## Caching
 
-`unstable_cache` at 5 sites (`infinite-server.tsx`, `preveri/page.tsx`, `draft-articles.tsx`,
-`archived-articles.tsx`, `cached-global-state.tsx`), plus `src/lib/revive-cache-dates.ts` —
-a workaround that exists purely because `unstable_cache` JSON-mangles `Date` values.
+`unstable_cache` at 6 sites (`infinite-server.tsx`, `preveri/page.tsx`, `draft-articles.tsx`,
+`archived-articles.tsx`, `cached-global-state.tsx`, `server/article/get-article.ts`), plus
+`src/lib/revive-cache-dates.ts` — a workaround that exists purely because `unstable_cache`
+JSON-mangles `Date` values.
 
-Five cache tags are declared: `homepage-feed`, `all-published`, `drafts`, `archive`, `authors`.
-Each site declares its tags `satisfies CacheTag[]` (`src/lib/cache-policy.ts`), so the union and
-the cache sites cannot drift: a tag declared at a site but absent from `CACHE_TAGS` fails
-typecheck, and one added to `CACHE_TAGS` that no event invalidates fails the reachability test.
+Six cache tags are declared: `homepage-feed`, `all-published`, `drafts`, `archive`, `authors`,
+`article`. Each site declares its tags `satisfies CacheTag[]` (`src/lib/cache-policy.ts`), so the
+union and the cache sites cannot drift: a tag declared at a site but absent from `CACHE_TAGS`
+fails typecheck, and one added to `CACHE_TAGS` that no event invalidates fails the reachability
+test.
+
+`article` was added after step 3's Suspense extraction turned up a gap the ISR work exposed:
+`get_new_article_by_slug` (`/novica/[published_url]`'s only data read) was uncached, called
+**twice** per request (`generateMetadata` and the page body), against a pause-prone free-tier
+DB. It is now `cache()`-deduped per request and `unstable_cache`-backed across requests,
+invalidated by the events that touch the published set (`article.published`/`archived`/
+`unarchived`/`deleted`) **and** every `author.*` event — the cached read embeds each article's
+byline, so renaming or deleting an author would otherwise leave stale bylines cached for up to
+the revalidate window.
 
 Every site has a **finite `revalidate` window** (#31 step 2) — 3600s for the public reads
-(`homepage-feed`, `authors`), 300s for the editor-facing ones (`drafts`, `archive`,
+(`homepage-feed`, `authors`, `article`), 300s for the editor-facing ones (`drafts`, `archive`,
 `all-published`). These are a safety net, not the refresh mechanism: invalidation is what makes a
 mutation show up — promptly rather than instantly, since `revalidateTag(tag, "max")` is
 stale-while-revalidate, so the first reader after a mutation may still get the old value while
@@ -68,6 +79,14 @@ sufficient for it, and `nextjs16-caching-verdict.md` item 4 ("no Cache Component
 wrong on this point. Measured: stubbing the session read out of the shell entirely flips 7
 routes to `○ (Static)`; `/novica/[published_url]` stays dynamic regardless, because the page
 reads the session itself for its `is_visible_to` gate.
+
+**Decision: don't chase ISR here.** Reaching it would mean either dropping admin visibility of
+archived articles at their public URL, or reversing ADR-0005 to enable `cacheComponents` —
+both real costs, for a win (CDN edge caching, request collapsing under load) that matters most
+under exactly the traffic this site doesn't have (`CONTEXT.md`: "Public traffic is small").
+Instead the DB-protection half of the motivation — the article read being uncached and called
+twice per request — is covered by the `article` tag above, at none of that cost. Revisit
+alongside caching generally at the ADR-0004 VPS move, per ADR-0005.
 
 ## Auth
 

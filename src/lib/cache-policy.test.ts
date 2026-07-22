@@ -31,22 +31,22 @@ const EXPECTED: Record<
 		query_keys: [],
 	},
 	"article.published": {
-		tags: ["drafts", "archive", "homepage-feed", "all-published"],
+		tags: ["drafts", "archive", "homepage-feed", "all-published", "article"],
 		paths: ["/"],
 		query_keys: [["infinite_published"]],
 	},
 	"article.archived": {
-		tags: ["drafts", "archive", "homepage-feed", "all-published"],
+		tags: ["drafts", "archive", "homepage-feed", "all-published", "article"],
 		paths: ["/"],
 		query_keys: [["infinite_published"]],
 	},
 	"article.unarchived": {
-		tags: ["drafts", "archive", "all-published"],
+		tags: ["drafts", "archive", "all-published", "article"],
 		paths: ["/"],
 		query_keys: [],
 	},
 	"article.deleted": {
-		tags: ["drafts", "archive", "homepage-feed", "all-published"],
+		tags: ["drafts", "archive", "homepage-feed", "all-published", "article"],
 		paths: ["/"],
 		query_keys: [["infinite_published"]],
 	},
@@ -61,22 +61,22 @@ const EXPECTED: Record<
 		query_keys: [],
 	},
 	"author.inserted": {
-		tags: ["authors"],
+		tags: ["authors", "article"],
 		paths: ["/"],
 		query_keys: [],
 	},
 	"author.renamed": {
-		tags: ["authors"],
+		tags: ["authors", "article"],
 		paths: ["/"],
 		query_keys: [],
 	},
 	"author.deleted": {
-		tags: ["authors"],
+		tags: ["authors", "article"],
 		paths: ["/"],
 		query_keys: [],
 	},
 	"author.synced": {
-		tags: ["authors"],
+		tags: ["authors", "article"],
 		paths: ["/"],
 		query_keys: [],
 	},

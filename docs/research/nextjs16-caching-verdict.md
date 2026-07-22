@@ -224,16 +224,32 @@ tier pauses on inactivity with connection caps (ADR-0004 cites exactly these as
 reasons to leave it). The cache is protecting a fragile DB from a query on every
 page view. Deleting it is the wrong direction.
 
-**The genuinely valuable Option-C move** is orthogonal to both APIs: make
-`/novica/[published_url]` — 700 article pages, publicly readable, rarely changing,
-the site's whole SEO surface — actually static/ISR-cached at the CDN. Vercel gives
-that durable 31-day storage, cross-region 300ms purges, request collapsing, and
-instant rollback for free (<https://vercel.com/docs/incremental-static-regeneration>,
-"Benefits of Vercel's CDN for ISR"), via a plain `export const revalidate` — no
-Cache Components required. The blocker is the same one as §4: `Shell` and the page
-both read the session unwrapped. **That Suspense work pays off under either
-API**, which is the key scheduling insight: it is a prerequisite, not a
-Cache-Components tax.
+**Correction (post #31 step 3): this paragraph was wrong.** `/novica/[published_url]` — 700
+article pages, publicly readable, rarely changing, the site's whole SEO surface — looked like
+the genuinely valuable Option-C move: static/ISR-cache it at the CDN via a plain
+`export const revalidate`, no Cache Components required, once `Shell`'s session read was
+Suspense-wrapped.
+
+That premise doesn't hold on Next 16. A `<Suspense>` boundary only partitions a route into a
+static shell plus a dynamic hole **under Partial Prerendering**, and PPR has no standalone flag
+in Next 16 — it ships only as part of `cacheComponents` (`cacheComponents.md`: *"cacheComponents
+implements Partial Prerendering (PPR) as the default behavior… the `experimental.ppr`
+configuration flag and the `experimental_ppr` route segment configuration are no longer
+necessary and have been removed"*). Without it, `headers()` opts the whole route into dynamic
+rendering regardless of Suspense (`headers.md:48`). Measured after doing the extraction: all 18
+routes report `ƒ (Dynamic)`; stubbing the session read out entirely flips only the routes that
+don't read it elsewhere.
+
+`/novica/[published_url]` reads the session a second time anyway, directly in the page, for its
+`is_visible_to` gate — admins see archived articles at the public URL, visitors don't. That's a
+second, independent blocker: even with PPR available, serving the route from one shared static
+cache is incompatible with that gate, short of dropping it.
+
+The Suspense extraction still shipped (§7 item 4, first half) — it's real, portable-React value,
+just not sufficient for ISR by itself. **Reaching ISR now would need reversing this doc's own
+§7 verdict** (enable `cacheComponents`) **or removing the admin gate**, and neither is worth it
+against `CONTEXT.md`'s "public traffic is small." See `docs/architecture.md`'s Caching section
+for the decision and the measurement.
 
 ## 6. Timing — does the VPS move flip the calculus?
 
@@ -272,11 +288,13 @@ Not "stay and do nothing." Stay, and fix the things that are actually broken:
    `unstable_cache`'s `JSON.stringify` round-trip
    (`node_modules/next/dist/server/web/spec-extension/unstable-cache.js:23`), it is
    already written, and it is ~20 lines.
-4. **Separately, and worth more than the migration: Suspense-wrap the session read
-   in `Shell`, then put `export const revalidate` on
-   `/novica/[published_url]`.** This is portable React work, it unlocks Vercel's
-   real CDN/ISR layer for the 700 article pages, and it is the prerequisite for
-   Cache Components too — so it is never wasted.
+4. **Suspense-wrap the session read in `Shell`.** Done in #31 step 3. Still worth
+   doing on its own portable-React merits — it removed a `Session` object from
+   two client components and cut the shell's session query in half via
+   `React.cache`. **It does not unlock ISR on `/novica/[published_url]`, and
+   nothing short of it does either without reversing this doc's own verdict**;
+   see the correction above §6. Superseded: do not plan further work against
+   the original claim.
 5. **Revisit at the VPS move**, with the caching/oRPC/better-auth work, as ADR-0002
    already sequences.
 
@@ -290,9 +308,11 @@ and it fixes none of the defects that are actually hurting the site (§5) — th
 are two missing `revalidateTag` calls.
 
 **Why not C:** deleting app-level caching would put `cachedAllAuthors` back on
-every request against a pause-prone Supabase free tier. But C's *good* half — lean
-on ISR/CDN — is folded in as item 4 above, on its own merits and independent of
-which cache API is in use.
+every request against a pause-prone Supabase free tier. C's *good* half — lean
+on ISR/CDN — turned out to be blocked regardless of cache API (see the correction
+above §6); the DB-protection motivation behind it is instead covered by caching
+`get_new_article_by_slug` under the same `unstable_cache` regime as everything
+else (`article` tag, `docs/architecture.md`).
 
 **What would change this answer:**
 
@@ -313,5 +333,6 @@ which cache API is in use.
   query. `revive-cache-dates.ts` only handles `Date`; the underlying
   `JSON.stringify` limitation would resurface, and the structural fix is `use cache`
   (Flight serialization — see `nextjs16-caching.md` §2).
-- **Nothing about traffic growth changes this.** More traffic makes the *ISR* work
-  (item 4) more urgent, not the API migration.
+- **Nothing about traffic growth changes this**, and item 4 is no longer the
+  traffic-relief lever it was written as — see the correction above §6. Traffic
+  growth would instead argue for revisiting the `cacheComponents` question itself.

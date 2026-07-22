@@ -22,12 +22,12 @@
  * fail the suite.
  *
  * The loop is closed at both ends, so a new tag cannot go dead by omission.
- * All five cache sites — `app/infinite-server.tsx`, `app/preveri/page.tsx`,
+ * All six cache sites — `app/infinite-server.tsx`, `app/preveri/page.tsx`,
  * `components/draft-articles.tsx`, `components/archived-articles.tsx`,
- * `server/cached-global-state.tsx` — declare their tags
- * `satisfies CacheTag[]`, so declaring a tag that isn't listed here fails
- * typecheck; adding it here then fails the reachability test until some event
- * actually invalidates it.
+ * `server/cached-global-state.tsx`, `server/article/get-article.ts` —
+ * declare their tags `satisfies CacheTag[]`, so declaring a tag that isn't
+ * listed here fails typecheck; adding it here then fails the reachability
+ * test until some event actually invalidates it.
  */
 export const CACHE_TAGS = [
 	"drafts",
@@ -35,6 +35,7 @@ export const CACHE_TAGS = [
 	"authors",
 	"homepage-feed",
 	"all-published",
+	"article",
 ] as const;
 
 export type CacheTag = (typeof CACHE_TAGS)[number];
@@ -78,13 +79,16 @@ const HOMEPAGE_FEED_KEYS = [["infinite_published"]] as const;
 /**
  * Every tag touched when an article enters or leaves the published set:
  * `drafts` because the draft it was written in is gone, `archive` because a
- * superseded row can land there, and the two public listings.
+ * superseded row can land there, the two public listings, and `article`
+ * because the change is exactly what `/novica/[slug]` must stop serving
+ * stale for — visibility or content changed under that URL.
  */
 const PUBLISHED_SET_TAGS = [
 	"drafts",
 	"archive",
 	"homepage-feed",
 	"all-published",
+	"article",
 ] as const satisfies readonly CacheTag[];
 
 const DRAFTS_ONLY: InvalidationDescriptor = {
@@ -99,8 +103,16 @@ const PUBLISHED_SET_CHANGED: InvalidationDescriptor = {
 	query_keys: HOMEPAGE_FEED_KEYS,
 };
 
+// `article` is included because the cached article-by-slug read embeds each
+// article's authors for its byline (`ARTICLE_LIST_RELATIONS` in
+// article-queries.ts) — renaming or deleting an author would otherwise leave
+// stale bylines on every article page they wrote for, up to the revalidate
+// window. `author.inserted` doesn't strictly need it (a brand-new author has
+// no existing bylines yet), but one shared descriptor per event class is the
+// pattern this file already uses for the published-set events, and the cost
+// of over-invalidating is a few extra cache misses.
 const AUTHORS_CHANGED: InvalidationDescriptor = {
-	tags: ["authors"],
+	tags: ["authors", "article"],
 	paths: ROOT_PATHS,
 	query_keys: [],
 };
@@ -122,8 +134,11 @@ const INVALIDATIONS: Record<DomainEvent, InvalidationDescriptor> = {
 	// `/preveri` verifies everything that was ever public, archived rows
 	// included (`find_articles_for_verification`). `homepage-feed` does not
 	// change, because an archived article was already hidden from it.
+	// `article` does change: the source row going from archived to deleted
+	// means /novica/[slug] must stop serving it to admins, the only audience
+	// who could see it there.
 	"article.unarchived": {
-		tags: ["drafts", "archive", "all-published"],
+		tags: ["drafts", "archive", "all-published", "article"],
 		paths: ROOT_PATHS,
 		query_keys: [],
 	},
