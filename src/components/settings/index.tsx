@@ -23,13 +23,6 @@ import {
 	DialogTitle,
 } from "~/components/ui/dialog";
 import {
-	Empty,
-	EmptyDescription,
-	EmptyHeader,
-	EmptyMedia,
-	EmptyTitle,
-} from "~/components/ui/empty";
-import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
@@ -37,7 +30,13 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { ScrollArea } from "~/components/ui/scroll-area";
+import {
+	Empty,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyMedia,
+	EmptyTitle,
+} from "~/components/ui/empty";
 import {
 	Table,
 	TableBody,
@@ -122,10 +121,16 @@ const CHANGE_KIND_VARIANT: Record<
 	missing: "destructive",
 };
 
+const CHANGE_KIND_CLASS_NAME: Record<MemberSyncChange["kind"], string> = {
+	new: "",
+	changed: "border-transparent bg-amber-500 text-white hover:bg-amber-500/80",
+	missing: "",
+};
+
 interface ChangeRow {
 	key: string;
 	name: string;
-	detail: string;
+	details: string[];
 }
 
 function to_change_row(change: MemberSyncChange): ChangeRow {
@@ -134,24 +139,22 @@ function to_change_row(change: MemberSyncChange): ChangeRow {
 			return {
 				key: change.google.google_id,
 				name: change.google.name,
-				detail: change.google.email ?? "—",
+				details: [change.google.email ?? "—"],
 			};
 		case "changed":
 			return {
 				key: change.google.google_id,
 				name: change.google.name,
-				detail: change.diffs
-					.map(
-						(diff) =>
-							`${diff.field}: ${diff.before ?? "—"} → ${diff.after ?? "—"}`,
-					)
-					.join(", "),
+				details: change.diffs.map(
+					(diff) =>
+						`${diff.field}: ${diff.before ?? "—"} → ${diff.after ?? "—"}`,
+				),
 			};
 		case "missing":
 			return {
 				key: `db-${change.before.id}`,
 				name: change.before.name,
-				detail: "Ni več v Google Admin",
+				details: ["Ni več v Google Admin"],
 			};
 	}
 }
@@ -204,7 +207,7 @@ function MemberSyncDialog({
 			}}
 		>
 			<DialogContent
-				className="max-w-2xl"
+				className="max-w-3xl"
 				aria-describedby="Uskladi člane z Google Admin"
 			>
 				<DialogHeader>
@@ -249,13 +252,12 @@ function MemberSyncDialog({
 					</Empty>
 				)}
 				{preview_mutation.data && preview_mutation.data.length > 0 && (
-					<ScrollArea className="max-h-96">
-						<Table>
+					<div className="max-h-96 overflow-auto">
+						<Table className="min-w-[40rem]">
 							<TableHeader>
 								<TableRow>
 									<TableHead>Ime</TableHead>
 									<TableHead>Sprememba</TableHead>
-									<TableHead />
 								</TableRow>
 							</TableHeader>
 							<TableBody>
@@ -263,21 +265,30 @@ function MemberSyncDialog({
 									const row = to_change_row(change);
 									return (
 										<TableRow key={row.key}>
-											<TableCell>{row.name}</TableCell>
-											<TableCell className="text-muted-foreground">
-												{row.detail}
+											<TableCell className="whitespace-nowrap align-top">
+												<div className="flex items-center gap-2">
+													<Badge
+														variant={CHANGE_KIND_VARIANT[change.kind]}
+														className={CHANGE_KIND_CLASS_NAME[change.kind]}
+													>
+														{CHANGE_KIND_LABEL[change.kind]}
+													</Badge>
+													{row.name}
+												</div>
 											</TableCell>
-											<TableCell>
-												<Badge variant={CHANGE_KIND_VARIANT[change.kind]}>
-													{CHANGE_KIND_LABEL[change.kind]}
-												</Badge>
+											<TableCell className="text-muted-foreground">
+												{row.details.map((detail) => (
+													<div key={detail} className="whitespace-nowrap">
+														{detail}
+													</div>
+												))}
 											</TableCell>
 										</TableRow>
 									);
 								})}
 							</TableBody>
 						</Table>
-					</ScrollArea>
+					</div>
 				)}
 
 				<DialogFooter>
