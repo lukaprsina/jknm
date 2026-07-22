@@ -15,7 +15,7 @@
  * whether anything currently invalidates it.
  *
  * The direction matters: taking this list from the invalidation side is how
- * `homepage-feed` and `all-published` sat dead — declared with
+ * `homepage-feed` and `all-published` sat dead — declared, at the time, with
  * `revalidate: false`, reachable from no `revalidateTag` call, and therefore
  * serving a permanently frozen homepage feed and `/preveri` view. The
  * reachability test in `cache-policy.test.ts` exists to make that class of bug

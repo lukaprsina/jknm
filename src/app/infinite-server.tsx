@@ -17,7 +17,13 @@ const cachedPublishedPage = unstable_cache(
 		return find_published_articles_page(db, { limit, cursor: pageParam });
 	},
 	["homepage-feed"],
-	{ tags: ["homepage-feed"] satisfies CacheTag[], revalidate: false },
+	{
+		tags: ["homepage-feed"] satisfies CacheTag[],
+		// Public read: the cache earns its keep here, so the window is long. It
+		// is a safety net, not the refresh mechanism — article.published and
+		// friends invalidate this tag directly.
+		revalidate: 3600,
+	},
 );
 
 export async function get_infinite_published2({

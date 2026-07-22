@@ -42,12 +42,18 @@ oRPC is a decided-but-unimplemented future step (see ADR-0002).
 `archived-articles.tsx`, `cached-global-state.tsx`), plus `src/lib/revive-cache-dates.ts` —
 a workaround that exists purely because `unstable_cache` JSON-mangles `Date` values.
 
-Five cache tags are declared, all with `revalidate: false`: `homepage-feed`, `all-published`,
-`drafts`, `archive`, `authors`. Each site declares its tags `satisfies CacheTag[]`
-(`src/lib/cache-policy.ts`), so the union and the cache sites cannot drift: a tag declared at a
-site but absent from `CACHE_TAGS` fails typecheck, and one added to `CACHE_TAGS` that no event
-invalidates fails the reachability test. Bounding the `revalidate` windows is #31 step 2, still
-pending.
+Five cache tags are declared: `homepage-feed`, `all-published`, `drafts`, `archive`, `authors`.
+Each site declares its tags `satisfies CacheTag[]` (`src/lib/cache-policy.ts`), so the union and
+the cache sites cannot drift: a tag declared at a site but absent from `CACHE_TAGS` fails
+typecheck, and one added to `CACHE_TAGS` that no event invalidates fails the reachability test.
+
+Every site has a **finite `revalidate` window** (#31 step 2) — 3600s for the public reads
+(`homepage-feed`, `authors`), 300s for the editor-facing ones (`drafts`, `archive`,
+`all-published`). These are a safety net, not the refresh mechanism: invalidation is what makes a
+mutation show up — promptly rather than instantly, since `revalidateTag(tag, "max")` is
+stale-while-revalidate, so the first reader after a mutation may still get the old value while
+the refresh runs. The window only bounds how long a *missing* invalidation could serve a frozen
+view.
 
 **Staying on `unstable_cache`** — migrating to Cache Components (`use cache`) was investigated
 and rejected (ADR-0005). What remains planned is

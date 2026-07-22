@@ -25,7 +25,12 @@ export const cachedArchived = unstable_cache(
 		});
 	},
 	["archive"],
-	{ tags: ["archive"] satisfies CacheTag[], revalidate: false },
+	{
+		tags: ["archive"] satisfies CacheTag[],
+		// Editor-facing and low-traffic, so a short window costs little and
+		// recovers quickly from a missed invalidation.
+		revalidate: 300,
+	},
 );
 
 export async function ArchivedArticles() {

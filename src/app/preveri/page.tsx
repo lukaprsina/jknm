@@ -12,7 +12,12 @@ const cachedAllPublished = unstable_cache(
 		return find_articles_for_verification(db);
 	},
 	["all-published"],
-	{ tags: ["all-published"] satisfies CacheTag[], revalidate: false },
+	{
+		tags: ["all-published"] satisfies CacheTag[],
+		// Verification view: its whole job is reflecting reality, and it is read
+		// by admins only, so bound it tightly.
+		revalidate: 300,
+	},
 );
 
 export default async function PreveriPage() {

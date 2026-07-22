@@ -7,5 +7,9 @@ export const cachedAllAuthors = unstable_cache(
 		return db.query.Author.findMany();
 	},
 	["authors"],
-	{ tags: ["authors"] satisfies CacheTag[], revalidate: false },
+	{
+		tags: ["authors"] satisfies CacheTag[],
+		// Read on every page that renders bylines, and authors change rarely.
+		revalidate: 3600,
+	},
 );

@@ -17,7 +17,12 @@ export const cachedDrafts = unstable_cache(
 		return find_draft_articles(db);
 	},
 	["drafts"],
-	{ tags: ["drafts"] satisfies CacheTag[], revalidate: false },
+	{
+		tags: ["drafts"] satisfies CacheTag[],
+		// Editor-facing and low-traffic, so a short window costs little and
+		// recovers quickly from a missed invalidation.
+		revalidate: 300,
+	},
 );
 
 export async function DraftArticles() {
