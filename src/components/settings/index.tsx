@@ -1,7 +1,13 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { LogOut, RefreshCcw, SettingsIcon, UsersIcon } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+	CheckCircle2,
+	LogOut,
+	RefreshCcw,
+	SettingsIcon,
+	UsersIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -15,6 +21,13 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "~/components/ui/dialog";
+import {
+	Empty,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyMedia,
+	EmptyTitle,
+} from "~/components/ui/empty";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -71,7 +84,7 @@ export function SettingsDropdown() {
 					</DropdownMenuItem>
 					<DropdownMenuItem onClick={() => set_sync_dialog_open(true)}>
 						<RefreshCcw className="mr-2 h-4 w-4" size={18} />
-						<span>Popravi</span>
+						<span>Uskladi člane</span>
 					</DropdownMenuItem>
 					<DropdownMenuSeparator />
 					<DropdownMenuItem
@@ -127,7 +140,10 @@ function to_change_row(change: MemberSyncChange): ChangeRow {
 				key: change.google.google_id,
 				name: change.google.name,
 				detail: change.diffs
-					.map((diff) => `${diff.field}: ${diff.before ?? "—"} → ${diff.after ?? "—"}`)
+					.map(
+						(diff) =>
+							`${diff.field}: ${diff.before ?? "—"} → ${diff.after ?? "—"}`,
+					)
 					.join(", "),
 			};
 		case "missing":
@@ -139,13 +155,6 @@ function to_change_row(change: MemberSyncChange): ChangeRow {
 	}
 }
 
-/**
- * Read-only sanity check, not an editable diff (per design: never meant to
- * be edited, and "Update" always re-fetches Google itself rather than
- * trusting this preview). `missing` rows are informational only — Google
- * marks departed members `suspended` rather than removing them, so nothing
- * here is ever deleted.
- */
 function MemberSyncDialog({
 	open,
 	onOpenChange,
@@ -157,20 +166,20 @@ function MemberSyncDialog({
 	const router = useRouter();
 	const query_client = useQueryClient();
 
-	const preview_mutation = useMutation({
-		mutationFn: () => unwrap_server_function(previewMemberSync()),
-		onError: (error) => {
-			toaster.toast({
-				title: "Napaka pri branju sprememb",
-				description: error.message,
-			});
-		},
+	const preview_query = useQuery({
+		queryKey: ["member-sync-preview"],
+		queryFn: () => unwrap_server_function(previewMemberSync()),
+		enabled: open,
 	});
 
+	// Write operation mutation
 	const sync_mutation = useMutation({
 		mutationFn: () => unwrap_server_function(syncMembers()),
 		onSuccess: async () => {
 			await apply_client_invalidations(query_client, "author.synced");
+			await query_client.invalidateQueries({
+				queryKey: ["member-sync-preview"],
+			});
 			router.refresh();
 			onOpenChange(false);
 		},
@@ -183,13 +192,7 @@ function MemberSyncDialog({
 	});
 
 	return (
-		<Dialog
-			open={open}
-			onOpenChange={(next_open) => {
-				onOpenChange(next_open);
-				if (next_open) preview_mutation.mutate();
-			}}
-		>
+		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent
 				className="max-w-2xl"
 				aria-describedby="Uskladi člane z Google Admin"
@@ -202,16 +205,26 @@ function MemberSyncDialog({
 					</DialogDescription>
 				</DialogHeader>
 
-				{preview_mutation.isPending && <p>Nalaganje…</p>}
-				{preview_mutation.isError && (
+				{preview_query.isPending && <p>Nalaganje…</p>}
+				{preview_query.isError && (
 					<p className="text-destructive">
-						Napaka: {preview_mutation.error.message}
+						Napaka: {preview_query.error.message}
 					</p>
 				)}
-				{preview_mutation.data?.length === 0 && (
-					<p>Ni sprememb — vsi člani so že usklajeni.</p>
+				{preview_query.data?.length === 0 && (
+					<Empty>
+						<EmptyHeader>
+							<EmptyMedia variant="icon">
+								<CheckCircle2 />
+							</EmptyMedia>
+							<EmptyTitle>Ni sprememb</EmptyTitle>
+							<EmptyDescription>
+								Vsi člani so že usklajeni z Google Admin.
+							</EmptyDescription>
+						</EmptyHeader>
+					</Empty>
 				)}
-				{preview_mutation.data && preview_mutation.data.length > 0 && (
+				{preview_query.data && preview_query.data.length > 0 && (
 					<ScrollArea className="max-h-96">
 						<Table>
 							<TableHeader>
@@ -222,7 +235,7 @@ function MemberSyncDialog({
 								</TableRow>
 							</TableHeader>
 							<TableBody>
-								{preview_mutation.data.map((change) => {
+								{preview_query.data.map((change) => {
 									const row = to_change_row(change);
 									return (
 										<TableRow key={row.key}>
@@ -249,8 +262,8 @@ function MemberSyncDialog({
 					</Button>
 					<Button
 						disabled={
-							!preview_mutation.data ||
-							preview_mutation.data.length === 0 ||
+							!preview_query.data ||
+							preview_query.data.length === 0 ||
 							sync_mutation.isPending
 						}
 						onClick={() => sync_mutation.mutate()}
@@ -262,89 +275,3 @@ function MemberSyncDialog({
 		</Dialog>
 	);
 }
-
-/* 
-<DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <User className="mr-2 h-4 w-4" />
-            <span>Avtorji</span>
-            <DropdownMenuShortcut>⇧⌘A</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <CreditCard className="mr-2 h-4 w-4" />
-            <span>Billing</span>
-            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Keyboard className="mr-2 h-4 w-4" />
-            <span>Keyboard shortcuts</span>
-            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <Users className="mr-2 h-4 w-4" />
-            <span>Team</span>
-          </DropdownMenuItem>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <UserPlus className="mr-2 h-4 w-4" />
-              <span>Invite users</span>
-            </DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <DropdownMenuItem>
-                  <Mail className="mr-2 h-4 w-4" />
-                  <span>Email</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <MessageSquare className="mr-2 h-4 w-4" />
-                  <span>Message</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  <span>More...</span>
-                </DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-          </DropdownMenuSub>
-          <DropdownMenuItem>
-            <Plus className="mr-2 h-4 w-4" />
-            <span>New Team</span>
-            <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Github className="mr-2 h-4 w-4" />
-          <span>GitHub</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <LifeBuoy className="mr-2 h-4 w-4" />
-          <span>Support</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem disabled>
-          <Cloud className="mr-2 h-4 w-4" />
-          <span>API</span>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>Log out</span>
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-        </DropdownMenuItem>
-*/
