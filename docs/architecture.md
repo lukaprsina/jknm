@@ -30,7 +30,7 @@ oRPC is a decided-but-unimplemented future step (see ADR-0002).
 - **Cache invalidation goes through one typed mapping** (`src/lib/cache-policy.ts`, #31
   step 1). Mutations emit a `DomainEvent` and never name tags or paths; the pure
   `invalidations_for` returns a descriptor that two dumb adapters consume —
-  `src/server/cache-invalidation.ts` (`revalidateTag`/`revalidatePath`) and
+  `src/server/cache-invalidation.ts` (`updateTag`/`revalidatePath`) and
   `src/lib/cache-invalidation-client.ts` (`invalidateQueries`). Those two files are the
   only places in `src/` that call the underlying primitives. A reachability test asserts
   every declared cache tag is invalidated by at least one event, so the
@@ -59,10 +59,12 @@ for why this exists instead of ISR.
 Every site has a **finite `revalidate` window** (#31 step 2) — 3600s for the public reads
 (`homepage-feed`, `authors`, `article`), 300s for the editor-facing ones (`drafts`, `archive`,
 `all-published`). These are a safety net, not the refresh mechanism: invalidation is what makes a
-mutation show up — promptly rather than instantly, since `revalidateTag(tag, "max")` is
-stale-while-revalidate, so the first reader after a mutation may still get the old value while
-the refresh runs. The window only bounds how long a *missing* invalidation could serve a frozen
-view.
+mutation show up. `apply_server_invalidations` uses `updateTag`, not `revalidateTag(tag, "max")`
+— every call site is inside a Server Action, and `updateTag` blocks the next reader on fresh data
+instead of `"max"`'s stale-while-revalidate (which let a reader right after a mutation still get
+the pre-mutation value; concretely, an admin republishing an article under a new slug could still
+load the stale old-slug page and crash clicking edit on its now-`deleted` source). The window only
+bounds how long a *missing* invalidation could serve a frozen view.
 
 **Staying on `unstable_cache`** — migrating to Cache Components (`use cache`) was investigated
 and rejected ([ADR-0005](adr/0005-stay-on-unstable-cache.md)). What remains planned is

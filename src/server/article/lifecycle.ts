@@ -1,7 +1,7 @@
 "use server";
 
 import { algoliasearch as searchClient } from "algoliasearch";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import type { z } from "zod";
 import { env } from "~/env";
 import { ALGOLIA_PUBLISHED_ARTICLE_INDEX } from "~/lib/algoliasearch";
@@ -238,13 +238,32 @@ export async function create_superseding_draft(
 		input,
 	);
 
-	const { draft, source_status } = await db.transaction(async (tx) => {
+	const { draft, source_status, reused } = await db.transaction(async (tx) => {
 		const source = await find_article_with_relations(
 			tx,
 			eq(Article.id, validated_input.article_id),
 		);
 		if (!source) throw new Error("Article not found");
 		assert_can_supersede(source.status);
+
+		// The pencil/"revise" action can be triggered again on an article that
+		// already has an open superseding draft (double-click, a second tab,
+		// re-opening the page) — reuse that draft instead of minting a second
+		// one pointing at the same source, which orphaned the first as a
+		// duplicate no lifecycle action ever cleaned up.
+		const existing_draft = await tx.query.Article.findFirst({
+			where: and(
+				eq(Article.supersedes_id, source.id),
+				eq(Article.status, "draft"),
+			),
+		});
+		if (existing_draft) {
+			return {
+				draft: existing_draft,
+				source_status: source.status,
+				reused: true,
+			};
+		}
 
 		const created = await tx
 			.insert(Article)
@@ -282,8 +301,10 @@ export async function create_superseding_draft(
 			await soft_delete_article(tx, source.id);
 		}
 
-		return { draft, source_status: source.status };
+		return { draft, source_status: source.status, reused: false };
 	});
+
+	if (reused) return draft;
 
 	// One action, two events: an `archived` source was just retired (the
 	// archive listing changed), a `published` one stays live and untouched.

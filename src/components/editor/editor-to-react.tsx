@@ -7,7 +7,7 @@ import Blocks from "editorjs-blocks-react-renderer";
 import HTMLReactParser from "html-react-parser";
 import Image from "next/image";
 import Link from "next/link";
-import { createElement, useEffect, useMemo, useRef, useState } from "react";
+import { createElement, useEffect, useMemo, useRef } from "react";
 import ArticleDescription from "~/components/article/description";
 import { gallery_store, useGalleryImages } from "~/components/gallery-store";
 import { TableOfContents } from "~/components/toc/table-of-contents";
@@ -99,12 +99,13 @@ export function EditorToReact({
 }: {
 	article: EditorDraftArticle | PublishedArticleView | undefined;
 }) {
-	const [heading, setHeading] = useState<string | undefined>();
-
 	const { blocks_data, headings } = useEditorData(article);
 
-	useEffect(() => {
-		if (!article?.content) return;
+	// Derived synchronously from `article.content` (available at first paint,
+	// SSR included) rather than via useEffect+useState, which left every
+	// article flashing "Untitled" until the effect ran post-hydration.
+	const heading = useMemo(() => {
+		if (!article?.content) return undefined;
 
 		const heading_info = get_heading_from_editor(article.content);
 
@@ -114,7 +115,7 @@ export function EditorToReact({
 			title = "Invalid heading";
 		}
 
-		setHeading(title);
+		return title;
 	}, [article?.content]);
 
 	const gallery_images = useMemo(() => {

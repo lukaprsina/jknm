@@ -19,6 +19,7 @@ export const cachedArchived = unstable_cache(
 			where: eq(Article.status, "archived"),
 			with: {
 				articles_to_authors: { with: { author: true } },
+				article_slugs: true,
 				thumbnail_media: true,
 			},
 			orderBy: desc(Article.archived_at),
