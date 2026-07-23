@@ -1,17 +1,13 @@
 {
-    "editor.codeActionsOnSave": {
-        "source.fixAll.biome": "explicit",
-        "source.organizeImports.biome": "explicit",
-        "source.sortMembers.biome": "explicit"
-    },
-    "files.associations": {
-        "*.css": "tailwindcss"
-    },
-    "tailwindCSS.classAttributes": [
-        "class",
-        "className",
-        "headerClassName"
-    ],
-    "git.detectSubmodules": false,
-    "vsicons.presets.angular": true
+	"editor.codeActionsOnSave": {
+		"source.fixAll.biome": "explicit",
+		"source.organizeImports.biome": "explicit",
+		"source.sortMembers.biome": "explicit"
+	},
+	"files.associations": {
+		"*.css": "tailwindcss"
+	},
+	"tailwindCSS.classAttributes": ["class", "className", "headerClassName"],
+	"git.detectSubmodules": false,
+	"vsicons.presets.angular": true
 }

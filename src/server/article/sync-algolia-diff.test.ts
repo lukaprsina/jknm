@@ -1,11 +1,13 @@
 import { describe, expect, test } from "vitest";
 import {
 	type AlgoliaArticleHit,
-	type DbArticleSummary,
 	compute_algolia_sync_diff,
+	type DbArticleSummary,
 } from "./sync-algolia-diff";
 
-const hit = (overrides: Partial<AlgoliaArticleHit> = {}): AlgoliaArticleHit => ({
+const hit = (
+	overrides: Partial<AlgoliaArticleHit> = {},
+): AlgoliaArticleHit => ({
 	objectID: "a1",
 	title: "Prvi članek",
 	url: "prvi-clanek",
@@ -16,7 +18,9 @@ const hit = (overrides: Partial<AlgoliaArticleHit> = {}): AlgoliaArticleHit => (
 	...overrides,
 });
 
-const article = (overrides: Partial<DbArticleSummary> = {}): DbArticleSummary => ({
+const article = (
+	overrides: Partial<DbArticleSummary> = {},
+): DbArticleSummary => ({
 	id: "a1",
 	title: "Prvi članek",
 	url: "prvi-clanek",
@@ -49,7 +53,9 @@ describe("compute_algolia_sync_diff", () => {
 				kind: "stale",
 				article: article(),
 				before: hit({ title: "Star naslov" }),
-				diffs: [{ field: "title", before: "Star naslov", after: "Prvi članek" }],
+				diffs: [
+					{ field: "title", before: "Star naslov", after: "Prvi članek" },
+				],
 			},
 		]);
 	});
@@ -63,7 +69,11 @@ describe("compute_algolia_sync_diff", () => {
 		expect(changes).toEqual([
 			{
 				kind: "stale",
-				article: article({ updated_at: 1000, has_thumbnail: false, image: undefined }),
+				article: article({
+					updated_at: 1000,
+					has_thumbnail: false,
+					image: undefined,
+				}),
 				before: hit({ updated_at: 500, has_thumbnail: true, image: "old.jpg" }),
 				diffs: [
 					{ field: "updated_at", before: "500", after: "1000" },
@@ -91,9 +101,14 @@ describe("compute_algolia_sync_diff", () => {
 	});
 
 	test("reports an Algolia hit with no matching published DB article as 'orphaned'", () => {
-		const changes = compute_algolia_sync_diff([hit({ objectID: "stale-1" })], []);
+		const changes = compute_algolia_sync_diff(
+			[hit({ objectID: "stale-1" })],
+			[],
+		);
 
-		expect(changes).toEqual([{ kind: "orphaned", before: hit({ objectID: "stale-1" }) }]);
+		expect(changes).toEqual([
+			{ kind: "orphaned", before: hit({ objectID: "stale-1" }) },
+		]);
 	});
 
 	test("matches by objectID/id, not by row order", () => {
@@ -102,6 +117,8 @@ describe("compute_algolia_sync_diff", () => {
 			[article({ id: "a1" }), article({ id: "a2", title: "Drugi" })],
 		);
 
-		expect(changes).toEqual([{ kind: "missing", article: article({ id: "a1" }) }]);
+		expect(changes).toEqual([
+			{ kind: "missing", article: article({ id: "a1" }) },
+		]);
 	});
 });

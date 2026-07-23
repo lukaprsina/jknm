@@ -157,7 +157,10 @@ async function main() {
 	}
 
 	if (execute) {
-		await writeFile(IMAGE_SIZES_PATH, `${JSON.stringify(image_sizes, null, "\t")}\n`);
+		await writeFile(
+			IMAGE_SIZES_PATH,
+			`${JSON.stringify(image_sizes, null, "\t")}\n`,
+		);
 		console.log(`Updated ${IMAGE_SIZES_PATH}`);
 	} else {
 		console.log("Dry run only — re-run with --execute to apply.");

@@ -27,7 +27,12 @@ export interface MemberFieldDiff {
 
 export type MemberSyncChange =
 	| { kind: "new"; google: GoogleMember }
-	| { kind: "changed"; google: GoogleMember; before: DbMember; diffs: MemberFieldDiff[] }
+	| {
+			kind: "changed";
+			google: GoogleMember;
+			before: DbMember;
+			diffs: MemberFieldDiff[];
+	  }
 	| { kind: "missing"; before: DbMember };
 
 function diff_fields(before: DbMember, after: GoogleMember): MemberFieldDiff[] {

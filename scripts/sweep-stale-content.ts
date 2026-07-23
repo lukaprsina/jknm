@@ -43,9 +43,7 @@ async function sweep_deleted_articles(cutoff: Date, execute: boolean) {
 		columns: { id: true, title: true, deleted_at: true },
 	});
 
-	console.log(
-		`${candidates.length} deleted article(s) past the grace window.`,
-	);
+	console.log(`${candidates.length} deleted article(s) past the grace window.`);
 	for (const article of candidates) {
 		console.log(
 			`  ${article.id} "${article.title}" (deleted_at ${article.deleted_at?.toISOString()})`,
@@ -82,15 +80,14 @@ async function sweep_orphaned_media(cutoff: Date, execute: boolean) {
 	const candidates = await db.query.Media.findMany({
 		where:
 			excluded_ids.length > 0
-				? and(
-						notInArray(Media.id, excluded_ids),
-						lt(Media.created_at, cutoff),
-					)
+				? and(notInArray(Media.id, excluded_ids), lt(Media.created_at, cutoff))
 				: lt(Media.created_at, cutoff),
 		columns: { id: true, filename: true, created_at: true, original: true },
 	});
 
-	console.log(`${candidates.length} orphaned media row(s) past the grace window.`);
+	console.log(
+		`${candidates.length} orphaned media row(s) past the grace window.`,
+	);
 	for (const media of candidates) {
 		// Diagnostic only: uploads never carry an article_id (see CONTEXT.md's
 		// Reconciliation entry) and `media_to_articles` is exactly what we
@@ -102,7 +99,9 @@ async function sweep_orphaned_media(cutoff: Date, execute: boolean) {
 		const referencing = await db
 			.select({ id: Article.id, title: Article.title, status: Article.status })
 			.from(Article)
-			.where(sql`${Article.content_json}::text LIKE ${`%${media.original.url}%`}`);
+			.where(
+				sql`${Article.content_json}::text LIKE ${`%${media.original.url}%`}`,
+			);
 
 		const origin =
 			referencing.length > 0

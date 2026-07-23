@@ -12,15 +12,16 @@ import { add_or_update_algolia, remove_from_algolia } from "./lifecycle";
 import {
 	type AlgoliaArticleHit,
 	type AlgoliaSyncChange,
-	type DbArticleSummary,
 	compute_algolia_sync_diff,
+	type DbArticleSummary,
 } from "./sync-algolia-diff";
 
 // Legacy (pre-unification) articles share this index under a numeric
 // `objectID` (`legacy_id.toString()`) — this diff only ever concerns the
 // unified `articles` table's uuid rows, so anything else is filtered out
 // before it ever reaches `compute_algolia_sync_diff`.
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const UUID_RE =
+	/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 function resolve_primary_slug(slugs: { slug: string; is_primary: boolean }[]) {
 	return slugs.find((slug) => slug.is_primary) ?? slugs[0];
@@ -37,7 +38,10 @@ interface AlgoliaHitRecord {
 }
 
 async function fetch_algolia_published_hits(): Promise<AlgoliaArticleHit[]> {
-	const algolia = searchClient(env.NEXT_PUBLIC_ALGOLIA_ID, env.ALGOLIA_ADMIN_KEY);
+	const algolia = searchClient(
+		env.NEXT_PUBLIC_ALGOLIA_ID,
+		env.ALGOLIA_ADMIN_KEY,
+	);
 
 	const hits: AlgoliaArticleHit[] = [];
 	await algolia.browseObjects({

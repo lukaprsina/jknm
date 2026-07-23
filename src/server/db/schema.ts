@@ -46,9 +46,7 @@ export const Author = pgTable(
 		// The upsert target for sync_members: one Author row per Google member.
 		// Guests keep a NULL google_id, and Postgres unique indexes allow any
 		// number of NULLs, so this doesn't constrain them.
-		google_id_unique: uniqueIndex("author_google_id_idx").on(
-			author.google_id,
-		),
+		google_id_unique: uniqueIndex("author_google_id_idx").on(author.google_id),
 	}),
 );
 

@@ -51,7 +51,9 @@ export type AlgoliaSyncChange =
 	  }
 	| { kind: "orphaned"; before: AlgoliaArticleHit };
 
-function to_diff_string(value: string | number | boolean | undefined): string | null {
+function to_diff_string(
+	value: string | number | boolean | undefined,
+): string | null {
 	if (value === undefined) return null;
 	return String(value);
 }

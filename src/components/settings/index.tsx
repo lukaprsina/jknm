@@ -50,11 +50,11 @@ import { sign_out } from "~/lib/auth-client";
 import { apply_client_invalidations } from "~/lib/cache-invalidation-client";
 import { unwrap_server_function } from "~/lib/orpc-action";
 import type { AlgoliaSyncChange } from "~/server/article/sync-algolia-diff";
+import type { MemberSyncChange } from "~/server/author/sync-members-diff";
 import {
 	previewAlgoliaSync,
 	syncAlgolia,
 } from "~/server/orpc/article/procedures";
-import type { MemberSyncChange } from "~/server/author/sync-members-diff";
 import {
 	previewMemberSync,
 	syncMembers,
@@ -340,7 +340,10 @@ const ALGOLIA_CHANGE_KIND_VARIANT: Record<
 	orphaned: "destructive",
 };
 
-const ALGOLIA_CHANGE_KIND_CLASS_NAME: Record<AlgoliaSyncChange["kind"], string> = {
+const ALGOLIA_CHANGE_KIND_CLASS_NAME: Record<
+	AlgoliaSyncChange["kind"],
+	string
+> = {
 	missing: "",
 	stale: "border-transparent bg-amber-500 text-white hover:bg-amber-500/80",
 	orphaned: "",
@@ -365,7 +368,8 @@ function to_algolia_change_row(change: AlgoliaSyncChange): AlgoliaChangeRow {
 				key: change.article.id,
 				name: change.article.title,
 				details: change.diffs.map(
-					(diff) => `${diff.field}: ${diff.before ?? "—"} → ${diff.after ?? "—"}`,
+					(diff) =>
+						`${diff.field}: ${diff.before ?? "—"} → ${diff.after ?? "—"}`,
 				),
 			};
 		case "orphaned":
@@ -427,8 +431,8 @@ function AlgoliaSyncDialog({
 				<DialogHeader>
 					<DialogTitle>Uskladi Algolia z bazo</DialogTitle>
 					<DialogDescription>
-						Primerjava iskalnega indeksa z objavljenimi članki v bazi.
-						Prikazani so samo članki, ki bi se spremenili.
+						Primerjava iskalnega indeksa z objavljenimi članki v bazi. Prikazani
+						so samo članki, ki bi se spremenili.
 					</DialogDescription>
 				</DialogHeader>
 
@@ -483,7 +487,9 @@ function AlgoliaSyncDialog({
 												<div className="flex items-center gap-2">
 													<Badge
 														variant={ALGOLIA_CHANGE_KIND_VARIANT[change.kind]}
-														className={ALGOLIA_CHANGE_KIND_CLASS_NAME[change.kind]}
+														className={
+															ALGOLIA_CHANGE_KIND_CLASS_NAME[change.kind]
+														}
 													>
 														{ALGOLIA_CHANGE_KIND_LABEL[change.kind]}
 													</Badge>

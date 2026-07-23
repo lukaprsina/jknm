@@ -308,10 +308,7 @@ export async function publish_article(
 				})) ?? null)
 			: null;
 
-		const thumbnail = await resolve_thumbnail(
-			tx,
-			input.article.thumbnail_crop,
-		);
+		const thumbnail = await resolve_thumbnail(tx, input.article.thumbnail_crop);
 
 		const updated = await tx
 			.update(Article)
@@ -330,11 +327,7 @@ export async function publish_article(
 
 		assert_one(updated);
 
-		await replace_article_authors(
-			tx,
-			input.article_id,
-			input.author_ids,
-		);
+		await replace_article_authors(tx, input.article_id, input.author_ids);
 		// Reconcile against the *persisted* content (see `save_article`) so a
 		// publish that omits `content` doesn't wipe existing media links.
 		await reconcile_media_to_articles(

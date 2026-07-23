@@ -91,10 +91,7 @@ export function useEditorMutations() {
 		mutationFn: (input: Parameters<typeof discardDraft>[0]) =>
 			unwrap_server_function(discardDraft(input)),
 		onSettled: async () => {
-			await apply_client_invalidations(
-				query_client,
-				"article.draft_discarded",
-			);
+			await apply_client_invalidations(query_client, "article.draft_discarded");
 			// `url` is `""` when the source was archived straight from a draft
 			// and never had a slug minted — fall back to `/` in that case too.
 			router.replace(

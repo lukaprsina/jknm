@@ -12,7 +12,10 @@ import {
 	publish_article,
 	save_article,
 } from "~/server/article/new-article";
-import { preview_algolia_sync, sync_algolia } from "~/server/article/sync-algolia";
+import {
+	preview_algolia_sync,
+	sync_algolia,
+} from "~/server/article/sync-algolia";
 import {
 	archive_article_validator,
 	create_article_validator,

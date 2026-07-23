@@ -16,10 +16,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { useToast } from "~/hooks/use-toast";
 import { unwrap_server_function } from "~/lib/orpc-action";
-import {
-	insertGuest,
-	renameGuest,
-} from "~/server/orpc/author/procedures";
+import { insertGuest, renameGuest } from "~/server/orpc/author/procedures";
 import type { GuestAuthor } from "./table";
 
 export const edit_form_schema = z.object({
