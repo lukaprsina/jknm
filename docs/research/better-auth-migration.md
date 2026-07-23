@@ -1,5 +1,9 @@
 # better-auth: facts for the NextAuth v4 migration (#32)
 
+> **Status (2026-07-23): implemented.** Issue #32 is closed; the migration described here has
+> shipped — see `docs/architecture.md`'s "Auth" section for current state. Kept as reference
+> facts about better-auth's schema/API, still accurate as vendored-doc citations.
+
 Reference material for whoever implements #32. **This document holds facts; #32 holds
 decisions.** Where the two disagree, #32 wins — but check whether this file explains why.
 

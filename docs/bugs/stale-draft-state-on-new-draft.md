@@ -1,5 +1,13 @@
 # Bug: stale draft data (author + debug JSON) flashes on new-draft creation
 
+> **Status (2026-07-23): fixed.** `editor-context.tsx`'s `EditorProvider` now seeds
+> `editor_store` synchronously during render, keyed on `article.id`
+> (`src/components/editor/editor-context.tsx:47-64`, "Seeded synchronously during render...
+> EditorJS's async `onReady` only needs to report content-derived fields") — exactly the fix
+> plan's first two bullets. `persist` is gone (`editor-store.ts` is now a plain `create<...>()`
+> with no `zustand/middleware`), closing the cross-tab/localStorage leak too. Kept for
+> archaeology; no further action needed.
+
 No existing convention for bug-investigation notes was found under `docs/adr/` or
 `docs/agents/` (those hold ADRs and agent-audit reports respectively), so this
 note lives at `docs/bugs/` per the fallback instruction.

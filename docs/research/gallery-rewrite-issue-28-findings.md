@@ -1,5 +1,10 @@
 # Gallery/Lightbox Rewrite (Issue #28) — Additional Findings
 
+> **Status (2026-07-23): historical.** Issue #28 is closed and resolved (commit `9532e36`,
+> "Rewrite image gallery: fix scroll-lock, landscape crop, caption alignment, #28"). Kept as a
+> record of the pre-rewrite findings; do not treat any finding below as still-open without
+> re-checking `gallery-store.tsx`/`image-gallery.tsx` first.
+
 Primary-source code research against the current `tweaks` branch, supplementing
 the 11 issues already documented in GitHub issue #28. Only NEW findings are
 listed below; each cites file:line.

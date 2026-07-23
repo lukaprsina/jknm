@@ -117,11 +117,11 @@ Migrated from NextAuth v4 in #32.
     of NextAuth's `signIn` callback and the other two candidate hooks silently fail (see #32).
     That custom callback *replaces* Google's built-in `hd` check, which is why `hd` is not set.
   - `session-shape.ts` — adapts better-auth's `{ session, user }` into the app's established
-    `{ user, expires }` shape, so all **16** `getServerAuthSession()` reads and every component
+    `{ user, expires }` shape, so all **11** `getServerAuthSession()` reads and every component
     taking a `Session` prop were left untouched by the migration.
 - `Session` is exported from `~/server/auth`, not from the library. Swapping the library again
   does not mean editing UI components.
-- Surface: 1 route handler (`api/auth/[...all]`), 16 server reads, 4 client call sites.
+- Surface: 1 route handler (`api/auth/[...all]`), 11 server reads, 4 client call sites.
 - Env: `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` (must be explicit — an inferred base URL makes
   Google answer `redirect_uri_mismatch`), `GOOGLE_CLIENT_ID`/`_SECRET`. The Google redirect URI
   `{BETTER_AUTH_URL}/api/auth/callback/google` is unchanged from NextAuth v4.
@@ -135,8 +135,12 @@ Migrated from NextAuth v4 in #32.
   the still-pending production data migration.
 - `src/server/article/` — `new-article.ts` (`create_article`, `save_article`, `publish_article`),
   `lifecycle.ts` (archive/delete/discard/supersede), `get-article.ts`, `article-queries.ts`,
-  `slug.ts`, `authorized-mutation.ts`, and the framework-agnostic `lifecycle-rules.ts` /
-  `reconcile-media.ts`.
+  `slug.ts`, `validators.ts` (Zod input validators for the oRPC procedures), and the
+  framework-agnostic `lifecycle-rules.ts` / `reconcile-media.ts`. `authorized-mutation.ts`
+  (`run_authorized_mutation`) is gone — oRPC's `authed` builder (`src/server/orpc/base.ts`)
+  replaced it.
+- `src/server/orpc/` — `base.ts` (`authed`/`actionableOptions`), `context.ts` (`ORPCContext`),
+  `article/procedures.ts`, `author/procedures.ts`.
 - `src/server/author/` — insert, rename, delete, sync from Google.
 - `src/server/db/schema.ts` — Drizzle schema.
 

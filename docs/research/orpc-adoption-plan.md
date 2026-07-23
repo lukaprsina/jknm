@@ -1,5 +1,10 @@
 # oRPC adoption plan for issue #31 step 4
 
+> **Status (2026-07-23): implemented.** Issue #31 is closed and oRPC is live — see
+> `docs/architecture.md`'s "Data transport" section for what actually shipped
+> (`src/server/orpc/`). Kept as the design rationale for *why* it's shaped this way; for current
+> state, read the code and `docs/architecture.md`, not this plan.
+
 Companion to `docs/adr/0002-orpc-not-server-actions.md` (the "why", already decided)
 and steps 1-3 of issue #31 (already shipped: `src/lib/cache-policy.ts`,
 `src/server/cache-invalidation.ts`, `src/lib/cache-invalidation-client.ts`, the

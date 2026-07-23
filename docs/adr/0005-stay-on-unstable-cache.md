@@ -58,12 +58,14 @@ would deepen exactly the lock-in that argument is built on.
   re-open this.
 - #31 consolidates cache *invalidation* — it does not change the caching primitive. Any spec
   that proposes replacing `unstable_cache` is out of step with this ADR.
-- The five declared tags (`homepage-feed`, `all-published`, `drafts`, `archive`, `authors`)
-  remain the caching contract.
+- The declared tags remain the caching contract — a sixth (`article`) was added after this ADR
+  landed, when the `article`-tag caching described in `docs/architecture.md` shipped; see
+  [ADR-0006](0006-no-isr-on-article-pages.md). The count changes, not the argument above.
 
 ## What would change the answer
 
-- **The Hetzner/Kamal move (ADR-0004) actually happening.** Self-hosted, `use cache` persists
+- **The Hetzner/Kamal move (ADR-0004, currently deferred/not the current plan — see its status
+  header) actually happening.** Self-hosted, `use cache` persists
   across requests with no metering — the central cost argument evaporates and Option A becomes
   attractive. This is the most likely trigger.
 - Next committing to a removal version for `unstable_cache`.
