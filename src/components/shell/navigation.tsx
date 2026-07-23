@@ -43,7 +43,7 @@ function NavDropdown({ section }: { section: NavSection }) {
 				{title}
 			</NavigationMenuTrigger>
 			<NavigationMenuContent className="z-50">
-				<ul className="grid w-[653px] p-6 lg:grid-cols-[.75fr_1fr]">
+				<ul className="grid w-[300px] gap-1 p-6">
 					<ListItem is_title list_title={<b>{title}</b>} href={`/${href}`} />
 					{headings.map((heading) => (
 						<ListItem

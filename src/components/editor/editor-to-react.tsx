@@ -146,7 +146,7 @@ export function EditorToReact({
 	return (
 		<>
 			<TableOfContents entries={headings} />
-			<Card className="hidden pt-8 md:block">
+			<Card className="hidden border-0 bg-transparent pt-8 shadow-none md:block">
 				<CardHeader>
 					<h1
 						dangerouslySetInnerHTML={{
