@@ -3,8 +3,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import {
 	get_primary_slug,
 	map_new_article_to_published_view,
@@ -14,20 +12,11 @@ import { EditorToReact } from "~/components/editor/editor-to-react";
 import { InfoCard } from "~/components/info-card";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { useShallowSearchParams } from "~/hooks/use-shallow-search-params";
 import { useToast } from "~/hooks/use-toast";
 import { get_article_by_new_id } from "~/server/article/get-article";
 
-export interface PreveriStoreType {
-	index: number;
-}
-
-export const preveri_store = create<PreveriStoreType>()(
-	persist(() => ({ index: 1 }), { name: "preveri" }),
-);
-
-export function usePreveriIndex(): number {
-	return preveri_store((state) => state.index);
-}
+const DEFAULT_LEGACY_ID = 1;
 
 export function PreveriClient({
 	articles,
@@ -40,11 +29,22 @@ export function PreveriClient({
 	const toaster = useToast();
 	const [inputPage, setInputPage] = useState(1);
 	const router = useRouter();
-	const preveri_store_index = usePreveriIndex();
+	const { searchParams, write } = useShallowSearchParams();
+
+	const current_legacy_id = useMemo(() => {
+		const raw = searchParams.get("id");
+		const parsed = raw === null ? NaN : Number(raw);
+		return Number.isNaN(parsed) ? DEFAULT_LEGACY_ID : parsed;
+	}, [searchParams]);
+
+	const set_legacy_id = useCallback(
+		(legacy_id: number) => write({ id: String(legacy_id) }),
+		[write],
+	);
 
 	const page_info = useMemo(() => {
 		const article_index = articles.findIndex(
-			(article) => article.legacy_id === preveri_store_index,
+			(article) => article.legacy_id === current_legacy_id,
 		);
 
 		if (article_index === -1) {
@@ -60,7 +60,7 @@ export function PreveriClient({
 			previous: articles[article_index - 1]?.legacy_id ?? NaN,
 			current_id: articles[article_index]?.id,
 		};
-	}, [articles, preveri_store_index]);
+	}, [articles, current_legacy_id]);
 
 	const current_id = page_info.current_id;
 	const article = useQuery({
@@ -102,11 +102,10 @@ export function PreveriClient({
 
 	return (
 		<>
-			<h1>Preveri: ID {preveri_store_index}</h1>
+			<h1>Preveri: ID {current_legacy_id}</h1>
 			<form
 				onSubmit={(event) => {
 					event.preventDefault();
-					// console.log("form onsubmit");
 					const article_index = articles.findIndex(
 						(article) => article.legacy_id === inputPage,
 					);
@@ -119,7 +118,7 @@ export function PreveriClient({
 						return;
 					}
 
-					preveri_store.setState({ index: inputPage });
+					set_legacy_id(inputPage);
 				}}
 				className="my-8 flex items-center gap-4"
 			>
@@ -127,16 +126,14 @@ export function PreveriClient({
 					<Button
 						type="button"
 						disabled={Number.isNaN(page_info.previous)}
-						onClick={() =>
-							preveri_store.setState({ index: page_info.previous })
-						}
+						onClick={() => set_legacy_id(page_info.previous)}
 					>
 						Prejšnja: {page_info.previous}
 					</Button>
 					<Button
 						type="button"
 						disabled={Number.isNaN(page_info.next)}
-						onClick={() => preveri_store.setState({ index: page_info.next })}
+						onClick={() => set_legacy_id(page_info.next)}
 					>
 						Naslednja: {page_info.next}
 					</Button>
@@ -157,7 +154,7 @@ export function PreveriClient({
 			<div className="grid h-full w-full grid-cols-2 gap-2">
 				<iframe
 					className="h-full w-full overflow-y-hidden rounded-xl"
-					src={iframe_src(preveri_store_index)}
+					src={iframe_src(current_legacy_id)}
 				/>
 				{page}
 			</div>

@@ -14,7 +14,7 @@ import {
 	getSortedRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
-import { use, useMemo, useRef, useState } from "react";
+import { use, useCallback, useMemo, useRef, useState } from "react";
 
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -27,6 +27,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "~/components/ui/table";
+import { useShallowSearchParams } from "~/hooks/use-shallow-search-params";
 import { AllAuthorsContext } from "../provider";
 import {
 	AuthorsTableCellButtons,
@@ -38,14 +39,62 @@ export interface GuestAuthor {
 	name: string;
 }
 
+function sorting_from_search_params(
+	searchParams: URLSearchParams,
+): SortingState {
+	const sort_id = searchParams.get("sort");
+	if (!sort_id) return [];
+	return [{ id: sort_id, desc: searchParams.get("dir") === "desc" }];
+}
+
+function page_index_from_search_params(searchParams: URLSearchParams): number {
+	const raw = searchParams.get("page");
+	const parsed = raw === null ? NaN : Number(raw) - 1;
+	return Number.isNaN(parsed) || parsed < 0 ? 0 : parsed;
+}
+
 export function AuthorsDataTable() {
-	const [sorting, setSorting] = useState<SortingState>([]);
+	const { searchParams, write } = useShallowSearchParams();
+
+	const [sorting, setSortingState] = useState<SortingState>(() =>
+		sorting_from_search_params(searchParams),
+	);
 	const [rowSelection, setRowSelection] = useState({});
-	const [pagination, setPagination] = useState<PaginationState>({
-		pageIndex: 0,
+	const [pagination, setPaginationState] = useState<PaginationState>(() => ({
+		pageIndex: page_index_from_search_params(searchParams),
 		pageSize: 8,
-	});
+	}));
 	const lastSelectedIndexRef = useRef<number | null>(null);
+
+	const setSorting: typeof setSortingState = useCallback(
+		(updater) => {
+			setSortingState((previous) => {
+				const next =
+					typeof updater === "function" ? updater(previous) : updater;
+				const [first] = next;
+				write({
+					sort: first?.id ?? null,
+					dir: first ? (first.desc ? "desc" : "asc") : null,
+				});
+				return next;
+			});
+		},
+		[write],
+	);
+
+	const setPagination: typeof setPaginationState = useCallback(
+		(updater) => {
+			setPaginationState((previous) => {
+				const next =
+					typeof updater === "function" ? updater(previous) : updater;
+				write({
+					page: next.pageIndex === 0 ? null : String(next.pageIndex + 1),
+				});
+				return next;
+			});
+		},
+		[write],
+	);
 
 	const columns = useMemo<ColumnDef<GuestAuthor>[]>(
 		() => [

@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import { Shell } from "~/components/shell";
 import { article_variants, page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
@@ -19,7 +20,9 @@ export default async function Authors() {
 	return (
 		<Shell>
 			<div className={cn(page_variants(), article_variants())}>
-				<AuthorsDataTable />
+				<Suspense fallback={null}>
+					<AuthorsDataTable />
+				</Suspense>
 			</div>
 		</Shell>
 	);
