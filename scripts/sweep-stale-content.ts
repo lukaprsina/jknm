@@ -29,7 +29,7 @@
  */
 
 import { parseArgs } from "node:util";
-import { and, eq, inArray, isNotNull, lt, notInArray } from "drizzle-orm";
+import { and, eq, inArray, isNotNull, lt, notInArray, sql } from "drizzle-orm";
 import { env } from "~/env";
 import { delete_objects, list_objects } from "~/lib/s3-utils";
 import { db } from "~/server/db";
@@ -87,13 +87,32 @@ async function sweep_orphaned_media(cutoff: Date, execute: boolean) {
 						lt(Media.created_at, cutoff),
 					)
 				: lt(Media.created_at, cutoff),
-		columns: { id: true, filename: true, created_at: true },
+		columns: { id: true, filename: true, created_at: true, original: true },
 	});
 
 	console.log(`${candidates.length} orphaned media row(s) past the grace window.`);
 	for (const media of candidates) {
+		// Diagnostic only: uploads never carry an article_id (see CONTEXT.md's
+		// Reconciliation entry) and `media_to_articles` is exactly what we
+		// already excluded candidates by, so this is a *content_json* text
+		// search across every status (including deleted/archived) to help a
+		// human eyeball where a media row used to be referenced, not a
+		// reliable "current owner" — it can be empty for uploads that were
+		// never saved into any article's content at all.
+		const referencing = await db
+			.select({ id: Article.id, title: Article.title, status: Article.status })
+			.from(Article)
+			.where(sql`${Article.content_json}::text LIKE ${`%${media.original.url}%`}`);
+
+		const origin =
+			referencing.length > 0
+				? referencing
+						.map((a) => `${a.id} "${a.title}" (${a.status})`)
+						.join(", ")
+				: "no referencing article found (never saved into content, or content_json since edited)";
+
 		console.log(
-			`  ${media.id} "${media.filename}" (created_at ${media.created_at.toISOString()})`,
+			`  ${media.id} "${media.filename}" (created_at ${media.created_at.toISOString()})\n    from: ${origin}`,
 		);
 	}
 
