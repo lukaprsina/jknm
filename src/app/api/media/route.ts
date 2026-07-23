@@ -165,7 +165,7 @@ export async function POST(request: NextRequest) {
 
 	await bucket_obj.upload(key, buffer, {
 		contentType: mime_type,
-		contentLength: 5 * 10485760,
+		contentLength: buffer.byteLength,
 	});
 
 	const url = media_url(key);
