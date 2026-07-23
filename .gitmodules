@@ -7,3 +7,6 @@
 [submodule "vendor/orpc"]
 	path = vendor/orpc
 	url = https://github.com/middleapi/orpc
+[submodule "vendor/radix-ui-primitives"]
+	path = vendor/radix-ui-primitives
+	url = https://github.com/radix-ui/primitives
