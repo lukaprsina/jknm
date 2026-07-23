@@ -1,5 +1,6 @@
 "use server";
 
+import { ORPCError } from "@orpc/server";
 import {
 	archive_article,
 	create_superseding_draft,
@@ -11,6 +12,7 @@ import {
 	publish_article,
 	save_article,
 } from "~/server/article/new-article";
+import { preview_algolia_sync, sync_algolia } from "~/server/article/sync-algolia";
 import {
 	archive_article_validator,
 	create_article_validator,
@@ -68,4 +70,39 @@ export const createSupersedingDraft = authed
 	.handler(async ({ input, context }) =>
 		create_superseding_draft(input, context.session),
 	)
+	.actionable(actionableOptions);
+
+/**
+ * oRPC masks every thrown error into a generic "Internal Server Error"
+ * before it reaches the client (see `toORPCError` in `@orpc/client`) — so
+ * without this, a real cause (Algolia credentials, a browse failure) is both
+ * invisible to the admin and never logged anywhere. Logging here and
+ * rethrowing with the original message preserved keeps that cause visible on
+ * both sides. Mirrors `rethrow_logged` in `~/server/orpc/author/procedures.ts`.
+ */
+function rethrow_logged(context: string, error: unknown): never {
+	console.error(`[${context}]`, error);
+	throw new ORPCError("INTERNAL_SERVER_ERROR", {
+		message: error instanceof Error ? error.message : String(error),
+	});
+}
+
+export const previewAlgoliaSync = authed
+	.handler(async () => {
+		try {
+			return await preview_algolia_sync();
+		} catch (error) {
+			rethrow_logged("previewAlgoliaSync", error);
+		}
+	})
+	.actionable(actionableOptions);
+
+export const syncAlgolia = authed
+	.handler(async () => {
+		try {
+			return await sync_algolia();
+		} catch (error) {
+			rethrow_logged("syncAlgolia", error);
+		}
+	})
 	.actionable(actionableOptions);

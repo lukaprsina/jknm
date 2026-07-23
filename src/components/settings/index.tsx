@@ -49,6 +49,11 @@ import { useToast } from "~/hooks/use-toast";
 import { sign_out } from "~/lib/auth-client";
 import { apply_client_invalidations } from "~/lib/cache-invalidation-client";
 import { unwrap_server_function } from "~/lib/orpc-action";
+import type { AlgoliaSyncChange } from "~/server/article/sync-algolia-diff";
+import {
+	previewAlgoliaSync,
+	syncAlgolia,
+} from "~/server/orpc/article/procedures";
 import type { MemberSyncChange } from "~/server/author/sync-members-diff";
 import {
 	previewMemberSync,
@@ -59,6 +64,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 export function SettingsDropdown() {
 	const router = useRouter();
 	const [sync_dialog_open, set_sync_dialog_open] = useState(false);
+	const [algolia_dialog_open, set_algolia_dialog_open] = useState(false);
 
 	return (
 		<>
@@ -86,6 +92,10 @@ export function SettingsDropdown() {
 						<RefreshCcw className="mr-2 h-4 w-4" size={18} />
 						<span>Uskladi člane</span>
 					</DropdownMenuItem>
+					<DropdownMenuItem onClick={() => set_algolia_dialog_open(true)}>
+						<SearchIcon className="mr-2 h-4 w-4" size={18} />
+						<span>Uskladi Algolia</span>
+					</DropdownMenuItem>
 					<DropdownMenuSeparator />
 					<DropdownMenuItem
 						onClick={async () => {
@@ -101,6 +111,10 @@ export function SettingsDropdown() {
 			<MemberSyncDialog
 				open={sync_dialog_open}
 				onOpenChange={set_sync_dialog_open}
+			/>
+			<AlgoliaSyncDialog
+				open={algolia_dialog_open}
+				onOpenChange={set_algolia_dialog_open}
 			/>
 		</>
 	);
@@ -272,6 +286,206 @@ function MemberSyncDialog({
 														className={CHANGE_KIND_CLASS_NAME[change.kind]}
 													>
 														{CHANGE_KIND_LABEL[change.kind]}
+													</Badge>
+													{row.name}
+												</div>
+											</TableCell>
+											<TableCell className="text-muted-foreground">
+												{row.details.map((detail) => (
+													<div key={detail} className="whitespace-nowrap">
+														{detail}
+													</div>
+												))}
+											</TableCell>
+										</TableRow>
+									);
+								})}
+							</TableBody>
+						</Table>
+					</div>
+				)}
+
+				<DialogFooter>
+					<Button variant="outline" onClick={() => onOpenChange(false)}>
+						Prekliči
+					</Button>
+					<Button
+						disabled={
+							!preview_mutation.data ||
+							preview_mutation.data.length === 0 ||
+							sync_mutation.isPending
+						}
+						onClick={() => sync_mutation.mutate()}
+					>
+						{sync_mutation.isPending ? "Usklajujem…" : "Posodobi"}
+					</Button>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
+	);
+}
+
+const ALGOLIA_CHANGE_KIND_LABEL: Record<AlgoliaSyncChange["kind"], string> = {
+	missing: "Manjka",
+	stale: "Spremenjen",
+	orphaned: "Odveč",
+};
+
+const ALGOLIA_CHANGE_KIND_VARIANT: Record<
+	AlgoliaSyncChange["kind"],
+	"default" | "secondary" | "destructive"
+> = {
+	missing: "default",
+	stale: "secondary",
+	orphaned: "destructive",
+};
+
+const ALGOLIA_CHANGE_KIND_CLASS_NAME: Record<AlgoliaSyncChange["kind"], string> = {
+	missing: "",
+	stale: "border-transparent bg-amber-500 text-white hover:bg-amber-500/80",
+	orphaned: "",
+};
+
+interface AlgoliaChangeRow {
+	key: string;
+	name: string;
+	details: string[];
+}
+
+function to_algolia_change_row(change: AlgoliaSyncChange): AlgoliaChangeRow {
+	switch (change.kind) {
+		case "missing":
+			return {
+				key: change.article.id,
+				name: change.article.title,
+				details: [change.article.url],
+			};
+		case "stale":
+			return {
+				key: change.article.id,
+				name: change.article.title,
+				details: change.diffs.map(
+					(diff) => `${diff.field}: ${diff.before ?? "—"} → ${diff.after ?? "—"}`,
+				),
+			};
+		case "orphaned":
+			return {
+				key: `algolia-${change.before.objectID}`,
+				name: change.before.title,
+				details: ["Ni več objavljen v bazi"],
+			};
+	}
+}
+
+function AlgoliaSyncDialog({
+	open,
+	onOpenChange,
+}: {
+	open: boolean;
+	onOpenChange: (open: boolean) => void;
+}) {
+	const toaster = useToast();
+
+	const preview_mutation = useMutation({
+		mutationFn: () => unwrap_server_function(previewAlgoliaSync()),
+		onError: (error) => {
+			console.log("Error previewing Algolia sync:", error);
+			toaster.toast({
+				title: "Napaka pri branju sprememb",
+				description: error.message,
+			});
+		},
+	});
+
+	const sync_mutation = useMutation({
+		mutationFn: () => unwrap_server_function(syncAlgolia()),
+		onSuccess: () => {
+			onOpenChange(false);
+		},
+		onError: (error) => {
+			toaster.toast({
+				title: "Napaka pri usklajevanju Algolia",
+				description: error.message,
+			});
+		},
+	});
+
+	return (
+		<Dialog
+			open={open}
+			onOpenChange={(next_open) => {
+				onOpenChange(next_open);
+				if (!next_open) {
+					preview_mutation.reset();
+				}
+			}}
+		>
+			<DialogContent
+				className="max-w-3xl"
+				aria-describedby="Uskladi Algolia z bazo"
+			>
+				<DialogHeader>
+					<DialogTitle>Uskladi Algolia z bazo</DialogTitle>
+					<DialogDescription>
+						Primerjava iskalnega indeksa z objavljenimi članki v bazi.
+						Prikazani so samo članki, ki bi se spremenili.
+					</DialogDescription>
+				</DialogHeader>
+
+				{preview_mutation.isIdle && (
+					<Empty>
+						<EmptyHeader>
+							<EmptyMedia variant="icon">
+								<SearchIcon />
+							</EmptyMedia>
+							<EmptyTitle>Preveri spremembe</EmptyTitle>
+							<EmptyDescription>
+								Primerjaj Algolia indeks z objavljenimi članki.
+							</EmptyDescription>
+						</EmptyHeader>
+						<Button onClick={() => preview_mutation.mutate()}>Preveri</Button>
+					</Empty>
+				)}
+				{preview_mutation.isPending && <p>Nalaganje…</p>}
+				{preview_mutation.isError && (
+					<p className="text-destructive">
+						Napaka: {preview_mutation.error.message}
+					</p>
+				)}
+				{preview_mutation.data?.length === 0 && (
+					<Empty>
+						<EmptyHeader>
+							<EmptyMedia variant="icon">
+								<CheckCircle2 />
+							</EmptyMedia>
+							<EmptyTitle>Ni sprememb</EmptyTitle>
+							<EmptyDescription>
+								Algolia je že usklajena z bazo.
+							</EmptyDescription>
+						</EmptyHeader>
+					</Empty>
+				)}
+				{preview_mutation.data && preview_mutation.data.length > 0 && (
+					<div className="max-h-96 overflow-auto">
+						<Table className="min-w-160">
+							<TableHeader>
+								<TableRow>
+									<TableHead>Ime</TableHead>
+									<TableHead>Sprememba</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{preview_mutation.data.map((change) => {
+									const row = to_algolia_change_row(change);
+									return (
+										<TableRow key={row.key}>
+											<TableCell className="whitespace-nowrap align-top">
+												<div className="flex items-center gap-2">
+													<Badge
+														variant={ALGOLIA_CHANGE_KIND_VARIANT[change.kind]}
+														className={ALGOLIA_CHANGE_KIND_CLASS_NAME[change.kind]}
+													>
+														{ALGOLIA_CHANGE_KIND_LABEL[change.kind]}
 													</Badge>
 													{row.name}
 												</div>
