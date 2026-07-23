@@ -6,11 +6,11 @@ import {
 } from "~/components/ui/navigation-menu";
 import type { NavSection } from "~/lib/static-nav-sections";
 import { NavigationMenuTrigger } from "../navigation-menu-trigger";
-import { ListItem } from "./header";
+import { DesktopHeaderLink, ListItem } from "./header";
 
 export function Navigation({ sections }: { sections: NavSection[] }) {
 	return (
-		<NavigationMenu className="z-50">
+		<NavigationMenu className="z-50 w-full max-w-none">
 			<NavigationMenuList>
 				{sections.map((section) => (
 					<NavDropdown key={section.section} section={section} />
@@ -24,13 +24,7 @@ function NavDropdown({ section }: { section: NavSection }) {
 	const { section: href, title, headings } = section;
 
 	if (headings.length === 0) {
-		return (
-			<NavigationMenuItem value={href}>
-				<NavigationMenuTrigger className="bg-transparent text-base" href={href}>
-					{title}
-				</NavigationMenuTrigger>
-			</NavigationMenuItem>
-		);
+		return <DesktopHeaderLink href={`/${href}`}>{title}</DesktopHeaderLink>;
 	}
 
 	return (
@@ -42,9 +36,9 @@ function NavDropdown({ section }: { section: NavSection }) {
 			>
 				{title}
 			</NavigationMenuTrigger>
-			<NavigationMenuContent className="z-50">
-				<ul className="grid w-[300px] gap-1 p-6">
-					<ListItem is_title list_title={<b>{title}</b>} href={`/${href}`} />
+			<NavigationMenuContent className="z-50 w-full md:w-full">
+				<ul className="grid w-full gap-1 p-6">
+					<ListItem list_title={<b>{title}</b>} href={`/${href}`} />
 					{headings.map((heading) => (
 						<ListItem
 							key={heading.id}

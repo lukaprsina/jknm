@@ -32,7 +32,11 @@ export default async function RootLayout({
 
 	return (
 		<StrictMode>
-			<html lang="en" className={`${GeistSans.variable}`}>
+			<html
+				lang="en"
+				className={`${GeistSans.variable}`}
+				data-scroll-behavior="smooth"
+			>
 				<body
 					className={cn(
 						"font-sans antialiased",
