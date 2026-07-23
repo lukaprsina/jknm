@@ -20,7 +20,7 @@ This file is **domain vocabulary only** — the shared language for talking abou
 - **Article status** — one of `draft` / `published` / `archived` / `deleted`. `archived` covers both "hide a mistake" and "archive something stale"; archived and deleted articles 404 for non-admins.
 - **Admin** — anyone with a session. `sign-in-gate.ts` only admits verified `@jknm.si` Google identities, so "signed in" and "is admin" are the same fact everywhere in the codebase (`is_visible_to(status, is_admin)` in `lifecycle-rules.ts`, `is_admin` in `editing-buttons.tsx`) — there is no separate role check to add.
 - **Slug** — an article's public URL segment, held in the `article_slugs` table rather than on the article row, so renames can leave a redirect behind. Collisions are resolved by suffixing.
-- **Reconciliation** — deriving which media rows an article uses by re-reading its `content_json` on every save, rather than tracking links at upload time. Uploads never carry an `article_id`; orphaned media (no links, 48h old) is swept.
+- **Reconciliation** — deriving which media rows an article uses by re-reading its `content_json` on every save, rather than tracking links at upload time (`reconcile_media_to_articles`, `src/server/article/reconcile-media.ts`). Uploads never carry an `article_id`. **No sweep job exists yet** — orphaned media (no `media_to_articles` row) accumulates in both Postgres and B2 with nothing deleting it; see the codebase-health audit in `docs/research/`.
 
 ## `jknm-convex` — the reference design
 

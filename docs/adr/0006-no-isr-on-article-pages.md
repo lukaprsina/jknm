@@ -69,8 +69,9 @@ That captures the DB-protection value ISR would have provided, at none of the co
 
 ## What would change the answer
 
-- **The Hetzner/Kamal move ([ADR-0004](0004-self-hosting-hetzner-kamal.md)) actually
-  happening**, alongside revisiting [ADR-0005](0005-stay-on-unstable-cache.md) — the same
+- **The Hetzner/Kamal move ([ADR-0004](0004-self-hosting-hetzner-kamal.md), currently
+  deferred/not the current plan) actually happening**, alongside revisiting
+  [ADR-0005](0005-stay-on-unstable-cache.md) — the same
   trigger that would flip that ADR's answer flips this one too, since both gate on
   `cacheComponents`.
 - **Traffic growing enough that DB load or cache-hit ratio is actually felt** — the `article` tag

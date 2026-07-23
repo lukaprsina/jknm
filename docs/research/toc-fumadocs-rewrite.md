@@ -1,5 +1,9 @@
 # Research: table-of-contents rewrite (issue #30)
 
+> **Status (2026-07-23): historical.** Issue #30 is closed ("Verified in code: complete TOC
+> rewrite implemented"). This is pre-implementation research, kept for the API citations against
+> `vendor/fumadocs`; it does not describe the shipped TOC feature's actual shape.
+
 Investigation only, no source changes. Citations are repo-relative paths.
 Initial pass read against an isolated worktree defaulted to `main`
 (commit `6caf989`, 2026-07-20); follow-up verification pass (section 0 note

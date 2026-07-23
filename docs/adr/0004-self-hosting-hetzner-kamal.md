@@ -1,5 +1,13 @@
 # Self-host on Hetzner via Kamal, deferred
 
+> **Status (2026-07-23): superseded/on hold, not the current plan.** The maintainer has decided
+> to stay on Next.js + Vercel + Supabase for the summer — no VPS/self-hosting migration in this
+> window. `vercel.json` (crons, no Docker/Kamal config) and the absence of any `standalone`
+> output wiring confirm the code has not moved either. This ADR's *approach*, if self-hosting is
+> ever revisited, is still the recorded answer — nothing below is retracted — but treat every
+> "once executed" / "what would change the answer" reference elsewhere in `docs/` (ADR-0005,
+> ADR-0006) as pointing at a deferred, not scheduled, trigger.
+
 The rewritten app currently runs on **Vercel + Supabase**, and stays there for the near-term production push. Separately, issue #10 already resolved the *future* self-hosting approach: **Hetzner + Kamal + self-hosted Postgres, all on one VPS**, to eliminate Vercel's cold starts. This ADR records that decision so it doesn't need re-litigating later — it does not change anything about the current Vercel/Supabase deployment.
 
 **Provider**: Hetzner — cheap EU compute, good latency fit for a Slovenian-audience site.
