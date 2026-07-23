@@ -3,6 +3,7 @@ import { and, eq } from "drizzle-orm";
 import type { z } from "zod";
 import { env } from "~/env";
 import { ALGOLIA_PUBLISHED_ARTICLE_INDEX } from "~/lib/algoliasearch";
+import type { convert_new_article_to_algolia_object } from "~/lib/algoliasearch";
 import { assert_one } from "~/lib/assert-length";
 import type { Session } from "../auth";
 import { apply_server_invalidations } from "../cache-invalidation";
@@ -38,6 +39,34 @@ export async function remove_from_algolia(article_id: string) {
 		await algolia.deleteObject({
 			indexName: ALGOLIA_PUBLISHED_ARTICLE_INDEX,
 			objectID: article_id,
+		});
+	} catch (error) {
+		console.error("algolia error", error);
+	}
+}
+
+/**
+ * Best-effort Algolia upsert, run *after* the publish transaction commits
+ * (not inside it, and not guarding the commit on its success) — the DB row
+ * is the source of truth for "is this published", so a transient Algolia
+ * failure here means a published article is briefly unsearchable, not that
+ * the publish itself failed. Previously this ran inside `publish_article`'s
+ * transaction, after a `FOR UPDATE` lock was taken in
+ * `resolve_supersede_publish_slug`, extending how long that lock was held by
+ * however long the Algolia call took.
+ */
+export async function add_or_update_algolia(
+	object: ReturnType<typeof convert_new_article_to_algolia_object>,
+) {
+	try {
+		const algolia = searchClient(
+			env.NEXT_PUBLIC_ALGOLIA_ID,
+			env.ALGOLIA_ADMIN_KEY,
+		);
+		await algolia.addOrUpdateObject({
+			indexName: ALGOLIA_PUBLISHED_ARTICLE_INDEX,
+			objectID: object.objectID,
+			body: object,
 		});
 	} catch (error) {
 		console.error("algolia error", error);

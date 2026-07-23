@@ -16,7 +16,8 @@
 		"start": "next start",
 		"test": "vitest run",
 		"test:watch": "vitest",
-		"static": "bun run scripts/static_to_algolia.ts"
+		"static": "bun run scripts/static_to_algolia.ts",
+		"sweep": "bun run scripts/sweep-stale-content.ts"
 	},
 	"dependencies": {
 		"@algolia/autocomplete-js": "^1.19.9",
