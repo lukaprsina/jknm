@@ -7,6 +7,7 @@ import { create } from "zustand";
 import { Separator } from "~/components/ui/separator";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 // import Logo from "~/assets/logo-barvni.svg";
+import type { NavSection } from "~/lib/static-nav-sections";
 import { cn } from "~/lib/utils";
 import {
 	ContactIcon,
@@ -39,10 +40,12 @@ export function useNavbarHeight(): number | undefined {
 export function DesktopHeader({
 	className,
 	editor_controls,
+	nav_sections,
 	...props
 }: React.ComponentProps<"div"> & {
 	/** Admin-only editor chrome, rendered opaquely so no `Session` reaches the client. */
 	editor_controls: React.ReactNode;
+	nav_sections: NavSection[];
 }) {
 	const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
 	const header_ref = useRef<HTMLDivElement | null>(null);
@@ -137,7 +140,7 @@ export function DesktopHeader({
 				)}
 			>
 				{/* <LinksMenu /> */}
-				<Navigation />
+				<Navigation sections={nav_sections} />
 			</div>
 		</>
 	);
