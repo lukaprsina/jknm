@@ -12,5 +12,6 @@
         "className",
         "headerClassName"
     ],
-    "git.detectSubmodules": false
+    "git.detectSubmodules": false,
+    "vsicons.presets.angular": true
 }
