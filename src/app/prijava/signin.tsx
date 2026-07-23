@@ -23,7 +23,7 @@ export default function SignIn({ session }: { session: Session | null }) {
 				<div className="dark:border-r> relative hidden h-full flex-col justify-center bg-muted p-10 text-white lg:flex">
 					<div className="absolute inset-0 bg-zinc-100" />
 					<div className="z-10 flex items-center justify-center text-lg font-medium">
-						<Logo className="w-auto min-w-[290px]" />
+						<Logo className="max-w-3/4 min-w-72.5" />
 					</div>
 				</div>
 				<div className={cn("lg:p-8", article_variants())}>
