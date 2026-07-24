@@ -230,7 +230,7 @@ export function TimelineItem({
 			<div className="flex items-center">
 				{/* bg-blue-200 */}
 				<div className="z-10 flex h-3 w-3 shrink-0 items-center justify-center rounded-full bg-muted-foreground ring-0 ring-background dark:bg-blue-900 dark:ring-background sm:ring-8">
-					<button onClick={props.onClick}>
+					<button type="button" onClick={props.onClick}>
 						<svg
 							className="h-2.5 w-2.5"
 							aria-hidden="true"

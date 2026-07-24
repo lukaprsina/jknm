@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
 		// thumbnail crop's fixed "thumbnail.png") that doesn't reflect the
 		// actual file type and previously caused every cropped thumbnail to be
 		// stored as a `.png` no matter what format the source image really was.
-		const mime_type = blob.type || mime.getType(title) || "image/jpeg";
+		const mime_type = blob.type || (mime.getType(title) ?? "image/jpeg");
 		const real_extension = mime.getExtension(mime_type);
 		if (real_extension) {
 			const base_title = title.replace(/\.[^./]+$/, "");

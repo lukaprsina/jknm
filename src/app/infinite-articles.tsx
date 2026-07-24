@@ -36,9 +36,10 @@ export function InfiniteArticles() {
 			)}
 		>
 			{infinite_published.data?.pages.map((group, group_index) => (
+				// biome-ignore lint/suspicious/noArrayIndexKey: pages are append-only, never reordered
 				<Fragment key={group_index}>
 					{group.data.map((article, index) => {
-						let ref;
+						let ref: IntersectionRef | undefined;
 						if (
 							group_index === infinite_published.data.pages.length - 1 &&
 							index === group.data.length - 10

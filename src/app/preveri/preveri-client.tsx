@@ -153,6 +153,7 @@ export function PreveriClient({
 			</form>
 			<div className="grid h-full w-full grid-cols-2 gap-2">
 				<iframe
+					title="Predogled arhivske novice"
 					className="h-full w-full overflow-y-hidden rounded-xl"
 					src={iframe_src(current_legacy_id)}
 				/>

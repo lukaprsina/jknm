@@ -39,6 +39,7 @@ const MyInfiniteHitsDynamic = dynamic(
 			return (
 				<div className={cn(article_grid_variants())}>
 					{Array.from({ length: 10 }).map((_, index) => (
+						// biome-ignore lint/suspicious/noArrayIndexKey: fixed-count, never-reordered loading placeholders
 						<Skeleton key={index} className="h-[441px] bg-[hsl(0_0%_90%)]" />
 					))}
 				</div>

@@ -61,9 +61,11 @@ const BreadcrumbPage = React.forwardRef<
 	HTMLSpanElement,
 	React.ComponentPropsWithoutRef<"span">
 >(({ className, ...props }, ref) => (
+	// biome-ignore lint/a11y/useSemanticElements: intentional disabled-link pattern (current page, no href to link to) — shadcn/ui's canonical BreadcrumbPage
 	<span
 		ref={ref}
 		role="link"
+		tabIndex={-1}
 		aria-disabled="true"
 		aria-current="page"
 		className={cn("font-normal text-foreground", className)}

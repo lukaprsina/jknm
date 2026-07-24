@@ -43,6 +43,7 @@ export function MagicCard({
 	}, [mouseX, mouseY, gradientSize]);
 
 	return (
+		// biome-ignore lint/a11y/noStaticElementInteractions: purely a decorative cursor-follow gradient, no functional interaction
 		<div
 			onMouseMove={handleMouseMove}
 			onMouseLeave={handleMouseLeave}

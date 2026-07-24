@@ -16,6 +16,7 @@ import {
 } from "~/lib/article-utils";
 import { get_base_url } from "~/lib/get-base-url";
 import { get_s3_prefix } from "~/lib/s3-publish";
+import { sanitize_inline_html } from "~/lib/sanitize-html";
 import { cn } from "~/lib/utils";
 import type { PublishedArticleHit } from "~/lib/validators";
 import { MagicCard } from "../magic-card";
@@ -95,6 +96,7 @@ export function ArticleCard({
 				{/* TODO: prose-h3:text-xl prose-h3:font-semibold*/}
 				<div className="h-full">
 					<CardHeader>
+						{/* biome-ignore lint/a11y/noStaticElementInteractions: purely a hover reveal for the tooltip button below, which is independently focusable/keyboard-accessible */}
 						<div
 							className="flex justify-between gap-2"
 							onMouseEnter={() => setHoverLink(true)}
@@ -102,8 +104,9 @@ export function ArticleCard({
 						>
 							<h3
 								className="line-clamp-2 h-[3em]"
+								// biome-ignore lint/security/noDangerouslySetInnerHtml: sanitized via sanitize_inline_html (DOMPurify) — title may carry EditorJS inline formatting
 								dangerouslySetInnerHTML={{
-									__html: title,
+									__html: sanitize_inline_html(title),
 								}}
 							/>
 							{typeof id === "number" && (

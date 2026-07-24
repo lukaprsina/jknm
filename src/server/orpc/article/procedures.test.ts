@@ -7,7 +7,7 @@ import type { Session } from "~/server/auth";
 // which Vitest's plain node environment (no Next.js runtime) can't resolve.
 // It only special-cases `redirect`/`notFound` errors — a no-op stand-in is
 // accurate here since these tests throw neither.
-vi.mock("next/navigation", () => ({ unstable_rethrow: () => {} }));
+vi.mock("next/navigation", () => ({ unstable_rethrow: () => undefined }));
 
 const { archiveArticle } = await import("./procedures");
 

@@ -65,6 +65,7 @@ export default function SignIn({ session }: { session: Session | null }) {
 function GoogleSignInButton() {
 	return (
 		<button
+			type="button"
 			className="gsi-material-button"
 			onClick={async () => {
 				await sign_in_with_google({ callback_url: "/" });
@@ -79,6 +80,7 @@ function GoogleSignInButton() {
 						viewBox="0 0 48 48"
 						xmlnsXlink="http://www.w3.org/1999/xlink"
 						style={{ display: "block" }}
+						aria-hidden="true"
 					>
 						<path
 							fill="#EA4335"
