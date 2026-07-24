@@ -151,26 +151,37 @@ function GalleryImage({ image }: { image: EditorJSImageData }) {
 	const { width, height } = fitToViewport(natural, GALLERY_IMAGE_BOUNDS);
 
 	return (
-		<figure className="mx-auto grid w-full justify-items-center gap-2 md:max-w-[90vw]">
-			<Image
-				className="rounded-xl"
-				src={image.file.url}
-				alt={image.caption || "Slika"}
-				width={width}
-				height={height}
-				style={{
-					maxWidth: "100%",
-					maxHeight: `calc(100dvh - ${CAPTION_RESERVE_PX}px)`,
-					width: "auto",
-					height: "auto",
-					objectFit: "contain",
-				}}
-			/>
-			{image.caption && (
-				<figcaption className="rounded-xl text-center text-white">
-					{image.caption}
-				</figcaption>
-			)}
+		<figure className="mx-auto grid w-full justify-items-center md:max-w-[90vw]">
+			{/*
+			 * This inner wrapper is w-fit so it shrinks to the widest child (the
+			 * image, whose rendered width is only known after the maxWidth/
+			 * maxHeight/objectFit clamp below runs). The figcaption then stretches
+			 * to fill the wrapper (grid's default justify-items is stretch), so
+			 * its width always matches the image's rendered width instead of just
+			 * the caption text — that's what makes text-left actually left-align
+			 * against the image edge instead of the centered caption box.
+			 */}
+			<div className="grid w-fit gap-2">
+				<Image
+					className="rounded-xl"
+					src={image.file.url}
+					alt={image.caption || "Slika"}
+					width={width}
+					height={height}
+					style={{
+						maxWidth: "100%",
+						maxHeight: `calc(100dvh - ${CAPTION_RESERVE_PX}px)`,
+						width: "auto",
+						height: "auto",
+						objectFit: "contain",
+					}}
+				/>
+				{image.caption && (
+					<figcaption className="rounded-xl text-left text-white px-2">
+						{image.caption}
+					</figcaption>
+				)}
+			</div>
 		</figure>
 	);
 }

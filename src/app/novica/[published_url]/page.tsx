@@ -3,13 +3,13 @@ import sanitizeHtml from "sanitize-html";
 import { map_new_article_to_published_view } from "~/components/article/new-adapter";
 import { ArticleNotFound } from "~/components/component-not-found";
 import { PublishedContent } from "~/components/content";
+import { ImageGallery } from "~/components/image-gallery";
 import { Shell } from "~/components/shell";
 import ScrollToTop from "~/components/shell/scroll-to-top";
 import { ScrollProvider } from "~/contexts/scroll-context";
 import { get_new_article_by_slug } from "~/server/article/get-article";
 import { is_visible_to } from "~/server/article/lifecycle-rules";
 import { getServerAuthSession } from "~/server/auth";
-import { ImageGallery } from "./image-gallery";
 
 interface NovicaProps {
 	params: Promise<{
