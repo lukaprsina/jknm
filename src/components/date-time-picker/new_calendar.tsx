@@ -251,22 +251,25 @@ function Calendar({
 								{Array.from(
 									{ length: displayYears.to - displayYears.from + 1 },
 									(_, i) => {
-										const isBefore =
-											differenceInCalendarDays(
-												new Date(displayYears.from + i, 12, 31),
-												startMonth!,
-											) < 0;
+										const isBefore = startMonth
+											? differenceInCalendarDays(
+													new Date(displayYears.from + i, 12, 31),
+													startMonth,
+												) < 0
+											: false;
 
-										const isAfter =
-											differenceInCalendarDays(
-												new Date(displayYears.from + i, 0, 0),
-												endMonth!,
-											) > 0;
+										const isAfter = endMonth
+											? differenceInCalendarDays(
+													new Date(displayYears.from + i, 0, 0),
+													endMonth,
+												) > 0
+											: false;
 
 										const isDisabled = isBefore || isAfter;
 										return (
 											<Button
-												key={i}
+												// biome-ignore lint/suspicious/noArrayIndexKey: key is the year value itself, not a position
+												key={displayYears.from + i}
 												className={cn(
 													"h-7 w-full text-sm font-normal text-foreground",
 													displayYears.from + i === new Date().getFullYear() &&

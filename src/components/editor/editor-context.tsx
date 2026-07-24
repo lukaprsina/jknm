@@ -12,7 +12,6 @@ import {
 	useContext,
 	useEffect,
 	useMemo,
-	useReducer,
 	useRef,
 	useState,
 } from "react";
@@ -39,7 +38,7 @@ export const EditorContext = createContext<EditorContextType | undefined>(
 export function EditorProvider({ children }: { children: ReactNode }) {
 	const article = useContext(DraftArticleContext);
 	const [savingText, setSavingText] = useState<string | undefined>();
-	const [, forceUpdate] = useReducer((x: number) => x + 1, 0);
+	const [editorInstance, setEditorInstance] = useState<EditorJS | null>(null);
 	const editorJS = useRef<EditorJS | null>(null);
 	const [dirty, setDirty] = useState(false);
 	const toaster = useToast();
@@ -47,9 +46,9 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 	// Seeded synchronously during render (not in an effect/onReady) so the
 	// toolbar and settings panel never paint a previous draft's state —
 	// EditorJS's async `onReady` only needs to report content-derived fields.
-	const seeded_draft_id = useRef<string | null>(null);
-	if (article && seeded_draft_id.current !== article.id) {
-		seeded_draft_id.current = article.id;
+	const [seededDraftId, setSeededDraftId] = useState<string | null>(null);
+	if (article && seededDraftId !== article.id) {
+		setSeededDraftId(article.id);
 
 		editor_store.setState({
 			draft_id: article.id,
@@ -97,7 +96,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 			inlineToolbar: true,
 			autofocus: true,
 			onReady: () => {
-				forceUpdate();
+				setEditorInstance(editorJS.current);
 
 				// Undo/DragDrop need the editor's blocks painted in the DOM, which
 				// isn't guaranteed yet when `onReady` fires — wait two paints instead
@@ -133,9 +132,9 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 			},
 			onChange: (_, event) => {
 				if (Array.isArray(event)) {
-					for (const {} of event) {
+					event.forEach(() => {
 						onChange();
-					}
+					});
 				} else {
 					onChange();
 				}
@@ -157,7 +156,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 	return (
 		<EditorContext.Provider
 			value={{
-				editor: editorJS.current ?? undefined,
+				editor: editorInstance ?? undefined,
 				dirty,
 				savingText,
 				setSavingText,

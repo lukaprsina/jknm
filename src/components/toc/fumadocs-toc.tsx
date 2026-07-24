@@ -87,8 +87,11 @@ export function AnchorProvider({
 	single = false,
 	children,
 }: AnchorProviderProps) {
-	const observer = useMemo(() => new Observer(), []);
-	observer.single = single;
+	// The compiler forbids mutating a value returned from a hook, so `single`
+	// is passed in at construction rather than assigned onto `observer`
+	// afterward -- recreating the (rarely-changing) observer on a `single`
+	// flip re-triggers the effects below, which rewire it from scratch.
+	const observer = useMemo(() => new Observer(single), [single]);
 
 	useEffect(() => {
 		observer.setItems(toc);
@@ -220,9 +223,10 @@ type ChangeListener = (
 
 class Observer {
 	items: TOCItemInfo[] = [];
-	single = false;
 	private observer: IntersectionObserver | null = null;
 	private listeners = new Set<ChangeListener>();
+
+	constructor(private single: boolean) {}
 
 	listen(listener: ChangeListener) {
 		this.listeners.add(listener);

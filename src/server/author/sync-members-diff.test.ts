@@ -1,5 +1,9 @@
 import { describe, expect, test } from "vitest";
-import { type DbMember, type GoogleMember, compute_member_sync_diff } from "./sync-members-diff";
+import {
+	compute_member_sync_diff,
+	type DbMember,
+	type GoogleMember,
+} from "./sync-members-diff";
 
 const google = (overrides: Partial<GoogleMember> = {}): GoogleMember => ({
 	google_id: "g1",
@@ -40,7 +44,9 @@ describe("compute_member_sync_diff", () => {
 				kind: "changed",
 				google: google({ email: "ana.new@jknm.si" }),
 				before: db_member(),
-				diffs: [{ field: "email", before: "ana@jknm.si", after: "ana.new@jknm.si" }],
+				diffs: [
+					{ field: "email", before: "ana@jknm.si", after: "ana.new@jknm.si" },
+				],
 			},
 		]);
 	});
@@ -60,9 +66,14 @@ describe("compute_member_sync_diff", () => {
 	test("matches by google_id, not by row order", () => {
 		const changes = compute_member_sync_diff(
 			[google({ google_id: "g2", name: "Bor Kos" })],
-			[db_member({ google_id: "g1" }), db_member({ id: 2, google_id: "g2", name: "Bor Kos" })],
+			[
+				db_member({ google_id: "g1" }),
+				db_member({ id: 2, google_id: "g2", name: "Bor Kos" }),
+			],
 		);
 
-		expect(changes).toEqual([{ kind: "missing", before: db_member({ google_id: "g1" }) }]);
+		expect(changes).toEqual([
+			{ kind: "missing", before: db_member({ google_id: "g1" }) },
+		]);
 	});
 });

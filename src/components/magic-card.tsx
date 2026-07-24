@@ -43,11 +43,12 @@ export function MagicCard({
 	}, [mouseX, mouseY, gradientSize]);
 
 	return (
+		// biome-ignore lint/a11y/noStaticElementInteractions: purely a decorative cursor-follow gradient, no functional interaction
 		<div
 			onMouseMove={handleMouseMove}
 			onMouseLeave={handleMouseLeave}
 			className={cn(
-				"group relative flex size-full overflow-hidden rounded-xl border bg-neutral-100 text-black dark:bg-neutral-900 dark:text-white",
+				"group relative flex size-full overflow-hidden rounded-xl border bg-neutral-200 text-black dark:bg-neutral-900 dark:text-white",
 				className,
 			)}
 		>

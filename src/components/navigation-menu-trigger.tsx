@@ -28,6 +28,12 @@ export const NavigationMenuTrigger = React.forwardRef<
 		// Fix: When hovering the trigger and clicking, it opens and closes.
 		// This adds a timer which ignores the click, modified from
 		// https://github.com/radix-ui/primitives/issues/1630#issuecomment-1545995075
+		//
+		// Only relevant to triggers with a dropdown (`hasContent`): Radix still
+		// flips `data-state` to "open" on hover for contentless triggers too
+		// (there's just nothing to render), so without gating this on
+		// `hasContent`, a plain link could race its own hover-open against an
+		// ordinary click and have that click silently cancelled (ADR-0007).
 
 		// init disable state
 		const [disable, setDisable] = React.useState(false);
@@ -43,6 +49,8 @@ export const NavigationMenuTrigger = React.forwardRef<
 
 		// Create observer on first render
 		React.useEffect(() => {
+			if (!hasContent) return;
+
 			// Callback function
 			const observerCallback = (mutationsList: Mutation[]) => {
 				for (const mutation of mutationsList) {
@@ -74,7 +82,7 @@ export const NavigationMenuTrigger = React.forwardRef<
 			return () => {
 				observer.disconnect();
 			};
-		}, [forwarded_ref]);
+		}, [forwarded_ref, hasContent]);
 
 		return (
 			<NavigationMenuPrimitive.Trigger

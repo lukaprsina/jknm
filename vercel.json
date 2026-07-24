@@ -1,7 +1,7 @@
 {
 	"crons": [
 		{
-			"path": "/api/wake-supabase",
+			"path": "/api/wake_supabase",
 			"schedule": "0 0 * * 1"
 		}
 	]

@@ -9,6 +9,9 @@ export async function unwrap_server_function<T>(
 	call: Promise<readonly [error: unknown, data: T | undefined]>,
 ): Promise<T> {
 	const [error, data] = await call;
-	if (error) throw error;
+	if (error)
+		throw error instanceof Error
+			? error
+			: new Error("Non-Error thrown from server function", { cause: error });
 	return data as T;
 }

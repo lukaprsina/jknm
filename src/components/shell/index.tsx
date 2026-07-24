@@ -1,5 +1,6 @@
 import type React from "react";
 import { Suspense } from "react";
+import { STATIC_NAV_SECTIONS } from "~/lib/static-nav-sections";
 import { cn } from "~/lib/utils";
 import type { EditableArticleRef } from "../article/new-adapter";
 import { Separator } from "../ui/separator";
@@ -47,6 +48,7 @@ export function Shell({
 						<DesktopHeader
 							className="hidden md:flex"
 							editor_controls={editor_controls}
+							nav_sections={STATIC_NAV_SECTIONS}
 						/>
 						<MobileHeader
 							className="flex md:hidden"

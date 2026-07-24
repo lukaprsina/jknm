@@ -7,3 +7,4 @@
 - osnutka dva reš še slike in objav
 - statične bold zgodovina **
 - galerija mogoče tekst ne centrirat ampak levo
+- tanstack form

@@ -7,7 +7,7 @@ import Blocks from "editorjs-blocks-react-renderer";
 import HTMLReactParser from "html-react-parser";
 import Image from "next/image";
 import Link from "next/link";
-import { createElement, useEffect, useMemo, useRef } from "react";
+import { createElement, useEffect, useMemo, useRef, useState } from "react";
 import ArticleDescription from "~/components/article/description";
 import { gallery_store, useGalleryImages } from "~/components/gallery-store";
 import { TableOfContents } from "~/components/toc/table-of-contents";
@@ -19,6 +19,7 @@ import {
 	get_heading_from_editor,
 } from "~/lib/editor-utils";
 import { human_file_size } from "~/lib/human-file-size";
+import { sanitize_inline_html } from "~/lib/sanitize-html";
 import { cn } from "~/lib/utils";
 import type {
 	EditorDraftArticle,
@@ -64,19 +65,25 @@ function ArticleBody({
 function useEditorData(
 	article: { content: EditorDraftArticle["content"] } | undefined,
 ) {
+	const content = article?.content;
+
+	// Fallback for content saved without a `time` field — captured once per
+	// mount rather than via a fresh `Date.now()` on every recompute.
+	const [defaultTime] = useState(() => Date.now());
+
 	const headings = useMemo(() => {
-		if (!article?.content) return [];
-		return extract_headings_from_content(article.content);
-	}, [article?.content]);
+		if (!content) return [];
+		return extract_headings_from_content(content);
+	}, [content]);
 
 	const blocks_data = useMemo(() => {
-		if (!article?.content) return;
+		if (!content) return;
 
 		const heading_by_block_index = new Map(
 			headings.map((heading) => [heading.block_index, heading.id]),
 		);
 
-		const blocks = article.content.blocks
+		const blocks = content.blocks
 			.slice(1) // remove first heading (the article H1, rendered separately below)
 			.map((block, index) => {
 				const toc_id = heading_by_block_index.get(index + 1);
@@ -85,11 +92,11 @@ function useEditorData(
 			});
 
 		return {
-			version: article.content.version ?? "unknown version",
+			version: content.version ?? "unknown version",
 			blocks,
-			time: article.content.time ?? Date.now(),
+			time: content.time ?? defaultTime,
 		};
-	}, [article?.content, headings]);
+	}, [content, headings, defaultTime]);
 
 	return { blocks_data, headings };
 }
@@ -100,14 +107,15 @@ export function EditorToReact({
 	article: EditorDraftArticle | PublishedArticleView | undefined;
 }) {
 	const { blocks_data, headings } = useEditorData(article);
+	const content = article?.content;
 
 	// Derived synchronously from `article.content` (available at first paint,
 	// SSR included) rather than via useEffect+useState, which left every
 	// article flashing "Untitled" until the effect ran post-hydration.
 	const heading = useMemo(() => {
-		if (!article?.content) return undefined;
+		if (!content) return undefined;
 
-		const heading_info = get_heading_from_editor(article.content);
+		const heading_info = get_heading_from_editor(content);
 
 		let title = heading_info.title;
 		if (heading_info.error || !title) {
@@ -115,19 +123,19 @@ export function EditorToReact({
 			title = "Invalid heading";
 		}
 
-		return title;
-	}, [article?.content]);
+		return sanitize_inline_html(title);
+	}, [content]);
 
 	const gallery_images = useMemo(() => {
-		if (!article?.content) return [];
+		if (!content) return [];
 
-		return extract_media_refs_from_content(article.content, ["image"])
+		return extract_media_refs_from_content(content, ["image"])
 			.map((ref) => ref.data)
 			.map((data) => {
 				const { width, height } = get_effective_dimensions(data.file);
 				return { ...data, file: { ...data.file, width, height } };
 			});
-	}, [article?.content]);
+	}, [content]);
 
 	useEffect(() => {
 		gallery_store.getState().registerImages(gallery_images);
@@ -146,9 +154,10 @@ export function EditorToReact({
 	return (
 		<>
 			<TableOfContents entries={headings} />
-			<Card className="hidden pt-8 md:block">
+			<Card className="hidden border-0 bg-transparent pt-8 shadow-none md:block">
 				<CardHeader>
 					<h1
+						// biome-ignore lint/security/noDangerouslySetInnerHtml: `heading` is sanitized via sanitize_inline_html (DOMPurify) in EditorToReact above
 						dangerouslySetInnerHTML={{
 							__html: heading ?? "Untitled",
 						}}
@@ -165,6 +174,7 @@ export function EditorToReact({
 			</Card>
 			<div className="pt-8 md:hidden">
 				<h1
+					// biome-ignore lint/security/noDangerouslySetInnerHtml: `heading` is sanitized via sanitize_inline_html (DOMPurify) in EditorToReact above
 					dangerouslySetInnerHTML={{
 						__html: heading ?? "Untitled",
 					}}
@@ -265,7 +275,7 @@ export const HeaderRenderer: RenderFn<{
 	return createElement(tag, {
 		id: data.toc_id,
 		className,
-		dangerouslySetInnerHTML: { __html: data.text },
+		dangerouslySetInnerHTML: { __html: sanitize_inline_html(data.text) },
 	});
 };
 
@@ -334,6 +344,7 @@ export const AttachesRenderer: RenderFn<EditorJSAttachesData> = ({
 				height="24"
 				fill="none"
 				viewBox="0 0 24 24"
+				aria-hidden="true"
 			>
 				<path
 					stroke="currentColor"

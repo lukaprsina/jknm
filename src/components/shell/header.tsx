@@ -55,16 +55,17 @@ export function DesktopHeaderLink({
 }) {
 	return (
 		<NavigationMenuItem>
-			<Link href={href} legacyBehavior passHref>
-				<NavigationMenuLink
+			<NavigationMenuLink asChild>
+				<Link
+					href={href}
 					className={cn(
 						navigationMenuTriggerStyle(),
 						"bg-transparent text-base dark:bg-primary/80 dark:text-primary-foreground",
 					)}
 				>
 					{children}
-				</NavigationMenuLink>
-			</Link>
+				</Link>
+			</NavigationMenuLink>
 		</NavigationMenuItem>
 	);
 }
@@ -73,15 +74,14 @@ export const ListItem = React.forwardRef<
 	React.ComponentRef<"a">,
 	React.ComponentPropsWithoutRef<"a"> & {
 		list_title?: React.ReactNode;
-		is_title?: boolean;
 	}
->(({ className, list_title, is_title, href, ...props }, ref) => {
+>(({ className, list_title, href, ...props }, ref) => {
 	if (!href) {
 		return null;
 	}
 
 	return (
-		<li className={cn(is_title && "col-span-2")}>
+		<li>
 			<NavigationMenuLink asChild>
 				<Link
 					href={href}
@@ -89,6 +89,7 @@ export const ListItem = React.forwardRef<
 					className={cn(
 						"prose",
 						buttonVariants({ size: "sm", variant: "link" }),
+						"w-full justify-start text-left",
 						className,
 					)}
 					{...props}

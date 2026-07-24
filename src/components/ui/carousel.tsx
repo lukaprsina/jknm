@@ -75,6 +75,15 @@ const Carousel = React.forwardRef<
 			setCanScrollNext(api.canScrollNext());
 		}, []);
 
+		// Sync the initial scroll-button state as soon as `api` becomes
+		// available, without a setState call inside the effect below (which
+		// only needs to *subscribe* to later "reInit"/"select" events).
+		const [previousApi, setPreviousApi] = React.useState(api);
+		if (api && api !== previousApi) {
+			setPreviousApi(api);
+			onSelect(api);
+		}
+
 		const scrollPrev = React.useCallback(() => {
 			api?.scrollPrev();
 		}, [api]);
@@ -96,7 +105,6 @@ const Carousel = React.forwardRef<
 				return;
 			}
 
-			onSelect(api);
 			api.on("reInit", onSelect);
 			api.on("select", onSelect);
 
@@ -118,6 +126,7 @@ const Carousel = React.forwardRef<
 					canScrollNext,
 				}}
 			>
+				{/* biome-ignore lint/a11y/useSemanticElements: <section> doesn't support aria-roledescription without an accessible name; role="region" + aria-roledescription is the documented embla/shadcn carousel pattern */}
 				<div
 					ref={ref}
 					className={cn("relative", className)}
@@ -162,6 +171,7 @@ const CarouselItem = React.forwardRef<
 	const { orientation } = useCarousel();
 
 	return (
+		// biome-ignore lint/a11y/useSemanticElements: <fieldset> doesn't support aria-roledescription; role="group" + aria-roledescription is the documented embla/shadcn carousel pattern
 		<div
 			ref={ref}
 			role="group"

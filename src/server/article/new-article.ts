@@ -1,11 +1,6 @@
-import { algoliasearch as searchClient } from "algoliasearch";
 import { and, eq, sql } from "drizzle-orm";
 import type { z } from "zod";
-import { env } from "~/env";
-import {
-	ALGOLIA_PUBLISHED_ARTICLE_INDEX,
-	convert_new_article_to_algolia_object,
-} from "~/lib/algoliasearch";
+import { convert_new_article_to_algolia_object } from "~/lib/algoliasearch";
 import { convert_title_to_url } from "~/lib/article-utils";
 import { assert_one } from "~/lib/assert-length";
 import type { ThumbnailType } from "~/lib/validators";
@@ -14,7 +9,11 @@ import { apply_server_invalidations } from "../cache-invalidation";
 import { type DbTransaction, db } from "../db";
 import { Article, ArticleSlug, ArticlesToAuthors, Media } from "../db/schema";
 import { find_article_with_relations } from "./article-queries";
-import { remove_from_algolia, soft_delete_article } from "./lifecycle";
+import {
+	add_or_update_algolia,
+	remove_from_algolia,
+	soft_delete_article,
+} from "./lifecycle";
 import {
 	assert_can_supersede,
 	decide_slug_transition,
@@ -133,13 +132,15 @@ async function resolve_supersede_publish_slug(
 		primary = inserted[0];
 	}
 
-	if (superseded.status === "published") {
-		await remove_from_algolia(superseded.id);
-	}
-
 	await soft_delete_article(tx, supersedes_id);
 
-	return primary;
+	// Unlisting is a network call, so it's deferred to the caller to run
+	// *after* the transaction commits, rather than while this function's
+	// `FOR UPDATE` lock (above) is still held.
+	return {
+		primary,
+		unlist_algolia_id: superseded.status === "published" ? supersedes_id : null,
+	};
 }
 
 /**
@@ -307,10 +308,7 @@ export async function publish_article(
 				})) ?? null)
 			: null;
 
-		const thumbnail = await resolve_thumbnail(
-			tx,
-			input.article.thumbnail_crop,
-		);
+		const thumbnail = await resolve_thumbnail(tx, input.article.thumbnail_crop);
 
 		const updated = await tx
 			.update(Article)
@@ -329,11 +327,7 @@ export async function publish_article(
 
 		assert_one(updated);
 
-		await replace_article_authors(
-			tx,
-			input.article_id,
-			input.author_ids,
-		);
+		await replace_article_authors(tx, input.article_id, input.author_ids);
 		// Reconcile against the *persisted* content (see `save_article`) so a
 		// publish that omits `content` doesn't wipe existing media links.
 		await reconcile_media_to_articles(
@@ -342,7 +336,7 @@ export async function publish_article(
 			updated[0].content_json,
 		);
 
-		const primary =
+		const { primary, unlist_algolia_id } =
 			existing.supersedes_id && is_supersede_publish(source)
 				? await resolve_supersede_publish_slug(
 						tx,
@@ -350,11 +344,14 @@ export async function publish_article(
 						existing.supersedes_id,
 						input.article.title,
 					)
-				: await resolve_first_publish_slug(
-						tx,
-						input.article_id,
-						input.article.title,
-					);
+				: {
+						primary: await resolve_first_publish_slug(
+							tx,
+							input.article_id,
+							input.article.title,
+						),
+						unlist_algolia_id: null,
+					};
 
 		const article = await find_article_with_relations(
 			tx,
@@ -362,25 +359,26 @@ export async function publish_article(
 		);
 		if (!article) throw new Error("Published article not found");
 
-		const algolia = searchClient(
-			env.NEXT_PUBLIC_ALGOLIA_ID,
-			env.ALGOLIA_ADMIN_KEY,
-		);
-
-		await algolia.addOrUpdateObject({
-			indexName: ALGOLIA_PUBLISHED_ARTICLE_INDEX,
-			objectID: article.id,
-			body: convert_new_article_to_algolia_object({
-				article,
-				slug: primary.slug,
-				authors: article.articles_to_authors,
-				thumbnail_media: article.thumbnail_media,
-			}),
-		});
-
-		return { article, slug: primary.slug };
+		return { article, slug: primary.slug, unlist_algolia_id };
 	});
 
+	// Algolia calls are network I/O and best-effort (see `add_or_update_algolia`
+	// / `remove_from_algolia`) — run after the transaction has committed, not
+	// inside it, so a slow or failing Algolia call can't extend how long the
+	// supersede-publish `FOR UPDATE` lock is held, and can't roll back a
+	// publish that already succeeded in the DB.
+	if (transaction.unlist_algolia_id) {
+		await remove_from_algolia(transaction.unlist_algolia_id);
+	}
+	await add_or_update_algolia(
+		convert_new_article_to_algolia_object({
+			article: transaction.article,
+			slug: transaction.slug,
+			authors: transaction.article.articles_to_authors,
+			thumbnail_media: transaction.article.thumbnail_media,
+		}),
+	);
+
 	apply_server_invalidations("article.published");
-	return transaction;
+	return { article: transaction.article, slug: transaction.slug };
 }

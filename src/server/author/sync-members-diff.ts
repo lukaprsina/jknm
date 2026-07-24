@@ -27,7 +27,12 @@ export interface MemberFieldDiff {
 
 export type MemberSyncChange =
 	| { kind: "new"; google: GoogleMember }
-	| { kind: "changed"; google: GoogleMember; before: DbMember; diffs: MemberFieldDiff[] }
+	| {
+			kind: "changed";
+			google: GoogleMember;
+			before: DbMember;
+			diffs: MemberFieldDiff[];
+	  }
 	| { kind: "missing"; before: DbMember };
 
 function diff_fields(before: DbMember, after: GoogleMember): MemberFieldDiff[] {
@@ -52,8 +57,8 @@ export function compute_member_sync_diff(
 ): MemberSyncChange[] {
 	const db_by_google_id = new Map(
 		db_members
-			.filter((member) => member.google_id !== null)
-			.map((member) => [member.google_id!, member]),
+			.map((member) => [member.google_id, member] as const)
+			.filter((pair): pair is [string, DbMember] => pair[0] !== null),
 	);
 	const google_ids = new Set(google_members.map((member) => member.google_id));
 	const changes: MemberSyncChange[] = [];

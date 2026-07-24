@@ -16,7 +16,8 @@
 		"start": "next start",
 		"test": "vitest run",
 		"test:watch": "vitest",
-		"static": "bun run scripts/static_to_algolia.ts"
+		"static": "bun run scripts/static_to_algolia.ts",
+		"sweep": "bun run scripts/sweep-stale-content.ts"
 	},
 	"dependencies": {
 		"@algolia/autocomplete-js": "^1.19.9",
@@ -111,6 +112,7 @@
 		"immer": "^11.1.11",
 		"instantsearch.css": "^8.18.0",
 		"instantsearch.js": "^4.104.0",
+		"isomorphic-dompurify": "^3.19.0",
 		"jose": "^6.2.3",
 		"klona": "^2.0.6",
 		"lucide-react": "^1.23.0",
@@ -136,7 +138,6 @@
 		"scroll-into-view-if-needed": "^3.1.0",
 		"server-only": "^0.0.1",
 		"sharp": "^0.35.3",
-		"slugify": "^1.6.9",
 		"superjson": "^2.2.6",
 		"tailwind-merge": "^3.6.0",
 		"unified": "^11.0.5",

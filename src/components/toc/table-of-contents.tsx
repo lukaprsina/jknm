@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useSyncExternalStore,
+} from "react";
 import { createPortal } from "react-dom";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import type { TocEntry } from "~/lib/toc";
@@ -8,6 +14,18 @@ import { cn } from "~/lib/utils";
 import { mobile_nav_store, useMobileNavOpen } from "../shell/mobile-header";
 import { AnchorProvider, ScrollProvider, TOCItem } from "./fumadocs-toc";
 import { toc_visibility_store } from "./toc-store";
+
+function no_op_subscribe() {
+	return () => undefined;
+}
+
+function get_null() {
+	return null;
+}
+
+function get_shell_aside() {
+	return document.getElementById("shell-aside");
+}
 
 function TocList({ entries }: { entries: TocEntry[] }) {
 	const container_ref = useRef<HTMLDivElement>(null);
@@ -40,48 +58,43 @@ function TocList({ entries }: { entries: TocEntry[] }) {
  * nothing for an empty TOC, and flips `toc_visibility_store` so the shell
  * layout and mobile sheet can react to whether this page has one at all. */
 export function TableOfContents({ entries }: { entries: TocEntry[] }) {
-	// Both portal targets are read from the DOM only inside effects, never
-	// during render: reading `document` synchronously in the first client
-	// render (the one hydration diffs against) would disagree with the SSR
-	// pass, where `document` doesn't exist at all -- exactly the
-	// server/client branch React's hydration-mismatch warning calls out.
-	const [aside_element, set_aside_element] = useState<HTMLElement | null>(null);
-	const [mobile_element, set_mobile_element] = useState<HTMLElement | null>(
-		null,
-	);
 	const mobile_sheet_open = useMobileNavOpen();
 
-	useEffect(() => {
-		set_aside_element(document.getElementById("shell-aside"));
-	}, []);
+	// Both portal targets are read from the DOM via `useSyncExternalStore`,
+	// never during render: reading `document` synchronously in the first
+	// client render (the one hydration diffs against) would disagree with
+	// the SSR pass, where `document` doesn't exist at all -- exactly the
+	// server/client branch React's hydration-mismatch warning calls out.
+	const aside_element = useSyncExternalStore(
+		no_op_subscribe,
+		get_shell_aside,
+		get_null,
+	);
 
-	useEffect(() => {
-		if (!mobile_sheet_open) {
-			set_mobile_element(null);
-			return;
-		}
+	// `#mobile-toc` is rendered by `<MobileSheet>` (a separate component
+	// subtree gated on the same store), which mounts it asynchronously via
+	// Radix's sheet-open animation -- it isn't guaranteed to exist in the DOM
+	// yet by the time the sheet opens, so watch for it via MutationObserver
+	// instead of a single getElementById attempt.
+	const subscribe_mobile_toc = useCallback(
+		(on_store_change: () => void) => {
+			if (!mobile_sheet_open) return () => undefined;
 
-		// `#mobile-toc` is rendered by `<MobileSheet>` (a separate component
-		// subtree gated on the same store), which mounts it asynchronously
-		// via Radix's sheet-open animation -- it isn't guaranteed to exist in
-		// the DOM yet by the time this effect runs, so watch for it instead
-		// of a single getElementById attempt.
-		const existing = document.getElementById("mobile-toc");
-		if (existing) {
-			set_mobile_element(existing);
-			return;
-		}
-
-		const observer = new MutationObserver(() => {
-			const element = document.getElementById("mobile-toc");
-			if (element) {
-				set_mobile_element(element);
-				observer.disconnect();
-			}
-		});
-		observer.observe(document.body, { childList: true, subtree: true });
-		return () => observer.disconnect();
+			const observer = new MutationObserver(on_store_change);
+			observer.observe(document.body, { childList: true, subtree: true });
+			return () => observer.disconnect();
+		},
+		[mobile_sheet_open],
+	);
+	const get_mobile_toc = useCallback(() => {
+		if (!mobile_sheet_open) return null;
+		return document.getElementById("mobile-toc");
 	}, [mobile_sheet_open]);
+	const mobile_element = useSyncExternalStore(
+		subscribe_mobile_toc,
+		get_mobile_toc,
+		get_null,
+	);
 
 	useEffect(() => {
 		toc_visibility_store.setState({ has_toc: entries.length > 0 });

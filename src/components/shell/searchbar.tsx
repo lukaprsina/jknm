@@ -115,9 +115,9 @@ export function Searchbar() {
 				{value && (
 					<>
 						<CommandGroup heading="Vsebina">
-							{staticPages.map((item, idx) => (
+							{staticPages.map((item) => (
 								<CommandItem
-									key={idx}
+									key={item.section}
 									onSelect={() => router.push(`/${item.section}`)}
 								>
 									{item.section.charAt(0).toUpperCase() + item.section.slice(1)}
@@ -125,9 +125,9 @@ export function Searchbar() {
 							))}
 						</CommandGroup>
 						<CommandGroup heading="Novice">
-							{publishedArticles.map((item, idx) => (
+							{publishedArticles.map((item) => (
 								<CommandItem
-									key={idx}
+									key={item.url}
 									onSelect={() => router.push(`/novica/${item.url}`)}
 								>
 									{item.title}

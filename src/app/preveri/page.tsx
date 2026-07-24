@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache";
+import { Suspense } from "react";
 import { Shell } from "~/components/shell";
 import type { CacheTag } from "~/lib/cache-policy";
 import { article_variants, page_variants } from "~/lib/page-variants";
@@ -28,7 +29,9 @@ export default async function PreveriPage() {
 			<div
 				className={cn(page_variants(), article_variants(), "max-w-none px-6")}
 			>
-				<PreveriClient articles={articles} />
+				<Suspense fallback={null}>
+					<PreveriClient articles={articles} />
+				</Suspense>
 			</div>
 		</Shell>
 	);

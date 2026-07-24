@@ -1,6 +1,6 @@
 import { Mail, Phone } from "lucide-react";
 import Link from "next/link";
-import { FacebookIcon, InstagramIcon, TwitterIcon, YoutubeIcon } from "./icons";
+import { FacebookIcon, InstagramIcon, YoutubeIcon } from "./icons";
 
 export function Footer() {
 	return (
@@ -53,7 +53,6 @@ export function Footer() {
 							<FacebookIcon />
 							<YoutubeIcon />
 							<InstagramIcon />
-							<TwitterIcon />
 						</div>
 					</div>
 				</div>

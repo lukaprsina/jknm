@@ -2,14 +2,7 @@
 
 import Image from "next/image";
 import type React from "react";
-import {
-	useCallback,
-	useContext,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-} from "react";
+import { useCallback, useContext, useMemo, useRef, useState } from "react";
 import type { Crop } from "react-image-crop";
 import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
 import { useEditorImageData } from "~/components/editor/editor-store";
@@ -36,7 +29,9 @@ export function ImageSelector({
 	const store_images = useEditorImageData();
 	const input_ref = useRef<HTMLInputElement>(null);
 	const [crop, setCrop] = useState<Crop>();
-	const [uploadedVersion, setUploadedVersion] = useState<number>(Date.now());
+	const [uploadedVersion, setUploadedVersion] = useState<number>(() =>
+		Date.now(),
+	);
 	const [customThumbnailExists, setCustomThumbnailExists] = useState<boolean>(
 		formImage?.uploaded_custom_thumbnail ?? false,
 	);
@@ -46,7 +41,9 @@ export function ImageSelector({
 		formImage?.uploaded_custom_thumbnail ? (formImage.image_url ?? "") : "",
 	);
 	const [doCenterCrop, setDoCenterCrop] = useState<boolean>(false);
-	const [imageIndex, setImageIndex] = useState<number | undefined>(undefined);
+	const [selectedImageIndex, setSelectedImageIndex] = useState<
+		number | undefined
+	>(undefined);
 
 	const images = useMemo(() => {
 		const temp = [...store_images];
@@ -65,24 +62,27 @@ export function ImageSelector({
 		return temp;
 	}, [customThumbnailExists, customThumbnailUrl, draft_article, store_images]);
 
-	useEffect(() => {
+	// `crop` mirrors `formImage` (the source of truth), but ReactCrop also
+	// writes into it directly as the user drags — so it can't be a plain
+	// derived value, only re-synced when `formImage` itself changes.
+	const [previousFormImage, setPreviousFormImage] = useState(formImage);
+	if (formImage !== previousFormImage) {
+		setPreviousFormImage(formImage);
 		setCrop(formImage);
-	}, [formImage]);
+	}
 
-	useEffect(() => {
-		if (!formImage || typeof imageIndex === "number") return;
+	// Defaults to whichever image matches `formImage` until the user makes an
+	// explicit selection (click), which then wins regardless of later prop changes.
+	const imageIndex = useMemo(() => {
+		if (typeof selectedImageIndex === "number") return selectedImageIndex;
+		if (!formImage) return undefined;
 
-		const selected_image_index = images.findIndex(
+		const index = images.findIndex(
 			(image) => image.file.url === formImage.image_url,
 		);
 
-		if (selected_image_index === -1) {
-			setImageIndex(undefined);
-			return;
-		}
-
-		setImageIndex(selected_image_index);
-	}, [formImage, imageIndex, images]);
+		return index === -1 ? undefined : index;
+	}, [formImage, images, selectedImageIndex]);
 
 	const handle_image_load = useCallback(
 		(event: React.SyntheticEvent<HTMLImageElement>) => {
@@ -98,21 +98,19 @@ export function ImageSelector({
 				current_crop = crop;
 			}
 
-			if (!current_crop) {
-				current_crop = centerCrop(
-					makeAspectCrop(
-						{
-							unit: "%",
-							width: 100,
-						},
-						16 / 9,
-						width,
-						height,
-					),
+			current_crop ??= centerCrop(
+				makeAspectCrop(
+					{
+						unit: "%",
+						width: 100,
+					},
+					16 / 9,
 					width,
 					height,
-				);
-			}
+				),
+				width,
+				height,
+			);
 
 			const thumbnail = {
 				...current_crop,
@@ -190,6 +188,7 @@ export function ImageSelector({
 
 							return (
 								<Card
+									// biome-ignore lint/suspicious/noArrayIndexKey: url alone isn't unique (custom thumbnail can repeat a store image's url)
 									key={`${image.file.url}-${index}`}
 									className={cn(
 										"box-border flex cursor-pointer items-center justify-center border-2 p-2",
@@ -207,7 +206,7 @@ export function ImageSelector({
 										onClick={() => {
 											setFormImage(undefined);
 											setUploadedVersion(Date.now());
-											setImageIndex(index);
+											setSelectedImageIndex(index);
 											setDoCenterCrop(true);
 										}}
 									/>
@@ -272,10 +271,10 @@ export function ImageSelector({
 							minHeight={50}
 							minWidth={50}
 						>
-							{/* eslint-disable-next-line @next/next/no-img-element */}
+							{/* biome-ignore lint/performance/noImgElement: ReactCrop clones a raw <img> ref, incompatible with next/image */}
 							<img
 								src={`${images[imageIndex].file.url}?v=${uploadedVersion}`}
-								alt="Cropped image"
+								alt="Obrezovanje slike"
 								width={images[imageIndex].file.width}
 								height={images[imageIndex].file.height}
 								className="h-full w-full min-w-[500px] object-contain"
