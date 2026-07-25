@@ -144,6 +144,19 @@ Migrated from NextAuth v4 in #32.
   (deliberately-dropped sections like `jame`/`kataster`/`jrs` — their cadastre data now lives on
   JZS's own site, so those 410 rather than redirecting off-domain). Both routes share
   `legacy_gone()`/`legacy_redirect()`/`REDIRECT_CACHE_CONTROL` from `~/lib/site-config.ts`.
+- Metadata: `layout.tsx` sets `twitter: { card: "summary_large_image" }` site-wide (Next
+  populates `twitter:image` from `openGraph.images` automatically when no `twitter-image` file
+  convention exists, so no per-page duplication is needed). `novica/[published_url]/page.tsx`'s
+  `generateMetadata` adds an `openGraph.images` entry from `article.thumbnail_media.original`
+  (real pixel `width`/`height`, no crop applied) only when a thumbnail exists — leaving
+  `openGraph` unset otherwise so the root `opengraph-image.png` file convention keeps applying as
+  the fallback (setting `openGraph` at all, even without `images`, would shallow-replace it per
+  Next's segment-metadata merge rules). `page.tsx` (homepage) renders a static `Organization`/
+  `WebSite` JSON-LD `<script>` (`ORGANIZATION_JSON_LD`). `alternates.canonical` is set on every
+  static page (`/`, `/arhiv`, `/kontakt`, `/klub`, `/publiciranje`, `/raziskovanje`, `/varstvo`,
+  `/zgodovina`) matching `sitemap.ts`'s `STATIC_ROUTES`, mirroring the pattern already used on
+  `/novica/[slug]`. `/avtorji` is deliberately excluded — it `redirect()`s anonymous visitors to
+  `/` before rendering, so a canonical pointing at itself would be misleading.
 - `src/server/article/` — `new-article.ts` (`create_article`, `save_article`, `publish_article`),
   `lifecycle.ts` (archive/delete/discard/supersede), `get-article.ts`, `article-queries.ts`,
   `slug.ts`, `validators.ts` (Zod input validators for the oRPC procedures), and the
