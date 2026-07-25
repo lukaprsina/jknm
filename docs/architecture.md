@@ -135,6 +135,15 @@ Migrated from NextAuth v4 in #32.
   article migration has run, and every migrated article carries its 2008-site id in
   `Article.legacy_id` (verified row-by-row against the old site via `/preveri`), so `legacy_id`
   can be treated as complete. `scripts/migrate-legacy-media.ts` is still present.
+  `si/route.ts` (exact `/si`) 308-redirects old `?id=<legacy_id>` article URLs to
+  `/novica/<slug>`; `si/[...path]/route.ts` (catch-all, coexists since it requires ≥1 segment)
+  covers the rest of the old classic-ASP site's static tree — a fixed allowlist in
+  `~/lib/legacy-si-paths.ts` (`resolve_legacy_static_path`) 308-redirects the sections the admin
+  kept current (`klub`, `klub/zgodovina`, `publikacije`, `raziskovanje`, `varstvo`,
+  `etc/kontakt`, `etc/iskanje`) to their new-site equivalent, and 410s everything else
+  (deliberately-dropped sections like `jame`/`kataster`/`jrs` — their cadastre data now lives on
+  JZS's own site, so those 410 rather than redirecting off-domain). Both routes share
+  `legacy_gone()`/`legacy_redirect()`/`REDIRECT_CACHE_CONTROL` from `~/lib/site-config.ts`.
 - `src/server/article/` — `new-article.ts` (`create_article`, `save_article`, `publish_article`),
   `lifecycle.ts` (archive/delete/discard/supersede), `get-article.ts`, `article-queries.ts`,
   `slug.ts`, `validators.ts` (Zod input validators for the oRPC procedures), and the

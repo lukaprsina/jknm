@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
+import { legacy_gone, legacy_redirect } from "~/lib/site-config";
 import { find_article_with_relations } from "~/server/article/article-queries";
 import { find_primary_slug_or_first } from "~/server/article/lifecycle-rules";
 import { db } from "~/server/db";
@@ -12,13 +13,6 @@ const LEGACY_ID_RE = /^\d+$/;
 // turning a "this id never existed" case into a 500 instead of the 410 it
 // should be.
 const PG_INT_MAX = 2147483647;
-
-// 308s CDN-cacheable for a day: this endpoint only ever exists to absorb
-// crawler/bookmark traffic hitting known-stable legacy URLs, so letting
-// Vercel's edge serve repeat hits directly is a free win a Route Handler
-// gets that a Server Component redirect doesn't.
-const REDIRECT_CACHE_CONTROL =
-	"public, max-age=0, s-maxage=86400, stale-while-revalidate=604800";
 
 /**
  * Legacy URL shape: `https://www.jknm.si/si/?id=<legacy_id>&l=<year>`. `l`
@@ -38,7 +32,7 @@ export async function GET(request: NextRequest) {
 	}
 
 	if (!LEGACY_ID_RE.test(id) || Number(id) > PG_INT_MAX) {
-		return new NextResponse(null, { status: 410 });
+		return legacy_gone();
 	}
 
 	const article = await find_article_with_relations(
@@ -52,21 +46,18 @@ export async function GET(request: NextRequest) {
 	// unlike `/novica/[slug]`'s `is_visible_to`, which does gate archived
 	// articles in for signed-in admins.
 	if (article?.status !== "published") {
-		return new NextResponse(null, { status: 410 });
+		return legacy_gone();
 	}
 
 	const slug = find_primary_slug_or_first(article.article_slugs)?.slug;
 
 	if (!slug) {
-		return new NextResponse(null, { status: 410 });
+		return legacy_gone();
 	}
 
 	// 308, matching `permanentRedirect()`'s status elsewhere on the site
 	// (the non-primary-slug redirect on `/novica/[slug]`) — 301 and 308 are
 	// equivalent to Google, so this is a consistency choice, not a
 	// correctness one.
-	return NextResponse.redirect(
-		new URL(`/novica/${encodeURIComponent(slug)}`, request.url),
-		{ status: 308, headers: { "Cache-Control": REDIRECT_CACHE_CONTROL } },
-	);
+	return legacy_redirect(`/novica/${encodeURIComponent(slug)}`, request);
 }
