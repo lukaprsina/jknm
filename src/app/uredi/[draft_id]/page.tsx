@@ -41,6 +41,7 @@ export async function generateMetadata(
 	if (!session)
 		return {
 			title: "Napaka",
+			robots: { index: false, follow: false },
 		};
 
 	const decoded = decodeURIComponent(draft_id);
@@ -59,6 +60,7 @@ export async function generateMetadata(
 
 	return {
 		title,
+		robots: { index: false, follow: false },
 	};
 }
 

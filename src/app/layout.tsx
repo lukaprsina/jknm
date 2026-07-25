@@ -18,10 +18,15 @@ export const metadata: Metadata = {
 	// OG images) elsewhere in the app to resolve at all — Next hard build-
 	// errors on a relative URL-based field without this set.
 	metadataBase: new URL(SITE_ORIGIN),
-	title: "Jamarski klub Novo mesto",
+	title: {
+		default: "Jamarski klub Novo mesto",
+		template: "%s | Jamarski klub Novo mesto",
+	},
 	description:
 		"Smo specialisti za dokumentirano raziskovanje in ohranjanje čistega ter zdravega podzemskega sveta.",
-	icons: [{ rel: "icon", url: "/favicon.ico" }],
+	// No `icons` here: `favicon.ico`, `icon0.svg`, `icon1.png`, and
+	// `apple-icon.png` in `app/` are auto-detected by Next.js file-based
+	// metadata conventions and injected without manual config.
 	// No `images` here: X falls back to `og:image` itself when `twitter:image`
 	// is absent, so per-page `openGraph.images` (see `novica/[published_url]`)
 	// already covers social-card images without duplicating them here.

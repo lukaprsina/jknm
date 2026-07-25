@@ -2,7 +2,7 @@
 
 ## What this is
 
-JKNM (Jamarski klub Novo mesto) is a Slovenian caving club's public news site: articles, an authors/members page, an archive, contact/verification pages, and an admin editor for writing and publishing articles. Single maintainer, actively iterating. Public traffic is small; the pain is entirely on the admin/editing side.
+JKNM (Jamarski klub Novo mesto) is a Slovenian caving club's public news site: articles, an archive, contact/verification pages, and an admin editor for writing and publishing articles. The authors page (`/avtorji`) and verification page (`/preveri`) are admin-only internal tooling, not public. Single maintainer, actively iterating. Public traffic is small; the pain is entirely on the admin/editing side.
 
 ## Where things are written down
 

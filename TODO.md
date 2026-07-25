@@ -6,5 +6,5 @@
 - improve mobile
 - osnutka dva reš še slike in objav
 - statične bold zgodovina **
-- galerija mogoče tekst ne centrirat ampak levo
 - tanstack form
+- TOC article add H1 too

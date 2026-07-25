@@ -10,8 +10,8 @@ import { SITE_ORIGIN } from "~/lib/site-config";
  * at worst under RFC 9309's most-specific-group-wins rule (a bot with its
  * own group would ignore the `disallow` list below entirely).
  *
- * `/uredi`, `/preveri`, `/prijava` are already access-controlled via
- * `getServerAuthSession()` — this isn't a security boundary, just keeping
+ * `/uredi`, `/preveri`, `/prijava`, `/avtorji` are already access-controlled
+ * via `getServerAuthSession()` — this isn't a security boundary, just keeping
  * admin/internal-tooling URLs out of the index and off crawl budget.
  */
 export default function robots(): MetadataRoute.Robots {
@@ -20,7 +20,7 @@ export default function robots(): MetadataRoute.Robots {
 			{
 				userAgent: "*",
 				allow: "/",
-				disallow: ["/uredi/", "/preveri/", "/prijava/", "/api/"],
+				disallow: ["/uredi/", "/preveri/", "/prijava/", "/avtorji/", "/api/"],
 			},
 		],
 		sitemap: `${SITE_ORIGIN}/sitemap.xml`,
