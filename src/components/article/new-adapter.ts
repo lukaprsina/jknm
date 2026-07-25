@@ -1,5 +1,5 @@
 import type { ThumbnailType } from "~/lib/validators";
-import { find_primary_slug } from "~/server/article/lifecycle-rules";
+import { find_primary_slug_or_first } from "~/server/article/lifecycle-rules";
 import type {
 	Article,
 	ArticleContentType,
@@ -61,8 +61,7 @@ export type EditableArticleRef = { id: string };
 
 /** The article's primary slug, falling back to any slug if none is flagged primary. */
 export function get_primary_slug(article: NewArticleWithRelations) {
-	return (find_primary_slug(article.article_slugs) ?? article.article_slugs[0])
-		?.slug;
+	return find_primary_slug_or_first(article.article_slugs)?.slug;
 }
 
 function reconstruct_thumbnail_crop(

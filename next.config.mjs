@@ -54,6 +54,20 @@ const config = {
 			},
 		],
 	},
+	// Vercel's own docs don't document automatic `noindex` on production
+	// alias hostnames (`jknm-turborepo.vercel.app`, `jknm-si.vercel.app` —
+	// both live above in `remotePatterns`), and they're publicly reachable.
+	// Left unindexed, they'd otherwise be indexable duplicate-content copies
+	// of every page on `www.jknm.si`.
+	async headers() {
+		return [
+			{
+				source: "/:path*",
+				has: [{ type: "host", value: "(?<host>.*\\.vercel\\.app)" }],
+				headers: [{ key: "X-Robots-Tag", value: "noindex" }],
+			},
+		];
+	},
 };
 
 const withMDX = createMDX({

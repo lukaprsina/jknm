@@ -70,8 +70,11 @@ export interface InvalidationDescriptor {
 	readonly query_keys: readonly (readonly unknown[])[];
 }
 
-/** Every article view is reachable from `/`, so far. */
-const ROOT_PATHS = ["/"] as const;
+/**
+ * Every article view is reachable from `/`, and every published/archived/
+ * deleted change also changes what `/sitemap.xml` should list.
+ */
+const ROOT_PATHS = ["/", "/sitemap.xml"] as const;
 
 /** The homepage feed's TanStack Query key (`app/infinite-articles.tsx`). */
 const HOMEPAGE_FEED_KEYS = [["infinite_published"]] as const;

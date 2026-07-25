@@ -8,11 +8,16 @@ import { Open_Sans } from "next/font/google";
 import { StrictMode } from "react";
 import { Toaster } from "~/components/ui/toaster";
 import { TooltipProvider } from "~/components/ui/tooltip";
+import { SITE_ORIGIN } from "~/lib/site-config";
 import { cn } from "~/lib/utils";
 import { cachedAllAuthors } from "~/server/cached-global-state";
 import Providers from "./provider";
 
 export const metadata: Metadata = {
+	// Required for every relative URL-bearing metadata field (canonicals,
+	// OG images) elsewhere in the app to resolve at all — Next hard build-
+	// errors on a relative URL-based field without this set.
+	metadataBase: new URL(SITE_ORIGIN),
 	title: "Jamarski klub Novo mesto",
 	description:
 		"Smo specialisti za dokumentirano raziskovanje in ohranjanje čistega ter zdravega podzemskega sveta.",

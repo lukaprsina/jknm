@@ -185,6 +185,19 @@ export function find_primary_slug<T extends { is_primary: boolean }>(
 }
 
 /**
+ * `find_primary_slug`, falling back to any slug — what every caller that
+ * needs *a* URL to render or index with actually wants (the no-fallback
+ * behavior above exists only for `resolve_slug_request`, which must tell "no
+ * canonical slug" apart from "the canonical slug is X"). Shared so the same
+ * `?? slugs[0]` fallback isn't hand-rolled at every call site.
+ */
+export function find_primary_slug_or_first<T extends { is_primary: boolean }>(
+	slugs: T[],
+): T | undefined {
+	return find_primary_slug(slugs) ?? slugs[0];
+}
+
+/**
  * What `/novica/<slug>` should do with one incoming request. A three-way
  * outcome rather than an article-or-nothing, because "this article exists but
  * you asked for it by a retired name" is a third case the nullable shape can't

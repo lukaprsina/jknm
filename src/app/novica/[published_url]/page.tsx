@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import sanitizeHtml from "sanitize-html";
+import type { NewArticleWithRelations } from "~/components/article/new-adapter";
 import { map_new_article_to_published_view } from "~/components/article/new-adapter";
 import { PublishedContent } from "~/components/content";
 import { ImageGallery } from "~/components/image-gallery";
 import { Shell } from "~/components/shell";
 import ScrollToTop from "~/components/shell/scroll-to-top";
 import { ScrollProvider } from "~/contexts/scroll-context";
+import { SITE_ORIGIN } from "~/lib/site-config";
 import { get_new_article_by_slug } from "~/server/article/get-article";
 import { resolve_slug_request } from "~/server/article/lifecycle-rules";
 import { getServerAuthSession } from "~/server/auth";
@@ -78,11 +80,46 @@ async function resolve_article(published_url: string) {
 
 export async function generateMetadata(props: NovicaProps): Promise<Metadata> {
 	const { published_url } = await props.params;
-	const { article } = await resolve_article(published_url);
+	// `requested_slug` is safe to use directly as the canonical here: by the
+	// time this returns, `resolve_article` has already redirected away from
+	// any non-primary slug, so whatever's left is the canonical one.
+	const { article, requested_slug } = await resolve_article(published_url);
 
 	return {
 		title: sanitizeHtml(article.title, { allowedTags: [] }),
+		alternates: {
+			canonical: `/novica/${encodeURIComponent(requested_slug)}`,
+		},
 	};
+}
+
+/**
+ * `Article` (not `NewsArticle`): a caving club isn't a news publisher, and
+ * `NewsArticle` unlocks nothing here (Google's "Top stories" needs no
+ * markup at all). This earns no rich result either way — the value is
+ * unambiguous machine-readable author/date, and increasingly, LLM ingestion.
+ *
+ * `</` is escaped inside the JSON so a title/excerpt containing a literal
+ * `</script>` can't prematurely close the tag.
+ */
+function build_article_json_ld(article: NewArticleWithRelations, slug: string) {
+	const json_ld = {
+		"@context": "https://schema.org",
+		"@type": "Article",
+		headline: sanitizeHtml(article.title, { allowedTags: [] }),
+		datePublished: article.created_at.toISOString(),
+		dateModified: article.updated_at.toISOString(),
+		url: `${SITE_ORIGIN}/novica/${encodeURIComponent(slug)}`,
+		author: article.articles_to_authors.map((rel) => ({
+			"@type": "Person",
+			name: rel.author.name,
+		})),
+		...(article.thumbnail_media
+			? { image: [article.thumbnail_media.original.url] }
+			: {}),
+	};
+
+	return JSON.stringify(json_ld).replace(/</g, "\\u003c");
 }
 
 export default async function NovicaPage(props: NovicaProps) {
@@ -94,6 +131,13 @@ export default async function NovicaPage(props: NovicaProps) {
 	return (
 		<Shell published_article={new_view}>
 			<ScrollProvider>
+				<script
+					type="application/ld+json"
+					// biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD has no other way to embed — content is sanitized/escaped in build_article_json_ld.
+					dangerouslySetInnerHTML={{
+						__html: build_article_json_ld(article, requested_slug),
+					}}
+				/>
 				<PublishedContent article={new_view} />
 				<ImageGallery />
 				<ScrollToTop />

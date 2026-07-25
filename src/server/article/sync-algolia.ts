@@ -9,7 +9,7 @@ import { db } from "../db";
 import { Article } from "../db/schema";
 import { find_article_with_relations } from "./article-queries";
 import { add_or_update_algolia, remove_from_algolia } from "./lifecycle";
-import { find_primary_slug } from "./lifecycle-rules";
+import { find_primary_slug_or_first } from "./lifecycle-rules";
 import {
 	type AlgoliaArticleHit,
 	type AlgoliaSyncChange,
@@ -27,7 +27,7 @@ const UUID_RE =
 function resolve_primary_slug(slugs: { slug: string; is_primary: boolean }[]) {
 	// Falls back to any slug: an Algolia record needs *a* URL, and having one
 	// that resolves beats having none.
-	return find_primary_slug(slugs) ?? slugs[0];
+	return find_primary_slug_or_first(slugs);
 }
 
 interface AlgoliaHitRecord {
