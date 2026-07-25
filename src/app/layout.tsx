@@ -22,6 +22,10 @@ export const metadata: Metadata = {
 	description:
 		"Smo specialisti za dokumentirano raziskovanje in ohranjanje čistega ter zdravega podzemskega sveta.",
 	icons: [{ rel: "icon", url: "/favicon.ico" }],
+	// No `images` here: X falls back to `og:image` itself when `twitter:image`
+	// is absent, so per-page `openGraph.images` (see `novica/[published_url]`)
+	// already covers social-card images without duplicating them here.
+	twitter: { card: "summary_large_image" },
 };
 
 const open_sans = Open_Sans({

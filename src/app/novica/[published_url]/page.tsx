@@ -84,12 +84,32 @@ export async function generateMetadata(props: NovicaProps): Promise<Metadata> {
 	// time this returns, `resolve_article` has already redirected away from
 	// any non-primary slug, so whatever's left is the canonical one.
 	const { article, requested_slug } = await resolve_article(published_url);
+	const title = sanitizeHtml(article.title, { allowedTags: [] });
 
 	return {
-		title: sanitizeHtml(article.title, { allowedTags: [] }),
+		title,
 		alternates: {
 			canonical: `/novica/${encodeURIComponent(requested_slug)}`,
 		},
+		// Only set when a thumbnail exists — an unset `openGraph` here leaves
+		// the root `opengraph-image.png` file convention as the fallback
+		// (setting it always, even to an empty/absent `images`, would shallow-
+		// replace that fallback per Next's segment-metadata merge rules).
+		...(article.thumbnail_media
+			? {
+					openGraph: {
+						title,
+						images: [
+							{
+								url: article.thumbnail_media.original.url,
+								width: article.thumbnail_media.original.width,
+								height: article.thumbnail_media.original.height,
+								alt: title,
+							},
+						],
+					},
+				}
+			: {}),
 	};
 }
 
