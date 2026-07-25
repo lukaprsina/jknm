@@ -33,7 +33,10 @@ export default async function RootLayout({
 	return (
 		<StrictMode>
 			<html
-				lang="en"
+				// `sl`, not `si`: ISO 639-1 for Slovenian is `sl`. `si` is Sinhala as a
+				// language subtag — it's Slovenia's *country* code (ISO 3166), which is
+				// not what this attribute takes.
+				lang="sl"
 				className={`${GeistSans.variable}`}
 				data-scroll-behavior="smooth"
 			>

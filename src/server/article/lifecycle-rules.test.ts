@@ -9,6 +9,7 @@ import {
 	is_supersede_publish,
 	is_visible_to,
 	resolve_lifecycle_target,
+	resolve_slug_request,
 } from "./lifecycle-rules";
 
 describe("assert_can_archive", () => {
@@ -220,6 +221,129 @@ describe("is_visible_to", () => {
 	test("published is visible to everyone", () => {
 		expect(is_visible_to("published", true)).toBe(true);
 		expect(is_visible_to("published", false)).toBe(true);
+	});
+});
+
+describe("resolve_slug_request", () => {
+	function make_article(
+		overrides: Partial<Parameters<typeof resolve_slug_request>[0]["article"]> &
+			object = {},
+	) {
+		return {
+			status: "published" as const,
+			article_slugs: [{ slug: "jama-krizna", is_primary: true }],
+			...overrides,
+		};
+	}
+
+	test("renders when the requested slug is the primary one", () => {
+		expect(
+			resolve_slug_request({
+				requested_slug: "jama-krizna",
+				article: make_article(),
+				is_admin: false,
+			}),
+		).toEqual({ outcome: "render" });
+	});
+
+	test("404s when no article resolved from the slug", () => {
+		expect(
+			resolve_slug_request({
+				requested_slug: "nikoli-obstajala",
+				article: undefined,
+				is_admin: false,
+			}),
+		).toEqual({ outcome: "not_found" });
+	});
+
+	test("redirects an old non-primary slug to the primary one", () => {
+		expect(
+			resolve_slug_request({
+				requested_slug: "stara-pot",
+				article: make_article({
+					article_slugs: [
+						{ slug: "stara-pot", is_primary: false },
+						{ slug: "nova-pot", is_primary: true },
+					],
+				}),
+				is_admin: false,
+			}),
+		).toEqual({ outcome: "redirect_to_primary", slug: "nova-pot" });
+	});
+
+	// The ordering that matters: an invisible article must 404 rather than
+	// redirect, or we'd point a crawler at a URL that then 404s — a wasted hop
+	// and an ambiguous canonical signal.
+	test("404s an old slug of an archived article instead of redirecting", () => {
+		expect(
+			resolve_slug_request({
+				requested_slug: "stara-pot",
+				article: make_article({
+					status: "archived",
+					article_slugs: [
+						{ slug: "stara-pot", is_primary: false },
+						{ slug: "nova-pot", is_primary: true },
+					],
+				}),
+				is_admin: false,
+			}),
+		).toEqual({ outcome: "not_found" });
+	});
+
+	test("still redirects an archived article's old slug for an admin, who can see it", () => {
+		expect(
+			resolve_slug_request({
+				requested_slug: "stara-pot",
+				article: make_article({
+					status: "archived",
+					article_slugs: [
+						{ slug: "stara-pot", is_primary: false },
+						{ slug: "nova-pot", is_primary: true },
+					],
+				}),
+				is_admin: true,
+			}),
+		).toEqual({ outcome: "redirect_to_primary", slug: "nova-pot" });
+	});
+
+	test("404s a deleted article for admins too", () => {
+		expect(
+			resolve_slug_request({
+				requested_slug: "jama-krizna",
+				article: make_article({ status: "deleted" }),
+				is_admin: true,
+			}),
+		).toEqual({ outcome: "not_found" });
+	});
+
+	// Data anomaly: `create_article` always writes a primary slug, but if none is
+	// flagged we must not invent a redirect — serving the article at the URL that
+	// resolved it is strictly better than a loop or a 404.
+	test("renders rather than redirecting when no slug is flagged primary", () => {
+		expect(
+			resolve_slug_request({
+				requested_slug: "stara-pot",
+				article: make_article({
+					article_slugs: [{ slug: "stara-pot", is_primary: false }],
+				}),
+				is_admin: false,
+			}),
+		).toEqual({ outcome: "render" });
+	});
+
+	test("cannot ask for a redirect to the slug already requested", () => {
+		const resolution = resolve_slug_request({
+			requested_slug: "nova-pot",
+			article: make_article({
+				article_slugs: [
+					{ slug: "stara-pot", is_primary: false },
+					{ slug: "nova-pot", is_primary: true },
+				],
+			}),
+			is_admin: false,
+		});
+
+		expect(resolution).toEqual({ outcome: "render" });
 	});
 });
 
