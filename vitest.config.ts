@@ -1,9 +1,16 @@
 import { loadEnv } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
-	plugins: [tsconfigPaths()],
+	resolve: {
+		// Native replacement for the `vite-tsconfig-paths` plugin (Vite added
+		// first-party support for this). Reads `paths` from the root
+		// `tsconfig.json` only — unlike the plugin's default crawl, it never
+		// walks the vendored `fumadocs`/`better-auth`/`radix-ui-primitives` git
+		// submodules under `vendor/` (see AGENTS.md), so there's nothing there
+		// to fail parsing.
+		tsconfigPaths: true,
+	},
 	test: {
 		environment: "node",
 		exclude: ["**/node_modules/**", "vendor/**"],

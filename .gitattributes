@@ -1,0 +1,17 @@
+# Force LF for everything Biome formats, regardless of a developer's local
+# core.autocrlf. Without this, Windows checkouts (autocrlf=true) round-trip
+# source files to CRLF, and Biome (which defaults to LF) then reports them as
+# unformatted even though nothing meaningful changed.
+* text=auto eol=lf
+
+# Binary — never touch line endings. `bun.lockb` in particular: `text=auto`'s
+# heuristic can misdetect it and corrupt it byte-for-byte (caught in review —
+# a renormalize shrank it from 564500 to 563300 bytes).
+bun.lockb binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary

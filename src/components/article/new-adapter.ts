@@ -61,9 +61,8 @@ export type EditableArticleRef = { id: string };
 
 /** The article's primary slug, falling back to any slug if none is flagged primary. */
 export function get_primary_slug(article: NewArticleWithRelations) {
-	return (
-		find_primary_slug(article.article_slugs) ?? article.article_slugs[0]
-	)?.slug;
+	return (find_primary_slug(article.article_slugs) ?? article.article_slugs[0])
+		?.slug;
 }
 
 function reconstruct_thumbnail_crop(
