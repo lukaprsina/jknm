@@ -48,7 +48,10 @@ export function MagicCard({
 			onMouseMove={handleMouseMove}
 			onMouseLeave={handleMouseLeave}
 			className={cn(
-				"group relative flex size-full overflow-hidden rounded-xl border bg-neutral-200 text-black dark:bg-neutral-900 dark:text-white",
+				"group relative flex size-full overflow-hidden rounded-xl border text-black dark:bg-neutral-900 dark:text-white",
+				// "bg-neutral-100", // 92.2%
+				// "bg-neutral-200", // 97%
+				"bg-[oklch(94.6%_0_0)]",
 				className,
 			)}
 		>

@@ -114,7 +114,7 @@ export function ArticleCard({
 									<TooltipTrigger asChild>
 										<Button
 											className={cn(
-												"flex-shrink-0 opacity-100 transition-opacity",
+												"shrink-0 opacity-100 transition-opacity",
 												!hoverLink && "opacity-0",
 											)}
 											size="icon"
