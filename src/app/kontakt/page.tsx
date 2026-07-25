@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Shell } from "~/components/shell";
 import { page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
 import ContactForm from "./contact-form";
+
+export const metadata: Metadata = {
+	alternates: { canonical: "/kontakt" },
+};
 
 export default function ContactPage() {
 	return (

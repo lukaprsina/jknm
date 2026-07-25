@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import { StaticPageToc } from "~/components/toc/static-page-toc";
-import Content, { tableOfContents } from "./content.mdx";
+import Content, {
+	metadata as content_metadata,
+	tableOfContents,
+} from "./content.mdx";
 
-export { metadata } from "./content.mdx";
+export const metadata: Metadata = {
+	...content_metadata,
+	alternates: { canonical: "/zgodovina" },
+};
 
 export default function Page() {
 	return (

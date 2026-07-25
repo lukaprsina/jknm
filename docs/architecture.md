@@ -131,8 +131,32 @@ Migrated from NextAuth v4 in #32.
 - `src/app/` — App Router. `(static)` = static content pages, `novica` = article pages,
   `uredi` = admin editor, `arhiv`/`avtorji`/`kontakt`/`preveri` = archive/authors/contact/verify,
   `api/` = route handlers (better-auth, media upload, contact email, Supabase keep-alive).
-  The 2008-site converter was deleted (#26); `scripts/migrate-legacy-articles.ts` remains for
-  the still-pending production data migration.
+  The 2008-site converter and `scripts/migrate-legacy-articles.ts` were deleted (#26); the
+  article migration has run, and every migrated article carries its 2008-site id in
+  `Article.legacy_id` (verified row-by-row against the old site via `/preveri`), so `legacy_id`
+  can be treated as complete. `scripts/migrate-legacy-media.ts` is still present.
+  `si/route.ts` (exact `/si`) 308-redirects old `?id=<legacy_id>` article URLs to
+  `/novica/<slug>`; `si/[...path]/route.ts` (catch-all, coexists since it requires ≥1 segment)
+  covers the rest of the old classic-ASP site's static tree — a fixed allowlist in
+  `~/lib/legacy-si-paths.ts` (`resolve_legacy_static_path`) 308-redirects the sections the admin
+  kept current (`klub`, `klub/zgodovina`, `publikacije`, `raziskovanje`, `varstvo`,
+  `etc/kontakt`, `etc/iskanje`) to their new-site equivalent, and 410s everything else
+  (deliberately-dropped sections like `jame`/`kataster`/`jrs` — their cadastre data now lives on
+  JZS's own site, so those 410 rather than redirecting off-domain). Both routes share
+  `legacy_gone()`/`legacy_redirect()`/`REDIRECT_CACHE_CONTROL` from `~/lib/site-config.ts`.
+- Metadata: `layout.tsx` sets `twitter: { card: "summary_large_image" }` site-wide (Next
+  populates `twitter:image` from `openGraph.images` automatically when no `twitter-image` file
+  convention exists, so no per-page duplication is needed). `novica/[published_url]/page.tsx`'s
+  `generateMetadata` adds an `openGraph.images` entry from `article.thumbnail_media.original`
+  (real pixel `width`/`height`, no crop applied) only when a thumbnail exists — leaving
+  `openGraph` unset otherwise so the root `opengraph-image.png` file convention keeps applying as
+  the fallback (setting `openGraph` at all, even without `images`, would shallow-replace it per
+  Next's segment-metadata merge rules). `page.tsx` (homepage) renders a static `Organization`/
+  `WebSite` JSON-LD `<script>` (`ORGANIZATION_JSON_LD`). `alternates.canonical` is set on every
+  static page (`/`, `/arhiv`, `/kontakt`, `/klub`, `/publiciranje`, `/raziskovanje`, `/varstvo`,
+  `/zgodovina`) matching `sitemap.ts`'s `STATIC_ROUTES`, mirroring the pattern already used on
+  `/novica/[slug]`. `/avtorji` is deliberately excluded — it `redirect()`s anonymous visitors to
+  `/` before rendering, so a canonical pointing at itself would be misleading.
 - `src/server/article/` — `new-article.ts` (`create_article`, `save_article`, `publish_article`),
   `lifecycle.ts` (archive/delete/discard/supersede), `get-article.ts`, `article-queries.ts`,
   `slug.ts`, `validators.ts` (Zod input validators for the oRPC procedures), and the
@@ -154,5 +178,31 @@ The legacy `published_article` / `draft_article` tables (plus their join tables 
 `duplicate_article_urls`) are **gone** — dropped in `drizzle/0006_clammy_echo.sql` once
 `find_available_slug` (`src/server/article/slug.ts`) no longer needed the
 `published_article.url` collision check and `wake_supabase` was repointed at `Article`. The
-one-shot `scripts/migrate-legacy-*` tooling that produced the migrated data is deleted along
-with them — see ADR-0003 for the historical audit.
+one-shot article-migration tooling that produced the migrated data is deleted along with them
+(`scripts/migrate-legacy-media.ts` remains) — see ADR-0003 for the historical audit.
+
+## `/novica/<slug>` response contract
+
+One pure rule decides every response: `resolve_slug_request` in
+`src/server/article/lifecycle-rules.ts`, unit-tested in `lifecycle-rules.test.ts`. The page
+(`src/app/novica/[published_url]/page.tsx`) only translates its three outcomes into Next calls.
+
+| Request | Response |
+| --- | --- |
+| Primary slug of a visible article | **200**, renders |
+| Non-primary (renamed-away) slug of a visible article | **308** to the primary slug |
+| Unknown slug | **404** (`not-found.tsx` in the route folder) |
+| `deleted`, or `archived` for a non-admin | **404** |
+
+Two things this deliberately gets right, and which are easy to regress:
+
+- **Visibility is checked before slug canonicality.** An old slug of an article that is now
+  hidden must 404, not redirect — a redirect to a URL that then 404s is a wasted crawler hop
+  and an ambiguous canonical signal.
+- **The status codes are real, not rendered.** Returning an error *component* with HTTP 200 is
+  a soft 404: it tells Google a real page lives at that URL, so the phantom URL stays indexed
+  and keeps consuming crawl budget. This route did exactly that until the fix. Any future
+  "not found" state on a public route must go through `notFound()`, never a 200 with error copy.
+
+Background and the primary sources behind these choices:
+`docs/research/legacy-id-redirects-and-seo-metadata.md`.

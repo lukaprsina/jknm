@@ -22,62 +22,62 @@ const EXPECTED: Record<
 > = {
 	"article.created": {
 		tags: ["drafts"],
-		paths: ["/"],
+		paths: ["/", "/sitemap.xml"],
 		query_keys: [],
 	},
 	"article.saved": {
 		tags: ["drafts"],
-		paths: ["/"],
+		paths: ["/", "/sitemap.xml"],
 		query_keys: [],
 	},
 	"article.published": {
 		tags: ["drafts", "archive", "homepage-feed", "all-published", "article"],
-		paths: ["/"],
+		paths: ["/", "/sitemap.xml"],
 		query_keys: [["infinite_published"]],
 	},
 	"article.archived": {
 		tags: ["drafts", "archive", "homepage-feed", "all-published", "article"],
-		paths: ["/"],
+		paths: ["/", "/sitemap.xml"],
 		query_keys: [["infinite_published"]],
 	},
 	"article.unarchived": {
 		tags: ["drafts", "archive", "all-published", "article"],
-		paths: ["/"],
+		paths: ["/", "/sitemap.xml"],
 		query_keys: [],
 	},
 	"article.deleted": {
 		tags: ["drafts", "archive", "homepage-feed", "all-published", "article"],
-		paths: ["/"],
+		paths: ["/", "/sitemap.xml"],
 		query_keys: [["infinite_published"]],
 	},
 	"article.draft_discarded": {
 		tags: ["drafts"],
-		paths: ["/"],
+		paths: ["/", "/sitemap.xml"],
 		query_keys: [],
 	},
 	"article.superseding_draft_created": {
 		tags: ["drafts"],
-		paths: ["/"],
+		paths: ["/", "/sitemap.xml"],
 		query_keys: [],
 	},
 	"author.inserted": {
 		tags: ["authors", "article"],
-		paths: ["/"],
+		paths: ["/", "/sitemap.xml"],
 		query_keys: [],
 	},
 	"author.renamed": {
 		tags: ["authors", "article"],
-		paths: ["/"],
+		paths: ["/", "/sitemap.xml"],
 		query_keys: [],
 	},
 	"author.deleted": {
 		tags: ["authors", "article"],
-		paths: ["/"],
+		paths: ["/", "/sitemap.xml"],
 		query_keys: [],
 	},
 	"author.synced": {
 		tags: ["authors", "article"],
-		paths: ["/"],
+		paths: ["/", "/sitemap.xml"],
 		query_keys: [],
 	},
 };

@@ -167,6 +167,93 @@ export function is_visible_to(status: ArticleStatus, is_admin: boolean) {
 }
 
 /**
+ * The primary (canonical) slug row of an article, or `undefined` if none is
+ * flagged. Deliberately **without** the `?? slugs[0]` fallback its two callers
+ * in `new-adapter.ts` and `sync-algolia.ts` want: those need *a* slug to render
+ * or index with, whereas `resolve_slug_request` below must be able to tell
+ * "no canonical slug exists" from "the canonical slug is X" — it decides
+ * whether to redirect, and a fallback would invent a redirect target. Callers
+ * that want the fallback append their own.
+ *
+ * Structurally typed, not `NewArticleWithRelations`, to keep this module free
+ * of DB and framework types.
+ */
+export function find_primary_slug<T extends { is_primary: boolean }>(
+	slugs: T[],
+): T | undefined {
+	return slugs.find((slug) => slug.is_primary);
+}
+
+/**
+ * `find_primary_slug`, falling back to any slug — what every caller that
+ * needs *a* URL to render or index with actually wants (the no-fallback
+ * behavior above exists only for `resolve_slug_request`, which must tell "no
+ * canonical slug" apart from "the canonical slug is X"). Shared so the same
+ * `?? slugs[0]` fallback isn't hand-rolled at every call site.
+ */
+export function find_primary_slug_or_first<T extends { is_primary: boolean }>(
+	slugs: T[],
+): T | undefined {
+	return find_primary_slug(slugs) ?? slugs[0];
+}
+
+/**
+ * What `/novica/<slug>` should do with one incoming request. A three-way
+ * outcome rather than an article-or-nothing, because "this article exists but
+ * you asked for it by a retired name" is a third case the nullable shape can't
+ * express — and the case the route used to get wrong by serving a 200.
+ */
+export type SlugRequestResolution =
+	| { outcome: "render" }
+	| { outcome: "redirect_to_primary"; slug: string }
+	| { outcome: "not_found" };
+
+/**
+ * The whole `/novica/<slug>` request rule in one place: visibility first, then
+ * slug canonicality.
+ *
+ * That order is deliberate. `article_slugs` deliberately retains a renamed
+ * article's old slugs (`CONTEXT.md`) so they stay resolvable, but a hit on an
+ * old slug is only worth a redirect if the destination will actually render.
+ * Checking canonicality first would send a crawler to a URL that then 404s —
+ * a wasted hop, and an ambiguous canonical signal for the old URL. Answer
+ * once, honestly.
+ *
+ * `article_slugs` is taken structurally (not as the Drizzle relation type) to
+ * keep this module free of DB and framework types, like the rest of the file.
+ * The caller translates the outcome into `notFound()` / `permanentRedirect()`.
+ */
+export function resolve_slug_request({
+	requested_slug,
+	article,
+	is_admin,
+}: {
+	requested_slug: string;
+	article:
+		| {
+				status: ArticleStatus;
+				article_slugs: { slug: string; is_primary: boolean }[];
+		  }
+		| null
+		| undefined;
+	is_admin: boolean;
+}): SlugRequestResolution {
+	if (!article) return { outcome: "not_found" };
+	if (!is_visible_to(article.status, is_admin)) return { outcome: "not_found" };
+
+	const primary_slug = find_primary_slug(article.article_slugs)?.slug;
+
+	// No primary flagged is a data anomaly (`create_article` always writes one).
+	// Serve the article at whichever slug resolved it rather than inventing a
+	// redirect target — the requested slug is known-good, having found this row.
+	if (primary_slug && primary_slug !== requested_slug) {
+		return { outcome: "redirect_to_primary", slug: primary_slug };
+	}
+
+	return { outcome: "render" };
+}
+
+/**
  * The "Arhiv" accordion's origin label: whether an archived article was ever
  * live, or was archived straight from a draft.
  */

@@ -3,14 +3,58 @@ import {
 	HydrationBoundary,
 	QueryClient,
 } from "@tanstack/react-query";
+import type { Metadata } from "next";
 import { ArchivedArticles } from "~/components/archived-articles";
 import { DraftArticles } from "~/components/draft-articles";
 import { Shell } from "~/components/shell";
 import { article_variants, page_variants } from "~/lib/page-variants";
+import { SITE_ORIGIN } from "~/lib/site-config";
 import { cn } from "~/lib/utils";
 import { getServerAuthSession } from "~/server/auth";
 import { InfiniteArticles } from "./infinite-articles";
 import { get_infinite_published2 } from "./infinite-server";
+
+export const metadata: Metadata = {
+	alternates: { canonical: "/" },
+};
+
+const CLUB_NAME = "Jamarski klub Novo mesto";
+
+/**
+ * Static (no per-request data), so built once at module load rather than
+ * per-request like `build_article_json_ld` — reinforces the club as a single
+ * `Organization` entity for Google's knowledge-panel/entity understanding,
+ * same rationale as the `Article` JSON-LD on `/novica/[slug]`.
+ */
+const ORGANIZATION_JSON_LD = JSON.stringify({
+	"@context": "https://schema.org",
+	"@graph": [
+		{
+			"@type": "Organization",
+			"@id": `${SITE_ORIGIN}/#organization`,
+			name: CLUB_NAME,
+			url: SITE_ORIGIN,
+			logo: `${SITE_ORIGIN}/opengraph-image.png`,
+		},
+		{
+			"@type": "WebSite",
+			"@id": `${SITE_ORIGIN}/#website`,
+			url: SITE_ORIGIN,
+			name: CLUB_NAME,
+			publisher: { "@id": `${SITE_ORIGIN}/#organization` },
+		},
+	],
+}).replace(/</g, "\\u003c");
+
+function OrganizationJsonLd() {
+	return (
+		<script
+			type="application/ld+json"
+			// biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD has no other way to embed — content is a static, escaped constant.
+			dangerouslySetInnerHTML={{ __html: ORGANIZATION_JSON_LD }}
+		/>
+	);
+}
 
 export default async function HomePageServer() {
 	const queryClient = new QueryClient();
@@ -26,30 +70,36 @@ export default async function HomePageServer() {
 
 	if (!session) {
 		return (
-			<Shell without_footer>
-				<div
-					className={cn(
-						page_variants({ max_width: "wide" }),
-						article_variants(),
-					)}
-				>
-					<InfiniteArticles />
-				</div>
-			</Shell>
+			<>
+				<OrganizationJsonLd />
+				<Shell without_footer>
+					<div
+						className={cn(
+							page_variants({ max_width: "wide" }),
+							article_variants(),
+						)}
+					>
+						<InfiniteArticles />
+					</div>
+				</Shell>
+			</>
 		);
 	}
 
 	return (
-		<HydrationBoundary state={dehydrate(queryClient)}>
-			<Shell without_footer>
-				<div className={cn(page_variants({ max_width: "wide" }))}>
-					<DraftArticles />
-					<ArchivedArticles />
-					<div>
-						<InfiniteArticles />
+		<>
+			<OrganizationJsonLd />
+			<HydrationBoundary state={dehydrate(queryClient)}>
+				<Shell without_footer>
+					<div className={cn(page_variants({ max_width: "wide" }))}>
+						<DraftArticles />
+						<ArchivedArticles />
+						<div>
+							<InfiniteArticles />
+						</div>
 					</div>
-				</div>
-			</Shell>
-		</HydrationBoundary>
+				</Shell>
+			</HydrationBoundary>
+		</>
 	);
 }
