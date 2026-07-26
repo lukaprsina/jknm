@@ -7,7 +7,6 @@
 # Binary — never touch line endings. `bun.lockb` in particular: `text=auto`'s
 # heuristic can misdetect it and corrupt it byte-for-byte (caught in review —
 # a renormalize shrank it from 564500 to 563300 bytes).
-bun.lockb binary
 *.png binary
 *.jpg binary
 *.jpeg binary
