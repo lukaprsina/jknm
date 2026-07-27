@@ -21,13 +21,13 @@ const config = {
 	// platform-specific native binary (it's resolved via a dynamic require at
 	// runtime), so the deployed /api/media function was missing
 	// libvips-cpp.so on Vercel even though it worked locally. Force it in.
-	// outputFileTracingIncludes: {
-	// 	"/api/media": [
-	// 		"./node_modules/@img/sharp-linux-x64/**/*",
-	// 		"./node_modules/@img/sharp-libvips-linux-x64/**/*",
-	// 	],
-	// },
-	serverExternalPackages: ["sharp"],
+	outputFileTracingIncludes: {
+		"/api/media": [
+			"./node_modules/@img/sharp-linux-x64/**/*",
+			"./node_modules/@img/sharp-libvips-linux-x64/**/*",
+		],
+	},
+	// serverExternalPackages: ["sharp"],
 	images: {
 		loader: "custom",
 		loaderFile: "./image-loader.js",
