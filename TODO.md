@@ -8,5 +8,6 @@
 - statične bold zgodovina **
 - tanstack form
 - TOC article add H1 too
+- legacy id 611 is soft-deleted, it is linked though
 
 ## Research content migration strategy for B2 bucket

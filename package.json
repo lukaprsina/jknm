@@ -14,6 +14,7 @@
 		"test": "vitest run",
 		"test:watch": "vitest",
 		"static": "bun run scripts/static_to_algolia.ts",
+		"dehotlink": "bun run scripts/dehotlink-static-pages.ts",
 		"sweep": "bun run scripts/sweep-stale-content.ts"
 	},
 	"dependencies": {

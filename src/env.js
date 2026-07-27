@@ -63,6 +63,7 @@ export const env = createEnv({
 		NEXT_PUBLIC_AWS_REGION: z.string(),
 		NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME: z.string(),
 		NEXT_PUBLIC_AWS_MEDIA_BUCKET_NAME: z.string(),
+		NEXT_PUBLIC_AWS_STATIC_BUCKET_NAME: z.string(),
 		// Despite the name, this is no longer an auth variable: #32 left the auth
 		// client same-origin, so nothing here configures it. Its only consumer is
 		// `get_base_url()`. Renaming it means a coordinated Vercel change, so #32
@@ -105,6 +106,8 @@ export const env = createEnv({
 			process.env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
 		NEXT_PUBLIC_AWS_MEDIA_BUCKET_NAME:
 			process.env.NEXT_PUBLIC_AWS_MEDIA_BUCKET_NAME,
+		NEXT_PUBLIC_AWS_STATIC_BUCKET_NAME:
+			process.env.NEXT_PUBLIC_AWS_STATIC_BUCKET_NAME,
 		RESEND_API_KEY: process.env.RESEND_API_KEY,
 	},
 	/**
