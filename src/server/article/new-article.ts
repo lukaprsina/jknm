@@ -221,6 +221,7 @@ async function resolve_thumbnail(
 		thumbnail_y: null,
 		thumbnail_width: null,
 		thumbnail_height: null,
+		uploaded_custom_thumbnail: null,
 	};
 
 	if (!thumbnail_crop) return cleared;
@@ -240,6 +241,7 @@ async function resolve_thumbnail(
 		thumbnail_y: thumbnail_crop.y,
 		thumbnail_width: thumbnail_crop.width,
 		thumbnail_height: thumbnail_crop.height,
+		uploaded_custom_thumbnail: thumbnail_crop.uploaded_custom_thumbnail ?? null,
 	};
 }
 

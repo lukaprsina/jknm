@@ -104,6 +104,14 @@ function reconstruct_thumbnail_crop(
 		y: article.thumbnail_y,
 		width: article.thumbnail_width,
 		height: article.thumbnail_height,
+		// `null` means "unknown" (see the schema comment) — never-backfilled
+		// legacy rows with no match in the old export. `image-selector.tsx`
+		// treats an absent flag as `false` ("not custom"), which would silently
+		// hide an actually-custom thumbnail from the picker's already-selected
+		// state — the exact bug this column exists to fix. Defaulting unknown to
+		// `true` is the safe direction: worst case it's a harmless duplicate
+		// entry in the picker's image list, not an invisible one.
+		uploaded_custom_thumbnail: article.uploaded_custom_thumbnail ?? true,
 	};
 }
 

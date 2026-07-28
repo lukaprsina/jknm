@@ -233,7 +233,10 @@ export async function discard_draft(
 				})
 			: null;
 
-		if (existing.supersedes_id && should_restore_source_on_discard(source ?? null)) {
+		if (
+			existing.supersedes_id &&
+			should_restore_source_on_discard(source ?? null)
+		) {
 			await tx
 				.update(Article)
 				.set({ status: "archived", deleted_at: null })
@@ -307,6 +310,7 @@ export async function create_superseding_draft(
 				thumbnail_y: source.thumbnail_y,
 				thumbnail_width: source.thumbnail_width,
 				thumbnail_height: source.thumbnail_height,
+				uploaded_custom_thumbnail: source.uploaded_custom_thumbnail,
 				supersedes_id: source.id,
 				created_by: session.user.id,
 			})

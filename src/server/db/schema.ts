@@ -242,6 +242,10 @@ export const Article = pgTable(
 		thumbnail_y: real("thumbnail_y"),
 		thumbnail_width: real("thumbnail_width"),
 		thumbnail_height: real("thumbnail_height"),
+		// Null means "unknown" (never backfilled and never resaved since) rather
+		// than "not custom" — distinct from `false`, so a legacy row nobody has
+		// touched yet doesn't silently masquerade as a known answer.
+		uploaded_custom_thumbnail: boolean("uploaded_custom_thumbnail"),
 		supersedes_id: uuid("supersedes_id").references(
 			(): AnyPgColumn => Article.id,
 		),

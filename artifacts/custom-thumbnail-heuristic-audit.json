@@ -1,0 +1,4538 @@
+[
+  {
+    "legacy_id": 1,
+    "article_id": "e400bc6b-f2aa-4e6f-b44e-5d9ed9f7eb9f",
+    "title": "Potop v termalni izvir",
+    "thumbnail_url": "https://gradivo.jknm.org/8987136f-1105-4296-bc92-323e8f00c9ba/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 503,
+    "article_id": "96742001-d466-4bae-a453-551f8a31aa51",
+    "title": "Kanin 2017 - leto presežkov v kaninskem podzemlju",
+    "thumbnail_url": "https://gradivo.jknm.org/ba2a4822-bf52-4351-a2e9-fc20088d5372/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 563,
+    "article_id": "9250c1bc-ecb3-4fcf-baa5-045caba82e6e",
+    "title": "Lukenjska jama kot arheološko najdišče",
+    "thumbnail_url": "https://gradivo.jknm.org/bc9b308a-d5a8-4624-abf4-8a10b3e04626/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 606,
+    "article_id": "b5c5c047-d6d7-44c1-b186-108dc8b7f823",
+    "title": "Kočevski Rog je očiščen pnevmatik ...",
+    "thumbnail_url": "https://gradivo.jknm.org/ee04392e-64c7-4217-8b3d-a68305443595/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 613,
+    "article_id": "fcd8d2be-4381-4d15-84cc-90a1fd9f5116",
+    "title": "JKNM praznuje 60 let",
+    "thumbnail_url": "https://gradivo.jknm.org/02a11168-fb81-4ec8-accb-eabd735a7926/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 639,
+    "article_id": "2d2d8edf-182d-402a-9856-84fc327b5a08",
+    "title": "Jamarske raziskave v obori Stari Log",
+    "thumbnail_url": "https://gradivo.jknm.org/07a43667-289c-4931-833b-89d33210d074/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 94,
+    "article_id": "033015c6-6258-4639-9c94-a343d45935b4",
+    "title": "Šumeča polšna - dvodnevni raziskovalni tabor [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/c7441060-dc02-4006-8479-f679b1438169/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 142,
+    "article_id": "a431a92b-cc02-4f5b-a8b8-841a294f3176",
+    "title": "Jamarski tečaj 2010",
+    "thumbnail_url": "https://gradivo.jknm.org/abf71f00-c36b-45fa-b78d-a931dd9824b3/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 202,
+    "article_id": "ce2971ce-4a0c-4f69-93f2-4bcbcb627eb6",
+    "title": "Jamarski tečaj 2011",
+    "thumbnail_url": "https://gradivo.jknm.org/996e8a9a-e35e-4c37-9f7c-695064a28255/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 351,
+    "article_id": "524925f0-c988-4ee2-9def-e590fb0d2548",
+    "title": "Čaganka – projekt &gt;400",
+    "thumbnail_url": "https://gradivo.jknm.org/2cfa8c9a-3898-4f51-817d-b125f70e1ca1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 356,
+    "article_id": "e700b026-c39c-4b23-a303-6445234a02c3",
+    "title": "Jamarski tečaj 2014",
+    "thumbnail_url": "https://gradivo.jknm.org/57545342-4176-4e8e-9f2a-d2af5f35c072/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 640,
+    "article_id": "018e1273-03e4-401e-85e3-e420973ca348",
+    "title": "Čaganka - pomladno - zimska izvedba",
+    "thumbnail_url": "https://gradivo.jknm.org/b4d990c3-0635-44fa-abb0-26c1f625737f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 641,
+    "article_id": "f60ac710-73c0-4836-bce7-c2a90dc2d9a0",
+    "title": "Jamarski tečaj 2024 - Jazbina in prva praktična vaja",
+    "thumbnail_url": "https://gradivo.jknm.org/b6e35652-8b41-4cd6-b6c4-cefedbf0a36c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 644,
+    "article_id": "9f219da4-a260-44ad-b210-040b13fda4b6",
+    "title": "Jamarski tečaj 2024 - obisk Kaščice",
+    "thumbnail_url": "https://gradivo.jknm.org/20d19772-01ec-4e84-b47c-6e6ec6c8f58d/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 645,
+    "article_id": "f5321e7d-01bb-44bf-91ae-b1881e3667c4",
+    "title": "Jamarski tečaj 2024 - obisk Kaščice [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/21483ecf-740d-4197-bc31-72a44591543e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 646,
+    "article_id": "a272e161-ea3d-41f4-ae27-db49efa73fb6",
+    "title": "Nova jama na Kočevskem Rogu",
+    "thumbnail_url": "https://gradivo.jknm.org/87aa1246-c376-4a5c-a2b3-1d04315b4167/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 649,
+    "article_id": "2987def9-9893-4f33-94fe-44d9bd8b435e",
+    "title": "Jamarski tečaj 2024 - klubski izpit",
+    "thumbnail_url": "https://gradivo.jknm.org/cc4af8f9-7263-4e23-8dfc-8b4487568290/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 647,
+    "article_id": "2dcd6b26-ef63-4db9-a8e6-18ad38e5596a",
+    "title": "Obisk jamarjev s Krete",
+    "thumbnail_url": "https://gradivo.jknm.org/31227bf0-cea5-445b-a70c-5a36ed1eb99c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 648,
+    "article_id": "7b97eaa6-6fdc-43c7-8a2a-24069e730a2f",
+    "title": "Obisk jamarjev s Krete [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/f35b03a3-5a5b-40b2-8e67-a0bd9f737d1c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 650,
+    "article_id": "34815367-143d-41fe-8ff3-b7ea962d541f",
+    "title": "Obisk jamarjev s Krete [3]",
+    "thumbnail_url": "https://gradivo.jknm.org/ef4681e2-66d1-4077-afc0-7c734af05352/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 651,
+    "article_id": "be19fcf6-3994-4706-931d-e31db7a9eab8",
+    "title": "Obisk jamarjev s Krete [4]",
+    "thumbnail_url": "https://gradivo.jknm.org/cee8d8c8-5ed0-4d36-b3b2-76941990035c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 653,
+    "article_id": "0895e3b7-04e1-4bd5-84e6-e130872a9052",
+    "title": "O netopirjih iz nekaj izbranih dolenjskih jam",
+    "thumbnail_url": "https://gradivo.jknm.org/fc18898d-cfe9-464a-9c6f-af05aeee52f7/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 654,
+    "article_id": "84c4883f-f10c-4619-97eb-4231deeb0489",
+    "title": "Belgijci v Čaganki",
+    "thumbnail_url": "https://gradivo.jknm.org/726aad68-5544-4b63-b3a5-bc552f5225e4/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 655,
+    "article_id": "4a57a188-0b16-4c1f-b92e-b54fa8db683b",
+    "title": "Kanin 2024 - številčna udeležba na taboru",
+    "thumbnail_url": "https://gradivo.jknm.org/1a943af3-dabd-4dd7-bf7b-b980c3bbd842/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 656,
+    "article_id": "bc7f77bf-7a7c-4028-a7bb-ae10b2148a8f",
+    "title": "Kanin 2024 - jami, ki obetata",
+    "thumbnail_url": "https://gradivo.jknm.org/5ed1ffed-8807-4963-9dae-65423c020b4c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 657,
+    "article_id": "ecc5ccab-4e50-40fd-9ee3-495fd537e873",
+    "title": "Kanin 2024 - NM 5 šibaaa!",
+    "thumbnail_url": "https://gradivo.jknm.org/2dfaf6e9-3c73-4bb8-9950-d94405fb99f3/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 643,
+    "article_id": "4f5adf5d-492e-4bb3-a1b0-824914b0d887",
+    "title": "Jamarski tečaj 2024 - Stropnica",
+    "thumbnail_url": "https://gradivo.jknm.org/ea74e0b7-88df-4b67-9e9d-c9e7a2ba158a/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 233,
+    "article_id": "3474d03d-0ac3-4b8b-935b-3884c2950231",
+    "title": "Raziskave vodne jame Šumetac",
+    "thumbnail_url": "https://gradivo.jknm.org/ee9cff7f-154c-4eb9-8321-099b85c8200b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 52,
+    "article_id": "09f17f2f-5812-4f19-a038-5935bf28f5a3",
+    "title": "Predstavljamo kratek film o Čaganki",
+    "thumbnail_url": "https://gradivo.jknm.org/26366339-4fc6-454c-93bd-9d548f1ae145/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 309,
+    "article_id": "c41e85a4-ba69-44cb-94ff-64d835d9bc2f",
+    "title": "Brezno pri Vratnicah",
+    "thumbnail_url": "https://gradivo.jknm.org/137454d3-f85e-409d-bf19-f814f426df5a/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 419,
+    "article_id": "ae9665cb-ca5c-4119-b12b-5dd8a9c13699",
+    "title": "Zjoturina",
+    "thumbnail_url": "https://gradivo.jknm.org/0e7a4887-153c-4266-9ec3-5639fe4855b1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 116,
+    "article_id": "2cec0323-99cc-4b03-a8a9-a39d8ce069b4",
+    "title": "Pečenevka - hvalnica norosti",
+    "thumbnail_url": "https://gradivo.jknm.org/bac08ea4-62d9-41ed-98af-6f2c72b4a56f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 145,
+    "article_id": "6d87a994-deb1-443a-bbac-c498595d809a",
+    "title": "Desant na Kunč",
+    "thumbnail_url": "https://gradivo.jknm.org/78db54d4-24b4-4d7c-a75d-4b36e10b4ac1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 305,
+    "article_id": "7ebddf6a-21fa-4b04-bf5e-bacd5fbf1acc",
+    "title": "Jamarski tečaj 2013",
+    "thumbnail_url": "https://gradivo.jknm.org/0f117f73-782c-4045-bda5-bcecb6f163db/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 365,
+    "article_id": "81a645ee-fbf6-409c-8bfc-bf518cf79982",
+    "title": "Čaganka - On the record",
+    "thumbnail_url": "https://gradivo.jknm.org/50c38aba-7e55-4487-b4dc-a929a16572fe/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 387,
+    "article_id": "d0660182-0b70-4f63-9d64-99a24e48890e",
+    "title": "Čaganka - fotografiranje na polno",
+    "thumbnail_url": "https://gradivo.jknm.org/daf28ad9-e07b-45bd-8037-6e44c78489ab/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 441,
+    "article_id": "d57b5175-af3b-47c6-af5a-606a5af2d2e6",
+    "title": "Cvingerska jama - dokumentiranje",
+    "thumbnail_url": "https://gradivo.jknm.org/da628970-1b32-4fde-9eda-929c4e4b9901/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 455,
+    "article_id": "7a2f6731-b90b-48a5-ab7a-d087383d1a1a",
+    "title": "Dolenjski jamarski tabor 2016",
+    "thumbnail_url": "https://gradivo.jknm.org/8f8c2870-5737-432c-b245-e040500aa2e1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 483,
+    "article_id": "a4b12c7e-eaaa-44d0-bdd0-e42810fa8c08",
+    "title": "Kočevarka",
+    "thumbnail_url": "https://gradivo.jknm.org/7e8e2c1b-7122-4a88-84ef-ebf6a3438957/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 491,
+    "article_id": "10c6e6f3-2330-4341-aa2b-c7f4bc7d52a4",
+    "title": "Dolenjski jamarski tabor 2017",
+    "thumbnail_url": "https://gradivo.jknm.org/fb04b780-4666-4a0a-8fba-53d4660f501d/original.png",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 27,
+    "article_id": "db52c53e-6e91-4273-ae8a-61b354c7a916",
+    "title": "Čaganka [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/58b5d9bb-5032-42be-8744-257b10d24361/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 73,
+    "article_id": "01063f21-2d46-4b5b-877a-4d9014cd33de",
+    "title": "Vaja Rešujmo življenja 2009",
+    "thumbnail_url": "https://gradivo.jknm.org/5fba7c7e-a835-43f6-b8dd-f302c074b035/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 631,
+    "article_id": "a0fc0039-1fdd-4414-91d8-d1e868336046",
+    "title": "Srečno 2024",
+    "thumbnail_url": "https://gradivo.jknm.org/f88f1ad9-7a51-4ee7-9e52-d74a55880a52/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 632,
+    "article_id": "c63cebef-e4dd-489d-804f-9daba2a5c580",
+    "title": "Jojkinovac - druga najgloblja jama v BiH",
+    "thumbnail_url": "https://gradivo.jknm.org/5f508d73-a71f-42f4-9606-ff35594175fb/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 230,
+    "article_id": "7ff07d1b-ccb3-4492-9f84-3d5054426f03",
+    "title": "Potep ob Kolpi",
+    "thumbnail_url": "https://gradivo.jknm.org/d2b7b743-98f8-4b5e-8387-cb2b7f3c146c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 633,
+    "article_id": "b2b97316-8b35-4849-af59-a82ffc342802",
+    "title": "Študenti biologije na obisku pri letečih Dolenjcih",
+    "thumbnail_url": "https://gradivo.jknm.org/1e4a3327-d465-4bdb-93ad-91db46431fe1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 634,
+    "article_id": "1a997f28-4a94-4593-8a65-dd00503f1a72",
+    "title": "Vstop v leto 2024 in naše samorastniške izkušnje",
+    "thumbnail_url": "https://gradivo.jknm.org/fcdefac1-3538-455e-af16-fc8a1c3e3b10/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 637,
+    "article_id": "30c2437f-10c1-49d8-ac06-3ef1cb8b991e",
+    "title": "Čistilna akcija vodovarstvenega območja izvira Radeščice [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/2a2aa1ea-8fd9-4b8e-a260-513cf0ad4c47/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 638,
+    "article_id": "d23cf62f-b5ea-4a97-a3e0-ddb8a8dbb930",
+    "title": "Tisoča jama",
+    "thumbnail_url": "https://gradivo.jknm.org/62c6de30-04fb-435d-8bfc-932b5e828814/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 288,
+    "article_id": "82f474fe-430b-40dc-9e30-a959a9316fc5",
+    "title": "Udor pri hiši Cerovec 29",
+    "thumbnail_url": "https://gradivo.jknm.org/d500ffe4-ba00-4bda-98ae-96c48ab7e775/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 290,
+    "article_id": "0742325b-1a1e-4950-9194-01cdf612622c",
+    "title": "Dolenjska, dežela udorov",
+    "thumbnail_url": "https://gradivo.jknm.org/e54e85c5-7fee-4d62-8e1d-58526d1c433f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 289,
+    "article_id": "c7abef2e-b518-4ada-ab12-77ae3f7a7dfc",
+    "title": "Zanimiva zaščita med- in povojnega grobišča na Hrvaškem",
+    "thumbnail_url": "https://gradivo.jknm.org/f8c3ff71-bc90-4886-ba63-8737e4e80d7a/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 291,
+    "article_id": "883f25dc-029a-464b-ad6f-39784d1b5195",
+    "title": "Odprli Škratovo jamo in urejen vaški studenec",
+    "thumbnail_url": "https://gradivo.jknm.org/7d8df4ef-b54f-4b54-9f42-a9ab80f984d8/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 292,
+    "article_id": "1010f182-c624-4273-9e4e-2af57b5cd20f",
+    "title": "V Viru pri Stični",
+    "thumbnail_url": "https://gradivo.jknm.org/93912483-d58f-423d-82f6-9dac60fdb04d/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 293,
+    "article_id": "b7081a18-07c7-43d6-a35f-31fec8e53dac",
+    "title": "Čaganka - Predpriprava na zimsko akcijo 2012",
+    "thumbnail_url": "https://gradivo.jknm.org/7720f1ea-1a6e-41b5-b708-f0604ea85139/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 294,
+    "article_id": "5da54590-2ce5-4838-9577-9147323def5b",
+    "title": "Mačkić kamen - druga odprava 2012 [3]",
+    "thumbnail_url": "https://gradivo.jknm.org/5e0bf854-f593-440e-a512-29d237414055/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 295,
+    "article_id": "b2426b17-9174-4854-adff-db9ca1a21ceb",
+    "title": "Silvestrovanje 2012",
+    "thumbnail_url": "https://gradivo.jknm.org/e86be0bd-6338-44c6-953c-9132b66703d4/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 296,
+    "article_id": "c5e75f91-70f1-47d6-b31f-bd911a024660",
+    "title": "Okrogla miza o Temenici",
+    "thumbnail_url": "https://gradivo.jknm.org/fbfb949b-4d20-4dfd-afdc-f9881337ad15/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 322,
+    "article_id": "f1a83f7a-09dc-4127-98c1-d4f985a8b025",
+    "title": "Drugi spust v Županovo jamo",
+    "thumbnail_url": "https://gradivo.jknm.org/50e317f5-d547-41fd-95ea-5258d5fd87c7/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 334,
+    "article_id": "56fc4c8f-c5cc-4dd3-ba7f-565d5bb21ae9",
+    "title": "Straška gora preseneča",
+    "thumbnail_url": "https://gradivo.jknm.org/6b7aea0c-1641-431b-a502-3175bb1b6d95/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 335,
+    "article_id": "09a46e4e-18da-45de-94cd-6e39bf0b0e5b",
+    "title": "En dan 6 jam, 6 fara",
+    "thumbnail_url": "https://gradivo.jknm.org/3ca69c5f-f23a-4bf3-b32e-604cc4edde8e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 337,
+    "article_id": "b78ed2fa-3a61-49e0-8a2a-3834dc3f88a1",
+    "title": "Brezno v resi",
+    "thumbnail_url": "https://gradivo.jknm.org/dacbf92a-e5b5-4359-9595-a9a2c3ca91ec/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 338,
+    "article_id": "84b47aec-f408-44e3-a0fc-4242250566dd",
+    "title": "Udor pod Bazo 20",
+    "thumbnail_url": "https://gradivo.jknm.org/47720555-9f39-4cda-8a18-75ab7ce164d5/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 339,
+    "article_id": "a09bfdf5-9055-4dde-a021-a8af29bae9cc",
+    "title": "Predstavitev v Ajdovski jami",
+    "thumbnail_url": "https://gradivo.jknm.org/fdb772ff-2a70-446c-857e-670bf1e54065/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 340,
+    "article_id": "af47ab17-1efa-4e3f-b935-dd3a8caa932b",
+    "title": "Ogled Radoške jame",
+    "thumbnail_url": "https://gradivo.jknm.org/b25d298c-159f-4fb2-9d20-404f41145cef/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 343,
+    "article_id": "cabee7e9-36df-404c-a73d-2a5d153f1e41",
+    "title": "Jame pri Hinjah",
+    "thumbnail_url": "https://gradivo.jknm.org/3c997750-0e60-4417-bf96-d160693d26bd/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 626,
+    "article_id": "d419dd72-3af8-48ef-86dd-950d2e260d68",
+    "title": "Kanin 2023 - moker tabor",
+    "thumbnail_url": "https://gradivo.jknm.org/69ad7e31-38ed-4744-9613-eafaaa3ed81e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 627,
+    "article_id": "4824ed07-cf90-428b-900a-8596d5107b00",
+    "title": "Alojz Medle (1937 - 2023)",
+    "thumbnail_url": "https://gradivo.jknm.org/d745d71b-5837-4412-8382-2ccf25eab005/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 628,
+    "article_id": "f5a0dcf0-0c82-43e7-b843-0697f81e635b",
+    "title": "Odprava Bosna – Doboj 2023",
+    "thumbnail_url": "https://gradivo.jknm.org/8e2a5546-32fc-4e85-80b8-d2f27838077b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 629,
+    "article_id": "ab421141-63db-442a-84fd-875e521311d7",
+    "title": "Divji lovec s Plešivice",
+    "thumbnail_url": "https://gradivo.jknm.org/8ce8d69e-facd-4822-94e4-903df1022fca/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 630,
+    "article_id": "4db918db-b945-4b6f-9898-a583572cd3ea",
+    "title": "Naša naravna dediščina",
+    "thumbnail_url": "https://gradivo.jknm.org/8082ec76-e746-4669-a10c-c309cdc9109a/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 411,
+    "article_id": "2c1a57a9-d7de-4a96-92e0-da2eba0d4e16",
+    "title": "Brezno pri bolnici Zgornje Lašče",
+    "thumbnail_url": "https://gradivo.jknm.org/58eb4aa0-9da0-4cca-8afd-b6027c3f84ec/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 567,
+    "article_id": "f3eaeb73-8b2a-41f7-be3c-150a3fbb0e95",
+    "title": "Kanin 2020",
+    "thumbnail_url": "https://gradivo.jknm.org/f2cff634-8db1-4186-aad3-fc228bec6f6c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 13,
+    "article_id": "26d9f197-31ee-4d48-9d9a-8489dc436824",
+    "title": "Prazgodovinsko gradišče na Židovcu v Beli krajini",
+    "thumbnail_url": "https://gradivo.jknm.org/812f5775-0ecd-4c43-9616-a912e611ad47/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 16,
+    "article_id": "8d6220eb-e7be-4d94-8fad-35a711a0609e",
+    "title": "Rešujmo življenja 2008",
+    "thumbnail_url": "https://gradivo.jknm.org/6d50803c-8b21-46b3-a099-82e2a2e2003d/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 412,
+    "article_id": "837932a3-4597-42c6-abd8-42f3ade3e44f",
+    "title": "Jojkinovac 2015",
+    "thumbnail_url": "https://gradivo.jknm.org/87d75e62-f631-4b1e-9989-6b6960403641/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 17,
+    "article_id": "6d1dcddb-bc5b-46e7-b7e4-e3ef7b497ddf",
+    "title": "Nove raziskave na Židovcu",
+    "thumbnail_url": "https://gradivo.jknm.org/8a9e0b84-a038-46b3-ab50-8c801d55ad07/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 18,
+    "article_id": "ac7aaccf-6893-4b8c-a2d6-8a7d9de98d81",
+    "title": "Raziskovalno–izobraževalni tabor na Kočevskem Rogu",
+    "thumbnail_url": "https://gradivo.jknm.org/b6a3435b-7bef-479d-85ac-f1ac01ba2770/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 19,
+    "article_id": "96b6bbe7-6950-4c3c-bc5a-358cfec172d1",
+    "title": "Udor na cesti na Radohi",
+    "thumbnail_url": "https://gradivo.jknm.org/ee6becd4-469e-4073-b80f-f02ad3eae488/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 20,
+    "article_id": "99fddea5-53ae-4951-8aff-2b592f4409db",
+    "title": "Fotografiranje Gabrske jame",
+    "thumbnail_url": "https://gradivo.jknm.org/d73f33d6-5ea9-43ae-9d60-f1d0128f913e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 21,
+    "article_id": "90f868fa-1cf8-4349-9f4f-e672059bb08b",
+    "title": "Prerigeljsko brezno na Kočevski Mali gori",
+    "thumbnail_url": "https://gradivo.jknm.org/af1fc19a-a275-4b31-9ccc-f195592aabc4/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 22,
+    "article_id": "27cab94f-1adb-4a87-84aa-437bbb496645",
+    "title": "Nove raziskave na Kočevskem Rogu",
+    "thumbnail_url": "https://gradivo.jknm.org/e0fe5b44-99e1-41d2-94e6-fae67e5fcc73/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 36,
+    "article_id": "c32d26fe-fedb-470a-a180-84bba3bfed01",
+    "title": "Brezno 4. julij je razopremljeno",
+    "thumbnail_url": "https://gradivo.jknm.org/7e817163-0d0f-411e-9a95-a28236925cf6/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 24,
+    "article_id": "8553a223-3b44-4495-8177-d8924f33760a",
+    "title": "Kanin 2008 - letos prvič na pogorju",
+    "thumbnail_url": "https://gradivo.jknm.org/e1aec2a0-b7cd-421e-b38a-84b48bf6c749/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 28,
+    "article_id": "874f5fd4-942a-48e8-85fc-11322455b874",
+    "title": "Nova jama na Temeniškem podolju",
+    "thumbnail_url": "https://gradivo.jknm.org/2f91551f-9056-4070-813e-08e93c368016/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 35,
+    "article_id": "5202f33a-fb7d-4726-8454-5482b1240828",
+    "title": "Straški mejnik",
+    "thumbnail_url": "https://gradivo.jknm.org/167c4a18-f48e-4ab4-9503-39d5768edfa8/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 413,
+    "article_id": "5b72b574-321f-4434-9f94-e93dcca91a80",
+    "title": "Ogled Kotarjeve prepadne",
+    "thumbnail_url": "https://gradivo.jknm.org/8e77cda3-789a-4144-ad2e-1da79a85c4f3/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 414,
+    "article_id": "d630d4f4-0a23-4624-8c1d-db9e5c024bc6",
+    "title": "Odvodnica predzadnjič [5]",
+    "thumbnail_url": "https://gradivo.jknm.org/d6d51daa-5047-4ed9-a789-856385d67c7e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 415,
+    "article_id": "52cec680-7919-4750-964d-6d5ab25cff52",
+    "title": "Potop v Ajdovsko jamo",
+    "thumbnail_url": "https://gradivo.jknm.org/909e6439-b62e-47be-bad7-075cbd923891/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 416,
+    "article_id": "0c2ba986-da05-4fbd-b246-0590093d76fb",
+    "title": "Silvestrovanje 2015",
+    "thumbnail_url": "https://gradivo.jknm.org/71502ca7-9fc4-408f-a9d8-4535c0e69300/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 417,
+    "article_id": "3a7e07db-baee-4490-a829-6a821194d07f",
+    "title": "Žlanik ob Kolpi",
+    "thumbnail_url": "https://gradivo.jknm.org/5076fbc5-1cbb-4f3e-9586-687493a8a874/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 418,
+    "article_id": "48a81c6e-df66-4020-ad92-65c7c00dfe56",
+    "title": "Kraljevka, nova sedemdesetmetrca",
+    "thumbnail_url": "https://gradivo.jknm.org/7e69ecb4-56ef-4eef-b58b-79e7a12133fd/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 37,
+    "article_id": "5c2ef6cf-6046-4142-af31-585271bb90ea",
+    "title": "Čaganka - nov dolenjski globinski rekord [4]",
+    "thumbnail_url": "https://gradivo.jknm.org/bbf7d167-490c-4bc3-8df7-bae92fd5de07/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 38,
+    "article_id": "a869f549-a8fc-4724-8f6b-89c14c05a143",
+    "title": "Raziskave v okolici Mirne gore na Kočevskem Rogu",
+    "thumbnail_url": "https://gradivo.jknm.org/0ea20d2b-9c52-4230-bec0-dff0683de860/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 43,
+    "article_id": "dbb8131f-7b83-47af-bb97-927e5a7f205b",
+    "title": "Na dveh akcijah deset jam",
+    "thumbnail_url": "https://gradivo.jknm.org/fec09f40-d3ff-4f56-98d2-b48857633e51/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 66,
+    "article_id": "709f888f-6104-49ac-b75a-46fbffb5b07a",
+    "title": "Tretjemajsko raziskovanje na Gorjancih",
+    "thumbnail_url": "https://gradivo.jknm.org/6c4b2015-b1bd-4662-90e4-c5ebee6548a1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 67,
+    "article_id": "74602dd4-46fe-4a91-9678-7ea3537f9ccf",
+    "title": "Koprivnik in Golobinjek [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/4c93bd65-faed-4a87-8ece-ed4d0333636a/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 44,
+    "article_id": "aff03300-a43b-432e-a973-ce894c6e9bae",
+    "title": "Bela krajina še vedno neraziskana",
+    "thumbnail_url": "https://gradivo.jknm.org/82689b17-367c-4486-abb2-630c7a5338fd/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 46,
+    "article_id": "942a8b7b-d107-48c6-ac8d-2ad48bc1ab87",
+    "title": "Kanin 2009 - zimski pregled terena",
+    "thumbnail_url": "https://gradivo.jknm.org/a07178d4-532f-4af0-a1d0-2545ec4ae925/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 49,
+    "article_id": "18b0dcc9-214a-4216-abec-8fa4a35316f0",
+    "title": "Novo brezno na Trški gori",
+    "thumbnail_url": "https://gradivo.jknm.org/bf4e2457-fefd-4abd-8194-3e5cc0c0fc08/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 50,
+    "article_id": "d36f4476-dd59-46e5-8cb0-17de9cd20a1b",
+    "title": "Mirnopeška noga na dnu najgloblje jame v občini Mirna Peč",
+    "thumbnail_url": "https://gradivo.jknm.org/5b2ad125-9e5d-4c24-beb5-0a00dfbd9964/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 53,
+    "article_id": "0b557908-587f-4551-89d3-5f279bd857c7",
+    "title": "Meritve brezen na Kočevskem rogu",
+    "thumbnail_url": "https://gradivo.jknm.org/c023573d-3316-4984-8e37-7bf35cb24351/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 54,
+    "article_id": "9474d465-e982-4c41-9f5b-7d759bcb2a68",
+    "title": "Zanimivosti s Kočevskega Roga",
+    "thumbnail_url": "https://gradivo.jknm.org/6c0adc6d-37d2-4ac9-9a4e-81bcb572d6ea/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 55,
+    "article_id": "4ac16181-d4c3-4e15-a11e-731c92d9e8f0",
+    "title": "JKNM prejel nagrado Viljema Puticka",
+    "thumbnail_url": "https://gradivo.jknm.org/f7f5b873-9e24-4641-962c-fd441ac3866f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 57,
+    "article_id": "a4047b1f-ec43-424a-b24d-7cc55a0a5066",
+    "title": "Nova 40 metrca na Kočevskem Rogu",
+    "thumbnail_url": "https://gradivo.jknm.org/0c7eaff2-05b1-495f-b912-c9ef30e7d860/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 58,
+    "article_id": "9bcee251-26c4-4c53-8d4d-7e0ad8bfb680",
+    "title": "Reševanje psa iz brezna",
+    "thumbnail_url": "https://gradivo.jknm.org/09303b56-6580-4574-a902-0b606e99cf6f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 59,
+    "article_id": "1d8f2261-dc0a-4165-8539-068b16b3ea1c",
+    "title": "Od Pečenevke do Kotarjeve prepadne",
+    "thumbnail_url": "https://gradivo.jknm.org/3c47d834-cc19-4058-9c2b-d18658c6b881/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 60,
+    "article_id": "22df45e7-bf1e-442e-899e-57f132cfb317",
+    "title": "Smrečnik na Kočevskem Rogu",
+    "thumbnail_url": "https://gradivo.jknm.org/ea613ca3-daa1-47a5-9074-116614879212/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 61,
+    "article_id": "f3e17c60-0cb0-4309-a38e-baac402c0ba1",
+    "title": "Jamarski tečaj 2009 - vtisi jamarskega tečajnika",
+    "thumbnail_url": "https://gradivo.jknm.org/b5543d5b-f3c0-4905-ae87-25e18da798b7/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 62,
+    "article_id": "3affee32-668c-4f54-a352-456ee4c69f3c",
+    "title": "Lobanja X",
+    "thumbnail_url": "https://gradivo.jknm.org/ae542628-c2a7-4628-9ec5-8e22cc1ce78c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 63,
+    "article_id": "c436360a-2053-4fa5-b0e6-c7e738f36e2d",
+    "title": "Raziskovalni tabor in zaključek jamarskega tečaja",
+    "thumbnail_url": "https://gradivo.jknm.org/da6393d7-2ac0-4049-9d77-a5dc51114a7f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 64,
+    "article_id": "256785cf-4db3-4478-b6fb-c6db40593452",
+    "title": "Koprivnik in Golobinjek",
+    "thumbnail_url": "https://gradivo.jknm.org/0817621b-c238-4939-9c50-f387a7a2b8d0/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 65,
+    "article_id": "57a797a9-0768-4ab8-adc5-2713dd54cad8",
+    "title": "Astina plus dve novi jami",
+    "thumbnail_url": "https://gradivo.jknm.org/f82d7bf0-78ca-42de-a97c-d687eaf009a9/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 69,
+    "article_id": "e65b414a-c4eb-4d64-89b9-c80dba060ffc",
+    "title": "Nove jame na Lisci",
+    "thumbnail_url": "https://gradivo.jknm.org/20933f0a-c584-4e87-a488-aa4c5e7f4a06/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 70,
+    "article_id": "db3f6c35-ab05-45b2-b880-b4ff61926983",
+    "title": "Usposabljanje tečajnikov v Lukenjski steni",
+    "thumbnail_url": "https://gradivo.jknm.org/3b1d73df-7103-43c1-a1ad-52fbc248a29e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 71,
+    "article_id": "22ac4ca3-c939-403f-9dd3-c0a2a61e170a",
+    "title": "Kardeljev bunker",
+    "thumbnail_url": "https://gradivo.jknm.org/fde6387a-33fe-4657-b4af-841709d6ff13/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 74,
+    "article_id": "60fa1eec-0838-4fc7-9cd7-749619a0a55c",
+    "title": "Rajhenavski pragozd",
+    "thumbnail_url": "https://gradivo.jknm.org/f064f54b-1126-4216-b973-6bf4259175f7/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 76,
+    "article_id": "5409f7f0-dd46-4c02-9c4d-a3198ea80aec",
+    "title": "Porod v Cinkovem križu",
+    "thumbnail_url": "https://gradivo.jknm.org/5400efed-9443-4248-9cd6-7411fce25df8/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 77,
+    "article_id": "a10dbd83-738e-45da-ae90-5587543297ee",
+    "title": "Brezna v okolici bolnice Jelendol",
+    "thumbnail_url": "https://gradivo.jknm.org/327438e2-d75c-4a11-9fcd-5e81d73416c7/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 80,
+    "article_id": "0679397a-63cf-4949-85b4-fd75c5ea4c81",
+    "title": "Delovni piknik pred Jazbino",
+    "thumbnail_url": "https://gradivo.jknm.org/099c8e1e-1227-46e1-a884-e7c3837d849f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 81,
+    "article_id": "76ad67c7-7327-4b92-8181-6759347625ee",
+    "title": "Raziskave v okolici Drvodevnika pri Travnem Dolu",
+    "thumbnail_url": "https://gradivo.jknm.org/8d2248a6-b4ec-4d5c-9df3-78c1c301df16/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 84,
+    "article_id": "798c1cb1-7705-460e-b468-1ceaaf68a71c",
+    "title": "Vašo luknjico smo prišli malo pogledat",
+    "thumbnail_url": "https://gradivo.jknm.org/64dfef50-9211-49bc-8d73-1cec061ed34c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 87,
+    "article_id": "7ecbfda9-cc1f-4b22-828a-2211b5e868e3",
+    "title": "Do dna Pihalnika",
+    "thumbnail_url": "https://gradivo.jknm.org/4deb3336-b464-49bd-ae50-5444d1fbd511/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 88,
+    "article_id": "79b5ce06-a761-4171-a893-7362c90aff7c",
+    "title": "Nove jame na Kočevskem Rogu",
+    "thumbnail_url": "https://gradivo.jknm.org/f6ad8f4d-0d8c-414f-89e8-9f57340450e4/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 149,
+    "article_id": "f3ebe4d0-d602-4f3e-a9b7-84faaf50f0df",
+    "title": "Esmeralda [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/849c83bb-7d04-44eb-925c-508f8392995b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 78,
+    "article_id": "dd09d3a4-8f3e-46b1-a34b-733a6d255a4f",
+    "title": "Iz klubskega arhiva: Brezno Cinkov križ [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/9efa6fa5-09e3-4c86-996e-09cb93a8afa1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 90,
+    "article_id": "dd2430f0-8aab-4f95-9c02-c64cd66ab130",
+    "title": "Skavtski obisk Rivčje jame",
+    "thumbnail_url": "https://gradivo.jknm.org/5b0fb6ef-4eed-457f-a42e-8a1c61c411e4/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 91,
+    "article_id": "a6a09328-f942-4a38-8a8d-170f717acb55",
+    "title": "Lobanja X [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/206cf9d6-3aae-4d49-94e9-4bb30a28a625/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 92,
+    "article_id": "788cf208-7d50-48d9-9342-4fbbd022019c",
+    "title": "Šumeča polšna",
+    "thumbnail_url": "https://gradivo.jknm.org/1d1d6463-3a88-4e3b-bdeb-aaeeee6b2ab1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 93,
+    "article_id": "dd425046-4967-4a3a-8ec2-c069ee207538",
+    "title": "Kanin 2009 - poletna akcija",
+    "thumbnail_url": "https://gradivo.jknm.org/57d4d6e9-dd4c-4947-b3c3-cb1db5c792ee/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 96,
+    "article_id": "5278bf0c-0079-4e8d-aee2-e507c1933729",
+    "title": "Podzemni vodovodarji",
+    "thumbnail_url": "https://gradivo.jknm.org/ec3661df-dfe5-4585-be2d-3792decc143f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 97,
+    "article_id": "fc0178e5-8f45-4d21-94e3-b0b440e954cc",
+    "title": "Drekpumparji",
+    "thumbnail_url": "https://gradivo.jknm.org/fb22caf8-4630-49fb-9bc1-11dbceaecb3f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 98,
+    "article_id": "499d54f6-419a-4c63-a9b5-ea892c4f1d93",
+    "title": "Posebna sorta jamarjev",
+    "thumbnail_url": "https://gradivo.jknm.org/8412b361-6cb6-4798-805c-062ea6bc6cf5/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 99,
+    "article_id": "b90dcb1c-e26d-470a-aa3f-c9a428e87927",
+    "title": "Srečanje slovenskih jamarjev",
+    "thumbnail_url": "https://gradivo.jknm.org/7a8ae923-4fb8-4427-8ace-00a55967ce59/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 100,
+    "article_id": "a4ec06db-9931-4b01-9b1a-b8907a891357",
+    "title": "Podzemni vodovodarji [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/b70b3a55-902c-4192-accf-b3cf717c06e5/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 101,
+    "article_id": "6de46148-1f4f-48bd-be7d-8cb1c3fa950e",
+    "title": "Ponovno v Mojem dihalniku",
+    "thumbnail_url": "https://gradivo.jknm.org/27b432b6-450d-42e2-9153-c167b9675da7/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 102,
+    "article_id": "ef64c9ae-d053-4e0c-94ff-66b934f18087",
+    "title": "Odpiranje izvira Žibrščice",
+    "thumbnail_url": "https://gradivo.jknm.org/e4ca7edc-f550-4a06-98aa-f9517a3521e7/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 103,
+    "article_id": "eddacb92-94f8-43dc-8b9c-4c3ef10c4deb",
+    "title": "Ali Čaganka ogroža rekord Čaganke?",
+    "thumbnail_url": "https://gradivo.jknm.org/c867f6e1-c19b-459b-aabc-69c6a1b2b5cb/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 104,
+    "article_id": "b0d735fa-32ff-465a-a9a5-ba2e1ce44e02",
+    "title": "Gasilske vaje pod Kotarjevo prepadno",
+    "thumbnail_url": "https://gradivo.jknm.org/ae5a782a-ae63-45a2-a724-5cbaa8d8a429/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 105,
+    "article_id": "57d1a9f6-d376-4659-bba4-0dfbb776dd6a",
+    "title": "Kočevske beštije",
+    "thumbnail_url": "https://gradivo.jknm.org/6639ea89-ad22-4e91-bdaf-6eab91370385/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 106,
+    "article_id": "10fa088c-4237-4538-9c0b-d6c04272835a",
+    "title": "Brezno pod košenico",
+    "thumbnail_url": "https://gradivo.jknm.org/828faff4-6ed5-47c7-860e-82abc902e2e9/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 108,
+    "article_id": "fbe7a562-e738-44ce-8cac-3a7bfa27228d",
+    "title": "Jamarski večer v Lokalpatriotu",
+    "thumbnail_url": "https://gradivo.jknm.org/88ceb37d-fc2f-47a5-b081-8fd74c4697dd/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 109,
+    "article_id": "b56eb8ee-1fca-440f-9289-fa32f7584c6f",
+    "title": "Ali Čaganka ogroža rekord Čaganke? [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/47f7bfb9-88fe-431d-9426-e523e8551d57/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 150,
+    "article_id": "76708014-48cb-43ef-ab68-be7f8e70c208",
+    "title": "Prvojamarjenje 2010",
+    "thumbnail_url": "https://gradivo.jknm.org/48ec831e-ba52-49a5-9fcc-2850709e2d15/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 420,
+    "article_id": "a7e9b2e1-fe9a-43b6-916e-5fe806d64bd4",
+    "title": "Zjoturina [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/17620087-ddf6-4540-ad5c-6f92fd422f7e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 421,
+    "article_id": "c3fb0f4d-c4e0-47cf-8d22-761c9cd8c51e",
+    "title": "Čaganka - zimsko jamarjenje",
+    "thumbnail_url": "https://gradivo.jknm.org/21c50a04-78c0-4eb0-8678-b900bb1b2d7f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 422,
+    "article_id": "1f0b4654-bd23-4241-b963-e63d01292b85",
+    "title": "Čaganka - 3D skeniranje",
+    "thumbnail_url": "https://gradivo.jknm.org/b18321fe-1360-4f1e-a7cc-3c508da487ef/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 107,
+    "article_id": "8b236921-6f52-4cfd-8a00-06e848cd3945",
+    "title": "Podzemni vodovodarji [3]",
+    "thumbnail_url": "https://gradivo.jknm.org/c9dec2d7-4b67-403b-b964-0c42f889f5e9/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 95,
+    "article_id": "5d87e034-445f-4ad0-8a4c-b643f7834b9e",
+    "title": "Šumeča polšna - sklepno dejanje [3]",
+    "thumbnail_url": "https://gradivo.jknm.org/040b8d15-5572-4831-957e-9add069aba90/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 111,
+    "article_id": "2c1a769c-73ab-4b5c-ae5b-a8f53b3d8b60",
+    "title": "Meritve v okolici Semiča",
+    "thumbnail_url": "https://gradivo.jknm.org/e822c746-5da6-4d41-bb01-14a95e564d08/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 112,
+    "article_id": "39201e91-f7b8-4f40-89bf-7ac59dd35ea6",
+    "title": "Jesenski sadovi Roga",
+    "thumbnail_url": "https://gradivo.jknm.org/64879690-ff19-4b6c-9380-4917ddc5c11e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 113,
+    "article_id": "ae08bb0c-1c48-47fb-86d9-37614f6e0bdb",
+    "title": "Ponovno na Poljanski gori",
+    "thumbnail_url": "https://gradivo.jknm.org/fce22406-254b-420f-9a6e-fe8d40c39f4b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 114,
+    "article_id": "14df68aa-39ad-43d3-bb7e-8d40308da192",
+    "title": "Klubski izlet v Jamo pod Babjim zobom",
+    "thumbnail_url": "https://gradivo.jknm.org/30206dd7-1197-410c-b073-eb26ac69fe26/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 115,
+    "article_id": "2d613e1d-acb0-47fa-9e16-3022ea8be188",
+    "title": "Cink križ – tokrat do dna!",
+    "thumbnail_url": "https://gradivo.jknm.org/8d3462a0-a89b-455b-8ecf-ab7a5c514892/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 117,
+    "article_id": "d905de81-0f23-49a8-be1c-6ce4ff0d4ff2",
+    "title": "Miklavž v Čaganki",
+    "thumbnail_url": "https://gradivo.jknm.org/46dca862-b365-4eaf-a228-2e19e748f2fd/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 118,
+    "article_id": "0d9851b1-60ac-4f8d-ae37-4b25038af7f4",
+    "title": "Pihalnik ali Prhalnik?",
+    "thumbnail_url": "https://gradivo.jknm.org/809fb51c-a2d9-43cf-83bd-fe881e3b04b8/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 119,
+    "article_id": "e5205fd1-5a07-497d-a072-b9fba5eb8713",
+    "title": "Velika Vratnica in ražnjiči",
+    "thumbnail_url": "https://gradivo.jknm.org/2601997d-7e0a-473c-9f57-1db2013cc8a4/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 120,
+    "article_id": "c9b4a92e-2768-48f8-8a00-143f9b54c523",
+    "title": "Jama besnih krav",
+    "thumbnail_url": "https://gradivo.jknm.org/12f97644-74b8-468e-9460-a2d13c266c60/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 121,
+    "article_id": "f9a82b7b-19db-4f2a-9766-ecddef02220d",
+    "title": "Lahkotno po klubskem silvestrovanju",
+    "thumbnail_url": "https://gradivo.jknm.org/13b69203-8587-4a6f-8c2b-1990d52eb143/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 122,
+    "article_id": "956dcacb-7f23-4bf3-be8f-4939cc4a4603",
+    "title": "Ob koncu leta 2009",
+    "thumbnail_url": "https://gradivo.jknm.org/67f1a76a-1f2e-4f77-826f-657c9ee7573a/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 124,
+    "article_id": "5608f5d0-7530-4bb0-b783-59633f21b279",
+    "title": "Iz Cinka do zvezd",
+    "thumbnail_url": "https://gradivo.jknm.org/b5d23fb2-6397-492f-b863-e6e24ef14234/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 229,
+    "article_id": "c8cb44b4-e52a-4232-aa64-5967ce4f3743",
+    "title": "Čaganka - uradna rekordna globina",
+    "thumbnail_url": "https://gradivo.jknm.org/38ff7971-ae2a-465d-9f00-e2d9d97b211a/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 126,
+    "article_id": "6af8fd29-3b15-4240-8ca4-e2717d794b12",
+    "title": "V domači okolici - na Radohi",
+    "thumbnail_url": "https://gradivo.jknm.org/a677d5a3-564d-4d65-87f5-3003cd063acd/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 127,
+    "article_id": "490e2128-b92a-4dfa-9ef9-2cc8c451c4bf",
+    "title": "Brajerjeva jama - napad na drugi vprašaj",
+    "thumbnail_url": "https://gradivo.jknm.org/3e20cdf7-b7cb-487e-b9f4-3cb51d004a7c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 135,
+    "article_id": "022f1ad9-c43c-4af0-b89b-434950646a4d",
+    "title": "Nove dimenzije na Poljanski gori",
+    "thumbnail_url": "https://gradivo.jknm.org/b6fa4858-aec1-4b1f-af17-554929dfc8fd/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 137,
+    "article_id": "7cedbc90-07bd-49a3-b06f-03080bc29660",
+    "title": "Občni zbor Jamarske zveze Slovenije",
+    "thumbnail_url": "https://gradivo.jknm.org/5c5f5f6e-d2bb-4eda-8cbd-4e70f84cc2b1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 139,
+    "article_id": "d4268dc4-7ce7-453f-8a93-6e0b48fec42b",
+    "title": "Brezno pri Malem Slatniku",
+    "thumbnail_url": "https://gradivo.jknm.org/7d535a70-1807-4f04-8201-e15f7a089ef7/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 140,
+    "article_id": "ca389011-1f1a-4a19-94dc-608acc07ba9d",
+    "title": "Katera Vratnica je globlja?",
+    "thumbnail_url": "https://gradivo.jknm.org/476618c1-a0d7-445d-b78b-9e608865fa87/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 141,
+    "article_id": "94b0c80e-128b-4f98-bdfb-8d105f831b84",
+    "title": "Kanin 2010 - Monte Kanino speleos",
+    "thumbnail_url": "https://gradivo.jknm.org/a381bbb0-6185-45ce-841a-98046950e425/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 143,
+    "article_id": "2a7b1b9f-c8a7-4ac8-9778-534b8e6d29ed",
+    "title": "Pomladansko čiščenje Čaganke",
+    "thumbnail_url": "https://gradivo.jknm.org/6a38877c-8a5e-4860-9f2f-3475c615bd4f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 144,
+    "article_id": "f3509925-fdba-4d80-a526-e7e637468ff2",
+    "title": "Fotografska akcija v Kaščici",
+    "thumbnail_url": "https://gradivo.jknm.org/571a707d-9e02-44a1-a15b-942550fff157/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 258,
+    "article_id": "faa7e583-8973-4dc7-a44e-8bd5ebbfc3fb",
+    "title": "Čaganka - presežena magična globina 300 m",
+    "thumbnail_url": "https://gradivo.jknm.org/8736af43-5943-4545-ba82-2e9636d4ac0d/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 146,
+    "article_id": "f441d0ad-076c-443c-ac6a-35c1e549a973",
+    "title": "Jamarski tečaj 2010 - mala šola jamarstva v Malisnici",
+    "thumbnail_url": "https://gradivo.jknm.org/9b75ec0c-52c9-4f07-b010-6977f05e723a/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 147,
+    "article_id": "7a5cc2c4-bca0-433f-9e06-a5863c3ecf0c",
+    "title": "Čiščenje jame Grč vrh 3",
+    "thumbnail_url": "https://gradivo.jknm.org/8e2ce412-b324-406f-a89a-553c0adc79f1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 148,
+    "article_id": "88ce79f8-fb7f-4bc8-8892-0b749e5b28aa",
+    "title": "Esmeralda",
+    "thumbnail_url": "https://gradivo.jknm.org/4efcef42-39b3-4b03-8a47-c3e0dc324222/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 256,
+    "article_id": "f606d8ac-6101-48fd-8937-2c54d82f9f4d",
+    "title": "Zajci obrali zadnje grozdje",
+    "thumbnail_url": "https://gradivo.jknm.org/e4b6879d-ed88-4e27-9c84-f89b3f425198/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 257,
+    "article_id": "f7e776be-af11-48b0-a311-10a7cb0ab4cf",
+    "title": "Jame od Jame do Lazine",
+    "thumbnail_url": "https://gradivo.jknm.org/27ff8ea5-9e9b-4465-b694-7ab76ac961d2/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 259,
+    "article_id": "82891725-9480-4ab1-9d13-aa662dd07261",
+    "title": "Čaganka - zimski tabor",
+    "thumbnail_url": "https://gradivo.jknm.org/bde2e61f-6209-48bc-a1e5-4b6fb85ad7ca/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 151,
+    "article_id": "b9f1fc9d-4387-48f2-abcd-130c3e7f39ba",
+    "title": "Državna vaja kinologov",
+    "thumbnail_url": "https://gradivo.jknm.org/049a8177-ad7d-4611-b3e8-999e8240152f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 153,
+    "article_id": "9265bcd6-8140-44a8-aa85-9a57cf6b7e9e",
+    "title": "Roške punce",
+    "thumbnail_url": "https://gradivo.jknm.org/a698b875-61d6-4a5d-841e-f041b0496ec2/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 154,
+    "article_id": "37825239-8ab9-4f63-98bd-47fe91df33c3",
+    "title": "Po roških puncah še trije mučeniki",
+    "thumbnail_url": "https://gradivo.jknm.org/695f644d-8bc7-44c7-93a0-be3b4b63ec1a/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 155,
+    "article_id": "47ed35e7-9ad7-42e2-81d0-cde52e1f29e1",
+    "title": "Generalka za Rock Otočec",
+    "thumbnail_url": "https://gradivo.jknm.org/29cc7f3f-b371-4af4-a46b-6882a632e5cc/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 156,
+    "article_id": "cb4e4300-ffcd-4f4d-988c-a262253901af",
+    "title": "Babin kamen 3",
+    "thumbnail_url": "https://gradivo.jknm.org/8a62f453-8494-4e87-8c23-cf340ee52702/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 158,
+    "article_id": "ac440601-58f8-4eaa-b64f-206e886f9a5b",
+    "title": "Raziskave na Kočevskem",
+    "thumbnail_url": "https://gradivo.jknm.org/1c0bde0b-4e1c-48df-aee3-a746e0840bcf/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 159,
+    "article_id": "6e46ef43-ecb9-4c27-8d95-526a5185d47a",
+    "title": "Kanin 2010 - poletni raziskovalni tabor",
+    "thumbnail_url": "https://gradivo.jknm.org/498523f8-94e8-418a-aff3-524ba0d7d221/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 160,
+    "article_id": "0b120f62-a90f-48c6-bfa9-c02f62fc2685",
+    "title": "Brezno na Poljanski gori",
+    "thumbnail_url": "https://gradivo.jknm.org/13f137e3-cdee-445f-ade5-018a02612b2b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 161,
+    "article_id": "99df7e5e-c11e-4114-8507-08c66cc4df80",
+    "title": "Raziskave na Kočevskem [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/31761875-5835-45cc-8c5c-69446a068f9c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 162,
+    "article_id": "a75fc9ea-6608-49a1-b3ac-e5adbd62c941",
+    "title": "Napad na Vimol",
+    "thumbnail_url": "https://gradivo.jknm.org/b77116ad-147a-4e0c-9d1d-e350bcd8c178/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 163,
+    "article_id": "ff584d97-f800-4f11-b9e7-e21878235768",
+    "title": "Poplave 2010",
+    "thumbnail_url": "https://gradivo.jknm.org/239d6392-0d8b-41bd-8523-6fd6e140059e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 164,
+    "article_id": "28e81a2f-dc93-4c9e-b0fa-e7e6fab248f4",
+    "title": "Poplave 2010 [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/149079aa-5f04-4b19-b565-ff8367a8bc87/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 165,
+    "article_id": "860a94cc-1d51-44d6-9328-cbc3eda2cea9",
+    "title": "Poplave 2010 [3]",
+    "thumbnail_url": "https://gradivo.jknm.org/cac34890-1d43-4f66-bbed-85c5702248c1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 166,
+    "article_id": "a1814797-4e47-470c-a22a-39c1d8bb9865",
+    "title": "Poplave 2010 [4]",
+    "thumbnail_url": "https://gradivo.jknm.org/c892fd70-ba1c-4d76-b814-44c169dc5f23/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 167,
+    "article_id": "4a1b0edc-6230-4efc-bf34-ae2f45a1e6bb",
+    "title": "Bosna 2010",
+    "thumbnail_url": "https://gradivo.jknm.org/fdffacb3-45c9-479d-bffc-f135be84d9a0/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 168,
+    "article_id": "0ff4613d-c95d-4841-8b99-651be9446e70",
+    "title": "Raziskave na Kočevskem [3]",
+    "thumbnail_url": "https://gradivo.jknm.org/74066835-f61b-42e8-9a45-f634d9b77bea/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 260,
+    "article_id": "e05a4b1d-0d88-47fb-b630-6766c365abee",
+    "title": "Zimski obisk Skalarjevega brezna",
+    "thumbnail_url": "https://gradivo.jknm.org/034624f0-3077-4cac-b33d-55b35a183f6b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 262,
+    "article_id": "aed20a09-b8e1-4e81-bb8e-92b51ec5421f",
+    "title": "Očistimo Slovenijo - Županova jama",
+    "thumbnail_url": "https://gradivo.jknm.org/e60d9b6d-a123-4128-85ce-cfe96d917b72/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 263,
+    "article_id": "c6dd514c-08b8-4d7b-be10-b95537098464",
+    "title": "Očistimo Slovenijo - Udornica Grč vrh 4",
+    "thumbnail_url": "https://gradivo.jknm.org/2a8e94a6-55f5-49be-9477-f654b9797a9a/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 423,
+    "article_id": "747e0399-a7cc-4185-9ac9-fff839333c99",
+    "title": "Čaganka - rov za taprave jamarje",
+    "thumbnail_url": "https://gradivo.jknm.org/56891370-fe4b-4177-a4cd-eeccda9297f8/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 170,
+    "article_id": "1e4ab436-91b7-43fe-a1e4-4a0cb0f567bb",
+    "title": "Jame pri Klevevžu",
+    "thumbnail_url": "https://gradivo.jknm.org/f3e63b2b-0784-4de3-a3a0-94984af7140e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 172,
+    "article_id": "849d6e16-a828-4feb-800e-1dd17287b4f1",
+    "title": "Brezno na Poljanski gori [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/b92c42a2-26ee-4c22-be7e-e4dbeab58064/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 173,
+    "article_id": "2f4b14f2-549c-4bbc-8835-340a669d6de7",
+    "title": "Raziskave na Kočevskem [4]",
+    "thumbnail_url": "https://gradivo.jknm.org/09b14d95-274f-479a-a025-d8f2bdf0913b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 174,
+    "article_id": "3d04d6e5-1bb6-4bd1-ae15-9b551d977ec4",
+    "title": "Klubski izlet 2010",
+    "thumbnail_url": "https://gradivo.jknm.org/fbc96a2c-d308-44e9-9b82-68dec0b1e00d/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 175,
+    "article_id": "ecbb06c1-0ae0-4999-b9af-f7cce4e6b04b",
+    "title": "Akcija v metliškem koncu",
+    "thumbnail_url": "https://gradivo.jknm.org/bb6b40a0-4f26-415f-8b30-893df9741fd6/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 176,
+    "article_id": "fec43acf-982d-42f1-b9ed-b6e2f32fe9ee",
+    "title": "Uživanje v deželi ob Kolpi",
+    "thumbnail_url": "https://gradivo.jknm.org/c7fbb5ff-acfa-4768-900b-f80bbfef2b46/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 177,
+    "article_id": "805f7235-1ae1-43c7-b33f-13e8ede28599",
+    "title": "Brezna pod Ovčjakom",
+    "thumbnail_url": "https://gradivo.jknm.org/ce43fed7-a6e3-4ef7-ad44-4ce4c81fc379/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 179,
+    "article_id": "6422eda4-e4c8-4425-a285-413d9ee753e0",
+    "title": "Raziskave na Kočevskem [5]",
+    "thumbnail_url": "https://gradivo.jknm.org/f6c47b22-228f-434e-b666-e7c9cbfc213c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 180,
+    "article_id": "5818a5a5-2153-4f76-9ae2-bddefbf22659",
+    "title": "Novo mesto - Casola",
+    "thumbnail_url": "https://gradivo.jknm.org/51b1cc14-23ab-437a-a562-ae1477755a80/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 181,
+    "article_id": "e704bd4c-d6df-404d-9953-a6cbc31d683b",
+    "title": "Kraljevska akcija na Kraljevem studencu",
+    "thumbnail_url": "https://gradivo.jknm.org/61e505b1-7d6f-4b41-b1ce-32cca86ec332/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 182,
+    "article_id": "ce2a9174-5d98-43c7-88ea-53ad5a730a4c",
+    "title": "Medvedji dol 2",
+    "thumbnail_url": "https://gradivo.jknm.org/d1a45db7-760b-47cf-9305-d651aed3312b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 183,
+    "article_id": "c90db445-02d9-4ec9-b414-5e83a76599d7",
+    "title": "Zadnja lanska in prva letošnja akcija",
+    "thumbnail_url": "https://gradivo.jknm.org/b382f843-9f47-43ca-af42-82a4e3e0d634/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 184,
+    "article_id": "9a3d0547-fa7a-431c-b1fe-4d646e7d9a9f",
+    "title": "Človeške ribice so zavarovane",
+    "thumbnail_url": "https://gradivo.jknm.org/f6850a01-a031-418f-a7a1-b786f36c10b7/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 185,
+    "article_id": "e662f80e-6384-45ce-be66-1a89eb78ef43",
+    "title": "Novice s Kočevskega Roga",
+    "thumbnail_url": "https://gradivo.jknm.org/fc65515c-a656-455f-8ff1-2ae33f81f6be/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 280,
+    "article_id": "65124055-83a6-4bdc-8763-5e19d6311f1c",
+    "title": "50 let JKNM - slavnostna seja",
+    "thumbnail_url": "https://gradivo.jknm.org/2820dfc1-95c2-4914-bd40-c20d99ac0c41/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 281,
+    "article_id": "ad6382a6-4eb3-406c-b960-b960f1401545",
+    "title": "50 let JKNM - jamarski tabor na Frati",
+    "thumbnail_url": "https://gradivo.jknm.org/a7d7e387-3fbc-41d8-a338-db34029763a8/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 286,
+    "article_id": "b81cab35-1777-45bf-93f7-4d16821a3c50",
+    "title": "50 let JKNM - izšel je Dolenjski kras 6",
+    "thumbnail_url": "https://gradivo.jknm.org/a0b2a935-66d7-494a-9c1a-5e3b7c473704/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 282,
+    "article_id": "ad969172-e521-4d34-95b5-e1de341ba30c",
+    "title": "50 let JKNM - Borivoj Ladišić",
+    "thumbnail_url": "https://gradivo.jknm.org/c6e3bc27-75ff-423f-9186-7153403411e5/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 283,
+    "article_id": "54f3aa31-5e4f-4fc5-9b39-916bc06a7a74",
+    "title": "Spominska svečanost pri Beceletovi jami",
+    "thumbnail_url": "https://gradivo.jknm.org/532d2e4c-bad0-426f-8898-0213f1868a28/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 284,
+    "article_id": "44a6a1f6-d387-4090-b4f0-66e7116da0c8",
+    "title": "Kanin 2012 - druga realizacija",
+    "thumbnail_url": "https://gradivo.jknm.org/8fbfa7db-98cc-45fb-8c16-606883d4e1e6/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 186,
+    "article_id": "3efb245e-63f2-4904-b5f2-721204f1007a",
+    "title": "Usposabljanje za uporabo zrakoplovov",
+    "thumbnail_url": "https://gradivo.jknm.org/cb748afe-3206-4440-b3e6-bce9324a53c9/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 187,
+    "article_id": "69a89f01-387e-4bca-bcbb-3306369eae93",
+    "title": "Ogled jame Karlovec",
+    "thumbnail_url": "https://gradivo.jknm.org/fa62f080-09be-4102-ae3b-b85dc594da43/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 188,
+    "article_id": "00376a1c-f39d-47a8-808e-5caed697da60",
+    "title": "Na Kočevsko",
+    "thumbnail_url": "https://gradivo.jknm.org/1e360e60-0f43-4547-9c58-e8160f63e044/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 189,
+    "article_id": "d110f025-afc9-44f6-b78c-7ccd1373f1aa",
+    "title": "Nova jama pod Sv. Ano",
+    "thumbnail_url": "https://gradivo.jknm.org/13c902d1-a6e5-428d-a88c-7525bc226eca/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 190,
+    "article_id": "163e3dd9-c04f-4466-a91f-e3929ec0357a",
+    "title": "Polšna na Vrh borštov",
+    "thumbnail_url": "https://gradivo.jknm.org/846fbd98-6de1-4ac5-b5d4-6908a842a706/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 191,
+    "article_id": "583f018c-9733-438c-a113-90b5dbf5913f",
+    "title": "Mala Strašca se nadaljuje",
+    "thumbnail_url": "https://gradivo.jknm.org/9886555d-37ea-4f3f-947d-6f2ec6f5a97e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 192,
+    "article_id": "3d6900a5-8c5e-4be7-9562-ceb6b55a01be",
+    "title": "Delovno v okolici Travnega dola",
+    "thumbnail_url": "https://gradivo.jknm.org/ccd27ff3-2b4f-4e12-b3f9-59c41a250419/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 193,
+    "article_id": "c1796adb-0920-4383-ad91-6a104ade4bff",
+    "title": "Čaganka - ponovno rojstvo",
+    "thumbnail_url": "https://gradivo.jknm.org/733c0f83-dabe-45df-b2a9-63621734de5f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 194,
+    "article_id": "93cf3e3a-d8b0-4ccf-84b9-4949126301f8",
+    "title": "Na Vinski gori",
+    "thumbnail_url": "https://gradivo.jknm.org/b7a6f556-4854-4587-a87c-c4016a03608e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 195,
+    "article_id": "b04914be-c6f0-4c1b-aebb-31ae96a1a312",
+    "title": "Občni zbor 2010",
+    "thumbnail_url": "https://gradivo.jknm.org/e673e453-5330-448a-ad58-dffa2142ae00/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 196,
+    "article_id": "e0b5998d-95f0-4d9f-b8ad-ee5c8c158f92",
+    "title": "Akcija na Toplem vrhu nad Mavrlenom",
+    "thumbnail_url": "https://gradivo.jknm.org/0683f333-bd28-4235-bd70-362681a359f7/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 197,
+    "article_id": "ffcbf2bc-8043-4b14-9ce2-92189c68b559",
+    "title": "Topli vrh 5",
+    "thumbnail_url": "https://gradivo.jknm.org/0b00c71a-16f5-4000-8b2b-d346ca63cedf/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 198,
+    "article_id": "0074916b-5147-4993-9624-6a6c84eeb5e9",
+    "title": "Rekord še vedno mirnopeški, trebanjci pa imajo eno več",
+    "thumbnail_url": "https://gradivo.jknm.org/fbecbccc-e2ef-4f6b-919b-2320dfaeee3c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 200,
+    "article_id": "b37ae8dd-90c5-4d87-9331-36e5cc4fd62f",
+    "title": "Prerigeljske novice",
+    "thumbnail_url": "https://gradivo.jknm.org/c9247cdb-f4e0-4786-91a9-8d6c07debc96/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 201,
+    "article_id": "516d7ced-91a0-423d-a189-085faea9fcc8",
+    "title": "Delovna akcija na Grč vrhu",
+    "thumbnail_url": "https://gradivo.jknm.org/c10d6710-0c68-4d15-adb3-40077006eeed/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 203,
+    "article_id": "311c5a75-60d2-429c-8068-3ce3daaf88bb",
+    "title": "Na Radulji",
+    "thumbnail_url": "https://gradivo.jknm.org/6d2bd92c-1f9d-4b44-bcf5-ccb48567e543/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 204,
+    "article_id": "337d1f43-7ce1-4c7a-be8a-5983e7cd68bb",
+    "title": "Kuščarek pri Velikem Gabru",
+    "thumbnail_url": "https://gradivo.jknm.org/8a964289-5b17-419a-8a30-6f6dcf9780da/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 205,
+    "article_id": "e25526a5-88db-492a-b2f8-8c20aa930f6c",
+    "title": "Primskovo in zgodba o jamskih kačah",
+    "thumbnail_url": "https://gradivo.jknm.org/ad75b50e-9cb4-4101-9d7b-bb01772527ac/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 206,
+    "article_id": "a68126ea-fe5e-4792-bf8e-8813ad3db79e",
+    "title": "Jamarski tečaj 2011 se je začel",
+    "thumbnail_url": "https://gradivo.jknm.org/68d7aa5b-c6f8-4934-aa0f-131ca5f7adee/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 207,
+    "article_id": "a6ee7b14-ab4a-49ed-ba19-d08269d3eb20",
+    "title": "V Taborski steni",
+    "thumbnail_url": "https://gradivo.jknm.org/707b9703-2236-4817-8d09-2f4aa7944c9a/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 208,
+    "article_id": "25106083-4463-4bfe-b535-edc03d9973fc",
+    "title": "Nadaljevanja jamarskega tečaja 2011",
+    "thumbnail_url": "https://gradivo.jknm.org/68d89dfc-0b86-4353-a76b-26a9354c1a50/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 209,
+    "article_id": "89867cb4-2d3e-483e-ba4f-5afb8438a07b",
+    "title": "7 : 0 za DARS",
+    "thumbnail_url": "https://gradivo.jknm.org/f0353a19-8b91-47a7-9b6a-7f17899f6ea9/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 211,
+    "article_id": "a22b94aa-4473-4824-bccf-46330dd01c7f",
+    "title": "Grč vrh 3 na dan OF",
+    "thumbnail_url": "https://gradivo.jknm.org/1d959a5f-f2be-4220-9921-feaa8725fb4c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 212,
+    "article_id": "a52297a1-407a-46b5-bd1c-7b85f725a4b5",
+    "title": "Čaganka - jamarski tabor 2011",
+    "thumbnail_url": "https://gradivo.jknm.org/ec07b728-14a6-4602-b308-c83bc7085e40/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 213,
+    "article_id": "ce21ce78-1d85-4ab6-89d6-a6d388cb1eaa",
+    "title": "Rešujmo življenja 2011",
+    "thumbnail_url": "https://gradivo.jknm.org/a27c3123-78ba-443d-b3a7-3e9ee18c0a54/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 214,
+    "article_id": "21198b5f-bc6b-40de-b95c-3092874cb3b7",
+    "title": "Kolen jama",
+    "thumbnail_url": "https://gradivo.jknm.org/4f32a975-2a0f-48e8-91f1-8d8f3d00a19b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 215,
+    "article_id": "d85338a5-0f56-4b3d-892c-d216d8debe30",
+    "title": "Novici iz trebanjskega konca",
+    "thumbnail_url": "https://gradivo.jknm.org/f058f619-e379-4990-b160-b9cc140e5d78/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 216,
+    "article_id": "4de28e59-844e-4f91-88b9-b173ef8857e8",
+    "title": "Reševalno usposabljanje Biška vas 2011",
+    "thumbnail_url": "https://gradivo.jknm.org/1a6ed9fa-a4c7-4756-8731-a9e0fbd21954/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 217,
+    "article_id": "149c7eb6-e400-4101-94a3-76b8e46acd14",
+    "title": "Predstavitev jamarstva učencem OŠ Brusnice",
+    "thumbnail_url": "https://gradivo.jknm.org/54ae69a5-e6e6-4561-8d6a-519b0a21fc4b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 219,
+    "article_id": "636aa483-1866-4ec8-9425-a2bd4e93d12c",
+    "title": "Tečaj za pripravnike JRS in jamarske reševalce",
+    "thumbnail_url": "https://gradivo.jknm.org/3f6cb254-bc7a-483f-8df5-852966b16378/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 221,
+    "article_id": "2300ea62-19f3-407c-8be5-b6e9778d5ba2",
+    "title": "Špranjca na Lahinji",
+    "thumbnail_url": "https://gradivo.jknm.org/94062fe8-6ebd-4dc2-8167-9c2b5686578b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 222,
+    "article_id": "99a2a6ff-d153-43aa-8bc3-e02256658ae8",
+    "title": "Na Lužah je luštno b'lo",
+    "thumbnail_url": "https://gradivo.jknm.org/720f2da2-7a6f-4be6-84af-6d4477571e9f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 223,
+    "article_id": "4fb66a64-3c39-469e-810a-12fc2029cc2a",
+    "title": "Akcija v okolica Dobrniča",
+    "thumbnail_url": "https://gradivo.jknm.org/bfb4e108-a15c-4d1e-8cce-c65a3170da8b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 224,
+    "article_id": "ea6451a8-b5d1-4ca6-b57f-efee6dd09065",
+    "title": "Kanin 2011 - dve raziskovalni ekipi",
+    "thumbnail_url": "https://gradivo.jknm.org/ade72d85-4b92-44fa-97dd-5da08fd25b3a/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 225,
+    "article_id": "2b194ce0-b65a-481f-a8f6-6bab9f7351f9",
+    "title": "Čaganka - na pragu novega rekorda",
+    "thumbnail_url": "https://gradivo.jknm.org/85f12b60-93e8-487b-9f03-44f1cd88dacf/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 226,
+    "article_id": "f7260f55-452b-49e0-b1d0-e260d369969d",
+    "title": "Čaganka - nov globinski rekord Dolenjske in Bele krajine",
+    "thumbnail_url": "https://gradivo.jknm.org/79ba3c46-9b12-465f-be88-1794065531a1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 227,
+    "article_id": "ebe62268-8e6c-474e-a455-3241a9268560",
+    "title": "Čaganka - ožinica in polh",
+    "thumbnail_url": "https://gradivo.jknm.org/85324fd8-2c73-4b64-9b42-d4cc5ef7a91c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 228,
+    "article_id": "09fcbe2e-2c64-4e17-8774-90d74897bc90",
+    "title": "Širjenje vhodov na Kočevskem",
+    "thumbnail_url": "https://gradivo.jknm.org/346cb0f9-998f-44b0-87ad-f41fb944aa80/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 285,
+    "article_id": "e64add15-84ae-4001-9818-3d65fd421b2d",
+    "title": "Kanin 2012 - tretja realizacija",
+    "thumbnail_url": "https://gradivo.jknm.org/394d0769-51b1-4137-bfba-ec25c75fb66d/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 287,
+    "article_id": "1e7b0653-b5de-44aa-9d33-506ab88c0287",
+    "title": "Udor v vinogradu",
+    "thumbnail_url": "https://gradivo.jknm.org/23b7244d-3049-4667-8e34-899998e01c90/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 220,
+    "article_id": "04843f90-ab7d-404b-896e-0268a3be0766",
+    "title": "Hobijev brlog",
+    "thumbnail_url": "https://gradivo.jknm.org/e3ba4303-a046-4d91-a037-0c3b868ec713/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 231,
+    "article_id": "125f8512-0825-46ad-a0bb-069b0c5be6fd",
+    "title": "Dvogrla na Poljanski gori",
+    "thumbnail_url": "https://gradivo.jknm.org/998f0153-eb2b-4075-9203-da999d9406d6/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 232,
+    "article_id": "c04425df-23c6-4623-b003-c745c4b35769",
+    "title": "Kanin 2011 - Skalarjevo brezno",
+    "thumbnail_url": "https://gradivo.jknm.org/f445291c-6be7-49d4-9b5e-1e94bff37f23/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 234,
+    "article_id": "9eac01dc-bf4c-4a83-b2bb-a0e6e1f6fd1d",
+    "title": "Dan varnosti in tehnike 2011",
+    "thumbnail_url": "https://gradivo.jknm.org/0c418955-c7f4-42cf-b411-e8a53d2d379e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 235,
+    "article_id": "380e287c-1df0-4a6a-8825-e2e802f02309",
+    "title": "Raziskovanje in druženje na Hinjah",
+    "thumbnail_url": "https://gradivo.jknm.org/272559af-b59e-439a-8c9c-74d5433ada3f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 237,
+    "article_id": "064a8d88-5fb3-409f-b95d-0805d8404904",
+    "title": "Mačkić kamen v BiH",
+    "thumbnail_url": "https://gradivo.jknm.org/f6742901-03ec-4bf6-a99d-2dd9b0968f61/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 238,
+    "article_id": "1e985840-56b4-4327-80f8-81cf61a91583",
+    "title": "Ogled Ajdovske jame pri Krškem",
+    "thumbnail_url": "https://gradivo.jknm.org/36093c9d-49d9-4f4c-a4b8-d74adeea443f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 241,
+    "article_id": "f96a6a6a-a13a-497e-8c56-ed16a8ba8f2a",
+    "title": "Kristali, stebri, jezero, Hinje …",
+    "thumbnail_url": "https://gradivo.jknm.org/33ff3a9b-8c66-41d0-bef3-2abebab93735/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 242,
+    "article_id": "575e0ce9-c063-457c-85fe-ee4f72e5b7e7",
+    "title": "V kateri jami tiči Zajc?",
+    "thumbnail_url": "https://gradivo.jknm.org/4208a155-176e-4b22-8ca8-f3149be059df/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 243,
+    "article_id": "2339b069-f055-4c15-ab8a-45d04ea8e3dc",
+    "title": "Jubilejni obisk v Kostanjeviški jami",
+    "thumbnail_url": "https://gradivo.jknm.org/13bd33a4-9ac6-45af-a651-d26e572b852c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 244,
+    "article_id": "9ec6a237-e6d7-4f78-ba30-0a7d1f2b12a6",
+    "title": "Mišnice",
+    "thumbnail_url": "https://gradivo.jknm.org/9bfe63d2-5967-4454-9b87-b7bcb36657c8/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 245,
+    "article_id": "90859cfd-eb80-4bd2-9af6-6db9436e370f",
+    "title": "Mišnice [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/7eb3a97e-8825-43c4-9922-d556749fc705/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 246,
+    "article_id": "5016e0f5-a639-4ef0-91b7-7f9507728241",
+    "title": "Člani JKNM na izpitu JZS v Domžalah",
+    "thumbnail_url": "https://gradivo.jknm.org/ffc099c6-3947-44c2-b74e-52e02eb26752/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 247,
+    "article_id": "896c102c-ce70-4d03-8012-4e3e78dcffeb",
+    "title": "V Veliki Vratnici",
+    "thumbnail_url": "https://gradivo.jknm.org/927865ce-8d6e-4f67-9ecc-635997a3d154/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 248,
+    "article_id": "0484a4b0-c5d3-4e6c-b6de-5d8c8d5bd372",
+    "title": "Polšna v križišču",
+    "thumbnail_url": "https://gradivo.jknm.org/c197e0c0-aeff-4c0f-969a-213c99acf238/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 249,
+    "article_id": "eef785f5-6902-49c6-b190-5124990fa547",
+    "title": "Čiščenje Hudičeve jame",
+    "thumbnail_url": "https://gradivo.jknm.org/a20716ff-a48c-4e17-9d10-8abe144fb4e0/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 250,
+    "article_id": "f7b00770-4660-48e5-aec8-8215ab0bf505",
+    "title": "Pokončno in globoko v letu 2012",
+    "thumbnail_url": "https://gradivo.jknm.org/6e1965c6-ad90-4635-a75e-dcfff5c9b264/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 251,
+    "article_id": "c4f16e2b-4bbe-4afe-8bcc-2d0932d3bd0d",
+    "title": "Prva letošnja",
+    "thumbnail_url": "https://gradivo.jknm.org/515eaf41-64ed-408d-91a0-9fde788dbc43/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 252,
+    "article_id": "f09ea407-667f-4da2-8940-45cc23668e18",
+    "title": "Čaganka (še) ne da!",
+    "thumbnail_url": "https://gradivo.jknm.org/b5c40894-0bd1-4b79-9937-a9875c89660b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 253,
+    "article_id": "599c1f41-55bb-4ff8-9159-516228b91052",
+    "title": "Veš, Mirnopečan, svoj dolg?",
+    "thumbnail_url": "https://gradivo.jknm.org/1f5aef5e-a9aa-45d5-90a6-a9f3505909a5/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 254,
+    "article_id": "9d848c9a-d555-4e33-8df7-383d476b98cf",
+    "title": "Čaganka - nov rekord je 278 m",
+    "thumbnail_url": "https://gradivo.jknm.org/8693699c-9833-4e10-822d-87c45f1ccaa2/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 255,
+    "article_id": "2b55c560-bf10-49a5-89c1-1c70cf91dc68",
+    "title": "Mišnice [3]",
+    "thumbnail_url": "https://gradivo.jknm.org/61482cbe-a679-4fb9-b852-377a58334633/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 239,
+    "article_id": "22f7d623-8e7f-4be2-b8f4-2b13c1df9096",
+    "title": "Dva polčasa v Velikem vrhu",
+    "thumbnail_url": "https://gradivo.jknm.org/b2289dee-ac94-45c0-95e4-8499271a5ea1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 265,
+    "article_id": "39356dd8-4fa9-40a0-b7bc-588cc9962121",
+    "title": "Začetek tečaja za jamarja pripravnika",
+    "thumbnail_url": "https://gradivo.jknm.org/05179970-6bc6-4e2c-a20f-842d772eab2c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 266,
+    "article_id": "73693c5f-06f8-425e-a3fe-bf3063dcbff7",
+    "title": "Čaganka - jamarski tabor 2012",
+    "thumbnail_url": "https://gradivo.jknm.org/f628c615-2170-4711-b625-588c52099264/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 267,
+    "article_id": "350eaed3-28c3-4ee4-a4d2-92afcd2e0722",
+    "title": "Jame v industrijski coni Mirna Peč",
+    "thumbnail_url": "https://gradivo.jknm.org/ee44e120-7df6-455b-860e-eee77e878ccb/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 268,
+    "article_id": "1c7482e2-c116-4fae-a4aa-c881986bb856",
+    "title": "Korita nad Dobrničem: širjenje vhoda v izvirno jamo",
+    "thumbnail_url": "https://gradivo.jknm.org/865a30c9-6630-4aa7-a31f-5180fb876c69/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 269,
+    "article_id": "22585c8f-70bd-48a2-99e5-92d02594eb4d",
+    "title": "Uspešno pri Hinjah",
+    "thumbnail_url": "https://gradivo.jknm.org/10a3143f-0359-45bc-a83b-330406b9ce78/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 270,
+    "article_id": "b1a26d4d-48e6-4c3c-8334-86594077365e",
+    "title": "Kačna jama",
+    "thumbnail_url": "https://gradivo.jknm.org/755e4f0f-ab67-4ec4-ad12-a8578f436aab/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 271,
+    "article_id": "8371feb8-7afb-4b05-b3a5-ebdd928d40ca",
+    "title": "Ogenj na Pajkežu",
+    "thumbnail_url": "https://gradivo.jknm.org/f03278da-2b4e-4cab-922b-104ddd3b384c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 272,
+    "article_id": "d80ab550-a6b2-46e5-87c8-adce89c89451",
+    "title": "Čaganka - nikoli dokončana zgodba",
+    "thumbnail_url": "https://gradivo.jknm.org/a2f98bdb-2807-4d1c-9bbe-f96f72cddc26/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 273,
+    "article_id": "3efc5075-215b-42ae-830b-21f8a58d150d",
+    "title": "Odprtje foto razstave v Mirni Peči",
+    "thumbnail_url": "https://gradivo.jknm.org/288bcfe7-542b-445b-aaa6-41768e84cc7d/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 274,
+    "article_id": "417c372c-261b-4f2f-af5b-573d36a6e5d1",
+    "title": "Mačkić kamen v BiH [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/6eb2fd79-188a-4864-a462-6f391fbf2cec/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 275,
+    "article_id": "23287843-395f-411e-8275-687ef7ab92c8",
+    "title": "Čaganka - izmerjena rekordna globina",
+    "thumbnail_url": "https://gradivo.jknm.org/cda86377-fcdb-432e-b70f-63421927c5b3/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 276,
+    "article_id": "6d045947-cedc-444c-ba2a-3e99b26e2e3e",
+    "title": "Kanin 2012 ali \"najprej gor, potem dol\"",
+    "thumbnail_url": "https://gradivo.jknm.org/fb8065b4-caaa-4d9a-aa2f-819b3f2996b9/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 277,
+    "article_id": "93bad7d0-2b87-4719-a75b-0a72f060e326",
+    "title": "Pri Borovcu na Kočevskem",
+    "thumbnail_url": "https://gradivo.jknm.org/396d9727-ecbd-4c80-8841-e005e3c84aa6/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 264,
+    "article_id": "7c9c3d66-9201-48fd-9cee-439233701946",
+    "title": "Jamarski tečaj 2012",
+    "thumbnail_url": "https://gradivo.jknm.org/d02694c2-4bff-43c2-b637-6d2c67b0a115/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 279,
+    "article_id": "1ca8dc37-8447-441d-8354-095e5470edbf",
+    "title": "50 let JKNM - iznos vina Jamski Zajc iz Čaganke",
+    "thumbnail_url": "https://gradivo.jknm.org/31f12f34-b38a-4309-a02b-eb3eedad6c27/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 297,
+    "article_id": "764cf164-3505-494e-8d1b-82b18e7985bd",
+    "title": "Moj dihalnik zopet zadihal",
+    "thumbnail_url": "https://gradivo.jknm.org/7b8d4f54-18a3-4b56-9e6d-a864195804c0/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 299,
+    "article_id": "c065fc68-fc99-4961-b5da-887ffe0568ed",
+    "title": "Ob koncu sveta v pekel",
+    "thumbnail_url": "https://gradivo.jknm.org/7ded0af7-7b34-4c9d-860d-74a083954787/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 300,
+    "article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
+    "title": "Publikacije Dolenjski kras",
+    "thumbnail_url": "https://gradivo.jknm.org/502347ed-8e58-470e-8e3d-e6487082e298/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 301,
+    "article_id": "509ea910-d67a-4e28-bc99-03a9918ed4d8",
+    "title": "Čaganka - odplaknjen tabor",
+    "thumbnail_url": "https://gradivo.jknm.org/b8bbb3ba-5b36-41a2-9550-d82793229861/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 303,
+    "article_id": "e0906bcb-58fd-44cd-a08a-bc35d64cbce6",
+    "title": "Občni zbor 2012",
+    "thumbnail_url": "https://gradivo.jknm.org/af625850-62ef-495f-bafe-2af70dbd7374/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 306,
+    "article_id": "810c4778-5888-48af-ac1d-f835ef3ab831",
+    "title": "Stairway to Heaven – prva pripravljalna akcija",
+    "thumbnail_url": "https://gradivo.jknm.org/6d2f6f2b-009e-442e-b49f-2f93af57f992/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 307,
+    "article_id": "42ed076e-5918-4013-9674-b27038e851b4",
+    "title": "Občni zbor JZS",
+    "thumbnail_url": "https://gradivo.jknm.org/d77b52d1-6071-4c4b-90fb-8a1ee3a32e8b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 464,
+    "article_id": "c2fe9c8c-6b5d-4270-b852-4be298f219ad",
+    "title": "Ebenthal - merjenje in fotografiranje",
+    "thumbnail_url": "https://gradivo.jknm.org/e7cbf7d0-3fc5-47f5-b637-acb09fdeeef1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 473,
+    "article_id": "a3fea467-7297-424e-9452-3b5d8302aace",
+    "title": "Dnevi varstva pred snežnimi plazovi",
+    "thumbnail_url": "https://gradivo.jknm.org/64716810-4e1c-4a9c-a447-5653e181ed1e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 474,
+    "article_id": "6d718837-c9eb-4130-9658-4a83148434f2",
+    "title": "Poročilo o delu kluba za leto 2016",
+    "thumbnail_url": "https://gradivo.jknm.org/5d4314c8-a4d6-4d51-bf90-25c3c797f538/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 475,
+    "article_id": "9cff5458-1129-48ad-afe3-33d1a51a1e66",
+    "title": "Čaganka - Južni rov še ni končan",
+    "thumbnail_url": "https://gradivo.jknm.org/7e475488-116c-41f8-9ff0-90e9bd1ac386/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 298,
+    "article_id": "532ed555-11c2-4046-b44f-d687c92c9db2",
+    "title": "Dan varnosti in tehnike 2012",
+    "thumbnail_url": "https://gradivo.jknm.org/2ff1dd2a-605f-4e11-b423-6eab5dd6cfcb/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 302,
+    "article_id": "cc8b5025-e2d8-4f8f-8d36-456c12725b67",
+    "title": "Nova jama pod Grč vrhom",
+    "thumbnail_url": "https://gradivo.jknm.org/b46aa4cc-1ff3-4b42-af7b-853c7dd63e2a/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 304,
+    "article_id": "d4db564c-4c43-4ad9-90f3-bccf1f0907a8",
+    "title": "Kaj skriva Jama pod železniško postajo?",
+    "thumbnail_url": "https://gradivo.jknm.org/f69e0cc6-297a-4370-8b55-aadea2b6e851/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 463,
+    "article_id": "71f5ebf4-b77d-4824-861b-83716b261f6b",
+    "title": "Čaganka - kamin Game Over",
+    "thumbnail_url": "https://gradivo.jknm.org/0ef5df4f-120e-450b-b74c-92edaa7730be/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 308,
+    "article_id": "233f907e-b4f6-48a5-b2f0-646b11d60ee2",
+    "title": "Trening v Malisnici",
+    "thumbnail_url": "https://gradivo.jknm.org/41ce849d-dfd8-41d4-8365-fdf8d9909af0/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 311,
+    "article_id": "f4a45196-63e5-4580-8c8d-d68e4b51f609",
+    "title": "Mala jazbina – kronologija raziskav",
+    "thumbnail_url": "https://gradivo.jknm.org/35c066f7-1b97-4d9f-8980-ae120584dca5/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 312,
+    "article_id": "a7b4b11c-053e-4812-a663-bf93e66ed0cc",
+    "title": "Udora ob avtocesti",
+    "thumbnail_url": "https://gradivo.jknm.org/877f73e3-c99b-415e-95d8-b41030af1102/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 313,
+    "article_id": "8b96de92-7903-45e7-a7d3-009ea8c6bdf0",
+    "title": "Lurška jama pri Sevnici",
+    "thumbnail_url": "https://gradivo.jknm.org/dbe92a8a-d19a-4962-a111-3d7165d0d123/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 314,
+    "article_id": "86399e13-42d0-4585-8b60-2190ea5161b9",
+    "title": "Izvir Minutnik na Gorjancih",
+    "thumbnail_url": "https://gradivo.jknm.org/e3db3391-a4cd-419e-82d1-045af092b3b0/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 315,
+    "article_id": "aa3d8856-f499-4836-a8bc-d336a1268ad5",
+    "title": "Tečaj JRS v Gorjah",
+    "thumbnail_url": "https://gradivo.jknm.org/8693933b-bb23-4533-868c-3d64117986fa/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 316,
+    "article_id": "466bdc99-80cd-45ff-8bab-6f60a767b91b",
+    "title": "Židovec ponovno preseneča",
+    "thumbnail_url": "https://gradivo.jknm.org/2b61678e-c6ab-4d70-8578-0ac129364081/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 317,
+    "article_id": "8c789a06-17a8-4c9c-8b97-e84f83d66e75",
+    "title": "Na Kočevskem Rogu",
+    "thumbnail_url": "https://gradivo.jknm.org/47748751-d7a5-429e-a8e9-a38ea240d8bf/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 318,
+    "article_id": "0be30cd6-621f-4c9e-bbaa-23bca45f4be2",
+    "title": "Nove jame na Radohi",
+    "thumbnail_url": "https://gradivo.jknm.org/1ce5d3c6-7532-47bb-acca-5074569a5b17/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 320,
+    "article_id": "f48c0d96-e6cf-4d27-836a-1dc5a03af345",
+    "title": "Zaključek tečaja in izpiti Jamarske reševalne službe",
+    "thumbnail_url": "https://gradivo.jknm.org/c3e87ffd-a719-402d-b3c3-d7faca6cbdea/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 495,
+    "article_id": "8e4b8c07-c9f4-4a74-abb1-725814d49a6f",
+    "title": "V iskanju monolister",
+    "thumbnail_url": "https://gradivo.jknm.org/52ab694e-39f8-4869-b730-c0e73e8946b0/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 321,
+    "article_id": "3c9a9412-fbd1-47cd-9ac2-e7ca4e571bd1",
+    "title": "Uspešno na Rogu",
+    "thumbnail_url": "https://gradivo.jknm.org/dd312dc1-f81c-49b8-bada-8b5f025f7443/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 323,
+    "article_id": "c717f281-725e-47b9-952f-bdbcdd0975c1",
+    "title": "Predstavitev kluba v Mirni Peči",
+    "thumbnail_url": "https://gradivo.jknm.org/265b3552-c854-4201-b698-405b4bc1e498/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 324,
+    "article_id": "7a70083e-654c-4788-9e6d-f2cd89ff7ec8",
+    "title": "Ponovno na Kočevskem",
+    "thumbnail_url": "https://gradivo.jknm.org/525ce82e-0094-430a-a8c7-c3362f330a73/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 325,
+    "article_id": "e0a34935-1d56-4f14-a7ee-2f919b4da6be",
+    "title": "Čaganka - dol in nazaj v očeh biologa",
+    "thumbnail_url": "https://gradivo.jknm.org/f6da9db8-f46e-4c07-a442-cc20df80eff4/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 326,
+    "article_id": "b57f5fd2-5236-49a8-97a7-71e4262502ca",
+    "title": "Nova jama pri Žvirčah",
+    "thumbnail_url": "https://gradivo.jknm.org/1097dba4-6f48-42cf-b777-9260ce554301/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 327,
+    "article_id": "31b07acb-236a-446c-b9f3-43935b4d6024",
+    "title": "Kanin 2013",
+    "thumbnail_url": "https://gradivo.jknm.org/bc1daa56-1968-4576-bf08-810034fc6786/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 328,
+    "article_id": "0a317aa5-bc0d-4f4f-9d38-05952b1382e8",
+    "title": "Čaganka - dan zmage na globini 350 m",
+    "thumbnail_url": "https://gradivo.jknm.org/33c292c4-9d23-4af3-b3de-165edd7e3b29/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 329,
+    "article_id": "a82e6447-4501-48bb-a29e-e0d08b0aa04b",
+    "title": "Kočevski rog: sva bila uspešna?",
+    "thumbnail_url": "https://gradivo.jknm.org/fc2066d7-dcdb-4b23-8148-cf7ea086d6ec/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 330,
+    "article_id": "72bc2051-3879-4e0e-b7cd-3eeefcd02241",
+    "title": "Huda luknja",
+    "thumbnail_url": "https://gradivo.jknm.org/b6640d51-69b1-4456-af12-8d2dd32b5940/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 331,
+    "article_id": "31bb782e-206c-460c-9af6-162f994001fa",
+    "title": "Nova krasotica na Poljanski gori",
+    "thumbnail_url": "https://gradivo.jknm.org/280421e6-8dd0-4e47-a5c5-3683cf4b327b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 332,
+    "article_id": "1ff77f99-21cd-491d-bcb1-15d7f035c83a",
+    "title": "Iskalna akcija na Straškem hribu",
+    "thumbnail_url": "https://gradivo.jknm.org/e75926ec-4ddf-469f-97c4-824f437d9cfe/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 584,
+    "article_id": "5ab7b1c7-63f0-40b3-abaa-68e0acd15297",
+    "title": "Jelenov hodnik",
+    "thumbnail_url": "https://gradivo.jknm.org/63de69ca-57ae-44f0-b81f-b0d65b3e9f86/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 585,
+    "article_id": "fdf26064-adcf-4b52-9023-dcc6445d8e8a",
+    "title": "Jamarski tečaj 2021 - od stropa do tal in nazaj",
+    "thumbnail_url": "https://gradivo.jknm.org/fab7910a-8b8b-4ed0-8db9-b38fc66e2c43/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 586,
+    "article_id": "712938c2-3a94-43e7-a3e5-be105e759bb1",
+    "title": "Jamarski tečaj 2021 - Jelenov hodnik",
+    "thumbnail_url": "https://gradivo.jknm.org/4867e41c-86cd-4506-abc7-c527c4d5f7ea/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 587,
+    "article_id": "56565c2c-df9b-43fd-a685-c03c75d3c60a",
+    "title": "Jamarski tečaj 2021 - izkušnja, ki se ne pozabi",
+    "thumbnail_url": "https://gradivo.jknm.org/880fcaf8-5d7c-4463-ac99-875332e8763f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 588,
+    "article_id": "27bbfbf3-1b87-47c0-a747-d2890e4349c2",
+    "title": "Jamarski tečaj 2021 - klubski izpiti in Čaganka",
+    "thumbnail_url": "https://gradivo.jknm.org/7ecaba67-1ba6-433d-94c1-0722a373642b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 589,
+    "article_id": "b9419a7a-40b0-4946-8ab1-88d08dd6dbb8",
+    "title": "Ajdovska jama - odprt vstop v vodni rov",
+    "thumbnail_url": "https://gradivo.jknm.org/df583b78-09b7-43b8-b173-ddd7ca4e1b19/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 333,
+    "article_id": "2de5b285-65a9-4b24-902c-b894db77f1c1",
+    "title": "OŠ Bršljin v Lukenjski jami",
+    "thumbnail_url": "https://gradivo.jknm.org/82aeb693-b6ed-4421-b9f7-b4968162cb75/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 336,
+    "article_id": "133f611d-de51-41d8-b0b3-d647ab70e52c",
+    "title": "Nova brezna v Jelendolu",
+    "thumbnail_url": "https://gradivo.jknm.org/59cf3058-9d76-4ad4-bd9c-e311623f512a/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 341,
+    "article_id": "a4521ae9-8163-47f4-b6aa-954b543983b1",
+    "title": "Nekaj drobnih iz Kočevskega Roga",
+    "thumbnail_url": "https://gradivo.jknm.org/6fae8b47-c09d-495b-ab8a-16693252275f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 342,
+    "article_id": "b63d8358-f3f8-43f1-b5f0-7374bd104546",
+    "title": "Pomoč planincem pri postavitvi ferate",
+    "thumbnail_url": "https://gradivo.jknm.org/3f920b42-92cc-486f-9663-c4b461bf635d/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 344,
+    "article_id": "a0c33c8a-dcd0-4c31-99db-8950205053a1",
+    "title": "Čaganka - ali je res blatna?",
+    "thumbnail_url": "https://gradivo.jknm.org/a653dbdb-1d0a-4604-add1-da2c8264032d/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 345,
+    "article_id": "786721f7-7480-4fe4-8d62-50eb0e3253d2",
+    "title": "Ponikve",
+    "thumbnail_url": "https://gradivo.jknm.org/dbf7832e-131b-4327-9d75-79b53a98865f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 346,
+    "article_id": "e5fb6446-c023-4d98-b6b2-713434c37345",
+    "title": "Bosna decembra 2013",
+    "thumbnail_url": "https://gradivo.jknm.org/ae3b5490-dabd-448c-916d-2ba960315798/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 347,
+    "article_id": "f1eec447-c135-4dde-886c-4927a825adb4",
+    "title": "Zaključek \"podgurske skupine\"",
+    "thumbnail_url": "https://gradivo.jknm.org/9c64259d-8283-490f-bc59-d58c72a80ca9/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 348,
+    "article_id": "8d7b5aa2-ae18-40e7-bd73-7e8afae827de",
+    "title": "Čaganka – šiba proti 400 m",
+    "thumbnail_url": "https://gradivo.jknm.org/fc67c666-b4d2-4a10-bafb-8b0fdc5a4fe2/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 349,
+    "article_id": "5aad1815-9b1e-4c27-ae2d-04bfba57fab0",
+    "title": "Čaganka – rekordnih 400!",
+    "thumbnail_url": "https://gradivo.jknm.org/4dce5e9e-76d8-405f-bd3d-ff33e950440a/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 350,
+    "article_id": "158d61f0-046f-4ffc-ab03-036a91ee4484",
+    "title": "Kotarjeva prepadna ali po sigi navzgor",
+    "thumbnail_url": "https://gradivo.jknm.org/0e8f1301-9f36-4507-bcd4-98dc9c7a60ed/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 352,
+    "article_id": "8d5c85bc-5746-42c1-b4b0-4efb31961b98",
+    "title": "Na Jazbecu",
+    "thumbnail_url": "https://gradivo.jknm.org/b6b8df25-f47f-40c6-a43d-b5f157fdf0dd/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 353,
+    "article_id": "c07d6bab-73a6-46c8-bb1a-9ef55af2c050",
+    "title": "Kaj skriva Jama pod železniško postajo? [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/3a4f19ba-0b95-46f8-87df-2233f3709908/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 354,
+    "article_id": "cc501562-e78a-4d27-8848-67679faf5bf0",
+    "title": "Mraznica alias Štorovka",
+    "thumbnail_url": "https://gradivo.jknm.org/f2598928-69ab-4b09-8006-9dccd699cba0/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 355,
+    "article_id": "94050c32-2f80-461e-81ed-13229dac7a1c",
+    "title": "Prijetno s koristnim",
+    "thumbnail_url": "https://gradivo.jknm.org/63dbe1b8-b2e2-4316-aaa6-0ea4e2b7db34/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 357,
+    "article_id": "458ef68d-d013-469c-8f5c-803896b773fc",
+    "title": "Slugova jama je očiščena",
+    "thumbnail_url": "https://gradivo.jknm.org/22f196b5-7db3-406a-ba6a-ffc0bcd235df/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 359,
+    "article_id": "11f37e42-31a0-4a9f-a638-87c18fc7a0cb",
+    "title": "Dobrniška akcija",
+    "thumbnail_url": "https://gradivo.jknm.org/a575b40e-5f69-476c-af74-128c9cf2d70f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 360,
+    "article_id": "63362626-4388-4032-a56d-c75de52dfc7d",
+    "title": "Čaganka - tabor 2014",
+    "thumbnail_url": "https://gradivo.jknm.org/ea70315b-cb09-4765-a075-83f7d7ba8926/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 361,
+    "article_id": "e6113744-3e08-4c98-90ed-82ca258c7b9e",
+    "title": "Čaganka - nova odkritja proti 450 m",
+    "thumbnail_url": "https://gradivo.jknm.org/da4f2ced-b2ca-4cc6-80e5-f9c4c331ad8b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 362,
+    "article_id": "1bc0aeb6-d101-498b-8aea-9daaf1d09fd7",
+    "title": "Firecombat 2014 v Žužemberku",
+    "thumbnail_url": "https://gradivo.jknm.org/38e17434-1eed-4e3a-84f7-27fe57d93557/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 363,
+    "article_id": "6b8380a6-fa9b-4574-ac69-856bca1b491a",
+    "title": "Jamarski izpiti",
+    "thumbnail_url": "https://gradivo.jknm.org/04e332b7-9e93-4a3b-aa8e-fd5700806d76/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 366,
+    "article_id": "3628d118-7646-4791-a537-189a5150cecd",
+    "title": "Dan doživetij v Županovi jami 2014",
+    "thumbnail_url": "https://gradivo.jknm.org/12611d6d-a875-476c-9b86-dca134e1408d/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 367,
+    "article_id": "87098a3c-d75b-46ad-81b9-b6b123293b63",
+    "title": "Novim izzivom naproti",
+    "thumbnail_url": "https://gradivo.jknm.org/7118cbd2-f6fd-443c-afe4-679f05be2d13/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 390,
+    "article_id": "9e3d55b1-a547-4f30-b0b0-aba57a558b76",
+    "title": "Zaletavček",
+    "thumbnail_url": "https://gradivo.jknm.org/be097bd4-f8de-489d-8c4f-b6eb4f0e72cb/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 368,
+    "article_id": "aae78206-222e-4f4e-9139-33ad42df9ca3",
+    "title": "Čar neznanega",
+    "thumbnail_url": "https://gradivo.jknm.org/3d3efc36-81da-472c-b475-87d2fff6f83c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 369,
+    "article_id": "9d7955c9-631a-4c22-8262-3dc4c7c072a8",
+    "title": "Obisk Brezna na Leški planini",
+    "thumbnail_url": "https://gradivo.jknm.org/fd01f979-8779-41b4-b2ab-a864d8ebd7c9/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 370,
+    "article_id": "453da038-cf76-4338-95de-fc9dd49cec59",
+    "title": "Čaganka - soteskanje",
+    "thumbnail_url": "https://gradivo.jknm.org/fa112e39-b7ae-4208-98ca-f67a3ef1eead/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 371,
+    "article_id": "36548b68-4b59-4678-ad47-14bc5c288ace",
+    "title": "Kanin 2014 [prvič]",
+    "thumbnail_url": "https://gradivo.jknm.org/93488f89-d666-4a54-9eba-3c5044f9728f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 372,
+    "article_id": "f2b12708-32f3-43c3-a6dc-a367eea2850b",
+    "title": "Jamarska odprava Črna gora 2014",
+    "thumbnail_url": "https://gradivo.jknm.org/5f64f73c-6021-4d14-98d8-f293dc3ccff2/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 373,
+    "article_id": "61f7cadd-8987-4d3c-b3b7-f7b27bc26e6f",
+    "title": "Kanin 2014 [drugič]",
+    "thumbnail_url": "https://gradivo.jknm.org/62b424f6-0be6-4775-a12e-e2f3327a2d07/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 374,
+    "article_id": "3ff1dd3d-e374-4c42-82f4-4c84c0792ddd",
+    "title": "Pogana jama na Gorjancih",
+    "thumbnail_url": "https://gradivo.jknm.org/446f9a93-9a92-4d46-a197-42c63fc90c59/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 375,
+    "article_id": "f5170552-cdca-49e9-968a-202ebd7d0212",
+    "title": "Jama Velika peč",
+    "thumbnail_url": "https://gradivo.jknm.org/bbde703e-b143-47c3-add6-a54a8e505d0e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 376,
+    "article_id": "b4096683-2396-4ac5-aaa8-c5f03087e010",
+    "title": "Brestanka",
+    "thumbnail_url": "https://gradivo.jknm.org/b9ce4fc9-6ae3-46c3-aa27-1124d9a4fbb3/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 377,
+    "article_id": "4a76aa54-08ee-454c-abd8-c83548c89417",
+    "title": "\"V dolini tihi\" v Slugovi jami",
+    "thumbnail_url": "https://gradivo.jknm.org/6298c625-4de6-4e0e-9f24-5aaada670b03/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 378,
+    "article_id": "c2d951ac-6cac-4164-9924-fd5b42faf067",
+    "title": "Čaganka in 19 jamarjev",
+    "thumbnail_url": "https://gradivo.jknm.org/6148f3ba-9c63-4979-9146-71df189a97df/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 379,
+    "article_id": "ffa0a47d-08f3-460b-8c5d-11d96db83765",
+    "title": "Skrivnost v jami Bajonetka na Kočevskem Rogu",
+    "thumbnail_url": "https://gradivo.jknm.org/6aace58a-b61f-41f8-b153-bff3b0815db2/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 380,
+    "article_id": "969e04f1-b18e-47c0-8fc0-3b0fd1ccc360",
+    "title": "Suša",
+    "thumbnail_url": "https://gradivo.jknm.org/56a2bf67-e35b-4bfb-89f4-569e2eb0cb1e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 381,
+    "article_id": "bb5509dd-3a1b-4257-92bf-4a987ce84fdf",
+    "title": "Mačkić kamen, Ovčara in Malo Očijevo 2014",
+    "thumbnail_url": "https://gradivo.jknm.org/bbd5cf96-ed14-47f2-8a08-4b0ec2f91518/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 382,
+    "article_id": "1e1ed7b8-4a0a-4d6e-9b10-153f14adc48c",
+    "title": "Interaktivna predstavitev jamarstva v Ajdovski jami",
+    "thumbnail_url": "https://gradivo.jknm.org/9f66bed7-b39d-4ec9-98c6-eb1556ed800b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 383,
+    "article_id": "feec9525-d87d-4d19-b0ae-c444c20aea25",
+    "title": "Čaganka - trojček akcij",
+    "thumbnail_url": "https://gradivo.jknm.org/d2dbc884-2cf3-4533-9908-8424f51c81db/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 384,
+    "article_id": "a5977317-ee3a-41de-9961-6dc6271a1726",
+    "title": "Zaključek jamarskega leta 2014",
+    "thumbnail_url": "https://gradivo.jknm.org/a97daabe-2999-4862-807c-a1896bd92b4e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 385,
+    "article_id": "8ae118f1-5a19-4742-818c-3ee5060db547",
+    "title": "Jamarjenje nad Semičem",
+    "thumbnail_url": "https://gradivo.jknm.org/3d849bca-03d0-4cc4-bb7b-38244caf22cc/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 386,
+    "article_id": "fe374d90-386d-4c68-8fb2-c52399961817",
+    "title": "Čaganka - praznični teden",
+    "thumbnail_url": "https://gradivo.jknm.org/ca6bc610-371a-4dfb-8ebf-4d77352c82bd/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 388,
+    "article_id": "4f54493c-5655-444c-8634-6ce1693703ec",
+    "title": "Čaganka - predstavitev v Bistrici",
+    "thumbnail_url": "https://gradivo.jknm.org/8a5eb012-a010-4bf1-96a8-2f8c63bb05a3/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 389,
+    "article_id": "5abe722c-bca3-4b69-8158-95a977ecf54f",
+    "title": "Kratka iz Viharnika",
+    "thumbnail_url": "https://gradivo.jknm.org/d6a390e4-f82c-4600-8415-17432929b005/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 404,
+    "article_id": "5e52e62a-3eda-4247-abe4-667fc97e5409",
+    "title": "Kanin 2015 – Vstala Primorska",
+    "thumbnail_url": "https://gradivo.jknm.org/1b0d9545-416b-4c7a-8834-5d0cf4b07175/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 405,
+    "article_id": "d968c73b-1102-4ade-ac77-6f5c28e89172",
+    "title": "Kotel [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/546c46b4-72e9-4e89-880f-d93c9f3655a0/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 406,
+    "article_id": "7c02a591-bd15-4676-999a-9e9107bca537",
+    "title": "Mišnica - jama globlja za 28 m",
+    "thumbnail_url": "https://gradivo.jknm.org/52c82da7-1b7b-4453-8f71-ca4a181c4baf/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 407,
+    "article_id": "b3818568-01ff-40e4-b220-d150c58e769f",
+    "title": "Naravoslovni dan Globodolska dolina",
+    "thumbnail_url": "https://gradivo.jknm.org/e9f1cd51-5799-4dc4-8ee5-1eefa9e857f5/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 408,
+    "article_id": "97f78237-a005-4583-bbfb-90c041167ab5",
+    "title": "Rešujmo življenja 2015",
+    "thumbnail_url": "https://gradivo.jknm.org/029e6d76-196c-4b5e-872b-d498ed701754/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 409,
+    "article_id": "67c2e069-a9c2-411e-b13c-a7de3d5ddee9",
+    "title": "Reka Reka - za čas kosila",
+    "thumbnail_url": "https://gradivo.jknm.org/b7c4bbf6-1f08-41f5-aa8c-3b62b2a3e190/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 410,
+    "article_id": "ea7a2452-734d-4d3b-9385-8326cf6d3a25",
+    "title": "Mišnica - kam za vraga teče vsa ta voda?",
+    "thumbnail_url": "https://gradivo.jknm.org/bac1a93c-8b94-408b-ace6-e2b8816b57e1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 391,
+    "article_id": "a0f0545e-1dea-4661-bc0f-c020705b91a8",
+    "title": "Čaganka - fotografiranje na polno [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/ea4ae475-44d7-4eb3-9206-b97c516e1f33/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 393,
+    "article_id": "2cfc3328-f3e4-4ca0-a0d4-50f051e54d2e",
+    "title": "Odvodnica",
+    "thumbnail_url": "https://gradivo.jknm.org/3d97a636-0182-48d6-8ebb-65adf6280c68/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 394,
+    "article_id": "1b2db80b-666a-4d56-9f5a-dc424db23360",
+    "title": "Odvodnica [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/ea84a144-0ebe-472c-a990-0eda5a208f27/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 395,
+    "article_id": "1fd759ab-4c32-403b-8de3-9b31a8566fa2",
+    "title": "Jama preplašenega medveda",
+    "thumbnail_url": "https://gradivo.jknm.org/1172d643-d1aa-4d60-a67d-78dcdcf2bbc2/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 396,
+    "article_id": "97956b9d-b317-435a-a640-f1a6f84ddebb",
+    "title": "Odvodnica [3]",
+    "thumbnail_url": "https://gradivo.jknm.org/11f99e6e-8724-467c-a5b3-fc1864b888ba/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 397,
+    "article_id": "187577e5-20a9-4299-9de0-08660a95e52f",
+    "title": "Začetna srečanja s smetmi",
+    "thumbnail_url": "https://gradivo.jknm.org/eb02cce2-9a8e-4a8e-969f-e664769b82f3/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 398,
+    "article_id": "136a8cc4-3ad4-451c-bda9-a4e1d7bd9326",
+    "title": "Firecombat 2015",
+    "thumbnail_url": "https://gradivo.jknm.org/933ed558-58f1-4490-9d0e-d413bf7c0f8e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 399,
+    "article_id": "4a6e2110-9e18-4baf-af2e-23474dae0fe0",
+    "title": "Odvodnica [4]",
+    "thumbnail_url": "https://gradivo.jknm.org/4c4becef-9688-40e1-812c-76cc145892d2/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 400,
+    "article_id": "b0875bc5-7e8d-4dc1-80bb-79148e9fa630",
+    "title": "Čaganka – srbski obisk",
+    "thumbnail_url": "https://gradivo.jknm.org/61f617d7-41c9-47bb-81da-ac5475bf0e29/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 401,
+    "article_id": "a4800db2-a8b7-4ab3-93a6-6b76f0ec050e",
+    "title": "Kanin 2015 - avgustovski tabor",
+    "thumbnail_url": "https://gradivo.jknm.org/81ede424-c7a9-47fd-a23a-18d742eb50e6/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 402,
+    "article_id": "24af78e8-f903-488e-9a54-9ddbe5ce9648",
+    "title": "Mišnica - veliko čiščenje",
+    "thumbnail_url": "https://gradivo.jknm.org/2d65b564-6c12-49fe-9aa7-237637f7823c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 403,
+    "article_id": "38986270-789e-4cfc-91d2-87fc002d0c56",
+    "title": "Mišnica - veliko čiščenje [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/22dd8061-acf3-4251-843f-e94632655ffd/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 424,
+    "article_id": "0952b798-39a2-4888-a13d-f034da6855f0",
+    "title": "Jamarski tečaj 2016",
+    "thumbnail_url": "https://gradivo.jknm.org/3257d802-1df5-4431-8407-21c501091f59/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 425,
+    "article_id": "86901c23-97ab-44aa-a93c-637a2a4b1c78",
+    "title": "Mišnica - slap v podzemlje",
+    "thumbnail_url": "https://gradivo.jknm.org/c80305d7-461d-43af-bba3-62120adf438f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 426,
+    "article_id": "17e4cb4e-ca64-4051-9f4f-1704aae597e5",
+    "title": "Čaganka - Južni rov se upira",
+    "thumbnail_url": "https://gradivo.jknm.org/e72a376e-d4fa-4c76-858a-52f3a927abe1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 427,
+    "article_id": "5abc9ad8-1c14-406f-b95a-d87ea3872255",
+    "title": "Nagrada Plaketa z zlatim znakom za Borivoja Ladišića",
+    "thumbnail_url": "https://gradivo.jknm.org/094dbd91-d18d-4454-adfe-60ff93df6413/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 428,
+    "article_id": "18ece05c-c54d-4d6f-9a6c-9b339cb19882",
+    "title": "Velikonočni ponedeljek v Mišnici",
+    "thumbnail_url": "https://gradivo.jknm.org/a3dc1fdd-f4db-4fba-9126-264e22212cfd/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 429,
+    "article_id": "6b4bcf5e-3672-420d-af47-7b7d63488b66",
+    "title": "Romitovka",
+    "thumbnail_url": "https://gradivo.jknm.org/d28b5802-c524-4859-9618-4339669f616f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 430,
+    "article_id": "1b08db53-a82c-4db0-93f6-4abe16ef1fda",
+    "title": "Očistili smo Schaffeichloch",
+    "thumbnail_url": "https://gradivo.jknm.org/c68b20d2-a584-4729-8435-c53f94018c2f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 431,
+    "article_id": "b766a362-5eae-4ae6-b123-4b590870e6cc",
+    "title": "Čaganka - rudarjenje v Južnem rovu",
+    "thumbnail_url": "https://gradivo.jknm.org/b43aa14b-9dcc-4bc2-8018-60275f40f981/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 432,
+    "article_id": "4a216c7a-6511-4697-b7ce-27fc116965ec",
+    "title": "Novi jamarski tečajniki",
+    "thumbnail_url": "https://gradivo.jknm.org/313840c8-4424-4419-8cff-ba72cb3e1d7e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 433,
+    "article_id": "b5bab0e7-a18c-4591-b989-132eef013f11",
+    "title": "Jamarji pripravniki 2016",
+    "thumbnail_url": "https://gradivo.jknm.org/0905492e-8193-430d-84e1-51e31377a4f9/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 434,
+    "article_id": "a1a09e3d-9e28-4a90-b271-6413db564991",
+    "title": "Čaganka - prvomajsko jamarjenje z odličnimi rezultati",
+    "thumbnail_url": "https://gradivo.jknm.org/2b44f12c-77e1-490c-9ee1-f996ce3099c9/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 435,
+    "article_id": "d22cdb38-6b88-47d5-8f3c-8fbdc46b9076",
+    "title": "Čaganka - Južni rov in tlaka na dnu",
+    "thumbnail_url": "https://gradivo.jknm.org/29abde2a-7591-4194-a343-40768e91a03f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 436,
+    "article_id": "50b6e5c1-aae4-4c50-a72d-5ac2cf3cd41d",
+    "title": "Čaganka - ožičenje Južnega rova",
+    "thumbnail_url": "https://gradivo.jknm.org/4a054d92-1aff-4fc5-8b44-f797d17bab05/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 437,
+    "article_id": "3c3c079c-ab8d-4976-ae4f-f280840d8520",
+    "title": "Tečajniški obisk Pihalnika",
+    "thumbnail_url": "https://gradivo.jknm.org/599c7af3-beb0-4825-ae74-a0472ab4b662/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 438,
+    "article_id": "09ff3545-695b-4339-a3c5-1bc30d10cbbb",
+    "title": "Jojkinovac in Grmeč 2016",
+    "thumbnail_url": "https://gradivo.jknm.org/b4cffc4e-9546-4783-a856-641a427fe7c9/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 439,
+    "article_id": "48f2f505-7f7b-4a4a-b8b3-b27e0f18d65c",
+    "title": "Zipline za Zalo",
+    "thumbnail_url": "https://gradivo.jknm.org/b97ca6b5-07cf-43ad-a220-fde2c08b4dd5/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 440,
+    "article_id": "c502024b-291e-4ebf-babc-04d21fda7cd8",
+    "title": "Izpiti JZS",
+    "thumbnail_url": "https://gradivo.jknm.org/b9d7cf2b-bc0e-4c7e-b918-a9baa9e16919/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 442,
+    "article_id": "9edc3d1a-b60f-477b-af05-c8714c125e4d",
+    "title": "Cvingerska jama - čiščenje",
+    "thumbnail_url": "https://gradivo.jknm.org/757e1316-5382-4c54-84e4-7ca7bd2daccc/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 443,
+    "article_id": "f9af5b41-66f6-4fd2-9a0b-56fe4a91a2ee",
+    "title": "Jamarski potep po Kočevskem Rogu",
+    "thumbnail_url": "https://gradivo.jknm.org/25fe1c98-9e16-4e41-9470-93da5bd48ce1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 444,
+    "article_id": "75b4598a-ee57-4cc9-a44c-fb35af27afbb",
+    "title": "Jama pri pesi",
+    "thumbnail_url": "https://gradivo.jknm.org/8c732293-ff7e-471d-86d3-746cc1f100c5/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 445,
+    "article_id": "5b55c3c8-fb46-4429-9716-4b777b3ed507",
+    "title": "Kanin 2016",
+    "thumbnail_url": "https://gradivo.jknm.org/7220ef05-2105-4955-9067-f224300d8bc5/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 446,
+    "article_id": "f80d9aed-a16a-435d-b72c-7701b4f498e8",
+    "title": "Dan doživetij v Županovi jami 2016",
+    "thumbnail_url": "https://gradivo.jknm.org/4abc063d-2bee-4110-b9c8-a9d847254883/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 448,
+    "article_id": "de2fded5-7ee2-47c0-b04a-b1b8bb519a39",
+    "title": "Jamarski izpiti Krka 2016",
+    "thumbnail_url": "https://gradivo.jknm.org/9bfc8f69-2884-4282-a63c-d63d83bb5e23/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 449,
+    "article_id": "469fa2be-a562-4862-820b-3a5fbba9ab5b",
+    "title": "Čiščenje Male Stankove jame pri Šalki vasi",
+    "thumbnail_url": "https://gradivo.jknm.org/39f6cbce-e0e3-471d-93e0-106b4f46a1be/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 450,
+    "article_id": "4062bf16-daf2-4c47-be9c-e564672eaf2d",
+    "title": "Cvingerska jama - čiščenje [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/f43a9f7c-9cc1-4c8e-ba65-2b077795efc4/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 451,
+    "article_id": "b83c53a9-bf15-4dad-a5c4-7d539bbe931c",
+    "title": "Kofelca - nova 100 metrca",
+    "thumbnail_url": "https://gradivo.jknm.org/d9e29bbb-9cdb-4304-8c9e-79dc559c25d1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 452,
+    "article_id": "7848ec5b-f6bf-4241-97d5-65c983afe8f4",
+    "title": "Sistem Željnskih jam",
+    "thumbnail_url": "https://gradivo.jknm.org/8e76e5ea-42fb-4d5a-9c66-0558b8e181b0/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 453,
+    "article_id": "eae21716-1eab-415c-b0c4-759416d2b027",
+    "title": "Čolnarjenje v Jami pri gostilni",
+    "thumbnail_url": "https://gradivo.jknm.org/03933440-f7cd-4387-a92e-68db78e31217/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 454,
+    "article_id": "ce230bb3-da6d-46b1-845d-42e6a407d4dc",
+    "title": "V Velikem studencu pod Velikim Slatnikom",
+    "thumbnail_url": "https://gradivo.jknm.org/25b40189-ad69-40cc-adbc-327842a817d3/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 456,
+    "article_id": "d8e493c3-cae6-4e03-8b67-8330043a7f23",
+    "title": "Sedemstota jama",
+    "thumbnail_url": "https://gradivo.jknm.org/2484771e-0eb0-4b4f-8b42-b7fde64d4a2f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 457,
+    "article_id": "296b64db-17e8-47f4-b812-02c2a8b79d54",
+    "title": "Predstavitev jamarskih reševalnih tehnik",
+    "thumbnail_url": "https://gradivo.jknm.org/eb78b674-e85b-4afa-8c10-789b42abdc91/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 458,
+    "article_id": "2c967315-ee51-4445-8057-2bf219effbb3",
+    "title": "Kam teče Žibrščica?",
+    "thumbnail_url": "https://gradivo.jknm.org/c198c359-f5a3-4e02-8fe5-83e2bebf4326/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 459,
+    "article_id": "61a78933-dd33-4f78-93b8-40c900362ba2",
+    "title": "Čaganka - skoraj 700 m Južnega rova",
+    "thumbnail_url": "https://gradivo.jknm.org/77ec4130-e153-4865-ba04-1a7948d043f2/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 460,
+    "article_id": "bb894b4d-36f6-4c0b-ad5b-93aabe2e366f",
+    "title": "Čaganka - ujeta pijavka",
+    "thumbnail_url": "https://gradivo.jknm.org/b465a062-932f-4196-b304-d4bcee1fcc4e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 461,
+    "article_id": "bf255f6d-f5e4-4dc2-ad25-ecdf7be385a5",
+    "title": "Kanin 2016 - jesensko-zimska akcija",
+    "thumbnail_url": "https://gradivo.jknm.org/228255a8-8fc5-4163-b9c9-8855fe9cf7b9/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 462,
+    "article_id": "abd003fb-a8d7-4fbf-8862-d5999b4242be",
+    "title": "Po dveh letih ponovno Moj dihalnik",
+    "thumbnail_url": "https://gradivo.jknm.org/a9bd00ef-315a-4efb-a184-0d12be989cf2/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 447,
+    "article_id": "bca74c5b-5d4c-43ca-937c-83f0a2168124",
+    "title": "Zverinjačke rupe 2016",
+    "thumbnail_url": "https://gradivo.jknm.org/d0ae528f-f62f-4990-a608-94a37a88f4d7/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 477,
+    "article_id": "19bb2e43-b25d-430f-a81d-0fbdcd4668b3",
+    "title": "Jamarjenje v občini Ključ",
+    "thumbnail_url": "https://gradivo.jknm.org/8dd220db-2d59-498a-8272-96eba9779f5f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 478,
+    "article_id": "2b00c67d-61b0-476e-a6d6-36b5373dfdee",
+    "title": "Jama Müllerloch pri Livoldu je očiščena",
+    "thumbnail_url": "https://gradivo.jknm.org/39acb031-ff89-43d1-8599-8cc27f63ab0d/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 479,
+    "article_id": "084edede-52e2-4425-a198-1a87e9a9d807",
+    "title": "Čaganka - prvomajski tabor",
+    "thumbnail_url": "https://gradivo.jknm.org/d915b777-9059-452e-a0d6-6dbaf57abc3d/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 480,
+    "article_id": "7b9fbcd1-00a3-45f9-8e32-9ffc119ae83d",
+    "title": "Mednarodna jamarska odprava v Mehiki",
+    "thumbnail_url": "https://gradivo.jknm.org/a7d5b020-b587-4a71-8fc5-a3af368350b1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 481,
+    "article_id": "c6dc00d4-81d1-4509-beee-5b64fa410af3",
+    "title": "Zgodba o močeradovi družini",
+    "thumbnail_url": "https://gradivo.jknm.org/6abcdca7-1741-4670-b597-481a0290af4f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 482,
+    "article_id": "45b90c95-9b53-40d3-9dce-66913df50037",
+    "title": "Firecombat 2017",
+    "thumbnail_url": "https://gradivo.jknm.org/05998a3e-1c4c-450e-97d2-fbfd0a1a51a8/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 493,
+    "article_id": "64bef22c-e561-4d20-980d-551602d8ac92",
+    "title": "Dolenjski jamarski tabor 2017 ali recept za uspešno jamarsko srečanje",
+    "thumbnail_url": "https://gradivo.jknm.org/5c8eebd3-c7f5-471d-929d-c17c1e1f25da/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 484,
+    "article_id": "565842f2-d826-4c63-b88a-d791f7d308fd",
+    "title": "Novi jamarji in jamarji pripravniki v JKNM",
+    "thumbnail_url": "https://gradivo.jknm.org/51874f11-036c-4a31-8fb1-d71f288a1ae2/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 485,
+    "article_id": "55ba2970-cb0e-4740-ad62-be991e8873d9",
+    "title": "Grabčeva pečina na Hvaru",
+    "thumbnail_url": "https://gradivo.jknm.org/394d73e2-8b79-4b76-8a04-fbc58d419240/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 486,
+    "article_id": "117fc14b-4f3a-4071-98bc-ef3d7e977f60",
+    "title": "Čaganka - Povabilo na kavo",
+    "thumbnail_url": "https://gradivo.jknm.org/8778f534-6bb1-492d-ad12-89741ce41514/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 487,
+    "article_id": "892c6042-4e9e-4822-98b0-dbe6d7cd17ff",
+    "title": "Brezno na Pečki",
+    "thumbnail_url": "https://gradivo.jknm.org/43a102be-27e4-49aa-8f4b-358303e291d4/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 488,
+    "article_id": "ed50eb36-3c8a-4ab2-92cc-2f90a51f96bd",
+    "title": "Jama nad mostom v Vavti vasi",
+    "thumbnail_url": "https://gradivo.jknm.org/1657e3e9-a466-42d5-84bb-22598be5555f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 489,
+    "article_id": "129d5d48-1121-4840-980b-94eb12d0a8d6",
+    "title": "Drožanjska vodovodna jama",
+    "thumbnail_url": "https://gradivo.jknm.org/1040e01f-873e-47df-915e-d09b73c9ad54/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 490,
+    "article_id": "fd20eb3e-d838-4c91-b033-92c158bdb009",
+    "title": "Kanin 2017 – iskanje Rexija",
+    "thumbnail_url": "https://gradivo.jknm.org/e93c97b0-a620-405f-b4b6-debd6f0c7435/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 492,
+    "article_id": "70d08d3b-f1bf-4b6d-a89f-9fe1443903f4",
+    "title": "Cvingerska jama - čiščenje [3]",
+    "thumbnail_url": "https://gradivo.jknm.org/7c583ac7-b010-4f62-8d69-a5a67b83fd87/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 494,
+    "article_id": "6d96abfc-ee41-4c0a-a292-a40af5536c39",
+    "title": "Brezno pri Pogorelcu",
+    "thumbnail_url": "https://gradivo.jknm.org/c16bdf06-c9af-4a55-a7f4-9b0074d96252/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 496,
+    "article_id": "9551d08f-3c33-4e08-88c2-e3d4e3cdc150",
+    "title": "Jamarstvo tokrat malo drugače",
+    "thumbnail_url": "https://gradivo.jknm.org/9ceb0b42-94fe-40c6-890b-3b1c646d47e6/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 497,
+    "article_id": "ac2ebd47-3e61-4707-baf5-d8c3ea5d8b9f",
+    "title": "Jama pri Laščah",
+    "thumbnail_url": "https://gradivo.jknm.org/707c0832-d1dc-4296-a3b3-bd4398ee1de5/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 498,
+    "article_id": "ce602da2-1ac1-4f4f-8e40-d13982242314",
+    "title": "Naravovarstveni nadzor Eleonorine jame",
+    "thumbnail_url": "https://gradivo.jknm.org/ff62d081-31a0-40e9-bba4-9c6f5c653332/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 499,
+    "article_id": "417c13dc-d13b-4fb2-b528-3689b0ed9932",
+    "title": "Čaganka proti –500 m",
+    "thumbnail_url": "https://gradivo.jknm.org/c0999721-9414-4394-a985-62f60e3670ed/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 501,
+    "article_id": "ed7704a8-88ad-4891-a6c5-a3468a1bda24",
+    "title": "Ob 55 letnici kluba: pet plodovitih let",
+    "thumbnail_url": "https://gradivo.jknm.org/62e15293-7419-451e-977f-9e856635cf85/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 502,
+    "article_id": "6ac2dd6f-6897-489f-b4c0-7c7a0174982e",
+    "title": "Nevarnost zastrupitve z ogljikovim monoksidom v jamarstvu",
+    "thumbnail_url": "https://gradivo.jknm.org/16211a9f-59f4-4505-bae3-9c91bd8f6ce3/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 504,
+    "article_id": "e956dc08-b7ef-44e1-953a-eac381440de8",
+    "title": "Izšel je Dolenjski kras 7",
+    "thumbnail_url": "https://gradivo.jknm.org/cd8b6a5e-1d7c-4826-9b87-07b8f7bb0803/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 505,
+    "article_id": "efd1ef05-e262-4fec-8a0c-2c4353c0b3e0",
+    "title": "Ob Gračnici",
+    "thumbnail_url": "https://gradivo.jknm.org/0b341e37-228d-44d4-92c4-226af991a406/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 506,
+    "article_id": "21e94354-1911-4fad-afe9-7f4454db1c56",
+    "title": "Slovo od leta 2017",
+    "thumbnail_url": "https://gradivo.jknm.org/0e367d5b-4825-436d-8894-55f71f6628af/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 507,
+    "article_id": "d123daf1-5365-49ee-ab8d-4a2dca64a246",
+    "title": "Osemstota jama",
+    "thumbnail_url": "https://gradivo.jknm.org/666b8658-2796-4163-b02c-a97608223a17/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 509,
+    "article_id": "95f79ba6-6784-4a9b-9a23-11984ea843ba",
+    "title": "Tečaj za jamarske reševalce pripravnike",
+    "thumbnail_url": "https://gradivo.jknm.org/aa1afd8c-8ad5-4494-ba6a-509fb25879aa/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 510,
+    "article_id": "58fce142-9154-4760-9453-6aaf3595689b",
+    "title": "Srnice",
+    "thumbnail_url": "https://gradivo.jknm.org/c3dd3887-ea79-40a2-8dcd-44eb1b99f69f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 511,
+    "article_id": "b8fcc4ec-c79f-44e6-9f30-a0cd3fa3c7fb",
+    "title": "Kumrovo brezno na Daljnem Vrhu",
+    "thumbnail_url": "https://gradivo.jknm.org/6646cd98-93a7-47ef-b500-c2713d0d2b70/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 512,
+    "article_id": "d95edf30-9c16-4c5e-83bf-9d1018e13daa",
+    "title": "Jamarski tečajniki letnik 2018",
+    "thumbnail_url": "https://gradivo.jknm.org/57190080-069d-4dc8-b605-3ff5e183f268/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 513,
+    "article_id": "59da21ac-ede1-4420-bf10-d7493c98e619",
+    "title": "Prvomajski tabor Čaganka",
+    "thumbnail_url": "https://gradivo.jknm.org/ab4d2502-ba12-4f3c-8adf-24d69b29f280/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 514,
+    "article_id": "66cefe46-d7bc-4aa4-b53a-c5c22c5ff35a",
+    "title": "Po sledeh medveda v raziskovanju podzemnih jam",
+    "thumbnail_url": "https://gradivo.jknm.org/d2f8f25d-ad61-4d1f-96d1-bad60988552f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 590,
+    "article_id": "25cc5abd-04c5-49f9-b753-b5451904ab6b",
+    "title": "Jamarski tečaj 2021 - izpiti JZS",
+    "thumbnail_url": "https://gradivo.jknm.org/0c3c49a6-ecf6-4fdf-adad-8891096a00d4/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 593,
+    "article_id": "76753db1-8284-464a-b54c-93960f3bbfe6",
+    "title": "Kanin 2021 - Skalarjevo brezno - več kot tisoč metrov globoko",
+    "thumbnail_url": "https://gradivo.jknm.org/37e190a6-e3ee-4d4e-9cab-bd62fe059f2e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 594,
+    "article_id": "2356a26d-ba90-4537-bb23-f29b6be5cdfe",
+    "title": "Kanin 2021 - Skalarjevo brezno - nadaljevanje raziskav",
+    "thumbnail_url": "https://gradivo.jknm.org/69fd0949-7d61-4ee9-b4cf-99f29d574587/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 595,
+    "article_id": "4762f314-1bfa-4518-b69b-d99d1e0e2255",
+    "title": "Mala Knežja jama je očiščena",
+    "thumbnail_url": "https://gradivo.jknm.org/22797c6e-0996-4495-96dc-01663f69f253/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 596,
+    "article_id": "364e9650-4eda-4749-8368-6458f6abc314",
+    "title": "Kanin 2021 - Skalarjevo brezno - medpraznična akcija",
+    "thumbnail_url": "https://gradivo.jknm.org/f4ea8505-2a4d-4822-9738-3d5515bbd19e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 597,
+    "article_id": "9703cabb-6399-4aec-b3f5-dad02e331082",
+    "title": "Podpisi v Lukenjski jami",
+    "thumbnail_url": "https://gradivo.jknm.org/65d8f38e-6cd3-4c27-812b-d3dcd81b22de/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 515,
+    "article_id": "65172a8b-99cf-47eb-918d-ea514cede444",
+    "title": "Krka ŽIVI! in Dan doživetij",
+    "thumbnail_url": "https://gradivo.jknm.org/ee5c63e2-2b9b-4545-bda6-6a56d83d0c50/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 591,
+    "article_id": "77f5bea0-6058-498b-bd4c-c5d5766b9987",
+    "title": "Kanin 2021 - jamarski tabor",
+    "thumbnail_url": "https://gradivo.jknm.org/356539a4-3aae-4aeb-a11f-14ed7dbd2ea2/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 592,
+    "article_id": "86f5d41b-0789-447b-8de2-a38d3fc50880",
+    "title": "Kanin 2021 - kopanje v Azaleji",
+    "thumbnail_url": "https://gradivo.jknm.org/9833baa4-4767-4ce1-8376-b2fa19dfdc96/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 500,
+    "article_id": "4e37f41a-56f0-4f2c-8445-85bf968a920f",
+    "title": "Cvingerska jama - raziskovanje nadaljevanja",
+    "thumbnail_url": "https://gradivo.jknm.org/c1afc67a-b751-4331-beaf-aa90d55d54bd/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 516,
+    "article_id": "da0d57a8-ea33-4406-861e-b92edc476c7b",
+    "title": "Zipline na Frati",
+    "thumbnail_url": "https://gradivo.jknm.org/8be2d93e-2600-4857-b645-f27ce80d8309/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 517,
+    "article_id": "af88755f-c55e-4c02-b287-84b10e7baa1a",
+    "title": "Cink križ - ožina še čaka",
+    "thumbnail_url": "https://gradivo.jknm.org/ae7a2ec5-0e96-4028-b7bd-92c0d04c7549/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 518,
+    "article_id": "58983e0b-7c61-4ddd-8d4b-c3a0bc8ffda3",
+    "title": "Čaganka - na dan državnosti",
+    "thumbnail_url": "https://gradivo.jknm.org/cd5d4a1e-fe0c-480b-bab5-f21a8065a3f9/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 519,
+    "article_id": "17e46ddb-236a-488d-b48c-f172164ea77e",
+    "title": "Čaganka – na 270 m globine!",
+    "thumbnail_url": "https://gradivo.jknm.org/57c1c29c-f751-4b49-b9af-f87772eafcd9/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 520,
+    "article_id": "67adeaa4-c63f-42ea-bcce-d98d45ae2df8",
+    "title": "JKNM v Leški",
+    "thumbnail_url": "https://gradivo.jknm.org/a75c451f-b8b7-42a6-b35b-de9b401b493e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 523,
+    "article_id": "5a2db046-8cf1-4ee9-9949-f6e8cc684d1a",
+    "title": "Skozi ožino Cinka",
+    "thumbnail_url": "https://gradivo.jknm.org/e6b68a5a-9660-4768-a7bc-8f839e47973e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 524,
+    "article_id": "015bf949-2b4f-49b8-89b1-5b2e51f3af54",
+    "title": "Jame na Pugledu",
+    "thumbnail_url": "https://gradivo.jknm.org/417945c5-d9e4-4438-aaa6-60e8ff6f1a5a/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 525,
+    "article_id": "90ea76f7-a0c2-4944-abb6-e42bb2aa1c9e",
+    "title": "Zabojček v jami na Stojni",
+    "thumbnail_url": "https://gradivo.jknm.org/bb1421be-4d2d-4918-8db6-382fc0eb2757/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 526,
+    "article_id": "ed148cc9-069c-48c4-b174-21be869525fe",
+    "title": "Odprava v Gouffre Berger",
+    "thumbnail_url": "https://gradivo.jknm.org/bc32f60b-bcc7-4e35-8a6c-9b5c2ef82de3/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 527,
+    "article_id": "5937a53d-e1fd-494a-a58f-75c7e8972c59",
+    "title": "Udor v Čužnji vasi",
+    "thumbnail_url": "https://gradivo.jknm.org/28a7255b-263f-46b1-83bd-166a4b334158/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 528,
+    "article_id": "c8bba4a6-baf2-48f1-bb9c-e0606cbe0f52",
+    "title": "Kanin 2018 - poletni raziskovalni tabor",
+    "thumbnail_url": "https://gradivo.jknm.org/e831955d-133b-4eef-9f0b-e62c6708f70b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 529,
+    "article_id": "e71bdb19-15e7-4aa2-86ae-512f0114bee4",
+    "title": "Info točka na Kočevskem Rogu",
+    "thumbnail_url": "https://gradivo.jknm.org/2f6b817c-c6a0-48e6-a96c-906b0dc6e2e3/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 531,
+    "article_id": "550a6c0d-4adb-4b49-98b1-92381c9415c4",
+    "title": "Prvonovembrsko čagankarjenje",
+    "thumbnail_url": "https://gradivo.jknm.org/69ef4803-8e7a-423d-8a29-a99c16f66009/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 532,
+    "article_id": "ae91b532-ea7c-49ac-9cf1-077ee3ea3cba",
+    "title": "Mala Vratnica je očiščena",
+    "thumbnail_url": "https://gradivo.jknm.org/724a1ad8-89b9-4738-be6c-dcef84410916/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 533,
+    "article_id": "e04eaf92-742e-4197-8edb-25401f25a39b",
+    "title": "JKNM v letu 2018",
+    "thumbnail_url": "https://gradivo.jknm.org/c4187460-3529-460e-aad3-671a1774fa4c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 534,
+    "article_id": "9b56b5a3-e633-45a0-a78d-6bd761435ddd",
+    "title": "Obisk Mihovške jame",
+    "thumbnail_url": "https://gradivo.jknm.org/da6f97a1-54b9-4d15-9ae2-88ea5996b980/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 535,
+    "article_id": "1bbded88-3e54-4658-bc5d-b1e358476faf",
+    "title": "Čaganka – okno v kaminu Game Over",
+    "thumbnail_url": "https://gradivo.jknm.org/6c3712f9-344c-4fb8-a24e-0c29893df9d6/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 538,
+    "article_id": "0701d2b9-b077-4909-92ef-8c2c39491930",
+    "title": "Jamarsko-gastronomska akcija v Ušivih jamah ter v Željnah",
+    "thumbnail_url": "https://gradivo.jknm.org/7092c922-9e6e-4e8b-a1b9-9468b7d82631/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 540,
+    "article_id": "96748d4a-39f0-4acb-b04e-68cab1352d0a",
+    "title": "Krka živi 2019",
+    "thumbnail_url": "https://gradivo.jknm.org/19a68ce7-1e3a-46f8-a1ed-b15ead886664/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 541,
+    "article_id": "3bcd7101-d1c4-47ef-b4f0-ab2a3aef2299",
+    "title": "Oddih na Korčuli",
+    "thumbnail_url": "https://gradivo.jknm.org/d6eaf15a-faca-4dca-aaec-1912545f5d8f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 542,
+    "article_id": "38921f68-3c93-4985-9e75-12d82f6193a5",
+    "title": "Čiščenje Brezna v Debliških livadah [2]",
+    "thumbnail_url": "https://gradivo.jknm.org/8279e966-be53-419f-afe5-328d623fc13e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 598,
+    "article_id": "1991cd33-320e-45d3-8ac8-8d6e8111eca0",
+    "title": "Čaganka - merjenje za 3D model",
+    "thumbnail_url": "https://gradivo.jknm.org/5d2e4d6c-9638-4f1e-a7ae-e107c45146af/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 599,
+    "article_id": "8690f970-2036-4000-87b4-5fcc3f061933",
+    "title": "Ebenthal - za sifonom",
+    "thumbnail_url": "https://gradivo.jknm.org/fee48e56-26eb-4bf4-9e38-9c39ea24b651/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 600,
+    "article_id": "1a6d14e1-a349-4127-8948-2cc06493da83",
+    "title": "Majhovka z jezerom",
+    "thumbnail_url": "https://gradivo.jknm.org/33cb106d-8842-45df-9101-a1260f5c100c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 530,
+    "article_id": "c45d8297-6d66-4355-a295-af7694dfd5b6",
+    "title": "Čiščenje Brezna v Debliških livadah",
+    "thumbnail_url": "https://gradivo.jknm.org/6b4f50c7-b2b6-41bb-9a75-92ed2a33c344/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 537,
+    "article_id": "4914693a-711d-4c5d-b106-a8e7bfe621b5",
+    "title": "Mirna Peč - v naši občini ni več onesnaženih jam",
+    "thumbnail_url": "https://gradivo.jknm.org/8207af09-53c7-4b7c-b18f-f4bef1c8c772/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 539,
+    "article_id": "45eeb7b8-6b5c-47b4-92ed-24523e9314dd",
+    "title": "Čaganka - prvomajsko snidenje",
+    "thumbnail_url": "https://gradivo.jknm.org/987fb559-cec6-4f9e-8e86-f88a01b3ece4/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 543,
+    "article_id": "dd720e79-10b2-4ff6-82e7-edd2473f1eca",
+    "title": "Iz mirnopeškega konca",
+    "thumbnail_url": "https://gradivo.jknm.org/092267d1-b5c2-4da8-bbcc-659fc5767036/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 544,
+    "article_id": "33a69c3d-c93d-4e17-9aa6-757f5a1975e5",
+    "title": "Jami na Jasnici",
+    "thumbnail_url": "https://gradivo.jknm.org/620647f0-df53-4ba0-ad2b-c56919454ed1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 545,
+    "article_id": "8298f81a-eb6e-4a1d-be70-a99b0c5cc822",
+    "title": "Kanin 2019",
+    "thumbnail_url": "https://gradivo.jknm.org/b9e38057-bd8f-47e5-b2ef-b9ca0ce2063a/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 546,
+    "article_id": "a278f992-6cbd-432a-9a41-8e8f8e66f198",
+    "title": "Firecombat 2019",
+    "thumbnail_url": "https://gradivo.jknm.org/6751b3c8-3c4b-4819-92f6-8655c9011ac3/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 547,
+    "article_id": "81e9b73a-a0f3-45b0-bad3-ca544703c0f2",
+    "title": "Raziskovalni tabor Mala gora",
+    "thumbnail_url": "https://gradivo.jknm.org/44fac578-f9ac-45e2-9e78-0a976b55f3aa/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 548,
+    "article_id": "d8930ea6-3dbc-49ed-86a4-53d9e55e52f6",
+    "title": "Čaganka - tridnevni tabor 2019",
+    "thumbnail_url": "https://gradivo.jknm.org/7f1f0e5b-d345-420d-9ad2-38adb859b19c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 549,
+    "article_id": "5a9604b0-d79a-44b8-be3f-0db5df50637b",
+    "title": "Baltik s Poljsko",
+    "thumbnail_url": "https://gradivo.jknm.org/38c14e4b-4661-4fd3-a62a-ecea655ef022/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 550,
+    "article_id": "43f29a0a-a5f3-4b66-93ec-56ad1c4cee19",
+    "title": "Čaganka - Prvonovembrski tabor 2019",
+    "thumbnail_url": "https://gradivo.jknm.org/502eb8bb-16a5-4dff-915a-d12e88599f75/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 551,
+    "article_id": "24f377de-87c4-4eec-b6c6-7b3af1835b9a",
+    "title": "Jamarski vikend",
+    "thumbnail_url": "https://gradivo.jknm.org/1b84349b-270a-4526-9026-da2ad9f5a169/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 552,
+    "article_id": "6b24ffdb-20cf-4b4e-ad6f-bc67242680a6",
+    "title": "Miklavževanje pri Mojem dihalniku",
+    "thumbnail_url": "https://gradivo.jknm.org/d27fcfe4-00b9-4e21-b8e1-7b3b24117354/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 553,
+    "article_id": "6eff8afd-0a50-442c-990e-bcdfdea36a4b",
+    "title": "Čaganka - leto 2020 bo njeno leto",
+    "thumbnail_url": "https://gradivo.jknm.org/97382a1e-a14e-464a-af96-ef517d1ae5b2/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 554,
+    "article_id": "c95b6b69-454d-48a3-98e6-08fb5b443620",
+    "title": "Rugarsko brezno",
+    "thumbnail_url": "https://gradivo.jknm.org/87e4dd4b-28f7-4f1a-adda-a796dec93345/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 556,
+    "article_id": "c3133753-ee06-416f-aa43-ca6936cd72a2",
+    "title": "Brezno Beli in Vrbovška podcestnica",
+    "thumbnail_url": "https://gradivo.jknm.org/3fd7a125-6113-4e6e-bcbe-e3c0fdcaf8e5/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 557,
+    "article_id": "41db9a1c-96b1-4e97-8cf8-581b2916bb7a",
+    "title": "Čaganka - romantični vikend za dva",
+    "thumbnail_url": "https://gradivo.jknm.org/28d09434-0cf3-4a70-9058-e1a2de06ab09/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 619,
+    "article_id": "ece873da-ccdc-4f6c-afdc-f49005f4ee4a",
+    "title": "Čaganka - Četud ni 500 globoka ...",
+    "thumbnail_url": "https://gradivo.jknm.org/dbe36155-5640-4ff0-9745-bbd4f8f367da/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 555,
+    "article_id": "8ce39b05-2e4a-4521-97e5-32cc6bac306d",
+    "title": "Čaganka - širjenje spodnjih delov",
+    "thumbnail_url": "https://gradivo.jknm.org/e4a7454c-f4fb-4ca4-b0c4-272e9e7cdb1d/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 558,
+    "article_id": "8ab0f746-2333-4fa2-b7f1-48f7be87db7f",
+    "title": "Na prezimovališčih netopirjev",
+    "thumbnail_url": "https://gradivo.jknm.org/05d7fae1-dcc1-4a00-a8ba-d16b70425d22/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 559,
+    "article_id": "584e050d-e20c-4a8c-9269-dc28be2dae88",
+    "title": "Čaganka – obisk 29. februarja",
+    "thumbnail_url": "https://gradivo.jknm.org/11e984b8-b43b-4f13-b475-ff5e7c3394f3/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 561,
+    "article_id": "a1ee038d-5444-4814-877a-99e0e14319b4",
+    "title": "Letošnja jamarska šola za punce in Jazbina",
+    "thumbnail_url": "https://gradivo.jknm.org/915e00ea-71c7-4945-bd83-24ef69f5cf1c/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 562,
+    "article_id": "08fa509c-3b63-4b77-9ef6-9c0fc4e08cd1",
+    "title": "Jamarski tečaj 2010 v polnem teku",
+    "thumbnail_url": "https://gradivo.jknm.org/552bf0a1-7556-41a9-899b-ff18c8a5b234/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 564,
+    "article_id": "3fd91e6f-d6b3-4732-ac53-2599ee1a4c6b",
+    "title": "Sanitarno čiščenje brezna na Kočevskem Rogu",
+    "thumbnail_url": "https://gradivo.jknm.org/6e5f73ae-955d-4992-b9d1-4875db132270/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 565,
+    "article_id": "6d1e6108-efeb-4fe5-8492-a0f47ca1001c",
+    "title": "Plavalni tečaj v Šolnovem breznu",
+    "thumbnail_url": "https://gradivo.jknm.org/e5a33117-1305-40a2-9c1a-6402e85bf366/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 566,
+    "article_id": "60ed6cd4-aff1-4a24-8cd1-4332af600c8c",
+    "title": "Čiščenje Brezna 3 pri grobišču",
+    "thumbnail_url": "https://gradivo.jknm.org/e46f11e2-2cd1-4b60-b065-4505a44eb461/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 568,
+    "article_id": "c5555754-4567-4574-900f-e6aaae1aa308",
+    "title": "Kanin 2020 - naval na Podgurko",
+    "thumbnail_url": "https://gradivo.jknm.org/2281e45c-d080-4a16-9e55-518d7894ad2e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 569,
+    "article_id": "646b383a-4022-4fa6-828f-aea074016f46",
+    "title": "Kanin 2020 - tretjič letos",
+    "thumbnail_url": "https://gradivo.jknm.org/6448620a-f79f-421d-bf54-f19caf63946a/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 570,
+    "article_id": "ff2e8d60-1883-4475-8aaf-10eea28d5b86",
+    "title": "Kanin 2020 - Podgurka ali ko se sanje uresničijo",
+    "thumbnail_url": "https://gradivo.jknm.org/bc0deaa6-a081-425d-a0b3-687998e8543d/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 571,
+    "article_id": "cdb75f0e-181c-4e5c-ab72-1beeb1b03506",
+    "title": "Jazbina za uvod v novo leto 2021",
+    "thumbnail_url": "https://gradivo.jknm.org/29fb4ccd-7a7f-490e-a110-c918815e8ad6/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 572,
+    "article_id": "dac5fef3-81e2-4121-9bc3-898ee4739236",
+    "title": "Produktiven konec in začetek leta",
+    "thumbnail_url": "https://gradivo.jknm.org/41c51742-f4cd-43b0-b920-17605c4c8f3e/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 574,
+    "article_id": "6e86bb80-3c22-4729-bd22-7e8eb7d2e390",
+    "title": "Terenska akcija na Kočevskem Rogu",
+    "thumbnail_url": "https://gradivo.jknm.org/d0316252-1e90-4d52-96ff-39edde90e1d6/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 575,
+    "article_id": "0e3045b0-5c19-4397-b269-dcf4b2b10f27",
+    "title": "Lidarce na Kočevskem rogu",
+    "thumbnail_url": "https://gradivo.jknm.org/1d8d8071-4476-4972-a419-b69098d5ff75/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 576,
+    "article_id": "3e7802b5-cf58-4d0a-b051-495105ce770c",
+    "title": "Paleontološke najdbe v Vodoravni jami na Židovcu",
+    "thumbnail_url": "https://gradivo.jknm.org/97690cc6-fcb3-42a9-8063-8a5aae4e5632/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 577,
+    "article_id": "7a81a770-eddc-4c9b-8e41-f371615bcf96",
+    "title": "Pesmica o akciji",
+    "thumbnail_url": "https://gradivo.jknm.org/417f359e-9908-43ff-b56f-b3d0b03dbfbb/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 580,
+    "article_id": "438364ef-9ea9-4603-b25d-7fa3257df5b1",
+    "title": "Rudnik v Kalahariju",
+    "thumbnail_url": "https://gradivo.jknm.org/cc5e0da1-5e17-4143-9523-b31f07ea58b8/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 582,
+    "article_id": "9cd15b9b-16fa-4ce6-afb6-acbe336440e5",
+    "title": "Jamarski tečaj 2021 - prvi dan praktičnega izobraževanja",
+    "thumbnail_url": "https://gradivo.jknm.org/c4365194-6c44-4ef8-bd3b-57cc5b9939ed/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 583,
+    "article_id": "01265a6f-862c-4c45-ad72-1c0aa02a4fa6",
+    "title": "Jamarski tečaj 2021 - drugi vikend",
+    "thumbnail_url": "https://gradivo.jknm.org/d0b7798f-6f16-41ac-9ec4-20aaec21320d/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 573,
+    "article_id": "a08e8d0e-fdaa-4956-8424-d0b297353a84",
+    "title": "Vodoravna jama na Židovcu je postala prava jama",
+    "thumbnail_url": "https://gradivo.jknm.org/5c9303e3-9b75-42ea-8739-d9af923f0de6/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 578,
+    "article_id": "65f330d3-0414-4ba6-b88b-93b55bf788d0",
+    "title": "Nova odkritja v Pihalniku",
+    "thumbnail_url": "https://gradivo.jknm.org/a5b22a1c-0876-462b-9306-748b62f8a0bd/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 579,
+    "article_id": "e60d2d82-6e6c-4387-8364-703447a85c07",
+    "title": "Ko Pihalnik postane sistem Pihalnik",
+    "thumbnail_url": "https://gradivo.jknm.org/51eb5907-73d1-4ff6-9bdf-97572e551e54/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 601,
+    "article_id": "3f54db24-2a86-470d-b19b-22430c25fa13",
+    "title": "Nagrada Viljema Puticka spet v roke JKNM",
+    "thumbnail_url": "https://gradivo.jknm.org/6e33ef09-ad08-48b2-acf9-60cfa8f2d042/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 602,
+    "article_id": "34fca64a-75f8-4203-8184-7f7d75e1caac",
+    "title": "Sancinova jama",
+    "thumbnail_url": "https://gradivo.jknm.org/a4bf66ba-8fce-43d5-9f9f-1a35e6f1f29b/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 604,
+    "article_id": "2039f527-5aec-4df4-bca9-6af98815988e",
+    "title": "Jamarski tečaj 2022 - odtisi in vtisi",
+    "thumbnail_url": "https://gradivo.jknm.org/7f4074d3-d0e0-4ac1-8d9b-8865441c80d3/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 605,
+    "article_id": "b6f75adf-9a7f-42f5-88e1-0951025864c0",
+    "title": "Jamarski tečaj 2022 – I love Jama",
+    "thumbnail_url": "https://gradivo.jknm.org/7ca76bfc-9ee1-4a78-8b5e-7d38b3f28d6d/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 607,
+    "article_id": "dcc1e72d-3a17-4371-a0cd-b7c3c2b1b3eb",
+    "title": "Bršljinski prvošolci v Lukenjski jami pri Prečni",
+    "thumbnail_url": "https://gradivo.jknm.org/e4e566cc-cf15-4534-a585-217b7577c7eb/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 608,
+    "article_id": "0a78b043-e047-4307-bd09-907ebe8335c8",
+    "title": "Kanin 2022 - Free Willy",
+    "thumbnail_url": "https://gradivo.jknm.org/aaae04f9-a867-423e-b753-8b65da97caaa/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 609,
+    "article_id": "ae2b0859-ba6e-4bc3-81d9-e07eb38df490",
+    "title": "Ogledna odprava na Orjen v Črni gori",
+    "thumbnail_url": "https://gradivo.jknm.org/43e42607-4119-4477-ab99-a177f0b7c96d/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 612,
+    "article_id": "9c3b7027-bef8-4cba-9228-206e09aac063",
+    "title": "STOP smetem in metanju odpadkov v jame",
+    "thumbnail_url": "https://gradivo.jknm.org/26f8be61-c4db-4e78-8d1c-00b970dc0a36/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 616,
+    "article_id": "1abd781d-66ca-4c5c-91e2-f9a6dfe57219",
+    "title": "Predstavitev raziskav v Ajdovski jami pri Nemški vasi in Bruhalniku Podjama",
+    "thumbnail_url": "https://gradivo.jknm.org/974f3dc7-31be-4c50-baf7-6609526255f1/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 617,
+    "article_id": "25db60c8-5555-44c8-bb17-9685732459e0",
+    "title": "Slovo od leta 2022 ali Lepo je biti jamar",
+    "thumbnail_url": "https://gradivo.jknm.org/4a9c28d4-d964-4fb4-94c0-2bb67ea959ba/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 610,
+    "article_id": "be7aa229-26c3-41dd-ad23-19085150a292",
+    "title": "Dolenjski jamarski tabor 2022",
+    "thumbnail_url": "https://gradivo.jknm.org/03c6cfc7-153a-4d62-8f76-4a74a8ffd0ac/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 611,
+    "article_id": "7c248be2-d59f-4f7a-a7b9-3e5038cc27e5",
+    "title": "JK Novo mesto – 60 let – fotografska razstava in predavanje",
+    "thumbnail_url": "https://gradivo.jknm.org/91caf2c2-d40c-4e33-88b6-751f532516aa/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 614,
+    "article_id": "b6711a0b-d66f-4988-9eb8-a76873dabc6d",
+    "title": "Čaganka - stoletna voda v spodnjih delih",
+    "thumbnail_url": "https://gradivo.jknm.org/e8b30f68-c90a-4309-ba5c-9488546b34f4/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 615,
+    "article_id": "c03e4420-e411-4290-9c69-ed71895d73f3",
+    "title": "60 let Jamarskega kluba Novo mesto",
+    "thumbnail_url": "https://gradivo.jknm.org/68e4347a-a421-4189-9a76-243ccc5e1639/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 618,
+    "article_id": "a9674570-54a9-467c-8f31-c8beb2f00c6f",
+    "title": "Kanin 2023 - zimska akcija v Skalarjevem breznu",
+    "thumbnail_url": "https://gradivo.jknm.org/97c91ca0-3a98-4d81-951b-cf5d46d0a6ab/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 621,
+    "article_id": "591e9a0b-4410-477d-b920-d295ecf7b789",
+    "title": "Spust v Labodnico",
+    "thumbnail_url": "https://gradivo.jknm.org/0850fa9c-be03-477d-a8b1-73db9b82c29f/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 622,
+    "article_id": "54deaac3-3a3c-42b4-8b97-10ea9c750537",
+    "title": "Izpiti JZS in podelitev priznanj",
+    "thumbnail_url": "https://gradivo.jknm.org/845fdb79-d575-4342-b75e-735f20b766f3/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 623,
+    "article_id": "edb883a8-a17e-4a0c-9e0d-7a21b9a38128",
+    "title": "V Veliki Prepadni in Noč v knjižnici",
+    "thumbnail_url": "https://gradivo.jknm.org/2741977a-2a2a-4b25-aab9-e9d67c5bfb03/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 624,
+    "article_id": "2b2cd069-3981-47c0-82cb-248ff948d25c",
+    "title": "Skozi Winetoujevo brezno v čudežni svet brez sonca",
+    "thumbnail_url": "https://gradivo.jknm.org/32cedb50-5521-4eba-ae35-0be44f7fc9f5/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  },
+  {
+    "legacy_id": 625,
+    "article_id": "b837d4a6-8e28-4b86-82fc-9bcb9761191f",
+    "title": "Luknja v Mrzlih dolinah",
+    "thumbnail_url": "https://gradivo.jknm.org/a0d4a4f6-642b-4e04-a28e-40ca4bdc7977/original.jpg",
+    "ground_truth_custom": false,
+    "heuristic_custom": true
+  }
+]
