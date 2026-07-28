@@ -1,4 +1,7 @@
-# Unrecovered legacy media (26 refs)
+# Unrecovered legacy media (23 refs)
+
+`3631_cinkov_kriz.pdf` (legacy_id 78, 79, 82) resolved via
+`scripts/fix-cinkov-kriz-shared-pdf.ts` — see notable-pattern section below.
 
 Produced by `scripts/recover-legacy-media-from-served-mirror.ts` (dry-run
 log), following on from `scripts/rescue-stale-media.ts`. Both scripts fetch
@@ -38,19 +41,17 @@ Reasons:
 | 637 | Čistilna akcija vodovarstvenega območja izvira Radeščice [2] | https://jknm.org/cistilna-akcija-vodovarstvenega-obmocja-izvira-radescice-2 | https://jknm.s3.eu-central-1.amazonaws.com/cistilna-akcija-vvo-izvira-radescice-ii-06-02-2024/v_dveh_dneh_izvlekli_za_tri_kontejnerje_smeti_dl_13_15_2_2024.pdf | gone (2024, not mirrored) |
 | 637 | Čistilna akcija vodovarstvenega območja izvira Radeščice [2] | https://jknm.org/cistilna-akcija-vodovarstvenega-obmocja-izvira-radescice-2 | https://jknm.s3.eu-central-1.amazonaws.com/cistilna-akcija-vvo-izvira-radescice-ii-06-02-2024/vrelec_296_str_15.png | gone (2024, not mirrored) |
 | 75 | Le kje sta Pihalnik in Achenloch? | https://jknm.org/le-kje-sta-pihalnik-in-achenloch | https://jknm.s3.eu-central-1.amazonaws.com/le-kje-sta-pihalnik-in-achenloch-03-06-2009/2577_pihalnik.pdf | no unique filename match |
-| 79 | Iz klubskega arhiva: Brezno Cinkov križ [1] | https://jknm.org/iz-klubskega-arhiva-brezno-cinkov-kriz-1 | https://jknm.s3.eu-central-1.amazonaws.com/iz-klubskega-arhiva-brezno-cinkov-kriz-1-18-06-2009/3631_cinkov_kriz.pdf | no legacy source (legacy_id 79 missing from both Objave.txt and scraped legacy-html) |
-| 78 | Iz klubskega arhiva: Brezno Cinkov križ [2] | https://jknm.org/iz-klubskega-arhiva-brezno-cinkov-kriz-2 | https://jknm.s3.eu-central-1.amazonaws.com/iz-klubskega-arhiva-brezno-cinkov-kriz-2-19-06-2009/3631_cinkov_kriz.pdf | no unique filename match |
-| 82 | Iz klubskega arhiva: Brezno Cinkov križ [3] | https://jknm.org/iz-klubskega-arhiva-brezno-cinkov-kriz-3 | https://jknm.s3.eu-central-1.amazonaws.com/iz-klubskega-arhiva-brezno-cinkov-kriz-3-20-06-2009/3631_cinkov_kriz.pdf | no unique filename match |
 | 107 | Podzemni vodovodarji [3] | https://jknm.org/podzemni-vodovodarji-3 | https://jknm.s3.eu-central-1.amazonaws.com/podzemni-vodovodarji-3-09-10-2009/4669_solnovo.pdf | no unique filename match |
 | 500 | Cvingerska jama - raziskovanje nadaljevanja | https://jknm.org/cvingerska-jama-raziskovanje-nadaljevanja | https://jknm.s3.eu-central-1.amazonaws.com/cvingerska-jama-raziskovanje-nadaljevanja-09-11-2017/dk7_23_prsina_razkrita_skrivnost_jame_na_cvingerju.pdf | no unique filename match |
 
-## Notable pattern: `3631_cinkov_kriz.pdf`
+## Resolved pattern: `3631_cinkov_kriz.pdf`
 
-The same file, referenced identically across three different articles in
-the "Iz klubskega arhiva: Brezno Cinkov križ" series (legacy_id 78, 79, 82).
-82's own copy was recovered (it had exactly one candidate in its own legacy
-content); 78's and 79's could not be — 79 has no legacy source at all, and
-78's legacy content lists 2 candidate paths where the filename didn't match
-either uniquely. Since it's the same underlying document, the fix here isn't
-another mirror lookup: it's uploading `3631_cinkov_kriz.pdf` once (or reusing
-82's `media` row / gradivo url) and pointing 78 and 79 at it directly.
+The same file was referenced identically across three articles in the
+"Iz klubskega arhiva: Brezno Cinkov križ" series (legacy_id 78, 79, 82).
+None of the three resolved via the per-article fuzzy match (79 has no legacy
+source at all; 78's and 82's legacy content each list 2 candidate paths where
+the filename didn't match either uniquely) — but the file itself wasn't
+actually lost: it's `served/media/pdf/3631_Cinkov_kriz.pdf`, still linked
+live today from the static pages (zgodovina, raziskovanje) via the vsebina
+bucket. `scripts/fix-cinkov-kriz-shared-pdf.ts` ingested it once into
+gradivo and repointed all three articles at the same new url.
