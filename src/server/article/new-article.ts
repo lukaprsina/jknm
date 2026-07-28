@@ -1,4 +1,4 @@
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, ne, sql } from "drizzle-orm";
 import type { z } from "zod";
 import { convert_new_article_to_algolia_object } from "~/lib/algoliasearch";
 import { convert_title_to_url } from "~/lib/article-utils";
@@ -16,6 +16,7 @@ import {
 } from "./lifecycle";
 import {
 	assert_can_supersede,
+	decide_published_at,
 	decide_slug_transition,
 	is_supersede_publish,
 } from "./lifecycle-rules";
@@ -134,6 +135,23 @@ async function resolve_supersede_publish_slug(
 		assert_one(inserted);
 		primary = inserted[0];
 	}
+
+	// Any other slug the superseded article picked up over its history (from
+	// an earlier retitle of *this same lineage*) needs to move forward too,
+	// not just the primary — otherwise it's left attached to a row this call
+	// is about to soft-delete, and a later retitle of the new row stops
+	// resolving it (the bug #21's "kept, resolvable, not deleted" guarantee
+	// was meant to prevent). The primary/demoted slug above is already
+	// re-pointed, so this only ever touches the rest.
+	await tx
+		.update(ArticleSlug)
+		.set({ is_primary: false, article_id })
+		.where(
+			and(
+				eq(ArticleSlug.article_id, supersedes_id),
+				ne(ArticleSlug.id, primary.id),
+			),
+		);
 
 	await soft_delete_article(tx, supersedes_id);
 
@@ -363,20 +381,11 @@ export async function publish_article(
 			existing.supersedes_id && is_supersede_publish(source),
 		);
 
-		// A superseding draft is a *fresh* row, so its own `published_at` is
-		// null — falling through to `new Date()` would silently re-date the
-		// article to today every time it's revised, bumping it to the top of
-		// the news list and moving it between years in the archive (the
-		// `published_year` generated column derives from this). Revising an
-		// article isn't republishing it, so the source's original date wins.
-		//
-		// Keyed on the source existing, not on `is_supersede`: the unarchive
-		// path retires its source at draft-creation time, so `is_supersede` is
-		// already false by now even though this is still the same article. A
-		// source that was archived straight from `draft` has a null
-		// `published_at` and correctly falls through.
-		const published_at =
-			source?.published_at ?? existing.published_at ?? new Date();
+		const published_at = decide_published_at({
+			source,
+			existing,
+			now: new Date(),
+		});
 
 		const thumbnail = await resolve_thumbnail(tx, input.article.thumbnail_crop);
 

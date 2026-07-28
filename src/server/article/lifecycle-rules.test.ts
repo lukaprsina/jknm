@@ -4,6 +4,7 @@ import {
 	assert_can_delete,
 	assert_can_discard,
 	assert_can_supersede,
+	decide_published_at,
 	decide_slug_transition,
 	get_archive_origin_label,
 	is_supersede_publish,
@@ -159,6 +160,63 @@ describe("is_supersede_publish", () => {
 
 	test("rejects a source still in draft, which should never happen but must not be treated as supersedable", () => {
 		expect(is_supersede_publish({ status: "draft" })).toBe(false);
+	});
+});
+
+describe("decide_published_at", () => {
+	const now = new Date("2026-07-28T00:00:00Z");
+
+	test("inherits the source's published_at on a real supersede-publish", () => {
+		const source_date = new Date("2013-05-01T00:00:00Z");
+		expect(
+			decide_published_at({
+				source: { published_at: source_date },
+				existing: { published_at: null },
+				now,
+			}),
+		).toEqual(source_date);
+	});
+
+	test("still inherits the source's date on the unarchive path, where the source is already retired and is_supersede_publish is false", () => {
+		const source_date = new Date("2024-01-16T00:00:00Z");
+		expect(
+			decide_published_at({
+				source: { published_at: source_date },
+				existing: { published_at: null },
+				now,
+			}),
+		).toEqual(source_date);
+	});
+
+	test("falls back to the row's own published_at when there is no source", () => {
+		const existing_date = new Date("2020-02-02T00:00:00Z");
+		expect(
+			decide_published_at({
+				source: null,
+				existing: { published_at: existing_date },
+				now,
+			}),
+		).toEqual(existing_date);
+	});
+
+	test("falls back to now for a genuinely first-time publish (no source, no existing date)", () => {
+		expect(
+			decide_published_at({
+				source: null,
+				existing: { published_at: null },
+				now,
+			}),
+		).toEqual(now);
+	});
+
+	test("falls back to now when the source itself has a null published_at (archived straight from draft)", () => {
+		expect(
+			decide_published_at({
+				source: { published_at: null },
+				existing: { published_at: null },
+				now,
+			}),
+		).toEqual(now);
 	});
 });
 

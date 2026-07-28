@@ -126,6 +126,34 @@ export function is_supersede_publish(
 	);
 }
 
+/**
+ * The `published_at` a publish should end up with. A superseding draft is a
+ * fresh row, so its own `published_at` is null — falling through to `now`
+ * would silently re-date the article to today every time it's revised,
+ * bumping it to the top of the news list and moving it between years in the
+ * archive (the `published_year` generated column derives from this).
+ * Revising an article isn't republishing it, so the source's original date
+ * wins whenever a source exists.
+ *
+ * Deliberately keyed on "a source exists", not on `is_supersede_publish`: the
+ * unarchive path retires its source at draft-creation time, so
+ * `is_supersede_publish` is already false by publish time even though this
+ * is still the same article and must still inherit its date. A source that
+ * was archived straight from `draft` has a null `published_at` and correctly
+ * falls through to `existing.published_at ?? now`.
+ */
+export function decide_published_at({
+	source,
+	existing,
+	now,
+}: {
+	source: { published_at: Date | null } | null;
+	existing: { published_at: Date | null };
+	now: Date;
+}): Date {
+	return source?.published_at ?? existing.published_at ?? now;
+}
+
 export type SlugTransitionDecision =
 	| { action: "reuse"; slug_id: number }
 	| { action: "mint_new_and_demote"; demote_slug_id: number }
