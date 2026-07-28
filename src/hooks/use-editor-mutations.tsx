@@ -7,6 +7,7 @@ import {
 	DraftArticleContext,
 	PublishedArticleContext,
 } from "~/components/article/context";
+import { resolve_default_published_at } from "~/components/article/new-adapter";
 import { EditorContext } from "~/components/editor/editor-context";
 import {
 	update_settings_from_editor,
@@ -108,9 +109,14 @@ export function useEditorMutations() {
 		},
 	});
 
+	const default_published_at = resolve_default_published_at(
+		draft_article,
+		published_article,
+	);
+
 	return {
 		save_draft: async (
-			fake_created_at?: Date,
+			override_published_at?: Date,
 			thumbnail_crop?: ThumbnailType,
 		) => {
 			editor_context.setSavingText("Shranjujem osnutek ...");
@@ -120,7 +126,7 @@ export function useEditorMutations() {
 			const article_id = draft_article.id;
 
 			const updated = validate_article(editor_content, toaster);
-			const created_at = fake_created_at ?? draft_article.created_at;
+			const published_at = override_published_at ?? default_published_at;
 
 			const state = editor_store.getState();
 			const resolved_thumbnail_crop = thumbnail_crop ?? state.thumbnail_crop;
@@ -138,14 +144,17 @@ export function useEditorMutations() {
 				article_id,
 				article: {
 					title: updated?.title ?? state.title,
-					created_at,
+					published_at,
 					content: editor_content,
 					thumbnail_crop: resolved_thumbnail_crop ?? undefined,
 				},
 				author_ids: state.author_ids,
 			});
 		},
-		publish: async (fake_created_at?: Date, thumbnail_crop?: ThumbnailType) => {
+		publish: async (
+			override_published_at?: Date,
+			thumbnail_crop?: ThumbnailType,
+		) => {
 			editor_context.setSavingText("Objavljam spremembe ...");
 			const editor_content = await editor_context.editor?.save();
 			if (!editor_content) return;
@@ -154,7 +163,7 @@ export function useEditorMutations() {
 			if (!updated) return;
 
 			const article_id = draft_article.id;
-			const created_at = fake_created_at ?? draft_article.created_at;
+			const published_at = override_published_at ?? default_published_at;
 
 			const state = editor_store.getState();
 			const resolved_thumbnail_crop = thumbnail_crop ?? state.thumbnail_crop;
@@ -175,7 +184,7 @@ export function useEditorMutations() {
 				article_id,
 				article: {
 					title: updated.title,
-					created_at,
+					published_at,
 					content: editor_content,
 					thumbnail_crop: resolved_thumbnail_crop ?? undefined,
 				},

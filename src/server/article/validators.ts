@@ -12,7 +12,7 @@ const new_article_payload_validator = z.object({
 	title: z.string(),
 	content: content_validator.optional(),
 	thumbnail_crop: thumbnail_validator.optional(),
-	created_at: z.date().optional(),
+	published_at: z.date().optional(),
 });
 
 export const save_article_validator = z.object({

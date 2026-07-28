@@ -324,7 +324,11 @@ async function resolve_retitle_slug(
 			),
 		})) ?? null;
 
-	const decision = decide_slug_transition({ old_title, new_title, old_primary_slug });
+	const decision = decide_slug_transition({
+		old_title,
+		new_title,
+		old_primary_slug,
+	});
 	if (decision.action === "reuse") return;
 
 	if (decision.action === "mint_new_and_demote") {
@@ -341,6 +345,14 @@ async function resolve_retitle_slug(
 /**
  * Save a draft on the unified `articles` table: update the row, replace its
  * authors, and reconcile `media_to_articles` from the content (#19).
+ *
+ * `input.article.published_at` (the settings-form date picker's value) is
+ * deliberately not written here: a draft has no real publish date yet, and
+ * writing one into the `published_at` column early would make
+ * `get_archive_origin_label` misreport a still-`draft` row that gets archived
+ * directly (`draft` -> `archived` is allowed) as "was published". The picked
+ * date only takes effect at actual publish time, via `decide_published_at`'s
+ * `requested` param in `publish_article` below.
  */
 export async function save_article(
 	input: z.infer<typeof save_article_validator>,
@@ -359,9 +371,6 @@ export async function save_article(
 			.set({
 				title: input.article.title,
 				content_json: input.article.content ?? undefined,
-				...(input.article.created_at
-					? { created_at: input.article.created_at }
-					: {}),
 				...thumbnail,
 			})
 			.where(eq(Article.id, input.article_id))
@@ -380,7 +389,10 @@ export async function save_article(
 			updated[0].content_json,
 		);
 
-		if (existing.status === "published" && existing.title !== input.article.title) {
+		if (
+			existing.status === "published" &&
+			existing.title !== input.article.title
+		) {
 			await resolve_retitle_slug(
 				tx,
 				input.article_id,
@@ -435,6 +447,7 @@ export async function publish_article(
 		);
 
 		const published_at = decide_published_at({
+			requested: input.article.published_at,
 			source,
 			existing,
 			now: new Date(),
@@ -449,9 +462,6 @@ export async function publish_article(
 				content_json: input.article.content ?? undefined,
 				status: "published",
 				published_at,
-				...(input.article.created_at
-					? { created_at: input.article.created_at }
-					: {}),
 				...thumbnail,
 			})
 			.where(eq(Article.id, input.article_id))

@@ -29,6 +29,7 @@ export interface EditorDraftArticle {
 	title: string;
 	created_at: Date;
 	updated_at: Date;
+	published_at: Date | null;
 	content: ArticleContentType | null;
 	content_preview: string;
 	thumbnail_crop: ThumbnailType | null;
@@ -46,6 +47,7 @@ export interface PublishedArticleView {
 	url: string;
 	created_at: Date;
 	updated_at: Date;
+	published_at: Date | null;
 	content: ArticleContentType | null;
 	content_preview: string;
 	thumbnail_crop: ThumbnailType | null;
@@ -62,6 +64,24 @@ export type EditableArticleRef = { id: string };
 /** The article's primary slug, falling back to any slug if none is flagged primary. */
 export function get_primary_slug(article: NewArticleWithRelations) {
 	return find_primary_slug_or_first(article.article_slugs)?.slug;
+}
+
+/**
+ * The "Čas objave" date picker's default: the draft's own `published_at` if
+ * it has one, else — mid-revision, before a superseding draft is published —
+ * the source article it's revising, else (a fresh standalone draft, never
+ * published) when the draft was created. Shared by `settings-form.tsx`'s
+ * `defaultValues` and `use-editor-mutations.tsx`'s implicit-publish fallback
+ * (e.g. the `Ctrl+Shift+S` shortcut) so a publish triggered without ever
+ * opening the settings dialog sends the same date the dialog would have
+ * shown, instead of two independently-maintained copies of this fallback
+ * silently drifting apart.
+ */
+export function resolve_default_published_at(
+	draft: Pick<EditorDraftArticle, "published_at" | "created_at">,
+	source: Pick<PublishedArticleView, "published_at"> | undefined,
+): Date {
+	return draft.published_at ?? source?.published_at ?? draft.created_at;
 }
 
 function reconstruct_thumbnail_crop(
@@ -96,6 +116,7 @@ export function map_new_article_to_editor_draft(
 		title: article.title,
 		created_at: article.created_at,
 		updated_at: article.updated_at,
+		published_at: article.published_at,
 		content: article.content_json,
 		content_preview: article.excerpt ?? "",
 		thumbnail_crop: reconstruct_thumbnail_crop(article),
@@ -118,6 +139,7 @@ export function map_new_article_to_published_view(
 		url: slug,
 		created_at: article.created_at,
 		updated_at: article.updated_at,
+		published_at: article.published_at,
 		content: article.content_json,
 		content_preview: article.excerpt ?? "",
 		thumbnail_crop: reconstruct_thumbnail_crop(article),

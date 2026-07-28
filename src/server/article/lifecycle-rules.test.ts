@@ -236,6 +236,42 @@ describe("decide_published_at", () => {
 			}),
 		).toEqual(now);
 	});
+
+	test("an explicit requested date overrides the source's inherited date", () => {
+		const requested = new Date("2020-06-15T00:00:00Z");
+		expect(
+			decide_published_at({
+				requested,
+				source: { published_at: new Date("2013-05-01T00:00:00Z") },
+				existing: { published_at: null },
+				now,
+			}),
+		).toEqual(requested);
+	});
+
+	test("an explicit requested date overrides the row's own published_at when there is no source", () => {
+		const requested = new Date("2020-06-15T00:00:00Z");
+		expect(
+			decide_published_at({
+				requested,
+				source: null,
+				existing: { published_at: new Date("2020-02-02T00:00:00Z") },
+				now,
+			}),
+		).toEqual(requested);
+	});
+
+	test("a null/undefined requested date falls back to the normal inheritance chain", () => {
+		const source_date = new Date("2013-05-01T00:00:00Z");
+		expect(
+			decide_published_at({
+				requested: null,
+				source: { published_at: source_date },
+				existing: { published_at: null },
+				now,
+			}),
+		).toEqual(source_date);
+	});
 });
 
 describe("decide_slug_transition", () => {

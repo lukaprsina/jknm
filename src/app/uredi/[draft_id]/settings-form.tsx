@@ -4,8 +4,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
 	DraftArticleContext,
+	PublishedArticleContext,
 	useIsSupersedingDraft,
 } from "~/components/article/context";
+import { resolve_default_published_at } from "~/components/article/new-adapter";
 import DatePicker from "~/components/date-time-picker/new_date_picker";
 import { editor_store } from "~/components/editor/editor-store";
 import {
@@ -35,12 +37,13 @@ import { SUPERSEDING_DRAFT_DIALOGS } from "~/server/article/lifecycle-rules";
 import { ImageSelector } from "./image-selector";
 
 export const form_schema = z.object({
-	created_at: z.date(),
+	published_at: z.date(),
 	thumbnail_crop: thumbnail_validator.optional(),
 });
 
 export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
 	const draft_article = useContext(DraftArticleContext);
+	const published_article = useContext(PublishedArticleContext);
 	const editor_mutations = useEditorMutations();
 	// "Zavrzi osnutek" is the low-stakes alternative to delete that only
 	// discards the draft; see `useIsSupersedingDraft`.
@@ -57,7 +60,9 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
 		resolver: zodResolver(form_schema),
 		defaultValues: {
 			thumbnail_crop: editor_store.getState().thumbnail_crop ?? undefined,
-			created_at: draft_article?.created_at,
+			published_at: draft_article
+				? resolve_default_published_at(draft_article, published_article)
+				: undefined,
 		},
 	});
 
@@ -66,7 +71,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
 			<form className="space-y-4">
 				<FormField
 					control={form.control}
-					name="created_at"
+					name="published_at"
 					render={({ field }) => (
 						<FormItem className="flex flex-col">
 							<FormLabel>Čas objave</FormLabel>
@@ -139,7 +144,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
 							onClick={form.handleSubmit(
 								async (values: z.infer<typeof form_schema>) => {
 									await editor_mutations.save_draft(
-										values.created_at,
+										values.published_at,
 										values.thumbnail_crop,
 									);
 									closeDialog();
@@ -153,7 +158,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
 							onClick={form.handleSubmit(
 								async (values: z.infer<typeof form_schema>) => {
 									await editor_mutations.publish(
-										values.created_at,
+										values.published_at,
 										values.thumbnail_crop,
 									);
 									closeDialog();

@@ -118,7 +118,7 @@ function Calendar({
 									differenceInCalendarDays(
 										new Date(displayYears.from - 1, 0, 1),
 										startMonth,
-									) < 0) ??
+									) < 0) ||
 								(endMonth &&
 									differenceInCalendarDays(
 										new Date(displayYears.from - 1, 0, 1),
@@ -136,7 +136,7 @@ function Calendar({
 									differenceInCalendarDays(
 										new Date(displayYears.to + 1, 0, 1),
 										startMonth,
-									) < 0) ??
+									) < 0) ||
 								(endMonth &&
 									differenceInCalendarDays(
 										new Date(displayYears.to + 1, 0, 1),
@@ -147,8 +147,16 @@ function Calendar({
 						return !nextMonth;
 					})();
 
+					// `previousMonth`/`nextMonth` come from `useDayPicker()` and only
+					// describe month-navigation bounds. In year view they must not gate
+					// the click at all — `endMonth` capped to the current month (see
+					// `DatePicker`) means `nextMonth` is already `undefined` the moment
+					// the calendar opens on today's month, which made the year view's
+					// next-arrow a permanent no-op. `isNextDisabled`/`isPreviousDisabled`
+					// above already computed the correct year-aware bound (and the
+					// button's `disabled` attribute already stops the click when true),
+					// so year view only needs to guard on `navView`.
 					const handlePreviousClick = React.useCallback(() => {
-						if (!previousMonth) return;
 						if (navView === "years") {
 							setDisplayYears((prev) => ({
 								from: prev.from - (prev.to - prev.from + 1),
@@ -163,12 +171,12 @@ function Calendar({
 							);
 							return;
 						}
+						if (!previousMonth) return;
 						goToMonth(previousMonth);
 						onPrevClick?.(previousMonth);
 					}, [previousMonth, goToMonth]);
 
 					const handleNextClick = React.useCallback(() => {
-						if (!nextMonth) return;
 						if (navView === "years") {
 							setDisplayYears((prev) => ({
 								from: prev.from + (prev.to - prev.from + 1),
@@ -183,6 +191,7 @@ function Calendar({
 							);
 							return;
 						}
+						if (!nextMonth) return;
 						goToMonth(nextMonth);
 						onNextClick?.(nextMonth);
 					}, [goToMonth, nextMonth]);

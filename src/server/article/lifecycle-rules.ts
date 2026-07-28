@@ -161,15 +161,26 @@ export function should_restore_source_on_discard(
 }
 
 export function decide_published_at({
+	requested,
 	source,
 	existing,
 	now,
 }: {
+	/**
+	 * An explicit publish date from the settings-form/toolbar date picker
+	 * (`publish_article`'s caller), when the admin set or corrected one. Wins
+	 * over inheritance: correcting a supersede-publish's date is exactly what
+	 * that control is for, and it's sent on every publish (defaulted
+	 * client-side to the same value inheritance would have picked), so this
+	 * never silently fights the fallback chain below unless the admin actually
+	 * changed it.
+	 */
+	requested?: Date | null;
 	source: { published_at: Date | null } | null;
 	existing: { published_at: Date | null };
 	now: Date;
 }): Date {
-	return source?.published_at ?? existing.published_at ?? now;
+	return requested ?? source?.published_at ?? existing.published_at ?? now;
 }
 
 export type SlugTransitionDecision =
