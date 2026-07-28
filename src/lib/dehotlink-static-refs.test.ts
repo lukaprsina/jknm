@@ -47,6 +47,14 @@ describe("find_pdf_refs", () => {
 			"[old article](https://www.jknm.si/si/?id=623&l=2016) and [other](https://skfb.ly/OKzp)";
 		expect(find_pdf_refs(mdx)).toEqual([]);
 	});
+
+	it("stops before an escaped quote (as in EditorJS JSON, not raw MDX)", () => {
+		const json_ish =
+			'<a href=\\"https://www.jknm.si/media/pdf/1055_Slugova.pdf\\">tukaj</a>';
+		expect(find_pdf_refs(json_ish)).toEqual([
+			"https://www.jknm.si/media/pdf/1055_Slugova.pdf",
+		]);
+	});
 });
 
 describe("find_legacy_id_refs", () => {
@@ -79,6 +87,13 @@ describe("find_legacy_id_refs", () => {
 	it("ignores media links", () => {
 		const mdx = "https://www.jknm.si/media/pdf/1055.pdf";
 		expect(find_legacy_id_refs(mdx)).toEqual([]);
+	});
+
+	it("matches the HTML-entity-escaped &amp;l= form found in EditorJS JSON", () => {
+		const json_ish = "https://www.jknm.si/si/?id=353&amp;l=2014";
+		expect(find_legacy_id_refs(json_ish)).toEqual([
+			{ raw: "https://www.jknm.si/si/?id=353&amp;l=2014", legacy_id: 353 },
+		]);
 	});
 });
 

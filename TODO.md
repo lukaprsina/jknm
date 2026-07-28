@@ -18,3 +18,23 @@ tysm, another thing. in my TOC system, i have h2s and h3s in an aside, but the m
 /novica/jamarski-tecaj-2024 636	#1	„program jamarske šole"	same
 /novica/jamarski-tecaj-2025 675	#1	„program jamarske šole"	https:// variant
 ```
+
+## Dead `www.jknm.si` static-page links left in article content (intentionally, for now)
+
+Per `scripts/audit-article-hotlinks.ts`, 27 refs across 16 articles still link
+old-site pages that were never migrated (admin intentionally left these out —
+they're outdated). Leaving the surrounding paragraphs alone rather than
+stripping the links. `article-link` (13 refs, `/si/?id=N`) and `media-file`
+(6 refs, old `/media/...pdf`) were handled separately — this is just the
+plain static-page-link category:
+
+- `/si/etc/impresum/` — legacy_id 142, 202, 356, 305, 264 (Jamarski tečaj 2010-2014)
+- `/si/izobrazevanje/(program/)` — legacy_id 56, 581, 603, 620, 636, 675 (table above)
+- `/si/publikacije/kras01/` through `kras05/` and bare `/si/publikacije/` —
+  legacy_id 300 ("Publikacije Dolenjski kras", all 5 in one article) and
+  legacy_id 504 ("Izšel je Dolenjski kras 7", links the bare index).
+  **kras01 is getting self-hosted** — when that lands, revisit 02-05 too,
+  same series.
+- `/si/jame/naj/?v=najgloblje` and `?v=najdaljse` — legacy_id 95 ("Šumeča
+  polšna - sklepno dejanje [3]")
+- `/si/raziskovanje/grmec/` — legacy_id 167 ("Bosna 2010")

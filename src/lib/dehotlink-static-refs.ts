@@ -8,11 +8,16 @@
  *  - /media/... links are files (all PDFs so far) that need self-hosting.
  *  - /si/?id=<legacy_id> links are old-CMS article pages, resolved via
  *    `Article.legacy_id` instead of a file copy.
+ *
+ * EditorJS article content stores its HTML with entities escaped, so the
+ * same link appears as `?id=147&amp;l=2010` rather than `&l=2010` — the
+ * `&(?:amp;)?l=` branch below covers both the raw MDX and escaped-JSON forms
+ * without needing a separate regex per source.
  */
 
-const PDF_REF_RE = /https?:\/\/(?:[a-z0-9-]+\.)?jknm\.si\/media\/[^)\s"]+/g;
+const PDF_REF_RE = /https?:\/\/(?:[a-z0-9-]+\.)?jknm\.si\/media\/[^)\s"\\]+/g;
 const LEGACY_ID_REF_RE =
-	/https?:\/\/(?:[a-z0-9-]+\.)?jknm\.si\/si\/\?id=(\d+)(?:&l=\d+)?/g;
+	/https?:\/\/(?:[a-z0-9-]+\.)?jknm\.si\/si\/\?id=(\d+)(?:&(?:amp;)?l=\d+)?/g;
 
 export function find_pdf_refs(mdx: string): string[] {
 	return [...new Set(mdx.match(PDF_REF_RE) ?? [])];
