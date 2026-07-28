@@ -1,5 +1,8 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
-import { extract_media_refs_from_content } from "~/lib/editor-utils";
+import {
+	extract_inline_media_urls,
+	extract_media_refs_from_content,
+} from "~/lib/editor-utils";
 import type { DbTransaction } from "~/server/db";
 import type { ArticleContentType } from "~/server/db/schema";
 import { Media, MediaToArticles } from "~/server/db/schema";
@@ -12,6 +15,11 @@ import { Media, MediaToArticles } from "~/server/db/schema";
  * the `media.id` — so we resolve each URL back to a `media` row via
  * `original->>'url'`. External images that were never uploaded through
  * `/api/media` have no `media` row and are simply skipped.
+ *
+ * Media linked from *inline HTML* (a PDF behind an `<a href>` in a paragraph)
+ * counts too, and is appended after the block-carried urls — it's referenced,
+ * so it must not look orphaned to the sweep, but it has no block position, so
+ * it doesn't get to disturb the gallery `order` of the real media blocks.
  *
  * The diff is minimal: only missing links are inserted, only unreferenced
  * links are deleted, and `order` is only rewritten where it actually changed.
@@ -31,6 +39,9 @@ export async function reconcile_media_to_articles(
 			if (url && !ordered_urls.includes(url)) {
 				ordered_urls.push(url);
 			}
+		}
+		for (const url of extract_inline_media_urls(content)) {
+			if (!ordered_urls.includes(url)) ordered_urls.push(url);
 		}
 	}
 

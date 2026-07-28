@@ -1,6 +1,7 @@
 import type { OutputData } from "@editorjs/editorjs";
 import sanitizeHtml from "sanitize-html";
 import { convert_title_to_url } from "./article-utils";
+import { MEDIA_PUBLIC_DOMAIN } from "./media-upload";
 import { TOC_HEADING_LEVELS, type TocEntry } from "./toc";
 
 interface HeadingReturnType {
@@ -96,6 +97,39 @@ export function extract_media_refs_from_content(
 				data: block.data as EditorJSFileData,
 			};
 		});
+}
+
+/**
+ * Media urls that appear anywhere in a block's data *other* than as an
+ * image/attaches block — in practice `<a href="https://gradivo.jknm.org/...">`
+ * inside a paragraph's inline HTML, which is how the club's PDFs are linked
+ * from prose.
+ *
+ * `extract_media_refs_from_content` can't see these: it filters by
+ * `block.type`, so an inline-linked PDF looks like an article that references
+ * no media at all. Left unreconciled it has no `media_to_articles` row, and
+ * `scripts/sweep-stale-content.ts` deletes exactly that — media with no link
+ * and no thumbnail use — 48h later, taking a live, linked-to file with it.
+ *
+ * Matching by serialized block data rather than by parsing the HTML is
+ * deliberate: any block type can carry inline HTML (list, quote, table), and
+ * the only thing being asserted is "this article points at this media", which
+ * doesn't depend on where in the block the url sits. Image/attaches blocks
+ * match too; callers dedupe.
+ */
+const MEDIA_URL_RE = new RegExp(
+	`https://${MEDIA_PUBLIC_DOMAIN.replace(/\./g, "\\.")}/[^"'\\s\\\\<>)]+`,
+	"g",
+);
+
+export function extract_inline_media_urls(content: OutputData): string[] {
+	const urls = new Set<string>();
+	for (const block of content.blocks) {
+		for (const url of JSON.stringify(block.data).match(MEDIA_URL_RE) ?? []) {
+			urls.add(url);
+		}
+	}
+	return [...urls];
 }
 
 export interface HeadingEntry extends TocEntry {

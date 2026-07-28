@@ -1,12 +1,8 @@
-import B2 from "b2-js";
-import mime from "mime/lite";
-import sharp from "sharp";
-import { env } from "~/env";
 import { extract_media_refs_from_content } from "~/lib/editor-utils";
-import { media_url } from "~/lib/media-upload";
 import type { DbTransaction } from "~/server/db";
 import type { ArticleContentType } from "~/server/db/schema";
-import { Media } from "~/server/db/schema";
+import type { Media } from "~/server/db/schema";
+import { authorize_b2, ingest_media_from_url } from "~/server/media/ingest";
 
 /**
  * Collects the distinct legacy media urls referenced by a legacy article's
@@ -32,85 +28,25 @@ export function collect_legacy_media_urls(
 }
 
 /**
- * Fetches a legacy media url, uploads it into the new `jknm-gradivo` bucket
- * under a fresh uuid (original only — variant/srcset generation is left to
- * the not-yet-built async pipeline per #22), and inserts the `media` row.
- * Returns null (logging a warning) rather than throwing on a single
- * unreachable url, so one broken legacy image doesn't fail the whole
+ * Fetches a legacy media url into the new `jknm-gradivo` bucket and inserts
+ * the `media` row. Returns null (logging a warning) rather than throwing on a
+ * single unreachable url, so one broken legacy image doesn't fail the whole
  * article's migration.
+ *
+ * Format sniffing, variant/srcset/blur generation and the key layout all live
+ * in `ingest_media` now. This used to be a degraded copy of that logic —
+ * original-only, `upload_status: "pending"`, awaiting an async pipeline that
+ * was never built — which is why legacy images rendered without srcsets while
+ * editor uploads got the full set.
  */
 export async function migrate_one_media_object(
 	tx: DbTransaction,
-	b2: Awaited<ReturnType<typeof B2.authorize>>,
+	b2: Awaited<ReturnType<typeof authorize_b2>>,
 	old_url: string,
 	log_label: string,
 ) {
-	const response = await fetch(old_url);
-	if (!response.ok) {
-		console.warn(
-			`${log_label} Failed to fetch legacy media ${old_url}: ${response.status}`,
-		);
-		return null;
-	}
-
-	const array_buffer = await response.arrayBuffer();
-	const buffer = Buffer.from(array_buffer);
-
-	let content_type =
-		response.headers.get("content-type") ?? "application/octet-stream";
-
-	let width = 0;
-	let height = 0;
-	if (content_type.startsWith("image/")) {
-		// The legacy bucket's own `Content-Type` header can't be trusted blindly
-		// — some legacy images were uploaded with a mismatched extension/type in
-		// the old app, which this migration would otherwise carry forward
-		// verbatim. Sniff the real format from the bytes themselves instead.
-		const metadata = await sharp(buffer)
-			.metadata()
-			.catch(() => undefined);
-		width = metadata?.width ?? 0;
-		height = metadata?.height ?? 0;
-		if (metadata?.format) {
-			content_type =
-				mime.getType(metadata.format) ?? `image/${metadata.format}`;
-		}
-	}
-	const extension = mime.getExtension(content_type) ?? "bin";
-	const filename = old_url.split("/").pop() ?? `media.${extension}`;
-
-	const id = crypto.randomUUID();
-	const key = `${id}/original.${extension}`;
-
-	const bucket_obj = await b2.bucket(env.NEXT_PUBLIC_AWS_MEDIA_BUCKET_NAME);
-	try {
-		await bucket_obj.upload(key, buffer, {
-			contentType: content_type,
-			contentLength: buffer.byteLength,
-		});
-	} catch (error) {
-		throw new Error(`${log_label} Failed to upload legacy media ${old_url}`, {
-			cause: error,
-		});
-	}
-
-	const url = media_url(key);
-
-	const [inserted] = await tx
-		.insert(Media)
-		.values({
-			id,
-			filename,
-			content_type,
-			size_bytes: buffer.byteLength,
-			original: { url, width, height, size_bytes: buffer.byteLength },
-			variants: [],
-			srcsets: null,
-			upload_status: "pending",
-		})
-		.returning();
-
-	return inserted ?? null;
+	console.log(`${log_label} ingesting ${old_url}`);
+	return ingest_media_from_url(old_url, { tx, b2 });
 }
 
 /**
@@ -126,10 +62,7 @@ export async function migrate_legacy_media(
 	const url_to_media = new Map<string, typeof Media.$inferSelect>();
 	if (old_urls.length === 0) return url_to_media;
 
-	const b2 = await B2.authorize({
-		applicationKeyId: env.AWS_ACCESS_KEY_ID,
-		applicationKey: env.AWS_SECRET_ACCESS_KEY,
-	});
+	const b2 = await authorize_b2();
 
 	for (const old_url of old_urls) {
 		const media = await migrate_one_media_object(tx, b2, old_url, log_label);
