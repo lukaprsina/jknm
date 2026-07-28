@@ -301,6 +301,44 @@ export async function create_article(
 }
 
 /**
+ * A plain save's counterpart to `resolve_supersede_publish_slug`'s
+ * retitle rule (#21): a published article's title changed under it (not via
+ * a supersede-draft), so mint a fresh slug and demote the old one to
+ * non-primary — kept, resolvable, not deleted — rather than leaving the
+ * primary slug (and every inbound legacy `/si/?id=<legacy_id>` link) pointing
+ * at URL text that no longer matches the title. Draft saves never reach this
+ * (see call site): a draft has no public URL yet, so there's nothing to keep
+ * in sync until publish.
+ */
+async function resolve_retitle_slug(
+	tx: DbTransaction,
+	article_id: string,
+	old_title: string,
+	new_title: string,
+) {
+	const old_primary_slug =
+		(await tx.query.ArticleSlug.findFirst({
+			where: and(
+				eq(ArticleSlug.article_id, article_id),
+				eq(ArticleSlug.is_primary, true),
+			),
+		})) ?? null;
+
+	const decision = decide_slug_transition({ old_title, new_title, old_primary_slug });
+	if (decision.action === "reuse") return;
+
+	if (decision.action === "mint_new_and_demote") {
+		await tx
+			.update(ArticleSlug)
+			.set({ is_primary: false })
+			.where(eq(ArticleSlug.id, decision.demote_slug_id));
+	}
+
+	const slug = await generate_unique_article_slug(tx, new_title);
+	await tx.insert(ArticleSlug).values({ slug, article_id, is_primary: true });
+}
+
+/**
  * Save a draft on the unified `articles` table: update the row, replace its
  * authors, and reconcile `media_to_articles` from the content (#19).
  */
@@ -308,6 +346,12 @@ export async function save_article(
 	input: z.infer<typeof save_article_validator>,
 ) {
 	const transaction = await db.transaction(async (tx) => {
+		const existing = await tx.query.Article.findFirst({
+			where: eq(Article.id, input.article_id),
+			columns: { title: true, status: true },
+		});
+		if (!existing) throw new Error("Article not found");
+
 		const thumbnail = await resolve_thumbnail(tx, input.article.thumbnail_crop);
 
 		const updated = await tx
@@ -335,6 +379,15 @@ export async function save_article(
 			input.article_id,
 			updated[0].content_json,
 		);
+
+		if (existing.status === "published" && existing.title !== input.article.title) {
+			await resolve_retitle_slug(
+				tx,
+				input.article_id,
+				existing.title,
+				input.article.title,
+			);
+		}
 
 		return find_article_with_relations(tx, eq(Article.id, input.article_id));
 	});

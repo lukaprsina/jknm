@@ -51,3 +51,10 @@ plain static-page-link category:
 2 flagged ours (VERIFY), not confident either way:
 488 — nad vs pod mostom (above/below the bridge) — opposite prepositions, can't tell which is right without checking the article/photos.
 621 — Labodnico vs Labadnico — I guessed ours is the corrected spelling but didn't verify against any independent source.
+
+## Next
+
+The remaining older open threads, still just sitting in TODO.md, not urgent:
+kras01–kras05 static-page links — waiting on you to self-host kras01.
+The izobrazevanje paragraph links — your own manual edit, not mine.
+The 23 unresolved stale-media refs — no further automated recovery path.
