@@ -1,0 +1,86 @@
+legacy_id,ours,legacy,suggested,note
+142,Jamarski tečaj 2010,Jamarski tečaj,ours,"year added, admin retitle"
+202,Jamarski tečaj 2011,Jamarski tečaj,ours,year added
+351,Čaganka – projekt &gt;400,Čaganka – projekt >400,legacy,"ours has an unescaped HTML entity (&gt;) baked into the title — migration bug, not a retitle"
+356,Jamarski tečaj 2014,Jamarski tečaj,ours,year added
+642,Jamarski tečaj 2024 - prvi vtisi iz Malisnice,Jamarski tečaj 2024 – prvi vtisi iz Malisnice,ours,dash style only
+645,Jamarski tečaj 2024 - obisk Kaščice [2],Jamarski tečaj 2024 - obisk Kaščice II,ours,bracket-number convention
+653,O netopirjih iz nekaj izbranih dolenjskih jam,O netopirjih iz nekaj izbranih Dolenjskih jam,ours,"casing only (common noun, not proper)"
+665,Andrej Jaklič (1952 - 2024),Andrej Jaklič (1952 – 2024,ours,legacy is missing the closing paren
+677,JKNM (tretjič) prejel nagrado Viljema Puticka,JKNM (spet) prejel nagrado Viljema Puticka,ours,"factual correction (tretjič/spet), looks deliberate"
+689,Anton Tramte (1962 - 2025),Anton Tramte (1962 – 2025),ours,dash style only
+51,Pregledali osem novih jam na Kočevskem Rogu,Pregledali osem novih jam na Kočevskem rogu,ours,casing only
+305,Jamarski tečaj 2013,Jamarski tečaj,ours,year added
+483,Kočevarka,Brezno pri Željnskih jamah,ours,"deliberate retitle, unrelated wording"
+635,Čistilna akcija vodovarstvenega območja izvira Radeščice,Čistilna akcija VVO izvira Radeščice,ours,abbreviation spelled out
+692,Srečno in zvočno v letu 2026,www.jknm.si se je odselil,ours,"repurposed closing-notice article, deliberate"
+26,Kanin 2008 - drugič letos,Kanin 2008 - Drugič letos,ours,casing after dash
+637,Čistilna akcija vodovarstvenega območja izvira Radeščice [2],Čistilna akcija VVO izvira Radeščice II,ours,abbreviation + bracket convention
+10,Jamarski tečaj 2008 - tečaj za jamarja pripravnika,Tečaj za jamarja pripravnika,ours,series prefix added
+14,Raziskovalno-izobraževalni tabor na Kočevskem Rogu 2008,Raziskovalno-izobraževalni tabor na Kočevskem rogu 2008,ours,casing only
+18,Raziskovalno–izobraževalni tabor na Kočevskem Rogu,Raziskovalno–izobraževalni tabor na Kočevskem rogu,ours,casing only
+22,Nove raziskave na Kočevskem Rogu,Nove raziskave na Kočevskem rogu,ours,casing only
+24,Kanin 2008 - letos prvič na pogorju,Kanin 2008 - Letos prvič na pogorju,ours,casing after dash
+30,Na Smrečniku na Kočevskem Rogu,Na Smrečniku na Kočevskem rogu,ours,casing only
+38,Raziskave v okolici Mirne gore na Kočevskem Rogu,Raziskave v okolici Mirne gore na Kočevskem rogu,ours,casing only
+42,Srečno v jamah in v letu 2009 ...,Srečno v jamah in v 2009 ...,ours,"fuller phrase (""v letu"")"
+43,Na dveh akcijah deset jam,Na dveh akcijah 10 jam,ours,"spelled-out number, style"
+67,Koprivnik in Golobinjek [2],Koprivnik in Golobinjek II,ours,bracket-number convention
+46,Kanin 2009 - zimski pregled terena,Kanin 2009 - Zimski pregled terena,ours,casing after dash
+47,Občni zbor 2008,Občni zbor,ours,year added
+54,Zanimivosti s Kočevskega Roga,Zanimivosti s Kočevskega roga,ours,casing only
+56,Jamarski tečaj 2009,Jamarski tečaj,ours,year added
+57,Nova 40 metrca na Kočevskem Rogu,Nova 40 metrca na Kočevskem rogu,ours,casing only
+60,Smrečnik na Kočevskem Rogu,Smrečnik na Kočevskem rogu,ours,casing only
+61,Jamarski tečaj 2009 - vtisi jamarskega tečajnika,Vtisi jamarskega tečajnika,ours,series prefix added
+63,Raziskovalni tabor in zaključek jamarskega tečaja,Raziskovalni tabor in zaključek tečaja,ours,clarifies which tečaj
+72,Nedokončane zadeve na Kočevskem Rogu,Nedokončane zadeve na Kočevskem rogu,ours,casing only
+81,Raziskave v okolici Drvodevnika pri Travnem Dolu,Raziskave v okolici Drvodevnika pri Travnem dolu,ours,casing only (place-name component)
+88,Nove jame na Kočevskem Rogu,Nove jame na Kočevskem rogu,ours,casing only
+122,Ob koncu leta 2009,Ob koncu leta,ours,year added
+125,Kanin 1990 - Reševanje dvajset let pozneje,Kanin 1990 - Reševanje na Kaninu dvajset let pozneje,ours,"""na Kaninu"" trimmed as redundant given ""Kanin 1990"" prefix"
+129,Ne me j****,Ne me J.,ours,"ours reads like profanity-filter corruption of the title, not an editorial choice — verify against article body/legacy scrape"
+146,Jamarski tečaj 2010 - mala šola jamarstva v Malisnici,Mala šola jamarstva v Malisnici,ours,series prefix added
+156,Babin kamen 3,BK 3,ours,abbreviation expanded
+185,Novice s Kočevskega Roga,Novice iz Kočevskega roga,ours,casing + preposition normalized
+206,Jamarski tečaj 2011 se je začel,Jamarski tečaj se je začel,ours,year added
+208,Nadaljevanja jamarskega tečaja 2011,Nadaljevanja jamarskega tečaja,ours,year added
+234,Dan varnosti in tehnike 2011,Dan varnosti in tehnike,ours,year added
+240,&amp;#$@*** pa Dolenjske jame!,"*?#$""!%& pa Dolenjske jame!",legacy,ours has an unescaped HTML entity (&amp;) baked into the title — same migration bug as legacy_id 351
+250,Pokončno in globoko v letu 2012,Pokončno in globoko v 2012,ours,"fuller phrase (""v letu"")"
+253,"Veš, Mirnopečan, svoj dolg?",Veš Mirnopečan svoj dolg?,ours,correct vocative punctuation
+266,Čaganka - jamarski tabor 2012,Čaganka – jamarski tabor 2012,ours,dash style (house style is hyphen)
+264,Jamarski tečaj 2012,Jamarski tečaj,ours,year added
+319,50 let JKNM - zahvala podpornikom,50 let - zahvala podpornikom,ours,clarifies JKNM
+317,Na Kočevskem Rogu,Na Kočevskem rogu,ours,casing only
+325,Čaganka - dol in nazaj v očeh biologa,Čaganka – dol in nazaj v očeh biologa,ours,dash style
+328,Čaganka - dan zmage na globini 350 m,Čaganka – dan zmage na globini 350 m,ours,dash style
+341,Nekaj drobnih iz Kočevskega Roga,Nekaj drobnih iz Kočevskega roga,ours,casing only
+344,Čaganka - ali je res blatna?,Čaganka – ali je res blatna?,ours,dash style
+357,Slugova jama je očiščena,Čistilna akcija v Mirni Peči,ours,"deliberate retitle, unrelated wording"
+358,Tečajniki in ponavljavci,Tečajniki in ponavljalci,legacy,"""ponavljalci"" (repeaters) is the standard Slovene form; ""ponavljavci"" in ours looks like a typo"
+360,Čaganka - tabor 2014,Čaganka - Tabor 2014,ours,"casing after dash, consistent with house style"
+361,Čaganka - nova odkritja proti 450 m,Čaganka - nova odkritja - proti 450 m,ours,redundant extra dash removed
+362,Firecombat 2014 v Žužemberku,Firecombat v Žužemberku,ours,year added
+366,Dan doživetij v Županovi jami 2014,Dan doživetij v Županovi jami,ours,year added
+379,Skrivnost v jami Bajonetka na Kočevskem Rogu,Skrivnost v jami na Kočevskem rogu,ours,cave name added + casing
+398,Firecombat 2015,Fire combat 2015,ours,"spacing, consistent with legacy_id 362"
+435,Čaganka - Južni rov in tlaka na dnu,Čaganka – Južni rov in tlaka na dnu,ours,dash style
+443,Jamarski potep po Kočevskem Rogu,Jamarski potep po Kočevskem rogu,ours,casing only
+446,Dan doživetij v Županovi jami 2016,Dan doživetij v Županovi jami,ours,year added
+450,Cvingerska jama - čiščenje [2],Cvingerska jama - čiščenje 2,ours,bracket-number convention
+478,Jama Müllerloch pri Livoldu je očiščena,Jama Mullerloch pri Livoldu je očiščena,ours,umlaut correction (Müllerloch)
+488,Jama nad mostom v Vavti vasi,Jama pod mostom v Vavti vasi,ours,"opposite preposition (nad=above vs pod=below) — can't tell which is correct without reading the article/photos, flagging rather than guessing"
+492,Cvingerska jama - čiščenje [3],Cvingerska jama – čiščenje 3,ours,dash + bracket convention
+500,Cvingerska jama - raziskovanje nadaljevanja,Cvingerska jama – raziskovanje nadaljevanja,ours,dash style
+517,Cink križ - ožina še čaka,"Cink križ, ožina še čaka",ours,punctuation style
+531,Prvonovembrsko čagankarjenje,Prvonovembrsko Čagankarjenje,ours,casing only (common noun)
+550,Čaganka - Prvonovembrski tabor 2019,Čaganka – Prvonovembrski tabor 2019,ours,dash style
+619,Čaganka - Četud ni 500 globoka ...,Četud ni 500 globoka ...,ours,series prefix added
+562,Jamarski tečaj 2010 v polnem teku,Tečaj za jamarja v polnem teku,ours,"renamed to match the Jamarski tečaj series convention, deliberate"
+579,Ko Pihalnik postane sistem Pihalnik,Ko Pihalnik postane sistem Pihalnika,ours,"legacy's genitive (""sistem Pihalnika"") is grammatically correct; ours looks truncated/wrong case"
+604,Jamarski tečaj 2022 - odtisi in vtisi,Jamarski tečaj 2022 – odtisi in vtisi,ours,dash style
+612,STOP smetem in metanju odpadkov v jame,Stop smetem in metanju odpadkov v jame,ours,stylistic emphasis (all-caps STOP)
+621,Spust v Labodnico,Spust v Labadnico,ours,"spelling, presuming Labodnica is the correct cave name — VERIFY"
+623,V Veliki Prepadni in Noč v knjižnici,V Veliki prepadni in Noč v knjižnici,ours,"casing (Prepadna is a cave name, proper noun)"
+624,Skozi Winetoujevo brezno v čudežni svet brez sonca,Skozi Winetoujevo brezno v čudežni svet brez sonca Županove jame,legacy,"legacy has extra ""Županove jame"" that ours is missing — looks like an accidental truncation, not an edit"

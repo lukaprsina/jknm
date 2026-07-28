@@ -38,3 +38,16 @@ plain static-page-link category:
 - `/si/jame/naj/?v=najgloblje` and `?v=najdaljse` — legacy_id 95 ("Šumeča
   polšna - sklepno dejanje [3]")
 - `/si/raziskovanje/grmec/` — legacy_id 167 ("Bosna 2010")
+
+## Title renames
+
+75 → ours — mostly Slovene casing after a dash/on "Rog(a/u)" (legacy is inconsistently lowercase, ours is consistently capitalized as the proper noun it is), house-style dash vs en dash, [2]-bracket vs roman numeral, or a year/series-prefix the admin clearly added on purpose.
+6 → legacy (real regressions worth fixing):
+351, 240 — ours literally contains an unescaped HTML entity (&gt;, &amp;) baked into the title text — a migration bug, not an edit.
+358 — ours has ponavljavci, legacy has the standard Slovene word ponavljalci — looks like a typo introduced during migration.
+579 — legacy's sistem Pihalnika (genitive) is grammatically correct; ours (sistem Pihalnik) reads like a dropped case ending.
+624 — legacy has an extra Županove jame at the end that ours is missing entirely — looks like an accidental truncation.
+129 — ours (Ne me j****) reads like profanity-filter corruption vs legacy's Ne me J. — flagged for you to check against the article body since I can't tell intent from the title alone.
+2 flagged ours (VERIFY), not confident either way:
+488 — nad vs pod mostom (above/below the bridge) — opposite prepositions, can't tell which is right without checking the article/photos.
+621 — Labodnico vs Labadnico — I guessed ours is the corrected spelling but didn't verify against any independent source.
