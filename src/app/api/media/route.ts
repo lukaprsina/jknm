@@ -1,93 +1,21 @@
 "use server";
 
-import B2 from "b2-js";
 import mime from "mime/lite";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import sharp from "sharp";
-import { env } from "~/env";
-import { convert_filename_to_url } from "~/lib/article-utils";
 import type {
 	FileUploadJSON,
 	FileUploadResponse,
 	ImageUploadJSON,
 } from "~/lib/media-upload";
-import { media_url } from "~/lib/media-upload";
 import { crop_image } from "~/lib/s3-utils";
 import { thumbnail_validator } from "~/lib/validators";
 import { getServerAuthSession } from "~/server/auth";
-import { db } from "~/server/db";
-import type { MediaVariantData } from "~/server/db/schema";
-import { Media } from "~/server/db/schema";
+import { ingest_media } from "~/server/media/ingest";
 
-const VARIANT_WIDTHS = [400, 800, 1600];
-const VARIANT_FORMATS = ["avif", "jpeg"] as const;
-const BLUR_WIDTH = 16;
-
-type Bucket = Awaited<ReturnType<B2["bucket"]>>;
-
-async function generate_image_variants({
-	buffer,
-	original_width,
-	id,
-	bucket_obj,
-}: {
-	buffer: Buffer;
-	original_width: number;
-	id: string;
-	bucket_obj: Bucket;
-}) {
-	const widths = VARIANT_WIDTHS.filter((width) => width < original_width);
-
-	const variants: MediaVariantData[] = [];
-	for (const width of widths) {
-		for (const format of VARIANT_FORMATS) {
-			const resized = sharp(buffer).resize({ width });
-			const output_buffer = await (format === "avif"
-				? resized.avif({ quality: 50 })
-				: resized.jpeg({ quality: 75 })
-			).toBuffer();
-			const output_metadata = await sharp(output_buffer).metadata();
-
-			const key = `${id}/${width}.${format}`;
-			await bucket_obj.upload(key, output_buffer, {
-				contentType: `image/${format}`,
-				contentLength: output_buffer.byteLength,
-			});
-
-			variants.push({
-				format,
-				width,
-				height: output_metadata.height ?? 0,
-				url: media_url(key),
-				size_bytes: output_buffer.byteLength,
-			});
-		}
-	}
-
-	const srcsets =
-		variants.length > 0
-			? {
-					avif: variants
-						.filter((v) => v.format === "avif")
-						.map((v) => `${v.url} ${v.width}w`)
-						.join(", "),
-					jpeg: variants
-						.filter((v) => v.format === "jpeg")
-						.map((v) => `${v.url} ${v.width}w`)
-						.join(", "),
-					sizes: "(max-width: 800px) 100vw, 800px",
-				}
-			: undefined;
-
-	const blur_buffer = await sharp(buffer)
-		.resize({ width: BLUR_WIDTH })
-		.jpeg({ quality: 40 })
-		.toBuffer();
-	const blur_placeholder = `data:image/jpeg;base64,${blur_buffer.toString("base64")}`;
-
-	return { variants, srcsets, blur_placeholder };
-}
+// Storage — bucket, key layout, variants, srcsets, blur placeholder — lives in
+// `~/server/media/ingest`. What's left here is the HTTP shape: auth, decoding
+// the multipart form, the optional crop, and EditorJS's response envelope.
 
 export async function POST(request: NextRequest) {
 	const session = await getServerAuthSession();
@@ -148,71 +76,22 @@ export async function POST(request: NextRequest) {
 
 	if (typeof file !== "object" || !file) return NextResponse.error();
 
-	const mime_type =
-		file.type || (mime.getType(title) ?? "application/octet-stream");
-	const extension = mime.getExtension(mime_type) ?? "bin";
-	const id = crypto.randomUUID();
-	const key = `${id}/original.${extension}`;
-
-	const arrayBuffer = await file.arrayBuffer();
-	const buffer = Buffer.from(arrayBuffer);
-
-	const b2 = await B2.authorize({
-		applicationKeyId: env.AWS_ACCESS_KEY_ID,
-		applicationKey: env.AWS_SECRET_ACCESS_KEY,
-	});
-	const bucket_obj = await b2.bucket(env.NEXT_PUBLIC_AWS_MEDIA_BUCKET_NAME);
-
-	await bucket_obj.upload(key, buffer, {
-		contentType: mime_type,
-		contentLength: buffer.byteLength,
+	const media = await ingest_media({
+		bytes: Buffer.from(await file.arrayBuffer()),
+		filename: title,
+		content_type:
+			file.type || (mime.getType(title) ?? "application/octet-stream"),
 	});
 
-	const url = media_url(key);
-
-	let width: number | undefined;
-	let height: number | undefined;
-	let variants: MediaVariantData[] = [];
-	let srcsets: { avif: string; jpeg: string; sizes: string } | undefined;
-	let blur_placeholder: string | undefined;
-	if (file_type === "image") {
-		const image_metadata = await sharp(buffer).metadata();
-		width = image_metadata.width;
-		height = image_metadata.height;
-
-		if (width) {
-			const generated = await generate_image_variants({
-				buffer,
-				original_width: width,
-				id,
-				bucket_obj,
-			});
-			variants = generated.variants;
-			srcsets = generated.srcsets;
-			blur_placeholder = generated.blur_placeholder;
-		}
-	}
-
-	await db.insert(Media).values({
-		id,
-		filename: convert_filename_to_url(title),
-		content_type: mime_type,
-		size_bytes: buffer.byteLength,
-		original: {
-			url,
-			width: width ?? 0,
-			height: height ?? 0,
-			size_bytes: buffer.byteLength,
-		},
-		variants,
-		srcsets,
-		blur_placeholder,
-		upload_status: "completed",
-	});
+	const url = media.original.url;
 
 	let file_data: ImageUploadJSON | FileUploadJSON;
 	if (file_type === "image") {
-		file_data = { url, width, height };
+		file_data = {
+			url,
+			width: media.original.width,
+			height: media.original.height,
+		};
 	} else {
 		file_data = {
 			url,
