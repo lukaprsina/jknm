@@ -142,6 +142,24 @@ export function is_supersede_publish(
  * was archived straight from `draft` has a null `published_at` and correctly
  * falls through to `existing.published_at ?? now`.
  */
+/**
+ * Whether discarding a superseding draft must also restore its source back to
+ * `archived`. True exactly when the source is currently `deleted` — the only
+ * way that happens while the draft is still `draft` is
+ * `create_superseding_draft`'s immediate retirement of an `archived` source at
+ * unarchive time (see its doc comment): nothing else can delete a source out
+ * from under an open draft, since a superseded source's own page 404s
+ * (`is_visible_to`), leaving no UI path to delete it directly, and
+ * `assert_can_supersede` requires `archived`/`published` at draft-creation
+ * time. Discarding without restoring would silently turn "cancel this edit"
+ * into "delete the article", contradicting `discard_draft`'s own contract.
+ */
+export function should_restore_source_on_discard(
+	source: { status: ArticleStatus } | null,
+): boolean {
+	return source?.status === "deleted";
+}
+
 export function decide_published_at({
 	source,
 	existing,

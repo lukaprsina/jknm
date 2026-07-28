@@ -16,6 +16,7 @@ import {
 	assert_can_discard,
 	assert_can_supersede,
 	resolve_lifecycle_target,
+	should_restore_source_on_discard,
 } from "./lifecycle-rules";
 import { reconcile_media_to_articles } from "./reconcile-media";
 import type {
@@ -206,6 +207,13 @@ export async function delete_article(
  * touching the article it supersedes — soft-deletes just this row. This is
  * the low-stakes counterpart to `delete_article`, which for a superseding
  * draft deletes the source instead.
+ *
+ * Except that "without touching the source" isn't automatically true for an
+ * unarchive-spawned draft: `create_superseding_draft` retires an `archived`
+ * source immediately, before this draft is ever published, so by the time
+ * discard runs the source may already be `deleted`. Restore it to `archived`
+ * in that case (`should_restore_source_on_discard`) — otherwise "cancel this
+ * edit" would silently delete the article instead of leaving it as it was.
  */
 export async function discard_draft(
 	input: z.infer<typeof discard_draft_validator>,
@@ -217,6 +225,20 @@ export async function discard_draft(
 		});
 		if (!existing) throw new Error("Article not found");
 		assert_can_discard(existing);
+
+		const source = existing.supersedes_id
+			? await tx.query.Article.findFirst({
+					where: eq(Article.id, existing.supersedes_id),
+					columns: { status: true },
+				})
+			: null;
+
+		if (existing.supersedes_id && should_restore_source_on_discard(source ?? null)) {
+			await tx
+				.update(Article)
+				.set({ status: "archived", deleted_at: null })
+				.where(eq(Article.id, existing.supersedes_id));
+		}
 
 		return soft_delete_article(tx, existing.id);
 	});

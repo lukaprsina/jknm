@@ -11,6 +11,7 @@ import {
 	is_visible_to,
 	resolve_lifecycle_target,
 	resolve_slug_request,
+	should_restore_source_on_discard,
 } from "./lifecycle-rules";
 
 describe("assert_can_archive", () => {
@@ -123,6 +124,23 @@ describe("resolve_lifecycle_target", () => {
 			target: draft,
 			cascade_delete_draft_id: null,
 		});
+	});
+});
+
+describe("should_restore_source_on_discard", () => {
+	test("restores when the source was retired by unarchiving (deleted)", () => {
+		expect(should_restore_source_on_discard({ status: "deleted" })).toBe(true);
+	});
+
+	test.each(["archived", "published", "draft"] as const)(
+		"does not restore when the source is still %s",
+		(status) => {
+			expect(should_restore_source_on_discard({ status })).toBe(false);
+		},
+	);
+
+	test("does not restore a standalone draft (no source)", () => {
+		expect(should_restore_source_on_discard(null)).toBe(false);
 	});
 });
 
