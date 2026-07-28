@@ -6,8 +6,8 @@
 - improve mobile
 - osnutka dva reš še slike in objav
 - statične bold zgodovina **
-- tanstack form
 - TOC article add H1 too
-- legacy id 611 is soft-deleted, it is linked though
+
+tysm, another thing. in my TOC system, i have h2s and h3s in an aside, but the main h1 is missing, you can't navigate to the top. it's guaranteed that an article's first h1 is at the top and that it's the only one (otherwise you can't publish), but you can also use the Article.title from the db.
 
 ## Research content migration strategy for B2 bucket

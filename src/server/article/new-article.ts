@@ -65,6 +65,9 @@ async function resolve_first_publish_slug(
  * for the new row and the old one is demoted to non-primary — kept,
  * resolvable, not deleted. Also retires the superseded row via the shared
  * `soft_delete_article`.
+ *
+ * `legacy_id` moves separately, in `inherit_identity_from_source` — it has to
+ * happen on the archived-source path too, which never reaches this function.
  */
 async function resolve_supersede_publish_slug(
 	tx: DbTransaction,
@@ -141,6 +144,48 @@ async function resolve_supersede_publish_slug(
 		primary,
 		unlist_algolia_id: superseded.status === "published" ? supersedes_id : null,
 	};
+}
+
+/**
+ * Move `legacy_id` off the superseded row and onto the newly published one.
+ *
+ * `legacy_id` is the same kind of fact as the primary slug — how an inbound
+ * link from the old 2008 site (`/si/?id=<legacy_id>`, resolved by
+ * src/app/si/route.ts and `resolve_legacy_article_link`) finds this article
+ * today — so it has to follow the content forward. Left on a superseded row,
+ * which is always soft-deleted, every such link resolves to an article nobody
+ * can see.
+ *
+ * Deliberately keyed on "this draft supersedes something", *not* on
+ * `is_supersede_publish`: unarchiving retires the source immediately
+ * (`create_superseding_draft`), so on that path the source is already
+ * `deleted` at publish time and the slug function below never runs — but the
+ * new row is still the same article and still needs the id. Runs after the
+ * slug work so the `FOR UPDATE` lock taken there (still held, same
+ * transaction) also covers this write on the supersede-publish path.
+ */
+async function inherit_identity_from_source(
+	tx: DbTransaction,
+	article_id: string,
+	supersedes_id: string,
+) {
+	const source_rows = await tx
+		.select({ legacy_id: Article.legacy_id })
+		.from(Article)
+		.where(eq(Article.id, supersedes_id))
+		.for("update");
+	const source = source_rows[0];
+	if (source?.legacy_id == null) return;
+
+	// Unique column, so the source releases the value before the new row takes it.
+	await tx
+		.update(Article)
+		.set({ legacy_id: null })
+		.where(eq(Article.id, supersedes_id));
+	await tx
+		.update(Article)
+		.set({ legacy_id: source.legacy_id })
+		.where(eq(Article.id, article_id));
 }
 
 /**
@@ -287,6 +332,12 @@ export async function save_article(
  * supersede-publish (#21, `supersedes_id` set): the latter also retires the
  * superseded row and applies the slug-inherit-or-demote rule — see
  * `resolve_supersede_publish_slug`.
+ *
+ * Whenever `supersedes_id` is set the new row also inherits the source's
+ * identity — `published_at` here, `legacy_id` via
+ * `inherit_identity_from_source`. That's independent of which of the two
+ * paths above runs, because an unarchived source is already `deleted` by
+ * publish time and so takes the first-publish branch.
  */
 export async function publish_article(
 	input: z.infer<typeof publish_article_validator>,
@@ -304,9 +355,28 @@ export async function publish_article(
 		const source = existing.supersedes_id
 			? ((await tx.query.Article.findFirst({
 					where: eq(Article.id, existing.supersedes_id),
-					columns: { status: true },
+					columns: { status: true, published_at: true },
 				})) ?? null)
 			: null;
+
+		const is_supersede = Boolean(
+			existing.supersedes_id && is_supersede_publish(source),
+		);
+
+		// A superseding draft is a *fresh* row, so its own `published_at` is
+		// null — falling through to `new Date()` would silently re-date the
+		// article to today every time it's revised, bumping it to the top of
+		// the news list and moving it between years in the archive (the
+		// `published_year` generated column derives from this). Revising an
+		// article isn't republishing it, so the source's original date wins.
+		//
+		// Keyed on the source existing, not on `is_supersede`: the unarchive
+		// path retires its source at draft-creation time, so `is_supersede` is
+		// already false by now even though this is still the same article. A
+		// source that was archived straight from `draft` has a null
+		// `published_at` and correctly falls through.
+		const published_at =
+			source?.published_at ?? existing.published_at ?? new Date();
 
 		const thumbnail = await resolve_thumbnail(tx, input.article.thumbnail_crop);
 
@@ -316,7 +386,7 @@ export async function publish_article(
 				title: input.article.title,
 				content_json: input.article.content ?? undefined,
 				status: "published",
-				published_at: existing.published_at ?? new Date(),
+				published_at,
 				...(input.article.created_at
 					? { created_at: input.article.created_at }
 					: {}),
@@ -337,7 +407,7 @@ export async function publish_article(
 		);
 
 		const { primary, unlist_algolia_id } =
-			existing.supersedes_id && is_supersede_publish(source)
+			is_supersede && existing.supersedes_id
 				? await resolve_supersede_publish_slug(
 						tx,
 						input.article_id,
@@ -352,6 +422,17 @@ export async function publish_article(
 						),
 						unlist_algolia_id: null,
 					};
+
+		// Both publish paths: the supersede-publish one above has already
+		// soft-deleted the source, and the unarchive one had its source retired
+		// back at draft creation. Either way the id must not stay behind.
+		if (existing.supersedes_id) {
+			await inherit_identity_from_source(
+				tx,
+				input.article_id,
+				existing.supersedes_id,
+			);
+		}
 
 		const article = await find_article_with_relations(
 			tx,
