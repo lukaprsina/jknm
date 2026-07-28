@@ -41,6 +41,8 @@ plain static-page-link category:
 
 ## Title renames
 
+129, 358, 240, 351, 579, 624
+
 75 → ours — mostly Slovene casing after a dash/on "Rog(a/u)" (legacy is inconsistently lowercase, ours is consistently capitalized as the proper noun it is), house-style dash vs en dash, [2]-bracket vs roman numeral, or a year/series-prefix the admin clearly added on purpose.
 6 → legacy (real regressions worth fixing):
 351, 240 — ours literally contains an unescaped HTML entity (&gt;, &amp;) baked into the title text — a migration bug, not an edit.
