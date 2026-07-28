@@ -1,42 +1,50 @@
 import { parseArgs } from "node:util";
-import { eq, isNotNull } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { db } from "~/server/db";
 import { Article } from "~/server/db/schema";
 
 /**
- * One-off: moves `legacy_id` from a soft-deleted superseded row forward onto
- * the live row that replaced it.
+ * One-off (v2): moves `legacy_id` from a soft-deleted superseded row all the
+ * way forward to the live end of its supersede chain, walking every hop
+ * rather than just one.
  *
- * Cause (still present in the app, see the note below): the supersede flow
- * moves the *slug* forward to the newly published row
- * (`resolve_supersede_publish_slug`, src/server/article/new-article.ts) and
- * soft-deletes the source, but never moves `legacy_id`. So revising a
- * migrated legacy article via the pencil strands its `legacy_id` on a
- * `deleted` row that has no slugs at all, while the live row gets none —
- * which breaks `/si/?id=N` resolution (`resolve_legacy_article_link`, used by
- * scripts/dehotlink-static-pages.ts), since that looks up `Article.legacy_id`
- * and would land on the invisible row.
+ * v1 of this script (committed alongside `inherit_identity_from_source` in
+ * 2ee65fc) only ever followed the *immediate* child of a stranded row. That's
+ * correct for an article revised once, but one revised twice (unarchive ->
+ * edit -> publish -> revise again -> publish again) ends up multiple hops
+ * away from where its `legacy_id` is parked — v1 would only advance it one
+ * hop per run, needing a re-run per additional hop, and evidently wasn't:
+ * legacy_id 358 and 240 were still stranded on their *original* rows, not
+ * even the immediate child, when this was investigated on 2026-07-28 (traced
+ * to `discard_draft` previously double-deleting an unarchived source before
+ * it could ever be republished — fixed separately, see lifecycle.ts).
  *
- * `legacy_id` is the same kind of fact as the slug — "how an old inbound link
- * finds this article today" — so it belongs on the live end of the chain, not
- * pinned to whichever edit happened to be live back in 2013/2024. Date-based
- * *matching* still uses the original row's `published_at`
- * (scripts/fix-legacy-ids-by-date.ts); only the storage location moves.
- *
- * Two known chains at time of writing:
- *   309 "Tečaj v Sežani"                  (live row also holds a junk -588)
- *   635 "Čistilna akcija ... Radeščice"   (live row holds null)
+ * This version walks the whole chain in one pass: build a reverse
+ * `supersedes_id` index (source id -> the row that superseded it), then for
+ * every row still holding a `legacy_id` while itself `deleted`, follow that
+ * index to the end. Skips a chain whose live end is a `draft` — an
+ * in-progress edit hasn't published yet, so the id would be moving to a row
+ * that isn't actually live; `inherit_identity_from_source` (new-article.ts)
+ * moves it the rest of the way itself once that draft publishes.
  *
  * Usage:
  *   bun run scripts/fix-legacy-id-supersede-chains.ts            # dry run
  *   bun run scripts/fix-legacy-id-supersede-chains.ts --execute
  */
 
+interface Row {
+	id: string;
+	legacy_id: number | null;
+	title: string;
+	status: "draft" | "published" | "archived" | "deleted";
+	supersedes_id: string | null;
+}
+
 async function main() {
 	const { values } = parseArgs({ options: { execute: { type: "boolean" } } });
 	const execute = values.execute ?? false;
 
-	const all = await db.query.Article.findMany({
+	const all: Row[] = await db.query.Article.findMany({
 		columns: {
 			id: true,
 			legacy_id: true,
@@ -44,50 +52,99 @@ async function main() {
 			status: true,
 			supersedes_id: true,
 		},
-		with: { article_slugs: { columns: { slug: true } } },
 	});
-	const by_id = new Map(all.map((a) => [a.id, a]));
+
+	// Reverse index: source id -> every row that claims to supersede it.
+	// Normally at most one (create_superseding_draft reuses an already-open
+	// draft rather than minting a second one against the same source), but
+	// stray dev/test rows can violate that without ever holding a legacy_id —
+	// harmless noise we only need to notice if a real chain actually forks
+	// through one, so ambiguity is checked lazily during the walk below
+	// instead of rejected here.
+	const superseded_by = new Map<string, Row[]>();
+	for (const row of all) {
+		if (!row.supersedes_id) continue;
+		const siblings = superseded_by.get(row.supersedes_id) ?? [];
+		siblings.push(row);
+		superseded_by.set(row.supersedes_id, siblings);
+	}
 
 	const moves: {
 		source_id: string;
 		live_id: string;
 		title: string;
 		legacy_id: number;
+		hops: number;
 		displaced: number | null;
 	}[] = [];
 
-	for (const live of all) {
-		if (!live.supersedes_id) continue;
-		const source = by_id.get(live.supersedes_id);
-		if (!source || source.legacy_id === null) continue;
+	for (const row of all) {
+		if (row.legacy_id === null || row.status !== "deleted") continue;
 
-		// Only chains whose source is retired (the live row is genuinely the
-		// current article). An open draft against a still-live source must not
-		// steal its legacy_id — the source is still the published one.
-		if (source.status !== "deleted") {
+		let hops = 0;
+		let current = row;
+		while (true) {
+			const children = superseded_by.get(current.id);
+			if (!children || children.length === 0) break;
+			if (children.length > 1) {
+				throw new Error(
+					`legacy_id=${row.legacy_id} "${row.title}": chain forks at ${current.id} — ${children
+						.map((c) => c.id)
+						.join(", ")} all claim to supersede it, refusing to guess which is the real chain`,
+				);
+			}
+			const next = children[0];
+			if (!next) break;
+			current = next;
+			hops += 1;
+			if (hops > 50) {
+				throw new Error(
+					`chain from ${row.id} didn't terminate after 50 hops — possible cycle`,
+				);
+			}
+		}
+
+		if (current.id === row.id) continue; // nothing supersedes it, nothing to move
+
+		if (current.status !== "published" && current.status !== "archived") {
 			console.log(
-				`  skipping "${live.title}": source status=${source.status}, not retired`,
+				`  skipping legacy_id=${row.legacy_id} "${row.title}": chain's live end (${current.id}) is ${current.status}, not published/archived`,
 			);
 			continue;
 		}
 
 		moves.push({
-			source_id: source.id,
-			live_id: live.id,
-			title: live.title,
-			legacy_id: source.legacy_id,
-			displaced: live.legacy_id,
+			source_id: row.id,
+			live_id: current.id,
+			title: current.title,
+			legacy_id: row.legacy_id,
+			hops,
+			displaced: current.legacy_id,
 		});
 	}
 
-	console.log(`${moves.length} supersede chain(s) with a stranded legacy_id:\n`);
+	// Two different stranded ids converging on the same live row would silently
+	// drop one of them (last write wins) — refuse rather than guess.
+	const live_id_counts = new Map<string, number>();
+	for (const move of moves) {
+		live_id_counts.set(move.live_id, (live_id_counts.get(move.live_id) ?? 0) + 1);
+	}
+	for (const [live_id, count] of live_id_counts) {
+		if (count > 1) {
+			throw new Error(
+				`${count} different stranded legacy_ids all resolve to the same live row ${live_id} — refusing to guess which is correct`,
+			);
+		}
+	}
+
+	console.log(`${moves.length} stranded legacy_id(s) to move:\n`);
 	for (const move of moves) {
 		const displaced =
 			move.displaced === null
 				? ""
 				: ` (overwriting ${move.displaced} on the live row)`;
 		console.log(
-			`  legacy_id=${move.legacy_id}  "${move.title}"\n    from deleted ${move.source_id}\n    to   live    ${move.live_id}${displaced}`,
+			`  legacy_id=${move.legacy_id}  "${move.title}"  (${move.hops} hop${move.hops === 1 ? "" : "s"})\n    from deleted ${move.source_id}\n    to   live    ${move.live_id}${displaced}`,
 		);
 	}
 
@@ -97,7 +154,7 @@ async function main() {
 	}
 
 	await db.transaction(async (tx) => {
-		// legacy_id is UNIQUE, so the source has to release the value before the
+		// legacy_id is UNIQUE, so each source has to release its value before the
 		// live row can take it.
 		for (const move of moves) {
 			await tx
@@ -124,6 +181,11 @@ async function main() {
 			if (holders.length !== 1 || holder?.id !== move.live_id) {
 				throw new Error(
 					`legacy_id=${move.legacy_id} resolves to ${holders.length} row(s), expected only ${move.live_id}`,
+				);
+			}
+			if (holder.status !== "published" && holder.status !== "archived") {
+				throw new Error(
+					`legacy_id=${move.legacy_id} landed on ${holder.id}, which is ${holder.status}`,
 				);
 			}
 			if (holder.article_slugs.length === 0) {
