@@ -55,3 +55,4 @@ scripts/.cache
 .env*
 /artifacts/b2-mirror/
 /artifacts/b2-move/
+/artifacts/media-dedupe-plan.json

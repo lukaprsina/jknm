@@ -1,6 +1,6 @@
 # Handoff: media dedup & thumbnail-flag work (JKNM, d:\dev\js\jknm)
 
-Repo: `d:\dev\js\jknm`, branch `main`, HEAD at commit `3936c99`.
+Repo: `d:\dev\js\jknm`, branch `main`, HEAD at commit `26a69fd` (this doc's own commit; the fix itself landed in `3936c99`).
 Read `AGENTS.md` and `CONTEXT.md` at repo root first — they're the standing
 domain/agent-skill docs and this doc assumes you already have them.
 
@@ -99,80 +99,74 @@ Full detail of *why* each piece is shaped the way it is lives in the doc
 comments at each call site and in the commit message of `3936c99` — not
 duplicated here.
 
-## What's still broken: the underlying dedup problem itself
+## Media dedup: resolved
 
-The `uploaded_custom_thumbnail` fix is a **workaround for one symptom**. The
-root cause — `Media` rows can silently duplicate the same file — is
-untouched and will keep causing this class of bug (thumbnail-vs-content
-mismatches are only the one instance that got reported and chased down; the
-same split likely affects anything else that tries to reason about "is this
-media used elsewhere").
+The underlying dedup problem described above (`Media` rows silently
+duplicating the same file) is fixed, on both staging and production:
 
-**Agreed plan for the real fix** (explicitly deferred to a separate
-session — do not casually fold it into unrelated work, it touches live
-storage/data):
+0. Full `pg_dump` backups taken before touching production
+   (`D:\Luka\JKNM\rewrite-backups\prod-pre-media-hash-*.dump`).
+1. `Media.hash` (sha256 of the original bytes) added and backfilled for
+   every row, via `scripts/analyze-media-duplicates.ts --execute`.
+2. `ingest_media()` (`src/server/media/ingest.ts`) now hashes incoming
+   bytes first and reuses an existing row on a match instead of always
+   inserting a new one — this is what stops new duplicates from forming.
+   A unique constraint on `Media.hash` plus an `onConflictDoNothing`
+   fallback closes the race between two concurrent uploads of identical
+   bytes.
+3. `scripts/dedupe-media.ts --execute` rewrote every affected article's
+   `thumbnail_media_id`/`content_json` to point at the canonical row (28
+   duplicate groups, 34 rows, 15 articles on both environments); the 34
+   now-unreferenced duplicate rows and their B2 objects were then deleted.
 
-0. Back up B2 buckets and the DB before touching anything. One backup
-   already exists at `D:\Luka\JKNM\rewrite-28-07-206` — check whether it's
-   still current enough before relying on it.
-1. Add a content-hash column to `Media`, backfill it for existing rows.
-2. Rewrite the upload path to check the hash first and reuse an existing
-   `Media` row when one already matches, instead of always inserting a new
-   one — this is what stops new duplicates from forming.
-3. Write a dedupe script: find `Media` rows sharing a hash, pick a
-   canonical row per hash, rewrite every article's `thumbnail_media_id` and
-   `content_json` image/attaches block references to point at the
-   canonical row, then deal with the now-orphaned duplicate rows (and their
-   now-orphaned B2 objects).
+Note on sequencing that mattered in practice: `dedupe-media.ts` only
+*unlinks* duplicates by design (it defers deletion to
+`scripts/sweep-stale-content.ts`'s 48h grace window, reusing already-working
+deletion code). Pushing the unique constraint on `Media.hash` requires the
+duplicate rows to actually be gone first, so on production this needed one
+extra manual step — deleting exactly those 34 already-verified-unreferenced
+rows — rather than waiting out the grace window or running the general
+sweep script (which would have also hard-deleted ~45 unrelated soft-deleted
+articles, out of scope for this work).
 
-The user explicitly wants to do this work **in a staging environment**
-(`.env.staging`, not the default `.env.local` this session's scripts used)
-"because I don't want to fuck this up too bad" — this is real
-production-affecting data (738 articles, real B2 objects). Step 2 (hash
-check on upload) should land *before* step 3 (the dedupe rewrite runs),
-otherwise new duplicates keep forming while old ones are being cleaned up.
-
-Sequencing note the user hasn't explicitly ruled on: once steps 1–3 land,
+Sequencing note on `uploaded_custom_thumbnail`: now that dedup is trustworthy,
 `uploaded_custom_thumbnail` becomes *theoretically* recomputable via the
-same content-membership check, now made trustworthy by dedup. Don't take
-that as license to revert the backfilled/wired column back to a computed
-heuristic — the two questions aren't the same fact. `uploaded_custom_thumbnail`
-answers "did the user explicitly click the upload button," which happens to
-usually but not always coincide with "is this media also in the content."
-The JSON ground truth already answers the real question for legacy rows and
-doesn't depend on the dedup work succeeding; the dedup work is what would
-make the heuristic *usable going forward* for new-site-only articles that
+same content-membership check. Don't take that as license to revert the
+backfilled/wired column back to a computed heuristic — the two questions
+aren't the same fact. `uploaded_custom_thumbnail` answers "did the user
+explicitly click the upload button," which happens to usually but not
+always coincide with "is this media also in the content." The JSON ground
+truth already answers the real question for legacy rows; dedup is what
+makes the heuristic *usable going forward* for new-site-only articles that
 have no legacy ground truth to fall back on at all.
 
-## Files touched / relevant this session
+## Files touched / relevant
 
-- `src/server/db/schema.ts` — new `uploaded_custom_thumbnail` column.
+- `src/server/db/schema.ts` — `uploaded_custom_thumbnail` column; `Media.hash`
+  column + unique constraint.
 - `src/server/article/new-article.ts` — `resolve_thumbnail` write path.
 - `src/components/article/new-adapter.ts` — `reconstruct_thumbnail_crop`
   read path, null-handling.
 - `src/server/article/lifecycle.ts` — `create_superseding_draft` copy path.
+- `src/server/media/ingest.ts` — upload-time hash dedup in `ingest_media()`.
+- `scripts/analyze-media-duplicates.ts` — hash backfill + duplicate-group
+  detection, already run with `--execute` on staging and production.
+- `scripts/dedupe-media.ts` — already run with `--execute` on staging and
+  production.
 - `scripts/audit-custom-thumbnail-heuristic.ts` — diagnostic only, already
   run, not meant to run again as part of normal operation.
 - `scripts/backfill-uploaded-custom-thumbnail.ts` — already run with
   `--execute` against the live DB.
-- Commit `3936c99` has the full diff and rationale; commit `4312252`
-  earlier in the same session fixed unrelated bugs (settings-form date
-  picker, calendar year-view navigation) — not part of this story.
+- Commit `3936c99` has the `uploaded_custom_thumbnail` diff and rationale;
+  commit `e15ecc7` has the upload-time hash dedup.
 
-## Suggested skills for the next session
+## Still open, deliberately left alone
 
-- **`domain-modeling`** — worth recording an ADR for "why media has no
-  dedup today and what the hash-based fix looks like" before starting
-  implementation; this is exactly the kind of decision that should be
-  written down once rather than re-derived.
-- **`tdd`** — the hash-check-on-upload path and the dedupe script are both
-  logic-heavy and currently untested; build them test-first, especially the
-  "which row is canonical when hashes collide" and "rewrite all referencing
-  articles" logic.
-- **`diagnosing-bugs`** — if the dedupe script surfaces more
-  content/thumbnail mismatches beyond what's already known, use this to
-  drive the investigation rather than ad hoc scripts, so findings stay
-  reproducible.
-- **`code-review`** — run before committing the hash/dedupe work, same as
-  this session's pattern (`/code-review HEAD`), given how much of a diff
-  that work will be and the DB-mutation stakes.
+- One orphaned, unreferenced media file — a cave photo ("astinova jama",
+  `ce94bf52-2471-4ba2-8193-dafce744b7e9`) — sits in the `jknm-gradivo-orphaned`
+  B2 bucket with no `Media` row and no article reference. Identified but its
+  fate (delete / re-link / leave in quarantine) was explicitly left
+  undecided.
+- `jknm-gradivo-orphaned` itself (the ~8,647-object bucket of pre-rewrite
+  legacy keys and confirmed-duplicate re-upload artifacts moved out of the
+  live bucket) is being kept around rather than purged, for now.
