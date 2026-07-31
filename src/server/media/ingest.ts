@@ -1,4 +1,6 @@
+import crypto from "node:crypto";
 import B2 from "b2-js";
+import { eq } from "drizzle-orm";
 import mime from "mime/lite";
 import sharp from "sharp";
 import { env } from "~/env";
@@ -55,6 +57,11 @@ export interface IngestMediaDeps {
 	tx?: DbTransaction | typeof db;
 	/** Pass a pre-authorized client to avoid re-authorizing per file in a batch. */
 	b2?: B2Client;
+}
+
+/** sha256 of `bytes`, hex-encoded — matches `Media.hash`'s format. */
+function hash_bytes(bytes: Buffer): string {
+	return crypto.createHash("sha256").update(bytes).digest("hex");
 }
 
 /**
@@ -211,16 +218,24 @@ export function authorize_b2() {
  * back `completed` — there is no async pipeline to finish the job later, so a
  * row this function returns is final. The public url is `media.original.url`.
  *
- * Not idempotent: every call mints a fresh uuid and uploads again. Callers
- * that might see the same source twice (migration scripts re-running) must
- * dedupe before calling, which is why the batch helpers below key on the
- * source url.
+ * Content-addressed: if `input.bytes` sha256-matches an existing `Media.hash`,
+ * that row is returned as-is and nothing is uploaded or inserted. This is what
+ * makes re-ingesting the same source safe — migration scripts re-running,
+ * someone re-uploading a file they already uploaded — without callers having
+ * to dedupe first.
  */
 export async function ingest_media(
 	input: IngestMediaInput,
 	deps: IngestMediaDeps = {},
 ) {
 	const database = deps.tx ?? db;
+
+	const hash = hash_bytes(input.bytes);
+	const existing = await database.query.Media.findFirst({
+		where: eq(Media.hash, hash),
+	});
+	if (existing) return existing;
+
 	const b2 = deps.b2 ?? (await authorize_b2());
 	const get_bucket = () => b2.bucket(env.NEXT_PUBLIC_AWS_MEDIA_BUCKET_NAME);
 
@@ -265,11 +280,24 @@ export async function ingest_media(
 			srcsets: derived.srcsets,
 			blur_placeholder: derived.blur_placeholder,
 			upload_status: "completed",
+			hash,
 		})
+		// `Media.hash` is unique, so a concurrent ingest_media() call for the
+		// same bytes can win this insert first — the hash-lookup above only
+		// catches duplicates that already existed *before* this call started.
+		// Losing the race still leaves a harmless orphaned B2 object (the
+		// upload above already happened), but must not surface as a thrown
+		// constraint-violation, so we fall back to the row the winner inserted.
+		.onConflictDoNothing({ target: Media.hash })
 		.returning();
 
-	if (!inserted) throw new Error(`Failed to insert media row for ${filename}`);
-	return inserted;
+	if (inserted) return inserted;
+
+	const winner = await database.query.Media.findFirst({
+		where: eq(Media.hash, hash),
+	});
+	if (!winner) throw new Error(`Failed to insert media row for ${filename}`);
+	return winner;
 }
 
 /**

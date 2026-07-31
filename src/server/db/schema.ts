@@ -215,6 +215,12 @@ export const Media = pgTable("media", {
 	variants: jsonb("variants").$type<MediaVariantData[]>().notNull().default([]),
 	srcsets: jsonb("srcsets").$type<MediaSrcsetsData>(),
 	blur_placeholder: text("blur_placeholder"),
+	// sha256 of the original file's bytes. Null means "not backfilled yet" —
+	// set live by ingest_media() (src/server/media/ingest.ts), which also uses
+	// it to reuse an existing row instead of inserting a dupe. Rows created
+	// before that check existed may still be null until backfilled by
+	// scripts/analyze-media-duplicates.ts.
+	hash: varchar("hash", { length: 64 }).unique(),
 	upload_status: media_upload_status_enum("upload_status")
 		.notNull()
 		.default("pending"),

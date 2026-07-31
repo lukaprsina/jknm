@@ -53,3 +53,5 @@ yarn-error.log*
 # local scratch cache for one-off scripts
 scripts/.cache
 .env*
+/artifacts/b2-mirror/
+/artifacts/b2-move/
