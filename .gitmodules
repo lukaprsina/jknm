@@ -10,3 +10,6 @@
 [submodule "vendor/radix-ui-primitives"]
 	path = vendor/radix-ui-primitives
 	url = https://github.com/radix-ui/primitives
+[submodule "vendor/editorjs"]
+	path = vendor/editorjs
+	url = https://github.com/codex-team/editor.js
