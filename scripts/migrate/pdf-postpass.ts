@@ -1,9 +1,9 @@
 /**
  * Static-page migration pilot, PDF post-pass (#36): finds `.pdf` anchors
- * that survived the paste still pointing at the old `vsebina.jknm.org`
- * self-host (paste can't convert them -- see `paste-static-page.ts`'s doc
- * comment for why they stay inline links rather than becoming `attaches`
- * blocks), re-ingests each one into `jknm-gradivo` via `ingest_media_from_url`
+ * that still point at the old `vsebina.jknm.org` self-host (see
+ * `docs/research/zgodovina-html-to-editorjs-mapping.md` for why they stay
+ * inline links rather than becoming `attaches` blocks), re-ingests each one
+ * into `jknm-gradivo` via `ingest_media_from_url`
  * (`src/server/media/ingest.ts`, content-addressed by sha256 so re-running
  * is safe), and repoints the href at the new, self-hosted `media` row.
  *
