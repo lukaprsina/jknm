@@ -69,6 +69,11 @@ async function resolve_first_publish_slug(
  *
  * `legacy_id` moves separately, in `inherit_identity_from_source` — it has to
  * happen on the archived-source path too, which never reaches this function.
+ *
+ * A `content`-kind source is always treated as "title unchanged" here — same
+ * fixed-route guarantee `resolve_retitle_slug` gates on plain saves (#35),
+ * applied to the supersede-publish path too since editing a content page
+ * normally goes through a superseding draft, not a plain save.
  */
 async function resolve_supersede_publish_slug(
 	tx: DbTransaction,
@@ -83,7 +88,12 @@ async function resolve_supersede_publish_slug(
 	// sees `status: "deleted"` and fails `assert_can_supersede` cleanly
 	// instead of overwriting the winner's slug re-point.
 	const superseded_rows = await tx
-		.select({ id: Article.id, title: Article.title, status: Article.status })
+		.select({
+			id: Article.id,
+			title: Article.title,
+			status: Article.status,
+			article_kind: Article.article_kind,
+		})
 		.from(Article)
 		.where(eq(Article.id, supersedes_id))
 		.for("update");
@@ -99,9 +109,14 @@ async function resolve_supersede_publish_slug(
 			),
 		})) ?? null;
 
+	// A content-kind row's slug never reminits on retitle (see this
+	// function's doc comment and #35) — same rule as `resolve_retitle_slug`,
+	// applied here by feeding `decide_slug_transition` its own old title so
+	// it always takes the "reuse" branch, re-pointing the existing slug to
+	// the newly-published row without ever minting a new one.
 	const decision = decide_slug_transition({
 		old_title: superseded.title,
-		new_title,
+		new_title: superseded.article_kind === "content" ? superseded.title : new_title,
 		old_primary_slug,
 	});
 
@@ -310,7 +325,9 @@ export async function create_article(
  * primary slug (and every inbound legacy `/si/?id=<legacy_id>` link) pointing
  * at URL text that no longer matches the title. Draft saves never reach this
  * (see call site): a draft has no public URL yet, so there's nothing to keep
- * in sync until publish.
+ * in sync until publish. `content`-kind rows never reach this either (gated
+ * at the call site): their route is the fixed page, not the slug, so
+ * reminting on a heading edit would silently break it (#33).
  */
 async function resolve_retitle_slug(
 	tx: DbTransaction,
@@ -362,7 +379,7 @@ export async function save_article(
 	const transaction = await db.transaction(async (tx) => {
 		const existing = await tx.query.Article.findFirst({
 			where: eq(Article.id, input.article_id),
-			columns: { title: true, status: true },
+			columns: { title: true, status: true, article_kind: true },
 		});
 		if (!existing) throw new Error("Article not found");
 
@@ -393,6 +410,7 @@ export async function save_article(
 
 		if (
 			existing.status === "published" &&
+			existing.article_kind !== "content" &&
 			existing.title !== input.article.title
 		) {
 			await resolve_retitle_slug(

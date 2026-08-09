@@ -178,6 +178,12 @@ export const article_status_enum = pgEnum("article_status", [
 	"deleted",
 ]);
 
+// "content" rows are the 5 fixed club pages (history, rules, research,
+// publishing, protection) migrated from hand-written MDX, going through the
+// same draft/publish pipeline as news but at a fixed route instead of
+// /novica/<slug> and without a slug that ever needs to move (#33).
+export const article_kind_enum = pgEnum("article_kind", ["article", "content"]);
+
 export const media_upload_status_enum = pgEnum("media_upload_status", [
 	"pending",
 	"processing",
@@ -240,6 +246,7 @@ export const Article = pgTable(
 			.$defaultFn(() => crypto.randomUUID()),
 		legacy_id: integer("legacy_id").unique(),
 		status: article_status_enum("status").notNull().default("draft"),
+		article_kind: article_kind_enum("article_kind").notNull().default("article"),
 		title: varchar("title", { length: 255 }).notNull(),
 		excerpt: text("excerpt").default(""),
 		content_json: jsonb("content_json").$type<ArticleContentType>(),
