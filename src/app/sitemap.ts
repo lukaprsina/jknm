@@ -1,6 +1,7 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import type { MetadataRoute } from "next";
 import { SITE_ORIGIN } from "~/lib/site-config";
+import { EXCLUDE_CONTENT_KIND } from "~/server/article/article-queries";
 import { find_primary_slug_or_first } from "~/server/article/lifecycle-rules";
 import { db } from "~/server/db";
 import { Article } from "~/server/db/schema";
@@ -27,8 +28,11 @@ const STATIC_ROUTES = [
 ] as const;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+	// Content-kind rows live at their own fixed route (already in
+	// STATIC_ROUTES below) — a /novica/<slug> entry for them here would be a
+	// duplicate-content sitemap entry alongside it.
 	const published_articles = await db.query.Article.findMany({
-		where: eq(Article.status, "published"),
+		where: and(eq(Article.status, "published"), EXCLUDE_CONTENT_KIND),
 		columns: { updated_at: true },
 		with: { article_slugs: true },
 	});

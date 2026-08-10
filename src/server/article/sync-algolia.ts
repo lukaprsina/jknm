@@ -34,6 +34,7 @@ interface AlgoliaHitRecord {
 	objectID: string;
 	title?: string;
 	url?: string;
+	article_kind?: string;
 	updated_at?: number;
 	has_thumbnail?: boolean;
 	image?: string;
@@ -56,6 +57,7 @@ async function fetch_algolia_published_hits(): Promise<AlgoliaArticleHit[]> {
 					objectID: hit.objectID,
 					title: hit.title ?? "",
 					url: hit.url ?? "",
+					article_kind: hit.article_kind,
 					updated_at: hit.updated_at ?? 0,
 					has_thumbnail: hit.has_thumbnail ?? false,
 					image: hit.image,
@@ -84,6 +86,7 @@ async function fetch_db_published_articles(): Promise<DbArticleSummary[]> {
 		id: article.id,
 		title: article.title,
 		url: resolve_primary_slug(article.article_slugs)?.slug ?? "",
+		article_kind: article.article_kind,
 		updated_at: article.updated_at.getTime(),
 		has_thumbnail: Boolean(article.thumbnail_media),
 		image: article.thumbnail_media?.original.url,

@@ -1,7 +1,7 @@
 import { env } from "~/env";
 import { convert_content_to_text } from "~/lib/content-to-text";
 import type { PublishedArticleHit } from "~/lib/validators";
-import type { ArticleContentType, Author, Media } from "~/server/db/schema";
+import type { ArticleContentType, ArticleKind, Author, Media } from "~/server/db/schema";
 
 export const ALGOLIA_PUBLISHED_ARTICLE_INDEX =
 	env.NEXT_PUBLIC_ALGOLIA_PUBLISHED_ARTICLE_INDEX;
@@ -20,6 +20,7 @@ export function convert_new_article_to_algolia_object({
 	article: {
 		id: string;
 		title: string;
+		article_kind: ArticleKind;
 		content_json: ArticleContentType | null;
 		created_at: Date;
 		updated_at: Date;
@@ -36,6 +37,7 @@ export function convert_new_article_to_algolia_object({
 	return {
 		objectID: article.id,
 		title: article.title,
+		article_kind: article.article_kind,
 		url: slug,
 		created_at: article.created_at.getTime(),
 		updated_at: article.updated_at.getTime(),

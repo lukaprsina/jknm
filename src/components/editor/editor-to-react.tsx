@@ -151,6 +151,11 @@ export function EditorToReact({
 
 	if (!blocks_data || !article) return;
 
+	// Content-kind pages (the 5 fixed club pages) aren't authored-and-dated
+	// news events, so the byline/date chrome is suppressed for them (#37,
+	// ADR-0009).
+	const suppress_news_chrome = article.article_kind === "content";
+
 	return (
 		<>
 			<TableOfContents entries={headings} />
@@ -162,11 +167,13 @@ export function EditorToReact({
 							__html: heading ?? "Untitled",
 						}}
 					/>
-					<ArticleDescription
-						type="page"
-						author_ids={author_ids}
-						created_at={article.created_at}
-					/>
+					{!suppress_news_chrome && (
+						<ArticleDescription
+							type="page"
+							author_ids={author_ids}
+							created_at={article.created_at}
+						/>
+					)}
 				</CardHeader>
 				<CardContent>
 					<ArticleBody blocks_data={blocks_data} />
@@ -179,11 +186,13 @@ export function EditorToReact({
 						__html: heading ?? "Untitled",
 					}}
 				/>
-				<ArticleDescription
-					type="page"
-					author_ids={author_ids}
-					created_at={article.created_at}
-				/>
+				{!suppress_news_chrome && (
+					<ArticleDescription
+						type="page"
+						author_ids={author_ids}
+						created_at={article.created_at}
+					/>
+				)}
 				<ArticleBody blocks_data={blocks_data} />
 			</div>
 		</>

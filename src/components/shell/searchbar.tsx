@@ -25,20 +25,13 @@ const ALGOLIA_CLIENT = algoliasearch(
 	env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY,
 );
 
-export type StaticHit = {
-	objectID: string;
-	text: string;
-	index: number;
-	section: string;
-};
-
 export function Searchbar() {
 	const { isSearchOpen, setSearchOpen } = useSearchContext();
 
 	const [value, setValue] = useState("");
 	const [noResults, setNoResults] = useState(false);
 
-	const [staticPages, setStaticPages] = useState<StaticHit[]>([]);
+	const [contentPages, setContentPages] = useState<PublishedArticleHit[]>([]);
 	const [publishedArticles, setPublishedArticles] = useState<
 		PublishedArticleHit[]
 	>([]);
@@ -51,31 +44,38 @@ export function Searchbar() {
 		if (!debounced_value || !isSearchOpen) return;
 
 		const callback = async () => {
-			const { results } = await ALGOLIA_CLIENT.searchForHits<
-				StaticHit | PublishedArticleHit
-			>({
-				requests: [
-					{
-						indexName: "static_pages",
-						query: debounced_value,
-						hitsPerPage: 3,
-					},
-					{
-						indexName: ALGOLIA_PUBLISHED_ARTICLE_INDEX,
-						query: debounced_value,
-						hitsPerPage: 15,
-					},
-				],
-				strategy: "none",
-			});
+			// Both groups query the same index now — content-kind rows ("Vsebina")
+			// and news rows ("Novice") are distinguished by an `article_kind` facet,
+			// not by a separate `static_pages` index (ADR-0009). Deploy-order note:
+			// `article_kind` must be declared as a filterable attribute on the
+			// Algolia index (one-time manual dashboard step, ADR-0009) before this
+			// ships, or Algolia rejects facetFilters and search breaks entirely.
+			const { results } = await ALGOLIA_CLIENT.searchForHits<PublishedArticleHit>(
+				{
+					requests: [
+						{
+							indexName: ALGOLIA_PUBLISHED_ARTICLE_INDEX,
+							query: debounced_value,
+							hitsPerPage: 3,
+							facetFilters: ["article_kind:content"],
+						},
+						{
+							indexName: ALGOLIA_PUBLISHED_ARTICLE_INDEX,
+							query: debounced_value,
+							hitsPerPage: 15,
+							facetFilters: ["article_kind:article"],
+						},
+					],
+					strategy: "none",
+				},
+			);
 
-			console.log("ALGOLIA RESULT", results);
-			const static_pages = results[0] as SearchResponse<StaticHit>;
+			const content_pages = results[0] as SearchResponse<PublishedArticleHit>;
 			const published_article =
 				results[1] as SearchResponse<PublishedArticleHit>;
 
-			setNoResults(static_pages.nbHits === 0 && published_article.nbHits === 0);
-			setStaticPages(static_pages.hits);
+			setNoResults(content_pages.nbHits === 0 && published_article.nbHits === 0);
+			setContentPages(content_pages.hits);
 			setPublishedArticles(published_article.hits);
 		};
 
@@ -115,12 +115,12 @@ export function Searchbar() {
 				{value && (
 					<>
 						<CommandGroup heading="Vsebina">
-							{staticPages.map((item) => (
+							{contentPages.map((item) => (
 								<CommandItem
-									key={item.section}
-									onSelect={() => router.push(`/${item.section}`)}
+									key={item.url}
+									onSelect={() => router.push(`/${item.url}`)}
 								>
-									{item.section.charAt(0).toUpperCase() + item.section.slice(1)}
+									{item.title}
 								</CommandItem>
 							))}
 						</CommandGroup>

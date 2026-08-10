@@ -3,7 +3,7 @@
 import { liteClient as algolia_search } from "algoliasearch/lite";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import { InstantSearch } from "react-instantsearch";
+import { Configure, InstantSearch } from "react-instantsearch";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Tabs, TabsContent } from "~/components/ui/tabs";
 import { env } from "~/env";
@@ -64,6 +64,14 @@ export function Search({ session }: { session: Session | null }) {
 			routing
 			// insights={true}
 		>
+			{/* Content-kind rows (the 5 fixed club pages) never belong in the
+			sortable news archive — they're reached via fixed nav links and quick
+			search, never here (ADR-0009). Deploy-order note: `article_kind` must
+			be declared as a filterable attribute on the Algolia index (one-time
+			manual dashboard step, ADR-0009 — no settings-as-code in this repo)
+			before this ships, or Algolia rejects the filter and search breaks for
+			everyone, not just content rows. */}
+			<Configure filters="article_kind:article" />
 			<Tabs
 				value={activeTab}
 				onValueChange={(new_value) =>

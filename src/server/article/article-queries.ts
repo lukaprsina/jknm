@@ -1,7 +1,14 @@
-import { asc, desc, eq, notInArray, type SQL } from "drizzle-orm";
+import { and, asc, desc, eq, ne, notInArray, type SQL } from "drizzle-orm";
 import { withCursorPagination } from "~/lib/drizzle-pagination";
 import type { DbTransaction, db } from "../db";
 import { Article, ArticlesToAuthors } from "../db/schema";
+
+/**
+ * Shared predicate for the 3 EXCLUDE-shaped listing surfaces (ADR-0009):
+ * content-kind rows (the 5 fixed club pages) have no natural place in a news
+ * listing, a legacy-verification set, or the sitemap's /novica/<slug> loop.
+ */
+export const EXCLUDE_CONTENT_KIND = ne(Article.article_kind, "content");
 
 /** Authors (ordered), slugs, and thumbnail media — the relations every article list/detail read path needs. */
 const ARTICLE_LIST_RELATIONS = {
@@ -29,7 +36,9 @@ export function find_article_with_relations(
 
 /**
  * One cursor-paginated page of published articles, newest first, with the
- * relations the homepage feed card needs.
+ * relations the homepage feed card needs. Excludes content-kind rows — a
+ * reverse-chronological "latest news" stream has no natural place for a
+ * fixed page like "Zgodovina" (ADR-0009).
  */
 export function find_published_articles_page(
 	executor: typeof db | DbTransaction,
@@ -39,7 +48,7 @@ export function find_published_articles_page(
 		with: ARTICLE_LIST_RELATIONS,
 		...withCursorPagination({
 			limit,
-			where: eq(Article.status, "published"),
+			where: and(eq(Article.status, "published"), EXCLUDE_CONTENT_KIND),
 			cursors: [[Article.created_at, "desc", cursor]],
 		}),
 	});
@@ -58,14 +67,19 @@ export function find_draft_articles(executor: typeof db | DbTransaction) {
  * `id`/`legacy_id` projection for the `/preveri` verification set — every
  * article that has (or could have) actually been public, excluding
  * still-in-progress drafts and deleted rows, mirroring the legacy
- * `published_article`-only set this replaces.
+ * `published_article`-only set this replaces. Content-kind rows have no
+ * legacy counterpart to reconcile against (ADR-0009), so they're excluded
+ * too.
  */
 export function find_articles_for_verification(
 	executor: typeof db | DbTransaction,
 ) {
 	return executor.query.Article.findMany({
 		columns: { id: true, legacy_id: true },
-		where: notInArray(Article.status, ["draft", "deleted"]),
+		where: and(
+			notInArray(Article.status, ["draft", "deleted"]),
+			EXCLUDE_CONTENT_KIND,
+		),
 		orderBy: asc(Article.legacy_id),
 	});
 }

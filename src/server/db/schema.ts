@@ -183,6 +183,7 @@ export const article_status_enum = pgEnum("article_status", [
 // same draft/publish pipeline as news but at a fixed route instead of
 // /novica/<slug> and without a slug that ever needs to move (#33).
 export const article_kind_enum = pgEnum("article_kind", ["article", "content"]);
+export type ArticleKind = (typeof article_kind_enum.enumValues)[number];
 
 export const media_upload_status_enum = pgEnum("media_upload_status", [
 	"pending",

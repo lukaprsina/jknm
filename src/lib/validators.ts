@@ -31,6 +31,7 @@ export type ThumbnailType = z.infer<typeof thumbnail_validator>;
 export const published_article_hit_validator = z.object({
 	objectID: z.string(), // published_id
 	title: z.string(),
+	article_kind: z.enum(["article", "content"]),
 	url: z.string(),
 	created_at: z.number(), // unix timestamp
 	updated_at: z.number(), // unix timestamp

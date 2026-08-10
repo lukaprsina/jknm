@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import sanitizeHtml from "sanitize-html";
 import type { NewArticleWithRelations } from "~/components/article/new-adapter";
-import { map_new_article_to_published_view } from "~/components/article/new-adapter";
+import {
+	map_new_article_to_published_view,
+	resolve_canonical_article_path,
+} from "~/components/article/new-adapter";
 import { PublishedContent } from "~/components/content";
 import { ImageGallery } from "~/components/image-gallery";
 import { Shell } from "~/components/shell";
@@ -89,7 +92,7 @@ export async function generateMetadata(props: NovicaProps): Promise<Metadata> {
 	return {
 		title,
 		alternates: {
-			canonical: `/novica/${encodeURIComponent(requested_slug)}`,
+			canonical: resolve_canonical_article_path(article, requested_slug),
 		},
 		// Only set when a thumbnail exists — an unset `openGraph` here leaves
 		// the root `opengraph-image.png` file convention as the fallback
@@ -129,7 +132,7 @@ function build_article_json_ld(article: NewArticleWithRelations, slug: string) {
 		headline: sanitizeHtml(article.title, { allowedTags: [] }),
 		datePublished: article.created_at.toISOString(),
 		dateModified: article.updated_at.toISOString(),
-		url: `${SITE_ORIGIN}/novica/${encodeURIComponent(slug)}`,
+		url: `${SITE_ORIGIN}${resolve_canonical_article_path(article, slug)}`,
 		author: article.articles_to_authors.map((rel) => ({
 			"@type": "Person",
 			name: rel.author.name,

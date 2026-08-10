@@ -11,6 +11,7 @@ const hit = (
 	objectID: "a1",
 	title: "Prvi članek",
 	url: "prvi-clanek",
+	article_kind: "article",
 	updated_at: 1000,
 	has_thumbnail: false,
 	image: undefined,
@@ -24,6 +25,7 @@ const article = (
 	id: "a1",
 	title: "Prvi članek",
 	url: "prvi-clanek",
+	article_kind: "article",
 	updated_at: 1000,
 	has_thumbnail: false,
 	image: undefined,
@@ -96,6 +98,22 @@ describe("compute_algolia_sync_diff", () => {
 				article: article({ author_ids: [2, 1] }),
 				before: hit({ author_ids: [1, 2] }),
 				diffs: [{ field: "author_ids", before: "1, 2", after: "2, 1" }],
+			},
+		]);
+	});
+
+	test("reports a pre-#37 hit with no article_kind field as 'stale', so a resync backfills it", () => {
+		const changes = compute_algolia_sync_diff(
+			[hit({ article_kind: undefined })],
+			[article()],
+		);
+
+		expect(changes).toEqual([
+			{
+				kind: "stale",
+				article: article(),
+				before: hit({ article_kind: undefined }),
+				diffs: [{ field: "article_kind", before: null, after: "article" }],
 			},
 		]);
 	});

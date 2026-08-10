@@ -3,6 +3,7 @@ import { find_primary_slug_or_first } from "~/server/article/lifecycle-rules";
 import type {
 	Article,
 	ArticleContentType,
+	ArticleKind,
 	ArticleSlug,
 	ArticlesToAuthors,
 	Author,
@@ -27,6 +28,7 @@ export type NewArticleWithRelations = typeof Article.$inferSelect & {
 export interface EditorDraftArticle {
 	id: string;
 	title: string;
+	article_kind: ArticleKind;
 	created_at: Date;
 	updated_at: Date;
 	published_at: Date | null;
@@ -45,6 +47,7 @@ export interface PublishedArticleView {
 	id: string;
 	title: string;
 	url: string;
+	article_kind: ArticleKind;
 	created_at: Date;
 	updated_at: Date;
 	published_at: Date | null;
@@ -56,6 +59,22 @@ export interface PublishedArticleView {
 		order: number;
 		author: typeof Author.$inferSelect;
 	}[];
+}
+
+/**
+ * A content-kind row's public URL is its own fixed route (e.g. `/zgodovina`,
+ * matching its slug — the retitle-remint gate keeps that slug stable), not
+ * `/novica/<slug>`; serving both at 200 is duplicate content (ADR-0009,
+ * #37). News-kind rows keep the ordinary `/novica/<slug>` URL.
+ */
+export function resolve_canonical_article_path(
+	article: { article_kind: ArticleKind },
+	slug: string,
+): string {
+	const encoded_slug = encodeURIComponent(slug);
+	return article.article_kind === "content"
+		? `/${encoded_slug}`
+		: `/novica/${encoded_slug}`;
 }
 
 /** Minimal shape the edit-pencil (`EditingButtons`/`EditButton`) needs. */
@@ -122,6 +141,7 @@ export function map_new_article_to_editor_draft(
 	return {
 		id: article.id,
 		title: article.title,
+		article_kind: article.article_kind,
 		created_at: article.created_at,
 		updated_at: article.updated_at,
 		published_at: article.published_at,
@@ -145,6 +165,7 @@ export function map_new_article_to_published_view(
 		id: article.id,
 		title: article.title,
 		url: slug,
+		article_kind: article.article_kind,
 		created_at: article.created_at,
 		updated_at: article.updated_at,
 		published_at: article.published_at,

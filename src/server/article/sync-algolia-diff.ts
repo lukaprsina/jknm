@@ -13,6 +13,11 @@ export interface AlgoliaArticleHit {
 	objectID: string;
 	title: string;
 	url: string;
+	// Undefined for any hit pushed before #37 added the field — those existing
+	// news records predate the article/content split and need to be picked up
+	// as "stale" below so a resync backfills them, or they'd silently fail the
+	// article_kind:article facet filter once faceting is enabled (ADR-0009).
+	article_kind: string | undefined;
 	updated_at: number;
 	has_thumbnail: boolean;
 	image: string | undefined;
@@ -23,6 +28,7 @@ export interface DbArticleSummary {
 	id: string;
 	title: string;
 	url: string;
+	article_kind: string;
 	updated_at: number;
 	has_thumbnail: boolean;
 	image: string | undefined;
@@ -33,6 +39,7 @@ export interface ArticleFieldDiff {
 	field:
 		| "title"
 		| "url"
+		| "article_kind"
 		| "updated_at"
 		| "has_thumbnail"
 		| "image"
@@ -69,6 +76,13 @@ function diff_fields(
 	}
 	if (before.url !== after.url) {
 		diffs.push({ field: "url", before: before.url, after: after.url });
+	}
+	if (before.article_kind !== after.article_kind) {
+		diffs.push({
+			field: "article_kind",
+			before: before.article_kind ?? null,
+			after: after.article_kind,
+		});
 	}
 	if (before.updated_at !== after.updated_at) {
 		diffs.push({
