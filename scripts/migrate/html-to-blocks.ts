@@ -39,6 +39,10 @@ interface ImageBlockData {
 	caption: string;
 	file: { url: string; width?: number; height?: number };
 }
+interface TableBlockData {
+	withHeadings: boolean;
+	content: string[][];
+}
 
 function to_header_block(el: HTMLElement, level: number): ArticleBlockType {
 	return {
@@ -73,21 +77,44 @@ function to_list_block(
 	};
 }
 
+function to_dimension(attr: string | undefined, name: string): number | undefined {
+	if (!attr) return undefined;
+	const value = Number(attr);
+	if (Number.isNaN(value)) {
+		throw new Error(`<img ${name}="${attr}"> is not a number`);
+	}
+	return value;
+}
+
 function to_image_block(el: HTMLElement): ArticleBlockType {
 	const img = el.querySelector("img");
 	if (!img) throw new Error("<figure> with no <img>");
-	const width = img.getAttribute("width");
-	const height = img.getAttribute("height");
+	const width = to_dimension(img.getAttribute("width"), "width");
+	const height = to_dimension(img.getAttribute("height"), "height");
 	return {
 		type: "image",
 		data: {
 			caption: el.querySelector("figcaption")?.innerHTML.trim() ?? "",
 			file: {
 				url: img.getAttribute("src") ?? "",
-				...(width ? { width: Number(width) } : {}),
-				...(height ? { height: Number(height) } : {}),
+				...(width !== undefined ? { width } : {}),
+				...(height !== undefined ? { height } : {}),
 			},
 		} satisfies ImageBlockData,
+	};
+}
+
+function to_table_block(el: HTMLElement): ArticleBlockType {
+	const rows = el.querySelectorAll("tr");
+	if (rows.length === 0) throw new Error("<table> with no <tr>");
+	return {
+		type: "table",
+		data: {
+			withHeadings: true,
+			content: rows.map((row) =>
+				row.querySelectorAll("th, td").map((cell) => cell.innerHTML.trim()),
+			),
+		} satisfies TableBlockData,
 	};
 }
 
@@ -120,6 +147,9 @@ export function html_to_blocks(container_html: string): ArticleBlockType[] {
 				break;
 			case "FIGURE":
 				blocks.push(to_image_block(el));
+				break;
+			case "TABLE":
+				blocks.push(to_table_block(el));
 				break;
 			default:
 				throw new Error(

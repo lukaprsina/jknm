@@ -21,7 +21,11 @@ import { eq } from "drizzle-orm";
 import { env } from "~/env.js";
 import { db } from "~/server/db";
 import { Article } from "~/server/db/schema";
-import { create_draft, pick_admin_user_id } from "./create-draft";
+import {
+	create_draft,
+	find_existing_content_draft,
+	pick_admin_user_id,
+} from "./create-draft";
 import { extract_static_content_html, html_to_blocks } from "./html-to-blocks";
 import { is_static_page_slug, STATIC_PAGES } from "./pages";
 
@@ -51,8 +55,15 @@ async function main() {
 	console.log(`Converted ${blocks.length} block(s) from ${page_url}`);
 
 	const admin_id = await pick_admin_user_id(admin_email_arg);
-	const draft = await create_draft(page_config.title, admin_id);
-	blocks.unshift(...(draft.content_json?.blocks ?? []));
+	const existing = await find_existing_content_draft(page_config.title);
+	const draft = existing ?? (await create_draft(page_config.title, admin_id));
+	if (existing) {
+		console.log(`Reusing existing draft ${draft.id} (rerun of a prior attempt)`);
+	}
+	// Keep only the seeded h1 header block (index 0) as the prefix -- on a
+	// reused draft the rest is last run's converted content, which this run
+	// is replacing outright, not appending to.
+	blocks.unshift(...(draft.content_json?.blocks?.slice(0, 1) ?? []));
 
 	await db
 		.update(Article)

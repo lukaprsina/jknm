@@ -61,8 +61,13 @@ async function main() {
 	);
 
 	const plan: PlanEntry[] = [];
+	const PROGRESS_EVERY = 10;
 
-	for (const old_url of old_urls) {
+	for (const [index, old_url] of old_urls.entries()) {
+		if (index > 0 && index % PROGRESS_EVERY === 0) {
+			console.log(`  -- progress: ${index}/${old_urls.length} --`);
+		}
+
 		if (!execute) {
 			const response = await fetch(old_url, { method: "HEAD" }).catch(
 				() => null,

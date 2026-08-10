@@ -91,8 +91,29 @@ describe("html_to_blocks", () => {
 	});
 
 	it("throws on an unrecognized top-level element instead of silently dropping content", () => {
-		expect(() => html_to_blocks("<table><tr><td>x</td></tr></table>")).toThrow(
-			/table/i,
+		expect(() => html_to_blocks("<blockquote>x</blockquote>")).toThrow(
+			/blockquote/i,
 		);
+	});
+
+	it("converts a <table> to a table block, using thead as the heading row", () => {
+		const blocks = html_to_blocks(
+			"<table><thead><tr><th><b>Leto</b></th><th>Objava</th></tr></thead>" +
+				'<tbody><tr><td>1982</td><td><a href="https://vsebina.jknm.org/x.pdf">članek</a></td></tr>' +
+				"<tr><td>1987</td><td>Drugi</td></tr></tbody></table>",
+		);
+		expect(blocks).toEqual([
+			{
+				type: "table",
+				data: {
+					withHeadings: true,
+					content: [
+						["<b>Leto</b>", "Objava"],
+						["1982", '<a href="https://vsebina.jknm.org/x.pdf">članek</a>'],
+						["1987", "Drugi"],
+					],
+				},
+			},
+		]);
 	});
 });

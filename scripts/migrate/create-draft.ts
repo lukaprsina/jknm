@@ -6,7 +6,7 @@
  * browser/auth session is available (or needed) from a script.
  */
 
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "~/server/db";
 import { Article, users } from "~/server/db/schema";
 
@@ -24,12 +24,29 @@ export async function pick_admin_user_id(admin_email: string | undefined) {
 	return row.id;
 }
 
+/**
+ * Migrating a page is re-run until the draft looks right (#36 step 5), so
+ * find the pilot's own prior attempt (unpublished, content-kind, same title)
+ * instead of inserting a fresh row every time -- otherwise reruns pile up
+ * orphaned drafts nobody cleans up.
+ */
+export async function find_existing_content_draft(title: string) {
+	return db.query.Article.findFirst({
+		where: and(
+			eq(Article.title, title),
+			eq(Article.status, "draft"),
+			eq(Article.article_kind, "content"),
+		),
+	});
+}
+
 export async function create_draft(title: string, created_by: string) {
 	const [created] = await db
 		.insert(Article)
 		.values({
 			title,
 			status: "draft",
+			article_kind: "content",
 			content_json: {
 				blocks: [{ id: "sheNwCUP5A", type: "header", data: { text: title, level: 1 } }],
 			},
