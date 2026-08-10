@@ -1,6 +1,6 @@
 import type React from "react";
 import { Suspense } from "react";
-import { STATIC_NAV_SECTIONS } from "~/lib/static-nav-sections";
+import { get_static_nav_sections } from "~/lib/static-nav-sections";
 import { cn } from "~/lib/utils";
 import type { EditableArticleRef } from "../article/new-adapter";
 import { Separator } from "../ui/separator";
@@ -21,13 +21,18 @@ interface ShellProps {
 }
 
 /**
- * Deliberately synchronous: the shell itself depends on no server data, so it
- * emits immediately and the session read streams in behind `<Suspense>`. The
- * fallback is `null` because the editing buttons are admin-only chrome — for
- * the anonymous majority the final render is also nothing, so there is no
- * layout shift to guard against.
+ * The nav-section fetch (`get_static_nav_sections`) is awaited directly
+ * rather than behind `<Suspense>` — unlike the session read, it's a cached,
+ * cheap lookup (`get_new_article_by_slug` is `unstable_cache`d, tag
+ * `"article"`, 1h revalidate, plus request-deduped via React `cache`) that
+ * every route needs before the header can render its dropdowns at all, so
+ * there's nothing meaningful to stream around it. The session read still
+ * streams in behind `<Suspense>` — the fallback is `null` because the
+ * editing buttons are admin-only chrome — for the anonymous majority the
+ * final render is also nothing, so there is no layout shift to guard
+ * against.
  */
-export function Shell({
+export async function Shell({
 	published_article,
 	children,
 	without_footer,
@@ -40,6 +45,8 @@ export function Shell({
 		</Suspense>
 	);
 
+	const nav_sections = await get_static_nav_sections();
+
 	return (
 		<SearchProvider>
 			<div className={cn("w-full", className)}>
@@ -48,7 +55,7 @@ export function Shell({
 						<DesktopHeader
 							className="hidden md:flex"
 							editor_controls={editor_controls}
-							nav_sections={STATIC_NAV_SECTIONS}
+							nav_sections={nav_sections}
 						/>
 						<MobileHeader
 							className="flex md:hidden"
