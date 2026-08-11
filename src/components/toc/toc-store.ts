@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import type { TocEntry } from "~/lib/toc";
 
 interface TocVisibilityStore {
 	has_toc: boolean;
@@ -12,4 +13,24 @@ export const toc_visibility_store = create<TocVisibilityStore>(() => ({
 
 export function useHasToc(): boolean {
 	return toc_visibility_store((state) => state.has_toc);
+}
+
+interface MobileTocProgressStore {
+	entries: TocEntry[];
+	active_id: string | null;
+}
+
+/** Mirrors the current page's TOC entries and scroll-spied active heading
+ * out to `MobileTocPopover`, which lives in the header -- outside the
+ * `<AnchorProvider>` that tracks active-anchor state -- so its trigger can
+ * show a reading-progress ring and the current heading's title. */
+export const mobile_toc_progress_store = create<MobileTocProgressStore>(
+	() => ({
+		entries: [],
+		active_id: null,
+	}),
+);
+
+export function useMobileTocProgress(): MobileTocProgressStore {
+	return mobile_toc_progress_store();
 }

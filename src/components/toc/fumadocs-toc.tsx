@@ -299,7 +299,17 @@ class Observer {
 				const element = document.getElementById(item.id);
 				if (!element) continue;
 
-				const d = Math.abs(viewTop - element.getBoundingClientRect().top);
+				// Deviation from the upstream fumadocs-core port: our article H1
+				// is `display:none` on mobile (rendered desktop-only, see
+				// `EditorToReact`), and a non-laid-out element's rect is all
+				// zero -- `|viewTop - 0|` is the smallest possible distance in
+				// almost every scroll position, so without this check the
+				// fallback always "wins" for the hidden H1 regardless of what's
+				// actually near the top of the viewport.
+				const rect = element.getBoundingClientRect();
+				if (rect.width === 0 && rect.height === 0) continue;
+
+				const d = Math.abs(viewTop - rect.top);
 				if (d < min) {
 					fallbackIdx = i;
 					min = d;
@@ -330,6 +340,11 @@ class Observer {
 	}
 
 	private update(next: TOCItemInfo[]) {
+		// biome-ignore lint/suspicious/noConsole: temporary debug, see conversation
+		console.log(
+			"[toc-debug] observer update",
+			next.map((i) => ({ id: i.id, active: i.active, fallback: i.fallback })),
+		);
 		this.items = next;
 		for (const listener of this.listeners) listener(next, { initial: false });
 	}

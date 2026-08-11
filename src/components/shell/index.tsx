@@ -51,16 +51,13 @@ export async function Shell({
 		<SearchProvider>
 			<div className={cn("w-full", className)}>
 				{!without_header ? (
-					<header className="h-20 w-full text-gray-800 md:h-auto">
+					<header className="w-full text-gray-800">
 						<DesktopHeader
 							className="hidden md:flex"
 							editor_controls={editor_controls}
 							nav_sections={nav_sections}
 						/>
-						<MobileHeader
-							className="flex md:hidden"
-							editor_controls={editor_controls}
-						/>
+						<MobileHeader editor_controls={editor_controls} />
 					</header>
 				) : undefined}
 				<TocAwareLayout>{children}</TocAwareLayout>

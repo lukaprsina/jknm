@@ -1,20 +1,22 @@
 "use client";
 
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { MenuIcon, TableOfContentsIcon } from "lucide-react";
+import { ChevronDownIcon, MenuIcon } from "lucide-react";
 import Link from "next/link";
-import { type ComponentProps, type ReactNode, useEffect, useRef } from "react";
+import {
+	type ComponentProps,
+	type ReactNode,
+	useEffect,
+	useRef,
+} from "react";
 import { create } from "zustand";
-import { useHasToc } from "~/components/toc/toc-store";
+import { useHasToc, useMobileTocProgress } from "~/components/toc/toc-store";
 import { Button } from "~/components/ui/button";
 import {
-	Drawer,
-	DrawerContent,
-	DrawerDescription,
-	DrawerHeader,
-	DrawerTitle,
-	DrawerTrigger,
-} from "~/components/ui/drawer";
+	Collapsible,
+	CollapsibleContent,
+	CollapsibleTrigger,
+} from "~/components/ui/collapsible";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { Separator } from "~/components/ui/separator";
 import {
@@ -28,7 +30,7 @@ import {
 } from "~/components/ui/sheet";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { cn } from "~/lib/utils";
-import { shell_store } from "./desktop-header";
+import { shell_store, useNavbarHeight } from "./desktop-header";
 import { HomeLink } from "./home-link";
 import {
 	ContactIcon,
@@ -81,6 +83,7 @@ export function MobileHeader({
 	const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
 	const md_breakpoint = useBreakpoint("md");
 	const has_toc = useHasToc();
+	const navbar_height = useNavbarHeight();
 
 	useEffect(() => {
 		if (md_breakpoint) {
@@ -91,26 +94,32 @@ export function MobileHeader({
 
 		if (!sticky_navbar_ref.current) return;
 
+		// Re-measured on `has_toc` too, since that's what permanently adds the
+		// "Na tej strani" trigger row to the block's resting height. Expanding
+		// that trigger does *not* need to re-trigger this: the expanded panel
+		// is a floating overlay (`position: absolute`), so it never affects
+		// `clientHeight` here -- see `MobileTocPopover` for why (matches
+		// fumadocs' own popover, which floats over the page rather than
+		// pushing it down).
 		shell_store.setState({
 			navbar_height: sticky_navbar_ref.current.clientHeight,
 		});
-	}, [md_breakpoint]);
+	}, [md_breakpoint, has_toc]);
 
 	return (
-		<div
-			ref={sticky_navbar_ref}
-			className={cn(
-				"fixed top-0 z-40 flex w-full items-center justify-between bg-white/90 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-				className,
-			)}
-			{...props}
-		>
-			<HomeLink className="text-2xl font-bold">
-				Jamarski klub Novo mesto
-			</HomeLink>
-			<div className="flex items-center gap-2">
-				{has_toc && <MobileTocSheet />}
-				<MobileSheet editor_controls={editor_controls} />
+		<div className={cn("md:hidden", className)} {...props}>
+			<div style={{ height: navbar_height }} className="min-h-20" aria-hidden />
+			<div
+				ref={sticky_navbar_ref}
+				className="fixed top-0 z-40 w-full bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+			>
+				<div className="flex items-center justify-between px-6 py-4">
+					<HomeLink className="text-2xl font-bold">
+						Jamarski klub Novo mesto
+					</HomeLink>
+					<MobileSheet editor_controls={editor_controls} />
+				</div>
+				{has_toc && <MobileTocPopover />}
 			</div>
 		</div>
 	);
@@ -211,32 +220,145 @@ export function MobileSheet({
 	);
 }
 
-export function MobileTocSheet() {
-	const open = useMobileTocOpen();
+function clamp(value: number, min: number, max: number): number {
+	if (value < min) return min;
+	if (value > max) return max;
+	return value;
+}
+
+/** Small ring showing how far through the TOC the active heading is --
+ * ported from fumadocs' `ProgressCircle` (`packages/radix-ui/src/layouts/
+ * docs/page/slots/toc.tsx`). */
+function ProgressCircle({
+	value,
+	className,
+}: {
+	/** 0-1 */
+	value: number;
+	className?: string;
+}) {
+	const size = 18;
+	const stroke_width = 1.5;
+	const radius = size / 2 - stroke_width;
+	const circumference = 2 * Math.PI * radius;
+	const progress = clamp(value, 0, 1) * circumference;
 
 	return (
-		<Drawer
+		<svg
+			role="progressbar"
+			viewBox={`0 0 ${size} ${size}`}
+			aria-valuenow={Math.round(clamp(value, 0, 1) * 100)}
+			aria-valuemin={0}
+			aria-valuemax={100}
+			style={{ width: size, height: size }}
+			className={className}
+		>
+			<circle
+				cx={size / 2}
+				cy={size / 2}
+				r={radius}
+				fill="none"
+				strokeWidth={stroke_width}
+				className="stroke-current/25"
+			/>
+			<circle
+				cx={size / 2}
+				cy={size / 2}
+				r={radius}
+				fill="none"
+				strokeWidth={stroke_width}
+				stroke="currentColor"
+				strokeDasharray={circumference}
+				strokeDashoffset={circumference - progress}
+				strokeLinecap="round"
+				transform={`rotate(-90 ${size / 2} ${size / 2})`}
+				className="transition-all"
+			/>
+		</svg>
+	);
+}
+
+/** "On this page" as a row below the navbar whose panel floats over the
+ * page -- ported from fumadocs' `TOCPopover` (same file as `ProgressCircle`
+ * above). Unlike a naive `Collapsible`, the expanded content is
+ * `position: absolute`: fumadocs' own trigger row keeps a fixed height
+ * whether open or closed and its panel overlays the article rather than
+ * pushing it down, which also sidesteps having to keep the header's
+ * reserved spacer in sync with an animating height. The trigger doubles as
+ * a reading-progress indicator: the ring fills as the active heading moves
+ * through the TOC, and the label swaps from "Na tej strani" to the current
+ * heading's title while collapsed. */
+export function MobileTocPopover() {
+	const open = useMobileTocOpen();
+	const { entries, active_id } = useMobileTocProgress();
+	const container_ref = useRef<HTMLDivElement>(null);
+
+	const active_index = entries.findIndex((entry) => entry.id === active_id);
+	const active_entry =
+		active_index === -1 ? undefined : entries[active_index];
+	const progress =
+		entries.length === 0 ? 0 : (active_index + 1) / entries.length;
+	const show_active_title = active_entry !== undefined && !open;
+
+	// Radix `Collapsible` has no built-in outside-click handling (unlike
+	// `Dialog`/`Sheet`) -- fine for a normal accordion, but this one floats
+	// over the page as an overlay, so it needs the same close-on-outside-tap
+	// affordance a sheet gets for free. Mirrors fumadocs' own
+	// `onClickOutside` in `TOCPopover`.
+	useEffect(() => {
+		if (!open) return;
+
+		const on_click_outside = (e: MouseEvent) => {
+			if (!(e.target instanceof HTMLElement)) return;
+			if (container_ref.current?.contains(e.target)) return;
+			mobile_toc_store.setState({ open: false });
+		};
+
+		window.addEventListener("click", on_click_outside);
+		return () => window.removeEventListener("click", on_click_outside);
+	}, [open]);
+
+	return (
+		<Collapsible
+			ref={container_ref}
 			open={open}
 			onOpenChange={(new_state) => {
 				mobile_toc_store.setState({ open: new_state });
 				if (new_state) mobile_nav_store.setState({ open: false });
 			}}
+			className="relative w-full border-t"
 		>
-			<DrawerTrigger asChild>
-				<Button variant="outline" size="icon">
-					<TableOfContentsIcon />
-					<span className="sr-only">Na tej strani</span>
-				</Button>
-			</DrawerTrigger>
-			<DrawerContent onOpenAutoFocus={(e) => e.preventDefault()}>
-				<DrawerHeader>
-					<DrawerTitle>Na tej strani</DrawerTitle>
-					<VisuallyHidden>
-						<DrawerDescription>Kazalo trenutne strani</DrawerDescription>
-					</VisuallyHidden>
-				</DrawerHeader>
-				<div id="mobile-toc" className="px-4 pb-8" />
-			</DrawerContent>
-		</Drawer>
+			<CollapsibleTrigger className="flex h-10 w-full items-center gap-2.5 px-6 text-start text-sm text-muted-foreground focus-visible:outline-none">
+				<ProgressCircle
+					value={progress}
+					className={cn("shrink-0", open && "text-foreground")}
+				/>
+				<span className="grid flex-1 *:col-start-1 *:row-start-1 *:my-auto">
+					<span
+						className={cn(
+							"truncate transition-[opacity,translate] duration-200",
+							open && "text-foreground",
+							show_active_title && "-translate-y-full opacity-0",
+						)}
+					>
+						Na tej strani
+					</span>
+					<span
+						className={cn(
+							"truncate transition-[opacity,translate] duration-200",
+							!show_active_title && "translate-y-full opacity-0",
+						)}
+					>
+						{active_entry?.title}
+					</span>
+				</span>
+				<ChevronDownIcon
+					className={cn("shrink-0 transition-transform", open && "rotate-180")}
+				/>
+			</CollapsibleTrigger>
+			<CollapsibleContent className="absolute inset-x-0 top-full z-10 overflow-hidden border-b bg-white/95 shadow-lg backdrop-blur data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down supports-[backdrop-filter]:bg-background/90">
+				<div id="mobile-toc" className="max-h-[50vh] overflow-y-auto px-6 py-2" />
+			</CollapsibleContent>
+		</Collapsible>
 	);
 }

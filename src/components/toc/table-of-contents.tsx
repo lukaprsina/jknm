@@ -12,8 +12,28 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import type { TocEntry } from "~/lib/toc";
 import { cn } from "~/lib/utils";
 import { mobile_toc_store, useMobileTocOpen } from "../shell/mobile-header";
-import { AnchorProvider, ScrollProvider, TOCItem } from "./fumadocs-toc";
-import { toc_visibility_store } from "./toc-store";
+import {
+	AnchorProvider,
+	ScrollProvider,
+	TOCItem,
+	useActiveAnchors,
+} from "./fumadocs-toc";
+import { mobile_toc_progress_store, toc_visibility_store } from "./toc-store";
+
+/** Lives inside `<AnchorProvider>` purely to read `useActiveAnchors()` (only
+ * valid under that provider) and mirror it out to `mobile_toc_progress_store`
+ * for `MobileTocPopover`, which renders outside the provider tree. */
+function ActiveAnchorSync() {
+	const active_ids = useActiveAnchors();
+
+	useEffect(() => {
+		// biome-ignore lint/suspicious/noConsole: temporary debug, see conversation
+		console.log("[toc-debug] ActiveAnchorSync active_ids", active_ids);
+		mobile_toc_progress_store.setState({ active_id: active_ids[0] ?? null });
+	}, [active_ids]);
+
+	return null;
+}
 
 function no_op_subscribe() {
 	return () => undefined;
@@ -101,8 +121,12 @@ export function TableOfContents({ entries }: { entries: TocEntry[] }) {
 
 	useEffect(() => {
 		toc_visibility_store.setState({ has_toc: entries.length > 0 });
-		return () => toc_visibility_store.setState({ has_toc: false });
-	}, [entries.length]);
+		mobile_toc_progress_store.setState({ entries });
+		return () => {
+			toc_visibility_store.setState({ has_toc: false });
+			mobile_toc_progress_store.setState({ entries: [], active_id: null });
+		};
+	}, [entries]);
 
 	const items = useMemo(
 		() =>
@@ -122,6 +146,7 @@ export function TableOfContents({ entries }: { entries: TocEntry[] }) {
 
 	return (
 		<AnchorProvider toc={items}>
+			<ActiveAnchorSync />
 			{mount_points.map((element) =>
 				createPortal(<TocList entries={entries} />, element, element.id),
 			)}
