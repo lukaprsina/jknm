@@ -39,6 +39,13 @@ export const env = createEnv({
 		// Google answers a wrong one with `redirect_uri_mismatch` — so this is
 		// explicit rather than preprocessed from VERCEL_URL.
 		BETTER_AUTH_URL: z.string().url(),
+		// Shared secret for `/api/internal/revalidate` — lets a script that
+		// mutated the DB directly (bypassing the oRPC/Server Action layer, e.g.
+		// `scripts/migrate/publish-content-page.ts`) ask the *live* server
+		// process to bust its own cache, since `updateTag` only works inside a
+		// real Server Action and a standalone script's process can never be
+		// one. Not session-authed — scripts have no browser session.
+		REVALIDATE_SECRET: z.string().min(16),
 		GOOGLE_CLIENT_ID: z.string(),
 		GOOGLE_CLIENT_SECRET: z.string(),
 		AWS_ACCESS_KEY_ID: z.string(),
@@ -86,6 +93,7 @@ export const env = createEnv({
 		NODE_ENV: process.env.NODE_ENV,
 		BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
 		BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
+		REVALIDATE_SECRET: process.env.REVALIDATE_SECRET,
 		GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
 		GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 		AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
