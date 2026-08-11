@@ -340,11 +340,6 @@ class Observer {
 	}
 
 	private update(next: TOCItemInfo[]) {
-		// biome-ignore lint/suspicious/noConsole: temporary debug, see conversation
-		console.log(
-			"[toc-debug] observer update",
-			next.map((i) => ({ id: i.id, active: i.active, fallback: i.fallback })),
-		);
 		this.items = next;
 		for (const listener of this.listeners) listener(next, { initial: false });
 	}

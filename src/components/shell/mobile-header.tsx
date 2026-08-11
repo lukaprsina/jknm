@@ -29,6 +29,7 @@ import {
 	SheetTrigger,
 } from "~/components/ui/sheet";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
+import { useIsScrollTop } from "~/hooks/use-is-scroll-top";
 import { cn } from "~/lib/utils";
 import { shell_store, useNavbarHeight } from "./desktop-header";
 import { HomeLink } from "./home-link";
@@ -84,6 +85,7 @@ export function MobileHeader({
 	const md_breakpoint = useBreakpoint("md");
 	const has_toc = useHasToc();
 	const navbar_height = useNavbarHeight();
+	const is_top = useIsScrollTop();
 
 	useEffect(() => {
 		if (md_breakpoint) {
@@ -101,25 +103,34 @@ export function MobileHeader({
 		// `clientHeight` here -- see `MobileTocPopover` for why (matches
 		// fumadocs' own popover, which floats over the page rather than
 		// pushing it down).
-		shell_store.setState({
-			navbar_height: sticky_navbar_ref.current.clientHeight,
-		});
+		const height = sticky_navbar_ref.current.clientHeight;
+		shell_store.setState({ navbar_height: height });
+		// Kept in sync so `.prose` headings' `scroll-margin-top` (globals.css)
+		// clears the sticky header when scrolling to an anchor link, whether
+		// "Jamarski klub Novo mesto" wraps to one line (113px) or two (137px).
+		document.documentElement.style.setProperty(
+			"--mobile-header-height",
+			`${height}px`,
+		);
 	}, [md_breakpoint, has_toc]);
 
 	return (
 		<div className={cn("md:hidden", className)} {...props}>
 			<div style={{ height: navbar_height }} className="min-h-20" aria-hidden />
-			<div
-				ref={sticky_navbar_ref}
-				className="fixed top-0 z-40 w-full bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-background/60"
-			>
-				<div className="flex items-center justify-between px-6 py-4">
+			<div ref={sticky_navbar_ref} className="fixed top-0 z-40 w-full">
+				<div
+					className={cn(
+						"flex items-center justify-between px-6 py-4 transition-colors",
+						!is_top &&
+							"bg-white/90 backdrop-blur-sm supports-backdrop-filter:bg-background/60",
+					)}
+				>
 					<HomeLink className="text-2xl font-bold">
 						Jamarski klub Novo mesto
 					</HomeLink>
 					<MobileSheet editor_controls={editor_controls} />
 				</div>
-				{has_toc && <MobileTocPopover />}
+				{has_toc && <MobileTocPopover is_top={is_top} />}
 			</div>
 		</div>
 	);
@@ -288,7 +299,7 @@ function ProgressCircle({
  * a reading-progress indicator: the ring fills as the active heading moves
  * through the TOC, and the label swaps from "Na tej strani" to the current
  * heading's title while collapsed. */
-export function MobileTocPopover() {
+export function MobileTocPopover({ is_top }: { is_top: boolean }) {
 	const open = useMobileTocOpen();
 	const { entries, active_id } = useMobileTocProgress();
 	const container_ref = useRef<HTMLDivElement>(null);
@@ -299,6 +310,12 @@ export function MobileTocPopover() {
 	const progress =
 		entries.length === 0 ? 0 : (active_index + 1) / entries.length;
 	const show_active_title = active_entry !== undefined && !open;
+	// Matches fumadocs' `(!isNavTransparent || open)`: the trigger row stays
+	// transparent while collapsed at the top of the page, and only picks up
+	// the same tint the navbar uses once scrolled or expanded -- keeping it
+	// in sync with `MobileHeader`'s own `!is_top` background so there's a
+	// single shared paint, not two independently-approximated ones.
+	const show_bg = !is_top || open;
 
 	// Radix `Collapsible` has no built-in outside-click handling (unlike
 	// `Dialog`/`Sheet`) -- fine for a normal accordion, but this one floats
@@ -326,9 +343,16 @@ export function MobileTocPopover() {
 				mobile_toc_store.setState({ open: new_state });
 				if (new_state) mobile_nav_store.setState({ open: false });
 			}}
-			className="relative w-full border-t"
+			// TODO: do we want border here?
+			className={cn("relative w-full"/* , "border-t" */)}
 		>
-			<CollapsibleTrigger className="flex h-10 w-full items-center gap-2.5 px-6 text-start text-sm text-muted-foreground focus-visible:outline-none">
+			<CollapsibleTrigger
+				className={cn(
+					"flex h-10 w-full items-center gap-2.5 px-6 text-start text-sm text-muted-foreground transition-colors focus-visible:outline-none",
+					show_bg &&
+						"bg-white/90 backdrop-blur-sm supports-backdrop-filter:bg-background/60",
+				)}
+			>
 				<ProgressCircle
 					value={progress}
 					className={cn("shrink-0", open && "text-foreground")}
@@ -356,7 +380,7 @@ export function MobileTocPopover() {
 					className={cn("shrink-0 transition-transform", open && "rotate-180")}
 				/>
 			</CollapsibleTrigger>
-			<CollapsibleContent className="absolute inset-x-0 top-full z-10 overflow-hidden border-b bg-white/95 shadow-lg backdrop-blur data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down supports-[backdrop-filter]:bg-background/90">
+			<CollapsibleContent className="absolute inset-x-0 top-full z-10 overflow-hidden border-b bg-white/90 shadow-lg backdrop-blur-sm data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down supports-backdrop-filter:bg-background/60">
 				<div id="mobile-toc" className="max-h-[50vh] overflow-y-auto px-6 py-2" />
 			</CollapsibleContent>
 		</Collapsible>

@@ -27,8 +27,6 @@ function ActiveAnchorSync() {
 	const active_ids = useActiveAnchors();
 
 	useEffect(() => {
-		// biome-ignore lint/suspicious/noConsole: temporary debug, see conversation
-		console.log("[toc-debug] ActiveAnchorSync active_ids", active_ids);
 		mobile_toc_progress_store.setState({ active_id: active_ids[0] ?? null });
 	}, [active_ids]);
 

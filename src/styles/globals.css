@@ -204,9 +204,13 @@
 	margin-top: 4px;
 }
 
-/* keep anchor-scrolled headings clear of the sticky navbar */
+/* keep anchor-scrolled headings clear of the sticky navbar. The mobile
+value comes from a CSS var kept in sync with the real measured header
+height (`MobileHeader`'s `navbar_height`, written to `--mobile-header-height`
+in src/components/shell/mobile-header.tsx) since it varies with whether
+"Jamarski klub Novo mesto" wraps to one or two lines. */
 .prose :where(h1, h2, h3, h4, h5, h6)[id] {
-	scroll-margin-top: 88px;
+	scroll-margin-top: var(--mobile-header-height, 88px);
 }
 
 @media (min-width: 768px) {

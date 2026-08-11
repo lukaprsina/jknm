@@ -11,7 +11,6 @@ import { createElement, useEffect, useMemo, useRef, useState } from "react";
 import ArticleDescription from "~/components/article/description";
 import { gallery_store, useGalleryImages } from "~/components/gallery-store";
 import { TableOfContents } from "~/components/toc/table-of-contents";
-import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import type { EditorJSImageData } from "~/lib/editor-utils";
 import {
 	extract_headings_from_content,
@@ -168,28 +167,13 @@ export function EditorToReact({
 	return (
 		<>
 			<TableOfContents entries={headings} />
-			<Card className="hidden border-0 bg-transparent pt-8 shadow-none md:block">
-				<CardHeader>
-					<h1
-						id={h1_id}
-						// biome-ignore lint/security/noDangerouslySetInnerHtml: `heading` is sanitized via sanitize_inline_html (DOMPurify) in EditorToReact above
-						dangerouslySetInnerHTML={{
-							__html: heading ?? "Untitled",
-						}}
-					/>
-					{!suppress_news_chrome && (
-						<ArticleDescription
-							type="page"
-							author_ids={author_ids}
-							created_at={article.created_at}
-						/>
-					)}
-				</CardHeader>
-				<CardContent>
-					<ArticleBody blocks_data={blocks_data} />
-				</CardContent>
-			</Card>
-			<div className="pt-8 md:hidden">
+			{/* Desktop previously wrapped this in `Card`/`CardHeader`/`CardContent`,
+			but with `border-0 bg-transparent shadow-none` those contributed no
+			visible chrome -- only padding -- so the responsive difference is
+			reproduced here via `md:p-6`/`md:pt-0` on plain wrappers instead of
+			rendering the whole subtree twice (which duplicated every heading id
+			and broke `getElementById`-based scroll-spy on mobile). */}
+			<div className="flex flex-col gap-1.5 pt-8 md:p-6">
 				<h1
 					id={h1_id}
 					// biome-ignore lint/security/noDangerouslySetInnerHtml: `heading` is sanitized via sanitize_inline_html (DOMPurify) in EditorToReact above
@@ -204,6 +188,8 @@ export function EditorToReact({
 						created_at={article.created_at}
 					/>
 				)}
+			</div>
+			<div className="md:p-6 md:pt-0">
 				<ArticleBody blocks_data={blocks_data} />
 			</div>
 		</>
