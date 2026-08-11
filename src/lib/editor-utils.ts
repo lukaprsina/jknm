@@ -140,8 +140,8 @@ export interface HeadingEntry extends TocEntry {
 /**
  * Extracts headings from EditorJS content as a flat, deduped, slugged TOC
  * (mirrors `rehype-slug`: first occurrence unsuffixed, later duplicates get
- * a numeric suffix). The article's H1 (block 0) is out of scope here --
- * callers already strip it before rendering.
+ * a numeric suffix). Excludes the article's H1 (block 0) by default -- pass
+ * `levels` including `1` to include it (see `EditorToReact`'s `headings`).
  */
 export function extract_headings_from_content(
 	content: OutputData,

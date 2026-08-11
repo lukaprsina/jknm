@@ -20,6 +20,7 @@ import {
 } from "~/lib/editor-utils";
 import { human_file_size } from "~/lib/human-file-size";
 import { sanitize_inline_html } from "~/lib/sanitize-html";
+import { TOC_HEADING_LEVELS } from "~/lib/toc";
 import { cn } from "~/lib/utils";
 import type {
 	EditorDraftArticle,
@@ -73,8 +74,16 @@ function useEditorData(
 
 	const headings = useMemo(() => {
 		if (!content) return [];
-		return extract_headings_from_content(content);
+		// The article H1 (block 0) is rendered separately below, not through
+		// `ArticleBody`, but it still needs a TOC entry -- so `levels` is widened
+		// to include it here rather than in the shared `TOC_HEADING_LEVELS`
+		// default (which `static-nav-sections.ts` also relies on). One call
+		// keeps a single dedup pass, so an H1 that happens to share wording
+		// with a later H2/H3 still gets a distinct slug instead of colliding.
+		return extract_headings_from_content(content, [1, ...TOC_HEADING_LEVELS]);
 	}, [content]);
+
+	const h1_id = headings[0]?.id;
 
 	const blocks_data = useMemo(() => {
 		if (!content) return;
@@ -98,7 +107,7 @@ function useEditorData(
 		};
 	}, [content, headings, defaultTime]);
 
-	return { blocks_data, headings };
+	return { blocks_data, headings, h1_id };
 }
 
 export function EditorToReact({
@@ -106,7 +115,7 @@ export function EditorToReact({
 }: {
 	article: EditorDraftArticle | PublishedArticleView | undefined;
 }) {
-	const { blocks_data, headings } = useEditorData(article);
+	const { blocks_data, headings, h1_id } = useEditorData(article);
 	const content = article?.content;
 
 	// Derived synchronously from `article.content` (available at first paint,
@@ -162,6 +171,7 @@ export function EditorToReact({
 			<Card className="hidden border-0 bg-transparent pt-8 shadow-none md:block">
 				<CardHeader>
 					<h1
+						id={h1_id}
 						// biome-ignore lint/security/noDangerouslySetInnerHtml: `heading` is sanitized via sanitize_inline_html (DOMPurify) in EditorToReact above
 						dangerouslySetInnerHTML={{
 							__html: heading ?? "Untitled",
@@ -181,6 +191,7 @@ export function EditorToReact({
 			</Card>
 			<div className="pt-8 md:hidden">
 				<h1
+					id={h1_id}
 					// biome-ignore lint/security/noDangerouslySetInnerHtml: `heading` is sanitized via sanitize_inline_html (DOMPurify) in EditorToReact above
 					dangerouslySetInnerHTML={{
 						__html: heading ?? "Untitled",

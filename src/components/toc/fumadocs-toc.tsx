@@ -125,7 +125,7 @@ export function TOCItem({
 	);
 
 	useTOCListener(
-		(items, { initial }) => {
+		(items) => {
 			const itemData = id ? items.find((item) => item.id === id) : null;
 
 			if (itemData && itemData.active !== active) {
@@ -145,7 +145,7 @@ export function TOCItem({
 
 					if (lastActive?.id === id) {
 						scrollIntoView(anchor, {
-							behavior: initial ? "instant" : "smooth",
+							behavior: "instant",
 							block: "center",
 							inline: "center",
 							scrollMode: "always",

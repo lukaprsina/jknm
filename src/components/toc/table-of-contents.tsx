@@ -40,8 +40,10 @@ function TocList({ entries }: { entries: TocEntry[] }) {
 							href={`#${entry.id}`}
 							onClick={() => mobile_nav_store.setState({ open: false })}
 							className={cn(
-								"block border-l-2 border-transparent py-1 pl-3 text-muted-foreground transition-colors hover:text-foreground data-[active=true]:border-foreground data-[active=true]:text-foreground",
-								entry.depth === 3 && "pl-6",
+								"block border-l-2 border-transparent py-1 text-left text-muted-foreground transition-colors hover:text-foreground data-[active=true]:border-foreground data-[active=true]:text-foreground",
+								entry.depth === 1 && "pl-0 font-medium",
+								entry.depth === 2 && "pl-5",
+								entry.depth === 3 && "pl-10",
 							)}
 						>
 							{entry.title}

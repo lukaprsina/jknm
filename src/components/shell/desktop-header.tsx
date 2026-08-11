@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import type React from "react";
 import { useCallback, useEffect, useRef } from "react";
 import { create } from "zustand";
@@ -16,6 +15,7 @@ import {
 	SearchIcon,
 	YoutubeIcon,
 } from "./icons";
+import { HomeLink } from "./home-link";
 import { Logo } from "./logo";
 import { Navigation } from "./navigation";
 
@@ -103,9 +103,9 @@ export function DesktopHeader({
 						{/* left spacer (reserved for future items) */}
 					</div>
 					<div className="flex-1 flex items-center justify-center">
-						<Link href="/">
+						<HomeLink>
 							<Logo className="w-auto min-w-[290px]" />
-						</Link>
+						</HomeLink>
 					</div>
 					<div className="flex-1 flex flex-col items-end justify-between">
 						<div className="flex justify-end">{editor_controls}</div>

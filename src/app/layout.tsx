@@ -52,7 +52,6 @@ export default async function RootLayout({
 				// not what this attribute takes.
 				lang="sl"
 				className={`${GeistSans.variable}`}
-				data-scroll-behavior="smooth"
 			>
 				<body
 					className={cn(

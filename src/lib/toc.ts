@@ -1,9 +1,9 @@
-/** Shared shape produced by both TOC producers (static MDX pages and EditorJS articles). */
+/** Shared shape produced by every TOC producer (news articles and content-kind pages, both EditorJS-backed). */
 export interface TocEntry {
 	id: string;
 	title: string;
 	depth: number;
 }
 
-/** Heading levels both TOC producers (static MDX pages and EditorJS articles) include. */
+/** Default heading levels a TOC includes -- H1 is added separately, see `EditorToReact`'s `h1_id`. */
 export const TOC_HEADING_LEVELS: readonly number[] = [2, 3];

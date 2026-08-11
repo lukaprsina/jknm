@@ -20,6 +20,7 @@ import {
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { cn } from "~/lib/utils";
 import { shell_store } from "./desktop-header";
+import { HomeLink } from "./home-link";
 import {
 	ContactIcon,
 	FacebookIcon,
@@ -75,9 +76,9 @@ export function MobileHeader({
 			)}
 			{...props}
 		>
-			<Link className="text-2xl font-bold" href="/">
+			<HomeLink className="text-2xl font-bold">
 				Jamarski klub Novo mesto
-			</Link>
+			</HomeLink>
 			<MobileSheet editor_controls={editor_controls} />
 		</div>
 	);
@@ -117,9 +118,9 @@ export function MobileSheet({
 				<SheetHeader>
 					<div className="flex w-full items-center justify-center">
 						<SheetClose asChild>
-							<Link href="/">
+							<HomeLink>
 								<Logo className="w-32" />
-							</Link>
+							</HomeLink>
 						</SheetClose>
 					</div>
 					<div className="flex justify-end">{editor_controls}</div>
