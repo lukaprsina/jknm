@@ -2,7 +2,6 @@
 
 - submit sitemap to bing webmaster and indexnow. AIs use bing.
 - improve mobile
-- TOC for articles doesn't work
 
 ```
 /novica/jamarski-tecaj-2009 legacy_id=56	#19	„Izobraževanje"	.../si/izobrazevanje/
