@@ -30,35 +30,45 @@ async function fetch_google_members(): Promise<GoogleMember[]> {
 		auth: google_client,
 	});
 
-	const result = await service.users.list({
-		customer: "C049fks0l",
-	});
-
-	if (!result.data.users) {
-		throw new Error("No Google Admin users found");
-	}
-
 	const members: GoogleMember[] = [];
 	const seen_google_ids = new Set<string>();
 
-	for (const user of result.data.users) {
-		const name = user.name?.fullName;
-		if (!name) throw new Error(`No full name for Google user ${user.id}`);
-
-		const google_id = user.id ?? undefined;
-		if (!google_id) throw new Error(`No Google ID for user ${name}`);
-		if (seen_google_ids.has(google_id)) {
-			throw new Error(`Duplicate Google ID for user ${name}`);
-		}
-		seen_google_ids.add(google_id);
-
-		members.push({
-			google_id,
-			name,
-			email: user.primaryEmail ?? null,
-			image: user.thumbnailPhotoUrl ?? null,
+	// The Admin SDK paginates at up to 200 users per page and signals more
+	// results via `nextPageToken` — reading only the first page silently drops
+	// anyone past it instead of erroring.
+	let page_token: string | undefined;
+	do {
+		const result = await service.users.list({
+			customer: "C049fks0l",
+			maxResults: 200,
+			pageToken: page_token,
 		});
-	}
+
+		if (!result.data.users) {
+			throw new Error("No Google Admin users found");
+		}
+
+		for (const user of result.data.users) {
+			const name = user.name?.fullName;
+			if (!name) throw new Error(`No full name for Google user ${user.id}`);
+
+			const google_id = user.id ?? undefined;
+			if (!google_id) throw new Error(`No Google ID for user ${name}`);
+			if (seen_google_ids.has(google_id)) {
+				throw new Error(`Duplicate Google ID for user ${name}`);
+			}
+			seen_google_ids.add(google_id);
+
+			members.push({
+				google_id,
+				name,
+				email: user.primaryEmail ?? null,
+				image: user.thumbnailPhotoUrl ?? null,
+			});
+		}
+
+		page_token = result.data.nextPageToken ?? undefined;
+	} while (page_token);
 
 	return members;
 }

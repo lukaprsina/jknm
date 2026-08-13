@@ -11,15 +11,33 @@ import type {
 import { crop_image } from "~/lib/s3-utils";
 import { thumbnail_validator } from "~/lib/validators";
 import { getServerAuthSession } from "~/server/auth";
+import {
+	ExternalFetchTooLargeError,
+	fetch_external_image,
+	MAX_MEDIA_BYTES,
+	UnsafeExternalUrlError,
+} from "~/server/media/fetch-external-image";
 import { ingest_media } from "~/server/media/ingest";
 
 // Storage — bucket, key layout, variants, srcsets, blur placeholder — lives in
-// `~/server/media/ingest`. What's left here is the HTTP shape: auth, decoding
-// the multipart form, the optional crop, and EditorJS's response envelope.
+// `~/server/media/ingest`. Fetching+validating a client-supplied source url
+// lives in `~/server/media/fetch-external-image`. What's left here is the
+// HTTP shape: auth, decoding the multipart form, the optional crop, and
+// EditorJS's response envelope.
 
 export async function POST(request: NextRequest) {
 	const session = await getServerAuthSession();
-	if (!session) return NextResponse.error();
+	if (!session) {
+		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+	}
+
+	// Reject oversized direct uploads before buffering the multipart body into
+	// memory, rather than only after `ingest_media` gets a huge buffer handed
+	// to it.
+	const content_length = request.headers.get("content-length");
+	if (content_length && Number(content_length) > MAX_MEDIA_BYTES) {
+		return NextResponse.json({ error: "File too large" }, { status: 413 });
+	}
 
 	const form_data = await request.formData();
 
@@ -40,20 +58,32 @@ export async function POST(request: NextRequest) {
 	) {
 		if (!title) title = "unknown_image.jpg";
 
-		const url_image_response = await fetch(external_url);
-		const blob = await url_image_response.blob();
+		let fetched: Awaited<ReturnType<typeof fetch_external_image>>;
+		try {
+			fetched = await fetch_external_image(external_url);
+		} catch (error) {
+			if (
+				error instanceof UnsafeExternalUrlError ||
+				error instanceof ExternalFetchTooLargeError
+			) {
+				return NextResponse.json({ error: error.message }, { status: 400 });
+			}
+			throw error;
+		}
 		// The source's real content-type (from the fetch response) is
 		// authoritative — `title` is often a synthetic placeholder (e.g. a
 		// thumbnail crop's fixed "thumbnail.png") that doesn't reflect the
 		// actual file type and previously caused every cropped thumbnail to be
 		// stored as a `.png` no matter what format the source image really was.
-		const mime_type = blob.type || (mime.getType(title) ?? "image/jpeg");
+		const mime_type = fetched.content_type || (mime.getType(title) ?? "image/jpeg");
 		const real_extension = mime.getExtension(mime_type);
 		if (real_extension) {
 			const base_title = title.replace(/\.[^./]+$/, "");
 			title = `${base_title}.${real_extension}`;
 		}
-		const uncropped_file = new File([blob], title, { type: mime_type });
+		const uncropped_file = new File([fetched.bytes], title, {
+			type: mime_type,
+		});
 
 		if (typeof crop_entry === "string") {
 			const crop = JSON.parse(crop_entry) as unknown;
@@ -68,13 +98,18 @@ export async function POST(request: NextRequest) {
 				title = file.name;
 			}
 		} else {
-			return NextResponse.error();
+			return NextResponse.json({ error: "Missing file" }, { status: 400 });
 		}
 	} else {
-		return NextResponse.error();
+		return NextResponse.json(
+			{ error: "Unrecognized file type" },
+			{ status: 400 },
+		);
 	}
 
-	if (typeof file !== "object" || !file) return NextResponse.error();
+	if (typeof file !== "object" || !file) {
+		return NextResponse.json({ error: "Invalid file" }, { status: 400 });
+	}
 
 	const media = await ingest_media({
 		bytes: Buffer.from(await file.arrayBuffer()),

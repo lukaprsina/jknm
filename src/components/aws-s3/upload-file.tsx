@@ -108,7 +108,8 @@ export async function parse_s3_response(
 			file: file_json.file,
 		};
 	} else {
-		console.error("Error uploading file: !file_data.ok", file_data);
+		const error_json: unknown = await file_data.json().catch(() => undefined);
+		console.error("Error uploading file:", file_data.status, error_json);
 		return error_response;
 	}
 }

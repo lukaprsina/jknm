@@ -185,13 +185,6 @@ export const article_status_enum = pgEnum("article_status", [
 export const article_kind_enum = pgEnum("article_kind", ["article", "content"]);
 export type ArticleKind = (typeof article_kind_enum.enumValues)[number];
 
-export const media_upload_status_enum = pgEnum("media_upload_status", [
-	"pending",
-	"processing",
-	"completed",
-	"failed",
-]);
-
 export interface MediaOriginalData {
 	url: string;
 	width: number;
@@ -228,9 +221,6 @@ export const Media = pgTable("media", {
 	// before that check existed may still be null until backfilled by
 	// scripts/analyze-media-duplicates.ts.
 	hash: varchar("hash", { length: 64 }).unique(),
-	upload_status: media_upload_status_enum("upload_status")
-		.notNull()
-		.default("pending"),
 	created_at: timestamp("created_at", { withTimezone: true })
 		.default(sql`CURRENT_TIMESTAMP`)
 		.notNull(),

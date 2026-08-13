@@ -279,7 +279,6 @@ export async function ingest_media(
 			variants: derived.variants,
 			srcsets: derived.srcsets,
 			blur_placeholder: derived.blur_placeholder,
-			upload_status: "completed",
 			hash,
 		})
 		// `Media.hash` is unique, so a concurrent ingest_media() call for the
