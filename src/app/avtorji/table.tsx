@@ -4,15 +4,21 @@ import type {
 	ColumnDef,
 	PaginationState,
 	Row,
+	RowData,
 	SortingState,
 } from "@tanstack/react-table";
 import {
+	columnFilteringFeature,
+	columnVisibilityFeature,
+	createFilteredRowModel,
+	createPaginatedRowModel,
+	createSortedRowModel,
 	flexRender,
-	getCoreRowModel,
-	getFilteredRowModel,
-	getPaginationRowModel,
-	getSortedRowModel,
-	useReactTable,
+	rowPaginationFeature,
+	rowSelectionFeature,
+	rowSortingFeature,
+	tableFeatures,
+	useTable,
 } from "@tanstack/react-table";
 import { use, useCallback, useMemo, useRef, useState } from "react";
 
@@ -38,6 +44,17 @@ export interface GuestAuthor {
 	id: number;
 	name: string;
 }
+
+export const features = tableFeatures({
+	rowSortingFeature,
+	columnFilteringFeature,
+	columnVisibilityFeature,
+	rowPaginationFeature,
+	rowSelectionFeature,
+	sortedRowModel: createSortedRowModel(),
+	filteredRowModel: createFilteredRowModel(),
+	paginatedRowModel: createPaginatedRowModel(),
+});
 
 function sorting_from_search_params(
 	searchParams: URLSearchParams,
@@ -96,7 +113,7 @@ export function AuthorsDataTable() {
 		[write],
 	);
 
-	const columns = useMemo<ColumnDef<GuestAuthor>[]>(
+	const columns = useMemo<ColumnDef<typeof features, GuestAuthor>[]>(
 		() => [
 			{
 				id: "select",
@@ -164,14 +181,11 @@ export function AuthorsDataTable() {
 		[all_authors],
 	);
 
-	const table = useReactTable({
+	const table = useTable({
+		features,
 		data: guest_authors,
 		columns,
 		onSortingChange: setSorting,
-		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
-		getSortedRowModel: getSortedRowModel(),
-		getFilteredRowModel: getFilteredRowModel(),
 		onRowSelectionChange: setRowSelection,
 		onPaginationChange: setPagination,
 		state: {
@@ -280,11 +294,11 @@ export function AuthorsDataTable() {
 }
 
 // https://github.com/TanStack/table/discussions/3068#discussioncomment-5052258
-function get_row_range<T>(
-	rows: Row<T>[],
+function get_row_range<T extends RowData>(
+	rows: Row<typeof features, T>[],
 	currentID: number,
 	selectedID: number,
-): Row<T>[] {
+): Row<typeof features, T>[] {
 	const rangeStart = selectedID > currentID ? currentID : selectedID;
 	const rangeEnd = rangeStart === currentID ? selectedID : currentID;
 	return rows.slice(rangeStart, rangeEnd + 1);

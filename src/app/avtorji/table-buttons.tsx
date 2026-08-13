@@ -32,7 +32,7 @@ import {
 import { useToast } from "~/hooks/use-toast";
 import { unwrap_server_function } from "~/lib/orpc-action";
 import { deleteGuests } from "~/server/orpc/author/procedures";
-import type { GuestAuthor } from "./table";
+import type { features, GuestAuthor } from "./table";
 import { EditAuthorNameForm, InsertAuthorForm } from "./table-forms";
 
 export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
@@ -117,7 +117,7 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
 export function AuthorsTableHeaderButtons({
 	rows,
 }: {
-	rows: Row<GuestAuthor>[];
+	rows: Row<typeof features, GuestAuthor>[];
 }) {
 	const toaster = useToast();
 	const router = useRouter();
