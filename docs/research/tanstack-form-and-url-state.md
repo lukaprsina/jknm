@@ -1,5 +1,10 @@
 # TanStack Form migration and Next.js URL query-param state
 
+**Status: partially actioned.** #31 explicitly deferred the TanStack Form question
+("not required here" — out of scope). The 3 URL-state migrations this doc recommends
+(`preveri-client.tsx`, `/arhiv` search, `/avtorji` table → shallow routing) have not been
+confirmed shipped; treat as an open backlog item, not settled history.
+
 Two independent questions bundled together because both surfaced from the same
 prompt: (1) is it worth moving this repo's forms off `react-hook-form` onto
 `@tanstack/react-form` (vendored at `vendor/tanstack-form`), and (2) what is

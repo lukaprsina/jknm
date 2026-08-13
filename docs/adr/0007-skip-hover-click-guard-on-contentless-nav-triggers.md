@@ -10,7 +10,7 @@ now only installs for triggers with a dropdown (`hasContent`). Plain links like 
 
 The `/arhiv` navbar link intermittently had its click silently cancelled in production
 (Chrome showed the link target, navigation never happened), reported once, not reproducible by
-the reporter. Full investigation: `docs/research/navigation-menu-trigger-ux.md`.
+the reporter.
 
 Radix flips a trigger's `data-state` to `"open"` on hover regardless of whether it has an
 attached `NavigationMenuContent` — open just means "this is the active item," not "there is
@@ -44,5 +44,4 @@ UX benefit at all.
 
 ## What would change the answer
 
-- Radix's `activationMode`/`disableToggle` shipping in a released version — see
-  `docs/research/navigation-menu-trigger-ux.md` §2c and §5(b) for what adopting it would mean.
+- Radix's `activationMode`/`disableToggle` shipping in a released version.

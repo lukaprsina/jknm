@@ -6,9 +6,9 @@ The app keeps using `unstable_cache` at its five cache sites. Next 16's Cache Co
 (`cacheComponents: true` + `use cache` / `cacheTag` / `cacheLife`) is **rejected for now**,
 despite `unstable_cache` carrying a deprecation note.
 
-Full evidence, cited to first-party sources, is in `docs/research/nextjs16-caching-verdict.md`
-(with `docs/research/nextjs16-caching.md` establishing what the APIs are). This ADR records
-the decision so the question is not re-opened every time the deprecation warning is noticed.
+Full evidence, cited to first-party sources, is in `docs/research/nextjs16-caching-verdict.md`.
+This ADR records the decision so the question is not re-opened every time the deprecation
+warning is noticed.
 
 ## Why
 

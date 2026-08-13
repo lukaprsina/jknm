@@ -1,7 +1,6 @@
 # Verdict: should this repo migrate `unstable_cache` → Cache Components?
 
-Companion to `nextjs16-caching.md`, which established *what* the APIs are and left
-"is it worth it" open. This document answers that.
+Answers "is it worth it" for migrating off `unstable_cache`.
 
 Sources: bundled docs for the installed `next@16.2.10`
 (`node_modules/next/dist/docs/`, cited `file:line`), Vercel's own documentation
@@ -332,7 +331,7 @@ else (`article` tag, `docs/architecture.md`).
 - **→ A (partially)** if a `Map`/`Set`/`Buffer`-valued column enters any cached
   query. `revive-cache-dates.ts` only handles `Date`; the underlying
   `JSON.stringify` limitation would resurface, and the structural fix is `use cache`
-  (Flight serialization — see `nextjs16-caching.md` §2).
+  (Flight serialization handles non-JSON-safe values natively).
 - **Nothing about traffic growth changes this**, and item 4 is no longer the
   traffic-relief lever it was written as — see the correction above §6. Traffic
   growth would instead argue for revisiting the `cacheComponents` question itself.

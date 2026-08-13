@@ -1,11 +1,9 @@
 # Content-kind articles share the news Algolia index and query surfaces, not a parallel set
 
-**Status: decided.** Part of map [#33](https://github.com/lukaprsina/jknm/issues/33) (migrate the 5 static
-pages into the `articles` table as `article_kind: "content"` rows), following the call-site audit
-in [#34](https://github.com/lukaprsina/jknm/issues/34) (`docs/research/article-kind-call-site-audit.md`).
-That audit is investigation notes — this is the durable record of the design reasoning and the
-final shape, since the audit's own recommendation on Algolia (§9) was left as an open question,
-now resolved.
+**Status: decided, in effect now.** Part of map [#33](https://github.com/lukaprsina/jknm/issues/33)
+(migrated the 5 static pages into the `articles` table as `article_kind: "content"` rows), following
+the call-site audit in [#34](https://github.com/lukaprsina/jknm/issues/34). This is the durable
+record of the design reasoning and the final shape.
 
 Every surface that currently assumes "published article = news" needed a decision on how a
 `content`-kind row should be treated once these 5 pages start publishing through it. They split

@@ -179,7 +179,7 @@ The legacy `published_article` / `draft_article` tables (plus their join tables 
 `find_available_slug` (`src/server/article/slug.ts`) no longer needed the
 `published_article.url` collision check and `wake_supabase` was repointed at `Article`. The
 one-shot article-migration tooling that produced the migrated data is deleted along with them
-(`scripts/migrate-legacy-media.ts` remains) — see ADR-0003 for the historical audit.
+(`scripts/migrate-legacy-media.ts` remains).
 
 ## `/novica/<slug>` response contract
 

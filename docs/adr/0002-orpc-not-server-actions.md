@@ -1,7 +1,7 @@
 # oRPC for the API transport, not Server Actions
 
-**Status: decided, not yet implemented.** Nothing in this ADR describes current code.
-See `docs/architecture.md` for what actually ships today.
+**Status: decided, implemented.** oRPC + `@orpc/tanstack-query` has shipped since #31.
+See `docs/architecture.md` for what actually ships today; this ADR records why.
 
 > **Correction (2026-07-21).** The original version of this ADR said oRPC "replac[es] tRPC"
 > and rejected Server Actions as a hypothetical. Both were wrong about the baseline: tRPC had
