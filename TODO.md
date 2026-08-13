@@ -1,7 +1,10 @@
 # TODO
 
 - submit sitemap to bing webmaster and indexnow. AIs use bing.
-- improve mobile
+- redesign /arhiv (strech searchbar, center it)
+  - put other UI (buttons) in another line
+  - scrollbar disappearing shifts site, when choosing facets and filters
+- article margin
 
 ```
 /novica/jamarski-tecaj-2009 legacy_id=56	#19	„Izobraževanje"	.../si/izobrazevanje/

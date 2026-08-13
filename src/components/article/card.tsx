@@ -54,6 +54,7 @@ export function ArticleCard({
 	const [hover, setHover] = useState(false);
 	const [hoverLink, setHoverLink] = useState(false);
 	const toaster = useToast();
+	console.log("A", { t: typeof id, id });
 
 	return (
 		<Link

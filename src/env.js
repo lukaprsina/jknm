@@ -38,7 +38,7 @@ export const env = createEnv({
 		// better-auth discourages inferring the base URL from the request, and
 		// Google answers a wrong one with `redirect_uri_mismatch` — so this is
 		// explicit rather than preprocessed from VERCEL_URL.
-		BETTER_AUTH_URL: z.string().url(),
+		BETTER_AUTH_URL: z.url(),
 		// Shared secret for `/api/internal/revalidate` — lets a script that
 		// mutated the DB directly (bypassing the oRPC/Server Action layer, e.g.
 		// `scripts/migrate/publish-content-page.ts`) ask the *live* server
@@ -80,7 +80,7 @@ export const env = createEnv({
 			// VERCEL_URL is present on every deployment.
 			(str) => process.env.VERCEL_URL ?? str,
 			// VERCEL_URL doesn't include `https` so it cant be validated as a URL
-			process.env.VERCEL ? z.string() : z.string().url(),
+			process.env.VERCEL ? z.string() : z.url(),
 		),
 	},
 

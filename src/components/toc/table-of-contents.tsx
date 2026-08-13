@@ -58,7 +58,7 @@ function TocList({ entries }: { entries: TocEntry[] }) {
 							href={`#${entry.id}`}
 							onClick={() => mobile_toc_store.setState({ open: false })}
 							className={cn(
-								"block border-l-2 border-transparent py-1 text-left text-muted-foreground transition-colors hover:text-foreground data-[active=true]:border-foreground data-[active=true]:text-foreground",
+								"block border-l-2 border-border py-1 text-left text-muted-foreground transition-colors hover:text-foreground data-[active=true]:border-foreground data-[active=true]:text-foreground",
 								entry.depth === 1 && "pl-2 font-medium",
 								entry.depth === 2 && "pl-6",
 								entry.depth === 3 && "pl-11",

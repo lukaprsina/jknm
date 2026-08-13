@@ -170,26 +170,33 @@ export function EditorToReact({
 			{/* Desktop previously wrapped this in `Card`/`CardHeader`/`CardContent`,
 			but with `border-0 bg-transparent shadow-none` those contributed no
 			visible chrome -- only padding -- so the responsive difference is
-			reproduced here via `md:p-6`/`md:pt-0` on plain wrappers instead of
+			reproduced here via `md:p-6` on a plain wrapper instead of
 			rendering the whole subtree twice (which duplicated every heading id
-			and broke `getElementById`-based scroll-spy on mobile). */}
-			<div className="flex flex-col gap-1.5 pt-8 md:p-6">
-				<h1
-					id={h1_id}
-					// biome-ignore lint/security/noDangerouslySetInnerHtml: `heading` is sanitized via sanitize_inline_html (DOMPurify) in EditorToReact above
-					dangerouslySetInnerHTML={{
-						__html: heading ?? "Untitled",
-					}}
-				/>
-				{!suppress_news_chrome && (
-					<ArticleDescription
-						type="page"
-						author_ids={author_ids}
-						created_at={article.created_at}
+			and broke `getElementById`-based scroll-spy on mobile). The title→body
+			gap is an explicit flex `gap` rather than heading margins: the `h1`
+			sits in a flex column, where margins never collapse with siblings, so
+			leaving `.prose`'s default h1 margin-bottom in play stacked with the
+			first body heading's own margin-top and produced an oversized gap
+			whenever the body opened with an h2/h3 instead of a paragraph. */}
+			{/* gap-6 */}
+			<div className="flex flex-col pt-8 md:p-6">
+				<div className="flex flex-col gap-1.5">
+					<h1
+						id={h1_id}
+						className="mb-0"
+						// biome-ignore lint/security/noDangerouslySetInnerHtml: `heading` is sanitized via sanitize_inline_html (DOMPurify) in EditorToReact above
+						dangerouslySetInnerHTML={{
+							__html: heading ?? "Untitled",
+						}}
 					/>
-				)}
-			</div>
-			<div className="md:p-6 md:pt-0">
+					{!suppress_news_chrome && (
+						<ArticleDescription
+							type="page"
+							author_ids={author_ids}
+							created_at={article.created_at}
+						/>
+					)}
+				</div>
 				<ArticleBody blocks_data={blocks_data} />
 			</div>
 		</>
