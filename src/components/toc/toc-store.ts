@@ -24,12 +24,10 @@ interface MobileTocProgressStore {
  * out to `MobileTocPopover`, which lives in the header -- outside the
  * `<AnchorProvider>` that tracks active-anchor state -- so its trigger can
  * show a reading-progress ring and the current heading's title. */
-export const mobile_toc_progress_store = create<MobileTocProgressStore>(
-	() => ({
-		entries: [],
-		active_id: null,
-	}),
-);
+export const mobile_toc_progress_store = create<MobileTocProgressStore>(() => ({
+	entries: [],
+	active_id: null,
+}));
 
 export function useMobileTocProgress(): MobileTocProgressStore {
 	return mobile_toc_progress_store();

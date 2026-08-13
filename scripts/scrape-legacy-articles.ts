@@ -83,7 +83,9 @@ async function main() {
 			const response = await fetch_with_timeout(url, TIMEOUT_MS);
 			const html = await response.text();
 			await fs.writeFile(out_path, html, "utf8");
-			console.log(`[${id}] ${response.status} -> ${out_path} (${html.length}B)`);
+			console.log(
+				`[${id}] ${response.status} -> ${out_path} (${html.length}B)`,
+			);
 			downloaded++;
 		} catch (error) {
 			failed++;

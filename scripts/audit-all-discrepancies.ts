@@ -2,7 +2,6 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { parse } from "csv-parse/sync";
 import { db } from "~/server/db";
-import { Article } from "~/server/db/schema";
 
 /**
  * Read-only, full re-audit of the legacy-migration data set. Re-derives every
@@ -79,7 +78,12 @@ interface DuplicateLegacyId {
 
 interface StrayHotlink {
 	kind: "stray_hotlink";
-	link_kind: "article-link" | "media-file" | "static-page-link" | "malformed-concat" | "other";
+	link_kind:
+		| "article-link"
+		| "media-file"
+		| "static-page-link"
+		| "malformed-concat"
+		| "other";
 	legacy_id: number | null;
 	article_id: string;
 	title: string;
@@ -127,11 +131,19 @@ interface LegacyRow {
 }
 
 function parse_csv_date(raw: string): Date | null {
-	const match = /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2})$/.exec(raw);
+	const match =
+		/^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2})$/.exec(raw);
 	if (!match) return null;
 	const [, d, m, y, h, min, s] = match;
 	return new Date(
-		Date.UTC(Number(y), Number(m) - 1, Number(d), Number(h), Number(min), Number(s)),
+		Date.UTC(
+			Number(y),
+			Number(m) - 1,
+			Number(d),
+			Number(h),
+			Number(min),
+			Number(s),
+		),
 	);
 }
 
@@ -144,7 +156,10 @@ function parse_html_date(raw: string): Date | null {
 
 async function load_csv_rows(): Promise<Map<number, LegacyRow>> {
 	const text = await fs.readFile(CSV_PATH, "utf8");
-	const records: string[][] = parse(text, { columns: false, relax_column_count: true });
+	const records: string[][] = parse(text, {
+		columns: false,
+		relax_column_count: true,
+	});
 
 	const rows = new Map<number, LegacyRow>();
 	for (const record of records) {
@@ -286,7 +301,10 @@ async function main() {
 			});
 		}
 
-		if (!article.published_at || !same_day(legacy.published_at, article.published_at)) {
+		if (
+			!article.published_at ||
+			!same_day(legacy.published_at, article.published_at)
+		) {
 			discrepancies.push({
 				kind: "date_mismatch",
 				legacy_id,
@@ -301,7 +319,11 @@ async function main() {
 
 	for (const [legacy_id, article_ids] of legacy_id_counts) {
 		if (article_ids.length > 1) {
-			discrepancies.push({ kind: "duplicate_legacy_id", legacy_id, article_ids });
+			discrepancies.push({
+				kind: "duplicate_legacy_id",
+				legacy_id,
+				article_ids,
+			});
 		}
 	}
 
@@ -393,7 +415,8 @@ async function main() {
 
 	// --- summarize + write ---------------------------------------------------
 	const by_kind = new Map<string, number>();
-	for (const d of discrepancies) by_kind.set(d.kind, (by_kind.get(d.kind) ?? 0) + 1);
+	for (const d of discrepancies)
+		by_kind.set(d.kind, (by_kind.get(d.kind) ?? 0) + 1);
 
 	console.log("Discrepancy counts:");
 	for (const [kind, count] of [...by_kind].sort()) {

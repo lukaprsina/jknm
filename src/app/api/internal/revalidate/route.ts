@@ -29,10 +29,7 @@ export async function POST(request: Request) {
 
 	const parsed = body_validator.safeParse(await request.json());
 	if (!parsed.success) {
-		return NextResponse.json(
-			{ error: parsed.error.message },
-			{ status: 400 },
-		);
+		return NextResponse.json({ error: parsed.error.message }, { status: 400 });
 	}
 
 	apply_server_invalidations(parsed.data.event);

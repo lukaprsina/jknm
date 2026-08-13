@@ -1,7 +1,12 @@
 import { env } from "~/env";
 import { convert_content_to_text } from "~/lib/content-to-text";
 import type { PublishedArticleHit } from "~/lib/validators";
-import type { ArticleContentType, ArticleKind, Author, Media } from "~/server/db/schema";
+import type {
+	ArticleContentType,
+	ArticleKind,
+	Author,
+	Media,
+} from "~/server/db/schema";
 
 export const ALGOLIA_PUBLISHED_ARTICLE_INDEX =
 	env.NEXT_PUBLIC_ALGOLIA_PUBLISHED_ARTICLE_INDEX;

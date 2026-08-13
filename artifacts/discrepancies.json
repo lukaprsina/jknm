@@ -1,970 +1,970 @@
 [
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 142,
-    "article_id": "a431a92b-cc02-4f5b-a8b8-841a294f3176",
-    "legacy_title": "Jamarski tečaj",
-    "our_title": "Jamarski tečaj 2010",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 202,
-    "article_id": "ce2971ce-4a0c-4f69-93f2-4bcbcb627eb6",
-    "legacy_title": "Jamarski tečaj",
-    "our_title": "Jamarski tečaj 2011",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 351,
-    "article_id": "524925f0-c988-4ee2-9def-e590fb0d2548",
-    "legacy_title": "Čaganka – projekt >400",
-    "our_title": "Čaganka – projekt &gt;400",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 356,
-    "article_id": "e700b026-c39c-4b23-a303-6445234a02c3",
-    "legacy_title": "Jamarski tečaj",
-    "our_title": "Jamarski tečaj 2014",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 642,
-    "article_id": "1b18516d-ae2c-46f5-84e1-77b61da64a10",
-    "legacy_title": "Jamarski tečaj 2024 – prvi vtisi iz Malisnice",
-    "our_title": "Jamarski tečaj 2024 - prvi vtisi iz Malisnice",
-    "source": "html"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 645,
-    "article_id": "f5321e7d-01bb-44bf-91ae-b1881e3667c4",
-    "legacy_title": "Jamarski tečaj 2024 - obisk Kaščice II",
-    "our_title": "Jamarski tečaj 2024 - obisk Kaščice [2]",
-    "source": "html"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 653,
-    "article_id": "0895e3b7-04e1-4bd5-84e6-e130872a9052",
-    "legacy_title": "O netopirjih iz nekaj izbranih Dolenjskih jam",
-    "our_title": "O netopirjih iz nekaj izbranih dolenjskih jam",
-    "source": "html"
-  },
-  {
-    "kind": "date_mismatch",
-    "legacy_id": 657,
-    "article_id": "ecc5ccab-4e50-40fd-9ee3-495fd537e873",
-    "title": "Kanin 2024 - NM 5 šibaaa!",
-    "legacy_published_at": "2024-09-01T00:00:00.000Z",
-    "our_published_at": "2024-09-20T12:34:01.106Z",
-    "source": "html"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 665,
-    "article_id": "bdf39bfe-d186-4965-bd8d-1eb80f7b92ca",
-    "legacy_title": "Andrej Jaklič (1952 – 2024",
-    "our_title": "Andrej Jaklič (1952 - 2024)",
-    "source": "html"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 677,
-    "article_id": "06f7b85a-b59c-47ae-b73d-5b795303b49b",
-    "legacy_title": "JKNM (spet) prejel nagrado Viljema Puticka",
-    "our_title": "JKNM (tretjič) prejel nagrado Viljema Puticka",
-    "source": "html"
-  },
-  {
-    "kind": "date_mismatch",
-    "legacy_id": 685,
-    "article_id": "802dce47-4e44-4280-b059-e91e4c7bbbab",
-    "title": "Bosna - nekaj kraških zanimivosti",
-    "legacy_published_at": "2025-08-26T00:00:00.000Z",
-    "our_published_at": "2025-08-27T10:56:49.672Z",
-    "source": "html"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 689,
-    "article_id": "2b942e39-cbc2-49eb-ae67-c24a16b434ba",
-    "legacy_title": "Anton Tramte (1962 – 2025)",
-    "our_title": "Anton Tramte (1962 - 2025)",
-    "source": "html"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 51,
-    "article_id": "be2311df-3131-442a-a966-05da87d1b396",
-    "legacy_title": "Pregledali osem novih jam na Kočevskem rogu",
-    "our_title": "Pregledali osem novih jam na Kočevskem Rogu",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 305,
-    "article_id": "7ebddf6a-21fa-4b04-bf5e-bacd5fbf1acc",
-    "legacy_title": "Jamarski tečaj",
-    "our_title": "Jamarski tečaj 2013",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 483,
-    "article_id": "a4b12c7e-eaaa-44d0-bdd0-e42810fa8c08",
-    "legacy_title": "Brezno pri Željnskih jamah",
-    "our_title": "Kočevarka",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 635,
-    "article_id": "70e10dff-4f7f-4731-96a6-b591b3f7bc77",
-    "legacy_title": "Čistilna akcija VVO izvira Radeščice",
-    "our_title": "Čistilna akcija vodovarstvenega območja izvira Radeščice",
-    "source": "html"
-  },
-  {
-    "kind": "date_mismatch",
-    "legacy_id": 675,
-    "article_id": "ab2bcebe-c9bc-454a-8fc4-32e71f0e79cc",
-    "title": "Jamarski tečaj 2025",
-    "legacy_published_at": "2025-02-02T00:00:00.000Z",
-    "our_published_at": "2025-02-17T17:50:09.709Z",
-    "source": "html"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 692,
-    "article_id": "8bf9acde-81f1-4bc4-9936-69fdf6896a8a",
-    "legacy_title": "www.jknm.si se je odselil",
-    "our_title": "Srečno in zvočno v letu 2026",
-    "source": "html"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 26,
-    "article_id": "f5eb7744-6b4a-41a3-ae68-e31f9b711ba5",
-    "legacy_title": "Kanin 2008 - Drugič letos",
-    "our_title": "Kanin 2008 - drugič letos",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 637,
-    "article_id": "30c2437f-10c1-49d8-ac06-3ef1cb8b991e",
-    "legacy_title": "Čistilna akcija VVO izvira Radeščice II",
-    "our_title": "Čistilna akcija vodovarstvenega območja izvira Radeščice [2]",
-    "source": "html"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 10,
-    "article_id": "ca4c173a-72ae-4ca7-a72c-321e04d01f27",
-    "legacy_title": "Tečaj za jamarja pripravnika",
-    "our_title": "Jamarski tečaj 2008 - tečaj za jamarja pripravnika",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 14,
-    "article_id": "5e6a4e33-f9cd-43d4-bb9d-c05d9501b6d0",
-    "legacy_title": "Raziskovalno-izobraževalni tabor na Kočevskem rogu 2008",
-    "our_title": "Raziskovalno-izobraževalni tabor na Kočevskem Rogu 2008",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 18,
-    "article_id": "ac7aaccf-6893-4b8c-a2d6-8a7d9de98d81",
-    "legacy_title": "Raziskovalno–izobraževalni tabor na Kočevskem rogu",
-    "our_title": "Raziskovalno–izobraževalni tabor na Kočevskem Rogu",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 22,
-    "article_id": "27cab94f-1adb-4a87-84aa-437bbb496645",
-    "legacy_title": "Nove raziskave na Kočevskem rogu",
-    "our_title": "Nove raziskave na Kočevskem Rogu",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 24,
-    "article_id": "8553a223-3b44-4495-8177-d8924f33760a",
-    "legacy_title": "Kanin 2008 - Letos prvič na pogorju",
-    "our_title": "Kanin 2008 - letos prvič na pogorju",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 30,
-    "article_id": "20343764-cd34-4866-ad5f-3520851d6c16",
-    "legacy_title": "Na Smrečniku na Kočevskem rogu",
-    "our_title": "Na Smrečniku na Kočevskem Rogu",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 38,
-    "article_id": "a869f549-a8fc-4724-8f6b-89c14c05a143",
-    "legacy_title": "Raziskave v okolici Mirne gore na Kočevskem rogu",
-    "our_title": "Raziskave v okolici Mirne gore na Kočevskem Rogu",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 42,
-    "article_id": "3263a879-dbfd-40b3-ae90-4e7881d7e569",
-    "legacy_title": "Srečno v jamah in v 2009 ...",
-    "our_title": "Srečno v jamah in v letu 2009 ...",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 43,
-    "article_id": "dbb8131f-7b83-47af-bb97-927e5a7f205b",
-    "legacy_title": "Na dveh akcijah 10 jam",
-    "our_title": "Na dveh akcijah deset jam",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 67,
-    "article_id": "74602dd4-46fe-4a91-9678-7ea3537f9ccf",
-    "legacy_title": "Koprivnik in Golobinjek II",
-    "our_title": "Koprivnik in Golobinjek [2]",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 46,
-    "article_id": "942a8b7b-d107-48c6-ac8d-2ad48bc1ab87",
-    "legacy_title": "Kanin 2009 - Zimski pregled terena",
-    "our_title": "Kanin 2009 - zimski pregled terena",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 47,
-    "article_id": "93f1ea43-3ace-47a3-a935-5924989ec014",
-    "legacy_title": "Občni zbor",
-    "our_title": "Občni zbor 2008",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 54,
-    "article_id": "9474d465-e982-4c41-9f5b-7d759bcb2a68",
-    "legacy_title": "Zanimivosti s Kočevskega roga",
-    "our_title": "Zanimivosti s Kočevskega Roga",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 56,
-    "article_id": "8cf396c3-8d5c-44d6-aa56-90fda0314292",
-    "legacy_title": "Jamarski tečaj",
-    "our_title": "Jamarski tečaj 2009",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 57,
-    "article_id": "a4047b1f-ec43-424a-b24d-7cc55a0a5066",
-    "legacy_title": "Nova 40 metrca na Kočevskem rogu",
-    "our_title": "Nova 40 metrca na Kočevskem Rogu",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 60,
-    "article_id": "22df45e7-bf1e-442e-899e-57f132cfb317",
-    "legacy_title": "Smrečnik na Kočevskem rogu",
-    "our_title": "Smrečnik na Kočevskem Rogu",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 61,
-    "article_id": "f3e17c60-0cb0-4309-a38e-baac402c0ba1",
-    "legacy_title": "Vtisi jamarskega tečajnika",
-    "our_title": "Jamarski tečaj 2009 - vtisi jamarskega tečajnika",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 63,
-    "article_id": "c436360a-2053-4fa5-b0e6-c7e738f36e2d",
-    "legacy_title": "Raziskovalni tabor in zaključek tečaja",
-    "our_title": "Raziskovalni tabor in zaključek jamarskega tečaja",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 72,
-    "article_id": "bba0d825-6b9f-4c6b-8913-096041b6581e",
-    "legacy_title": "Nedokončane zadeve na Kočevskem rogu",
-    "our_title": "Nedokončane zadeve na Kočevskem Rogu",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 81,
-    "article_id": "76ad67c7-7327-4b92-8181-6759347625ee",
-    "legacy_title": "Raziskave v okolici Drvodevnika pri Travnem dolu",
-    "our_title": "Raziskave v okolici Drvodevnika pri Travnem Dolu",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 88,
-    "article_id": "79b5ce06-a761-4171-a893-7362c90aff7c",
-    "legacy_title": "Nove jame na Kočevskem rogu",
-    "our_title": "Nove jame na Kočevskem Rogu",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 122,
-    "article_id": "956dcacb-7f23-4bf3-be8f-4939cc4a4603",
-    "legacy_title": "Ob koncu leta",
-    "our_title": "Ob koncu leta 2009",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 125,
-    "article_id": "95a3ef0e-fec1-4dac-ac91-68575b555142",
-    "legacy_title": "Kanin 1990 - Reševanje na Kaninu dvajset let pozneje",
-    "our_title": "Kanin 1990 - Reševanje dvajset let pozneje",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 129,
-    "article_id": "9f0eec32-888c-4d26-a098-a84d2a7f91f5",
-    "legacy_title": "Ne me J.",
-    "our_title": "Ne me j****",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 146,
-    "article_id": "f441d0ad-076c-443c-ac6a-35c1e549a973",
-    "legacy_title": "Mala šola jamarstva v Malisnici",
-    "our_title": "Jamarski tečaj 2010 - mala šola jamarstva v Malisnici",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 156,
-    "article_id": "cb4e4300-ffcd-4f4d-988c-a262253901af",
-    "legacy_title": "BK 3",
-    "our_title": "Babin kamen 3",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 185,
-    "article_id": "e662f80e-6384-45ce-be66-1a89eb78ef43",
-    "legacy_title": "Novice iz Kočevskega roga",
-    "our_title": "Novice s Kočevskega Roga",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 206,
-    "article_id": "a68126ea-fe5e-4792-bf8e-8813ad3db79e",
-    "legacy_title": "Jamarski tečaj se je začel",
-    "our_title": "Jamarski tečaj 2011 se je začel",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 208,
-    "article_id": "25106083-4463-4bfe-b535-edc03d9973fc",
-    "legacy_title": "Nadaljevanja jamarskega tečaja",
-    "our_title": "Nadaljevanja jamarskega tečaja 2011",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 234,
-    "article_id": "9eac01dc-bf4c-4a83-b2bb-a0e6e1f6fd1d",
-    "legacy_title": "Dan varnosti in tehnike",
-    "our_title": "Dan varnosti in tehnike 2011",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 240,
-    "article_id": "2e04bd2d-3fd3-4d38-be56-6d9ffc3ece9f",
-    "legacy_title": "*?#$\"!%& pa Dolenjske jame!",
-    "our_title": "&amp;#$@*** pa Dolenjske jame!",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 250,
-    "article_id": "f7b00770-4660-48e5-aec8-8215ab0bf505",
-    "legacy_title": "Pokončno in globoko v 2012",
-    "our_title": "Pokončno in globoko v letu 2012",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 253,
-    "article_id": "599c1f41-55bb-4ff8-9159-516228b91052",
-    "legacy_title": "Veš Mirnopečan svoj dolg?",
-    "our_title": "Veš, Mirnopečan, svoj dolg?",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 266,
-    "article_id": "73693c5f-06f8-425e-a3fe-bf3063dcbff7",
-    "legacy_title": "Čaganka – jamarski tabor 2012",
-    "our_title": "Čaganka - jamarski tabor 2012",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 264,
-    "article_id": "7c9c3d66-9201-48fd-9cee-439233701946",
-    "legacy_title": "Jamarski tečaj",
-    "our_title": "Jamarski tečaj 2012",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 319,
-    "article_id": "791fa82c-7557-44f3-b72d-387433a3ddc6",
-    "legacy_title": "50 let - zahvala podpornikom",
-    "our_title": "50 let JKNM - zahvala podpornikom",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 317,
-    "article_id": "8c789a06-17a8-4c9c-8b97-e84f83d66e75",
-    "legacy_title": "Na Kočevskem rogu",
-    "our_title": "Na Kočevskem Rogu",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 325,
-    "article_id": "e0a34935-1d56-4f14-a7ee-2f919b4da6be",
-    "legacy_title": "Čaganka – dol in nazaj v očeh biologa",
-    "our_title": "Čaganka - dol in nazaj v očeh biologa",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 328,
-    "article_id": "0a317aa5-bc0d-4f4f-9d38-05952b1382e8",
-    "legacy_title": "Čaganka – dan zmage na globini 350 m",
-    "our_title": "Čaganka - dan zmage na globini 350 m",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 341,
-    "article_id": "a4521ae9-8163-47f4-b6aa-954b543983b1",
-    "legacy_title": "Nekaj drobnih iz Kočevskega roga",
-    "our_title": "Nekaj drobnih iz Kočevskega Roga",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 344,
-    "article_id": "a0c33c8a-dcd0-4c31-99db-8950205053a1",
-    "legacy_title": "Čaganka – ali je res blatna?",
-    "our_title": "Čaganka - ali je res blatna?",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 357,
-    "article_id": "458ef68d-d013-469c-8f5c-803896b773fc",
-    "legacy_title": "Čistilna akcija v Mirni Peči",
-    "our_title": "Slugova jama je očiščena",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 358,
-    "article_id": "c483730e-32fa-4fd9-8d07-a1682d4c78e7",
-    "legacy_title": "Tečajniki in ponavljalci",
-    "our_title": "Tečajniki in ponavljavci",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 360,
-    "article_id": "63362626-4388-4032-a56d-c75de52dfc7d",
-    "legacy_title": "Čaganka - Tabor 2014",
-    "our_title": "Čaganka - tabor 2014",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 361,
-    "article_id": "e6113744-3e08-4c98-90ed-82ca258c7b9e",
-    "legacy_title": "Čaganka - nova odkritja - proti 450 m",
-    "our_title": "Čaganka - nova odkritja proti 450 m",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 362,
-    "article_id": "1bc0aeb6-d101-498b-8aea-9daaf1d09fd7",
-    "legacy_title": "Firecombat v Žužemberku",
-    "our_title": "Firecombat 2014 v Žužemberku",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 366,
-    "article_id": "3628d118-7646-4791-a537-189a5150cecd",
-    "legacy_title": "Dan doživetij v Županovi jami",
-    "our_title": "Dan doživetij v Županovi jami 2014",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 379,
-    "article_id": "ffa0a47d-08f3-460b-8c5d-11d96db83765",
-    "legacy_title": "Skrivnost v jami na Kočevskem rogu",
-    "our_title": "Skrivnost v jami Bajonetka na Kočevskem Rogu",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 398,
-    "article_id": "136a8cc4-3ad4-451c-bda9-a4e1d7bd9326",
-    "legacy_title": "Fire combat 2015",
-    "our_title": "Firecombat 2015",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 435,
-    "article_id": "d22cdb38-6b88-47d5-8f3c-8fbdc46b9076",
-    "legacy_title": "Čaganka – Južni rov in tlaka na dnu",
-    "our_title": "Čaganka - Južni rov in tlaka na dnu",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 443,
-    "article_id": "f9af5b41-66f6-4fd2-9a0b-56fe4a91a2ee",
-    "legacy_title": "Jamarski potep po Kočevskem rogu",
-    "our_title": "Jamarski potep po Kočevskem Rogu",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 446,
-    "article_id": "f80d9aed-a16a-435d-b72c-7701b4f498e8",
-    "legacy_title": "Dan doživetij v Županovi jami",
-    "our_title": "Dan doživetij v Županovi jami 2016",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 450,
-    "article_id": "4062bf16-daf2-4c47-be9c-e564672eaf2d",
-    "legacy_title": "Cvingerska jama - čiščenje 2",
-    "our_title": "Cvingerska jama - čiščenje [2]",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 478,
-    "article_id": "2b00c67d-61b0-476e-a6d6-36b5373dfdee",
-    "legacy_title": "Jama Mullerloch pri Livoldu je očiščena",
-    "our_title": "Jama Müllerloch pri Livoldu je očiščena",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 488,
-    "article_id": "ed50eb36-3c8a-4ab2-92cc-2f90a51f96bd",
-    "legacy_title": "Jama pod mostom v Vavti vasi",
-    "our_title": "Jama nad mostom v Vavti vasi",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 492,
-    "article_id": "70d08d3b-f1bf-4b6d-a89f-9fe1443903f4",
-    "legacy_title": "Cvingerska jama – čiščenje 3",
-    "our_title": "Cvingerska jama - čiščenje [3]",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 500,
-    "article_id": "4e37f41a-56f0-4f2c-8445-85bf968a920f",
-    "legacy_title": "Cvingerska jama – raziskovanje nadaljevanja",
-    "our_title": "Cvingerska jama - raziskovanje nadaljevanja",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 517,
-    "article_id": "af88755f-c55e-4c02-b287-84b10e7baa1a",
-    "legacy_title": "Cink križ, ožina še čaka",
-    "our_title": "Cink križ - ožina še čaka",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 531,
-    "article_id": "550a6c0d-4adb-4b49-98b1-92381c9415c4",
-    "legacy_title": "Prvonovembrsko Čagankarjenje",
-    "our_title": "Prvonovembrsko čagankarjenje",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 550,
-    "article_id": "43f29a0a-a5f3-4b66-93ec-56ad1c4cee19",
-    "legacy_title": "Čaganka – Prvonovembrski tabor 2019",
-    "our_title": "Čaganka - Prvonovembrski tabor 2019",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 619,
-    "article_id": "ece873da-ccdc-4f6c-afdc-f49005f4ee4a",
-    "legacy_title": "Četud ni 500 globoka ...",
-    "our_title": "Čaganka - Četud ni 500 globoka ...",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 562,
-    "article_id": "08fa509c-3b63-4b77-9ef6-9c0fc4e08cd1",
-    "legacy_title": "Tečaj za jamarja v polnem teku",
-    "our_title": "Jamarski tečaj 2010 v polnem teku",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 579,
-    "article_id": "e60d2d82-6e6c-4387-8364-703447a85c07",
-    "legacy_title": "Ko Pihalnik postane sistem Pihalnika",
-    "our_title": "Ko Pihalnik postane sistem Pihalnik",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 604,
-    "article_id": "2039f527-5aec-4df4-bca9-6af98815988e",
-    "legacy_title": "Jamarski tečaj 2022 – odtisi in vtisi",
-    "our_title": "Jamarski tečaj 2022 - odtisi in vtisi",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 612,
-    "article_id": "9c3b7027-bef8-4cba-9228-206e09aac063",
-    "legacy_title": "Stop smetem in metanju odpadkov v jame",
-    "our_title": "STOP smetem in metanju odpadkov v jame",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 621,
-    "article_id": "591e9a0b-4410-477d-b920-d295ecf7b789",
-    "legacy_title": "Spust v Labadnico",
-    "our_title": "Spust v Labodnico",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 623,
-    "article_id": "edb883a8-a17e-4a0c-9e0d-7a21b9a38128",
-    "legacy_title": "V Veliki prepadni in Noč v knjižnici",
-    "our_title": "V Veliki Prepadni in Noč v knjižnici",
-    "source": "csv"
-  },
-  {
-    "kind": "title_mismatch",
-    "legacy_id": 624,
-    "article_id": "2b2cd069-3981-47c0-82cb-248ff948d25c",
-    "legacy_title": "Skozi Winetoujevo brezno v čudežni svet brez sonca Županove jame",
-    "our_title": "Skozi Winetoujevo brezno v čudežni svet brez sonca",
-    "source": "csv"
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 142,
-    "article_id": "a431a92b-cc02-4f5b-a8b8-841a294f3176",
-    "title": "Jamarski tečaj 2010",
-    "url": "http://www.jknm.si/si/etc/impresum/",
-    "occurrences": 1
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 202,
-    "article_id": "ce2971ce-4a0c-4f69-93f2-4bcbcb627eb6",
-    "title": "Jamarski tečaj 2011",
-    "url": "http://www.jknm.si/si/etc/impresum/",
-    "occurrences": 1
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 356,
-    "article_id": "e700b026-c39c-4b23-a303-6445234a02c3",
-    "title": "Jamarski tečaj 2014",
-    "url": "http://www.jknm.si/si/etc/impresum/",
-    "occurrences": 1
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 636,
-    "article_id": "5e5aeaa9-678f-40cf-a783-aa605faaa201",
-    "title": "Jamarski tečaj 2024",
-    "url": "http://www.jknm.si/si/izobrazevanje/program/",
-    "occurrences": 1
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 305,
-    "article_id": "7ebddf6a-21fa-4b04-bf5e-bacd5fbf1acc",
-    "title": "Jamarski tečaj 2013",
-    "url": "http://www.jknm.si/si/etc/impresum/",
-    "occurrences": 1
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 675,
-    "article_id": "ab2bcebe-c9bc-454a-8fc4-32e71f0e79cc",
-    "title": "Jamarski tečaj 2025",
-    "url": "https://www.jknm.si/si/izobrazevanje/program/",
-    "occurrences": 1
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 56,
-    "article_id": "8cf396c3-8d5c-44d6-aa56-90fda0314292",
-    "title": "Jamarski tečaj 2009",
-    "url": "https://www.jknm.si/si/izobrazevanje/",
-    "occurrences": 1
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 75,
-    "article_id": "f3f404ce-4623-4af0-8d26-d0b7d9cfa44c",
-    "title": "Le kje sta Pihalnik in Achenloch?",
-    "url": "http://www.jknm.si/si/publikacije/kras01/",
-    "occurrences": 1
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 95,
-    "article_id": "5d87e034-445f-4ad0-8a4c-b643f7834b9e",
-    "title": "Šumeča polšna - sklepno dejanje [3]",
-    "url": "http://www.jknm.si/si/jame/naj/?v=najgloblje",
-    "occurrences": 1
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 95,
-    "article_id": "5d87e034-445f-4ad0-8a4c-b643f7834b9e",
-    "title": "Šumeča polšna - sklepno dejanje [3]",
-    "url": "http://www.jknm.si/si/jame/naj/?v=najdaljse",
-    "occurrences": 1
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 167,
-    "article_id": "4a1b0edc-6230-4efc-bf34-ae2f45a1e6bb",
-    "title": "Bosna 2010",
-    "url": "http://www.jknm.si/si/raziskovanje/grmec/",
-    "occurrences": 2
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 264,
-    "article_id": "7c9c3d66-9201-48fd-9cee-439233701946",
-    "title": "Jamarski tečaj 2012",
-    "url": "http://www.jknm.si/si/etc/impresum/",
-    "occurrences": 1
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 300,
-    "article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
-    "title": "Publikacije Dolenjski kras",
-    "url": "http://www.jknm.si/si/publikacije/kras01/",
-    "occurrences": 2
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 300,
-    "article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
-    "title": "Publikacije Dolenjski kras",
-    "url": "http://www.jknm.si/si/publikacije/kras02/",
-    "occurrences": 2
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 300,
-    "article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
-    "title": "Publikacije Dolenjski kras",
-    "url": "http://www.jknm.si/si/publikacije/kras03/",
-    "occurrences": 2
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 300,
-    "article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
-    "title": "Publikacije Dolenjski kras",
-    "url": "http://www.jknm.si/si/publikacije/kras04/",
-    "occurrences": 2
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 300,
-    "article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
-    "title": "Publikacije Dolenjski kras",
-    "url": "http://www.jknm.si/si/publikacije/kras05/",
-    "occurrences": 2
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 504,
-    "article_id": "e956dc08-b7ef-44e1-953a-eac381440de8",
-    "title": "Izšel je Dolenjski kras 7",
-    "url": "http://www.jknm.si/si/publikacije/",
-    "occurrences": 1
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 581,
-    "article_id": "f08aa6d3-3017-438d-b21f-b5d1cff9a7e1",
-    "title": "Jamarski tečaj 2021",
-    "url": "http://www.jknm.si/si/izobrazevanje/program/",
-    "occurrences": 1
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 603,
-    "article_id": "c9b3a0e6-d2fa-47f0-8e2d-b00cc7f50dd5",
-    "title": "Jamarski tečaj 2022",
-    "url": "http://www.jknm.si/si/izobrazevanje/program/",
-    "occurrences": 1
-  },
-  {
-    "kind": "stray_hotlink",
-    "link_kind": "static-page-link",
-    "legacy_id": 620,
-    "article_id": "f5555e7d-4eaa-4430-b6f5-b37357eca33f",
-    "title": "Jamarski tečaj 2023",
-    "url": "http://www.jknm.si/si/izobrazevanje/program/",
-    "occurrences": 1
-  },
-  {
-    "kind": "orphaned_slug",
-    "slug": "nova-novica",
-    "slug_id": 696,
-    "article_id": "806c454e-b1d9-4918-a01e-e1d2bddb5079",
-    "article_status": "deleted",
-    "is_primary": true
-  },
-  {
-    "kind": "orphaned_slug",
-    "slug": "nova-novica-2",
-    "slug_id": 697,
-    "article_id": "24984c20-0212-42a3-a353-2ac38c6df936",
-    "article_status": "deleted",
-    "is_primary": true
-  },
-  {
-    "kind": "orphaned_slug",
-    "slug": "nova-novica-3",
-    "slug_id": 698,
-    "article_id": "5fde98cb-f48a-4bef-865b-28ce6b76ebdb",
-    "article_status": "deleted",
-    "is_primary": true
-  },
-  {
-    "kind": "orphaned_slug",
-    "slug": "test",
-    "slug_id": 699,
-    "article_id": "1937d42b-e092-44bf-ad59-0627f4060b68",
-    "article_status": "deleted",
-    "is_primary": true
-  },
-  {
-    "kind": "orphaned_slug",
-    "slug": "test-2",
-    "slug_id": 700,
-    "article_id": "161e86ab-bbd7-49b0-9f41-d4d871f73a4f",
-    "article_status": "deleted",
-    "is_primary": true
-  },
-  {
-    "kind": "orphaned_slug",
-    "slug": "nova-novica-4",
-    "slug_id": 701,
-    "article_id": "3a84e1cc-afd8-41a8-9c14-a41c8bd19407",
-    "article_status": "deleted",
-    "is_primary": true
-  },
-  {
-    "kind": "orphaned_slug",
-    "slug": "nova-novica-5",
-    "slug_id": 702,
-    "article_id": "5ba9380f-245d-4c43-83c6-ebab1ed93fb7",
-    "article_status": "deleted",
-    "is_primary": true
-  },
-  {
-    "kind": "orphaned_slug",
-    "slug": "nova-novica-6",
-    "slug_id": 703,
-    "article_id": "d3a41b36-dc8c-49c0-9d31-4bdb13836445",
-    "article_status": "deleted",
-    "is_primary": true
-  },
-  {
-    "kind": "orphaned_slug",
-    "slug": "nova-novica-7",
-    "slug_id": 705,
-    "article_id": "47caa719-3143-402f-bdb2-5fbd7b297f06",
-    "article_status": "deleted",
-    "is_primary": true
-  }
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 142,
+		"article_id": "a431a92b-cc02-4f5b-a8b8-841a294f3176",
+		"legacy_title": "Jamarski tečaj",
+		"our_title": "Jamarski tečaj 2010",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 202,
+		"article_id": "ce2971ce-4a0c-4f69-93f2-4bcbcb627eb6",
+		"legacy_title": "Jamarski tečaj",
+		"our_title": "Jamarski tečaj 2011",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 351,
+		"article_id": "524925f0-c988-4ee2-9def-e590fb0d2548",
+		"legacy_title": "Čaganka – projekt >400",
+		"our_title": "Čaganka – projekt &gt;400",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 356,
+		"article_id": "e700b026-c39c-4b23-a303-6445234a02c3",
+		"legacy_title": "Jamarski tečaj",
+		"our_title": "Jamarski tečaj 2014",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 642,
+		"article_id": "1b18516d-ae2c-46f5-84e1-77b61da64a10",
+		"legacy_title": "Jamarski tečaj 2024 – prvi vtisi iz Malisnice",
+		"our_title": "Jamarski tečaj 2024 - prvi vtisi iz Malisnice",
+		"source": "html"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 645,
+		"article_id": "f5321e7d-01bb-44bf-91ae-b1881e3667c4",
+		"legacy_title": "Jamarski tečaj 2024 - obisk Kaščice II",
+		"our_title": "Jamarski tečaj 2024 - obisk Kaščice [2]",
+		"source": "html"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 653,
+		"article_id": "0895e3b7-04e1-4bd5-84e6-e130872a9052",
+		"legacy_title": "O netopirjih iz nekaj izbranih Dolenjskih jam",
+		"our_title": "O netopirjih iz nekaj izbranih dolenjskih jam",
+		"source": "html"
+	},
+	{
+		"kind": "date_mismatch",
+		"legacy_id": 657,
+		"article_id": "ecc5ccab-4e50-40fd-9ee3-495fd537e873",
+		"title": "Kanin 2024 - NM 5 šibaaa!",
+		"legacy_published_at": "2024-09-01T00:00:00.000Z",
+		"our_published_at": "2024-09-20T12:34:01.106Z",
+		"source": "html"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 665,
+		"article_id": "bdf39bfe-d186-4965-bd8d-1eb80f7b92ca",
+		"legacy_title": "Andrej Jaklič (1952 – 2024",
+		"our_title": "Andrej Jaklič (1952 - 2024)",
+		"source": "html"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 677,
+		"article_id": "06f7b85a-b59c-47ae-b73d-5b795303b49b",
+		"legacy_title": "JKNM (spet) prejel nagrado Viljema Puticka",
+		"our_title": "JKNM (tretjič) prejel nagrado Viljema Puticka",
+		"source": "html"
+	},
+	{
+		"kind": "date_mismatch",
+		"legacy_id": 685,
+		"article_id": "802dce47-4e44-4280-b059-e91e4c7bbbab",
+		"title": "Bosna - nekaj kraških zanimivosti",
+		"legacy_published_at": "2025-08-26T00:00:00.000Z",
+		"our_published_at": "2025-08-27T10:56:49.672Z",
+		"source": "html"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 689,
+		"article_id": "2b942e39-cbc2-49eb-ae67-c24a16b434ba",
+		"legacy_title": "Anton Tramte (1962 – 2025)",
+		"our_title": "Anton Tramte (1962 - 2025)",
+		"source": "html"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 51,
+		"article_id": "be2311df-3131-442a-a966-05da87d1b396",
+		"legacy_title": "Pregledali osem novih jam na Kočevskem rogu",
+		"our_title": "Pregledali osem novih jam na Kočevskem Rogu",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 305,
+		"article_id": "7ebddf6a-21fa-4b04-bf5e-bacd5fbf1acc",
+		"legacy_title": "Jamarski tečaj",
+		"our_title": "Jamarski tečaj 2013",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 483,
+		"article_id": "a4b12c7e-eaaa-44d0-bdd0-e42810fa8c08",
+		"legacy_title": "Brezno pri Željnskih jamah",
+		"our_title": "Kočevarka",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 635,
+		"article_id": "70e10dff-4f7f-4731-96a6-b591b3f7bc77",
+		"legacy_title": "Čistilna akcija VVO izvira Radeščice",
+		"our_title": "Čistilna akcija vodovarstvenega območja izvira Radeščice",
+		"source": "html"
+	},
+	{
+		"kind": "date_mismatch",
+		"legacy_id": 675,
+		"article_id": "ab2bcebe-c9bc-454a-8fc4-32e71f0e79cc",
+		"title": "Jamarski tečaj 2025",
+		"legacy_published_at": "2025-02-02T00:00:00.000Z",
+		"our_published_at": "2025-02-17T17:50:09.709Z",
+		"source": "html"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 692,
+		"article_id": "8bf9acde-81f1-4bc4-9936-69fdf6896a8a",
+		"legacy_title": "www.jknm.si se je odselil",
+		"our_title": "Srečno in zvočno v letu 2026",
+		"source": "html"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 26,
+		"article_id": "f5eb7744-6b4a-41a3-ae68-e31f9b711ba5",
+		"legacy_title": "Kanin 2008 - Drugič letos",
+		"our_title": "Kanin 2008 - drugič letos",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 637,
+		"article_id": "30c2437f-10c1-49d8-ac06-3ef1cb8b991e",
+		"legacy_title": "Čistilna akcija VVO izvira Radeščice II",
+		"our_title": "Čistilna akcija vodovarstvenega območja izvira Radeščice [2]",
+		"source": "html"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 10,
+		"article_id": "ca4c173a-72ae-4ca7-a72c-321e04d01f27",
+		"legacy_title": "Tečaj za jamarja pripravnika",
+		"our_title": "Jamarski tečaj 2008 - tečaj za jamarja pripravnika",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 14,
+		"article_id": "5e6a4e33-f9cd-43d4-bb9d-c05d9501b6d0",
+		"legacy_title": "Raziskovalno-izobraževalni tabor na Kočevskem rogu 2008",
+		"our_title": "Raziskovalno-izobraževalni tabor na Kočevskem Rogu 2008",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 18,
+		"article_id": "ac7aaccf-6893-4b8c-a2d6-8a7d9de98d81",
+		"legacy_title": "Raziskovalno–izobraževalni tabor na Kočevskem rogu",
+		"our_title": "Raziskovalno–izobraževalni tabor na Kočevskem Rogu",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 22,
+		"article_id": "27cab94f-1adb-4a87-84aa-437bbb496645",
+		"legacy_title": "Nove raziskave na Kočevskem rogu",
+		"our_title": "Nove raziskave na Kočevskem Rogu",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 24,
+		"article_id": "8553a223-3b44-4495-8177-d8924f33760a",
+		"legacy_title": "Kanin 2008 - Letos prvič na pogorju",
+		"our_title": "Kanin 2008 - letos prvič na pogorju",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 30,
+		"article_id": "20343764-cd34-4866-ad5f-3520851d6c16",
+		"legacy_title": "Na Smrečniku na Kočevskem rogu",
+		"our_title": "Na Smrečniku na Kočevskem Rogu",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 38,
+		"article_id": "a869f549-a8fc-4724-8f6b-89c14c05a143",
+		"legacy_title": "Raziskave v okolici Mirne gore na Kočevskem rogu",
+		"our_title": "Raziskave v okolici Mirne gore na Kočevskem Rogu",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 42,
+		"article_id": "3263a879-dbfd-40b3-ae90-4e7881d7e569",
+		"legacy_title": "Srečno v jamah in v 2009 ...",
+		"our_title": "Srečno v jamah in v letu 2009 ...",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 43,
+		"article_id": "dbb8131f-7b83-47af-bb97-927e5a7f205b",
+		"legacy_title": "Na dveh akcijah 10 jam",
+		"our_title": "Na dveh akcijah deset jam",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 67,
+		"article_id": "74602dd4-46fe-4a91-9678-7ea3537f9ccf",
+		"legacy_title": "Koprivnik in Golobinjek II",
+		"our_title": "Koprivnik in Golobinjek [2]",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 46,
+		"article_id": "942a8b7b-d107-48c6-ac8d-2ad48bc1ab87",
+		"legacy_title": "Kanin 2009 - Zimski pregled terena",
+		"our_title": "Kanin 2009 - zimski pregled terena",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 47,
+		"article_id": "93f1ea43-3ace-47a3-a935-5924989ec014",
+		"legacy_title": "Občni zbor",
+		"our_title": "Občni zbor 2008",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 54,
+		"article_id": "9474d465-e982-4c41-9f5b-7d759bcb2a68",
+		"legacy_title": "Zanimivosti s Kočevskega roga",
+		"our_title": "Zanimivosti s Kočevskega Roga",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 56,
+		"article_id": "8cf396c3-8d5c-44d6-aa56-90fda0314292",
+		"legacy_title": "Jamarski tečaj",
+		"our_title": "Jamarski tečaj 2009",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 57,
+		"article_id": "a4047b1f-ec43-424a-b24d-7cc55a0a5066",
+		"legacy_title": "Nova 40 metrca na Kočevskem rogu",
+		"our_title": "Nova 40 metrca na Kočevskem Rogu",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 60,
+		"article_id": "22df45e7-bf1e-442e-899e-57f132cfb317",
+		"legacy_title": "Smrečnik na Kočevskem rogu",
+		"our_title": "Smrečnik na Kočevskem Rogu",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 61,
+		"article_id": "f3e17c60-0cb0-4309-a38e-baac402c0ba1",
+		"legacy_title": "Vtisi jamarskega tečajnika",
+		"our_title": "Jamarski tečaj 2009 - vtisi jamarskega tečajnika",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 63,
+		"article_id": "c436360a-2053-4fa5-b0e6-c7e738f36e2d",
+		"legacy_title": "Raziskovalni tabor in zaključek tečaja",
+		"our_title": "Raziskovalni tabor in zaključek jamarskega tečaja",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 72,
+		"article_id": "bba0d825-6b9f-4c6b-8913-096041b6581e",
+		"legacy_title": "Nedokončane zadeve na Kočevskem rogu",
+		"our_title": "Nedokončane zadeve na Kočevskem Rogu",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 81,
+		"article_id": "76ad67c7-7327-4b92-8181-6759347625ee",
+		"legacy_title": "Raziskave v okolici Drvodevnika pri Travnem dolu",
+		"our_title": "Raziskave v okolici Drvodevnika pri Travnem Dolu",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 88,
+		"article_id": "79b5ce06-a761-4171-a893-7362c90aff7c",
+		"legacy_title": "Nove jame na Kočevskem rogu",
+		"our_title": "Nove jame na Kočevskem Rogu",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 122,
+		"article_id": "956dcacb-7f23-4bf3-be8f-4939cc4a4603",
+		"legacy_title": "Ob koncu leta",
+		"our_title": "Ob koncu leta 2009",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 125,
+		"article_id": "95a3ef0e-fec1-4dac-ac91-68575b555142",
+		"legacy_title": "Kanin 1990 - Reševanje na Kaninu dvajset let pozneje",
+		"our_title": "Kanin 1990 - Reševanje dvajset let pozneje",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 129,
+		"article_id": "9f0eec32-888c-4d26-a098-a84d2a7f91f5",
+		"legacy_title": "Ne me J.",
+		"our_title": "Ne me j****",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 146,
+		"article_id": "f441d0ad-076c-443c-ac6a-35c1e549a973",
+		"legacy_title": "Mala šola jamarstva v Malisnici",
+		"our_title": "Jamarski tečaj 2010 - mala šola jamarstva v Malisnici",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 156,
+		"article_id": "cb4e4300-ffcd-4f4d-988c-a262253901af",
+		"legacy_title": "BK 3",
+		"our_title": "Babin kamen 3",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 185,
+		"article_id": "e662f80e-6384-45ce-be66-1a89eb78ef43",
+		"legacy_title": "Novice iz Kočevskega roga",
+		"our_title": "Novice s Kočevskega Roga",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 206,
+		"article_id": "a68126ea-fe5e-4792-bf8e-8813ad3db79e",
+		"legacy_title": "Jamarski tečaj se je začel",
+		"our_title": "Jamarski tečaj 2011 se je začel",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 208,
+		"article_id": "25106083-4463-4bfe-b535-edc03d9973fc",
+		"legacy_title": "Nadaljevanja jamarskega tečaja",
+		"our_title": "Nadaljevanja jamarskega tečaja 2011",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 234,
+		"article_id": "9eac01dc-bf4c-4a83-b2bb-a0e6e1f6fd1d",
+		"legacy_title": "Dan varnosti in tehnike",
+		"our_title": "Dan varnosti in tehnike 2011",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 240,
+		"article_id": "2e04bd2d-3fd3-4d38-be56-6d9ffc3ece9f",
+		"legacy_title": "*?#$\"!%& pa Dolenjske jame!",
+		"our_title": "&amp;#$@*** pa Dolenjske jame!",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 250,
+		"article_id": "f7b00770-4660-48e5-aec8-8215ab0bf505",
+		"legacy_title": "Pokončno in globoko v 2012",
+		"our_title": "Pokončno in globoko v letu 2012",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 253,
+		"article_id": "599c1f41-55bb-4ff8-9159-516228b91052",
+		"legacy_title": "Veš Mirnopečan svoj dolg?",
+		"our_title": "Veš, Mirnopečan, svoj dolg?",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 266,
+		"article_id": "73693c5f-06f8-425e-a3fe-bf3063dcbff7",
+		"legacy_title": "Čaganka – jamarski tabor 2012",
+		"our_title": "Čaganka - jamarski tabor 2012",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 264,
+		"article_id": "7c9c3d66-9201-48fd-9cee-439233701946",
+		"legacy_title": "Jamarski tečaj",
+		"our_title": "Jamarski tečaj 2012",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 319,
+		"article_id": "791fa82c-7557-44f3-b72d-387433a3ddc6",
+		"legacy_title": "50 let - zahvala podpornikom",
+		"our_title": "50 let JKNM - zahvala podpornikom",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 317,
+		"article_id": "8c789a06-17a8-4c9c-8b97-e84f83d66e75",
+		"legacy_title": "Na Kočevskem rogu",
+		"our_title": "Na Kočevskem Rogu",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 325,
+		"article_id": "e0a34935-1d56-4f14-a7ee-2f919b4da6be",
+		"legacy_title": "Čaganka – dol in nazaj v očeh biologa",
+		"our_title": "Čaganka - dol in nazaj v očeh biologa",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 328,
+		"article_id": "0a317aa5-bc0d-4f4f-9d38-05952b1382e8",
+		"legacy_title": "Čaganka – dan zmage na globini 350 m",
+		"our_title": "Čaganka - dan zmage na globini 350 m",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 341,
+		"article_id": "a4521ae9-8163-47f4-b6aa-954b543983b1",
+		"legacy_title": "Nekaj drobnih iz Kočevskega roga",
+		"our_title": "Nekaj drobnih iz Kočevskega Roga",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 344,
+		"article_id": "a0c33c8a-dcd0-4c31-99db-8950205053a1",
+		"legacy_title": "Čaganka – ali je res blatna?",
+		"our_title": "Čaganka - ali je res blatna?",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 357,
+		"article_id": "458ef68d-d013-469c-8f5c-803896b773fc",
+		"legacy_title": "Čistilna akcija v Mirni Peči",
+		"our_title": "Slugova jama je očiščena",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 358,
+		"article_id": "c483730e-32fa-4fd9-8d07-a1682d4c78e7",
+		"legacy_title": "Tečajniki in ponavljalci",
+		"our_title": "Tečajniki in ponavljavci",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 360,
+		"article_id": "63362626-4388-4032-a56d-c75de52dfc7d",
+		"legacy_title": "Čaganka - Tabor 2014",
+		"our_title": "Čaganka - tabor 2014",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 361,
+		"article_id": "e6113744-3e08-4c98-90ed-82ca258c7b9e",
+		"legacy_title": "Čaganka - nova odkritja - proti 450 m",
+		"our_title": "Čaganka - nova odkritja proti 450 m",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 362,
+		"article_id": "1bc0aeb6-d101-498b-8aea-9daaf1d09fd7",
+		"legacy_title": "Firecombat v Žužemberku",
+		"our_title": "Firecombat 2014 v Žužemberku",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 366,
+		"article_id": "3628d118-7646-4791-a537-189a5150cecd",
+		"legacy_title": "Dan doživetij v Županovi jami",
+		"our_title": "Dan doživetij v Županovi jami 2014",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 379,
+		"article_id": "ffa0a47d-08f3-460b-8c5d-11d96db83765",
+		"legacy_title": "Skrivnost v jami na Kočevskem rogu",
+		"our_title": "Skrivnost v jami Bajonetka na Kočevskem Rogu",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 398,
+		"article_id": "136a8cc4-3ad4-451c-bda9-a4e1d7bd9326",
+		"legacy_title": "Fire combat 2015",
+		"our_title": "Firecombat 2015",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 435,
+		"article_id": "d22cdb38-6b88-47d5-8f3c-8fbdc46b9076",
+		"legacy_title": "Čaganka – Južni rov in tlaka na dnu",
+		"our_title": "Čaganka - Južni rov in tlaka na dnu",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 443,
+		"article_id": "f9af5b41-66f6-4fd2-9a0b-56fe4a91a2ee",
+		"legacy_title": "Jamarski potep po Kočevskem rogu",
+		"our_title": "Jamarski potep po Kočevskem Rogu",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 446,
+		"article_id": "f80d9aed-a16a-435d-b72c-7701b4f498e8",
+		"legacy_title": "Dan doživetij v Županovi jami",
+		"our_title": "Dan doživetij v Županovi jami 2016",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 450,
+		"article_id": "4062bf16-daf2-4c47-be9c-e564672eaf2d",
+		"legacy_title": "Cvingerska jama - čiščenje 2",
+		"our_title": "Cvingerska jama - čiščenje [2]",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 478,
+		"article_id": "2b00c67d-61b0-476e-a6d6-36b5373dfdee",
+		"legacy_title": "Jama Mullerloch pri Livoldu je očiščena",
+		"our_title": "Jama Müllerloch pri Livoldu je očiščena",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 488,
+		"article_id": "ed50eb36-3c8a-4ab2-92cc-2f90a51f96bd",
+		"legacy_title": "Jama pod mostom v Vavti vasi",
+		"our_title": "Jama nad mostom v Vavti vasi",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 492,
+		"article_id": "70d08d3b-f1bf-4b6d-a89f-9fe1443903f4",
+		"legacy_title": "Cvingerska jama – čiščenje 3",
+		"our_title": "Cvingerska jama - čiščenje [3]",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 500,
+		"article_id": "4e37f41a-56f0-4f2c-8445-85bf968a920f",
+		"legacy_title": "Cvingerska jama – raziskovanje nadaljevanja",
+		"our_title": "Cvingerska jama - raziskovanje nadaljevanja",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 517,
+		"article_id": "af88755f-c55e-4c02-b287-84b10e7baa1a",
+		"legacy_title": "Cink križ, ožina še čaka",
+		"our_title": "Cink križ - ožina še čaka",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 531,
+		"article_id": "550a6c0d-4adb-4b49-98b1-92381c9415c4",
+		"legacy_title": "Prvonovembrsko Čagankarjenje",
+		"our_title": "Prvonovembrsko čagankarjenje",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 550,
+		"article_id": "43f29a0a-a5f3-4b66-93ec-56ad1c4cee19",
+		"legacy_title": "Čaganka – Prvonovembrski tabor 2019",
+		"our_title": "Čaganka - Prvonovembrski tabor 2019",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 619,
+		"article_id": "ece873da-ccdc-4f6c-afdc-f49005f4ee4a",
+		"legacy_title": "Četud ni 500 globoka ...",
+		"our_title": "Čaganka - Četud ni 500 globoka ...",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 562,
+		"article_id": "08fa509c-3b63-4b77-9ef6-9c0fc4e08cd1",
+		"legacy_title": "Tečaj za jamarja v polnem teku",
+		"our_title": "Jamarski tečaj 2010 v polnem teku",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 579,
+		"article_id": "e60d2d82-6e6c-4387-8364-703447a85c07",
+		"legacy_title": "Ko Pihalnik postane sistem Pihalnika",
+		"our_title": "Ko Pihalnik postane sistem Pihalnik",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 604,
+		"article_id": "2039f527-5aec-4df4-bca9-6af98815988e",
+		"legacy_title": "Jamarski tečaj 2022 – odtisi in vtisi",
+		"our_title": "Jamarski tečaj 2022 - odtisi in vtisi",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 612,
+		"article_id": "9c3b7027-bef8-4cba-9228-206e09aac063",
+		"legacy_title": "Stop smetem in metanju odpadkov v jame",
+		"our_title": "STOP smetem in metanju odpadkov v jame",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 621,
+		"article_id": "591e9a0b-4410-477d-b920-d295ecf7b789",
+		"legacy_title": "Spust v Labadnico",
+		"our_title": "Spust v Labodnico",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 623,
+		"article_id": "edb883a8-a17e-4a0c-9e0d-7a21b9a38128",
+		"legacy_title": "V Veliki prepadni in Noč v knjižnici",
+		"our_title": "V Veliki Prepadni in Noč v knjižnici",
+		"source": "csv"
+	},
+	{
+		"kind": "title_mismatch",
+		"legacy_id": 624,
+		"article_id": "2b2cd069-3981-47c0-82cb-248ff948d25c",
+		"legacy_title": "Skozi Winetoujevo brezno v čudežni svet brez sonca Županove jame",
+		"our_title": "Skozi Winetoujevo brezno v čudežni svet brez sonca",
+		"source": "csv"
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 142,
+		"article_id": "a431a92b-cc02-4f5b-a8b8-841a294f3176",
+		"title": "Jamarski tečaj 2010",
+		"url": "http://www.jknm.si/si/etc/impresum/",
+		"occurrences": 1
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 202,
+		"article_id": "ce2971ce-4a0c-4f69-93f2-4bcbcb627eb6",
+		"title": "Jamarski tečaj 2011",
+		"url": "http://www.jknm.si/si/etc/impresum/",
+		"occurrences": 1
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 356,
+		"article_id": "e700b026-c39c-4b23-a303-6445234a02c3",
+		"title": "Jamarski tečaj 2014",
+		"url": "http://www.jknm.si/si/etc/impresum/",
+		"occurrences": 1
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 636,
+		"article_id": "5e5aeaa9-678f-40cf-a783-aa605faaa201",
+		"title": "Jamarski tečaj 2024",
+		"url": "http://www.jknm.si/si/izobrazevanje/program/",
+		"occurrences": 1
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 305,
+		"article_id": "7ebddf6a-21fa-4b04-bf5e-bacd5fbf1acc",
+		"title": "Jamarski tečaj 2013",
+		"url": "http://www.jknm.si/si/etc/impresum/",
+		"occurrences": 1
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 675,
+		"article_id": "ab2bcebe-c9bc-454a-8fc4-32e71f0e79cc",
+		"title": "Jamarski tečaj 2025",
+		"url": "https://www.jknm.si/si/izobrazevanje/program/",
+		"occurrences": 1
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 56,
+		"article_id": "8cf396c3-8d5c-44d6-aa56-90fda0314292",
+		"title": "Jamarski tečaj 2009",
+		"url": "https://www.jknm.si/si/izobrazevanje/",
+		"occurrences": 1
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 75,
+		"article_id": "f3f404ce-4623-4af0-8d26-d0b7d9cfa44c",
+		"title": "Le kje sta Pihalnik in Achenloch?",
+		"url": "http://www.jknm.si/si/publikacije/kras01/",
+		"occurrences": 1
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 95,
+		"article_id": "5d87e034-445f-4ad0-8a4c-b643f7834b9e",
+		"title": "Šumeča polšna - sklepno dejanje [3]",
+		"url": "http://www.jknm.si/si/jame/naj/?v=najgloblje",
+		"occurrences": 1
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 95,
+		"article_id": "5d87e034-445f-4ad0-8a4c-b643f7834b9e",
+		"title": "Šumeča polšna - sklepno dejanje [3]",
+		"url": "http://www.jknm.si/si/jame/naj/?v=najdaljse",
+		"occurrences": 1
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 167,
+		"article_id": "4a1b0edc-6230-4efc-bf34-ae2f45a1e6bb",
+		"title": "Bosna 2010",
+		"url": "http://www.jknm.si/si/raziskovanje/grmec/",
+		"occurrences": 2
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 264,
+		"article_id": "7c9c3d66-9201-48fd-9cee-439233701946",
+		"title": "Jamarski tečaj 2012",
+		"url": "http://www.jknm.si/si/etc/impresum/",
+		"occurrences": 1
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 300,
+		"article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
+		"title": "Publikacije Dolenjski kras",
+		"url": "http://www.jknm.si/si/publikacije/kras01/",
+		"occurrences": 2
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 300,
+		"article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
+		"title": "Publikacije Dolenjski kras",
+		"url": "http://www.jknm.si/si/publikacije/kras02/",
+		"occurrences": 2
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 300,
+		"article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
+		"title": "Publikacije Dolenjski kras",
+		"url": "http://www.jknm.si/si/publikacije/kras03/",
+		"occurrences": 2
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 300,
+		"article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
+		"title": "Publikacije Dolenjski kras",
+		"url": "http://www.jknm.si/si/publikacije/kras04/",
+		"occurrences": 2
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 300,
+		"article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
+		"title": "Publikacije Dolenjski kras",
+		"url": "http://www.jknm.si/si/publikacije/kras05/",
+		"occurrences": 2
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 504,
+		"article_id": "e956dc08-b7ef-44e1-953a-eac381440de8",
+		"title": "Izšel je Dolenjski kras 7",
+		"url": "http://www.jknm.si/si/publikacije/",
+		"occurrences": 1
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 581,
+		"article_id": "f08aa6d3-3017-438d-b21f-b5d1cff9a7e1",
+		"title": "Jamarski tečaj 2021",
+		"url": "http://www.jknm.si/si/izobrazevanje/program/",
+		"occurrences": 1
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 603,
+		"article_id": "c9b3a0e6-d2fa-47f0-8e2d-b00cc7f50dd5",
+		"title": "Jamarski tečaj 2022",
+		"url": "http://www.jknm.si/si/izobrazevanje/program/",
+		"occurrences": 1
+	},
+	{
+		"kind": "stray_hotlink",
+		"link_kind": "static-page-link",
+		"legacy_id": 620,
+		"article_id": "f5555e7d-4eaa-4430-b6f5-b37357eca33f",
+		"title": "Jamarski tečaj 2023",
+		"url": "http://www.jknm.si/si/izobrazevanje/program/",
+		"occurrences": 1
+	},
+	{
+		"kind": "orphaned_slug",
+		"slug": "nova-novica",
+		"slug_id": 696,
+		"article_id": "806c454e-b1d9-4918-a01e-e1d2bddb5079",
+		"article_status": "deleted",
+		"is_primary": true
+	},
+	{
+		"kind": "orphaned_slug",
+		"slug": "nova-novica-2",
+		"slug_id": 697,
+		"article_id": "24984c20-0212-42a3-a353-2ac38c6df936",
+		"article_status": "deleted",
+		"is_primary": true
+	},
+	{
+		"kind": "orphaned_slug",
+		"slug": "nova-novica-3",
+		"slug_id": 698,
+		"article_id": "5fde98cb-f48a-4bef-865b-28ce6b76ebdb",
+		"article_status": "deleted",
+		"is_primary": true
+	},
+	{
+		"kind": "orphaned_slug",
+		"slug": "test",
+		"slug_id": 699,
+		"article_id": "1937d42b-e092-44bf-ad59-0627f4060b68",
+		"article_status": "deleted",
+		"is_primary": true
+	},
+	{
+		"kind": "orphaned_slug",
+		"slug": "test-2",
+		"slug_id": 700,
+		"article_id": "161e86ab-bbd7-49b0-9f41-d4d871f73a4f",
+		"article_status": "deleted",
+		"is_primary": true
+	},
+	{
+		"kind": "orphaned_slug",
+		"slug": "nova-novica-4",
+		"slug_id": 701,
+		"article_id": "3a84e1cc-afd8-41a8-9c14-a41c8bd19407",
+		"article_status": "deleted",
+		"is_primary": true
+	},
+	{
+		"kind": "orphaned_slug",
+		"slug": "nova-novica-5",
+		"slug_id": 702,
+		"article_id": "5ba9380f-245d-4c43-83c6-ebab1ed93fb7",
+		"article_status": "deleted",
+		"is_primary": true
+	},
+	{
+		"kind": "orphaned_slug",
+		"slug": "nova-novica-6",
+		"slug_id": 703,
+		"article_id": "d3a41b36-dc8c-49c0-9d31-4bdb13836445",
+		"article_status": "deleted",
+		"is_primary": true
+	},
+	{
+		"kind": "orphaned_slug",
+		"slug": "nova-novica-7",
+		"slug_id": 705,
+		"article_id": "47caa719-3143-402f-bdb2-5fbd7b297f06",
+		"article_status": "deleted",
+		"is_primary": true
+	}
 ]

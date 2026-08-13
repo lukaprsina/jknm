@@ -9,7 +9,8 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
 	title: "Arhiv novic",
-	description: "Prebrskajte arhiv vseh objavljenih novic Jamarskega kluba Novo mesto.",
+	description:
+		"Prebrskajte arhiv vseh objavljenih novic Jamarskega kluba Novo mesto.",
 	alternates: { canonical: "/arhiv" },
 };
 

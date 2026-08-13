@@ -47,7 +47,8 @@ describe("strip_concatenated_prefixes", () => {
 	});
 
 	it("leaves genuine jknm.si links untouched", () => {
-		const real = "https://www.jknm.si/si/?id=304 and https://www.jknm.si/media/x.pdf";
+		const real =
+			"https://www.jknm.si/si/?id=304 and https://www.jknm.si/media/x.pdf";
 		expect(strip_concatenated_prefixes(real)).toBe(real);
 		expect(count_concatenated_prefixes(real)).toBe(0);
 	});
@@ -91,7 +92,9 @@ describe("rewrite_urls", () => {
 	});
 
 	it("treats replacement keys as literals, not patterns", () => {
-		const map = new Map([[`${B2}/a(1).jpg`, "https://gradivo.jknm.org/1/o.jpg"]]);
+		const map = new Map([
+			[`${B2}/a(1).jpg`, "https://gradivo.jknm.org/1/o.jpg"],
+		]);
 		expect(rewrite_urls(`${B2}/a(1).jpg`, map)).toBe(
 			"https://gradivo.jknm.org/1/o.jpg",
 		);

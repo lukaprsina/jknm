@@ -237,7 +237,9 @@ export const Article = pgTable(
 			.$defaultFn(() => crypto.randomUUID()),
 		legacy_id: integer("legacy_id").unique(),
 		status: article_status_enum("status").notNull().default("draft"),
-		article_kind: article_kind_enum("article_kind").notNull().default("article"),
+		article_kind: article_kind_enum("article_kind")
+			.notNull()
+			.default("article"),
 		title: varchar("title", { length: 255 }).notNull(),
 		excerpt: text("excerpt").default(""),
 		content_json: jsonb("content_json").$type<ArticleContentType>(),

@@ -116,7 +116,8 @@ async function resolve_supersede_publish_slug(
 	// the newly-published row without ever minting a new one.
 	const decision = decide_slug_transition({
 		old_title: superseded.title,
-		new_title: superseded.article_kind === "content" ? superseded.title : new_title,
+		new_title:
+			superseded.article_kind === "content" ? superseded.title : new_title,
 		old_primary_slug,
 	});
 

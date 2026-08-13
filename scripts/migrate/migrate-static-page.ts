@@ -58,7 +58,9 @@ async function main() {
 	const existing = await find_existing_content_draft(page_config.title);
 	const draft = existing ?? (await create_draft(page_config.title, admin_id));
 	if (existing) {
-		console.log(`Reusing existing draft ${draft.id} (rerun of a prior attempt)`);
+		console.log(
+			`Reusing existing draft ${draft.id} (rerun of a prior attempt)`,
+		);
 	}
 	// Keep only the seeded h1 header block (index 0) as the prefix -- on a
 	// reused draft the rest is last run's converted content, which this run
@@ -70,7 +72,10 @@ async function main() {
 		.set({ content_json: { blocks } })
 		.where(eq(Article.id, draft.id));
 
-	const draft_url = new URL(`/uredi/${draft.id}`, env.BETTER_AUTH_URL).toString();
+	const draft_url = new URL(
+		`/uredi/${draft.id}`,
+		env.BETTER_AUTH_URL,
+	).toString();
 	console.log(`\nDone. Draft: ${draft_url}`);
 	console.log(
 		"\nNext: QA the draft by eye (headings/lists/images/sup), then run " +

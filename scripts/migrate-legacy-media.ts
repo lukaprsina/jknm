@@ -1,7 +1,6 @@
 import { extract_media_refs_from_content } from "~/lib/editor-utils";
 import type { DbTransaction } from "~/server/db";
-import type { ArticleContentType } from "~/server/db/schema";
-import type { Media } from "~/server/db/schema";
+import type { ArticleContentType, Media } from "~/server/db/schema";
 import { authorize_b2, ingest_media_from_url } from "~/server/media/ingest";
 
 /**

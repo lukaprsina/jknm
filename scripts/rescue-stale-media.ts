@@ -94,7 +94,9 @@ async function main() {
 	// than on the first N rows (which are overwhelmingly already clean).
 	const affected = articles.filter((article) => {
 		if (!article.content_json) return false;
-		const raw = strip_concatenated_prefixes(JSON.stringify(article.content_json));
+		const raw = strip_concatenated_prefixes(
+			JSON.stringify(article.content_json),
+		);
 		return find_stale_asset_urls(raw).length > 0;
 	});
 
@@ -171,7 +173,9 @@ async function main() {
 	for (const url of failures) console.log(`  UNRECOVERABLE ${url}`);
 
 	if (!execute) {
-		console.log("\nDry run only — re-run with --execute to ingest and rewrite.");
+		console.log(
+			"\nDry run only — re-run with --execute to ingest and rewrite.",
+		);
 	}
 }
 

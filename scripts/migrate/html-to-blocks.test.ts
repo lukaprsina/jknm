@@ -87,7 +87,8 @@ describe("html_to_blocks", () => {
 		const blocks = html_to_blocks(
 			'<figure><img src="https://vsebina.jknm.org/x.jpg" width="10" height="10"></figure>',
 		);
-		expect((blocks[0]?.data as { caption: string }).caption).toBe("");
+		expect(blocks).toHaveLength(1);
+		expect((blocks[0]!.data as { caption: string }).caption).toBe("");
 	});
 
 	it("throws on an unrecognized top-level element instead of silently dropping content", () => {

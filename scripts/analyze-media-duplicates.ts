@@ -293,7 +293,11 @@ async function main() {
 	await fsp.mkdir("artifacts", { recursive: true });
 	await fsp.writeFile(
 		OUT_PATH,
-		JSON.stringify({ generated_at: new Date().toISOString(), duplicate_groups }, null, 2),
+		JSON.stringify(
+			{ generated_at: new Date().toISOString(), duplicate_groups },
+			null,
+			2,
+		),
 		"utf8",
 	);
 	console.log(`\nPlan written to ${OUT_PATH}`);

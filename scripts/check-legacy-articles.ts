@@ -31,13 +31,19 @@ interface LegacyRow {
 
 function parse_legacy_date(raw: string): Date | null {
 	// "29/2/2008 00:00:00" -> D/M/YYYY H:mm:ss
-	const match = /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2})$/.exec(
-		raw,
-	);
+	const match =
+		/^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2})$/.exec(raw);
 	if (!match) return null;
 	const [, d, m, y, h, min, s] = match;
 	return new Date(
-		Date.UTC(Number(y), Number(m) - 1, Number(d), Number(h), Number(min), Number(s)),
+		Date.UTC(
+			Number(y),
+			Number(m) - 1,
+			Number(d),
+			Number(h),
+			Number(min),
+			Number(s),
+		),
 	);
 }
 

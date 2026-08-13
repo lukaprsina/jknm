@@ -33,7 +33,11 @@ async function main() {
 	const b2 = await authorize_b2();
 	const bytes = await fs.readFile(PDF_PATH);
 	const media = await ingest_media(
-		{ bytes, filename: "3631_Cinkov_kriz.pdf", content_type: "application/pdf" },
+		{
+			bytes,
+			filename: "3631_Cinkov_kriz.pdf",
+			content_type: "application/pdf",
+		},
 		{ b2 },
 	);
 	console.log(`ingested -> ${media.original.url}`);
@@ -48,7 +52,9 @@ async function main() {
 		const original = JSON.stringify(article.content_json);
 		const stale_url = STALE_URL_PREFIXES.find((url) => original.includes(url));
 		if (!stale_url) {
-			console.log(`[${article.legacy_id}] no matching stale url found, skipping`);
+			console.log(
+				`[${article.legacy_id}] no matching stale url found, skipping`,
+			);
 			continue;
 		}
 

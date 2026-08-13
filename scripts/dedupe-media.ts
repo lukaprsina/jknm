@@ -135,7 +135,12 @@ async function main() {
 	for (const [article_id, title] of affected_articles) {
 		const article = await db.query.Article.findFirst({
 			where: eq(Article.id, article_id),
-			columns: { id: true, title: true, thumbnail_media_id: true, content_json: true },
+			columns: {
+				id: true,
+				title: true,
+				thumbnail_media_id: true,
+				content_json: true,
+			},
 		});
 		if (!article) {
 			console.warn(`  ${article_id} "${title}": not found (skipping)`);

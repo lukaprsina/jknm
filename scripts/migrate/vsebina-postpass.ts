@@ -39,7 +39,8 @@ async function main() {
 	const args = process.argv.slice(2);
 	const article_id = args.find((a) => !a.startsWith("--"));
 	const execute = args.includes("--execute");
-	const slug = args.find((a) => a.startsWith("--slug="))?.split("=")[1] ?? "page";
+	const slug =
+		args.find((a) => a.startsWith("--slug="))?.split("=")[1] ?? "page";
 
 	if (!article_id) {
 		throw new Error(
@@ -76,7 +77,9 @@ async function main() {
 				old_url,
 				status: response?.ok ? "would-ingest" : "fetch-failed",
 			});
-			console.log(`  [dry-run] ${old_url} -> ${response?.ok ? "reachable" : "UNREACHABLE"}`);
+			console.log(
+				`  [dry-run] ${old_url} -> ${response?.ok ? "reachable" : "UNREACHABLE"}`,
+			);
 			continue;
 		}
 
@@ -98,7 +101,9 @@ async function main() {
 			.update(Article)
 			.set({ content_json: JSON.parse(serialized) as ArticleContentType })
 			.where(eq(Article.id, article_id));
-		console.log(`\nWrote back article ${article_id} with ${plan.length} reference(s) repointed.`);
+		console.log(
+			`\nWrote back article ${article_id} with ${plan.length} reference(s) repointed.`,
+		);
 	}
 
 	const artifacts_dir = path.join(import.meta.dirname, "..", "..", "artifacts");

@@ -83,10 +83,7 @@ export function build_published_article_metadata(
  * `</` is escaped inside the JSON so a title/excerpt containing a literal
  * `</script>` can't prematurely close the tag.
  */
-function build_article_json_ld(
-	article: NewArticleWithRelations,
-	slug: string,
-) {
+function build_article_json_ld(article: NewArticleWithRelations, slug: string) {
 	const json_ld = {
 		"@context": "https://schema.org",
 		"@type": "Article",

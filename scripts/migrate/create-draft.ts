@@ -48,7 +48,9 @@ export async function create_draft(title: string, created_by: string) {
 			status: "draft",
 			article_kind: "content",
 			content_json: {
-				blocks: [{ id: "sheNwCUP5A", type: "header", data: { text: title, level: 1 } }],
+				blocks: [
+					{ id: "sheNwCUP5A", type: "header", data: { text: title, level: 1 } },
+				],
 			},
 			created_by,
 		})

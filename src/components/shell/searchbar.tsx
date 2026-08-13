@@ -50,8 +50,8 @@ export function Searchbar() {
 			// `article_kind` must be declared as a filterable attribute on the
 			// Algolia index (one-time manual dashboard step, ADR-0009) before this
 			// ships, or Algolia rejects facetFilters and search breaks entirely.
-			const { results } = await ALGOLIA_CLIENT.searchForHits<PublishedArticleHit>(
-				{
+			const { results } =
+				await ALGOLIA_CLIENT.searchForHits<PublishedArticleHit>({
 					requests: [
 						{
 							indexName: ALGOLIA_PUBLISHED_ARTICLE_INDEX,
@@ -67,14 +67,15 @@ export function Searchbar() {
 						},
 					],
 					strategy: "none",
-				},
-			);
+				});
 
 			const content_pages = results[0] as SearchResponse<PublishedArticleHit>;
 			const published_article =
 				results[1] as SearchResponse<PublishedArticleHit>;
 
-			setNoResults(content_pages.nbHits === 0 && published_article.nbHits === 0);
+			setNoResults(
+				content_pages.nbHits === 0 && published_article.nbHits === 0,
+			);
 			setContentPages(content_pages.hits);
 			setPublishedArticles(published_article.hits);
 		};

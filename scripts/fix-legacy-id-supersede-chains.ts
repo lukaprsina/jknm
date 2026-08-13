@@ -90,7 +90,9 @@ async function main() {
 				throw new Error(
 					`legacy_id=${row.legacy_id} "${row.title}": chain forks at ${current.id} — ${children
 						.map((c) => c.id)
-						.join(", ")} all claim to supersede it, refusing to guess which is the real chain`,
+						.join(
+							", ",
+						)} all claim to supersede it, refusing to guess which is the real chain`,
 				);
 			}
 			const next = children[0];
@@ -127,7 +129,10 @@ async function main() {
 	// drop one of them (last write wins) — refuse rather than guess.
 	const live_id_counts = new Map<string, number>();
 	for (const move of moves) {
-		live_id_counts.set(move.live_id, (live_id_counts.get(move.live_id) ?? 0) + 1);
+		live_id_counts.set(
+			move.live_id,
+			(live_id_counts.get(move.live_id) ?? 0) + 1,
+		);
 	}
 	for (const [live_id, count] of live_id_counts) {
 		if (count > 1) {

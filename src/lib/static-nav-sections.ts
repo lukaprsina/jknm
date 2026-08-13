@@ -25,7 +25,9 @@ const ARHIV_SECTION: NavSection = {
  */
 export function to_nav_section(
 	slug: string,
-	article: { title: string; content_json: ArticleContentType | null } | undefined,
+	article:
+		| { title: string; content_json: ArticleContentType | null }
+		| undefined,
 ): NavSection | null {
 	if (!article?.content_json) return null;
 

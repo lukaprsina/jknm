@@ -51,7 +51,9 @@ async function main() {
 			arts.add(`${row.legacy_id ?? "-"} ${row.status} ${row.title}`);
 			articles_by_kind.set(kind, arts);
 			if (kind === "media-file") {
-				const ext = (/\.([a-z0-9]{1,5})(?:\?|$)/i.exec(url)?.[1] ?? "none").toLowerCase();
+				const ext = (
+					/\.([a-z0-9]{1,5})(?:\?|$)/i.exec(url)?.[1] ?? "none"
+				).toLowerCase();
 				ext_counts.set(ext, (ext_counts.get(ext) ?? 0) + 1);
 			}
 		}

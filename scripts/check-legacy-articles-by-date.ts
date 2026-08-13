@@ -1,7 +1,6 @@
 import fs from "node:fs/promises";
 import { parse } from "csv-parse/sync";
 import { db } from "~/server/db";
-import { Article } from "~/server/db/schema";
 
 /**
  * One-off, experimental: legacy_id turns out to be unreliable for matching
@@ -30,13 +29,19 @@ interface LegacyRow {
 
 function parse_legacy_date(raw: string): Date | null {
 	// "29/2/2008 00:00:00" -> D/M/YYYY H:mm:ss
-	const match = /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2})$/.exec(
-		raw,
-	);
+	const match =
+		/^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2})$/.exec(raw);
 	if (!match) return null;
 	const [, d, m, y, h, min, s] = match;
 	return new Date(
-		Date.UTC(Number(y), Number(m) - 1, Number(d), Number(h), Number(min), Number(s)),
+		Date.UTC(
+			Number(y),
+			Number(m) - 1,
+			Number(d),
+			Number(h),
+			Number(min),
+			Number(s),
+		),
 	);
 }
 
@@ -64,7 +69,9 @@ function days_apart(a: Date, b: Date): number {
 
 async function main() {
 	const legacy_rows = await load_legacy_rows();
-	legacy_rows.sort((a, b) => a.published_at.getTime() - b.published_at.getTime());
+	legacy_rows.sort(
+		(a, b) => a.published_at.getTime() - b.published_at.getTime(),
+	);
 	console.log(`${legacy_rows.length} legacy row(s) loaded (date-parseable).`);
 
 	const last_legacy_date = legacy_rows[legacy_rows.length - 1]?.published_at;

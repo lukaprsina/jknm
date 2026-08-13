@@ -50,13 +50,19 @@ interface LegacyRow {
 
 function parse_legacy_date(raw: string): Date | null {
 	// CSV: "29/2/2008 00:00:00" -> D/M/YYYY H:mm:ss
-	const match = /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2})$/.exec(
-		raw,
-	);
+	const match =
+		/^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2})$/.exec(raw);
 	if (!match) return null;
 	const [, d, m, y, h, min, s] = match;
 	return new Date(
-		Date.UTC(Number(y), Number(m) - 1, Number(d), Number(h), Number(min), Number(s)),
+		Date.UTC(
+			Number(y),
+			Number(m) - 1,
+			Number(d),
+			Number(h),
+			Number(min),
+			Number(s),
+		),
 	);
 }
 
@@ -107,7 +113,11 @@ async function load_html_rows(): Promise<LegacyRow[]> {
 		const published_at = parse_html_date(date_match[1]?.trim() ?? "");
 		if (!published_at) continue;
 
-		rows.push({ legacy_id, title: (title_match[1] ?? "").trim(), published_at });
+		rows.push({
+			legacy_id,
+			title: (title_match[1] ?? "").trim(),
+			published_at,
+		});
 	}
 	return rows;
 }
@@ -130,7 +140,9 @@ async function main() {
 	const execute = values.execute ?? false;
 
 	const legacy_rows = await load_legacy_rows();
-	legacy_rows.sort((a, b) => a.published_at.getTime() - b.published_at.getTime());
+	legacy_rows.sort(
+		(a, b) => a.published_at.getTime() - b.published_at.getTime(),
+	);
 
 	const last_legacy_date = legacy_rows[legacy_rows.length - 1]?.published_at;
 	if (!last_legacy_date) throw new Error("no legacy rows");

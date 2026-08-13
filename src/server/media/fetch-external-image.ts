@@ -131,6 +131,7 @@ export async function fetch_external_image(
 
 	return {
 		bytes: Buffer.concat(chunks),
-		content_type: response.headers.get("content-type") ?? "application/octet-stream",
+		content_type:
+			response.headers.get("content-type") ?? "application/octet-stream",
 	};
 }

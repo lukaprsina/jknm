@@ -49,7 +49,7 @@ interface PlannedUpdate {
 
 async function load_legacy_ground_truth(): Promise<Map<number, boolean>> {
 	const text = await fs.readFile(LEGACY_JSON_PATH, "utf8");
-	const rows: LegacyArticle[] = JSON.parse(text);
+	const rows = JSON.parse(text) as LegacyArticle[];
 
 	const ground_truth = new Map<number, boolean>();
 	for (const row of rows) {

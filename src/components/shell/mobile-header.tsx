@@ -3,12 +3,7 @@
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { ChevronDownIcon, MenuIcon } from "lucide-react";
 import Link from "next/link";
-import {
-	type ComponentProps,
-	type ReactNode,
-	useEffect,
-	useRef,
-} from "react";
+import { type ComponentProps, type ReactNode, useEffect, useRef } from "react";
 import { create } from "zustand";
 import { useHasToc, useMobileTocProgress } from "~/components/toc/toc-store";
 import { Button } from "~/components/ui/button";
@@ -87,6 +82,7 @@ export function MobileHeader({
 	const navbar_height = useNavbarHeight();
 	const is_top = useIsScrollTop();
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: has_toc isn't read here, but it changes the DOM layout that clientHeight measures below -- see comment inside.
 	useEffect(() => {
 		if (md_breakpoint) {
 			mobile_nav_store.setState({ open: false });
@@ -305,8 +301,7 @@ export function MobileTocPopover({ is_top }: { is_top: boolean }) {
 	const container_ref = useRef<HTMLDivElement>(null);
 
 	const active_index = entries.findIndex((entry) => entry.id === active_id);
-	const active_entry =
-		active_index === -1 ? undefined : entries[active_index];
+	const active_entry = active_index === -1 ? undefined : entries[active_index];
 	const progress =
 		entries.length === 0 ? 0 : (active_index + 1) / entries.length;
 	const show_active_title = active_entry !== undefined && !open;
@@ -344,7 +339,7 @@ export function MobileTocPopover({ is_top }: { is_top: boolean }) {
 				if (new_state) mobile_nav_store.setState({ open: false });
 			}}
 			// TODO: do we want border here?
-			className={cn("relative w-full"/* , "border-t" */)}
+			className={cn("relative w-full" /* , "border-t" */)}
 		>
 			<CollapsibleTrigger
 				className={cn(
@@ -381,7 +376,10 @@ export function MobileTocPopover({ is_top }: { is_top: boolean }) {
 				/>
 			</CollapsibleTrigger>
 			<CollapsibleContent className="absolute inset-x-0 top-full z-10 overflow-hidden border-b bg-white/90 shadow-lg backdrop-blur-sm data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down supports-backdrop-filter:bg-background/60">
-				<div id="mobile-toc" className="max-h-[50vh] overflow-y-auto px-6 py-2" />
+				<div
+					id="mobile-toc"
+					className="max-h-[50vh] overflow-y-auto px-6 py-2"
+				/>
 			</CollapsibleContent>
 		</Collapsible>
 	);

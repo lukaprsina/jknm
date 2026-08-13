@@ -77,7 +77,10 @@ function to_list_block(
 	};
 }
 
-function to_dimension(attr: string | undefined, name: string): number | undefined {
+function to_dimension(
+	attr: string | undefined,
+	name: string,
+): number | undefined {
 	if (!attr) return undefined;
 	const value = Number(attr);
 	if (Number.isNaN(value)) {

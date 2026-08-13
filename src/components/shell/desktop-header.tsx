@@ -8,6 +8,7 @@ import { useBreakpoint } from "~/hooks/use-breakpoint";
 // import Logo from "~/assets/logo-barvni.svg";
 import type { NavSection } from "~/lib/static-nav-sections";
 import { cn } from "~/lib/utils";
+import { HomeLink } from "./home-link";
 import {
 	ContactIcon,
 	FacebookIcon,
@@ -15,7 +16,6 @@ import {
 	SearchIcon,
 	YoutubeIcon,
 } from "./icons";
-import { HomeLink } from "./home-link";
 import { Logo } from "./logo";
 import { Navigation } from "./navigation";
 

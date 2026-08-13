@@ -92,8 +92,11 @@ async function main() {
 
 	// --- 2. legacy_ids past the end of the old site ---
 	const to_null = all
-		.filter((a) => a.legacy_id !== null && a.legacy_id > LAST_REAL_LEGACY_ID)
-		.sort((a, b) => (a.legacy_id as number) - (b.legacy_id as number));
+		.filter(
+			(a): a is typeof a & { legacy_id: number } =>
+				a.legacy_id !== null && a.legacy_id > LAST_REAL_LEGACY_ID,
+		)
+		.sort((a, b) => a.legacy_id - b.legacy_id);
 
 	console.log(`${swap_targets.length} same-day ordering fix(es):\n`);
 	for (const t of swap_targets) {

@@ -49,6 +49,8 @@ describe("to_nav_section", () => {
 	});
 
 	test("returns null when the row has no content", () => {
-		expect(to_nav_section("klub", { title: "Klub", content_json: null })).toBeNull();
+		expect(
+			to_nav_section("klub", { title: "Klub", content_json: null }),
+		).toBeNull();
 	});
 });

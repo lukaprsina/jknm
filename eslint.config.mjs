@@ -6,6 +6,7 @@ export default tseslint.config(
 	{
 		ignores: [
 			".next/**",
+			".vercel/**",
 			"out/**",
 			"build/**",
 			"next-env.d.ts",
@@ -41,6 +42,12 @@ export default tseslint.config(
 				},
 			],
 			"@typescript-eslint/require-await": "off",
+			"@typescript-eslint/prefer-nullish-coalescing": [
+				"error",
+				{
+					ignoreMixedLogicalExpressions: true,
+				},
+			],
 			"@typescript-eslint/no-misused-promises": [
 				"error",
 				{
