@@ -366,31 +366,40 @@ async function resolve_retitle_slug(
  * Save a draft on the unified `articles` table: update the row, replace its
  * authors, and reconcile `media_to_articles` from the content (#19).
  *
- * `input.article.published_at` (the settings-form date picker's value) is
- * deliberately not written here: a draft has no real publish date yet, and
- * writing one into the `published_at` column early would make
- * `get_archive_origin_label` misreport a still-`draft` row that gets archived
- * directly (`draft` -> `archived` is allowed) as "was published". The picked
- * date only takes effect at actual publish time, via `decide_published_at`'s
- * `requested` param in `publish_article` below.
+ * `published_at` is written here too, from `input.article.published_at` (the
+ * settings-form date picker) falling back to whatever the row already had, or
+ * `now` for a first save — it doubles as "the date this piece is or will be
+ * published" even before an actual publish, so a picked date survives closing
+ * and reopening the editor. `publish_article`'s `decide_published_at` still
+ * lets an explicit override win at publish time, and inherits from `source`
+ * on a supersede-publish (drafts don't have a source's date yet).
  */
 export async function save_article(
 	input: z.infer<typeof save_article_validator>,
+	db_conn: typeof db = db,
 ) {
-	const transaction = await db.transaction(async (tx) => {
+	const transaction = await db_conn.transaction(async (tx) => {
 		const existing = await tx.query.Article.findFirst({
 			where: eq(Article.id, input.article_id),
-			columns: { title: true, status: true, article_kind: true },
+			columns: {
+				title: true,
+				status: true,
+				article_kind: true,
+				published_at: true,
+			},
 		});
 		if (!existing) throw new Error("Article not found");
 
 		const thumbnail = await resolve_thumbnail(tx, input.article.thumbnail_crop);
+		const published_at =
+			input.article.published_at ?? existing.published_at ?? new Date();
 
 		const updated = await tx
 			.update(Article)
 			.set({
 				title: input.article.title,
 				content_json: input.article.content ?? undefined,
+				published_at,
 				...thumbnail,
 			})
 			.where(eq(Article.id, input.article_id))

@@ -6,7 +6,6 @@ import {
 	assert_can_supersede,
 	decide_published_at,
 	decide_slug_transition,
-	get_archive_origin_label,
 	is_supersede_publish,
 	is_visible_to,
 	resolve_lifecycle_target,
@@ -456,19 +455,5 @@ describe("resolve_slug_request", () => {
 		});
 
 		expect(resolution).toEqual({ outcome: "render" });
-	});
-});
-
-describe("get_archive_origin_label", () => {
-	test("labels a previously published article", () => {
-		expect(get_archive_origin_label({ published_at: new Date() })).toBe(
-			"bil objavljen",
-		);
-	});
-
-	test("labels an article that was archived straight from draft", () => {
-		expect(get_archive_origin_label({ published_at: null })).toBe(
-			"bil osnutek",
-		);
 	});
 });

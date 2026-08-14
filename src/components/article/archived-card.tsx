@@ -6,7 +6,6 @@ import {
 	CardHeader,
 } from "~/components/ui/card";
 import { format_date_for_human } from "~/lib/format-date";
-import { get_archive_origin_label } from "~/server/article/lifecycle-rules";
 import type {
 	Article,
 	ArticleSlug,
@@ -31,9 +30,6 @@ export function ArchivedArticleCard({
 }: {
 	article: ArchivedArticleRow;
 }) {
-	const origin = get_archive_origin_label({
-		published_at: article.published_at,
-	});
 	// Admins can still reach an archived article's public URL directly
 	// (`is_visible_to` allows it); one that was archived straight from a
 	// draft never had a slug minted, so there's nothing to link to.
@@ -54,9 +50,8 @@ export function ArchivedArticleCard({
 				)}
 			</CardHeader>
 			<CardContent className="flex-1 text-sm text-muted-foreground">
-				{origin}
 				{article.archived_at && (
-					<> · Arhivirana {format_date_for_human(article.archived_at)}</>
+					<>Arhivirana {format_date_for_human(article.archived_at)}</>
 				)}
 			</CardContent>
 			<CardFooter className="flex justify-end gap-2">

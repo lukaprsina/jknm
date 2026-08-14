@@ -32,5 +32,9 @@ export default defineConfig({
 		// `~/server/article/lifecycle`, which runs `~/env`'s validation at
 		// import time — previously no test transitively imported it at runtime.
 		env: loadEnv("test", process.cwd(), ""),
+		// PGlite's spin-up (`create_test_db`) gets noticeably slower once several
+		// suites run it concurrently — the default 5s timeout started flaking
+		// once a 4th test file using it joined `article-queries`/`lifecycle`/`ingest`.
+		testTimeout: 15000,
 	},
 });

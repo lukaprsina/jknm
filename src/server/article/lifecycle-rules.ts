@@ -127,22 +127,6 @@ export function is_supersede_publish(
 }
 
 /**
- * The `published_at` a publish should end up with. A superseding draft is a
- * fresh row, so its own `published_at` is null — falling through to `now`
- * would silently re-date the article to today every time it's revised,
- * bumping it to the top of the news list and moving it between years in the
- * archive (the `published_year` generated column derives from this).
- * Revising an article isn't republishing it, so the source's original date
- * wins whenever a source exists.
- *
- * Deliberately keyed on "a source exists", not on `is_supersede_publish`: the
- * unarchive path retires its source at draft-creation time, so
- * `is_supersede_publish` is already false by publish time even though this
- * is still the same article and must still inherit its date. A source that
- * was archived straight from `draft` has a null `published_at` and correctly
- * falls through to `existing.published_at ?? now`.
- */
-/**
  * Whether discarding a superseding draft must also restore its source back to
  * `archived`. True exactly when the source is currently `deleted` — the only
  * way that happens while the draft is still `draft` is
@@ -160,6 +144,22 @@ export function should_restore_source_on_discard(
 	return source?.status === "deleted";
 }
 
+/**
+ * The `published_at` a publish should end up with. `existing.published_at` is
+ * no longer null at this point in practice — `save_article` writes it on
+ * every draft save now — but a supersede-publish must still prefer the
+ * *source's* date over the draft's own: the draft's `published_at` is either
+ * unset (never saved) or whatever the admin last picked while revising, and
+ * revising an article isn't republishing it, so the source's original date
+ * wins whenever a source exists.
+ *
+ * Deliberately keyed on "a source exists", not on `is_supersede_publish`: the
+ * unarchive path retires its source at draft-creation time, so
+ * `is_supersede_publish` is already false by publish time even though this is
+ * still the same article and must still inherit its date. A source that was
+ * archived straight from `draft` before this could ever write a date falls
+ * through to `existing.published_at ?? now` like any other case.
+ */
 export function decide_published_at({
 	requested,
 	source,
@@ -308,16 +308,4 @@ export function resolve_slug_request({
 	}
 
 	return { outcome: "render" };
-}
-
-/**
- * The "Arhiv" accordion's origin label: whether an archived article was ever
- * live, or was archived straight from a draft.
- */
-export function get_archive_origin_label({
-	published_at,
-}: {
-	published_at: Date | null;
-}): "bil objavljen" | "bil osnutek" {
-	return published_at ? "bil objavljen" : "bil osnutek";
 }
