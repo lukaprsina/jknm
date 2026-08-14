@@ -42,7 +42,6 @@ export function ArticleTable({
 			{/* <TableCaption>Novice.</TableCaption> */}
 			<TableHeader>
 				<TableRow>
-					<TableHead>ID</TableHead>
 					<TableHead>
 						<Button
 							variant="ghost"
@@ -92,30 +91,11 @@ export function ArticleTable({
 								);
 							}}
 						>
-							Datum nastanka
+							Objavljeno
 							{sort_api.currentRefinement ===
 								"published_article_created_at_desc" && <ChevronDownIcon />}
 							{sort_api.currentRefinement ===
 								"published_article_created_at_asc" && <ChevronUpIcon />}
-						</Button>
-					</TableHead>
-					<TableHead>
-						<Button
-							variant="ghost"
-							onClick={() => {
-								sort_api.refine(
-									sort_api.currentRefinement ===
-										"published_article_updated_at_desc"
-										? "published_article_updated_at_asc"
-										: "published_article_updated_at_desc",
-								);
-							}}
-						>
-							Zadnje posodobljeno
-							{sort_api.currentRefinement ===
-								"published_article_updated_at_desc" && <ChevronDownIcon />}
-							{sort_api.currentRefinement ===
-								"published_article_updated_at_asc" && <ChevronUpIcon />}
 						</Button>
 					</TableHead>
 				</TableRow>
@@ -132,9 +112,9 @@ export function ArticleTable({
 			</TableBody>
 			<TableFooter>
 				<TableRow>
-					<TableCell colSpan={4}></TableCell>
+					<TableCell colSpan={2}></TableCell>
 					<TableCell className="text-right">
-						<MyStats />
+						<MyStats loaded_count={items.length} />
 					</TableCell>
 				</TableRow>
 			</TableFooter>
@@ -153,7 +133,6 @@ function ArticleTableRow({
 }) {
 	return (
 		<TableRow ref={ref} key={hit.objectID}>
-			<TableCell>{hit.objectID}</TableCell>
 			<TableCell className="font-medium">
 				<Button variant="link" asChild>
 					<Link href={get_published_article_link(hit.url)}>{hit.title}</Link>
@@ -163,7 +142,6 @@ function ArticleTableRow({
 				<Authors author_ids={hit.author_ids} />
 			</TableCell>
 			<TableCell>{format_date_for_human(new Date(hit.created_at))}</TableCell>
-			<TableCell>{format_date_for_human(new Date(hit.updated_at))}</TableCell>
 		</TableRow>
 	);
 }

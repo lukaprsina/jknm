@@ -32,7 +32,7 @@ export function ArticleCard({
 	featured,
 	title,
 	url,
-	id,
+	permalink_url,
 	content_preview,
 	created_at,
 	has_thumbnail,
@@ -43,7 +43,7 @@ export function ArticleCard({
 	featured?: boolean;
 	title: string;
 	url: string;
-	id?: number;
+	permalink_url?: string;
 	content_preview?: string;
 	created_at: Date;
 	has_thumbnail: boolean;
@@ -54,7 +54,6 @@ export function ArticleCard({
 	const [hover, setHover] = useState(false);
 	const [hoverLink, setHoverLink] = useState(false);
 	const toaster = useToast();
-	console.log("A", { t: typeof id, id });
 
 	return (
 		<Link
@@ -110,7 +109,7 @@ export function ArticleCard({
 									__html: sanitize_inline_html(title),
 								}}
 							/>
-							{typeof id === "number" && (
+							{permalink_url && (
 								<Tooltip>
 									<TooltipTrigger asChild>
 										<Button
@@ -123,14 +122,13 @@ export function ArticleCard({
 											onClick={async (e) => {
 												e.preventDefault();
 												e.stopPropagation();
-												const article_url = `${get_base_url(true)}/novica/?id=${id}`;
 
 												toaster.toast({
 													title: "Trajna povezava je kopirana v odložišče.",
-													description: article_url,
+													description: permalink_url,
 												});
 
-												await navigator.clipboard.writeText(article_url);
+												await navigator.clipboard.writeText(permalink_url);
 											}}
 										>
 											<LinkIcon size={18} />
@@ -177,14 +175,21 @@ export function ArticleAlgoliaCard({
 	// old S3 thumbnail.png path convention; new-model hits (uuid objectID)
 	// carry an absolute gradivo.jknm.org `image` URL directly.
 	const is_legacy_hit = /^\d+$/.test(hit.objectID);
+	const url = get_published_article_link(hit.url);
+	// Legacy articles' only stable permalink is the `?id=` redirect
+	// (`si/route.ts`); new-model articles have no legacy id, so their stable
+	// permalink is their slug URL (backed by `article_slugs` redirects).
+	const permalink_url = is_legacy_hit
+		? `${get_base_url(true)}/novica/?id=${hit.objectID}`
+		: `${get_base_url(true)}${url}`;
 
 	return (
 		<ArticleCard
 			ref={ref}
 			featured={false}
 			title={hit.title}
-			url={get_published_article_link(hit.url)}
-			id={is_legacy_hit ? parseInt(hit.objectID, 10) : undefined}
+			url={url}
+			permalink_url={permalink_url}
 			content_preview={hit.content_preview?.slice(0, 1000)}
 			created_at={new Date(hit.created_at)}
 			has_thumbnail={hit.has_thumbnail}

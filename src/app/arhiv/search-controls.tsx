@@ -5,7 +5,6 @@ import {
 	CustomClearRefinements,
 	MySearchBox2,
 	MySortBy,
-	MyStats,
 	TimelineRefinement,
 } from "./components";
 
@@ -34,10 +33,9 @@ export function SearchControls({ activeTab }: { activeTab: "card" | "table" }) {
 				</div>
 			</div>
 			<div className="flex w-full items-center justify-end gap-6">
-				<MyStats />
 				<CustomClearRefinements />
 			</div>
-			<div className="flex w-full items-center justify-between">
+			<div className="flex w-full items-center justify-between gap-4">
 				<TimelineRefinement />
 			</div>
 		</div>

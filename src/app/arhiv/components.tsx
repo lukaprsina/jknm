@@ -158,12 +158,12 @@ export function MySearchBox2(props: UseSearchBoxProps) {
   );
 } */
 
-export function MyStats() {
+export function MyStats({ loaded_count }: { loaded_count: number }) {
 	const stats = useStats();
 
 	return (
 		<p>
-			{stats.processingTimeMS} ms, {stats.nbHits} novic
+			Prikazanih {loaded_count} od {stats.nbHits} novic
 		</p>
 	);
 }
@@ -181,17 +181,13 @@ export function TimelineRefinement(
 		includedAttributes: ["year"],
 	});
 
-	/* const sorted_list = useMemo(() => {
-    const sorted_items = refinement_list.items.sort((a, b) => {
-      return parseInt(a.value) - parseInt(b.value);
-    });
-
-    console.log({ sorted_items });
-    return sorted_items;
-  }, [refinement_list]); */
+	const max_count = Math.max(
+		1,
+		...refinement_list.items.map((item) => item.count),
+	);
 
 	return (
-		<ol className="space-t-4 flex flex-wrap items-center justify-start pb-2 pl-1">
+		<ol className="flex flex-1 flex-wrap items-end gap-x-1 gap-y-2 pb-2 pl-1">
 			{refinement_list.items.map((item) => (
 				<TimelineItem
 					onClick={() => {
@@ -204,46 +200,48 @@ export function TimelineRefinement(
 					}}
 					key={item.value}
 					item={item}
+					max_count={max_count}
 				/>
 			))}
 		</ol>
 	);
 }
 
+const MAX_BAR_HEIGHT_PX = 64;
+const MIN_BAR_HEIGHT_PX = 6;
+
 export function TimelineItem({
 	item,
+	max_count,
 	...props
-}: { item: RefinementListItem } & React.ComponentProps<typeof Button>) {
+}: { item: RefinementListItem; max_count: number } & React.ComponentProps<
+	typeof Button
+>) {
+	const bar_height = Math.max(
+		MIN_BAR_HEIGHT_PX,
+		Math.round((item.count / max_count) * MAX_BAR_HEIGHT_PX),
+	);
+
 	return (
-		<li className="relative mb-6 pl-2 sm:mb-0">
-			<Button
-				variant="link"
+		<li className="flex flex-col items-center">
+			<button
+				type="button"
+				title={`${item.value}: ${item.count} novic`}
 				className={cn(
-					"-ml-2 mb-0 mr-5 p-0 sm:pe-8",
-					item.isRefined && "font-bold",
+					"w-3 rounded-t-lg bg-muted-foreground/40 transition-colors hover:bg-muted-foreground/70",
+					item.isRefined && "bg-primary hover:bg-primary",
 				)}
-				style={{ paddingInlineEnd: "0px" }}
+				style={{ height: bar_height }}
 				{...props}
+			/>
+			<span
+				className={cn(
+					"mt-1 rotate-45 text-xs text-muted-foreground sm:rotate-0",
+					item.isRefined && "font-bold text-foreground",
+				)}
 			>
-				<span>{item.value}</span>
-			</Button>
-			<div className="flex items-center">
-				{/* bg-blue-200 */}
-				<div className="z-10 flex h-3 w-3 shrink-0 items-center justify-center rounded-full bg-muted-foreground ring-0 ring-background dark:bg-blue-900 dark:ring-background sm:ring-8">
-					<button type="button" onClick={props.onClick}>
-						<svg
-							className="h-2.5 w-2.5"
-							aria-hidden="true"
-							xmlns="http://www.w3.org/2000/svg"
-							fill="currentColor"
-							viewBox="0 0 20 20"
-						>
-							{/* <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" /> */}
-						</svg>
-					</button>
-				</div>
-				<div className="hidden h-0.5 w-full bg-gray-200 dark:bg-gray-700 sm:flex"></div>
-			</div>
+				{item.value}
+			</span>
 		</li>
 	);
 }

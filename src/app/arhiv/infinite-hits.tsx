@@ -4,6 +4,7 @@ import { useInfiniteAlgoliaArticles } from "~/hooks/use-infinite-algolia";
 import { article_grid_variants, article_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
 import type { PublishedArticleHit } from "~/lib/validators";
+import { MyStats } from "./components";
 
 export function MyInfiniteHits(props: InfiniteHitsProps<PublishedArticleHit>) {
 	// console.log("MyInfiniteHits", typeof window);
@@ -32,6 +33,9 @@ export function MyInfiniteHits(props: InfiniteHitsProps<PublishedArticleHit>) {
 					/>
 				))}
 			</ul>
+			<div className="flex justify-end pt-4">
+				<MyStats loaded_count={items.length} />
+			</div>
 		</div>
 	);
 }
