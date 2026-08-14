@@ -21,7 +21,7 @@ export function InfoCard({
 			className={cn(
 				page_variants(),
 				article_variants(),
-				"flex min-h-screen items-center justify-center prose-h3:m-0",
+				"flex h-full items-center justify-center prose-h3:m-0",
 			)}
 		>
 			<Card>

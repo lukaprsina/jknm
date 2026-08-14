@@ -10,7 +10,7 @@ export function TocAwareLayout({ children }: { children: React.ReactNode }) {
 	const has_toc = useHasToc();
 
 	return (
-		<div className="flex w-full justify-center gap-8">
+		<div className="flex w-full flex-1 justify-center gap-8">
 			<main id="shell-main" className="min-w-0 flex-1">
 				{children}
 			</main>

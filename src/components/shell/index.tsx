@@ -49,7 +49,7 @@ export async function Shell({
 
 	return (
 		<SearchProvider>
-			<div className={cn("w-full", className)}>
+			<div className={cn("flex min-h-dvh w-full flex-col", className)}>
 				{!without_header ? (
 					<header className="w-full text-gray-800">
 						<DesktopHeader

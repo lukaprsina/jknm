@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Shell } from "~/components/shell";
 import { page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
@@ -33,7 +34,9 @@ export default async function Novice() {
 						</p>
 					)}
 				</div>
-				<Search session={session} />
+				<Suspense fallback={null}>
+					<Search session={session} />
+				</Suspense>
 			</div>
 		</Shell>
 	);

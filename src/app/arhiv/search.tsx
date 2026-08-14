@@ -1,16 +1,24 @@
 "use client";
 
 import { liteClient as algolia_search } from "algoliasearch/lite";
+import historyRouter from "instantsearch.js/es/lib/routers/history";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Configure, InstantSearch } from "react-instantsearch";
 import { Skeleton } from "~/components/ui/skeleton";
 import { env } from "~/env";
+import { useShallowSearchParams } from "~/hooks/use-shallow-search-params";
 import { article_grid_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
 import type { Session } from "~/server/auth";
 import { ArticleTable } from "./article-table";
 import { DEFAULT_REFINEMENT } from "./components";
+
+function tab_from_search_params(
+	searchParams: URLSearchParams,
+): "card" | "table" {
+	return searchParams.get("view") === "table" ? "table" : "card";
+}
 
 const SearchControlsDynamic = dynamic(
 	() =>
@@ -48,15 +56,47 @@ const searchClient = algolia_search(
 	env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY,
 );
 
+// InstantSearch's default history router rebuilds the URL from its own
+// route state alone (query/refinementList/sortBy/…), which would wipe out
+// our `view` param on every debounced write. Extending `createURL` to carry
+// the current `view` value through keeps both in the same URL instead of
+// racing two independent writers.
+const router = historyRouter<Record<string, unknown>>({
+	createURL({ qsModule, routeState, location }) {
+		const currentQuery = qsModule.parse(location.search.slice(1));
+		const queryString = qsModule.stringify(
+			currentQuery.view
+				? { ...routeState, view: currentQuery.view }
+				: routeState,
+		);
+		const { protocol, hostname, pathname, hash } = location;
+		const portWithPrefix = location.port === "" ? "" : `:${location.port}`;
+		return queryString
+			? `${protocol}//${hostname}${portWithPrefix}${pathname}?${queryString}${hash}`
+			: `${protocol}//${hostname}${portWithPrefix}${pathname}${hash}`;
+	},
+});
+
 export function Search({ session }: { session: Session | null }) {
-	const [activeTab, setActiveTab] = useState<"card" | "table">("card");
+	const { searchParams, write } = useShallowSearchParams();
+	const [activeTab, setActiveTabState] = useState<"card" | "table">(() =>
+		tab_from_search_params(searchParams),
+	);
+
+	const setActiveTab = useCallback(
+		(tab: "card" | "table") => {
+			setActiveTabState(tab);
+			write({ view: tab === "card" ? null : tab });
+		},
+		[write],
+	);
 
 	return (
 		<InstantSearch
 			future={{ preserveSharedStateOnUnmount: true }}
 			indexName={DEFAULT_REFINEMENT}
 			searchClient={searchClient}
-			routing
+			routing={{ router }}
 		>
 			{/* Content-kind rows (the 5 fixed club pages) never belong in the
 			sortable news archive — they're reached via fixed nav links and quick

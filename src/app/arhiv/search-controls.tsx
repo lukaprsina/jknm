@@ -21,6 +21,10 @@ export function SearchControls({
 			<div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 				<div className="flex items-center gap-2">
 					<MySearchBox2 />
+				</div>
+				<div className="flex items-center gap-2">
+					<AuthorRefinement />
+					{activeTab === "card" && <MySortBy />}
 					<ButtonGroup>
 						<Button
 							variant={activeTab === "card" ? "default" : "outline"}
@@ -39,10 +43,6 @@ export function SearchControls({
 							<TableIcon />
 						</Button>
 					</ButtonGroup>
-				</div>
-				<div className="flex items-center gap-2">
-					<AuthorRefinement />
-					{activeTab === "card" && <MySortBy />}
 				</div>
 			</div>
 			<div className="flex w-full items-center justify-between gap-4">
