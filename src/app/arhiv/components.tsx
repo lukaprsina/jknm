@@ -3,7 +3,7 @@
 import type { RefinementListItem } from "instantsearch.js/es/connectors/refinement-list/connectRefinementList";
 import { XIcon } from "lucide-react";
 import type React from "react";
-import { useCallback, useState } from "react";
+import { use, useCallback, useState } from "react";
 import type {
 	ClearRefinementsProps,
 	UseRefinementListProps,
@@ -16,6 +16,7 @@ import {
 	useSortBy,
 	useStats,
 } from "react-instantsearch";
+import { AllAuthorsContext } from "~/app/provider";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import {
@@ -165,6 +166,59 @@ export function MyStats({ loaded_count }: { loaded_count: number }) {
 		<p>
 			Prikazanih {loaded_count} od {stats.nbHits} novic
 		</p>
+	);
+}
+
+const ALL_AUTHORS_VALUE = "__all__";
+
+export function AuthorRefinement(
+	props: Omit<UseRefinementListProps, "attribute">,
+) {
+	const refinement_list = useRefinementList({
+		attribute: "author_ids",
+		limit: 100,
+		...props,
+	});
+	const clear_refinements = useClearRefinements({
+		includedAttributes: ["author_ids"],
+	});
+	const all_authors = use(AllAuthorsContext);
+
+	const named_items = refinement_list.items
+		.map((item) => ({
+			item,
+			name:
+				all_authors.find((author) => author.id === Number(item.value))?.name ??
+				item.value,
+		}))
+		.sort((a, b) => a.name.localeCompare(b.name, "sl"));
+
+	const current_value =
+		refinement_list.items.find((item) => item.isRefined)?.value ??
+		ALL_AUTHORS_VALUE;
+
+	return (
+		<Select
+			value={current_value}
+			onValueChange={(value) => {
+				clear_refinements.refine();
+				if (value !== ALL_AUTHORS_VALUE) {
+					refinement_list.refine(value);
+				}
+			}}
+		>
+			<SelectTrigger>
+				<SelectValue placeholder="Vsi avtorji" />
+			</SelectTrigger>
+			<SelectContent>
+				<SelectItem value={ALL_AUTHORS_VALUE}>Vsi avtorji</SelectItem>
+				{named_items.map(({ item, name }) => (
+					<SelectItem key={item.value} value={item.value}>
+						{name} ({item.count})
+					</SelectItem>
+				))}
+			</SelectContent>
+		</Select>
 	);
 }
 

@@ -2,6 +2,7 @@ import { TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { LayoutDashboard, TableIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
+	AuthorRefinement,
 	CustomClearRefinements,
 	MySearchBox2,
 	MySortBy,
@@ -17,6 +18,7 @@ export function SearchControls({ activeTab }: { activeTab: "card" | "table" }) {
 				{/* <CustomSearchBox /> */}
 				<MySearchBox2 />
 				<div className="flex flex-col items-center justify-between gap-6 text-nowrap sm:flex-row">
+					<AuthorRefinement />
 					{activeTab === "card" && <MySortBy />}
 					<TabsList>
 						<TabsTrigger value="card" asChild>
