@@ -56,4 +56,5 @@ scripts/.cache
 .env*
 /artifacts/b2-mirror/
 /artifacts/b2-move/
+/artifacts/s3-jknm/
 /artifacts/media-dedupe-plan.json

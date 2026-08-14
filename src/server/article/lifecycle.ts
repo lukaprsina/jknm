@@ -306,6 +306,12 @@ export async function create_superseding_draft(
 					title: source.title,
 					status: "draft",
 					article_kind: source.article_kind,
+					// Seeded from the source so the settings dialog's default shows the
+					// source's date, not today — `resolve_default_published_at`'s source
+					// fallback only fires while `PublishedArticleContext` is populated,
+					// which the unarchive path (source soft-deleted immediately, above)
+					// never does.
+					published_at: source.published_at,
 					content_json: source.content_json,
 					excerpt: source.excerpt,
 					thumbnail_media_id: source.thumbnail_media_id,

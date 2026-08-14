@@ -48,4 +48,35 @@ describe("create_superseding_draft", () => {
 
 		expect(stored?.article_kind).toBe("content");
 	});
+
+	test("copies the source's published_at onto the new draft, including on unarchive", async () => {
+		const db = await create_test_db();
+
+		await db
+			.insert(users)
+			.values({ id: "admin", name: "Admin", email: "admin@example.com" });
+
+		const picked = new Date("2026-08-12T00:00:00Z");
+		const [source] = await db
+			.insert(Article)
+			.values({
+				title: "Nova novica",
+				status: "archived",
+				published_at: picked,
+			})
+			.returning();
+		if (!source) throw new Error("insert failed");
+
+		const draft = await create_superseding_draft(
+			{ article_id: source.id },
+			session,
+			db,
+		);
+
+		const stored = await db.query.Article.findFirst({
+			where: eq(Article.id, draft.id),
+		});
+
+		expect(stored?.published_at).toEqual(picked);
+	});
 });
