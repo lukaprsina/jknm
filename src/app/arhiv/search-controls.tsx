@@ -18,11 +18,9 @@ export function SearchControls({
 }) {
 	return (
 		<div className="flex flex-col gap-4">
-			<div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
-				<MySearchBox2 />
-				<div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
-					<AuthorRefinement />
-					{activeTab === "card" && <MySortBy />}
+			<div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+				<div className="flex items-center gap-2">
+					<MySearchBox2 />
 					<ButtonGroup>
 						<Button
 							variant={activeTab === "card" ? "default" : "outline"}
@@ -41,6 +39,10 @@ export function SearchControls({
 							<TableIcon />
 						</Button>
 					</ButtonGroup>
+				</div>
+				<div className="flex items-center gap-2">
+					<AuthorRefinement />
+					{activeTab === "card" && <MySortBy />}
 				</div>
 			</div>
 			<div className="flex w-full items-center justify-between gap-4">

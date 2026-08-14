@@ -97,7 +97,7 @@ export function MySearchBox2(props: UseSearchBoxProps) {
 
 	return (
 		<Input
-			className="w-full sm:flex-1"
+			className="min-w-0 flex-1"
 			placeholder="Iskanje"
 			value={inputValue}
 			onChange={(e) => setQuery(e.target.value)}
@@ -149,7 +149,7 @@ export function AuthorRefinement(
 
 	return (
 		<MultiSelect
-			className="w-55"
+			className="min-w-0 flex-1 sm:w-55 sm:flex-none"
 			hideClearButton
 			options={options}
 			defaultValue={selected_values}
@@ -186,7 +186,7 @@ export function TimelineRefinement(
 	);
 
 	return (
-		<ol className="flex flex-1 flex-wrap items-end gap-x-1 gap-y-2 pb-2 pl-1">
+		<ol className="scroll-fade-x flex flex-1 items-end gap-x-1 gap-y-2 overflow-x-auto pb-2 pl-1">
 			{refinement_list.items.map((item) => (
 				<TimelineItem
 					onClick={() => {
@@ -222,7 +222,7 @@ export function TimelineItem({
 	);
 
 	return (
-		<li className="flex flex-col items-center">
+		<li className="flex shrink-0 flex-col items-center">
 			<button
 				type="button"
 				title={`${item.value}: ${item.count} novic`}
