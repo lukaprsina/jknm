@@ -6,6 +6,7 @@ import { ImageGallery } from "~/components/image-gallery";
 import { Shell } from "~/components/shell";
 import ScrollToTop from "~/components/shell/scroll-to-top";
 import { ScrollProvider } from "~/contexts/scroll-context";
+import { format_author_name } from "~/lib/author-name";
 import type { ContentPageSlug } from "~/lib/content-pages";
 import { SITE_ORIGIN } from "~/lib/site-config";
 import { get_new_article_by_slug } from "~/server/article/get-article";
@@ -93,7 +94,7 @@ function build_article_json_ld(article: NewArticleWithRelations, slug: string) {
 		url: `${SITE_ORIGIN}${resolve_canonical_article_path(article, slug)}`,
 		author: article.articles_to_authors.map((rel) => ({
 			"@type": "Person",
-			name: rel.author.name,
+			name: format_author_name(rel.author),
 		})),
 		...(article.thumbnail_media
 			? { image: [article.thumbnail_media.original.url] }

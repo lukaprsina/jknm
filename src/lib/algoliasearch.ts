@@ -1,4 +1,5 @@
 import { env } from "~/env";
+import { format_author_name, format_author_sort_name } from "~/lib/author-name";
 import { convert_content_to_text } from "~/lib/content-to-text";
 import type { PublishedArticleHit } from "~/lib/validators";
 import type {
@@ -49,7 +50,17 @@ export function convert_new_article_to_algolia_object({
 		content_preview: convert_content_to_text(article.content_json?.blocks),
 		year: article.created_at.getFullYear().toString(),
 		author_ids: authors.map((a) => a.author_id),
-		first_author: authors.at(0)?.author.name,
+		first_author: (() => {
+			const author = authors.at(0)?.author;
+			return author && format_author_name(author);
+		})(),
+		// Sort-only field for the `published_article_author_asc`/`_desc`
+		// Algolia replicas' custom ranking attribute — "Priimek, Ime" sorts by
+		// last name, unlike `first_author`'s display order.
+		first_author_sort: (() => {
+			const author = authors.at(0)?.author;
+			return author && format_author_sort_name(author);
+		})(),
 		// New-model media lives at an absolute gradivo.jknm.org URL, unlike
 		// legacy hits (which carry no `image` and are resolved via the S3
 		// thumbnail.png path convention in `ArticleAlgoliaCard`).

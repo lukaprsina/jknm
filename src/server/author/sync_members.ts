@@ -49,19 +49,30 @@ async function fetch_google_members(): Promise<GoogleMember[]> {
 		}
 
 		for (const user of result.data.users) {
-			const name = user.name?.fullName;
-			if (!name) throw new Error(`No full name for Google user ${user.id}`);
+			// Google Admin's own directory data carries stray leading/trailing
+			// whitespace on some real accounts' givenName/familyName (observed
+			// in production data) — trimmed here so it doesn't leak into every
+			// sync as a double space in the byline or a sort-order glitch.
+			const first_name = user.name?.givenName?.trim();
+			const last_name = user.name?.familyName?.trim();
+			const full_name = user.name?.fullName ?? user.id;
+			if (!first_name || !last_name) {
+				throw new Error(
+					`No given/family name for Google user ${full_name ?? user.id}`,
+				);
+			}
 
 			const google_id = user.id ?? undefined;
-			if (!google_id) throw new Error(`No Google ID for user ${name}`);
+			if (!google_id) throw new Error(`No Google ID for user ${full_name}`);
 			if (seen_google_ids.has(google_id)) {
-				throw new Error(`Duplicate Google ID for user ${name}`);
+				throw new Error(`Duplicate Google ID for user ${full_name}`);
 			}
 			seen_google_ids.add(google_id);
 
 			members.push({
 				google_id,
-				name,
+				first_name,
+				last_name,
 				email: user.primaryEmail ?? null,
 				image: user.thumbnailPhotoUrl ?? null,
 			});
@@ -78,7 +89,8 @@ async function fetch_db_members(): Promise<DbMember[]> {
 		.select({
 			id: Author.id,
 			google_id: Author.google_id,
-			name: Author.name,
+			first_name: Author.first_name,
+			last_name: Author.last_name,
 			email: Author.email,
 			image: Author.image,
 		})
@@ -118,7 +130,8 @@ export async function sync_members() {
 					({
 						author_type: "member",
 						google_id: member.google_id,
-						name: member.name,
+						first_name: member.first_name,
+						last_name: member.last_name,
 						email: member.email,
 						image: member.image,
 					}) satisfies typeof Author.$inferInsert,
@@ -127,7 +140,8 @@ export async function sync_members() {
 		.onConflictDoUpdate({
 			target: Author.google_id,
 			set: {
-				name: sql`excluded.name`,
+				first_name: sql`excluded.first_name`,
+				last_name: sql`excluded.last_name`,
 				email: sql`excluded.email`,
 				image: sql`excluded.image`,
 			},

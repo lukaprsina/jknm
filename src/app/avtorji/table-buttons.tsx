@@ -30,6 +30,7 @@ import {
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { useToast } from "~/hooks/use-toast";
+import { format_author_name } from "~/lib/author-name";
 import { unwrap_server_function } from "~/lib/orpc-action";
 import { deleteGuests } from "~/server/orpc/author/procedures";
 import type { features, GuestAuthor } from "./table";
@@ -95,7 +96,7 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
 					</AlertDialogHeader>
 					<span>
 						Ste prepričani, da želite izbrisati avtorja z imenom{" "}
-						<b>{author.name}</b>?
+						<b>{format_author_name(author)}</b>?
 					</span>
 					<AlertDialogFooter>
 						<AlertDialogCancel>Prekliči</AlertDialogCancel>
@@ -144,7 +145,7 @@ export function AuthorsTableHeaderButtons({
 
 		let sklon: React.ReactNode | undefined;
 		if (length === 1) {
-			const name = rows[0]?.original.name;
+			const name = rows[0] && format_author_name(rows[0].original);
 			sklon = (
 				<>
 					avtorja z imenom <b>{name}</b>

@@ -7,7 +7,8 @@ import {
 
 const google = (overrides: Partial<GoogleMember> = {}): GoogleMember => ({
 	google_id: "g1",
-	name: "Ana Novak",
+	first_name: "Ana",
+	last_name: "Novak",
 	email: "ana@jknm.si",
 	image: null,
 	...overrides,
@@ -16,7 +17,8 @@ const google = (overrides: Partial<GoogleMember> = {}): GoogleMember => ({
 const db_member = (overrides: Partial<DbMember> = {}): DbMember => ({
 	id: 1,
 	google_id: "g1",
-	name: "Ana Novak",
+	first_name: "Ana",
+	last_name: "Novak",
 	email: "ana@jknm.si",
 	image: null,
 	...overrides,
@@ -58,17 +60,22 @@ describe("compute_member_sync_diff", () => {
 	});
 
 	test("ignores DB rows with no google_id (guests)", () => {
-		const guest = db_member({ id: 2, google_id: null, name: "Guest" });
+		const guest = db_member({ id: 2, google_id: null, first_name: "Guest" });
 
 		expect(compute_member_sync_diff([], [guest])).toEqual([]);
 	});
 
 	test("matches by google_id, not by row order", () => {
 		const changes = compute_member_sync_diff(
-			[google({ google_id: "g2", name: "Bor Kos" })],
+			[google({ google_id: "g2", first_name: "Bor", last_name: "Kos" })],
 			[
 				db_member({ google_id: "g1" }),
-				db_member({ id: 2, google_id: "g2", name: "Bor Kos" }),
+				db_member({
+					id: 2,
+					google_id: "g2",
+					first_name: "Bor",
+					last_name: "Kos",
+				}),
 			],
 		);
 

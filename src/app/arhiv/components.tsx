@@ -28,9 +28,26 @@ import {
 	SelectValue,
 } from "~/components/ui/select";
 import { ALGOLIA_PUBLISHED_ARTICLE_INDEX } from "~/lib/algoliasearch";
+import { format_author_name, format_author_sort_name } from "~/lib/author-name";
 import { cn } from "~/lib/utils";
 
-export const DEFAULT_REFINEMENT = "published_article_created_at_desc";
+// Replica index names follow `${base}_<criterion>` (see Algolia dashboard) —
+// derived from the env-configured base index, not hardcoded to prod's
+// `published_article`, so `dev:staging` (base `published_article_staging`)
+// actually queries staging's replicas instead of silently falling back to
+// prod's.
+function replica(suffix: string) {
+	return `${ALGOLIA_PUBLISHED_ARTICLE_INDEX}_${suffix}`;
+}
+
+export const CREATED_AT_DESC = replica("created_at_desc");
+export const CREATED_AT_ASC = replica("created_at_asc");
+export const TITLE_ASC = replica("title_asc");
+export const TITLE_DESC = replica("title_desc");
+export const AUTHOR_ASC = replica("author_asc");
+export const AUTHOR_DESC = replica("author_desc");
+
+export const DEFAULT_REFINEMENT = CREATED_AT_DESC;
 
 export function MySortBy() {
 	const { currentRefinement, options, refine } = useSortBy({
@@ -114,14 +131,17 @@ export function AuthorRefinement(
 	const all_authors = use(AllAuthorsContext);
 
 	const options = refinement_list.items
-		.map((item) => ({
-			value: item.value,
-			label: `${
-				all_authors.find((author) => author.id === Number(item.value))?.name ??
-				item.value
-			} (${item.count})`,
-		}))
-		.sort((a, b) => a.label.localeCompare(b.label, "sl"));
+		.map((item) => {
+			const author = all_authors.find(
+				(author) => author.id === Number(item.value),
+			);
+			return {
+				value: item.value,
+				label: `${author ? format_author_name(author) : item.value} (${item.count})`,
+				sort_label: author ? format_author_sort_name(author) : item.value,
+			};
+		})
+		.sort((a, b) => a.sort_label.localeCompare(b.sort_label, "sl"));
 
 	const selected_values = refinement_list.items
 		.filter((item) => item.isRefined)
@@ -261,8 +281,12 @@ export function ActiveFilterChips() {
 					className="cursor-pointer gap-1 text-sm"
 					onClick={() => author_refinement.refine(item.value)}
 				>
-					{all_authors.find((author) => author.id === Number(item.value))
-						?.name ?? item.value}
+					{(() => {
+						const author = all_authors.find(
+							(author) => author.id === Number(item.value),
+						);
+						return author ? format_author_name(author) : item.value;
+					})()}
 					<XIcon className="size-3.5" />
 				</Badge>
 			))}
@@ -283,10 +307,10 @@ export function ActiveFilterChips() {
 }
 
 export const SORT_BY_ITEMS = [
-	{ value: "published_article_created_at_desc", label: "Najnovejše" },
-	{ value: "published_article_created_at_asc", label: "Najstarejše" },
-	{ value: "published_article_title_asc", label: "Ime naraščajoče" },
-	{ value: "published_article_title_desc", label: "Ime padajoče" },
-	{ value: "published_article_author_asc", label: "Avtor naraščajoče" },
-	{ value: "published_article_author_desc", label: "Avtor padajoče" },
+	{ value: CREATED_AT_DESC, label: "Najnovejše" },
+	{ value: CREATED_AT_ASC, label: "Najstarejše" },
+	{ value: TITLE_ASC, label: "Ime naraščajoče" },
+	{ value: TITLE_DESC, label: "Ime padajoče" },
+	{ value: AUTHOR_ASC, label: "Avtor naraščajoče" },
+	{ value: AUTHOR_DESC, label: "Avtor padajoče" },
 ];

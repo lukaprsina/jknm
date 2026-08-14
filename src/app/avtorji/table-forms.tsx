@@ -15,12 +15,14 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { useToast } from "~/hooks/use-toast";
+import { format_author_name } from "~/lib/author-name";
 import { unwrap_server_function } from "~/lib/orpc-action";
 import { insertGuest, renameGuest } from "~/server/orpc/author/procedures";
 import type { GuestAuthor } from "./table";
 
 export const edit_form_schema = z.object({
-	name: z.string().min(1).max(255),
+	first_name: z.string().min(1).max(255),
+	last_name: z.string().min(1).max(255),
 });
 
 export function EditAuthorNameForm({
@@ -50,7 +52,8 @@ export function EditAuthorNameForm({
 	const form = useForm<z.infer<typeof edit_form_schema>>({
 		resolver: zodResolver(edit_form_schema),
 		defaultValues: {
-			name: author.name,
+			first_name: author.first_name,
+			last_name: author.last_name,
 		},
 	});
 
@@ -61,21 +64,36 @@ export function EditAuthorNameForm({
 				onSubmit={form.handleSubmit(() => {
 					rename_guest_mutation.mutate({
 						id: author.id,
-						name: form.getValues("name"),
+						first_name: form.getValues("first_name"),
+						last_name: form.getValues("last_name"),
 					});
 
 					close_dialog();
 				})}
 			>
 				<span>
-					Staro ime in priimek: <b>{author.name}</b>, ID: <b>{author.id}</b>
+					Staro ime in priimek: <b>{format_author_name(author)}</b>, ID:{" "}
+					<b>{author.id}</b>
 				</span>
 				<FormField
 					control={form.control}
-					name="name"
+					name="first_name"
 					render={({ field }) => (
 						<FormItem className="flex flex-col">
 							<FormLabel>Novo ime</FormLabel>
+							<FormControl>
+								<Input {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="last_name"
+					render={({ field }) => (
+						<FormItem className="flex flex-col">
+							<FormLabel>Nov priimek</FormLabel>
 							<FormControl>
 								<Input {...field} />
 							</FormControl>
@@ -95,7 +113,8 @@ export function EditAuthorNameForm({
 }
 
 export const insert_form_schema = z.object({
-	name: z.string().min(1).max(255),
+	first_name: z.string().min(1).max(255),
+	last_name: z.string().min(1).max(255),
 });
 
 export function InsertAuthorForm() {
@@ -119,7 +138,8 @@ export function InsertAuthorForm() {
 	const form = useForm<z.infer<typeof insert_form_schema>>({
 		resolver: zodResolver(insert_form_schema),
 		defaultValues: {
-			name: "",
+			first_name: "",
+			last_name: "",
 		},
 	});
 
@@ -128,15 +148,31 @@ export function InsertAuthorForm() {
 			<form
 				className="space-y-4"
 				onSubmit={form.handleSubmit(() => {
-					insert_guest_mutation.mutate({ name: form.getValues("name") });
+					insert_guest_mutation.mutate({
+						first_name: form.getValues("first_name"),
+						last_name: form.getValues("last_name"),
+					});
 				})}
 			>
 				<FormField
 					control={form.control}
-					name="name"
+					name="first_name"
 					render={({ field }) => (
 						<FormItem className="flex flex-col">
-							<FormLabel>Ime in priimek</FormLabel>
+							<FormLabel>Ime</FormLabel>
+							<FormControl>
+								<Input {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="last_name"
+					render={({ field }) => (
+						<FormItem className="flex flex-col">
+							<FormLabel>Priimek</FormLabel>
 							<FormControl>
 								<Input {...field} />
 							</FormControl>

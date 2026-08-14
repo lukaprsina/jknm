@@ -47,6 +47,7 @@ import {
 } from "~/components/ui/table";
 import { useToast } from "~/hooks/use-toast";
 import { sign_out } from "~/lib/auth-client";
+import { format_author_name } from "~/lib/author-name";
 import { apply_client_invalidations } from "~/lib/cache-invalidation-client";
 import { unwrap_server_function } from "~/lib/orpc-action";
 import type { AlgoliaSyncChange } from "~/server/article/sync-algolia-diff";
@@ -152,13 +153,13 @@ function to_change_row(change: MemberSyncChange): ChangeRow {
 		case "new":
 			return {
 				key: change.google.google_id,
-				name: change.google.name,
+				name: format_author_name(change.google),
 				details: [change.google.email ?? "—"],
 			};
 		case "changed":
 			return {
 				key: change.google.google_id,
-				name: change.google.name,
+				name: format_author_name(change.google),
 				details: change.diffs.map(
 					(diff) =>
 						`${diff.field}: ${diff.before ?? "—"} → ${diff.after ?? "—"}`,
@@ -167,7 +168,7 @@ function to_change_row(change: MemberSyncChange): ChangeRow {
 		case "missing":
 			return {
 				key: `db-${change.before.id}`,
-				name: change.before.name,
+				name: format_author_name(change.before),
 				details: ["Ni več v Google Admin"],
 			};
 	}

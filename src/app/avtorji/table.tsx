@@ -34,6 +34,7 @@ import {
 	TableRow,
 } from "~/components/ui/table";
 import { useShallowSearchParams } from "~/hooks/use-shallow-search-params";
+import { format_author_name } from "~/lib/author-name";
 import { AllAuthorsContext } from "../provider";
 import {
 	AuthorsTableCellButtons,
@@ -42,7 +43,8 @@ import {
 
 export interface GuestAuthor {
 	id: number;
-	name: string;
+	first_name: string;
+	last_name: string;
 }
 
 export const features = tableFeatures({
@@ -159,7 +161,8 @@ export function AuthorsDataTable() {
 				cell: ({ row }) => <div>{row.getValue("id")}</div>,
 			},
 			{
-				accessorKey: "name",
+				id: "name",
+				accessorFn: (author) => format_author_name(author),
 				header: "Ime in priimek",
 				cell: ({ row }) => <div>{row.getValue("name")}</div>,
 			},

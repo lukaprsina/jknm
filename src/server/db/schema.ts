@@ -36,7 +36,8 @@ export const Author = pgTable(
 	{
 		id: serial("id").primaryKey(),
 		author_type: author_type_enum("author_type").notNull(),
-		name: varchar("name", { length: 255 }).notNull(),
+		first_name: varchar("first_name", { length: 255 }).notNull(),
+		last_name: varchar("last_name", { length: 255 }).notNull(),
 		google_id: varchar("google_id", { length: 255 }),
 		email: text("email"),
 		image: varchar("image", { length: 255 }),

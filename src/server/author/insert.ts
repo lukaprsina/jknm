@@ -11,7 +11,8 @@ export async function insert_guest(
 		.insert(Author)
 		.values({
 			author_type: "guest",
-			name: input.name,
+			first_name: input.first_name,
+			last_name: input.last_name,
 		})
 		.returning();
 

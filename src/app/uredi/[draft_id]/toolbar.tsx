@@ -7,6 +7,7 @@ import { EditorContext } from "~/components/editor/editor-context";
 import { editor_store, useAuthorIds } from "~/components/editor/editor-store";
 import type { MultiSelectProps } from "~/components/multi-select";
 import { MultiSelect } from "~/components/multi-select";
+import { format_author_name } from "~/lib/author-name";
 import { ToolbarButtons } from "./toolbar-buttons";
 
 export function MyToolbar() {
@@ -24,7 +25,7 @@ export function MyToolbar() {
 			.map(
 				(user) =>
 					({
-						label: user.name,
+						label: format_author_name(user),
 						value: user.id.toString(),
 						icon: undefined,
 					}) satisfies MultiSelectProps["options"]["0"],

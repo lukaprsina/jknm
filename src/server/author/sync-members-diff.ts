@@ -6,7 +6,8 @@
 
 export interface GoogleMember {
 	google_id: string;
-	name: string;
+	first_name: string;
+	last_name: string;
 	email: string | null;
 	image: string | null;
 }
@@ -14,13 +15,14 @@ export interface GoogleMember {
 export interface DbMember {
 	id: number;
 	google_id: string | null;
-	name: string;
+	first_name: string;
+	last_name: string;
 	email: string | null;
 	image: string | null;
 }
 
 export interface MemberFieldDiff {
-	field: "name" | "email" | "image";
+	field: "first_name" | "last_name" | "email" | "image";
 	before: string | null;
 	after: string | null;
 }
@@ -38,8 +40,19 @@ export type MemberSyncChange =
 function diff_fields(before: DbMember, after: GoogleMember): MemberFieldDiff[] {
 	const diffs: MemberFieldDiff[] = [];
 
-	if (before.name !== after.name) {
-		diffs.push({ field: "name", before: before.name, after: after.name });
+	if (before.first_name !== after.first_name) {
+		diffs.push({
+			field: "first_name",
+			before: before.first_name,
+			after: after.first_name,
+		});
+	}
+	if (before.last_name !== after.last_name) {
+		diffs.push({
+			field: "last_name",
+			before: before.last_name,
+			after: after.last_name,
+		});
 	}
 	if (before.email !== after.email) {
 		diffs.push({ field: "email", before: before.email, after: after.email });

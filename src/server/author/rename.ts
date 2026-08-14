@@ -10,7 +10,7 @@ export async function rename_guest(
 ) {
 	const result = await db
 		.update(Author)
-		.set({ name: input.name })
+		.set({ first_name: input.first_name, last_name: input.last_name })
 		.where(eq(Author.id, input.id))
 		.returning();
 
