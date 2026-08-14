@@ -126,7 +126,6 @@ async function fix_one(
 			original: { url, width, height, size_bytes: buffer.byteLength },
 			variants: [],
 			srcsets: null,
-			upload_status: "completed",
 		});
 
 		await tx

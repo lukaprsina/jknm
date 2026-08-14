@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
 			const base_title = title.replace(/\.[^./]+$/, "");
 			title = `${base_title}.${real_extension}`;
 		}
-		const uncropped_file = new File([fetched.bytes], title, {
+		const uncropped_file = new File([new Uint8Array(fetched.bytes)], title, {
 			type: mime_type,
 		});
 
