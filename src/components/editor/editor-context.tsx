@@ -15,10 +15,14 @@ import {
 	useRef,
 	useState,
 } from "react";
+import { resolve_default_published_at } from "~/components/article/new-adapter";
 import { useToast } from "~/hooks/use-toast";
 import { convert_title_to_url } from "~/lib/article-utils";
 import { extract_media_refs_from_content } from "~/lib/editor-utils";
-import { DraftArticleContext } from "../article/context";
+import {
+	DraftArticleContext,
+	PublishedArticleContext,
+} from "../article/context";
 import { update_settings_from_editor, validate_article } from "./editor-lib";
 import { editor_store } from "./editor-store";
 import { EDITOR_JS_PLUGINS } from "./plugins";
@@ -37,6 +41,7 @@ export const EditorContext = createContext<EditorContextType | undefined>(
 
 export function EditorProvider({ children }: { children: ReactNode }) {
 	const article = useContext(DraftArticleContext);
+	const published = useContext(PublishedArticleContext);
 	const [savingText, setSavingText] = useState<string | undefined>();
 	const [editorInstance, setEditorInstance] = useState<EditorJS | null>(null);
 	const editorJS = useRef<EditorJS | null>(null);
@@ -56,6 +61,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 			url: convert_title_to_url(article.title),
 			s3_url: "",
 			thumbnail_crop: article.thumbnail_crop,
+			published_at: resolve_default_published_at(article, published),
 			image_data: article.content
 				? extract_media_refs_from_content(article.content, ["image"]).map(
 						(ref) => ref.data,

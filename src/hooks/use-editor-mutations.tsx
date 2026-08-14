@@ -136,6 +136,7 @@ export function useEditorMutations() {
 				url: updated?.url ?? "",
 				s3_url: "",
 				thumbnail_crop: resolved_thumbnail_crop,
+				published_at,
 				editor_content,
 				article_id,
 			});
@@ -173,6 +174,7 @@ export function useEditorMutations() {
 				url: updated.url,
 				s3_url: "",
 				thumbnail_crop: resolved_thumbnail_crop,
+				published_at,
 				editor_content,
 				article_id,
 				author_ids: draft_article.draft_articles_to_authors.map(

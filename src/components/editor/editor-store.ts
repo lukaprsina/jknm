@@ -8,6 +8,7 @@ export interface EditorStoreType {
 	url: string;
 	s3_url: string;
 	thumbnail_crop: ThumbnailType | null;
+	published_at: Date | undefined;
 	image_data: EditorJSImageData[];
 	author_ids: number[];
 }
@@ -18,6 +19,7 @@ const initial_data: EditorStoreType = {
 	url: "",
 	s3_url: "",
 	thumbnail_crop: null,
+	published_at: undefined,
 	image_data: [],
 	author_ids: [],
 };

@@ -270,73 +270,77 @@ export async function discard_draft(
 export async function create_superseding_draft(
 	input: z.infer<typeof create_superseding_draft_validator>,
 	session: Session,
+	db_conn: typeof db = db,
 ) {
-	const { draft, source_status, reused } = await db.transaction(async (tx) => {
-		const source = await find_article_with_relations(
-			tx,
-			eq(Article.id, input.article_id),
-		);
-		if (!source) throw new Error("Article not found");
-		assert_can_supersede(source.status);
-
-		// The pencil/"revise" action can be triggered again on an article that
-		// already has an open superseding draft (double-click, a second tab,
-		// re-opening the page) — reuse that draft instead of minting a second
-		// one pointing at the same source, which orphaned the first as a
-		// duplicate no lifecycle action ever cleaned up.
-		const existing_draft = await tx.query.Article.findFirst({
-			where: and(
-				eq(Article.supersedes_id, source.id),
-				eq(Article.status, "draft"),
-			),
-		});
-		if (existing_draft) {
-			return {
-				draft: existing_draft,
-				source_status: source.status,
-				reused: true,
-			};
-		}
-
-		const created = await tx
-			.insert(Article)
-			.values({
-				title: source.title,
-				status: "draft",
-				content_json: source.content_json,
-				excerpt: source.excerpt,
-				thumbnail_media_id: source.thumbnail_media_id,
-				thumbnail_x: source.thumbnail_x,
-				thumbnail_y: source.thumbnail_y,
-				thumbnail_width: source.thumbnail_width,
-				thumbnail_height: source.thumbnail_height,
-				uploaded_custom_thumbnail: source.uploaded_custom_thumbnail,
-				supersedes_id: source.id,
-				created_by: session.user.id,
-			})
-			.returning();
-
-		assert_one(created);
-		const draft = created[0];
-
-		if (source.articles_to_authors.length !== 0) {
-			await tx.insert(ArticlesToAuthors).values(
-				source.articles_to_authors.map((rel) => ({
-					article_id: draft.id,
-					author_id: rel.author_id,
-					order: rel.order,
-				})),
+	const { draft, source_status, reused } = await db_conn.transaction(
+		async (tx) => {
+			const source = await find_article_with_relations(
+				tx,
+				eq(Article.id, input.article_id),
 			);
-		}
+			if (!source) throw new Error("Article not found");
+			assert_can_supersede(source.status);
 
-		await reconcile_media_to_articles(tx, draft.id, draft.content_json);
+			// The pencil/"revise" action can be triggered again on an article that
+			// already has an open superseding draft (double-click, a second tab,
+			// re-opening the page) — reuse that draft instead of minting a second
+			// one pointing at the same source, which orphaned the first as a
+			// duplicate no lifecycle action ever cleaned up.
+			const existing_draft = await tx.query.Article.findFirst({
+				where: and(
+					eq(Article.supersedes_id, source.id),
+					eq(Article.status, "draft"),
+				),
+			});
+			if (existing_draft) {
+				return {
+					draft: existing_draft,
+					source_status: source.status,
+					reused: true,
+				};
+			}
 
-		if (source.status === "archived") {
-			await soft_delete_article(tx, source.id);
-		}
+			const created = await tx
+				.insert(Article)
+				.values({
+					title: source.title,
+					status: "draft",
+					article_kind: source.article_kind,
+					content_json: source.content_json,
+					excerpt: source.excerpt,
+					thumbnail_media_id: source.thumbnail_media_id,
+					thumbnail_x: source.thumbnail_x,
+					thumbnail_y: source.thumbnail_y,
+					thumbnail_width: source.thumbnail_width,
+					thumbnail_height: source.thumbnail_height,
+					uploaded_custom_thumbnail: source.uploaded_custom_thumbnail,
+					supersedes_id: source.id,
+					created_by: session.user.id,
+				})
+				.returning();
 
-		return { draft, source_status: source.status, reused: false };
-	});
+			assert_one(created);
+			const draft = created[0];
+
+			if (source.articles_to_authors.length !== 0) {
+				await tx.insert(ArticlesToAuthors).values(
+					source.articles_to_authors.map((rel) => ({
+						article_id: draft.id,
+						author_id: rel.author_id,
+						order: rel.order,
+					})),
+				);
+			}
+
+			await reconcile_media_to_articles(tx, draft.id, draft.content_json);
+
+			if (source.status === "archived") {
+				await soft_delete_article(tx, source.id);
+			}
+
+			return { draft, source_status: source.status, reused: false };
+		},
+	);
 
 	if (reused) return draft;
 

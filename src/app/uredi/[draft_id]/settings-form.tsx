@@ -1,13 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {
-	DraftArticleContext,
-	PublishedArticleContext,
-	useIsSupersedingDraft,
-} from "~/components/article/context";
-import { resolve_default_published_at } from "~/components/article/new-adapter";
+import { useIsSupersedingDraft } from "~/components/article/context";
 import DatePicker from "~/components/date-time-picker/new_date_picker";
 import { editor_store } from "~/components/editor/editor-store";
 import {
@@ -42,8 +36,6 @@ export const form_schema = z.object({
 });
 
 export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
-	const draft_article = useContext(DraftArticleContext);
-	const published_article = useContext(PublishedArticleContext);
 	const editor_mutations = useEditorMutations();
 	// "Zavrzi osnutek" is the low-stakes alternative to delete that only
 	// discards the draft; see `useIsSupersedingDraft`.
@@ -60,9 +52,7 @@ export function SettingsForm({ closeDialog }: { closeDialog: () => void }) {
 		resolver: zodResolver(form_schema),
 		defaultValues: {
 			thumbnail_crop: editor_store.getState().thumbnail_crop ?? undefined,
-			published_at: draft_article
-				? resolve_default_published_at(draft_article, published_article)
-				: undefined,
+			published_at: editor_store.getState().published_at,
 		},
 	});
 

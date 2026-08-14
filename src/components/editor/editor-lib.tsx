@@ -14,6 +14,7 @@ export function update_settings_from_editor({
 	url,
 	s3_url,
 	thumbnail_crop,
+	published_at,
 	editor_content,
 	article_id,
 	author_ids,
@@ -22,6 +23,7 @@ export function update_settings_from_editor({
 	url: string;
 	s3_url: string;
 	thumbnail_crop: ThumbnailType | null;
+	published_at?: Date;
 	editor_content: OutputData;
 	article_id: string;
 	author_ids?: number[];
@@ -37,6 +39,7 @@ export function update_settings_from_editor({
 		url,
 		s3_url,
 		...(thumbnail_crop && { thumbnail_crop }),
+		...(published_at && { published_at }),
 		...(author_ids && { author_ids }),
 	});
 }
