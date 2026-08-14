@@ -9,19 +9,20 @@ import { CardDescription } from "../ui/card";
 export default function ArticleDescription({
 	author_ids,
 	type,
-	created_at,
+	date,
 }: {
 	author_ids: number[];
 	type: "card" | "card-featured" | "page";
-	created_at: Date;
+	/** The article's published date, or its creation date while still unpublished (see callers). */
+	date: Date;
 }) {
-	if (typeof created_at.toLocaleDateString !== "function") {
+	if (typeof date.toLocaleDateString !== "function") {
 		console.warn("ArticleDescription", {
 			author_ids,
 			type,
-			created_at,
+			date,
 			// eslint-disable-next-line @typescript-eslint/unbound-method
-			created_at_func: created_at.toLocaleDateString,
+			date_func: date.toLocaleDateString,
 		});
 	}
 
@@ -38,7 +39,7 @@ export default function ArticleDescription({
 				<Authors author_ids={author_ids} />
 			</span>
 			{type !== "card" && author_ids.length !== 0 && <DotIcon />}
-			<span>{format_date_for_human(created_at)}</span>
+			<span>{format_date_for_human(date)}</span>
 		</CardDescription>
 	);
 }

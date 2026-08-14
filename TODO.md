@@ -2,6 +2,9 @@
 
 - submit sitemap to bing webmaster and indexnow. AIs use bing.
 - regenerate titles
+- left-align TOC
+- publish date is always today's date
+- static pages get superseeded
 
 ```
 /novica/jamarski-tecaj-2009 legacy_id=56	#19	„Izobraževanje"	.../si/izobrazevanje/

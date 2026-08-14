@@ -40,6 +40,16 @@ export function convert_new_article_to_algolia_object({
 	}[];
 	thumbnail_media: typeof Media.$inferSelect | null;
 }) {
+	// `publish_article` always writes `published_at` in the same transaction
+	// that produces this object (`decide_published_at` never leaves it null
+	// for a row that's actually being published) — null here would mean this
+	// function was called on a row that was never published.
+	if (!article.published_at) {
+		throw new Error(
+			`Cannot index article ${article.id} for search: missing published_at`,
+		);
+	}
+
 	return {
 		objectID: article.id,
 		title: article.title,
@@ -47,8 +57,9 @@ export function convert_new_article_to_algolia_object({
 		url: slug,
 		created_at: article.created_at.getTime(),
 		updated_at: article.updated_at.getTime(),
+		published_at: article.published_at.getTime(),
 		content_preview: convert_content_to_text(article.content_json?.blocks),
-		year: article.created_at.getFullYear().toString(),
+		year: article.published_at.getFullYear().toString(),
 		author_ids: authors.map((a) => a.author_id),
 		first_author: (() => {
 			const author = authors.at(0)?.author;

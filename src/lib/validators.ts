@@ -33,8 +33,12 @@ export const published_article_hit_validator = z.object({
 	title: z.string(),
 	article_kind: z.enum(["article", "content"]),
 	url: z.string(),
+	// When the row was created — kept for legacy hits' S3 thumbnail-path
+	// derivation (`ArticleAlgoliaCard`). Not what's shown/sorted as the
+	// article's date; that's `published_at`.
 	created_at: z.number(), // unix timestamp
 	updated_at: z.number(), // unix timestamp
+	published_at: z.number(), // unix timestamp
 	content_preview: z.string().optional(),
 	author_ids: z.array(z.number()),
 	first_author: z.string().optional(),

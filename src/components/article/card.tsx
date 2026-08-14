@@ -34,7 +34,7 @@ export function ArticleCard({
 	url,
 	permalink_url,
 	content_preview,
-	created_at,
+	date,
 	has_thumbnail,
 	image_url,
 	author_ids,
@@ -45,7 +45,8 @@ export function ArticleCard({
 	url: string;
 	permalink_url?: string;
 	content_preview?: string;
-	created_at: Date;
+	/** The article's published date, or its creation date while still unpublished (see callers). */
+	date: Date;
 	has_thumbnail: boolean;
 	image_url?: string;
 	author_ids: number[];
@@ -142,7 +143,7 @@ export function ArticleCard({
 							<ArticleDescription
 								type={featured ? "card-featured" : "card"}
 								author_ids={author_ids}
-								created_at={created_at}
+								date={date}
 							/>
 						</div>
 					</CardHeader>
@@ -191,7 +192,7 @@ export function ArticleAlgoliaCard({
 			url={url}
 			permalink_url={permalink_url}
 			content_preview={hit.content_preview?.slice(0, 1000)}
-			created_at={new Date(hit.created_at)}
+			date={new Date(hit.published_at)}
 			has_thumbnail={hit.has_thumbnail}
 			author_ids={hit.author_ids}
 			image_url={

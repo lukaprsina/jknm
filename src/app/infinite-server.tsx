@@ -39,6 +39,6 @@ export async function get_infinite_published2({
 
 	return {
 		data,
-		next_cursor: data.at(-1)?.created_at,
+		next_cursor: data.at(-1)?.published_at ?? undefined,
 	};
 }

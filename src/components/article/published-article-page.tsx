@@ -89,7 +89,7 @@ function build_article_json_ld(article: NewArticleWithRelations, slug: string) {
 		"@context": "https://schema.org",
 		"@type": "Article",
 		headline: sanitizeHtml(article.title, { allowedTags: [] }),
-		datePublished: article.created_at.toISOString(),
+		datePublished: (article.published_at ?? article.created_at).toISOString(),
 		dateModified: article.updated_at.toISOString(),
 		url: `${SITE_ORIGIN}${resolve_canonical_article_path(article, slug)}`,
 		author: article.articles_to_authors.map((rel) => ({

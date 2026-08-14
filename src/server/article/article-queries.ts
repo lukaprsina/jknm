@@ -8,7 +8,6 @@ import {
 	ne,
 	notInArray,
 	type SQL,
-	sql,
 } from "drizzle-orm";
 import { withCursorPagination } from "~/lib/drizzle-pagination";
 import type { DbTransaction, db } from "../db";
@@ -50,6 +49,10 @@ export function find_article_with_relations(
  * relations the homepage feed card needs. Excludes content-kind rows — a
  * reverse-chronological "latest news" stream has no natural place for a
  * fixed page like "Zgodovina" (ADR-0009).
+ *
+ * Ordered by `published_at`, not `created_at`: the feed's "newest" is the
+ * date an admin set as the article's publish date, which can differ from
+ * (and predate) when the draft row was first created.
  */
 export function find_published_articles_page(
 	executor: typeof db | DbTransaction,
@@ -60,7 +63,7 @@ export function find_published_articles_page(
 		...withCursorPagination({
 			limit,
 			where: and(eq(Article.status, "published"), EXCLUDE_CONTENT_KIND),
-			cursors: [[Article.created_at, "desc", cursor]],
+			cursors: [[Article.published_at, "desc", cursor]],
 		}),
 	});
 }
@@ -78,6 +81,10 @@ export function find_draft_articles(executor: typeof db | DbTransaction) {
  * Year range of every published article, for the `/arhiv` header —
  * deliberately independent of any Algolia refinement, unlike the page's own
  * "Prikazanih X od Y" line, which does track the active filters.
+ *
+ * Uses the `published_year` generated column (derived from `published_at`,
+ * see schema.ts), not `created_at`: the archive is organized by when an
+ * article was published, which can differ from when its row was created.
  */
 export async function find_published_articles_year_range(
 	executor: typeof db | DbTransaction,
@@ -86,12 +93,8 @@ export async function find_published_articles_year_range(
 	// over zero matching articles (NULL min/max).
 	const [row] = await executor
 		.select({
-			min_year: sql<
-				number | null
-			>`extract(year from ${min(Article.created_at)})::int`,
-			max_year: sql<
-				number | null
-			>`extract(year from ${max(Article.created_at)})::int`,
+			min_year: min(Article.published_year),
+			max_year: max(Article.published_year),
 		})
 		.from(Article)
 		.where(and(eq(Article.status, "published"), EXCLUDE_CONTENT_KIND));

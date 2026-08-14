@@ -193,7 +193,7 @@ export function EditorToReact({
 						<ArticleDescription
 							type="page"
 							author_ids={author_ids}
-							created_at={article.created_at}
+							date={article.published_at ?? article.created_at}
 						/>
 					)}
 				</div>

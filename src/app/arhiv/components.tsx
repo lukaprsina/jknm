@@ -40,14 +40,14 @@ function replica(suffix: string) {
 	return `${ALGOLIA_PUBLISHED_ARTICLE_INDEX}_${suffix}`;
 }
 
-export const CREATED_AT_DESC = replica("created_at_desc");
-export const CREATED_AT_ASC = replica("created_at_asc");
+export const PUBLISHED_AT_DESC = replica("published_at_desc");
+export const PUBLISHED_AT_ASC = replica("published_at_asc");
 export const TITLE_ASC = replica("title_asc");
 export const TITLE_DESC = replica("title_desc");
 export const AUTHOR_ASC = replica("author_asc");
 export const AUTHOR_DESC = replica("author_desc");
 
-export const DEFAULT_REFINEMENT = CREATED_AT_DESC;
+export const DEFAULT_REFINEMENT = PUBLISHED_AT_DESC;
 
 export function MySortBy() {
 	const { currentRefinement, options, refine } = useSortBy({
@@ -307,8 +307,8 @@ export function ActiveFilterChips() {
 }
 
 export const SORT_BY_ITEMS = [
-	{ value: CREATED_AT_DESC, label: "Najnovejše" },
-	{ value: CREATED_AT_ASC, label: "Najstarejše" },
+	{ value: PUBLISHED_AT_DESC, label: "Najnovejše" },
+	{ value: PUBLISHED_AT_ASC, label: "Najstarejše" },
 	{ value: TITLE_ASC, label: "Ime naraščajoče" },
 	{ value: TITLE_DESC, label: "Ime padajoče" },
 	{ value: AUTHOR_ASC, label: "Avtor naraščajoče" },

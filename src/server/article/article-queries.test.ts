@@ -27,22 +27,22 @@ describe("find_published_articles_page", () => {
 			make_article({
 				title: "Published old",
 				status: "published",
-				created_at: new Date("2026-01-01"),
+				published_at: new Date("2026-01-01"),
 			}),
 			make_article({
 				title: "Published new",
 				status: "published",
-				created_at: new Date("2026-02-01"),
+				published_at: new Date("2026-02-01"),
 			}),
 			make_article({
 				title: "Draft",
 				status: "draft",
-				created_at: new Date("2026-03-01"),
+				published_at: new Date("2026-03-01"),
 			}),
 			make_article({
 				title: "Archived",
 				status: "archived",
-				created_at: new Date("2026-04-01"),
+				published_at: new Date("2026-04-01"),
 			}),
 		]);
 
@@ -54,24 +54,50 @@ describe("find_published_articles_page", () => {
 		]);
 	});
 
-	test("cursors past the given created_at, continuing newest-first", async () => {
+	test("orders by published_at, not created_at (a revised article keeps its original publish date)", async () => {
+		const db = await create_test_db();
+
+		await db.insert(Article).values([
+			make_article({
+				title: "Created recently, published long ago",
+				status: "published",
+				created_at: new Date("2026-03-01"),
+				published_at: new Date("2020-01-01"),
+			}),
+			make_article({
+				title: "Created long ago, published recently",
+				status: "published",
+				created_at: new Date("2020-01-01"),
+				published_at: new Date("2026-03-01"),
+			}),
+		]);
+
+		const page = await find_published_articles_page(db, { limit: 10 });
+
+		expect(page.map((a) => a.title)).toEqual([
+			"Created long ago, published recently",
+			"Created recently, published long ago",
+		]);
+	});
+
+	test("cursors past the given published_at, continuing newest-first", async () => {
 		const db = await create_test_db();
 
 		await db.insert(Article).values([
 			make_article({
 				title: "Page 1",
 				status: "published",
-				created_at: new Date("2026-03-01"),
+				published_at: new Date("2026-03-01"),
 			}),
 			make_article({
 				title: "Page 2",
 				status: "published",
-				created_at: new Date("2026-02-01"),
+				published_at: new Date("2026-02-01"),
 			}),
 			make_article({
 				title: "Page 3",
 				status: "published",
-				created_at: new Date("2026-01-01"),
+				published_at: new Date("2026-01-01"),
 			}),
 		]);
 
@@ -85,24 +111,24 @@ describe("find_published_articles_page", () => {
 });
 
 describe("find_published_articles_year_range", () => {
-	test("spans only published articles' created_at years", async () => {
+	test("spans only published articles' published_at years", async () => {
 		const db = await create_test_db();
 
 		await db.insert(Article).values([
 			make_article({
 				title: "Published old",
 				status: "published",
-				created_at: new Date("2020-06-01"),
+				published_at: new Date("2020-06-01"),
 			}),
 			make_article({
 				title: "Published new",
 				status: "published",
-				created_at: new Date("2026-02-01"),
+				published_at: new Date("2026-02-01"),
 			}),
 			make_article({
 				title: "Draft",
 				status: "draft",
-				created_at: new Date("2027-01-01"),
+				published_at: new Date("2027-01-01"),
 			}),
 		]);
 

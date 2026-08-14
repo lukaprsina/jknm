@@ -25,9 +25,9 @@ import type { IntersectionRef } from "../infinite-articles";
 import {
 	AUTHOR_ASC,
 	AUTHOR_DESC,
-	CREATED_AT_ASC,
-	CREATED_AT_DESC,
 	MyStats,
+	PUBLISHED_AT_ASC,
+	PUBLISHED_AT_DESC,
 	SORT_BY_ITEMS,
 	TITLE_ASC,
 	TITLE_DESC,
@@ -99,17 +99,17 @@ export function ArticleTable({
 								className="-mx-2"
 								onClick={() => {
 									sort_api.refine(
-										sort_api.currentRefinement === CREATED_AT_ASC
-											? CREATED_AT_DESC
-											: CREATED_AT_ASC,
+										sort_api.currentRefinement === PUBLISHED_AT_ASC
+											? PUBLISHED_AT_DESC
+											: PUBLISHED_AT_ASC,
 									);
 								}}
 							>
 								Objavljeno
-								{sort_api.currentRefinement === CREATED_AT_DESC && (
+								{sort_api.currentRefinement === PUBLISHED_AT_DESC && (
 									<ChevronDownIcon />
 								)}
-								{sort_api.currentRefinement === CREATED_AT_ASC && (
+								{sort_api.currentRefinement === PUBLISHED_AT_ASC && (
 									<ChevronUpIcon />
 								)}
 							</Button>
@@ -153,7 +153,7 @@ function ArticleTableRow({
 				<Authors author_ids={hit.author_ids} format={format_author_sort_name} />
 			</TableCell>
 			<TableCell className="whitespace-nowrap p-2 text-muted-foreground">
-				{format_date_for_human(new Date(hit.created_at))}
+				{format_date_for_human(new Date(hit.published_at))}
 			</TableCell>
 		</TableRow>
 	);
