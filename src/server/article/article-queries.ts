@@ -1,4 +1,16 @@
-import { and, asc, desc, eq, ne, notInArray, type SQL } from "drizzle-orm";
+import {
+	and,
+	asc,
+	count,
+	desc,
+	eq,
+	max,
+	min,
+	ne,
+	notInArray,
+	type SQL,
+	sql,
+} from "drizzle-orm";
 import { withCursorPagination } from "~/lib/drizzle-pagination";
 import type { DbTransaction, db } from "../db";
 import { Article, ArticlesToAuthors } from "../db/schema";
@@ -61,6 +73,33 @@ export function find_draft_articles(executor: typeof db | DbTransaction) {
 		with: ARTICLE_LIST_RELATIONS,
 		orderBy: desc(Article.updated_at),
 	});
+}
+
+/**
+ * Total count and year range of every published article, for the `/arhiv`
+ * header — deliberately independent of any Algolia refinement, unlike the
+ * page's own "Prikazanih X od Y" line, which does track the active filters.
+ */
+export async function find_published_articles_stats(
+	executor: typeof db | DbTransaction,
+) {
+	// A plain aggregate with no GROUP BY always returns exactly one row, even
+	// over zero matching articles (count 0, NULL min/max).
+	const [row] = await executor
+		.select({
+			count: count(),
+			min_year: sql<
+				number | null
+			>`extract(year from ${min(Article.created_at)})::int`,
+			max_year: sql<
+				number | null
+			>`extract(year from ${max(Article.created_at)})::int`,
+		})
+		.from(Article)
+		.where(and(eq(Article.status, "published"), EXCLUDE_CONTENT_KIND));
+
+	// biome-ignore lint/style/noNonNullAssertion: guaranteed by the aggregate shape above
+	return row!;
 }
 
 /**

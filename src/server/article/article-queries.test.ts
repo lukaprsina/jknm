@@ -5,6 +5,7 @@ import {
 	find_articles_for_verification,
 	find_draft_articles,
 	find_published_articles_page,
+	find_published_articles_stats,
 } from "./article-queries";
 
 function make_article(overrides: Partial<typeof Article.$inferInsert> = {}) {
@@ -80,6 +81,42 @@ describe("find_published_articles_page", () => {
 		});
 
 		expect(next_page.map((a) => a.title)).toEqual(["Page 3"]);
+	});
+});
+
+describe("find_published_articles_stats", () => {
+	test("counts only published articles and spans their created_at years", async () => {
+		const db = await create_test_db();
+
+		await db.insert(Article).values([
+			make_article({
+				title: "Published old",
+				status: "published",
+				created_at: new Date("2020-06-01"),
+			}),
+			make_article({
+				title: "Published new",
+				status: "published",
+				created_at: new Date("2026-02-01"),
+			}),
+			make_article({
+				title: "Draft",
+				status: "draft",
+				created_at: new Date("2027-01-01"),
+			}),
+		]);
+
+		const stats = await find_published_articles_stats(db);
+
+		expect(stats).toEqual({ count: 2, min_year: 2020, max_year: 2026 });
+	});
+
+	test("reports zero count and null years with no published articles", async () => {
+		const db = await create_test_db();
+
+		const stats = await find_published_articles_stats(db);
+
+		expect(stats).toEqual({ count: 0, min_year: null, max_year: null });
 	});
 });
 

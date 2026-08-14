@@ -17,6 +17,7 @@ import {
 	useStats,
 } from "react-instantsearch";
 import { AllAuthorsContext } from "~/app/provider";
+import { MultiSelect } from "~/components/multi-select";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import {
@@ -31,45 +32,27 @@ import { cn } from "~/lib/utils";
 
 export const DEFAULT_REFINEMENT = "published_article_created_at_desc";
 
-/* 
-TODO:
-Warning: Can't perform a React state update on a component that hasn't mounted yet.
-This indicates that you have a side-effect in your render function that asynchronously
-later calls tries to update the component. Move this work to useEffect instead
- */
 export function MySortBy() {
 	const { currentRefinement, options, refine } = useSortBy({
 		items: SORT_BY_ITEMS,
 	});
 
 	return (
-		<div className="flex items-center justify-between gap-2">
-			<p>Razvrsti po</p>
-			<Select
-				onValueChange={(value) => refine(value)}
-				value={currentRefinement}
-			>
-				<SelectTrigger>
-					<SelectValue placeholder="Sortiraj po ..." />
-				</SelectTrigger>
-				<SelectContent>
-					{options.map((option) => (
-						<SelectItem key={option.value} value={option.value}>
-							{option.label}
-						</SelectItem>
-					))}
-				</SelectContent>
-			</Select>
-		</div>
+		<Select onValueChange={(value) => refine(value)} value={currentRefinement}>
+			<SelectTrigger className="w-auto">
+				<SelectValue placeholder="Razvrsti po ..." />
+			</SelectTrigger>
+			<SelectContent>
+				{options.map((option) => (
+					<SelectItem key={option.value} value={option.value}>
+						{option.label}
+					</SelectItem>
+				))}
+			</SelectContent>
+		</Select>
 	);
 }
 
-/*
-TODO:
-Warning: Can't perform a React state update on a component that hasn't mounted yet.
-This indicates that you have a side-effect in your render function that asynchronously
-later calls tries to update the component. Move this work to useEffect instead
- */
 export function MySearchBox2(props: UseSearchBoxProps) {
 	const { query, refine: search_refine } = useSearchBox(props);
 	const [inputValue, setInputValue] = useState(query);
@@ -77,14 +60,11 @@ export function MySearchBox2(props: UseSearchBoxProps) {
 
 	const setQuery = useCallback(
 		(new_query: string) => {
-			const trimmed = new_query.trim();
-
-			if (trimmed === "") {
-				sort_refine(DEFAULT_REFINEMENT);
-			} else {
-				sort_refine(ALGOLIA_PUBLISHED_ARTICLE_INDEX);
-			}
-
+			sort_refine(
+				new_query.trim() === ""
+					? DEFAULT_REFINEMENT
+					: ALGOLIA_PUBLISHED_ARTICLE_INDEX,
+			);
 			setInputValue(new_query);
 			search_refine(new_query);
 		},
@@ -92,30 +72,22 @@ export function MySearchBox2(props: UseSearchBoxProps) {
 	);
 
 	return (
-		<div className="flex w-full max-w-sm items-center space-x-2">
+		<div className="flex w-full items-center gap-2 sm:flex-1">
 			<Input
 				placeholder="Iskanje"
 				value={inputValue}
-				className="max-w-xl"
-				onChange={(e) => {
-					const text = e.target.value;
-
-					setQuery(text);
-				}}
+				onChange={(e) => setQuery(e.target.value)}
 				autoComplete="off"
 				autoCorrect="off"
 				autoCapitalize="off"
 				spellCheck={false}
 				maxLength={512}
 			/>
-
 			<Button
 				variant="outline"
 				size="icon"
-				className="flex-shrink-0"
-				onClick={() => {
-					setQuery("");
-				}}
+				className="shrink-0"
+				onClick={() => setQuery("")}
 			>
 				<XIcon size={12} />
 			</Button>
@@ -123,53 +95,15 @@ export function MySearchBox2(props: UseSearchBoxProps) {
 	);
 }
 
-/* export function MySearchBox() {
-  const search_api = useSearchBox({ queryHook });
-  const { refine: sort_refine } = useSortBy({ items: SORT_BY_ITEMS });
-
-  return (
-    <div className="flex w-full max-w-sm items-center space-x-2">
-      <Input
-        placeholder="Išči po novicah …"
-        value={search_api.query}
-        className="max-w-xl"
-        onChange={(e) => {
-          const text = e.target.value;
-          const trimmed = text.trim();
-
-          search_api.refine(text);
-          if (trimmed.length === 0) {
-            sort_refine(DEFAULT_REFINEMENT);
-          } else {
-            sort_refine("published_article");
-          }
-        }}
-      />
-
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => {
-          search_api.clear();
-        }}
-      >
-        <XIcon size="12px" />
-      </Button>
-    </div>
-  );
-} */
-
 export function MyStats({ loaded_count }: { loaded_count: number }) {
 	const stats = useStats();
 
 	return (
-		<p>
+		<p className="text-sm text-muted-foreground">
 			Prikazanih {loaded_count} od {stats.nbHits} novic
 		</p>
 	);
 }
-
-const ALL_AUTHORS_VALUE = "__all__";
 
 export function AuthorRefinement(
 	props: Omit<UseRefinementListProps, "attribute">,
@@ -179,46 +113,38 @@ export function AuthorRefinement(
 		limit: 100,
 		...props,
 	});
-	const clear_refinements = useClearRefinements({
-		includedAttributes: ["author_ids"],
-	});
 	const all_authors = use(AllAuthorsContext);
 
-	const named_items = refinement_list.items
+	const options = refinement_list.items
 		.map((item) => ({
-			item,
-			name:
+			value: item.value,
+			label: `${
 				all_authors.find((author) => author.id === Number(item.value))?.name ??
-				item.value,
+				item.value
+			} (${item.count})`,
 		}))
-		.sort((a, b) => a.name.localeCompare(b.name, "sl"));
+		.sort((a, b) => a.label.localeCompare(b.label, "sl"));
 
-	const current_value =
-		refinement_list.items.find((item) => item.isRefined)?.value ??
-		ALL_AUTHORS_VALUE;
+	const selected_values = refinement_list.items
+		.filter((item) => item.isRefined)
+		.map((item) => item.value);
 
 	return (
-		<Select
-			value={current_value}
-			onValueChange={(value) => {
-				clear_refinements.refine();
-				if (value !== ALL_AUTHORS_VALUE) {
-					refinement_list.refine(value);
-				}
+		<MultiSelect
+			className="w-[220px]"
+			options={options}
+			defaultValue={selected_values}
+			placeholder="Vsi avtorji"
+			onValueChange={(new_values) => {
+				const toggled_values = selected_values
+					.filter((value) => !new_values.includes(value))
+					.concat(
+						new_values.filter((value) => !selected_values.includes(value)),
+					);
+
+				for (const value of toggled_values) refinement_list.refine(value);
 			}}
-		>
-			<SelectTrigger>
-				<SelectValue placeholder="Vsi avtorji" />
-			</SelectTrigger>
-			<SelectContent>
-				<SelectItem value={ALL_AUTHORS_VALUE}>Vsi avtorji</SelectItem>
-				{named_items.map(({ item, name }) => (
-					<SelectItem key={item.value} value={item.value}>
-						{name} ({item.count})
-					</SelectItem>
-				))}
-			</SelectContent>
-		</Select>
+		/>
 	);
 }
 

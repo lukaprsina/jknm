@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Configure, InstantSearch } from "react-instantsearch";
 import { Skeleton } from "~/components/ui/skeleton";
-import { Tabs, TabsContent } from "~/components/ui/tabs";
 import { env } from "~/env";
 import { article_grid_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
@@ -24,10 +23,6 @@ const SearchControlsDynamic = dynamic(
 	},
 );
 
-/* import("./infinite-hits").then(async (mod) => {
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-      return mod.MyInfiniteHits;
-    }), */
 const MyInfiniteHitsDynamic = dynamic(
 	() =>
 		import("./infinite-hits").then((mod) => ({
@@ -62,7 +57,6 @@ export function Search({ session }: { session: Session | null }) {
 			indexName={DEFAULT_REFINEMENT}
 			searchClient={searchClient}
 			routing
-			// insights={true}
 		>
 			{/* Content-kind rows (the 5 fixed club pages) never belong in the
 			sortable news archive — they're reached via fixed nav links and quick
@@ -72,25 +66,17 @@ export function Search({ session }: { session: Session | null }) {
 			before this ships, or Algolia rejects the filter and search breaks for
 			everyone, not just content rows. */}
 			<Configure filters="article_kind:article" />
-			<Tabs
-				value={activeTab}
-				onValueChange={(new_value) =>
-					setActiveTab(new_value as "card" | "table")
-				}
-				defaultValue="card"
-				className="pb-6 pt-2"
-			>
-				<SearchControlsDynamic activeTab={activeTab} />
-				<TabsContent
-					value="card"
-					className="flex flex-col justify-between gap-4"
-				>
+			<div className="flex flex-col gap-4 pb-6 pt-2">
+				<SearchControlsDynamic
+					activeTab={activeTab}
+					onTabChange={setActiveTab}
+				/>
+				{activeTab === "card" ? (
 					<MyInfiniteHitsDynamic />
-				</TabsContent>
-				<TabsContent value="table">
+				) : (
 					<ArticleTable session={session} />
-				</TabsContent>
-			</Tabs>
+				)}
+			</div>
 		</InstantSearch>
 	);
 }

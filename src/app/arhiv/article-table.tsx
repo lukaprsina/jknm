@@ -11,7 +11,6 @@ import {
 	Table,
 	TableBody,
 	TableCell,
-	TableFooter,
 	TableHead,
 	TableHeader,
 	TableRow,
@@ -38,87 +37,82 @@ export function ArticleTable({
 	});
 
 	return (
-		<Table>
-			{/* <TableCaption>Novice.</TableCaption> */}
-			<TableHeader>
-				<TableRow>
-					<TableHead>
-						<Button
-							variant="ghost"
-							onClick={() => {
-								sort_api.refine(
-									sort_api.currentRefinement === "published_article_title_desc"
-										? "published_article_title_asc"
-										: "published_article_title_desc",
-								);
-							}}
-						>
-							Naslov
-							{sort_api.currentRefinement ===
-								"published_article_title_desc" && <ChevronDownIcon />}
-							{sort_api.currentRefinement === "published_article_title_asc" && (
-								<ChevronUpIcon />
-							)}
-						</Button>
-					</TableHead>
-					<TableHead>
-						<Button
-							variant="ghost"
-							onClick={() => {
-								sort_api.refine(
-									sort_api.currentRefinement === "published_article_author_desc"
-										? "published_article_author_asc"
-										: "published_article_author_desc",
-								);
-							}}
-						>
-							Avtorji
-							{sort_api.currentRefinement ===
-								"published_article_author_desc" && <ChevronDownIcon />}
-							{sort_api.currentRefinement ===
-								"published_article_author_asc" && <ChevronUpIcon />}
-						</Button>
-					</TableHead>
-					<TableHead>
-						<Button
-							variant="ghost"
-							onClick={() => {
-								sort_api.refine(
-									sort_api.currentRefinement ===
-										"published_article_created_at_desc"
-										? "published_article_created_at_asc"
-										: "published_article_created_at_desc",
-								);
-							}}
-						>
-							Objavljeno
-							{sort_api.currentRefinement ===
-								"published_article_created_at_desc" && <ChevronDownIcon />}
-							{sort_api.currentRefinement ===
-								"published_article_created_at_asc" && <ChevronUpIcon />}
-						</Button>
-					</TableHead>
-				</TableRow>
-			</TableHeader>
-			<TableBody>
-				{items.map((item, index) => (
-					<ArticleTableRow
-						hit={item}
-						session={session}
-						key={item.objectID}
-						ref={load_more_ref(index)}
-					/>
-				))}
-			</TableBody>
-			<TableFooter>
-				<TableRow>
-					<TableCell colSpan={2}></TableCell>
-					<TableCell className="text-right">
-						<MyStats loaded_count={items.length} />
-					</TableCell>
-				</TableRow>
-			</TableFooter>
-		</Table>
+		<div>
+			<MyStats loaded_count={items.length} />
+			<Table className="table-fixed">
+				<TableHeader>
+					<TableRow>
+						<TableHead>
+							<Button
+								variant="ghost"
+								onClick={() => {
+									sort_api.refine(
+										sort_api.currentRefinement ===
+											"published_article_title_desc"
+											? "published_article_title_asc"
+											: "published_article_title_desc",
+									);
+								}}
+							>
+								Naslov
+								{sort_api.currentRefinement ===
+									"published_article_title_desc" && <ChevronDownIcon />}
+								{sort_api.currentRefinement ===
+									"published_article_title_asc" && <ChevronUpIcon />}
+							</Button>
+						</TableHead>
+						<TableHead className="w-56">
+							<Button
+								variant="ghost"
+								onClick={() => {
+									sort_api.refine(
+										sort_api.currentRefinement ===
+											"published_article_author_desc"
+											? "published_article_author_asc"
+											: "published_article_author_desc",
+									);
+								}}
+							>
+								Avtorji
+								{sort_api.currentRefinement ===
+									"published_article_author_desc" && <ChevronDownIcon />}
+								{sort_api.currentRefinement ===
+									"published_article_author_asc" && <ChevronUpIcon />}
+							</Button>
+						</TableHead>
+						<TableHead className="w-40">
+							<Button
+								variant="ghost"
+								onClick={() => {
+									sort_api.refine(
+										sort_api.currentRefinement ===
+											"published_article_created_at_desc"
+											? "published_article_created_at_asc"
+											: "published_article_created_at_desc",
+									);
+								}}
+							>
+								Objavljeno
+								{sort_api.currentRefinement ===
+									"published_article_created_at_desc" && <ChevronDownIcon />}
+								{sort_api.currentRefinement ===
+									"published_article_created_at_asc" && <ChevronUpIcon />}
+							</Button>
+						</TableHead>
+					</TableRow>
+				</TableHeader>
+				<TableBody>
+					{items.map((item, index) => (
+						<ArticleTableRow
+							hit={item}
+							session={session}
+							key={item.objectID}
+							ref={load_more_ref(index)}
+						/>
+					))}
+				</TableBody>
+			</Table>
+		</div>
 	);
 }
 

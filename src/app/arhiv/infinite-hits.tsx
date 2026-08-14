@@ -7,17 +7,14 @@ import type { PublishedArticleHit } from "~/lib/validators";
 import { MyStats } from "./components";
 
 export function MyInfiniteHits(props: InfiniteHitsProps<PublishedArticleHit>) {
-	// console.log("MyInfiniteHits", typeof window);
-	// if (typeof window !== "object") return null;
-
 	const { load_more_ref, items } = useInfiniteAlgoliaArticles({
 		offset: 9,
 		...props,
 	});
 
 	return (
-		<div /* className="ais-InfiniteHits" */>
-			{/* "ais-InfiniteHits-list" */}
+		<div>
+			<MyStats loaded_count={items.length} />
 			<ul
 				className={cn(
 					article_grid_variants(),
@@ -28,14 +25,10 @@ export function MyInfiniteHits(props: InfiniteHitsProps<PublishedArticleHit>) {
 					<ArticleAlgoliaCard
 						hit={hit}
 						key={hit.objectID}
-						/* className="ais-InfiniteHits-item"*/
 						ref={load_more_ref(index)}
 					/>
 				))}
 			</ul>
-			<div className="flex justify-end pt-4">
-				<MyStats loaded_count={items.length} />
-			</div>
 		</div>
 	);
 }
