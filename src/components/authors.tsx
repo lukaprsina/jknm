@@ -4,7 +4,13 @@ import { Fragment, use, useMemo } from "react";
 import { AllAuthorsContext } from "~/app/provider";
 import { format_author_name } from "~/lib/author-name";
 
-export function Authors({ author_ids }: { author_ids: number[] }) {
+export function Authors({
+	author_ids,
+	format = format_author_name,
+}: {
+	author_ids: number[];
+	format?: typeof format_author_name;
+}) {
 	// const all_authors = cached_state_store.get.all_authors();
 	const all_authors = use(AllAuthorsContext);
 
@@ -19,7 +25,7 @@ export function Authors({ author_ids }: { author_ids: number[] }) {
 			{authors.map((author, index) => (
 				// span className="flex-shrink-0"
 				<Fragment key={author.id}>
-					{format_author_name(author)}
+					{format(author)}
 					{index !== authors.length - 1 && ",\u00A0"}
 				</Fragment>
 			))}

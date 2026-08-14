@@ -17,6 +17,7 @@ import {
 } from "~/components/ui/table";
 import { useInfiniteAlgoliaArticles } from "~/hooks/use-infinite-algolia";
 import { get_published_article_link } from "~/lib/article-utils";
+import { format_author_sort_name } from "~/lib/author-name";
 import { format_date_for_human } from "~/lib/format-date";
 import type { PublishedArticleHit } from "~/lib/validators";
 import type { Session } from "~/server/auth";
@@ -141,7 +142,7 @@ function ArticleTableRow({
 				</Button>
 			</TableCell>
 			<TableCell>
-				<Authors author_ids={hit.author_ids} />
+				<Authors author_ids={hit.author_ids} format={format_author_sort_name} />
 			</TableCell>
 			<TableCell>{format_date_for_human(new Date(hit.created_at))}</TableCell>
 		</TableRow>
