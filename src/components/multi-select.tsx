@@ -107,6 +107,12 @@ export interface MultiSelectProps
 	asChild?: boolean;
 
 	/**
+	 * Hides the trigger-level "clear all selections" icon.
+	 * Optional, defaults to false.
+	 */
+	hideClearButton?: boolean;
+
+	/**
 	 * Additional class names to apply custom styles to the multi-select component.
 	 * Optional, can be used to add custom styles.
 	 */
@@ -127,6 +133,7 @@ export const MultiSelect = React.forwardRef<
 			animation = 0,
 			maxCount = 3,
 			modalPopover = false,
+			hideClearButton = false,
 			className,
 			...props
 		},
@@ -253,17 +260,21 @@ export const MultiSelect = React.forwardRef<
 									)}
 								</div>
 								<div className="flex items-center justify-between">
-									<XIcon
-										className="mx-2 h-4 cursor-pointer text-muted-foreground"
-										onClick={(event) => {
-											event.stopPropagation();
-											handleClear();
-										}}
-									/>
-									<Separator
-										orientation="vertical"
-										className="flex h-full min-h-6"
-									/>
+									{!hideClearButton && (
+										<>
+											<XIcon
+												className="mx-2 h-4 cursor-pointer text-muted-foreground"
+												onClick={(event) => {
+													event.stopPropagation();
+													handleClear();
+												}}
+											/>
+											<Separator
+												orientation="vertical"
+												className="flex h-full min-h-6"
+											/>
+										</>
+									)}
 									<ChevronDown className="mx-2 h-4 cursor-pointer text-muted-foreground" />
 								</div>
 							</div>

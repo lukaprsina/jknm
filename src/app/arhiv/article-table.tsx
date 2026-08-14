@@ -48,9 +48,9 @@ export function ArticleTable({
 								onClick={() => {
 									sort_api.refine(
 										sort_api.currentRefinement ===
-											"published_article_title_desc"
-											? "published_article_title_asc"
-											: "published_article_title_desc",
+											"published_article_title_asc"
+											? "published_article_title_desc"
+											: "published_article_title_asc",
 									);
 								}}
 							>
@@ -67,9 +67,9 @@ export function ArticleTable({
 								onClick={() => {
 									sort_api.refine(
 										sort_api.currentRefinement ===
-											"published_article_author_desc"
-											? "published_article_author_asc"
-											: "published_article_author_desc",
+											"published_article_author_asc"
+											? "published_article_author_desc"
+											: "published_article_author_asc",
 									);
 								}}
 							>
@@ -86,9 +86,9 @@ export function ArticleTable({
 								onClick={() => {
 									sort_api.refine(
 										sort_api.currentRefinement ===
-											"published_article_created_at_desc"
-											? "published_article_created_at_asc"
-											: "published_article_created_at_desc",
+											"published_article_created_at_asc"
+											? "published_article_created_at_desc"
+											: "published_article_created_at_asc",
 									);
 								}}
 							>

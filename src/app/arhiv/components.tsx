@@ -3,9 +3,8 @@
 import type { RefinementListItem } from "instantsearch.js/es/connectors/refinement-list/connectRefinementList";
 import { XIcon } from "lucide-react";
 import type React from "react";
-import { use, useCallback, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import type {
-	ClearRefinementsProps,
 	UseRefinementListProps,
 	UseSearchBoxProps,
 } from "react-instantsearch";
@@ -18,7 +17,8 @@ import {
 } from "react-instantsearch";
 import { AllAuthorsContext } from "~/app/provider";
 import { MultiSelect } from "~/components/multi-select";
-import { Button } from "~/components/ui/button";
+import { Badge } from "~/components/ui/badge";
+import type { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import {
 	Select,
@@ -58,6 +58,13 @@ export function MySearchBox2(props: UseSearchBoxProps) {
 	const [inputValue, setInputValue] = useState(query);
 	const { refine: sort_refine } = useSortBy({ items: SORT_BY_ITEMS });
 
+	// Keeps the input in sync with `query` changes this component didn't
+	// cause itself — e.g. the active-filter chip's "clear search" button,
+	// which calls useSearchBox().clear() from outside this component.
+	useEffect(() => {
+		setInputValue(query);
+	}, [query]);
+
 	const setQuery = useCallback(
 		(new_query: string) => {
 			sort_refine(
@@ -72,26 +79,17 @@ export function MySearchBox2(props: UseSearchBoxProps) {
 	);
 
 	return (
-		<div className="flex w-full items-center gap-2 sm:flex-1">
-			<Input
-				placeholder="Iskanje"
-				value={inputValue}
-				onChange={(e) => setQuery(e.target.value)}
-				autoComplete="off"
-				autoCorrect="off"
-				autoCapitalize="off"
-				spellCheck={false}
-				maxLength={512}
-			/>
-			<Button
-				variant="outline"
-				size="icon"
-				className="shrink-0"
-				onClick={() => setQuery("")}
-			>
-				<XIcon size={12} />
-			</Button>
-		</div>
+		<Input
+			className="w-full sm:flex-1"
+			placeholder="Iskanje"
+			value={inputValue}
+			onChange={(e) => setQuery(e.target.value)}
+			autoComplete="off"
+			autoCorrect="off"
+			autoCapitalize="off"
+			spellCheck={false}
+			maxLength={512}
+		/>
 	);
 }
 
@@ -131,7 +129,8 @@ export function AuthorRefinement(
 
 	return (
 		<MultiSelect
-			className="w-[220px]"
+			className="w-55"
+			hideClearButton
 			options={options}
 			defaultValue={selected_values}
 			placeholder="Vsi avtorji"
@@ -226,22 +225,60 @@ export function TimelineItem({
 	);
 }
 
-export function CustomClearRefinements(props: ClearRefinementsProps) {
-	const { refine: clear_refinements } = useClearRefinements(props);
-	const { clear: clear_search } = useSearchBox();
+export function ActiveFilterChips() {
+	const { query, clear: clear_search } = useSearchBox();
+	const author_refinement = useRefinementList({
+		attribute: "author_ids",
+		limit: 100,
+	});
+	const clear_refinements = useClearRefinements();
 	const { refine: sort_refine } = useSortBy({ items: SORT_BY_ITEMS });
+	const all_authors = use(AllAuthorsContext);
+
+	const has_query = query.trim() !== "";
+	const selected_authors = author_refinement.items.filter(
+		(item) => item.isRefined,
+	);
+
+	if (!has_query && !clear_refinements.canRefine) return null;
 
 	return (
-		<Button
-			variant="outline"
-			onClick={() => {
-				clear_refinements();
-				clear_search();
-				sort_refine(DEFAULT_REFINEMENT);
-			}}
-		>
-			Počisti filtre
-		</Button>
+		<div className="flex flex-wrap items-center gap-2">
+			{has_query && (
+				<Badge
+					variant="secondary"
+					className="cursor-pointer gap-1 text-sm"
+					onClick={() => clear_search()}
+				>
+					{query}
+					<XIcon className="size-3.5" />
+				</Badge>
+			)}
+			{selected_authors.map((item) => (
+				<Badge
+					key={item.value}
+					variant="secondary"
+					className="cursor-pointer gap-1 text-sm"
+					onClick={() => author_refinement.refine(item.value)}
+				>
+					{all_authors.find((author) => author.id === Number(item.value))
+						?.name ?? item.value}
+					<XIcon className="size-3.5" />
+				</Badge>
+			))}
+			<Badge
+				variant="outline"
+				className="cursor-pointer gap-1 text-sm"
+				onClick={() => {
+					clear_refinements.refine();
+					clear_search();
+					sort_refine(DEFAULT_REFINEMENT);
+				}}
+			>
+				Počisti vse
+				<XIcon className="size-3.5" />
+			</Badge>
+		</div>
 	);
 }
 

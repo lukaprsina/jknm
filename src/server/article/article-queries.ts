@@ -1,7 +1,6 @@
 import {
 	and,
 	asc,
-	count,
 	desc,
 	eq,
 	max,
@@ -76,18 +75,17 @@ export function find_draft_articles(executor: typeof db | DbTransaction) {
 }
 
 /**
- * Total count and year range of every published article, for the `/arhiv`
- * header — deliberately independent of any Algolia refinement, unlike the
- * page's own "Prikazanih X od Y" line, which does track the active filters.
+ * Year range of every published article, for the `/arhiv` header —
+ * deliberately independent of any Algolia refinement, unlike the page's own
+ * "Prikazanih X od Y" line, which does track the active filters.
  */
-export async function find_published_articles_stats(
+export async function find_published_articles_year_range(
 	executor: typeof db | DbTransaction,
 ) {
 	// A plain aggregate with no GROUP BY always returns exactly one row, even
-	// over zero matching articles (count 0, NULL min/max).
+	// over zero matching articles (NULL min/max).
 	const [row] = await executor
 		.select({
-			count: count(),
 			min_year: sql<
 				number | null
 			>`extract(year from ${min(Article.created_at)})::int`,

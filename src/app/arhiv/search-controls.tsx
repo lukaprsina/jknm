@@ -2,8 +2,8 @@ import { LayoutDashboard, TableIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { ButtonGroup } from "~/components/ui/button-group";
 import {
+	ActiveFilterChips,
 	AuthorRefinement,
-	CustomClearRefinements,
 	MySearchBox2,
 	MySortBy,
 	TimelineRefinement,
@@ -43,12 +43,10 @@ export function SearchControls({
 					</ButtonGroup>
 				</div>
 			</div>
-			<div className="flex w-full items-center justify-end gap-6">
-				<CustomClearRefinements />
-			</div>
 			<div className="flex w-full items-center justify-between gap-4">
 				<TimelineRefinement />
 			</div>
+			<ActiveFilterChips />
 		</div>
 	);
 }
