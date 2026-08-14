@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  @media (max-width: 860px) {
+    .arhiv-toolbar { flex-direction: column; align-items: stretch !important; }
+    .arhiv-toolbar-controls { margin-left: 0 !important; justify-content: space-between !important; }
+    .arhiv-grid { grid-template-columns: 1fr !important; }
+  }
+  @media (min-width: 861px) and (max-width: 1140px) {
+    .arhiv-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  }
+  .arhiv-year-strip::-webkit-scrollbar { height: 6px; }
+  .arhiv-year-strip::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 3px; }
+  a { color: #1d4ed8; }
+  a:hover { color: #1e40af; }
+  .arhiv-card-link-btn { opacity: 0; transition: opacity 0.15s; }
+  .arhiv-card:hover .arhiv-card-link-btn { opacity: 1; }
+</style>
+</helmet>
+<div style="background:#ffffff; min-height:100vh; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; color:#18181b;">
+  <div style="max-width:1280px; margin:0 auto; padding:40px 24px 72px;">
+
+    <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin-bottom:28px; flex-wrap:wrap;">
+      <div>
+        <h1 style="font-size:32px; font-weight:700; color:#1e3a8a; margin:0 0 4px; letter-spacing:-0.01em;">Arhiv novic</h1>
+        <p style="margin:0; color:#71717a; font-size:15px;">{{ rangeText }}</p>
+      </div>
+      <p style="margin:0; color:#3f3f46; font-size:15px; font-weight:500;">{{ totalCount }} novic skupaj</p>
+    </div>
+
+    <div class="arhiv-toolbar" style="display:flex; align-items:center; gap:12px; margin-bottom:22px;">
+      <div style="position:relative; flex:1; min-width:220px;">
+        <svg style="position:absolute; left:13px; top:50%; transform:translateY(-50%); pointer-events:none;" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="7" cy="7" r="5.5" stroke="#a1a1aa" stroke-width="1.5"></circle>
+          <line x1="11" y1="11" x2="14.5" y2="14.5" stroke="#a1a1aa" stroke-width="1.5"></line>
+        </svg>
+        <input type="text" value="{{ searchValue }}" onChange="{{ onSearchChange }}" placeholder="Išči po naslovu, avtorju ali besedilu …" autoComplete="off" style="width:100%; height:44px; padding:0 40px 0 38px; border:1px solid #e4e4e7; border-radius:8px; font-size:15px; color:#18181b; background:#ffffff; box-sizing:border-box;" />
+        <sc-if value="{{ hasSearchValue }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ onClearSearch }}" aria-label="Počisti iskanje" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); width:26px; height:26px; border:none; background:#f4f4f5; border-radius:6px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#71717a; font-size:15px; line-height:1;">×</button>
+        </sc-if>
+      </div>
+
+      <div class="arhiv-toolbar-controls" style="display:flex; align-items:center; gap:10px; margin-left:auto;">
+        <div style="position:relative;">
+          <select value="{{ authorValue }}" onChange="{{ onAuthorChange }}" style="height:40px; padding:0 30px 0 12px; border:1px solid #e4e4e7; border-radius:8px; background:#fff; font-size:14px; color:#18181b; appearance:none; cursor:pointer;">
+            <option value="">Vsi avtorji</option>
+            <sc-for list="{{ authorOptions }}" as="a" hint-placeholder-count="4">
+              <option value="{{ a }}">{{ a }}</option>
+            </sc-for>
+          </select>
+          <span style="position:absolute; right:10px; top:50%; transform:translateY(-58%); pointer-events:none; color:#71717a; font-size:10px;">▾</span>
+        </div>
+
+        <div style="position:relative;">
+          <select value="{{ sortValue }}" onChange="{{ onSortChange }}" style="height:40px; padding:0 30px 0 12px; border:1px solid #e4e4e7; border-radius:8px; background:#fff; font-size:14px; color:#18181b; appearance:none; cursor:pointer;">
+            <sc-for list="{{ sortOptions }}" as="opt" hint-placeholder-count="6">
+              <option value="{{ opt.value }}">{{ opt.label }}</option>
+            </sc-for>
+          </select>
+          <span style="position:absolute; right:10px; top:50%; transform:translateY(-58%); pointer-events:none; color:#71717a; font-size:10px;">▾</span>
+        </div>
+
+        <div style="display:flex; border:1px solid #e4e4e7; border-radius:8px; overflow:hidden;">
+          <button onClick="{{ onSetCardView }}" aria-label="Prikaz kartic" style="width:40px; height:40px; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; background:{{ cardViewBg }}; color:{{ cardViewColor }};">
+            <svg width="16" height="16" viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="1" fill="currentColor"></rect><rect x="9" y="1" width="6" height="6" rx="1" fill="currentColor"></rect><rect x="1" y="9" width="6" height="6" rx="1" fill="currentColor"></rect><rect x="9" y="9" width="6" height="6" rx="1" fill="currentColor"></rect></svg>
+          </button>
+          <button onClick="{{ onSetTableView }}" aria-label="Prikaz tabele" style="width:40px; height:40px; border:none; border-left:1px solid #e4e4e7; display:flex; align-items:center; justify-content:center; cursor:pointer; background:{{ tableViewBg }}; color:{{ tableViewColor }};">
+            <svg width="16" height="16" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="1.5" stroke="currentColor" stroke-width="1.3" fill="none"></rect><line x1="1" y1="6" x2="15" y2="6" stroke="currentColor" stroke-width="1.3"></line><line x1="6" y1="6" x2="6" y2="15" stroke="currentColor" stroke-width="1.3"></line></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <sc-if value="{{ showHistogram }}" hint-placeholder-val="{{ true }}">
+      <div class="arhiv-year-strip" style="display:flex; align-items:flex-end; gap:2px; overflow-x:auto; padding:16px 4px 14px; border-bottom:1px solid #e4e4e7; margin-bottom:22px; scroll-snap-type:x proximity;">
+        <sc-for list="{{ yearBars }}" as="yb" hint-placeholder-count="19">
+          <button onClick="{{ yb.onClick }}" title="{{ yb.title }}" style="display:flex; flex-direction:column; align-items:center; gap:6px; min-width:38px; border:none; background:transparent; cursor:pointer; padding:0 3px; scroll-snap-align:start; flex-shrink:0;">
+            <span style="font-size:11px; color:{{ yb.countColor }}; font-weight:{{ yb.countWeight }};">{{ yb.count }}</span>
+            <span style="width:20px; height:{{ yb.heightPx }}px; border-radius:4px 4px 2px 2px; background:{{ yb.barColor }}; transition:background 0.15s;"></span>
+            <span style="font-size:12px; color:{{ yb.labelColor }}; font-weight:{{ yb.labelWeight }};">{{ yb.label }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ !showHistogram }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex; flex-wrap:wrap; gap:8px; padding-bottom:22px; border-bottom:1px solid #e4e4e7; margin-bottom:22px;">
+        <sc-for list="{{ yearPills }}" as="yp" hint-placeholder-count="19">
+          <button onClick="{{ yp.onClick }}" style="height:32px; padding:0 12px; border-radius:16px; border:1px solid {{ yp.borderColor }}; background:{{ yp.bg }}; color:{{ yp.color }}; font-size:13px; cursor:pointer;">{{ yp.label }} <span style="opacity:0.65;">({{ yp.count }})</span></button>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ hasActiveFilters }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:18px;">
+        <sc-for list="{{ activeChips }}" as="chip" hint-placeholder-count="2">
+          <span style="display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 6px 0 12px; border-radius:15px; background:#eff6ff; color:#1d4ed8; font-size:13px; font-weight:500;">
+            {{ chip.label }}
+            <button onClick="{{ chip.onClear }}" style="width:20px; height:20px; border:none; background:transparent; color:#1d4ed8; cursor:pointer; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px;">×</button>
+          </span>
+        </sc-for>
+        <button onClick="{{ onClearAll }}" style="height:30px; padding:0 12px; border:1px solid #e4e4e7; border-radius:15px; background:#fff; color:#3f3f46; font-size:13px; cursor:pointer;">Počisti vse</button>
+      </div>
+    </sc-if>
+
+    <p style="margin:0 0 16px; color:#71717a; font-size:14px;">{{ resultsSummary }}</p>
+
+    <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center; padding:72px 0; color:#a1a1aa; font-size:15px;">Ni najdenih novic za izbrane filtre.</div>
+    </sc-if>
+
+    <sc-if value="{{ isCardView }}" hint-placeholder-val="{{ true }}">
+      <div class="arhiv-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+        <sc-for list="{{ visibleArticles }}" as="art" hint-placeholder-count="9">
+          <a href="#" class="arhiv-card" style="display:flex; flex-direction:column; text-decoration:none; color:inherit; border-radius:12px; overflow:hidden; background:#fff; box-shadow:0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1); transition:box-shadow 0.2s, transform 0.2s;" style-hover="box-shadow:0 20px 25px -5px rgba(0,0,0,0.12), 0 8px 10px -6px rgba(0,0,0,0.1); transform:translateY(-2px);">
+            <div style="position:relative; aspect-ratio:16/9; background:repeating-linear-gradient(45deg,#f4f4f5,#f4f4f5 10px,#ececee 10px,#ececee 20px); display:flex; align-items:center; justify-content:center;">
+              <span style="font-family:ui-monospace,'SF Mono',monospace; font-size:11px; color:#a1a1aa;">fotografija</span>
+            </div>
+            <div style="padding:16px; display:flex; flex-direction:column; gap:8px; flex:1;">
+              <div style="display:flex; justify-content:space-between; gap:8px;">
+                <h3 style="margin:0; font-size:17px; font-weight:600; color:#1d4ed8; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{{ art.title }}</h3>
+                <button class="arhiv-card-link-btn" onClick="{{ onCopyLink }}" aria-label="Kopiraj povezavo" style="flex-shrink:0; width:28px; height:28px; border:none; background:transparent; color:#71717a; border-radius:6px; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                  <svg width="14" height="14" viewBox="0 0 14 14"><circle cx="4" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="1.4"></circle><circle cx="10" cy="4" r="3" fill="none" stroke="currentColor" stroke-width="1.4"></circle><line x1="6" y1="8" x2="8" y2="6" stroke="currentColor" stroke-width="1.4"></line></svg>
+                </button>
+              </div>
+              <p style="margin:0; font-size:13px; color:#71717a;">{{ art.author }} · {{ art.dateLabel }}</p>
+              <p style="margin:0; font-size:14px; color:#52525b; line-height:1.5; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">{{ art.excerpt }}</p>
+            </div>
+          </a>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ !isCardView }}" hint-placeholder-val="{{ false }}">
+      <div class="arhiv-table-wrap" style="overflow-x:auto; border:1px solid #e4e4e7; border-radius:10px;">
+        <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:560px;">
+          <thead>
+            <tr style="background:#fafafa; border-bottom:1px solid #e4e4e7;">
+              <th onClick="{{ onSortTitle }}" style="padding:12px 16px; text-align:left; cursor:pointer; user-select:none; font-weight:600; color:#3f3f46; white-space:nowrap;">Naslov <span style="font-size:11px; color:#1d4ed8;">{{ titleSortIcon }}</span></th>
+              <th onClick="{{ onSortAuthor }}" style="padding:12px 16px; text-align:left; cursor:pointer; user-select:none; font-weight:600; color:#3f3f46; white-space:nowrap;">Avtor <span style="font-size:11px; color:#1d4ed8;">{{ authorSortIcon }}</span></th>
+              <th onClick="{{ onSortDate }}" style="padding:12px 16px; text-align:left; cursor:pointer; user-select:none; font-weight:600; color:#3f3f46; white-space:nowrap;">Objavljeno <span style="font-size:11px; color:#1d4ed8;">{{ dateSortIcon }}</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ tableRows }}" as="row" hint-placeholder-count="8">
+              <tr style="border-bottom:1px solid #f0f0f1;" style-hover="background:#fafafa;">
+                <td style="padding:12px 16px; max-width:420px;"><a href="#" style="color:#1d4ed8; text-decoration:none; font-weight:500;">{{ row.title }}</a></td>
+                <td style="padding:12px 16px; color:#3f3f46; white-space:nowrap;">{{ row.author }}</td>
+                <td style="padding:12px 16px; color:#71717a; white-space:nowrap;">{{ row.dateLabel }}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ hasMore }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex; justify-content:center; margin-top:28px;">
+        <button onClick="{{ onLoadMore }}" style="height:44px; padding:0 24px; border:1px solid #e4e4e7; border-radius:8px; background:#fff; color:#1d4ed8; font-size:14px; font-weight:600; cursor:pointer;">Naloži več</button>
+      </div>
+    </sc-if>
+
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900},&quot;defaultView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;card&quot;,&quot;tsType&quot;:&quot;'card'|'table'&quot;,&quot;options&quot;:[&quot;card&quot;,&quot;table&quot;],&quot;section&quot;:&quot;Behavior&quot;},&quot;showYearHistogram&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behavior&quot;}}">
+const SL_MONTHS = ["januar","februar","marec","april","maj","junij","julij","avgust","september","oktober","november","december"];
+const YEARS = [2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026];
+const YEAR_COUNTS = [6,9,13,11,16,14,20,17,24,19,27,15,30,34,28,37,41,33,18];
+const AUTHORS = ["Damijan Šinigoj","Zdravko Bučar","Timotej Jurček","Jovana Rakić","Miha Kovač","Ana Zupančič","Peter Novak","Nina Kastelic","Rok Hočevar","Sara Vidmar"];
+const TITLES = [
+  "Raziskovanje nove jame pri Otočcu","Vodenje otrok po Kostanjeviški jami","Čistilna akcija v breznu na Gorjancih",
+  "Potapljaški poseg v izviru Krke","Obisk madžarskih jamarjev","Meritve temperature v Jazbinski jami",
+  "Postavitev nove opreme v breznu","Fotografski večer arhivskih posnetkov","Reševalna vaja v podzemni dvorani",
+  "Kartiranje novega rova","Predstavitev raziskav na občnem zboru","Vzdrževanje planinske koče",
+  "Biospeleološki popis netopirjev","Odprava v Snežno jamo","Delavnica vozlanja za začetnike",
+  "Srečanje jamarskih društev Dolenjske",
+];
+const EXCERPTS = [
+  "Skupaj smo si ogledali nov rov in ga za silo zavarovali za nadaljnje raziskave.",
+  "Akcijo smo nadaljevali v soboto zjutraj, ko se nam je pridružilo še nekaj članov.",
+  "Meritve smo opravili na treh mestih in podatke vnesli v skupno bazo.",
+  "Po dolgem dostopu smo končno prišli do dna brezna.",
+  "Otroci so navdušeno prisluhnili razlagi o nastanku kapnikov.",
+  "Ekipa je preverila stanje opreme in jo po potrebi zamenjala.",
+  "Vreme nam je tokrat šlo na roko, zato smo lahko delo zaključili prej.",
+  "Rezultate raziskave bomo predstavili na naslednjem občnem zboru.",
+  "Že v prvi uri smo naleteli na doslej neznan del sistema.",
+  "Zahvaljujemo se vsem, ki so pomagali pri organizaciji.",
+  "Posnetke smo dopolnili z novimi meritvami globine.",
+  "Akcija je bila uspešna, čeprav so razmere bile zahtevne.",
+];
+const SORT_OPTIONS = [
+  { value: "newest", label: "Najnovejše" },
+  { value: "oldest", label: "Najstarejše" },
+  { value: "title_asc", label: "Ime naraščajoče" },
+  { value: "title_desc", label: "Ime padajoče" },
+  { value: "author_asc", label: "Avtor naraščajoče" },
+  { value: "author_desc", label: "Avtor padajoče" },
+];
+
+function formatDateSl(date) {
+  return `${date.getDate()}. ${SL_MONTHS[date.getMonth()]} ${date.getFullYear()}`;
+}
+
+function generateArticles() {
+  const list = [];
+  YEARS.forEach((year, yearIdx) => {
+    const count = YEAR_COUNTS[yearIdx];
+    for (let i = 0; i < count; i++) {
+      const month = (i * 3 + yearIdx) % 12;
+      const day = ((i * 5 + 3) % 28) + 1;
+      list.push({
+        id: `${year}-${i}`,
+        year,
+        title: TITLES[(yearIdx * 7 + i) % TITLES.length],
+        author: AUTHORS[(yearIdx * 4 + i * 3) % AUTHORS.length],
+        excerpt: EXCERPTS[(yearIdx * 5 + i * 2) % EXCERPTS.length],
+        created_at: new Date(year, month, day),
+      });
+    }
+  });
+  return list;
+}
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.allArticles = generateArticles();
+    this.state = {
+      search: "",
+      selectedYear: null,
+      selectedAuthor: "",
+      sortBy: "newest",
+      view: props.defaultView || "card",
+      visibleCount: 12,
+    };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const allArticles = this.allArticles;
+
+    let base = allArticles;
+    if (s.selectedAuthor) base = base.filter((a) => a.author === s.selectedAuthor);
+    const q = s.search.trim().toLowerCase();
+    if (q) {
+      base = base.filter(
+        (a) =>
+          a.title.toLowerCase().includes(q) ||
+          a.excerpt.toLowerCase().includes(q) ||
+          a.author.toLowerCase().includes(q),
+      );
+    }
+
+    const countsByYear = {};
+    YEARS.forEach((y) => (countsByYear[y] = 0));
+    base.forEach((a) => (countsByYear[a.year] = (countsByYear[a.year] || 0) + 1));
+    const maxCount = Math.max(1, ...YEARS.map((y) => countsByYear[y]));
+
+    const yearBars = YEARS.map((y) => {
+      const count = countsByYear[y];
+      const selected = s.selectedYear === y;
+      return {
+        label: String(y),
+        count,
+        heightPx: Math.max(4, Math.round((count / maxCount) * 56)),
+        barColor: selected ? "#1d4ed8" : count === 0 ? "#f0f0f1" : "#c7d2fe",
+        labelColor: selected ? "#1d4ed8" : "#71717a",
+        labelWeight: selected ? "700" : "400",
+        countColor: selected ? "#1d4ed8" : "#a1a1aa",
+        countWeight: selected ? "700" : "400",
+        title: `${y}: ${count} novic`,
+        onClick: () =>
+          this.setState((st) => ({
+            selectedYear: st.selectedYear === y ? null : y,
+            visibleCount: 12,
+          })),
+      };
+    });
+
+    const yearPills = YEARS.map((y) => {
+      const count = countsByYear[y];
+      const selected = s.selectedYear === y;
+      return {
+        label: String(y),
+        count,
+        bg: selected ? "#1d4ed8" : "#fff",
+        color: selected ? "#fff" : "#3f3f46",
+        borderColor: selected ? "#1d4ed8" : "#e4e4e7",
+        onClick: () =>
+          this.setState((st) => ({
+            selectedYear: st.selectedYear === y ? null : y,
+            visibleCount: 12,
+          })),
+      };
+    });
+
+    let list = base;
+    if (s.selectedYear) list = list.filter((a) => a.year === s.selectedYear);
+    list = [...list].sort((a, b) => {
+      switch (s.sortBy) {
+        case "oldest":
+          return a.created_at - b.created_at;
+        case "title_asc":
+          return a.title.localeCompare(b.title, "sl");
+        case "title_desc":
+          return b.title.localeCompare(a.title, "sl");
+        case "author_asc":
+          return a.author.localeCompare(b.author, "sl");
+        case "author_desc":
+          return b.author.localeCompare(a.author, "sl");
+        default:
+          return b.created_at - a.created_at;
+      }
+    });
+
+    const authorOptions = [...new Set(allArticles.map((a) => a.author))].sort((a, b) =>
+      a.localeCompare(b, "sl"),
+    );
+
+    const activeChips = [];
+    if (s.selectedYear)
+      activeChips.push({
+        label: `Leto: ${s.selectedYear}`,
+        onClear: () => this.setState({ selectedYear: null, visibleCount: 12 }),
+      });
+    if (s.selectedAuthor)
+      activeChips.push({
+        label: `Avtor: ${s.selectedAuthor}`,
+        onClear: () => this.setState({ selectedAuthor: "", visibleCount: 12 }),
+      });
+    if (q)
+      activeChips.push({
+        label: `Iskanje: "${s.search.trim()}"`,
+        onClear: () => this.setState({ search: "", visibleCount: 12 }),
+      });
+
+    const visibleArticles = list.slice(0, s.visibleCount).map((a) => ({
+      title: a.title,
+      author: a.author,
+      excerpt: a.excerpt,
+      dateLabel: formatDateSl(a.created_at),
+    }));
+    const onCopyLink = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+    const tableRows = list.slice(0, s.visibleCount).map((a) => ({
+      title: a.title,
+      author: a.author,
+      dateLabel: formatDateSl(a.created_at),
+    }));
+
+    const sortIcon = (key) => {
+      if (s.sortBy === `${key}_asc`) return "▲";
+      if (s.sortBy === `${key}_desc`) return "▼";
+      return "";
+    };
+
+    return {
+      rangeText: `Novice od ${YEARS[0]} do ${YEARS[YEARS.length - 1]}`,
+      totalCount: allArticles.length,
+      searchValue: s.search,
+      hasSearchValue: s.search.length > 0,
+      onSearchChange: (e) => this.setState({ search: e.target.value, visibleCount: 12 }),
+      onClearSearch: () => this.setState({ search: "", visibleCount: 12 }),
+      authorOptions,
+      authorValue: s.selectedAuthor,
+      onAuthorChange: (e) => this.setState({ selectedAuthor: e.target.value, visibleCount: 12 }),
+      sortValue: s.sortBy,
+      sortOptions: SORT_OPTIONS,
+      onSortChange: (e) => this.setState({ sortBy: e.target.value }),
+      isCardView: s.view === "card",
+      onSetCardView: () => this.setState({ view: "card" }),
+      onSetTableView: () => this.setState({ view: "table" }),
+      cardViewBg: s.view === "card" ? "#1d4ed8" : "#fff",
+      cardViewColor: s.view === "card" ? "#fff" : "#3f3f46",
+      tableViewBg: s.view === "table" ? "#1d4ed8" : "#fff",
+      tableViewColor: s.view === "table" ? "#fff" : "#3f3f46",
+      showHistogram: this.props.showYearHistogram ?? true,
+      yearBars,
+      yearPills,
+      hasActiveFilters: activeChips.length > 0,
+      activeChips,
+      onClearAll: () =>
+        this.setState({ selectedYear: null, selectedAuthor: "", search: "", visibleCount: 12 }),
+      resultsSummary:
+        list.length === 0
+          ? ""
+          : `Prikazanih ${Math.min(s.visibleCount, list.length)} od ${list.length} novic`,
+      isEmpty: list.length === 0,
+      visibleArticles,
+      onCopyLink,
+      tableRows,
+      hasMore: list.length > s.visibleCount,
+      onLoadMore: () => this.setState((st) => ({ visibleCount: st.visibleCount + 12 })),
+      onSortTitle: () =>
+        this.setState((st) => ({ sortBy: st.sortBy === "title_asc" ? "title_desc" : "title_asc" })),
+      onSortAuthor: () =>
+        this.setState((st) => ({
+          sortBy: st.sortBy === "author_asc" ? "author_desc" : "author_asc",
+        })),
+      onSortDate: () =>
+        this.setState((st) => ({ sortBy: st.sortBy === "oldest" ? "newest" : "oldest" })),
+      titleSortIcon: sortIcon("title"),
+      authorSortIcon: sortIcon("author"),
+      dateSortIcon: s.sortBy === "oldest" ? "▲" : s.sortBy === "newest" ? "▼" : "",
+    };
+  }
+}
+
+</script>
+</body>
+</html>
