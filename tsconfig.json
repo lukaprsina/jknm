@@ -45,13 +45,10 @@
 		"eslint.config.mjs",
 		"next-env.d.ts",
 		"next.config.mjs",
-		"src/components/shell/article-autocomplete.tsx.old",
-		"src/components/shell/command-bar.tsx.ol",
 		".next/dev/types/**/*.ts"
 	],
 	"exclude": [
 		"node_modules",
-		"vendor",
-		"Jknm.si Archive Redesign"
+		"vendor"
 	]
 }

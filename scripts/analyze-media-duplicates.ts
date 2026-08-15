@@ -173,8 +173,10 @@ async function main() {
 		const sorted = [...rows].sort(
 			(a, b) => a.created_at.getTime() - b.created_at.getTime(),
 		);
-		const canonical = sorted[0]!;
-		const duplicate_rows = sorted.slice(1);
+		const [canonical, ...duplicate_rows] = sorted;
+		if (canonical === undefined) {
+			throw new Error(`unreachable: duplicate group for hash ${hash} is empty`);
+		}
 
 		const canonical_keyed = new Map<string, string>(); // "original" | "widthxformat" -> url
 		canonical_keyed.set("original", canonical.original.url);

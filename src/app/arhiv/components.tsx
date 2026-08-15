@@ -3,7 +3,7 @@
 import type { RefinementListItem } from "instantsearch.js/es/connectors/refinement-list/connectRefinementList";
 import { XIcon } from "lucide-react";
 import type React from "react";
-import { use, useCallback, useEffect, useState } from "react";
+import { use, useCallback, useState } from "react";
 import type {
 	UseRefinementListProps,
 	UseSearchBoxProps,
@@ -78,9 +78,13 @@ export function MySearchBox2(props: UseSearchBoxProps) {
 	// Keeps the input in sync with `query` changes this component didn't
 	// cause itself — e.g. the active-filter chip's "clear search" button,
 	// which calls useSearchBox().clear() from outside this component.
-	useEffect(() => {
+	// InstantSearch debounces `query`, so the input can't just bind to it
+	// directly; instead it mirrors it via render-time state adjustment.
+	const [prevQuery, setPrevQuery] = useState(query);
+	if (prevQuery !== query) {
+		setPrevQuery(query);
 		setInputValue(query);
-	}, [query]);
+	}
 
 	const setQuery = useCallback(
 		(new_query: string) => {

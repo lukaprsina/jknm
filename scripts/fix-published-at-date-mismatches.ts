@@ -52,7 +52,12 @@ async function main() {
 	for (const row of rows) {
 		const legacy_id = row.legacy_id;
 		if (legacy_id === null) continue;
-		const target = new Date(TARGETS[legacy_id]);
+		const target_date = TARGETS[legacy_id];
+		if (target_date === undefined) {
+			console.warn(`[${legacy_id}] no target date in TARGETS; skipping`);
+			continue;
+		}
+		const target = new Date(target_date);
 
 		console.log(
 			`[${legacy_id}] ${row.title} (${row.status})\n  published_at: ${row.published_at?.toISOString() ?? "null"} -> ${target.toISOString()}`,
