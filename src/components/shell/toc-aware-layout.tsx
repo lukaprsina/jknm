@@ -35,7 +35,13 @@ export function TocAwareLayout({
 			<aside
 				id="shell-aside"
 				className={cn(
-					"sticky top-24 hidden h-fit max-h-[calc(100vh-6rem)] w-[300px] shrink-0 overflow-y-auto",
+					// Height must be definite (not `h-fit`): the portaled
+					// `<ScrollArea>` fills it with `h-full`, and Radix only
+					// scrolls when that percentage resolves to a definite
+					// height. `h-fit` left the viewport at content height and
+					// the Root's `overflow: hidden` clipped the overflow
+					// instead of scrolling -- long TOCs were cut off.
+					"sticky top-24 hidden h-[calc(100vh-6rem)] w-[300px] shrink-0",
 					has_toc && "md:block",
 				)}
 			/>
