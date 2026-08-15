@@ -92,7 +92,11 @@ describe("html_to_blocks", () => {
 				type: "image",
 				data: {
 					caption: "",
-					file: { url: "https://vsebina.jknm.org/x.jpg", width: 10, height: 10 },
+					file: {
+						url: "https://vsebina.jknm.org/x.jpg",
+						width: 10,
+						height: 10,
+					},
 				},
 			},
 		]);
