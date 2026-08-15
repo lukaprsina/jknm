@@ -15,6 +15,12 @@ type NavigationMenuTriggerProps = Omit<
 	// Whether this trigger has an attached NavigationMenuContent dropdown.
 	// Plain (contentless) triggers always navigate on click.
 	hasContent?: boolean;
+	// Explicitly opens this item's dropdown. Needed because Radix composes
+	// our onClick with its own click-to-open handler and skips its handler
+	// entirely once ours calls preventDefault() — on mouse that's masked by
+	// hover already opening the dropdown before the click fires, but touch
+	// has no hover step, so without this the dropdown never opened on tap.
+	onOpenRequest?: () => void;
 };
 
 export const NavigationMenuTrigger = React.forwardRef<
@@ -22,7 +28,15 @@ export const NavigationMenuTrigger = React.forwardRef<
 	NavigationMenuTriggerProps
 >(
 	(
-		{ className, children, href, hasContent = false, onClick, ...props },
+		{
+			className,
+			children,
+			href,
+			hasContent = false,
+			onOpenRequest,
+			onClick,
+			...props
+		},
 		ref,
 	) => {
 		// Fix: When hovering the trigger and clicking, it opens and closes.
@@ -100,8 +114,13 @@ export const NavigationMenuTrigger = React.forwardRef<
 						// following click so it doesn't toggle straight back closed.
 						e.preventDefault();
 					} else if (hasContent) {
-						// Dropdown is closed: open it instead of navigating.
+						// Dropdown is closed: open it instead of navigating. Do this
+						// ourselves via onOpenRequest rather than relying on Radix's
+						// own composed click handler — that handler is skipped once
+						// preventDefault() is called below (composeEventHandlers),
+						// which is what left touch taps with no way to open it.
 						e.preventDefault();
+						onOpenRequest?.();
 					}
 
 					if (onClick) onClick(e);

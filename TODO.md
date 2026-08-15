@@ -1,6 +1,6 @@
 # TODO
 
-- mobile, desktop navbar isn't clickable
+- the author json is getting leaked to the client
 
 ## later
 

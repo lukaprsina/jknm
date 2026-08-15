@@ -25,6 +25,7 @@ import {
 } from "~/components/ui/sheet";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { useIsScrollTop } from "~/hooks/use-is-scroll-top";
+import { useScrollDirection } from "~/hooks/use-scroll-direction";
 import { cn } from "~/lib/utils";
 import { shell_store, useNavbarHeight } from "./desktop-header";
 import { HomeLink } from "./home-link";
@@ -81,6 +82,10 @@ export function MobileHeader({
 	const has_toc = useHasToc();
 	const navbar_height = useNavbarHeight();
 	const is_top = useIsScrollTop();
+	const scroll_direction = useScrollDirection();
+	// Never hidden right at the top -- otherwise a small rubber-band bounce
+	// on load could hide the title row before the user has scrolled at all.
+	const hide_title_row = scroll_direction === "down" && !is_top;
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: has_toc isn't read here, but it changes the DOM layout that clientHeight measures below -- see comment inside.
 	useEffect(() => {
@@ -116,15 +121,24 @@ export function MobileHeader({
 			<div ref={sticky_navbar_ref} className="fixed top-0 z-40 w-full">
 				<div
 					className={cn(
-						"flex items-center justify-between px-6 py-4 transition-colors",
-						!is_top &&
-							"bg-white/90 backdrop-blur-sm supports-backdrop-filter:bg-background/60",
+						"grid transition-[grid-template-rows] duration-300 ease-in-out",
+						hide_title_row ? "grid-rows-[0fr]" : "grid-rows-[1fr]",
 					)}
 				>
-					<HomeLink className="text-2xl font-bold">
-						Jamarski klub Novo mesto
-					</HomeLink>
-					<MobileSheet editor_controls={editor_controls} />
+					<div className="overflow-hidden">
+						<div
+							className={cn(
+								"flex items-center justify-between px-6 py-4 transition-colors",
+								!is_top &&
+									"bg-white/90 backdrop-blur-sm supports-backdrop-filter:bg-background/60",
+							)}
+						>
+							<HomeLink className="text-xl font-bold min-[450px]:text-2xl">
+								Jamarski klub Novo mesto
+							</HomeLink>
+							<MobileSheet editor_controls={editor_controls} />
+						</div>
+					</div>
 				</div>
 				{has_toc && <MobileTocPopover is_top={is_top} />}
 			</div>
@@ -166,7 +180,7 @@ export function MobileSheet({
 			}}
 		>
 			<SheetTrigger asChild>
-				<Button variant="outline" size="icon">
+				<Button variant="outline" size="icon" className="shrink-0">
 					<MenuIcon />
 					<span className="sr-only">Meni</span>
 				</Button>

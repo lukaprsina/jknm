@@ -58,11 +58,9 @@ export default async function RootLayout({
 						"font-sans antialiased",
 						open_sans.variable,
 						GeistMono.variable,
+						"scrollbar-gutter-stable",
 					)}
-					// style={{scrollbarGutter: "stable"}}
 				>
-					{/* <TRPCReactProvider> */}
-					{/* <HydrateClient> */}
 					<Providers all_authors={all_authors}>
 						<TooltipProvider>
 							{children}
@@ -70,8 +68,6 @@ export default async function RootLayout({
 							<SpeedInsights />
 						</TooltipProvider>
 					</Providers>
-					{/* </HydrateClient> */}
-					{/* </TRPCReactProvider> */}
 				</body>
 			</html>
 		</StrictMode>

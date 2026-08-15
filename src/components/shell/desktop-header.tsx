@@ -140,6 +140,11 @@ export function DesktopHeader({
 				)}
 			>
 				{/* <LinksMenu /> */}
+				{is_header_sticky && (
+					<HomeLink className="absolute left-6 z-60 flex items-center md:left-12">
+						<Logo className="h-8 w-auto" />
+					</HomeLink>
+				)}
 				<Navigation sections={nav_sections} />
 			</div>
 		</>

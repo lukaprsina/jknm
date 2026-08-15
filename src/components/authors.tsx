@@ -26,7 +26,8 @@ export function Authors({
 				// span className="flex-shrink-0"
 				<Fragment key={author.id}>
 					{format(author)}
-					{index !== authors.length - 1 && ",\u00A0"}
+					{index !== authors.length - 1 &&
+						(format === format_author_name ? ",\u00A0" : ";\u00A0")}
 				</Fragment>
 			))}
 		</>
