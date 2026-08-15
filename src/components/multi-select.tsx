@@ -113,6 +113,12 @@ export interface MultiSelectProps
 	hideClearButton?: boolean;
 
 	/**
+	 * Hides the "(Select All)" option in the popover.
+	 * Optional, defaults to false.
+	 */
+	hideSelectAll?: boolean;
+
+	/**
 	 * Additional class names to apply custom styles to the multi-select component.
 	 * Optional, can be used to add custom styles.
 	 */
@@ -134,6 +140,7 @@ export const MultiSelect = React.forwardRef<
 			maxCount = 3,
 			modalPopover = false,
 			hideClearButton = false,
+			hideSelectAll = false,
 			className,
 			...props
 		},
@@ -295,29 +302,31 @@ export const MultiSelect = React.forwardRef<
 				>
 					<Command>
 						<CommandInput
-							placeholder="Search..."
+							placeholder="Išči..."
 							onKeyDown={handleInputKeyDown}
 						/>
 						<CommandList>
-							<CommandEmpty>No results found.</CommandEmpty>
+							<CommandEmpty>Ni najdenih rezultatov.</CommandEmpty>
 							<CommandGroup>
-								<CommandItem
-									key="all"
-									onSelect={toggleAll}
-									className="cursor-pointer"
-								>
-									<div
-										className={cn(
-											"mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-											selectedValues.length === options.length
-												? "bg-primary text-primary-foreground"
-												: "opacity-50 [&_svg]:invisible",
-										)}
+								{!hideSelectAll && (
+									<CommandItem
+										key="all"
+										onSelect={toggleAll}
+										className="cursor-pointer"
 									>
-										<CheckIcon className="h-4 w-4" />
-									</div>
-									<span>(Select All)</span>
-								</CommandItem>
+										<div
+											className={cn(
+												"mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+												selectedValues.length === options.length
+													? "bg-primary text-primary-foreground"
+													: "opacity-50 [&_svg]:invisible",
+											)}
+										>
+											<CheckIcon className="h-4 w-4" />
+										</div>
+										<span>(Izberi vse)</span>
+									</CommandItem>
+								)}
 								{options.map((option) => {
 									const isSelected = selectedValues.includes(option.value);
 									return (
@@ -353,7 +362,7 @@ export const MultiSelect = React.forwardRef<
 												onSelect={handleClear}
 												className="flex-1 cursor-pointer justify-center"
 											>
-												Clear
+												Počisti
 											</CommandItem>
 											<Separator
 												orientation="vertical"
@@ -365,7 +374,7 @@ export const MultiSelect = React.forwardRef<
 										onSelect={() => setIsPopoverOpen(false)}
 										className="max-w-full flex-1 cursor-pointer justify-center"
 									>
-										Close
+										Zapri
 									</CommandItem>
 								</div>
 							</CommandGroup>

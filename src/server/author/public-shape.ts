@@ -1,5 +1,3 @@
-import type { Author } from "../db/schema";
-
 /**
  * The only author fields any client component is allowed to read. Everything
  * else on an `Author` row (`google_id`, `email`, `image`, `user_id`) is
@@ -25,15 +23,3 @@ export const PUBLIC_AUTHOR_COLUMNS = {
 	first_name: true,
 	last_name: true,
 } as const;
-
-type AuthorRow = typeof Author.$inferSelect;
-
-/** Strip an `Author` row down to `PublicAuthor` before it reaches a client boundary. */
-export function to_public_author(author: AuthorRow): PublicAuthor {
-	return {
-		id: author.id,
-		author_type: author.author_type,
-		first_name: author.first_name,
-		last_name: author.last_name,
-	};
-}

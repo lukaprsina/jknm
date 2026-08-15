@@ -4,12 +4,12 @@
 [submodule "vendor/better-auth"]
 	path = vendor/better-auth
 	url = https://github.com/better-auth/better-auth
-[submodule "vendor/orpc"]
-	path = vendor/orpc
-	url = https://github.com/middleapi/orpc
-[submodule "vendor/radix-ui-primitives"]
-	path = vendor/radix-ui-primitives
-	url = https://github.com/radix-ui/primitives
 [submodule "vendor/editorjs"]
 	path = vendor/editorjs
 	url = https://github.com/codex-team/editor.js
+[submodule "vendor/orama"]
+	path = vendor/orama
+	url = https://github.com/oramasearch/orama
+[submodule "vendor/orama-docs"]
+	path = vendor/orama-docs
+	url = https://github.com/oramasearch/docs

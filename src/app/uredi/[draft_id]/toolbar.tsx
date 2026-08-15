@@ -51,6 +51,7 @@ export function MyToolbar() {
 						placeholder="Avtorji"
 						animation={2}
 						maxCount={3}
+						hideSelectAll
 					/>
 					<span className="flex flex-shrink-0">
 						{editor_context.savingText}

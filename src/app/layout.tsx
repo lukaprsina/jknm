@@ -11,7 +11,6 @@ import { TooltipProvider } from "~/components/ui/tooltip";
 import { SITE_ORIGIN } from "~/lib/site-config";
 import { cn } from "~/lib/utils";
 import { cachedAllAuthors } from "~/server/cached-global-state";
-import { to_public_author } from "~/server/author/public-shape";
 import Providers from "./provider";
 
 export const metadata: Metadata = {
@@ -43,7 +42,7 @@ const open_sans = Open_Sans({
 export default async function RootLayout({
 	children,
 }: Readonly<{ children: React.ReactNode }>) {
-	const all_authors = (await cachedAllAuthors()).map(to_public_author);
+	const all_authors = await cachedAllAuthors();
 
 	return (
 		<StrictMode>

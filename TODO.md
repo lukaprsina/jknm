@@ -1,6 +1,6 @@
 # TODO
 
-- the author json is getting leaked to the client
+- multiselect translate "Search", remove "Select all"
 
 ## later
 

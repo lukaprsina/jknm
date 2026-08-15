@@ -155,6 +155,7 @@ export function AuthorRefinement(
 		<MultiSelect
 			className="min-w-40 flex-1 lg:w-55 lg:flex-none"
 			hideClearButton
+			hideSelectAll
 			options={options}
 			defaultValue={selected_values}
 			placeholder="Vsi avtorji"
