@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element -- ReactCrop clones a raw <img> ref; biome enforces the same rule. */
 
 import Image from "next/image";
 import type React from "react";

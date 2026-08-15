@@ -26,6 +26,7 @@ function ButtonGroup({
 	...props
 }: React.ComponentProps<"div"> & VariantProps<typeof buttonGroupVariants>) {
 	return (
+		// biome-ignore lint/a11y/useSemanticElements: toolbar-like group of controls; fieldset would impose an unnecessary legend.
 		<div
 			role="group"
 			data-slot="button-group"
