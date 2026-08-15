@@ -115,7 +115,10 @@ export function PublishedArticlePage({
 	const new_view = map_new_article_to_published_view(article, slug);
 
 	return (
-		<Shell published_article={new_view}>
+		// Every article has an H1, so `EditorToReact` always renders a
+		// non-empty TOC here -- see `TocAwareLayout`'s `known_has_toc` doc for
+		// why the layout needs to know this before first paint.
+		<Shell published_article={new_view} has_toc>
 			<ScrollProvider>
 				<script
 					type="application/ld+json"
