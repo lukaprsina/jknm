@@ -11,6 +11,10 @@ export function TocAwareLayout({ children }: { children: React.ReactNode }) {
 
 	return (
 		<div className="flex w-full flex-1 justify-center gap-8">
+			<div
+				className={cn("hidden w-75 shrink-0", has_toc && "md:block")}
+				aria-hidden
+			/>
 			<main id="shell-main" className="min-w-0 flex-1">
 				{children}
 			</main>

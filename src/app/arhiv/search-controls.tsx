@@ -18,31 +18,35 @@ export function SearchControls({
 }) {
 	return (
 		<div className="flex flex-col gap-4">
-			<div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-				<div className="flex items-center gap-2">
+			<div className="flex flex-col gap-2 lg:flex-row lg:items-center">
+				<div className="flex items-center gap-2 lg:flex-3">
 					<MySearchBox2 />
 				</div>
-				<div className="flex items-center gap-2">
-					<AuthorRefinement />
-					{activeTab === "card" && <MySortBy />}
-					<ButtonGroup>
-						<Button
-							variant={activeTab === "card" ? "default" : "outline"}
-							size="icon"
-							aria-label="Prikaz kartic"
-							onClick={() => onTabChange("card")}
-						>
-							<LayoutDashboard />
-						</Button>
-						<Button
-							variant={activeTab === "table" ? "default" : "outline"}
-							size="icon"
-							aria-label="Prikaz tabele"
-							onClick={() => onTabChange("table")}
-						>
-							<TableIcon />
-						</Button>
-					</ButtonGroup>
+				<div className="flex flex-col gap-2 min-[500px]:flex-row min-[500px]:items-center">
+					<div className="flex flex-1 items-center gap-2">
+						<AuthorRefinement />
+					</div>
+					<div className="flex items-center gap-2">
+						{activeTab === "card" && <MySortBy />}
+						<ButtonGroup>
+							<Button
+								variant={activeTab === "card" ? "default" : "outline"}
+								size="icon"
+								aria-label="Prikaz kartic"
+								onClick={() => onTabChange("card")}
+							>
+								<LayoutDashboard />
+							</Button>
+							<Button
+								variant={activeTab === "table" ? "default" : "outline"}
+								size="icon"
+								aria-label="Prikaz tabele"
+								onClick={() => onTabChange("table")}
+							>
+								<TableIcon />
+							</Button>
+						</ButtonGroup>
+					</div>
 				</div>
 			</div>
 			<div className="flex w-full items-center justify-between gap-4">

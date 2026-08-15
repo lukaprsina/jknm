@@ -56,7 +56,7 @@ export function MySortBy() {
 
 	return (
 		<Select onValueChange={(value) => refine(value)} value={currentRefinement}>
-			<SelectTrigger className="w-auto">
+			<SelectTrigger className="flex-1 min-[500px]:w-40 min-[500px]:flex-none">
 				<SelectValue placeholder="Razvrsti po ..." />
 			</SelectTrigger>
 			<SelectContent>
@@ -149,7 +149,7 @@ export function AuthorRefinement(
 
 	return (
 		<MultiSelect
-			className="min-w-0 flex-1 sm:w-55 sm:flex-none"
+			className="min-w-40 flex-1 lg:w-55 lg:flex-none"
 			hideClearButton
 			options={options}
 			defaultValue={selected_values}
@@ -186,7 +186,7 @@ export function TimelineRefinement(
 	);
 
 	return (
-		<ol className="scroll-fade-x flex flex-1 items-end gap-x-1 gap-y-2 overflow-x-auto pb-2 pl-1">
+		<ol className="scroll-fade-x flex flex-1 items-end gap-x-2 gap-y-2 overflow-x-auto pb-2 pl-1">
 			{refinement_list.items.map((item) => (
 				<TimelineItem
 					onClick={() => {
@@ -227,7 +227,7 @@ export function TimelineItem({
 				type="button"
 				title={`${item.value}: ${item.count} novic`}
 				className={cn(
-					"w-3 rounded-t-lg bg-muted-foreground/40 transition-colors hover:bg-muted-foreground/70",
+					"w-3 rounded-t-lg bg-blue-800/40 transition-colors hover:bg-blue-800/70",
 					item.isRefined && "bg-primary hover:bg-primary",
 				)}
 				style={{ height: bar_height }}
@@ -259,11 +259,10 @@ export function ActiveFilterChips() {
 	const selected_authors = author_refinement.items.filter(
 		(item) => item.isRefined,
 	);
-
-	if (!has_query && !clear_refinements.canRefine) return null;
+	const has_active_filters = has_query || clear_refinements.canRefine;
 
 	return (
-		<div className="flex flex-wrap items-center gap-2">
+		<div className="flex min-h-6.5 flex-wrap items-center gap-2">
 			{has_query && (
 				<Badge
 					variant="secondary"
@@ -290,18 +289,20 @@ export function ActiveFilterChips() {
 					<XIcon className="size-3.5" />
 				</Badge>
 			))}
-			<Badge
-				variant="outline"
-				className="cursor-pointer gap-1 text-sm"
-				onClick={() => {
-					clear_refinements.refine();
-					clear_search();
-					sort_refine(DEFAULT_REFINEMENT);
-				}}
-			>
-				Počisti vse
-				<XIcon className="size-3.5" />
-			</Badge>
+			{has_active_filters && (
+				<Badge
+					variant="outline"
+					className="cursor-pointer gap-1 text-sm"
+					onClick={() => {
+						clear_refinements.refine();
+						clear_search();
+						sort_refine(DEFAULT_REFINEMENT);
+					}}
+				>
+					Počisti vse
+					<XIcon className="size-3.5" />
+				</Badge>
+			)}
 		</div>
 	);
 }

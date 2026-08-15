@@ -42,7 +42,10 @@ export function ArticleTable({
 	});
 
 	const { load_more_ref, items } = useInfiniteAlgoliaArticles({
-		offset: 20,
+		// Must stay well under Algolia's hitsPerPage (default 20): an offset
+		// that reaches or exceeds the page size clamps the sentinel to row 0
+		// on the first page instead of a row near the bottom.
+		offset: 5,
 		...props,
 	});
 
