@@ -21,21 +21,12 @@ import {
 	is_supersede_publish,
 } from "./lifecycle-rules";
 import { reconcile_media_to_articles } from "./reconcile-media";
-import { find_available_slug } from "./slug";
+import { assign_primary_slug } from "./slug";
 import type {
 	create_article_validator,
 	publish_article_validator,
 	save_article_validator,
 } from "./validators";
-
-/**
- * Generate a slug for a newly-titled article, deriving the base from the
- * title and delegating collision-suffixing to `find_available_slug`. Runs
- * inside the publish transaction to avoid a race.
- */
-async function generate_unique_article_slug(tx: DbTransaction, title: string) {
-	return find_available_slug(tx, convert_title_to_url(title));
-}
 
 async function resolve_first_publish_slug(
 	tx: DbTransaction,
@@ -50,13 +41,7 @@ async function resolve_first_publish_slug(
 	});
 	if (existing_primary) return existing_primary;
 
-	const slug = await generate_unique_article_slug(tx, title);
-	const inserted = await tx
-		.insert(ArticleSlug)
-		.values({ slug, article_id, is_primary: true })
-		.returning();
-	assert_one(inserted);
-	return inserted[0];
+	return assign_primary_slug(tx, article_id, convert_title_to_url(title));
 }
 
 /**
@@ -143,13 +128,11 @@ async function resolve_supersede_publish_slug(
 				.where(eq(ArticleSlug.id, decision.demote_slug_id));
 		}
 
-		const slug = await generate_unique_article_slug(tx, new_title);
-		const inserted = await tx
-			.insert(ArticleSlug)
-			.values({ slug, article_id, is_primary: true })
-			.returning();
-		assert_one(inserted);
-		primary = inserted[0];
+		primary = await assign_primary_slug(
+			tx,
+			article_id,
+			convert_title_to_url(new_title),
+		);
 	}
 
 	// Any other slug the superseded article picked up over its history (from
@@ -358,8 +341,7 @@ async function resolve_retitle_slug(
 			.where(eq(ArticleSlug.id, decision.demote_slug_id));
 	}
 
-	const slug = await generate_unique_article_slug(tx, new_title);
-	await tx.insert(ArticleSlug).values({ slug, article_id, is_primary: true });
+	await assign_primary_slug(tx, article_id, convert_title_to_url(new_title));
 }
 
 /**

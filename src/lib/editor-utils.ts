@@ -1,7 +1,7 @@
 import type { OutputData } from "@editorjs/editorjs";
-import sanitizeHtml from "sanitize-html";
 import { convert_title_to_url } from "./article-utils";
 import { MEDIA_PUBLIC_DOMAIN } from "./media-upload";
+import { strip_html_to_text } from "./sanitize-html";
 import { TOC_HEADING_LEVELS, type TocEntry } from "./toc";
 
 interface HeadingReturnType {
@@ -20,7 +20,7 @@ export function get_heading_from_editor(
 			level: number;
 		};
 
-		const title = first_header.text.trim();
+		const title = strip_html_to_text(first_header.text);
 		if (first_header.level === 1) {
 			return { title };
 		} else {
@@ -156,7 +156,7 @@ export function extract_headings_from_content(
 		const data = block.data as { text: string; level: number };
 		if (!levels.includes(data.level)) return;
 
-		const title = sanitizeHtml(data.text, { allowedTags: [] }).trim();
+		const title = strip_html_to_text(data.text);
 		if (!title) return;
 
 		let id = convert_title_to_url(title, () => `section-${block_index}`);

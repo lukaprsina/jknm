@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import sanitizeHtml from "sanitize-html";
 import { PublishedContent } from "~/components/content";
 import { ImageGallery } from "~/components/image-gallery";
 import { Shell } from "~/components/shell";
@@ -8,6 +7,7 @@ import ScrollToTop from "~/components/shell/scroll-to-top";
 import { ScrollProvider } from "~/contexts/scroll-context";
 import { format_author_name } from "~/lib/author-name";
 import type { ContentPageSlug } from "~/lib/content-pages";
+import { strip_html_to_text } from "~/lib/sanitize-html";
 import { SITE_ORIGIN } from "~/lib/site-config";
 import { get_new_article_by_slug } from "~/server/article/get-article";
 import { is_visible_to } from "~/server/article/lifecycle-rules";
@@ -46,7 +46,7 @@ export function build_published_article_metadata(
 	article: NewArticleWithRelations,
 	slug: string,
 ): Metadata {
-	const title = sanitizeHtml(article.title, { allowedTags: [] });
+	const title = strip_html_to_text(article.title);
 
 	return {
 		title,
@@ -88,7 +88,7 @@ function build_article_json_ld(article: NewArticleWithRelations, slug: string) {
 	const json_ld = {
 		"@context": "https://schema.org",
 		"@type": "Article",
-		headline: sanitizeHtml(article.title, { allowedTags: [] }),
+		headline: strip_html_to_text(article.title),
 		datePublished: (article.published_at ?? article.created_at).toISOString(),
 		dateModified: article.updated_at.toISOString(),
 		url: `${SITE_ORIGIN}${resolve_canonical_article_path(article, slug)}`,

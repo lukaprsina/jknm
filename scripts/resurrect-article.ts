@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
 import { convert_title_to_url } from "~/lib/article-utils";
-import { find_available_slug } from "~/server/article/slug";
+import { assign_primary_slug } from "~/server/article/slug";
 import { db } from "~/server/db";
-import { Article, ArticleSlug } from "~/server/db/schema";
+import { Article } from "~/server/db/schema";
 
 /**
  * One-off: undoes an accidental soft-delete of a legacy-migrated article that
@@ -40,16 +40,14 @@ async function main() {
 			})
 			.where(eq(Article.id, article.id));
 
-		const slug = await find_available_slug(
+		const primary = await assign_primary_slug(
 			tx,
+			article.id,
 			convert_title_to_url(article.title),
 		);
-		await tx
-			.insert(ArticleSlug)
-			.values({ slug, article_id: article.id, is_primary: true });
 
 		console.log(
-			`Restored article ${article.id} "${article.title}" -> /novica/${slug}`,
+			`Restored article ${article.id} "${article.title}" -> /novica/${primary.slug}`,
 		);
 	});
 }

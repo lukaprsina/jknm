@@ -1,6 +1,5 @@
 import type { OutputBlockData } from "@editorjs/editorjs";
-import { decode } from "html-entities";
-import sanitizeHtml from "sanitize-html";
+import { strip_html_to_text } from "./sanitize-html";
 
 const ALLOWED_BLOCKS = ["paragraph", "list", "quote"];
 
@@ -15,15 +14,6 @@ export function convert_content_to_text(
 		: blocks;
 
 	return filtered_blocks
-		.map((block) => {
-			const paragraph_data = block.data as { text: string };
-
-			const clean = sanitizeHtml(paragraph_data.text, {
-				allowedTags: [],
-			});
-
-			return decode(clean);
-		})
-		.filter((text) => typeof text !== "undefined")
+		.map((block) => strip_html_to_text((block.data as { text: string }).text))
 		.join("\n");
 }

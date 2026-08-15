@@ -2,7 +2,6 @@ import type { Metadata, ResolvingMetadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
-import sanitizeHtml from "sanitize-html";
 import { CreateSupersedingDraftButton } from "~/components/article/create-superseding-draft-button";
 import MakeNewDraftButton from "~/components/article/make-new-draft-button";
 import {
@@ -15,6 +14,7 @@ import { Shell } from "~/components/shell";
 import { buttonVariants } from "~/components/ui/button";
 import { CardContent, CardFooter } from "~/components/ui/card";
 import { article_variants, page_variants } from "~/lib/page-variants";
+import { strip_html_to_text } from "~/lib/sanitize-html";
 import { cn } from "~/lib/utils";
 import { get_article_by_new_id } from "~/server/article/get-article";
 import { getServerAuthSession } from "~/server/auth";
@@ -53,9 +53,7 @@ export async function generateMetadata(
 	}
 
 	const title = article_title
-		? sanitizeHtml(article_title, {
-				allowedTags: [],
-			})
+		? strip_html_to_text(article_title)
 		: "Uredi novico";
 
 	return {

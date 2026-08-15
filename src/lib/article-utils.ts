@@ -1,7 +1,7 @@
 import sanitize_filename from "sanitize-filename";
-import sanitizeHtml from "sanitize-html";
 import { v4 as uuid4 } from "uuid";
 import { format_date_for_url } from "./format-date";
+import { strip_html_to_text } from "./sanitize-html";
 
 // This module is imported from client components too (e.g. editing-buttons.tsx),
 // so it can't pull in Node's `path` module -- a plain string split is all
@@ -18,11 +18,9 @@ export function convert_title_to_url(
 	dangerous_url: string,
 	fallback: () => string = uuid4,
 ) {
-	const clean = sanitizeHtml(dangerous_url, {
-		allowedTags: [],
+	const sanitized = sanitize_filename(strip_html_to_text(dangerous_url), {
+		replacement: "",
 	});
-
-	const sanitized = sanitize_filename(clean, { replacement: "" });
 	const replaced = sanitized
 		.toLowerCase()
 		.replace(/–/g, "-")
