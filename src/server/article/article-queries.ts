@@ -10,6 +10,7 @@ import {
 	type SQL,
 } from "drizzle-orm";
 import { withCursorPagination } from "~/lib/drizzle-pagination";
+import { PUBLIC_AUTHOR_COLUMNS } from "../author/public-shape";
 import type { DbTransaction, db } from "../db";
 import { Article, ArticlesToAuthors } from "../db/schema";
 
@@ -20,10 +21,18 @@ import { Article, ArticlesToAuthors } from "../db/schema";
  */
 export const EXCLUDE_CONTENT_KIND = ne(Article.article_kind, "content");
 
-/** Authors (ordered), slugs, and thumbnail media — the relations every article list/detail read path needs. */
+/**
+ * Authors (ordered), slugs, and thumbnail media — the relations every article
+ * list/detail read path needs. The author relation is column-narrowed to
+ * `PublicAuthor`'s fields: the full row carries `email`/`google_id`/`image`/
+ * `user_id`, which must never cross a Server→Client boundary (homepage feed,
+ * article pages), so the DB never returns them here.
+ */
 const ARTICLE_LIST_RELATIONS = {
 	articles_to_authors: {
-		with: { author: true },
+		with: {
+			author: { columns: PUBLIC_AUTHOR_COLUMNS },
+		},
 		orderBy: asc(ArticlesToAuthors.order),
 	},
 	article_slugs: true,

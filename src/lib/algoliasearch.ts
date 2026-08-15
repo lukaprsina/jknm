@@ -1,11 +1,11 @@
 import { env } from "~/env";
 import { format_author_name, format_author_sort_name } from "~/lib/author-name";
 import { convert_content_to_text } from "~/lib/content-to-text";
+import type { PublicAuthor } from "~/server/author/public-shape";
 import type { PublishedArticleHit } from "~/lib/validators";
 import type {
 	ArticleContentType,
 	ArticleKind,
-	Author,
 	Media,
 } from "~/server/db/schema";
 
@@ -36,7 +36,7 @@ export function convert_new_article_to_algolia_object({
 	slug: string;
 	authors: {
 		author_id: number;
-		author: typeof Author.$inferSelect;
+		author: PublicAuthor;
 	}[];
 	thumbnail_media: typeof Media.$inferSelect | null;
 }) {

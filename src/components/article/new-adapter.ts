@@ -1,12 +1,12 @@
 import type { ThumbnailType } from "~/lib/validators";
 import { find_primary_slug_or_first } from "~/server/article/lifecycle-rules";
+import type { PublicAuthor } from "~/server/author/public-shape";
 import type {
 	Article,
 	ArticleContentType,
 	ArticleKind,
 	ArticleSlug,
 	ArticlesToAuthors,
-	Author,
 	Media,
 } from "~/server/db/schema";
 
@@ -18,7 +18,7 @@ import type {
  */
 export type NewArticleWithRelations = typeof Article.$inferSelect & {
 	articles_to_authors: (typeof ArticlesToAuthors.$inferSelect & {
-		author: typeof Author.$inferSelect;
+		author: PublicAuthor;
 	})[];
 	article_slugs: (typeof ArticleSlug.$inferSelect)[];
 	thumbnail_media: typeof Media.$inferSelect | null;
@@ -38,7 +38,7 @@ export interface EditorDraftArticle {
 	draft_articles_to_authors: {
 		author_id: number;
 		order: number;
-		author: typeof Author.$inferSelect;
+		author: PublicAuthor;
 	}[];
 }
 
@@ -57,7 +57,7 @@ export interface PublishedArticleView {
 	published_articles_to_authors: {
 		author_id: number;
 		order: number;
-		author: typeof Author.$inferSelect;
+		author: PublicAuthor;
 	}[];
 }
 

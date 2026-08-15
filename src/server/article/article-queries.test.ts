@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { Article } from "../db/schema";
+import { Article, ArticlesToAuthors, Author } from "../db/schema";
 import { create_test_db } from "../db/test-helpers";
 import {
 	find_articles_for_verification,
@@ -107,6 +107,49 @@ describe("find_published_articles_page", () => {
 		});
 
 		expect(next_page.map((a) => a.title)).toEqual(["Page 3"]);
+	});
+
+	test("returns authors stripped of identity fields (email, google_id, image, user_id)", async () => {
+		const db = await create_test_db();
+
+		await db.insert(Author).values([
+			{
+				id: 1,
+				author_type: "member",
+				first_name: "Ana",
+				last_name: "Novak",
+				google_id: "g1",
+				email: "ana@jknm.si",
+				image: "https://example.com/ana.jpg",
+				user_id: null,
+			},
+		]);
+
+		const [article] = await db
+			.insert(Article)
+			.values([
+				make_article({
+					title: "With author",
+					status: "published",
+					published_at: new Date("2026-02-01"),
+				}),
+			])
+			.returning();
+
+		if (!article) throw new Error("no article returned");
+
+		await db.insert(ArticlesToAuthors).values([
+			{ article_id: article.id, author_id: 1, order: 0 },
+		]);
+
+		const page = await find_published_articles_page(db, { limit: 10 });
+
+		expect(page[0]?.articles_to_authors[0]?.author).toEqual({
+			id: 1,
+			author_type: "member",
+			first_name: "Ana",
+			last_name: "Novak",
+		});
 	});
 });
 

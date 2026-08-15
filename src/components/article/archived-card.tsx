@@ -6,11 +6,11 @@ import {
 	CardHeader,
 } from "~/components/ui/card";
 import { format_date_for_human } from "~/lib/format-date";
+import type { PublicAuthor } from "~/server/author/public-shape";
 import type {
 	Article,
 	ArticleSlug,
 	ArticlesToAuthors,
-	Author,
 	Media,
 } from "~/server/db/schema";
 import { CreateSupersedingDraftButton } from "./create-superseding-draft-button";
@@ -19,7 +19,7 @@ import { get_primary_slug } from "./new-adapter";
 
 type ArchivedArticleRow = typeof Article.$inferSelect & {
 	articles_to_authors: (typeof ArticlesToAuthors.$inferSelect & {
-		author: typeof Author.$inferSelect;
+		author: PublicAuthor;
 	})[];
 	article_slugs: (typeof ArticleSlug.$inferSelect)[];
 	thumbnail_media: typeof Media.$inferSelect | null;

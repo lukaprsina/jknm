@@ -9,7 +9,7 @@ import {
 	QueryClientProvider,
 } from "@tanstack/react-query";
 import { createContext } from "react";
-import type { Author } from "~/server/db/schema";
+import type { PublicAuthor } from "~/server/author/public-shape";
 
 function makeQueryClient() {
 	return new QueryClient({
@@ -45,15 +45,13 @@ function getQueryClient() {
 	}
 }
 
-export const AllAuthorsContext = createContext<(typeof Author.$inferSelect)[]>(
-	[],
-);
+export const AllAuthorsContext = createContext<PublicAuthor[]>([]);
 
 export default function Providers({
 	all_authors,
 	children,
 }: {
-	all_authors: (typeof Author.$inferSelect)[];
+	all_authors: PublicAuthor[];
 	children: React.ReactNode;
 }) {
 	// NOTE: Avoid useState when initializing the query client if you don't

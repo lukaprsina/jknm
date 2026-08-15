@@ -10,6 +10,7 @@ import {
 import type { CacheTag } from "~/lib/cache-policy";
 import { article_grid_variants, article_variants } from "~/lib/page-variants";
 import { revive_cache_dates } from "~/lib/revive-cache-dates";
+import { PUBLIC_AUTHOR_COLUMNS } from "~/server/author/public-shape";
 import { db } from "~/server/db";
 import { Article } from "~/server/db/schema";
 
@@ -18,7 +19,9 @@ export const cachedArchived = unstable_cache(
 		return db.query.Article.findMany({
 			where: eq(Article.status, "archived"),
 			with: {
-				articles_to_authors: { with: { author: true } },
+				articles_to_authors: {
+					with: { author: { columns: PUBLIC_AUTHOR_COLUMNS } },
+				},
 				article_slugs: true,
 				thumbnail_media: true,
 			},
