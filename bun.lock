@@ -66,6 +66,9 @@
         "@tanstack/react-table": "^9.1.2",
         "@types/node-dir": "^0.0.37",
         "@vercel/speed-insights": "^2.0.0",
+        "@zbsearch/plugin-data-persistence": "4.0.0",
+        "@zbsearch/plugin-qps": "4.0.0",
+        "@zbsearch/stemmers": "4.0.0",
         "algoliasearch": "^5.55.1",
         "b2-js": "^1.2.4",
         "babel-plugin-react-compiler": "^1.0.0",
@@ -132,6 +135,7 @@
         "usehooks-ts": "^3.1.0",
         "uuid": "^14.0.1",
         "vaul": "^1.1.2",
+        "zbsearch": "4.0.0",
         "zod": "^4.4.3",
         "zustand": "^5.0.15",
       },
@@ -175,6 +179,7 @@
   "overrides": {
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
+    "zbsearch": "4.0.0",
   },
   "packages": {
     "@algolia/abtesting": ["@algolia/abtesting@1.22.0", "", { "dependencies": { "@algolia/client-common": "5.56.0", "@algolia/requester-browser-xhr": "5.56.0", "@algolia/requester-fetch": "5.56.0", "@algolia/requester-node-http": "5.56.0" } }, "sha512-BFR6zNowNKcY7Ou7TaJc9QWexES4YKPbmf/OTFofpdsdhz4x6q0lbxp3duO0EHnyrN7rE4ba/TSXuY+BDGu4+g=="],
@@ -1002,6 +1007,12 @@
     "@vitest/utils": ["@vitest/utils@4.1.10", "", { "dependencies": { "@vitest/pretty-format": "4.1.10", "convert-source-map": "^2.0.0", "tinyrainbow": "^3.1.0" } }, "sha512-fy9am/HWxbaGt/Sawrp90vt6Y6jQwf1RX77cz3uwoJwJVMli/e1IEwRPnMNJ7vKfPTwo0diXifkpPvwH9v7nGA=="],
 
     "@wojtekmaj/date-utils": ["@wojtekmaj/date-utils@2.0.2", "", {}, "sha512-Do66mSlSNifFFuo3l9gNKfRMSFi26CRuQMsDJuuKO/ekrDWuTTtE4ZQxoFCUOG+NgxnpSeBq/k5TY8ZseEzLpA=="],
+
+    "@zbsearch/plugin-data-persistence": ["@zbsearch/plugin-data-persistence@4.0.0", "", { "dependencies": { "@msgpack/msgpack": "^3.1.2", "dpack": "^0.6.22", "seqproto": "^0.2.3", "zbsearch": "workspace:*" } }, "sha512-JPIqEdjYGWmxTfFwKps0WrPXY1Kagss7ze9wKrKBmMsKZPHjR3MM9mAWC2nZPO66BaqtDMvsnOm8IIHfIFX27g=="],
+
+    "@zbsearch/plugin-qps": ["@zbsearch/plugin-qps@4.0.0", "", { "dependencies": { "zbsearch": "workspace:*" } }, "sha512-m+0FnjUp4ZJ362fcap2IpTecwU9Rsv+tuWtYV7AZyIOLEg0I8hbzYXS6mEzRRo1VOIsa8huDWI4WdYAwQrBFhA=="],
+
+    "@zbsearch/stemmers": ["@zbsearch/stemmers@4.0.0", "", {}, "sha512-1xza7thC3mCegX4R/uE/C/8kpXf+8dPMYG26cgxcyuBTJjNw8Jk7VrSAVZ4+0ic6C2eA16HMaafdLxAH5spfEA=="],
 
     "abbrev": ["abbrev@1.1.1", "", {}, "sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q=="],
 
@@ -2358,6 +2369,8 @@
     "yocto-spinner": ["yocto-spinner@1.2.2", "", { "dependencies": { "yoctocolors": "^2.1.1" } }, "sha512-DODGl1wJjA/s5pnJFKau9lIYHT81lnhob1i3e1TjxZRxEhWRKl74nTbWE6H5KlkViQQTo/Z29YFdxzTZAMY3ng=="],
 
     "yoctocolors": ["yoctocolors@2.2.0", "", {}, "sha512-xYqdZFUK/VYazNl/oCDYN+3WloWQwMfZxBoiNt6qNyk+xfOdi598muWE42rNZFp1kNOiqW936q5RhUdnpqElSg=="],
+
+    "zbsearch": ["zbsearch@4.0.0", "", {}, "sha512-gm4zfO31n2ZdruTTRQoWVWO4Q2+zrDt2GlrvIc+5JulRQNAm4IanCxER82vQ7Ug96FYkGqWUJBXFe1kGAcDWaQ=="],
 
     "zod": ["zod@4.4.3", "", {}, "sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ=="],
 

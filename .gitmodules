@@ -7,9 +7,9 @@
 [submodule "vendor/editorjs"]
 	path = vendor/editorjs
 	url = https://github.com/codex-team/editor.js
-[submodule "vendor/orama"]
-	path = vendor/orama
-	url = https://github.com/oramasearch/orama
 [submodule "vendor/orama-docs"]
 	path = vendor/orama-docs
 	url = https://github.com/oramasearch/docs
+[submodule "vendor/zbsearch"]
+	path = vendor/zbsearch
+	url = https://github.com/micheleriva/zbsearch
