@@ -2,11 +2,10 @@
 
 import { use, useContext, useMemo } from "react";
 import { AllAuthorsContext } from "~/app/provider";
-
+import type { AuthorOption } from "~/components/author-command-popover";
+import { AuthorCommandPopover } from "~/components/author-command-popover";
 import { EditorContext } from "~/components/editor/editor-context";
 import { editor_store, useAuthorIds } from "~/components/editor/editor-store";
-import type { MultiSelectProps } from "~/components/multi-select";
-import { MultiSelect } from "~/components/multi-select";
 import { format_author_name } from "~/lib/author-name";
 import { ToolbarButtons } from "./toolbar-buttons";
 
@@ -15,43 +14,39 @@ export function MyToolbar() {
 	const all_authors = use(AllAuthorsContext);
 	const author_ids = useAuthorIds();
 
-	const selected_author_ids = useMemo(() => {
-		// console.log("toolbar -> author_ids", author_ids, typeof author_ids);
-		return author_ids.map((id) => id.toString());
-	}, [author_ids]);
+	const selected_values = useMemo(
+		() => author_ids.map((id) => id.toString()),
+		[author_ids],
+	);
 
-	const authors = useMemo(() => {
-		return all_authors
-			.map(
-				(user) =>
-					({
-						label: format_author_name(user),
-						value: user.id.toString(),
-						icon: undefined,
-					}) satisfies MultiSelectProps["options"]["0"],
-			)
-			.filter((mapped_user) => {
-				return mapped_user.label && mapped_user.value;
-			});
-	}, [all_authors]);
+	const options: AuthorOption[] = useMemo(
+		() =>
+			all_authors.map((author) => ({
+				value: author.id.toString(),
+				author,
+				label: format_author_name(author),
+			})),
+		[all_authors],
+	);
 
 	if (!editor_context) return null;
 	return (
 		<div className="flex flex-col justify-between gap-4">
 			<div className="flex w-full flex-wrap items-center justify-between p-4">
 				<div className="flex items-center gap-2">
-					<MultiSelect
-						onValueChange={(value) => {
-							const ids = value.map((v) => parseInt(v, 10));
-							// console.log("toolbar -> onValueChange", ids);
-							editor_store.setState({ author_ids: ids });
+					<AuthorCommandPopover
+						className="w-auto"
+						options={options}
+						selectedValues={selected_values}
+						onToggle={(value) => {
+							const id = Number.parseInt(value, 10);
+							const next_ids = selected_values.includes(value)
+								? author_ids.filter((author_id) => author_id !== id)
+								: [...author_ids, id];
+							editor_store.setState({ author_ids: next_ids });
 						}}
-						defaultValue={selected_author_ids}
-						options={authors}
+						onClear={() => editor_store.setState({ author_ids: [] })}
 						placeholder="Avtorji"
-						animation={2}
-						maxCount={3}
-						hideSelectAll
 					/>
 					<span className="flex flex-shrink-0">
 						{editor_context.savingText}
@@ -62,17 +57,3 @@ export function MyToolbar() {
 		</div>
 	);
 }
-
-/*icon: ({ className }: { className?: string }) => {
-              if (!user.image || !user.name) return;
-
-              return (
-                <Image
-                  src={user.image}
-                  alt={user.name}
-                  width={16}
-                  height={16}
-                  className={cn("m-0 rounded-full", className)}
-                />
-              );
-            },*/

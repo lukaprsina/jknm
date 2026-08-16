@@ -1,6 +1,6 @@
 # TODO
 
-- multiselect translate "Search", remove "Select all"
+- typing into the searchbar disappears the sortby text (it should be the default sort, "Najnovejše")
 
 ## later
 

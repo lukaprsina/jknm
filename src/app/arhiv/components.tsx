@@ -16,9 +16,9 @@ import {
 	useStats,
 } from "react-instantsearch";
 import { AllAuthorsContext } from "~/app/provider";
-import { MultiSelect } from "~/components/multi-select";
-import { Badge } from "~/components/ui/badge";
-import type { Button } from "~/components/ui/button";
+import type { AuthorOption } from "~/components/author-command-popover";
+import { AuthorCommandPopover } from "~/components/author-command-popover";
+import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import {
 	Select,
@@ -48,6 +48,10 @@ export const AUTHOR_ASC = replica("author_asc");
 export const AUTHOR_DESC = replica("author_desc");
 
 export const DEFAULT_REFINEMENT = PUBLISHED_AT_DESC;
+// The base index itself: no customRanking configured, so it's pure text
+// relevance with no date component — a real "search relevance" sort, not
+// just an alias for the default.
+export const RELEVANCE_REFINEMENT = ALGOLIA_PUBLISHED_ARTICLE_INDEX;
 
 export function MySortBy() {
 	const { currentRefinement, options, refine } = useSortBy({
@@ -73,13 +77,15 @@ export function MySortBy() {
 export function MySearchBox2(props: UseSearchBoxProps) {
 	const { query, refine: search_refine } = useSearchBox(props);
 	const [inputValue, setInputValue] = useState(query);
-	const { refine: sort_refine } = useSortBy({ items: SORT_BY_ITEMS });
+	const { refine: sort_refine, currentRefinement } = useSortBy({
+		items: SORT_BY_ITEMS,
+	});
 
 	// Keeps the input in sync with `query` changes this component didn't
-	// cause itself — e.g. the active-filter chip's "clear search" button,
-	// which calls useSearchBox().clear() from outside this component.
-	// InstantSearch debounces `query`, so the input can't just bind to it
-	// directly; instead it mirrors it via render-time state adjustment.
+	// cause itself — e.g. the reset-filters button, which calls
+	// useSearchBox().clear() from outside this component. InstantSearch
+	// debounces `query`, so the input can't just bind to it directly;
+	// instead it mirrors it via render-time state adjustment.
 	const [prevQuery, setPrevQuery] = useState(query);
 	if (prevQuery !== query) {
 		setPrevQuery(query);
@@ -88,29 +94,54 @@ export function MySearchBox2(props: UseSearchBoxProps) {
 
 	const setQuery = useCallback(
 		(new_query: string) => {
-			sort_refine(
-				new_query.trim() === ""
-					? DEFAULT_REFINEMENT
-					: ALGOLIA_PUBLISHED_ARTICLE_INDEX,
-			);
+			const was_empty = inputValue.trim() === "";
+			const is_empty = new_query.trim() === "";
+			// Only flip the sort at the empty/non-empty boundary, and only
+			// away from/back to the untouched default — a sort the user
+			// picked by hand (e.g. "Ime naraščajoče") is left alone. Base
+			// index has no customRanking, so it's pure text relevance with no
+			// date component (confirmed via `algolia settings get
+			// published_article` — no meaning without a query, per Algolia's
+			// own relevant-sort docs).
+			if (was_empty && !is_empty && currentRefinement === DEFAULT_REFINEMENT) {
+				sort_refine(RELEVANCE_REFINEMENT);
+			} else if (
+				!was_empty &&
+				is_empty &&
+				currentRefinement === RELEVANCE_REFINEMENT
+			) {
+				sort_refine(DEFAULT_REFINEMENT);
+			}
 			setInputValue(new_query);
 			search_refine(new_query);
 		},
-		[search_refine, sort_refine],
+		[search_refine, sort_refine, currentRefinement, inputValue],
 	);
 
 	return (
-		<Input
-			className="min-w-0 flex-1"
-			placeholder="Iskanje"
-			value={inputValue}
-			onChange={(e) => setQuery(e.target.value)}
-			autoComplete="off"
-			autoCorrect="off"
-			autoCapitalize="off"
-			spellCheck={false}
-			maxLength={512}
-		/>
+		<div className="relative min-w-0 flex-1">
+			<Input
+				className="pr-8"
+				placeholder="Iskanje"
+				value={inputValue}
+				onChange={(e) => setQuery(e.target.value)}
+				autoComplete="off"
+				autoCorrect="off"
+				autoCapitalize="off"
+				spellCheck={false}
+				maxLength={512}
+			/>
+			{inputValue !== "" && (
+				<button
+					type="button"
+					aria-label="Počisti iskanje"
+					className="-translate-y-1/2 absolute top-1/2 right-2 text-muted-foreground hover:text-foreground"
+					onClick={() => setQuery("")}
+				>
+					<XIcon className="size-4" />
+				</button>
+			)}
+		</div>
 	);
 }
 
@@ -118,9 +149,12 @@ export function MyStats({ loaded_count }: { loaded_count: number }) {
 	const stats = useStats();
 
 	return (
-		<p className="text-sm text-muted-foreground">
-			Prikazanih {loaded_count} od {stats.nbHits} novic
-		</p>
+		<div className="flex items-center justify-between">
+			<p className="text-sm text-muted-foreground">
+				Prikazanih {loaded_count} od {stats.nbHits} novic
+			</p>
+			<ResetFiltersButton />
+		</div>
 	);
 }
 
@@ -132,42 +166,41 @@ export function AuthorRefinement(
 		limit: 100,
 		...props,
 	});
+	const clear_author_refinements = useClearRefinements({
+		includedAttributes: ["author_ids"],
+	});
 	const all_authors = use(AllAuthorsContext);
 
-	const options = refinement_list.items
+	const options: AuthorOption[] = refinement_list.items
 		.map((item) => {
-			const author = all_authors.find(
-				(author) => author.id === Number(item.value),
-			);
+			const author =
+				all_authors.find((author) => author.id === Number(item.value)) ?? null;
 			return {
 				value: item.value,
+				author,
 				label: `${author ? format_author_name(author) : item.value} (${item.count})`,
 				sort_label: author ? format_author_sort_name(author) : item.value,
 			};
 		})
-		.sort((a, b) => a.sort_label.localeCompare(b.sort_label, "sl"));
+		.sort((a, b) => a.sort_label.localeCompare(b.sort_label, "sl"))
+		.map(({ sort_label: _sort_label, ...option }) => option);
 
 	const selected_values = refinement_list.items
 		.filter((item) => item.isRefined)
 		.map((item) => item.value);
 
 	return (
-		<MultiSelect
+		<AuthorCommandPopover
 			className="min-w-40 flex-1 lg:w-55 lg:flex-none"
-			hideClearButton
-			hideSelectAll
 			options={options}
-			defaultValue={selected_values}
+			selectedValues={selected_values}
+			onToggle={refinement_list.refine}
+			onClear={
+				clear_author_refinements.canRefine
+					? clear_author_refinements.refine
+					: undefined
+			}
 			placeholder="Vsi avtorji"
-			onValueChange={(new_values) => {
-				const toggled_values = selected_values
-					.filter((value) => !new_values.includes(value))
-					.concat(
-						new_values.filter((value) => !selected_values.includes(value)),
-					);
-
-				for (const value of toggled_values) refinement_list.refine(value);
-			}}
 		/>
 	);
 }
@@ -250,69 +283,40 @@ export function TimelineItem({
 	);
 }
 
-export function ActiveFilterChips() {
+export function ResetFiltersButton() {
 	const { query, clear: clear_search } = useSearchBox();
-	const author_refinement = useRefinementList({
-		attribute: "author_ids",
-		limit: 100,
-	});
 	const clear_refinements = useClearRefinements();
-	const { refine: sort_refine } = useSortBy({ items: SORT_BY_ITEMS });
-	const all_authors = use(AllAuthorsContext);
+	const { refine: sort_refine, currentRefinement } = useSortBy({
+		items: SORT_BY_ITEMS,
+	});
 
-	const has_query = query.trim() !== "";
-	const selected_authors = author_refinement.items.filter(
-		(item) => item.isRefined,
-	);
-	const has_active_filters = has_query || clear_refinements.canRefine;
+	const has_active_filters =
+		query.trim() !== "" ||
+		clear_refinements.canRefine ||
+		currentRefinement !== DEFAULT_REFINEMENT;
+
+	if (!has_active_filters) return null;
 
 	return (
-		<div className="flex min-h-6.5 flex-wrap items-center gap-2">
-			{has_query && (
-				<Badge
-					variant="secondary"
-					className="cursor-pointer gap-1 text-sm"
-					onClick={() => clear_search()}
-				>
-					{query}
-					<XIcon className="size-3.5" />
-				</Badge>
-			)}
-			{selected_authors.map((item) => (
-				<Badge
-					key={item.value}
-					variant="secondary"
-					className="cursor-pointer gap-1 text-sm"
-					onClick={() => author_refinement.refine(item.value)}
-				>
-					{(() => {
-						const author = all_authors.find(
-							(author) => author.id === Number(item.value),
-						);
-						return author ? format_author_name(author) : item.value;
-					})()}
-					<XIcon className="size-3.5" />
-				</Badge>
-			))}
-			{has_active_filters && (
-				<Badge
-					variant="outline"
-					className="cursor-pointer gap-1 text-sm"
-					onClick={() => {
-						clear_refinements.refine();
-						clear_search();
-						sort_refine(DEFAULT_REFINEMENT);
-					}}
-				>
-					Počisti vse
-					<XIcon className="size-3.5" />
-				</Badge>
-			)}
-		</div>
+		<Button
+			type="button"
+			variant="ghost"
+			size="sm"
+			className="gap-1 text-muted-foreground"
+			onClick={() => {
+				clear_refinements.refine();
+				clear_search();
+				sort_refine(DEFAULT_REFINEMENT);
+			}}
+		>
+			<XIcon className="size-3.5" />
+			Ponastavi filtre
+		</Button>
 	);
 }
 
 export const SORT_BY_ITEMS = [
+	{ value: RELEVANCE_REFINEMENT, label: "Ustreznost" },
 	{ value: PUBLISHED_AT_DESC, label: "Najnovejše" },
 	{ value: PUBLISHED_AT_ASC, label: "Najstarejše" },
 	{ value: TITLE_ASC, label: "Ime naraščajoče" },
