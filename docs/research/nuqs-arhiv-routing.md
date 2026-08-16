@@ -42,10 +42,24 @@ hooks stay exactly as they are, and asks only who should own reading/writing the
 - [`src/hooks/use-shallow-search-params.ts`](../../src/hooks/use-shallow-search-params.ts) — a
   small hook (`{ searchParams, write }`) that patches params via `window.history.replaceState`
   directly, bypassing Next's router (no Suspense refetch, no server round trip, stays
-  bookmarkable). **Not `/arhiv`-only**: it's also used by
-  [`src/app/avtorji/table.tsx:36,76`](../../src/app/avtorji/table.tsx#L36) (author table sort/page
-  state) and [`src/app/preveri/preveri-client.tsx:15,32`](../../src/app/preveri/preveri-client.tsx#L15).
-  Grepped across `src/` — those are the only three call sites.
+  bookmarkable). Grepped across `src/` — exactly three call sites, **all three in scope for this
+  migration** (the site owner opted to wrap all of them together rather than leave two stragglers
+  behind):
+  - `search.tsx` (`/arhiv`, covered in detail above).
+  - [`src/app/avtorji/table.tsx:76`](../../src/app/avtorji/table.tsx#L76) — `AuthorsDataTable`'s
+    `sort`/`dir`/`page` params for a `@tanstack/react-table` instance. Two hand-rolled parse
+    functions do exactly what nuqs parsers do natively: `sorting_from_search_params`
+    (`table.tsx:61–67`) reads `sort`/`dir` into a `SortingState` tuple; `page_index_from_search_params`
+    (`table.tsx:69–73`) reads `page` as 1-based-in-the-URL/0-based-internally with a hand-written
+    `NaN`/negative guard. `setSorting`/`setPagination` (`table.tsx:88–116`) both wrap a React
+    `useState` setter *and* call `write(...)` inside the same callback — state and URL are updated
+    together, by hand, on every change.
+  - [`src/app/preveri/preveri-client.tsx:32`](../../src/app/preveri/preveri-client.tsx#L32) —
+    `PreveriClient`'s `id` (legacy article ID) param. `current_legacy_id` (`preveri-client.tsx:34–38`)
+    is a hand-rolled `searchParams.get("id")` → `Number()` → `Number.isNaN` guard → fallback to
+    `DEFAULT_LEGACY_ID` (`= 1`, line 19) — precisely the shape `parseAsInteger.withDefault(...)`
+    exists to replace. `set_legacy_id` (`preveri-client.tsx:40–43`) is a one-line `write({ id:
+    String(legacy_id) })`.
 - [`src/app/arhiv/components.tsx`](../../src/app/arhiv/components.tsx) — `MySearchBox2` (line 77,
   wraps `useSearchBox`), `MySortBy` (line 56, wraps `useSortBy`), `AuthorRefinement` (line 161,
   wraps `useRefinementList({ attribute: "author_ids" })`), `TimelineRefinement` (line 208, wraps
@@ -104,6 +118,18 @@ Fetched from `nuqs.dev/docs/parsers`, `nuqs.dev/docs/basic-usage`, `nuqs.dev/doc
 - **`parseAsArrayOf(parser, separator?)`** — `parseAsArrayOf(parseAsString)` for
   `author_ids` (currently an array of numeric-string ids per `AuthorRefinement`'s
   `refinement_list.items`/`selected_values`, `components.tsx:188–190`).
+- **`parseAsInteger`** — direct fit for `avtorji/table.tsx`'s `page` (replacing
+  `page_index_from_search_params`'s hand-written `Number()`/`NaN`/negative guard,
+  `table.tsx:69–73`, with `parseAsInteger.withDefault(0)`) and `preveri-client.tsx`'s `id`
+  (replacing `current_legacy_id`'s identical hand-written guard, `preveri-client.tsx:34–38`, with
+  `parseAsInteger.withDefault(DEFAULT_LEGACY_ID)`) — nuqs falls back to the parser's default on any
+  unparseable/missing value, which is exactly what both call sites hand-roll today. `dir` (asc/desc)
+  is another `parseAsStringLiteral(['asc', 'desc'] as const)` case, same shape as `view`/`sortBy`.
+  Note the one behavioral wrinkle to preserve deliberately, not accidentally: `table.tsx`'s URL
+  `page` is 1-based (`next.pageIndex + 1`, `table.tsx:110`) while the internal `pageIndex` state is
+  0-based — a straight `parseAsInteger` swap must keep that offset (e.g. store the URL value
+  1-based and subtract 1 when handing it to `useTable`, same as today), not silently flatten it to
+  match the internal representation.
 - **`useQueryStates`** — batches multiple keys into one hook call, one shared object of setters,
   documented for exactly this "several related URL params, one component" shape
   (`nuqs.dev/docs/batching`) — the natural fit for `q` + `sort` + `authors` + `year` + `view`
@@ -167,10 +193,20 @@ shape of "controlled InstantSearch," not a hack.
   left to configure and can be dropped along with it.
 - **`useShallowSearchParams` usage inside `search.tsx`** (`search.tsx:16,149,157` and the
   `tab_from_search_params` helper at lines 22–26) — `view` moves into the same nuqs
-  `useQueryStates` call as everything else, so `Search()` stops calling this hook. **The hook
-  file itself is not deletable**: `use-shallow-search-params.ts` is also used by
-  `src/app/avtorji/table.tsx` and `src/app/preveri/preveri-client.tsx`, neither of which this
-  research touches. Only its one call site inside `/arhiv` goes away.
+  `useQueryStates` call as everything else, so `Search()` stops calling this hook.
+- **`use-shallow-search-params.ts` itself, in full.** Since all three call sites
+  (`search.tsx`, `avtorji/table.tsx`, `preveri-client.tsx`) are in scope together, there's no
+  straggler consumer left once the migration lands — the whole file goes, not just the `/arhiv`
+  import of it. (Scope note for whoever picks this up: this only holds if all three land in the
+  same pass. Doing `/arhiv` alone and leaving the other two, as originally scoped, would leave the
+  file in place for those two — see the earlier revision of this doc, superseded by this section.)
+- **`sorting_from_search_params` and `page_index_from_search_params`** (`table.tsx:61–73`) —
+  both are hand-written equivalents of a `parseAsStringLiteral`/`parseAsInteger` parser pair; once
+  `useQueryStates` owns `sort`/`dir`/`page` for this table, both helper functions have nothing left
+  to do and are deleted, not refactored.
+- **The `Number()`/`NaN`-guard block inside `current_legacy_id`** (`preveri-client.tsx:34–38`) —
+  replaced outright by `parseAsInteger.withDefault(DEFAULT_LEGACY_ID)`; the `useMemo` wrapper goes
+  too, since nuqs's returned value is already stable across renders.
 
 ### Rewritten, and drastically smaller
 - **`search.tsx`**: net effect is the file shrinks from ~191 lines to roughly the JSX
@@ -197,6 +233,19 @@ shape of "controlled InstantSearch," not a hack.
   existing `.refine()` call each component already makes. Net line delta per component is small
   (a few lines added, nothing structural removed, since these components never touched the URL
   directly in the first place — see §1).
+- **`avtorji/table.tsx`'s `setSorting`/`setPagination`** (`table.tsx:88–116`): each currently
+  does two things in one callback — update React state, then hand-call `write(...)`. With
+  `useQueryStates` these collapse to one nuqs setter call each; the separate `useState` for
+  `sorting`/`pagination` goes away entirely, since nuqs's returned state *is* the state (same
+  pattern nuqs recommends generally — one source of truth instead of state+effect-synced-to-URL).
+  `AuthorsDataTable` loses `sorting_from_search_params`/`page_index_from_search_params` (deleted,
+  see above) and both `useState` calls; `useTable`'s `state.sorting`/`state.pagination` read
+  straight from the nuqs-returned object instead.
+- **`preveri-client.tsx`**: `current_legacy_id` drops its `useMemo`+parse-guard down to a single
+  `useQueryState` call; `set_legacy_id` becomes a direct nuqs setter instead of a `write()` wrapper.
+  Net change is a handful of lines, in the same shallow-not-structural sense as the `/arhiv`
+  components above — this file was already using the hook correctly, it just had to hand-roll the
+  parsing nuqs does for free.
 
 ### Stays as real, necessary logic — no shortcut exists
 - **`ResetPageOnTabChange` (`search.tsx:138–146`).** This has nothing to do with which library
@@ -240,8 +289,13 @@ shape of "controlled InstantSearch," not a hack.
   optional), then move `q`/`sort`/`authors`/`year`/`view` into one `useQueryStates` call in
   `Search()`, then wire each of the four hook-wrapping components in `components.tsx` to read
   their controlling value from that same state and call `.refine()` on change.
-- Net result: `search.tsx` loses roughly half its current body (the entire router/stateMapping
-  block, `future` flag, and the ad hoc `view` handling), `use-shallow-search-params.ts` loses one
-  of its three call sites but isn't deletable as a file, and no new files are needed beyond
-  wiring `NuqsAdapter` into an already-existing provider file. This is the aggressive option the
-  brief asked for, and it's justified: nothing here is being kept "just in case."
+- Net result, doing all three call sites together (the site owner's call — "we can wrap it all
+  together"): `search.tsx` loses roughly half its current body (the entire router/stateMapping
+  block, `future` flag, and the ad hoc `view` handling); `avtorji/table.tsx` loses two hand-written
+  parse functions and a `useState`+`write()` double-update pattern in favor of nuqs state being the
+  single source of truth; `preveri-client.tsx` loses a `useMemo`-wrapped parse guard for a
+  one-line `useQueryState` call; and `use-shallow-search-params.ts` — with zero consumers left —
+  is deleted outright, not just trimmed. No new files are needed beyond wiring `NuqsAdapter` into
+  an already-existing provider file. This is the aggressive option the brief asked for, and it's
+  justified end-to-end now: nothing here is being kept "just in case," including the shared hook
+  file itself.

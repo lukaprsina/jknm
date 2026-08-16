@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { parseAsInteger, useQueryState } from "nuqs";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
 	get_primary_slug,
@@ -12,7 +13,6 @@ import { EditorToReact } from "~/components/editor/editor-to-react";
 import { InfoCard } from "~/components/info-card";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { useShallowSearchParams } from "~/hooks/use-shallow-search-params";
 import { useToast } from "~/hooks/use-toast";
 import { get_article_by_new_id } from "~/server/article/get-article";
 
@@ -29,17 +29,9 @@ export function PreveriClient({
 	const toaster = useToast();
 	const [inputPage, setInputPage] = useState(1);
 	const router = useRouter();
-	const { searchParams, write } = useShallowSearchParams();
-
-	const current_legacy_id = useMemo(() => {
-		const raw = searchParams.get("id");
-		const parsed = raw === null ? NaN : Number(raw);
-		return Number.isNaN(parsed) ? DEFAULT_LEGACY_ID : parsed;
-	}, [searchParams]);
-
-	const set_legacy_id = useCallback(
-		(legacy_id: number) => write({ id: String(legacy_id) }),
-		[write],
+	const [current_legacy_id, set_legacy_id] = useQueryState(
+		"id",
+		parseAsInteger.withDefault(DEFAULT_LEGACY_ID),
 	);
 
 	const page_info = useMemo(() => {
@@ -118,7 +110,7 @@ export function PreveriClient({
 						return;
 					}
 
-					set_legacy_id(inputPage);
+					void set_legacy_id(inputPage);
 				}}
 				className="my-8 flex items-center gap-4"
 			>
@@ -126,14 +118,14 @@ export function PreveriClient({
 					<Button
 						type="button"
 						disabled={Number.isNaN(page_info.previous)}
-						onClick={() => set_legacy_id(page_info.previous)}
+						onClick={() => void set_legacy_id(page_info.previous)}
 					>
 						Prejšnja: {page_info.previous}
 					</Button>
 					<Button
 						type="button"
 						disabled={Number.isNaN(page_info.next)}
-						onClick={() => set_legacy_id(page_info.next)}
+						onClick={() => void set_legacy_id(page_info.next)}
 					>
 						Naslednja: {page_info.next}
 					</Button>

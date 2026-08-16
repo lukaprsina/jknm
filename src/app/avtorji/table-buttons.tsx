@@ -1,10 +1,9 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import type { Row } from "@tanstack/react-table";
 import { PencilIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -16,10 +15,13 @@ import {
 	AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
+import { ButtonGroup } from "~/components/ui/button-group";
+import { Checkbox } from "~/components/ui/checkbox";
 import {
 	Dialog,
 	DialogContent,
 	DialogDescription,
+	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -33,7 +35,7 @@ import { useToast } from "~/hooks/use-toast";
 import { format_author_name } from "~/lib/author-name";
 import { unwrap_server_function } from "~/lib/orpc-action";
 import { deleteGuests } from "~/server/orpc/author/procedures";
-import type { features, GuestAuthor } from "./table";
+import type { GuestAuthor } from "./table";
 import { EditAuthorNameForm, InsertAuthorForm } from "./table-forms";
 
 export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
@@ -61,8 +63,8 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<DialogTrigger asChild>
-							<Button size="icon" variant="ghost">
-								<PencilIcon size={18} />
+							<Button size="icon" variant="ghost" className="size-7">
+								<PencilIcon className="size-4" />
 							</Button>
 						</DialogTrigger>
 					</TooltipTrigger>
@@ -83,8 +85,8 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<AlertDialogTrigger asChild>
-							<Button size="icon" variant="ghost">
-								<TrashIcon size={18} />
+							<Button size="icon" variant="ghost" className="size-7">
+								<TrashIcon className="size-4" />
 							</Button>
 						</AlertDialogTrigger>
 					</TooltipTrigger>
@@ -116,12 +118,14 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
 }
 
 export function AuthorsTableHeaderButtons({
-	rows,
+	authors,
 }: {
-	rows: Row<typeof features, GuestAuthor>[];
+	authors: GuestAuthor[];
 }) {
 	const toaster = useToast();
 	const router = useRouter();
+	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+	const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
 	const delete_guests_mutation = useMutation({
 		mutationFn: (input: Parameters<typeof deleteGuests>[0]) =>
@@ -137,39 +141,23 @@ export function AuthorsTableHeaderButtons({
 		},
 	});
 
-	const message = useMemo(() => {
-		const length = rows.length;
-		// console.log({ length });
-		if (length === 0)
-			return "Najprej izberite avtorje, ki jih želite izbrisati.";
-
-		let sklon: React.ReactNode | undefined;
-		if (length === 1) {
-			const name = rows[0] && format_author_name(rows[0].original);
-			sklon = (
-				<>
-					avtorja z imenom <b>{name}</b>
-				</>
-			);
-		} else if (length === 2) {
-			sklon = <b>{length} avtorja</b>;
-		} else if (length === 3 || length === 4) {
-			sklon = <b>{length} avtorje</b>;
-		} else {
-			sklon = <b>{length} avtorjev</b>;
-		}
-
-		return <span>Ste prepričani, da želite izbrisati {sklon}?</span>;
-	}, [rows]);
+	const toggle_id = (id: number, checked: boolean) => {
+		setSelectedIds((prev) => {
+			const next = new Set(prev);
+			if (checked) next.add(id);
+			else next.delete(id);
+			return next;
+		});
+	};
 
 	return (
-		<div className="flex grow gap-1">
+		<ButtonGroup>
 			<Dialog>
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<DialogTrigger asChild>
 							<Button size="icon" variant="outline">
-								<PlusIcon size={18} />
+								<PlusIcon className="size-4" />
 							</Button>
 						</DialogTrigger>
 					</TooltipTrigger>
@@ -186,40 +174,62 @@ export function AuthorsTableHeaderButtons({
 					<InsertAuthorForm />
 				</DialogContent>
 			</Dialog>
-			<AlertDialog>
+			<Dialog
+				open={deleteDialogOpen}
+				onOpenChange={(open) => {
+					setDeleteDialogOpen(open);
+					if (!open) setSelectedIds(new Set());
+				}}
+			>
 				<Tooltip>
 					<TooltipTrigger asChild>
-						<AlertDialogTrigger asChild>
+						<DialogTrigger asChild>
 							<Button size="icon" variant="outline">
-								<TrashIcon size={18} />
+								<TrashIcon className="size-4" />
 							</Button>
-						</AlertDialogTrigger>
+						</DialogTrigger>
 					</TooltipTrigger>
-					<TooltipContent>Izbrišite izbrane avtorje</TooltipContent>
+					<TooltipContent>Izbrišite avtorje</TooltipContent>
 				</Tooltip>
-				<AlertDialogContent>
-					<AlertDialogHeader aria-describedby="Izbrišite izbrane avtorje">
-						<AlertDialogTitle>Izbrišite izbrane avtorje</AlertDialogTitle>
-					</AlertDialogHeader>
-					{message}
-					<AlertDialogFooter>
-						<AlertDialogCancel>
-							{rows.length === 0 ? "Nazaj" : "Ne izbriši"}
-						</AlertDialogCancel>
-						{rows.length !== 0 && (
-							<AlertDialogAction
-								onClick={() => {
-									delete_guests_mutation.mutate({
-										ids: rows.map((row) => row.original.id),
-									});
-								}}
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Izbrišite avtorje</DialogTitle>
+						<DialogDescription>
+							Izberite avtorje, ki jih želite izbrisati.
+						</DialogDescription>
+					</DialogHeader>
+					<div className="max-h-64 space-y-2 overflow-y-auto">
+						{authors.map((author) => (
+							<div
+								key={author.id}
+								className="flex items-center gap-2 text-sm"
 							>
-								Izbriši
-							</AlertDialogAction>
-						)}
-					</AlertDialogFooter>
-				</AlertDialogContent>
-			</AlertDialog>
-		</div>
+								<Checkbox
+									id={`delete-author-${author.id}`}
+									checked={selectedIds.has(author.id)}
+									onCheckedChange={(value) => toggle_id(author.id, !!value)}
+								/>
+								<label htmlFor={`delete-author-${author.id}`}>
+									{format_author_name(author)}
+								</label>
+							</div>
+						))}
+					</div>
+					<DialogFooter>
+						<Button
+							variant="destructive"
+							disabled={selectedIds.size === 0}
+							onClick={() => {
+								delete_guests_mutation.mutate({ ids: [...selectedIds] });
+								setDeleteDialogOpen(false);
+								setSelectedIds(new Set());
+							}}
+						>
+							Izbriši ({selectedIds.size})
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+		</ButtonGroup>
 	);
 }

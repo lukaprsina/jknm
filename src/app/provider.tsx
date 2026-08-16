@@ -8,6 +8,7 @@ import {
 	QueryClient,
 	QueryClientProvider,
 } from "@tanstack/react-query";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { createContext } from "react";
 import type { PublicAuthor } from "~/server/author/public-shape";
 
@@ -61,10 +62,12 @@ export default function Providers({
 	const queryClient = getQueryClient();
 
 	return (
-		<QueryClientProvider client={queryClient}>
-			<AllAuthorsContext.Provider value={all_authors}>
-				{children}
-			</AllAuthorsContext.Provider>
-		</QueryClientProvider>
+		<NuqsAdapter>
+			<QueryClientProvider client={queryClient}>
+				<AllAuthorsContext.Provider value={all_authors}>
+					{children}
+				</AllAuthorsContext.Provider>
+			</QueryClientProvider>
+		</NuqsAdapter>
 	);
 }

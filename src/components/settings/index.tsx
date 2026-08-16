@@ -202,6 +202,7 @@ function MemberSyncDialog({
 			await apply_client_invalidations(query_client, "author.synced");
 			router.refresh();
 			onOpenChange(false);
+			preview_mutation.reset();
 		},
 		onError: (error) => {
 			toaster.toast({
@@ -271,8 +272,8 @@ function MemberSyncDialog({
 						<Table className="min-w-[40rem]">
 							<TableHeader>
 								<TableRow>
-									<TableHead>Ime</TableHead>
-									<TableHead>Sprememba</TableHead>
+									<TableHead className="h-9 px-2">Ime</TableHead>
+									<TableHead className="h-9 px-2">Sprememba</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
@@ -280,7 +281,7 @@ function MemberSyncDialog({
 									const row = to_change_row(change);
 									return (
 										<TableRow key={row.key}>
-											<TableCell className="whitespace-nowrap align-top">
+											<TableCell className="whitespace-nowrap p-2 align-top">
 												<div className="flex items-center gap-2">
 													<Badge
 														variant={CHANGE_KIND_VARIANT[change.kind]}
@@ -291,7 +292,7 @@ function MemberSyncDialog({
 													{row.name}
 												</div>
 											</TableCell>
-											<TableCell className="text-muted-foreground">
+											<TableCell className="p-2 text-muted-foreground">
 												{row.details.map((detail) => (
 													<div key={detail} className="whitespace-nowrap">
 														{detail}
@@ -307,7 +308,13 @@ function MemberSyncDialog({
 				)}
 
 				<DialogFooter>
-					<Button variant="outline" onClick={() => onOpenChange(false)}>
+					<Button
+						variant="outline"
+						onClick={() => {
+							onOpenChange(false);
+							preview_mutation.reset();
+						}}
+					>
 						Prekliči
 					</Button>
 					<Button
@@ -406,6 +413,7 @@ function AlgoliaSyncDialog({
 		mutationFn: () => unwrap_server_function(syncAlgolia()),
 		onSuccess: () => {
 			onOpenChange(false);
+			preview_mutation.reset();
 		},
 		onError: (error) => {
 			toaster.toast({
@@ -475,8 +483,8 @@ function AlgoliaSyncDialog({
 						<Table className="min-w-160">
 							<TableHeader>
 								<TableRow>
-									<TableHead>Ime</TableHead>
-									<TableHead>Sprememba</TableHead>
+									<TableHead className="h-9 px-2">Ime</TableHead>
+									<TableHead className="h-9 px-2">Sprememba</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
@@ -484,7 +492,7 @@ function AlgoliaSyncDialog({
 									const row = to_algolia_change_row(change);
 									return (
 										<TableRow key={row.key}>
-											<TableCell className="whitespace-nowrap align-top">
+											<TableCell className="whitespace-nowrap p-2 align-top">
 												<div className="flex items-center gap-2">
 													<Badge
 														variant={ALGOLIA_CHANGE_KIND_VARIANT[change.kind]}
@@ -497,7 +505,7 @@ function AlgoliaSyncDialog({
 													{row.name}
 												</div>
 											</TableCell>
-											<TableCell className="text-muted-foreground">
+											<TableCell className="p-2 text-muted-foreground">
 												{row.details.map((detail) => (
 													<div key={detail} className="whitespace-nowrap">
 														{detail}
@@ -513,7 +521,13 @@ function AlgoliaSyncDialog({
 				)}
 
 				<DialogFooter>
-					<Button variant="outline" onClick={() => onOpenChange(false)}>
+					<Button
+						variant="outline"
+						onClick={() => {
+							onOpenChange(false);
+							preview_mutation.reset();
+						}}
+					>
 						Prekliči
 					</Button>
 					<Button

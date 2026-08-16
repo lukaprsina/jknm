@@ -16,7 +16,10 @@ export function SearchControls({
 	onTabChange: (tab: "card" | "table") => void;
 }) {
 	return (
-		<div className="flex flex-col gap-4">
+		<div className="flex flex-col gap-2">
+			<div className="flex w-full items-center justify-between gap-4">
+				<TimelineRefinement />
+			</div>
 			<div className="flex flex-col gap-2 lg:flex-row lg:items-center">
 				<div className="flex items-center gap-2 lg:flex-3">
 					<MySearchBox2 />
@@ -26,7 +29,7 @@ export function SearchControls({
 						<AuthorRefinement />
 					</div>
 					<div className="flex items-center gap-2">
-						{activeTab === "card" && <MySortBy />}
+						<MySortBy />
 						<ButtonGroup>
 							<Button
 								variant={activeTab === "card" ? "default" : "outline"}
@@ -47,9 +50,6 @@ export function SearchControls({
 						</ButtonGroup>
 					</div>
 				</div>
-			</div>
-			<div className="flex w-full items-center justify-between gap-4">
-				<TimelineRefinement />
 			</div>
 		</div>
 	);

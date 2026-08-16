@@ -3,8 +3,6 @@
 import type {
 	ColumnDef,
 	PaginationState,
-	Row,
-	RowData,
 	SortingState,
 } from "@tanstack/react-table";
 import {
@@ -13,17 +11,24 @@ import {
 	createFilteredRowModel,
 	createPaginatedRowModel,
 	createSortedRowModel,
+	filterFn_includesString,
 	flexRender,
 	rowPaginationFeature,
-	rowSelectionFeature,
 	rowSortingFeature,
 	tableFeatures,
 	useTable,
 } from "@tanstack/react-table";
-import { use, useCallback, useMemo, useRef, useState } from "react";
+import { XIcon } from "lucide-react";
+import {
+	parseAsInteger,
+	parseAsString,
+	parseAsStringLiteral,
+	useQueryStates,
+} from "nuqs";
+import { use, useMemo } from "react";
 
 import { Button } from "~/components/ui/button";
-import { Checkbox } from "~/components/ui/checkbox";
+import { ButtonGroup } from "~/components/ui/button-group";
 import { Input } from "~/components/ui/input";
 import {
 	Table,
@@ -33,8 +38,8 @@ import {
 	TableHeader,
 	TableRow,
 } from "~/components/ui/table";
-import { useShallowSearchParams } from "~/hooks/use-shallow-search-params";
 import { format_author_name } from "~/lib/author-name";
+import { cn } from "~/lib/utils";
 import { AllAuthorsContext } from "../provider";
 import {
 	AuthorsTableCellButtons,
@@ -52,109 +57,53 @@ export const features = tableFeatures({
 	columnFilteringFeature,
 	columnVisibilityFeature,
 	rowPaginationFeature,
-	rowSelectionFeature,
 	sortedRowModel: createSortedRowModel(),
 	filteredRowModel: createFilteredRowModel(),
 	paginatedRowModel: createPaginatedRowModel(),
+	filterFns: { includesString: filterFn_includesString },
 });
 
-function sorting_from_search_params(
-	searchParams: URLSearchParams,
-): SortingState {
-	const sort_id = searchParams.get("sort");
-	if (!sort_id) return [];
-	return [{ id: sort_id, desc: searchParams.get("dir") === "desc" }];
-}
-
-function page_index_from_search_params(searchParams: URLSearchParams): number {
-	const raw = searchParams.get("page");
-	const parsed = raw === null ? NaN : Number(raw) - 1;
-	return Number.isNaN(parsed) || parsed < 0 ? 0 : parsed;
-}
+const COLUMN_WIDTH_CLASSES: Record<string, string> = {
+	id: "w-20",
+	actions: "w-24",
+};
 
 export function AuthorsDataTable() {
-	const { searchParams, write } = useShallowSearchParams();
+	const [urlState, setUrlState] = useQueryStates({
+		sort: parseAsString,
+		dir: parseAsStringLiteral(["asc", "desc"] as const),
+		// URL is 1-based (link-friendly); pageIndex below is 0-based.
+		page: parseAsInteger.withDefault(1),
+	});
 
-	const [sorting, setSortingState] = useState<SortingState>(() =>
-		sorting_from_search_params(searchParams),
-	);
-	const [rowSelection, setRowSelection] = useState({});
-	const [pagination, setPaginationState] = useState<PaginationState>(() => ({
-		pageIndex: page_index_from_search_params(searchParams),
+	const sorting: SortingState = urlState.sort
+		? [{ id: urlState.sort, desc: urlState.dir === "desc" }]
+		: [];
+	const pagination: PaginationState = {
+		pageIndex: Math.max(0, urlState.page - 1),
 		pageSize: 8,
-	}));
-	const lastSelectedIndexRef = useRef<number | null>(null);
+	};
 
-	const setSorting: typeof setSortingState = useCallback(
-		(updater) => {
-			setSortingState((previous) => {
-				const next =
-					typeof updater === "function" ? updater(previous) : updater;
-				const [first] = next;
-				write({
-					sort: first?.id ?? null,
-					dir: first ? (first.desc ? "desc" : "asc") : null,
-				});
-				return next;
-			});
-		},
-		[write],
-	);
+	const setSorting: (
+		updater: SortingState | ((prev: SortingState) => SortingState),
+	) => void = (updater) => {
+		const next = typeof updater === "function" ? updater(sorting) : updater;
+		const [first] = next;
+		void setUrlState({
+			sort: first?.id ?? null,
+			dir: first ? (first.desc ? "desc" : "asc") : null,
+		});
+	};
 
-	const setPagination: typeof setPaginationState = useCallback(
-		(updater) => {
-			setPaginationState((previous) => {
-				const next =
-					typeof updater === "function" ? updater(previous) : updater;
-				write({
-					page: next.pageIndex === 0 ? null : String(next.pageIndex + 1),
-				});
-				return next;
-			});
-		},
-		[write],
-	);
+	const setPagination: (
+		updater: PaginationState | ((prev: PaginationState) => PaginationState),
+	) => void = (updater) => {
+		const next = typeof updater === "function" ? updater(pagination) : updater;
+		void setUrlState({ page: next.pageIndex + 1 });
+	};
 
 	const columns = useMemo<ColumnDef<typeof features, GuestAuthor>[]>(
 		() => [
-			{
-				id: "select",
-				header: ({ table }) => (
-					<Checkbox
-						checked={
-							table.getIsAllPageRowsSelected() ||
-							(table.getIsSomePageRowsSelected() && "indeterminate")
-						}
-						onCheckedChange={(value) =>
-							table.toggleAllPageRowsSelected(!!value)
-						}
-						aria-label="Select all"
-					/>
-				),
-				cell: ({ row, table }) => (
-					<Checkbox
-						checked={row.getIsSelected()}
-						onCheckedChange={(value) => row.toggleSelected(!!value)}
-						onClick={(event) => {
-							if (event.shiftKey && lastSelectedIndexRef.current !== null) {
-								const { rows, rowsById } = table.getRowModel();
-								const rowsToToggle = get_row_range(
-									rows,
-									row.index,
-									lastSelectedIndexRef.current,
-								);
-								const isCellSelected = rowsById[row.id]?.getIsSelected();
-								rowsToToggle.forEach((_row) => {
-									_row.toggleSelected(!isCellSelected);
-								});
-							}
-							lastSelectedIndexRef.current = row.index;
-						}}
-						aria-label="Select row"
-					/>
-				),
-				enableSorting: false,
-			},
 			{
 				accessorKey: "id",
 				header: "ID",
@@ -189,91 +138,98 @@ export function AuthorsDataTable() {
 		data: guest_authors,
 		columns,
 		onSortingChange: setSorting,
-		onRowSelectionChange: setRowSelection,
 		onPaginationChange: setPagination,
 		state: {
 			sorting,
-			rowSelection,
 			pagination,
 		},
 	});
 
+	const name_filter = (table.getColumn("name")?.getFilterValue() as
+		| string
+		| undefined) ?? "";
+
 	return (
 		<div className="w-full">
 			<div className="flex items-center gap-2 py-4">
-				<Input
-					placeholder="Filtriraj imena..."
-					className="max-w-sm"
-					value={
-						(table.getColumn("name")?.getFilterValue() as string | undefined) ??
-						""
-					}
-					onChange={(event) =>
-						table.getColumn("name")?.setFilterValue(event.target.value)
-					}
-				/>
-				<AuthorsTableHeaderButtons rows={table.getSelectedRowModel().rows} />
-			</div>
-			<div className="rounded-md border">
-				<Table>
-					<TableHeader>
-						{table.getHeaderGroups().map((headerGroup) => (
-							<TableRow key={headerGroup.id}>
-								{headerGroup.headers.map((header) => {
-									return (
-										<TableHead key={header.id}>
-											{header.isPlaceholder
-												? null
-												: flexRender(
-														header.column.columnDef.header,
-														header.getContext(),
-													)}
-										</TableHead>
-									);
-								})}
-							</TableRow>
-						))}
-					</TableHeader>
-					<TableBody
-					/* style={{
-              height: `${pagination.pageSize * 53}px`,
-            }} */
-					>
-						{table.getRowModel().rows.length ? (
-							table.getRowModel().rows.map((row) => (
-								<TableRow
-									key={row.id}
-									data-state={row.getIsSelected() && "selected"}
-								>
-									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id}>
-											{flexRender(
-												cell.column.columnDef.cell,
-												cell.getContext(),
-											)}
-										</TableCell>
-									))}
-								</TableRow>
-							))
-						) : (
-							<TableRow>
-								<TableCell
-									colSpan={columns.length}
-									className="h-24 text-center"
-								>
-									No results.
-								</TableCell>
-							</TableRow>
-						)}
-					</TableBody>
-				</Table>
-			</div>
-			<div className="flex items-center justify-end space-x-2 py-4">
-				<div className="flex-1 text-sm text-muted-foreground">
-					{table.getFilteredSelectedRowModel().rows.length} od{" "}
-					{table.getFilteredRowModel().rows.length} avtorjev izbranih.
+				<div className="relative min-w-0 flex-1">
+					<Input
+						placeholder="Filtriraj imena..."
+						className="pr-8"
+						value={name_filter}
+						onChange={(event) =>
+							table.getColumn("name")?.setFilterValue(event.target.value)
+						}
+					/>
+					{name_filter !== "" && (
+						<button
+							type="button"
+							aria-label="Počisti filter"
+							className="-translate-y-1/2 absolute top-1/2 right-2 text-muted-foreground hover:text-foreground"
+							onClick={() => table.getColumn("name")?.setFilterValue("")}
+						>
+							<XIcon className="size-4" />
+						</button>
+					)}
 				</div>
-				<div className="space-x-2">
+				<AuthorsTableHeaderButtons authors={guest_authors} />
+			</div>
+			<Table className="min-w-md w-full table-fixed">
+				<TableHeader>
+					{table.getHeaderGroups().map((headerGroup) => (
+						<TableRow key={headerGroup.id}>
+							{headerGroup.headers.map((header) => {
+								return (
+									<TableHead
+										key={header.id}
+										className={cn(
+											"h-9 px-2",
+											COLUMN_WIDTH_CLASSES[header.column.id],
+										)}
+									>
+										{header.isPlaceholder
+											? null
+											: flexRender(
+													header.column.columnDef.header,
+													header.getContext(),
+												)}
+									</TableHead>
+								);
+							})}
+						</TableRow>
+					))}
+				</TableHeader>
+				<TableBody>
+					{table.getRowModel().rows.length ? (
+						table.getRowModel().rows.map((row) => (
+							<TableRow key={row.id}>
+								{row.getVisibleCells().map((cell) => (
+									<TableCell
+										key={cell.id}
+										className={cn(
+											"p-2",
+											COLUMN_WIDTH_CLASSES[cell.column.id],
+										)}
+									>
+										{flexRender(
+											cell.column.columnDef.cell,
+											cell.getContext(),
+										)}
+									</TableCell>
+								))}
+							</TableRow>
+						))
+					) : (
+						<TableRow>
+							<TableCell colSpan={columns.length} className="h-24 text-center">
+								Ni najdenih avtorjev.
+							</TableCell>
+						</TableRow>
+					)}
+				</TableBody>
+			</Table>
+			<div className="flex items-center justify-end gap-2 py-4">
+				<ButtonGroup>
 					<Button
 						variant="outline"
 						size="sm"
@@ -290,19 +246,8 @@ export function AuthorsDataTable() {
 					>
 						Naslednja stran
 					</Button>
-				</div>
+				</ButtonGroup>
 			</div>
 		</div>
 	);
-}
-
-// https://github.com/TanStack/table/discussions/3068#discussioncomment-5052258
-function get_row_range<T extends RowData>(
-	rows: Row<typeof features, T>[],
-	currentID: number,
-	selectedID: number,
-): Row<typeof features, T>[] {
-	const rangeStart = selectedID > currentID ? currentID : selectedID;
-	const rangeEnd = rangeStart === currentID ? selectedID : currentID;
-	return rows.slice(rangeStart, rangeEnd + 1);
 }

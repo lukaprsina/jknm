@@ -2,12 +2,15 @@
 
 import type { RefinementListItem } from "instantsearch.js/es/connectors/refinement-list/connectRefinementList";
 import { XIcon } from "lucide-react";
+import {
+	parseAsArrayOf,
+	parseAsString,
+	parseAsStringLiteral,
+	useQueryState,
+} from "nuqs";
 import type React from "react";
-import { use, useCallback, useState } from "react";
-import type {
-	UseRefinementListProps,
-	UseSearchBoxProps,
-} from "react-instantsearch";
+import { createContext, use, useCallback, useEffect, useState } from "react";
+import type { UseRefinementListProps } from "react-instantsearch";
 import {
 	useClearRefinements,
 	useRefinementList,
@@ -53,18 +56,111 @@ export const DEFAULT_REFINEMENT = PUBLISHED_AT_DESC;
 // just an alias for the default.
 export const RELEVANCE_REFINEMENT = ALGOLIA_PUBLISHED_ARTICLE_INDEX;
 
-export function MySortBy() {
-	const { currentRefinement, options, refine } = useSortBy({
-		items: SORT_BY_ITEMS,
-	});
+export const SORT_BY_ITEMS = [
+	{ value: RELEVANCE_REFINEMENT, label: "Ustreznost" },
+	{ value: PUBLISHED_AT_DESC, label: "Najnovejše" },
+	{ value: PUBLISHED_AT_ASC, label: "Najstarejše" },
+	{ value: TITLE_ASC, label: "Ime naraščajoče" },
+	{ value: TITLE_DESC, label: "Ime padajoče" },
+	{ value: AUTHOR_ASC, label: "Avtor naraščajoče" },
+	{ value: AUTHOR_DESC, label: "Avtor padajoče" },
+];
+
+const SORT_VALUES = SORT_BY_ITEMS.map((item) => item.value);
+
+interface SearchState {
+	query: string;
+	search_refine: (query: string) => void;
+	clear_search: () => void;
+	sort: string;
+	setSort: (value: string) => void;
+	sort_options: { value: string; label: string }[];
+}
+
+const SearchStateContext = createContext<SearchState | null>(null);
+
+// The single, persistently-mounted owner of Algolia's search-box and sort-by
+// connectors. Both react-instantsearch connectors reset shared state in
+// their `dispose()` on unmount — connectSearchBox unconditionally clears the
+// query (node_modules/instantsearch.js/es/connectors/search-box/
+// connectSearchBox.js:43), connectSortBy resets the index back to whatever
+// it was when that particular widget instance first mounted
+// (.../sort-by/connectSortBy.js:86-88). `ArticleTable` and
+// `ResetFiltersButton` live inside the card/table tab-swapped branches, so a
+// second, independent instance of either connector mounted there would
+// dispose (and corrupt shared state) on every tab switch. Routing used to
+// mask this by re-deriving ui-state from the URL on every write; without it,
+// every consumer must share these two connector instances instead of
+// creating their own.
+export function SearchStateProvider({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
+	const { query, refine: search_refine, clear: clear_search } = useSearchBox();
+	const [urlQuery] = useQueryState("q", parseAsString.withDefault(""));
+	const [sort, setUrlSort] = useQueryState(
+		"sort",
+		parseAsStringLiteral(SORT_VALUES).withDefault(DEFAULT_REFINEMENT),
+	);
+	const {
+		refine: sort_refine,
+		currentRefinement,
+		options: sort_options,
+	} = useSortBy({ items: SORT_BY_ITEMS });
+
+	// Hydrates Algolia's query/sort from the URL once on mount — InstantSearch
+	// no longer owns any part of the URL, so nothing else does this.
+	// biome-ignore lint/correctness/useExhaustiveDependencies: mount-only hydration
+	useEffect(() => {
+		if (urlQuery !== "") search_refine(urlQuery);
+	}, []);
+
+	useEffect(() => {
+		if (currentRefinement !== sort) sort_refine(sort);
+	}, [sort, currentRefinement, sort_refine]);
+
+	const setSort = useCallback(
+		(value: string) => {
+			void setUrlSort(value);
+		},
+		[setUrlSort],
+	);
 
 	return (
-		<Select onValueChange={(value) => refine(value)} value={currentRefinement}>
+		<SearchStateContext.Provider
+			value={{
+				query,
+				search_refine,
+				clear_search,
+				sort,
+				setSort,
+				sort_options,
+			}}
+		>
+			{children}
+		</SearchStateContext.Provider>
+	);
+}
+
+function useSearchState(): SearchState {
+	const context = use(SearchStateContext);
+	if (!context) {
+		throw new Error("useSearchState must be used within SearchStateProvider");
+	}
+	return context;
+}
+
+export function MySortBy() {
+	const { sort, setSort, sort_options } = useSearchState();
+
+	return (
+		<Select onValueChange={(value) => void setSort(value)} value={sort}>
 			<SelectTrigger className="flex-1 min-[500px]:w-40 min-[500px]:flex-none">
 				<SelectValue placeholder="Razvrsti po ..." />
 			</SelectTrigger>
 			<SelectContent>
-				{options.map((option) => (
+				{sort_options.map((option) => (
 					<SelectItem key={option.value} value={option.value}>
 						{option.label}
 					</SelectItem>
@@ -74,18 +170,16 @@ export function MySortBy() {
 	);
 }
 
-export function MySearchBox2(props: UseSearchBoxProps) {
-	const { query, refine: search_refine } = useSearchBox(props);
+export function MySearchBox2() {
+	const { query, search_refine, sort, setSort } = useSearchState();
 	const [inputValue, setInputValue] = useState(query);
-	const { refine: sort_refine, currentRefinement } = useSortBy({
-		items: SORT_BY_ITEMS,
-	});
+	const [, setUrlQuery] = useQueryState("q", parseAsString.withDefault(""));
 
 	// Keeps the input in sync with `query` changes this component didn't
 	// cause itself — e.g. the reset-filters button, which calls
-	// useSearchBox().clear() from outside this component. InstantSearch
-	// debounces `query`, so the input can't just bind to it directly;
-	// instead it mirrors it via render-time state adjustment.
+	// `clear_search()` from outside this component. InstantSearch debounces
+	// `query`, so the input can't just bind to it directly; instead it
+	// mirrors it via render-time state adjustment.
 	const [prevQuery, setPrevQuery] = useState(query);
 	if (prevQuery !== query) {
 		setPrevQuery(query);
@@ -103,19 +197,16 @@ export function MySearchBox2(props: UseSearchBoxProps) {
 			// date component (confirmed via `algolia settings get
 			// published_article` — no meaning without a query, per Algolia's
 			// own relevant-sort docs).
-			if (was_empty && !is_empty && currentRefinement === DEFAULT_REFINEMENT) {
-				sort_refine(RELEVANCE_REFINEMENT);
-			} else if (
-				!was_empty &&
-				is_empty &&
-				currentRefinement === RELEVANCE_REFINEMENT
-			) {
-				sort_refine(DEFAULT_REFINEMENT);
+			if (was_empty && !is_empty && sort === DEFAULT_REFINEMENT) {
+				void setSort(RELEVANCE_REFINEMENT);
+			} else if (!was_empty && is_empty && sort === RELEVANCE_REFINEMENT) {
+				void setSort(DEFAULT_REFINEMENT);
 			}
 			setInputValue(new_query);
 			search_refine(new_query);
+			void setUrlQuery(new_query);
 		},
-		[search_refine, sort_refine, currentRefinement, inputValue],
+		[search_refine, sort, setSort, inputValue, setUrlQuery],
 	);
 
 	return (
@@ -170,6 +261,16 @@ export function AuthorRefinement(
 		includedAttributes: ["author_ids"],
 	});
 	const all_authors = use(AllAuthorsContext);
+	const [urlAuthors, setUrlAuthors] = useQueryState(
+		"authors",
+		parseAsArrayOf(parseAsString).withDefault([]),
+	);
+
+	// Hydrates Algolia's author refinement from the URL once on mount.
+	// biome-ignore lint/correctness/useExhaustiveDependencies: mount-only hydration
+	useEffect(() => {
+		for (const value of urlAuthors) refinement_list.refine(value);
+	}, []);
 
 	const options: AuthorOption[] = refinement_list.items
 		.map((item) => {
@@ -189,17 +290,30 @@ export function AuthorRefinement(
 		.filter((item) => item.isRefined)
 		.map((item) => item.value);
 
+	const onToggle = useCallback(
+		(value: string) => {
+			refinement_list.refine(value);
+			void setUrlAuthors((previous) =>
+				previous.includes(value)
+					? previous.filter((v) => v !== value)
+					: [...previous, value],
+			);
+		},
+		[refinement_list.refine, setUrlAuthors],
+	);
+
+	const onClear = useCallback(() => {
+		clear_author_refinements.refine();
+		void setUrlAuthors(null);
+	}, [clear_author_refinements.refine, setUrlAuthors]);
+
 	return (
 		<AuthorCommandPopover
 			className="min-w-40 flex-1 lg:w-55 lg:flex-none"
 			options={options}
 			selectedValues={selected_values}
-			onToggle={refinement_list.refine}
-			onClear={
-				clear_author_refinements.canRefine
-					? clear_author_refinements.refine
-					: undefined
-			}
+			onToggle={onToggle}
+			onClear={clear_author_refinements.canRefine ? onClear : undefined}
 			placeholder="Vsi avtorji"
 		/>
 	);
@@ -217,6 +331,13 @@ export function TimelineRefinement(
 	const clear_refinements = useClearRefinements({
 		includedAttributes: ["year"],
 	});
+	const [urlYear, setUrlYear] = useQueryState("year", parseAsString);
+
+	// Hydrates Algolia's year refinement from the URL once on mount.
+	// biome-ignore lint/correctness/useExhaustiveDependencies: mount-only hydration
+	useEffect(() => {
+		if (urlYear) refinement_list.refine(urlYear);
+	}, []);
 
 	const max_count = Math.max(
 		1,
@@ -224,15 +345,16 @@ export function TimelineRefinement(
 	);
 
 	return (
-		<ol className="scroll-fade-x flex flex-1 items-end gap-x-2 gap-y-2 overflow-x-auto pb-2 pl-1">
+		<ol className="scroll-fade-x flex flex-1 items-end gap-x-2 gap-y-2 overflow-x-auto pb-2">
 			{refinement_list.items.map((item) => (
 				<TimelineItem
 					onClick={() => {
+						clear_refinements.refine();
 						if (item.isRefined) {
-							clear_refinements.refine();
+							void setUrlYear(null);
 						} else {
-							clear_refinements.refine();
 							refinement_list.refine(item.value);
+							void setUrlYear(item.value);
 						}
 					}}
 					key={item.value}
@@ -284,16 +406,19 @@ export function TimelineItem({
 }
 
 export function ResetFiltersButton() {
-	const { query, clear: clear_search } = useSearchBox();
+	const { query, clear_search, sort, setSort } = useSearchState();
 	const clear_refinements = useClearRefinements();
-	const { refine: sort_refine, currentRefinement } = useSortBy({
-		items: SORT_BY_ITEMS,
-	});
+	const [, setUrlQuery] = useQueryState("q", parseAsString.withDefault(""));
+	const [, setUrlAuthors] = useQueryState(
+		"authors",
+		parseAsArrayOf(parseAsString).withDefault([]),
+	);
+	const [, setUrlYear] = useQueryState("year", parseAsString);
 
 	const has_active_filters =
 		query.trim() !== "" ||
 		clear_refinements.canRefine ||
-		currentRefinement !== DEFAULT_REFINEMENT;
+		sort !== DEFAULT_REFINEMENT;
 
 	if (!has_active_filters) return null;
 
@@ -306,7 +431,10 @@ export function ResetFiltersButton() {
 			onClick={() => {
 				clear_refinements.refine();
 				clear_search();
-				sort_refine(DEFAULT_REFINEMENT);
+				void setSort(DEFAULT_REFINEMENT);
+				void setUrlQuery(null);
+				void setUrlAuthors(null);
+				void setUrlYear(null);
 			}}
 		>
 			<XIcon className="size-3.5" />
@@ -315,12 +443,4 @@ export function ResetFiltersButton() {
 	);
 }
 
-export const SORT_BY_ITEMS = [
-	{ value: RELEVANCE_REFINEMENT, label: "Ustreznost" },
-	{ value: PUBLISHED_AT_DESC, label: "Najnovejše" },
-	{ value: PUBLISHED_AT_ASC, label: "Najstarejše" },
-	{ value: TITLE_ASC, label: "Ime naraščajoče" },
-	{ value: TITLE_DESC, label: "Ime padajoče" },
-	{ value: AUTHOR_ASC, label: "Avtor naraščajoče" },
-	{ value: AUTHOR_DESC, label: "Avtor padajoče" },
-];
+export { useSearchState };

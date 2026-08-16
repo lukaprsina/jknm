@@ -4,7 +4,6 @@ import type { Hit as SearchHit } from "instantsearch.js";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import Link from "next/link";
 import type { UseInfiniteHitsProps } from "react-instantsearch";
-import { useSortBy } from "react-instantsearch";
 import { Authors } from "~/components/authors";
 import { Button } from "~/components/ui/button";
 import {
@@ -28,18 +27,16 @@ import {
 	MyStats,
 	PUBLISHED_AT_ASC,
 	PUBLISHED_AT_DESC,
-	SORT_BY_ITEMS,
 	TITLE_ASC,
 	TITLE_DESC,
+	useSearchState,
 } from "./components";
 
 export function ArticleTable({
 	session,
 	...props
 }: { session: Session | null } & UseInfiniteHitsProps<PublishedArticleHit>) {
-	const sort_api = useSortBy({
-		items: SORT_BY_ITEMS,
-	});
+	const { sort, setSort } = useSearchState();
 
 	const { load_more_ref, items } = useInfiniteAlgoliaArticles({
 		// Must stay well under Algolia's hitsPerPage (default 20): an offset
@@ -61,18 +58,12 @@ export function ArticleTable({
 								size="sm"
 								className="-mx-2"
 								onClick={() => {
-									sort_api.refine(
-										sort_api.currentRefinement === TITLE_ASC
-											? TITLE_DESC
-											: TITLE_ASC,
-									);
+									setSort(sort === TITLE_ASC ? TITLE_DESC : TITLE_ASC);
 								}}
 							>
 								Naslov
-								{sort_api.currentRefinement === TITLE_DESC && (
-									<ChevronDownIcon />
-								)}
-								{sort_api.currentRefinement === TITLE_ASC && <ChevronUpIcon />}
+								{sort === TITLE_DESC && <ChevronDownIcon />}
+								{sort === TITLE_ASC && <ChevronUpIcon />}
 							</Button>
 						</TableHead>
 						<TableHead className="h-9 w-40 px-2 sm:w-56">
@@ -81,18 +72,12 @@ export function ArticleTable({
 								size="sm"
 								className="-mx-2"
 								onClick={() => {
-									sort_api.refine(
-										sort_api.currentRefinement === AUTHOR_ASC
-											? AUTHOR_DESC
-											: AUTHOR_ASC,
-									);
+									setSort(sort === AUTHOR_ASC ? AUTHOR_DESC : AUTHOR_ASC);
 								}}
 							>
 								Avtorji
-								{sort_api.currentRefinement === AUTHOR_DESC && (
-									<ChevronDownIcon />
-								)}
-								{sort_api.currentRefinement === AUTHOR_ASC && <ChevronUpIcon />}
+								{sort === AUTHOR_DESC && <ChevronDownIcon />}
+								{sort === AUTHOR_ASC && <ChevronUpIcon />}
 							</Button>
 						</TableHead>
 						<TableHead className="h-9 w-28 px-2 sm:w-40">
@@ -101,20 +86,16 @@ export function ArticleTable({
 								size="sm"
 								className="-mx-2"
 								onClick={() => {
-									sort_api.refine(
-										sort_api.currentRefinement === PUBLISHED_AT_ASC
+									setSort(
+										sort === PUBLISHED_AT_ASC
 											? PUBLISHED_AT_DESC
 											: PUBLISHED_AT_ASC,
 									);
 								}}
 							>
 								Objavljeno
-								{sort_api.currentRefinement === PUBLISHED_AT_DESC && (
-									<ChevronDownIcon />
-								)}
-								{sort_api.currentRefinement === PUBLISHED_AT_ASC && (
-									<ChevronUpIcon />
-								)}
+								{sort === PUBLISHED_AT_DESC && <ChevronDownIcon />}
+								{sort === PUBLISHED_AT_ASC && <ChevronUpIcon />}
 							</Button>
 						</TableHead>
 					</TableRow>
