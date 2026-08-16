@@ -229,9 +229,9 @@ shape of "controlled InstantSearch," not a hack.
   owning part of the URL and `useShallowSearchParams` owning the rest. Once nuqs is the single
   owner of the entire URL surface (`q`, `sort`, `authors`, `year`, `view`), that friction has
   nothing left to manage. This isn't "nuqs replaces InstantSearch's router with a nicer one" —
-  it's "there is no router left to have friction with."
-  its own `useQueryStates` batching, `clearOnDefault`, and `shallow: true`-by-default behavior
-  covers what `useShallowSearchParams` hand-rolls today, with less code per call site.
+  it's "there is no router left to have friction with." nuqs's own `useQueryStates` batching,
+  `clearOnDefault`, and `shallow: true`-by-default behavior covers what `useShallowSearchParams`
+  hand-rolls today, with less code per call site.
 - The two things that must stay (`ResetPageOnTabChange`, the never-URL-encode-`page` constraint)
   stay because they're genuine product behavior about a shared widget and non-shareable scroll
   position — not because any URL library forces them to.
