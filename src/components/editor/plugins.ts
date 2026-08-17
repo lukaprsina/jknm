@@ -75,7 +75,7 @@ export function EDITOR_JS_PLUGINS(): Record<
 			},
 		},
 		warning: {
-			class: Warning,
+			class: Warning as unknown as ToolConstructable,
 			inlineToolbar: true,
 		},
 		code: Code,
