@@ -6,3 +6,8 @@
 .cdx-block {
 	max-width: 100%;
 }
+
+.ce-inline-tool.file-link-tool svg {
+	width: 14px;
+	height: 14px;
+}

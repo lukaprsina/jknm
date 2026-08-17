@@ -13,3 +13,6 @@
 [submodule "vendor/zbsearch"]
 	path = vendor/zbsearch
 	url = https://github.com/micheleriva/zbsearch
+[submodule "vendor/editor-js-attaches"]
+	path = vendor/editor-js-attaches
+	url = https://github.com/editor-js/attaches
