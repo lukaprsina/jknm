@@ -1,9 +1,9 @@
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { parseArgs } from "node:util";
 import { parse as parse_csv } from "csv-parse/sync";
 import mime from "mime/lite";
+import { is_waived, load_waivers } from "~/lib/legacy-diff-waivers";
 import { extract_legacy_media_paths } from "~/lib/legacy-media-source";
 import { resolve_pdf_bytes } from "~/lib/resolve-static-pdf";
 import { db } from "~/server/db";
@@ -16,10 +16,9 @@ import { db } from "~/server/db";
  * as a separate script per that decision (different comparison unit: file
  * bytes vs link targets).
  *
- * `--kind=content` isn't implemented: the 5 evergreen pages were rebuilt
- * from scratch rather than migrated from legacy media, so there's nothing to
- * diff (confirmed with the user, matching the same call already made for
- * `legacy-link-diff.ts`'s content mode).
+ * Articles only — the 5 evergreen pages were rebuilt from scratch rather than
+ * migrated from legacy media, so there's nothing to diff (confirmed with the
+ * user, matching the same call already made for `legacy-link-diff.ts`).
  *
  * Legacy media refs come from the same two body sources as the link-diff
  * script (`Objave.txt` col 7 / `artifacts/legacy-html/<id>.html`), extracted
@@ -36,13 +35,19 @@ import { db } from "~/server/db";
  * up against `Media.hash` — content-addressing means a byte-identical match
  * is a hash match, nothing fuzzier is needed once bytes are in hand.
  *
- * Usage: bun run scripts/legacy-media-hash-diff.ts --kind=article
+ * Output is one JSON file per finding kind under artifacts/media-hash-diff/,
+ * same split-by-kind convention as audit-all-discrepancies.ts — minus
+ * whatever artifacts/media-hash-diff-waivers.jsonc has marked as
+ * deliberately ignored (see src/lib/legacy-diff-waivers.ts).
+ *
+ * Usage: bun run scripts/legacy-media-hash-diff.ts
  */
 
 const CSV_PATH = "artifacts/Objave.txt";
 const HTML_DIR = "artifacts/legacy-html";
 const SERVED_ROOT = "D:\\Luka\\JKNM\\served";
-const OUT_PATH = "artifacts/media-hash-diff-article.json";
+const OUT_DIR = "artifacts/media-hash-diff";
+const WAIVERS_PATH = "artifacts/media-hash-diff-waivers.jsonc";
 const LAST_REAL_LEGACY_ID = 691;
 
 const PDF_HREF_RE = /href="([^"]+\.pdf)"/gi;
@@ -159,25 +164,39 @@ function hash_bytes(bytes: Buffer): string {
 	return crypto.createHash("sha256").update(bytes).digest("hex");
 }
 
-interface Finding {
-	kind: "unresolved" | "missing_hash" | "wrong_article";
+interface UnresolvedFinding {
+	kind: "unresolved";
 	legacy_id: number;
 	article_id: string;
 	title: string;
 	media_kind: Kind;
 	legacy_url: string;
-	detail?: string;
 }
 
+interface MissingHashFinding {
+	kind: "missing_hash";
+	legacy_id: number;
+	article_id: string;
+	title: string;
+	media_kind: Kind;
+	legacy_url: string;
+	resolved_from: "served" | "live";
+}
+
+interface WrongArticleFinding {
+	kind: "wrong_article";
+	legacy_id: number;
+	article_id: string;
+	title: string;
+	media_kind: Kind;
+	legacy_url: string;
+	media_id: string;
+}
+
+type Finding = UnresolvedFinding | MissingHashFinding | WrongArticleFinding;
+
 async function main() {
-	const { values } = parseArgs({ options: { kind: { type: "string" } } });
-	if (values.kind !== "article") {
-		console.error(
-			`--kind=${values.kind ?? "<missing>"} not supported. Only --kind=article is implemented — the 5 evergreen pages have no legacy media to diff against.`,
-		);
-		process.exitCode = 1;
-		return;
-	}
+	const waivers = await load_waivers(WAIVERS_PATH);
 
 	const csv_bodies = await load_csv_bodies();
 	const html_bodies = await load_html_bodies();
@@ -255,7 +274,7 @@ async function main() {
 					title: article.title,
 					media_kind: ref.kind,
 					legacy_url: ref.url,
-					detail: `resolved from ${resolved.source}, not ingested anywhere`,
+					resolved_from: resolved.source,
 				});
 				console.log(`    - missing_hash: ${ref.url}`);
 				continue;
@@ -269,15 +288,25 @@ async function main() {
 					title: article.title,
 					media_kind: ref.kind,
 					legacy_url: ref.url,
-					detail: `media ${media.id} exists but isn't attached to this article`,
+					media_id: media.id,
 				});
 				console.log(`    - wrong_article: ${ref.url} -> media ${media.id}`);
 			}
 		}
 	}
 
+	const kept = findings.filter(
+		(f) =>
+			!is_waived(waivers, {
+				legacy_id: f.legacy_id,
+				kind: f.kind,
+				legacy_url: f.legacy_url,
+			}),
+	);
+	const waived_count = findings.length - kept.length;
+
 	const by_kind = new Map<string, number>();
-	for (const f of findings) by_kind.set(f.kind, (by_kind.get(f.kind) ?? 0) + 1);
+	for (const f of kept) by_kind.set(f.kind, (by_kind.get(f.kind) ?? 0) + 1);
 
 	console.log(
 		`\nChecked ${checked} article(s), ${refs_seen} legacy media ref(s) seen.`,
@@ -286,10 +315,19 @@ async function main() {
 	for (const [kind, count] of [...by_kind].sort()) {
 		console.log(`  ${kind}: ${count}`);
 	}
-	console.log(`\nTotal: ${findings.length}`);
+	console.log(`\nTotal: ${kept.length} (${waived_count} waived)`);
 
-	await fs.writeFile(OUT_PATH, JSON.stringify(findings, null, 2), "utf8");
-	console.log(`\nWritten to ${OUT_PATH}`);
+	await fs.rm(OUT_DIR, { recursive: true, force: true });
+	await fs.mkdir(OUT_DIR, { recursive: true });
+	const by_kind_rows = new Map<string, Finding[]>();
+	for (const f of kept) {
+		by_kind_rows.set(f.kind, [...(by_kind_rows.get(f.kind) ?? []), f]);
+	}
+	for (const [kind, rows] of by_kind_rows) {
+		const out_path = path.join(OUT_DIR, `${kind}.json`);
+		await fs.writeFile(out_path, JSON.stringify(rows, null, 2), "utf8");
+	}
+	console.log(`\nWritten ${by_kind_rows.size} file(s) to ${OUT_DIR}/`);
 }
 
 main()

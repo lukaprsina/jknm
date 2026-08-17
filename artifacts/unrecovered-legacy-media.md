@@ -1,7 +1,14 @@
-# Unrecovered legacy media (23 refs)
+# Unrecovered legacy media (17 refs)
 
 `3631_cinkov_kriz.pdf` (legacy_id 78, 79, 82) resolved via
 `scripts/fix-cinkov-kriz-shared-pdf.ts` — see notable-pattern section below.
+
+legacy_id 116, 145, 633, 75, 107, 500 (all "no unique filename match") also
+resolved, via a different route: `scripts/legacy-media-hash-diff.ts` found
+each one's bytes already sitting in `Media` under a hash match (ingested by
+some earlier, unrelated attempt), just never repointed from the dead
+`jknm.s3.eu-central-1.amazonaws.com` url. `scripts/fix-wrong-article-media.ts`
+rewrote all six.
 
 Produced by `scripts/recover-legacy-media-from-served-mirror.ts` (dry-run
 log), following on from `scripts/rescue-stale-media.ts`. Both scripts fetch
@@ -22,9 +29,6 @@ Reasons:
 |---|---|---|---|---|
 | 606 | Kočevski Rog je očiščen pnevmatik ... | https://jknm.org/kocevski-rog-je-ociscen-pnevmatik | https://jknm.s3.eu-central-1.amazonaws.com/kocevski-rog-je-ociscen-pnevmatik-05-06-2022/si | no unique filename match (not a real asset — malformed href fragment, belongs to the www.jknm.si link cleanup, not media) |
 | 606 | Kočevski Rog je očiščen pnevmatik ... | https://jknm.org/kocevski-rog-je-ociscen-pnevmatik | https://jknm.s3.eu-central-1.amazonaws.com/kocevski-rog-je-ociscen-pnevmatik-05-06-2022/sidg.si/ | no unique filename match (same as above) |
-| 116 | Pečenevka - hvalnica norosti | https://jknm.org/pecenevka-hvalnica-norosti | https://jknm.s3.eu-central-1.amazonaws.com/pecenevka-hvalnica-norosti-16-11-2009/851_pecenevka.pdf | no unique filename match |
-| 145 | Desant na Kunč | https://jknm.org/desant-na-kunc | https://jknm.s3.eu-central-1.amazonaws.com/desant-na-kunc-09-04-2010/669_ledena_kunc.pdf | no unique filename match |
-| 633 | Študenti biologije na obisku pri letečih Dolenjcih | https://jknm.org/studenti-biologije-na-obisku-pri-letecih-dolenjcih | https://jknm.s3.eu-central-1.amazonaws.com/studenti-biologije-na-obisku-pri-letecih-dolenjcih-16-01-2024/dk8_43_presetnik_hudoklin_tri_desetletja_spremljanja_zatocisc_netopirjev.pdf | no unique filename match |
 | 637 | Čistilna akcija vodovarstvenega območja izvira Radeščice [2] | https://jknm.org/cistilna-akcija-vodovarstvenega-obmocja-izvira-radescice-2 | https://jknm-novice.s3.eu-central-003.backblazeb2.com/.../radescica_02_13.jpg | gone (2024, not mirrored) |
 | 637 | Čistilna akcija vodovarstvenega območja izvira Radeščice [2] | https://jknm.org/cistilna-akcija-vodovarstvenega-obmocja-izvira-radescice-2 | https://jknm-novice.s3.eu-central-003.backblazeb2.com/.../radescica_02_10.jpg | gone (2024, not mirrored) |
 | 637 | Čistilna akcija vodovarstvenega območja izvira Radeščice [2] | https://jknm.org/cistilna-akcija-vodovarstvenega-obmocja-izvira-radescice-2 | https://jknm-novice.s3.eu-central-003.backblazeb2.com/.../radescica_02_1.jpg | gone (2024, not mirrored) |
@@ -40,9 +44,6 @@ Reasons:
 | 637 | Čistilna akcija vodovarstvenega območja izvira Radeščice [2] | https://jknm.org/cistilna-akcija-vodovarstvenega-obmocja-izvira-radescice-2 | https://jknm-novice.s3.eu-central-003.backblazeb2.com/.../radescica_02_12.jpg | gone (2024, not mirrored) |
 | 637 | Čistilna akcija vodovarstvenega območja izvira Radeščice [2] | https://jknm.org/cistilna-akcija-vodovarstvenega-obmocja-izvira-radescice-2 | https://jknm.s3.eu-central-1.amazonaws.com/cistilna-akcija-vvo-izvira-radescice-ii-06-02-2024/v_dveh_dneh_izvlekli_za_tri_kontejnerje_smeti_dl_13_15_2_2024.pdf | gone (2024, not mirrored) |
 | 637 | Čistilna akcija vodovarstvenega območja izvira Radeščice [2] | https://jknm.org/cistilna-akcija-vodovarstvenega-obmocja-izvira-radescice-2 | https://jknm.s3.eu-central-1.amazonaws.com/cistilna-akcija-vvo-izvira-radescice-ii-06-02-2024/vrelec_296_str_15.png | gone (2024, not mirrored) |
-| 75 | Le kje sta Pihalnik in Achenloch? | https://jknm.org/le-kje-sta-pihalnik-in-achenloch | https://jknm.s3.eu-central-1.amazonaws.com/le-kje-sta-pihalnik-in-achenloch-03-06-2009/2577_pihalnik.pdf | no unique filename match |
-| 107 | Podzemni vodovodarji [3] | https://jknm.org/podzemni-vodovodarji-3 | https://jknm.s3.eu-central-1.amazonaws.com/podzemni-vodovodarji-3-09-10-2009/4669_solnovo.pdf | no unique filename match |
-| 500 | Cvingerska jama - raziskovanje nadaljevanja | https://jknm.org/cvingerska-jama-raziskovanje-nadaljevanja | https://jknm.s3.eu-central-1.amazonaws.com/cvingerska-jama-raziskovanje-nadaljevanja-09-11-2017/dk7_23_prsina_razkrita_skrivnost_jame_na_cvingerju.pdf | no unique filename match |
 
 ## Resolved pattern: `3631_cinkov_kriz.pdf`
 

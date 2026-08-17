@@ -1,0 +1,4 @@
+// Findings from scripts/legacy-media-hash-diff.ts deliberately excluded from
+// its report. See src/lib/legacy-diff-waivers.ts for the matching key and
+// why this is a hand-edited file rather than something computed.
+[]

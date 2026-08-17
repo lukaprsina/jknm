@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { parseArgs } from "node:util";
 import { parse as parse_csv } from "csv-parse/sync";
 import { parse as parse_html } from "node-html-parser";
+import { is_waived, load_waivers } from "~/lib/legacy-diff-waivers";
 import { resolve_legacy_static_path } from "~/lib/legacy-si-paths";
 import { find_primary_slug } from "~/server/article/lifecycle-rules";
 import { db } from "~/server/db";
@@ -30,20 +30,23 @@ import { db } from "~/server/db";
  * <id>.html`'s `<h1>`'s parent container (same extraction as the static-page
  * migration, `scripts/migrate/html-to-blocks.ts`) for the rest.
  *
- * `--kind=content` (the 5 evergreen pages) is NOT implemented here: the
- * `served` mirror's `si/<section>/default.asp` files turned out to be empty
- * ASP redirect stubs, not saved static HTML, so there's no local legacy body
- * to diff against for those pages, contra what the map assumed when this
- * script was ticketed. Needs a decision (live-fetch which URL, given
- * `si/klub/` itself just redirects into `si/klub/zgodovina/`) before that
- * mode can be built.
+ * Articles only — the 5 evergreen content pages were rebuilt from scratch
+ * rather than migrated, confirmed correct, and have no legacy body to diff
+ * against anyway (the `served` mirror's `si/<section>/default.asp` files
+ * turned out to be empty ASP redirect stubs, not saved static HTML).
  *
- * Usage: bun run scripts/legacy-link-diff.ts --kind=article
+ * Output is one JSON file per finding kind under artifacts/link-diff/, same
+ * split-by-kind convention as audit-all-discrepancies.ts — minus whatever
+ * artifacts/link-diff-waivers.jsonc has marked as deliberately ignored (see
+ * src/lib/legacy-diff-waivers.ts).
+ *
+ * Usage: bun run scripts/legacy-link-diff.ts
  */
 
 const CSV_PATH = "artifacts/Objave.txt";
 const HTML_DIR = "artifacts/legacy-html";
-const OUT_PATH = "artifacts/link-diff-article.json";
+const OUT_DIR = "artifacts/link-diff";
+const WAIVERS_PATH = "artifacts/link-diff-waivers.jsonc";
 const LAST_REAL_LEGACY_ID = 691;
 
 interface LegacyBody {
@@ -183,14 +186,7 @@ function present(hrefs: Set<string>, target: string): boolean {
 }
 
 async function main() {
-	const { values } = parseArgs({ options: { kind: { type: "string" } } });
-	if (values.kind !== "article") {
-		console.error(
-			`--kind=${values.kind ?? "<missing>"} not supported. Only --kind=article is implemented — see the docblock for why --kind=content isn't yet.`,
-		);
-		process.exitCode = 1;
-		return;
-	}
+	const waivers = await load_waivers(WAIVERS_PATH);
 
 	const csv_bodies = await load_csv_bodies();
 	const html_bodies = await load_html_bodies();
@@ -289,8 +285,18 @@ async function main() {
 		}
 	}
 
+	const kept = findings.filter(
+		(f) =>
+			!is_waived(waivers, {
+				legacy_id: f.legacy_id,
+				kind: f.kind,
+				legacy_url: f.legacy_href,
+			}),
+	);
+	const waived_count = findings.length - kept.length;
+
 	const by_kind = new Map<string, number>();
-	for (const f of findings) by_kind.set(f.kind, (by_kind.get(f.kind) ?? 0) + 1);
+	for (const f of kept) by_kind.set(f.kind, (by_kind.get(f.kind) ?? 0) + 1);
 
 	console.log(
 		`\nChecked ${checked} article(s), ${legacy_links_seen} legacy link(s) seen.`,
@@ -299,10 +305,19 @@ async function main() {
 	for (const [kind, count] of [...by_kind].sort()) {
 		console.log(`  ${kind}: ${count}`);
 	}
-	console.log(`\nTotal: ${findings.length}`);
+	console.log(`\nTotal: ${kept.length} (${waived_count} waived)`);
 
-	await fs.writeFile(OUT_PATH, JSON.stringify(findings, null, 2), "utf8");
-	console.log(`\nWritten to ${OUT_PATH}`);
+	await fs.rm(OUT_DIR, { recursive: true, force: true });
+	await fs.mkdir(OUT_DIR, { recursive: true });
+	const by_kind_rows = new Map<string, MissingLink[]>();
+	for (const f of kept) {
+		by_kind_rows.set(f.kind, [...(by_kind_rows.get(f.kind) ?? []), f]);
+	}
+	for (const [kind, rows] of by_kind_rows) {
+		const out_path = path.join(OUT_DIR, `${kind}.json`);
+		await fs.writeFile(out_path, JSON.stringify(rows, null, 2), "utf8");
+	}
+	console.log(`\nWritten ${by_kind_rows.size} file(s) to ${OUT_DIR}/`);
 }
 
 main()
