@@ -12,19 +12,26 @@ import { db } from "~/server/db";
  * script: orphaned non-primary slugs on deleted articles, and published_at
  * values that look re-dated by the bug fixed in decide_published_at.
  *
- * Deliberately trusts nothing written in prior reports/TODO.md/artifacts/*.md
+ * Deliberately trusts nothing written in prior reports/LINKS.md/artifacts/*.md
  * — every check re-reads the live DB and the raw legacy sources fresh, so a
  * discrepancy that was supposedly fixed still shows up here if it isn't
- * actually fixed. Output is one JSON array of `Discrepancy` (discriminated
- * union, one variant per check) to artifacts/discrepancies.json.
+ * actually fixed. Output is one JSON file per `Discrepancy["kind"]` under
+ * artifacts/discrepancies/ (discriminated union, one variant per check) —
+ * split so a fixed category's file disappears from the next run's output
+ * instead of lingering as a stale entry inside one big array.
  *
  * Usage: bun run scripts/audit-all-discrepancies.ts
  */
 
 const CSV_PATH = "artifacts/Objave.txt";
 const HTML_DIR = "artifacts/legacy-html";
-const LAST_REAL_LEGACY_ID = 692;
-const OUT_PATH = "artifacts/discrepancies.json";
+// legacy_id 692 is the old site's goodbye page ("www.jknm.si se je odselil"),
+// not a real article — 691 is the last real migrated content. Getting this
+// wrong let a genuinely-new post-migration article that landed on legacy_id
+// 692 (a by-date reconciliation boundary bug) sail past this check and get
+// buried as an ordinary title_mismatch instead of flagged as out-of-range.
+const LAST_REAL_LEGACY_ID = 691;
+const OUT_DIR = "artifacts/discrepancies";
 
 // --- the union ---------------------------------------------------------
 
@@ -424,8 +431,17 @@ async function main() {
 	}
 	console.log(`\nTotal: ${discrepancies.length}`);
 
-	await fs.writeFile(OUT_PATH, JSON.stringify(discrepancies, null, 2), "utf8");
-	console.log(`\nWritten to ${OUT_PATH}`);
+	await fs.rm(OUT_DIR, { recursive: true, force: true });
+	await fs.mkdir(OUT_DIR, { recursive: true });
+	const by_kind_rows = new Map<string, Discrepancy[]>();
+	for (const d of discrepancies) {
+		by_kind_rows.set(d.kind, [...(by_kind_rows.get(d.kind) ?? []), d]);
+	}
+	for (const [kind, rows] of by_kind_rows) {
+		const out_path = path.join(OUT_DIR, `${kind}.json`);
+		await fs.writeFile(out_path, JSON.stringify(rows, null, 2), "utf8");
+	}
+	console.log(`\nWritten ${by_kind_rows.size} file(s) to ${OUT_DIR}/`);
 }
 
 main()

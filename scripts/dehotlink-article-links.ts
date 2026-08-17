@@ -24,7 +24,7 @@ import { Article } from "~/server/db/schema";
  * this is 19 of the 46 remaining `www.jknm.si` refs — the other 27
  * (static-page-link: impresum, izobraževanje, publikacije/kras0N, jame/naj,
  * raziskovanje/grmec) point at pages that were never migrated and are left
- * alone, tracked in TODO.md.
+ * alone, tracked in LINKS.md.
  *
  * Usage:
  *   bun run scripts/dehotlink-article-links.ts            # dry run

@@ -1,0 +1,1082 @@
+[
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 606,
+    "article_id": "b5c5c047-d6d7-44c1-b186-108dc8b7f823",
+    "title": "Kočevski Rog je očiščen pnevmatik ...",
+    "legacy_href": "http://www.jknm.si/si/?id=595&l=2021",
+    "expected": "/novica/mala-knezja-jama-je-ociscena"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 606,
+    "article_id": "b5c5c047-d6d7-44c1-b186-108dc8b7f823",
+    "title": "Kočevski Rog je očiščen pnevmatik ...",
+    "legacy_href": "https://sidg.si/",
+    "expected": "https://sidg.si/"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 613,
+    "article_id": "fcd8d2be-4381-4d15-84cc-90a1fd9f5116",
+    "title": "JKNM praznuje 60 let",
+    "legacy_href": "https://www.youtube.com/watch?v=BIQPlHyrvNk&t=407s&ab_channel=Va%C5%A1Kanal",
+    "expected": "https://www.youtube.com/watch?v=BIQPlHyrvNk&t=407s&ab_channel=Va%C5%A1Kanal"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 487,
+    "article_id": "892c6042-4e9e-4822-98b0-dbe6d7cd17ff",
+    "title": "Brezno na Pečki",
+    "legacy_href": "http://www.jknm.si/si/?id=481&l=2017",
+    "expected": "/novica/zgodba-o-moceradovi-druzini"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 82,
+    "article_id": "addb3f3b-8ef8-4a3b-a474-680a989a74bd",
+    "title": "Iz klubskega arhiva: Brezno Cinkov križ [3]",
+    "legacy_href": "http://www.jknm.si/si/?id=79",
+    "expected": "/novica/iz-klubskega-arhiva-brezno-cinkov-kriz-1"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 202,
+    "article_id": "ce2971ce-4a0c-4f69-93f2-4bcbcb627eb6",
+    "title": "Jamarski tečaj 2011",
+    "legacy_href": "mailto:jernej.tramte@jknm.si",
+    "expected": "mailto:jernej.tramte@jknm.si"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 116,
+    "article_id": "2cec0323-99cc-4b03-a8a9-a39d8ce069b4",
+    "title": "Pečenevka - hvalnica norosti",
+    "legacy_href": "http://www.jknm.si/si/?id=59",
+    "expected": "/novica/od-pecenevke-do-kotarjeve-prepadne"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 305,
+    "article_id": "7ebddf6a-21fa-4b04-bf5e-bacd5fbf1acc",
+    "title": "Jamarski tečaj 2013",
+    "legacy_href": "mailto:anze.tomsic@jknm.si",
+    "expected": "mailto:anze.tomsic@jknm.si"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 387,
+    "article_id": "d0660182-0b70-4f63-9d64-99a24e48890e",
+    "title": "Čaganka - fotografiranje na polno",
+    "legacy_href": "http://www.jknm.si/si/?id=383&l=2014",
+    "expected": "/novica/caganka-trojcek-akcij"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 441,
+    "article_id": "d57b5175-af3b-47c6-af5a-606a5af2d2e6",
+    "title": "Cvingerska jama - dokumentiranje",
+    "legacy_href": "http://www.jknm.si/si/?id=442",
+    "expected": "/novica/cvingerska-jama-ciscenje"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 483,
+    "article_id": "a4b12c7e-eaaa-44d0-bdd0-e42810fa8c08",
+    "title": "Kočevarka",
+    "legacy_href": "http://www.jknm.si/si/?id=452&l=2016",
+    "expected": "/novica/sistem-zeljnskih-jam"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 169,
+    "article_id": "7c415c80-c11e-407e-9c07-83c9414bff6c",
+    "title": "Disco",
+    "legacy_href": "http://www.casola2010.it/",
+    "expected": "http://www.casola2010.it/"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 368,
+    "article_id": "aae78206-222e-4f4e-9139-33ad42df9ca3",
+    "title": "Čar neznanega",
+    "legacy_href": "http://www.jknm.si/si/?id=355",
+    "expected": "/novica/prijetno-s-koristnim"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 391,
+    "article_id": "a0f0545e-1dea-4661-bc0f-c020705b91a8",
+    "title": "Čaganka - fotografiranje na polno [2]",
+    "legacy_href": "http://www.jknm.si/si/?id=387",
+    "expected": "/novica/caganka-fotografiranje-na-polno"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 635,
+    "article_id": "70e10dff-4f7f-4731-96a6-b591b3f7bc77",
+    "title": "Čistilna akcija vodovarstvenega območja izvira Radeščice",
+    "legacy_href": "https://www.jknm.si/si/?id=637",
+    "expected": "/novica/cistilna-akcija-vodovarstvenega-obmocja-izvira-radescice-2"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 637,
+    "article_id": "30c2437f-10c1-49d8-ac06-3ef1cb8b991e",
+    "title": "Čistilna akcija vodovarstvenega območja izvira Radeščice [2]",
+    "legacy_href": "https://www.jknm.si/si/?id=635",
+    "expected": "/novica/cistilna-akcija-vodovarstvenega-obmocja-izvira-radescice"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 638,
+    "article_id": "d23cf62f-b5ea-4a97-a3e0-ddb8a8dbb930",
+    "title": "Tisoča jama",
+    "legacy_href": "https://www.jknm.si/si/?id=456&l=2016",
+    "expected": "/novica/sedemstota-jama"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 638,
+    "article_id": "d23cf62f-b5ea-4a97-a3e0-ddb8a8dbb930",
+    "title": "Tisoča jama",
+    "legacy_href": "https://www.jknm.si/si/?id=507&l=2018",
+    "expected": "/novica/osemstota-jama"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 290,
+    "article_id": "0742325b-1a1e-4950-9194-01cdf612622c",
+    "title": "Dolenjska, dežela udorov",
+    "legacy_href": "http://www.jknm.si/si/?id=287",
+    "expected": "/novica/udor-v-vinogradu"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 290,
+    "article_id": "0742325b-1a1e-4950-9194-01cdf612622c",
+    "title": "Dolenjska, dežela udorov",
+    "legacy_href": "http://www.jknm.si/si/?id=288",
+    "expected": "/novica/udor-pri-hisi-cerovec-29"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 340,
+    "article_id": "af47ab17-1efa-4e3f-b935-dd3a8caa932b",
+    "title": "Ogled Radoške jame",
+    "legacy_href": "http://www.jknm.si/si/?id=339",
+    "expected": "/novica/predstavitev-v-ajdovski-jami"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 414,
+    "article_id": "d630d4f4-0a23-4624-8c1d-db9e5c024bc6",
+    "title": "Odvodnica predzadnjič [5]",
+    "legacy_href": "http://www.jknm.si/si/?id=393&l=2015",
+    "expected": "/novica/odvodnica"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 414,
+    "article_id": "d630d4f4-0a23-4624-8c1d-db9e5c024bc6",
+    "title": "Odvodnica predzadnjič [5]",
+    "legacy_href": "http://www.jknm.si/si/?id=394&l=2015",
+    "expected": "/novica/odvodnica-2"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 414,
+    "article_id": "d630d4f4-0a23-4624-8c1d-db9e5c024bc6",
+    "title": "Odvodnica predzadnjič [5]",
+    "legacy_href": "http://www.jknm.si/si/?id=396&l=2015",
+    "expected": "/novica/odvodnica-3"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 414,
+    "article_id": "d630d4f4-0a23-4624-8c1d-db9e5c024bc6",
+    "title": "Odvodnica predzadnjič [5]",
+    "legacy_href": "http://www.jknm.si/si/?id=399&l=2015",
+    "expected": "/novica/odvodnica-4"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 415,
+    "article_id": "52cec680-7919-4750-964d-6d5ab25cff52",
+    "title": "Potop v Ajdovsko jamo",
+    "legacy_href": "http://www.jknm.si/si/?id=238&l=2011",
+    "expected": "/novica/ogled-ajdovske-jame-pri-krskem"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 37,
+    "article_id": "5c2ef6cf-6046-4142-af31-585271bb90ea",
+    "title": "Čaganka - nov dolenjski globinski rekord [4]",
+    "legacy_href": "http://www.jknm.si/si/?id=25",
+    "expected": "/novica/jame-na-caganki"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 37,
+    "article_id": "5c2ef6cf-6046-4142-af31-585271bb90ea",
+    "title": "Čaganka - nov dolenjski globinski rekord [4]",
+    "legacy_href": "http://www.jknm.si/si/?id=27",
+    "expected": "/novica/caganka-2"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 37,
+    "article_id": "5c2ef6cf-6046-4142-af31-585271bb90ea",
+    "title": "Čaganka - nov dolenjski globinski rekord [4]",
+    "legacy_href": "http://www.jknm.si/si/?id=32",
+    "expected": "/novica/caganka-3"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 62,
+    "article_id": "3affee32-668c-4f54-a352-456ee4c69f3c",
+    "title": "Lobanja X",
+    "legacy_href": "http://www.jknm.si/si/?id=59",
+    "expected": "/novica/od-pecenevke-do-kotarjeve-prepadne"
+  },
+  {
+    "kind": "missing_static_link",
+    "legacy_id": 75,
+    "article_id": "f3f404ce-4623-4af0-8d26-d0b7d9cfa44c",
+    "title": "Le kje sta Pihalnik in Achenloch?",
+    "legacy_href": "/si/publikacije/kras01/",
+    "expected": "/publiciranje"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 83,
+    "article_id": "df5ca717-5738-4937-8884-b60ee602e7ba",
+    "title": "Obisk Kostanjeviške jame",
+    "legacy_href": "http://picasaweb.google.si/miha.rukse/KostanjeviskaJama20062009?authkey=Gv1sRgCJqMm7qs1e_a7wE",
+    "expected": "http://picasaweb.google.si/miha.rukse/KostanjeviskaJama20062009?authkey=Gv1sRgCJqMm7qs1e_a7wE"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 80,
+    "article_id": "0679397a-63cf-4949-85b4-fd75c5ea4c81",
+    "title": "Delovni piknik pred Jazbino",
+    "legacy_href": "http://picasaweb.google.com/Damijan.Sinigoj/GOGAPiknik#",
+    "expected": "http://picasaweb.google.com/Damijan.Sinigoj/GOGAPiknik#"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 84,
+    "article_id": "798c1cb1-7705-460e-b468-1ceaaf68a71c",
+    "title": "Vašo luknjico smo prišli malo pogledat",
+    "legacy_href": "http://picasaweb.google.com/Damijan.Sinigoj/NeregistriranaJama#",
+    "expected": "http://picasaweb.google.com/Damijan.Sinigoj/NeregistriranaJama#"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 93,
+    "article_id": "dd425046-4967-4a3a-8ec2-c069ee207538",
+    "title": "Kanin 2009 - poletna akcija",
+    "legacy_href": "http://picasaweb.google.si/miha.rukse/KaninVirjeIn?authkey=Gv1sRgCO3hh9zRwuuwjQE#slideshow/5369489331343550786",
+    "expected": "http://picasaweb.google.si/miha.rukse/KaninVirjeIn?authkey=Gv1sRgCO3hh9zRwuuwjQE#slideshow/5369489331343550786"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 93,
+    "article_id": "dd425046-4967-4a3a-8ec2-c069ee207538",
+    "title": "Kanin 2009 - poletna akcija",
+    "legacy_href": "http://picasaweb.google.si/miha.rukse/TaborNaKaninu?authkey=Gv1sRgCPbRlpTf-aCHNw#slideshow/5369522784911190146",
+    "expected": "http://picasaweb.google.si/miha.rukse/TaborNaKaninu?authkey=Gv1sRgCPbRlpTf-aCHNw#slideshow/5369522784911190146"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 93,
+    "article_id": "dd425046-4967-4a3a-8ec2-c069ee207538",
+    "title": "Kanin 2009 - poletna akcija",
+    "legacy_href": "http://picasaweb.google.com/Damijan.Sinigoj/Kanin#",
+    "expected": "http://picasaweb.google.com/Damijan.Sinigoj/Kanin#"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 93,
+    "article_id": "dd425046-4967-4a3a-8ec2-c069ee207538",
+    "title": "Kanin 2009 - poletna akcija",
+    "legacy_href": "http://vimeo.com/6475725",
+    "expected": "http://vimeo.com/6475725"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 93,
+    "article_id": "dd425046-4967-4a3a-8ec2-c069ee207538",
+    "title": "Kanin 2009 - poletna akcija",
+    "legacy_href": "http://vimeo.com/klemenmihalic",
+    "expected": "http://vimeo.com/klemenmihalic"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 93,
+    "article_id": "dd425046-4967-4a3a-8ec2-c069ee207538",
+    "title": "Kanin 2009 - poletna akcija",
+    "legacy_href": "http://vimeo.com",
+    "expected": "http://vimeo.com"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 96,
+    "article_id": "5278bf0c-0079-4e8d-aee2-e507c1933729",
+    "title": "Podzemni vodovodarji",
+    "legacy_href": "http://picasaweb.google.com/Damijan.Sinigoj/SolnovoBrezno",
+    "expected": "http://picasaweb.google.com/Damijan.Sinigoj/SolnovoBrezno"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 98,
+    "article_id": "499d54f6-419a-4c63-a9b5-ea892c4f1d93",
+    "title": "Posebna sorta jamarjev",
+    "legacy_href": "http://tomazgrdin.blog.siol.net/2009/09/06/0023-milje-pod-zemljo-prvic/",
+    "expected": "http://tomazgrdin.blog.siol.net/2009/09/06/0023-milje-pod-zemljo-prvic/"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 109,
+    "article_id": "b56eb8ee-1fca-440f-9289-fa32f7584c6f",
+    "title": "Ali Čaganka ogroža rekord Čaganke? [2]",
+    "legacy_href": "http://www.sinigoj.si/",
+    "expected": "http://www.sinigoj.si/"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 150,
+    "article_id": "76708014-48cb-43ef-ab68-be7f8e70c208",
+    "title": "Prvojamarjenje 2010",
+    "legacy_href": "http://www.sinigoj.com/2010/05/jesus-camp",
+    "expected": "http://www.sinigoj.com/2010/05/jesus-camp"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 128,
+    "article_id": "16c73a98-a5da-498b-956d-00e01f5ceac5",
+    "title": "Test luči v Pihalniku",
+    "legacy_href": "http://www.jknm.si/si/?id=118&l=2009",
+    "expected": "/novica/pihalnik-ali-prhalnik"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 144,
+    "article_id": "f3509925-fdba-4d80-a526-e7e637468ff2",
+    "title": "Fotografska akcija v Kaščici",
+    "legacy_href": "http://tomazgrdin.blog.siol.net/",
+    "expected": "http://tomazgrdin.blog.siol.net/"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 258,
+    "article_id": "faa7e583-8973-4dc7-a44e-8bd5ebbfc3fb",
+    "title": "Čaganka - presežena magična globina 300 m",
+    "legacy_href": "http://www.jknm.si/si/?id=193&l=2011",
+    "expected": "/novica/caganka-ponovno-rojstvo"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 258,
+    "article_id": "faa7e583-8973-4dc7-a44e-8bd5ebbfc3fb",
+    "title": "Čaganka - presežena magična globina 300 m",
+    "legacy_href": "http://www.jknm.si/si/?id=212&l=2011",
+    "expected": "/novica/caganka-jamarski-tabor-2011"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 258,
+    "article_id": "faa7e583-8973-4dc7-a44e-8bd5ebbfc3fb",
+    "title": "Čaganka - presežena magična globina 300 m",
+    "legacy_href": "http://www.jknm.si/si/?id=225&l=2011",
+    "expected": "/novica/caganka-na-pragu-novega-rekorda"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 258,
+    "article_id": "faa7e583-8973-4dc7-a44e-8bd5ebbfc3fb",
+    "title": "Čaganka - presežena magična globina 300 m",
+    "legacy_href": "http://www.jknm.si/si/?id=226&l=2011",
+    "expected": "/novica/caganka-nov-globinski-rekord-dolenjske-in-bele-krajine"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 258,
+    "article_id": "faa7e583-8973-4dc7-a44e-8bd5ebbfc3fb",
+    "title": "Čaganka - presežena magična globina 300 m",
+    "legacy_href": "http://www.jknm.si/si/?id=227&l=2011",
+    "expected": "/novica/caganka-ozinica-in-polh"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 258,
+    "article_id": "faa7e583-8973-4dc7-a44e-8bd5ebbfc3fb",
+    "title": "Čaganka - presežena magična globina 300 m",
+    "legacy_href": "http://www.jknm.si/si/?id=229&l=2011",
+    "expected": "/novica/caganka-uradna-rekordna-globina"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 258,
+    "article_id": "faa7e583-8973-4dc7-a44e-8bd5ebbfc3fb",
+    "title": "Čaganka - presežena magična globina 300 m",
+    "legacy_href": "http://www.jknm.si/si/?id=240&l=2011",
+    "expected": "/novica/k-pa-dolenjske-jame"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 258,
+    "article_id": "faa7e583-8973-4dc7-a44e-8bd5ebbfc3fb",
+    "title": "Čaganka - presežena magična globina 300 m",
+    "legacy_href": "http://www.jknm.si/si/?id=242&l=2011",
+    "expected": "/novica/v-kateri-jami-tici-zajc"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 258,
+    "article_id": "faa7e583-8973-4dc7-a44e-8bd5ebbfc3fb",
+    "title": "Čaganka - presežena magična globina 300 m",
+    "legacy_href": "http://www.jknm.si/si/?id=252&l=2012",
+    "expected": "/novica/caganka-se-ne-da"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 258,
+    "article_id": "faa7e583-8973-4dc7-a44e-8bd5ebbfc3fb",
+    "title": "Čaganka - presežena magična globina 300 m",
+    "legacy_href": "http://www.jknm.si/si/?id=254",
+    "expected": "/novica/caganka-nov-rekord-je-278-m"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 163,
+    "article_id": "ff584d97-f800-4f11-b9e7-e21878235768",
+    "title": "Poplave 2010",
+    "legacy_href": "http://tomi.malensek.com/novice/aktualno/poplavljeno-mesto-brsljin-otocec-loka.html",
+    "expected": "http://tomi.malensek.com/novice/aktualno/poplavljeno-mesto-brsljin-otocec-loka.html"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 178,
+    "article_id": "d751b4a3-9351-4903-ba18-0b34d104ec4c",
+    "title": "Prve žive jamske školjke v Sloveniji",
+    "legacy_href": "http://www.slobodnadalmacija.hr/Dubrovnik/tabid/75/articleType/ArticleView/articleId/4600/Default.aspx",
+    "expected": "http://www.slobodnadalmacija.hr/Dubrovnik/tabid/75/articleType/ArticleView/articleId/4600/Default.aspx"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 178,
+    "article_id": "d751b4a3-9351-4903-ba18-0b34d104ec4c",
+    "title": "Prve žive jamske školjke v Sloveniji",
+    "legacy_href": "http://www.lokalno.si/si/aktualno/zanimivosti/?id=29329",
+    "expected": "http://www.lokalno.si/si/aktualno/zanimivosti/?id=29329"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 180,
+    "article_id": "5818a5a5-2153-4f76-9ae2-bddefbf22659",
+    "title": "Novo mesto - Casola",
+    "legacy_href": "http://www.jknm.si/si/?id=169",
+    "expected": "/novica/disco"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 184,
+    "article_id": "9a3d0547-fa7a-431c-b1fe-4d646e7d9a9f",
+    "title": "Človeške ribice so zavarovane",
+    "legacy_href": "http://www.jknm.si/si/?id=187",
+    "expected": "/novica/ogled-jame-karlovec"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 284,
+    "article_id": "44a6a1f6-d387-4090-b4f0-66e7116da0c8",
+    "title": "Kanin 2012 - druga realizacija",
+    "legacy_href": "http://www.jknm.si/si/?id=276",
+    "expected": "/novica/kanin-2012-ali-najprej-gor-potem-dol"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 284,
+    "article_id": "44a6a1f6-d387-4090-b4f0-66e7116da0c8",
+    "title": "Kanin 2012 - druga realizacija",
+    "legacy_href": "http://www.jknm.si/si/?id=280",
+    "expected": "/novica/50-let-jknm-slavnostna-seja"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 284,
+    "article_id": "44a6a1f6-d387-4090-b4f0-66e7116da0c8",
+    "title": "Kanin 2012 - druga realizacija",
+    "legacy_href": "http://www.jknm.si/si/?id=279",
+    "expected": "/novica/50-let-jknm-iznos-vina-jamski-zajc-iz-caganke"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 284,
+    "article_id": "44a6a1f6-d387-4090-b4f0-66e7116da0c8",
+    "title": "Kanin 2012 - druga realizacija",
+    "legacy_href": "http://www.jknm.si/si/?id=275",
+    "expected": "/novica/caganka-izmerjena-rekordna-globina"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 199,
+    "article_id": "d834c498-d260-4564-aaaa-d576448a8329",
+    "title": "Potep po Šmarjeških Toplicah",
+    "legacy_href": "http://www.smarjeske-toplice.si/Razgledi/",
+    "expected": "http://www.smarjeske-toplice.si/Razgledi/"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 187,
+    "article_id": "69a89f01-387e-4bca-bcbb-3306369eae93",
+    "title": "Ogled jame Karlovec",
+    "legacy_href": "http://www.jknm.si/si/?id=184",
+    "expected": "/novica/cloveske-ribice-so-zavarovane"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 196,
+    "article_id": "e0b5998d-95f0-4d9f-b8ad-ee5c8c158f92",
+    "title": "Akcija na Toplem vrhu nad Mavrlenom",
+    "legacy_href": "http://www.jknm.si/si/?id=194",
+    "expected": "/novica/na-vinski-gori"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 197,
+    "article_id": "ffcbf2bc-8043-4b14-9ce2-92189c68b559",
+    "title": "Topli vrh 5",
+    "legacy_href": "http://www.jknm.si/si/?id=194",
+    "expected": "/novica/na-vinski-gori"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 197,
+    "article_id": "ffcbf2bc-8043-4b14-9ce2-92189c68b559",
+    "title": "Topli vrh 5",
+    "legacy_href": "http://www.jknm.si/si/?id=196",
+    "expected": "/novica/akcija-na-toplem-vrhu-nad-mavrlenom"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 236,
+    "article_id": "1b4ce133-669b-429d-a488-bb12ecf3873d",
+    "title": "Kotel",
+    "legacy_href": "http://www.jknm.si/si/?id=405",
+    "expected": "/novica/kotel-2"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 238,
+    "article_id": "1e985840-56b4-4327-80f8-81cf61a91583",
+    "title": "Ogled Ajdovske jame pri Krškem",
+    "legacy_href": "http://www.jknm.si/si/?id=415",
+    "expected": "/novica/potop-v-ajdovsko-jamo"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 253,
+    "article_id": "599c1f41-55bb-4ff8-9159-516228b91052",
+    "title": "Veš, Mirnopečan, svoj dolg?",
+    "legacy_href": "http://www.jknm.si/si/?id=140&l=2010",
+    "expected": "/novica/katera-vratnica-je-globlja"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 268,
+    "article_id": "1c7482e2-c116-4fae-a4aa-c881986bb856",
+    "title": "Korita nad Dobrničem: širjenje vhoda v izvirno jamo",
+    "legacy_href": "http://www.jknm.si/si/?id=223&l=2011",
+    "expected": "/novica/akcija-v-okolica-dobrnica"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 269,
+    "article_id": "22585c8f-70bd-48a2-99e5-92d02594eb4d",
+    "title": "Uspešno pri Hinjah",
+    "legacy_href": "http://www.jknm.si/si/?id=107&l=2009",
+    "expected": "/novica/podzemni-vodovodarji-3"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 274,
+    "article_id": "417c372c-261b-4f2f-af5b-573d36a6e5d1",
+    "title": "Mačkić kamen v BiH [2]",
+    "legacy_href": "http://www.jknm.si/si/?id=237&l=2011",
+    "expected": "/novica/macki-kamen-v-bih"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 299,
+    "article_id": "c065fc68-fc99-4961-b5da-887ffe0568ed",
+    "title": "Ob koncu sveta v pekel",
+    "legacy_href": "http://www.geopedia.si/lite.jsp?params=T118_L11063_F3934_x472050_y142150_s14_b4&locale=sl",
+    "expected": "http://www.geopedia.si/lite.jsp?params=T118_L11063_F3934_x472050_y142150_s14_b4&locale=sl"
+  },
+  {
+    "kind": "missing_static_link",
+    "legacy_id": 300,
+    "article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
+    "title": "Publikacije Dolenjski kras",
+    "legacy_href": "http://www.jknm.si/si/publikacije/kras01/",
+    "expected": "/publiciranje"
+  },
+  {
+    "kind": "missing_static_link",
+    "legacy_id": 300,
+    "article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
+    "title": "Publikacije Dolenjski kras",
+    "legacy_href": "http://www.jknm.si/si/publikacije/kras02/",
+    "expected": "/publiciranje"
+  },
+  {
+    "kind": "missing_static_link",
+    "legacy_id": 300,
+    "article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
+    "title": "Publikacije Dolenjski kras",
+    "legacy_href": "http://www.jknm.si/si/publikacije/kras03/",
+    "expected": "/publiciranje"
+  },
+  {
+    "kind": "missing_static_link",
+    "legacy_id": 300,
+    "article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
+    "title": "Publikacije Dolenjski kras",
+    "legacy_href": "http://www.jknm.si/si/publikacije/kras04/",
+    "expected": "/publiciranje"
+  },
+  {
+    "kind": "missing_static_link",
+    "legacy_id": 300,
+    "article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
+    "title": "Publikacije Dolenjski kras",
+    "legacy_href": "http://www.jknm.si/si/publikacije/kras05/",
+    "expected": "/publiciranje"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 304,
+    "article_id": "d4db564c-4c43-4ad9-90f3-bccf1f0907a8",
+    "title": "Kaj skriva Jama pod železniško postajo?",
+    "legacy_href": "http://www.jknm.si/si/?id=353",
+    "expected": "/novica/kaj-skriva-jama-pod-zeleznisko-postajo-2"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 463,
+    "article_id": "71f5ebf4-b77d-4824-861b-83716b261f6b",
+    "title": "Čaganka - kamin Game Over",
+    "legacy_href": "http://www.jknm.si/si/?id=25&l=2008",
+    "expected": "/novica/jame-na-caganki"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 463,
+    "article_id": "71f5ebf4-b77d-4824-861b-83716b261f6b",
+    "title": "Čaganka - kamin Game Over",
+    "legacy_href": "http://www.jknm.si/si/?id=27&l=2008",
+    "expected": "/novica/caganka-2"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 463,
+    "article_id": "71f5ebf4-b77d-4824-861b-83716b261f6b",
+    "title": "Čaganka - kamin Game Over",
+    "legacy_href": "http://www.jknm.si/si/?id=55&l=2009",
+    "expected": "/novica/jknm-prejel-nagrado-viljema-puticka"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 463,
+    "article_id": "71f5ebf4-b77d-4824-861b-83716b261f6b",
+    "title": "Čaganka - kamin Game Over",
+    "legacy_href": "http://www.jknm.si/si/?id=32&l=2008",
+    "expected": "/novica/caganka-3"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 463,
+    "article_id": "71f5ebf4-b77d-4824-861b-83716b261f6b",
+    "title": "Čaganka - kamin Game Over",
+    "legacy_href": "http://www.jknm.si/si/?id=212&l=2011",
+    "expected": "/novica/caganka-jamarski-tabor-2011"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 463,
+    "article_id": "71f5ebf4-b77d-4824-861b-83716b261f6b",
+    "title": "Čaganka - kamin Game Over",
+    "legacy_href": "http://www.jknm.si/si/?id=293&l=2012",
+    "expected": "/novica/caganka-predpriprava-na-zimsko-akcijo-2012"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 463,
+    "article_id": "71f5ebf4-b77d-4824-861b-83716b261f6b",
+    "title": "Čaganka - kamin Game Over",
+    "legacy_href": "http://www.jknm.si/si/?id=226&l=2011",
+    "expected": "/novica/caganka-nov-globinski-rekord-dolenjske-in-bele-krajine"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 463,
+    "article_id": "71f5ebf4-b77d-4824-861b-83716b261f6b",
+    "title": "Čaganka - kamin Game Over",
+    "legacy_href": "http://www.jknm.si/si/?id=258&l=2012",
+    "expected": "/novica/caganka-presezena-magicna-globina-300-m"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 463,
+    "article_id": "71f5ebf4-b77d-4824-861b-83716b261f6b",
+    "title": "Čaganka - kamin Game Over",
+    "legacy_href": "http://www.jknm.si/si/?id=328&l=2013",
+    "expected": "/novica/caganka-dan-zmage-na-globini-350-m"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 463,
+    "article_id": "71f5ebf4-b77d-4824-861b-83716b261f6b",
+    "title": "Čaganka - kamin Game Over",
+    "legacy_href": "http://www.jknm.si/si/?id=349&l=2014",
+    "expected": "/novica/caganka-rekordnih-400"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 463,
+    "article_id": "71f5ebf4-b77d-4824-861b-83716b261f6b",
+    "title": "Čaganka - kamin Game Over",
+    "legacy_href": "http://www.jknm.si/si/?id=365&l=2014",
+    "expected": "/novica/caganka-on-the-record"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 463,
+    "article_id": "71f5ebf4-b77d-4824-861b-83716b261f6b",
+    "title": "Čaganka - kamin Game Over",
+    "legacy_href": "http://www.jknm.si/si/?id=434&l=2016",
+    "expected": "/novica/caganka-prvomajsko-jamarjenje-z-odlicnimi-rezultati"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 463,
+    "article_id": "71f5ebf4-b77d-4824-861b-83716b261f6b",
+    "title": "Čaganka - kamin Game Over",
+    "legacy_href": "http://www.jknm.si/si/?id=460&l=2016",
+    "expected": "/novica/caganka-ujeta-pijavka"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 495,
+    "article_id": "8e4b8c07-c9f4-4a74-abb1-725814d49a6f",
+    "title": "V iskanju monolister",
+    "legacy_href": "http://www.jknm.si/si/?id=290&l=2012",
+    "expected": "/novica/dolenjska-dezela-udorov"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 495,
+    "article_id": "8e4b8c07-c9f4-4a74-abb1-725814d49a6f",
+    "title": "V iskanju monolister",
+    "legacy_href": "http://www.jknm.si/si/?id=489&l=2017",
+    "expected": "/novica/drozanjska-vodovodna-jama"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 331,
+    "article_id": "31bb782e-206c-460c-9af6-162f994001fa",
+    "title": "Nova krasotica na Poljanski gori",
+    "legacy_href": "http://www.jknm.si/si/?id=148&l=2010",
+    "expected": "/novica/esmeralda"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 331,
+    "article_id": "31bb782e-206c-460c-9af6-162f994001fa",
+    "title": "Nova krasotica na Poljanski gori",
+    "legacy_href": "http://www.jknm.si/si/?id=149&l=2010",
+    "expected": "/novica/esmeralda-2"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 588,
+    "article_id": "27bbfbf3-1b87-47c0-a747-d2890e4349c2",
+    "title": "Jamarski tečaj 2021 - klubski izpiti in Čaganka",
+    "legacy_href": "http://www.jknm.si/si/?id=585",
+    "expected": "/novica/jamarski-tecaj-2021-od-stropa-do-tal-in-nazaj"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 353,
+    "article_id": "c07d6bab-73a6-46c8-bb1a-9ef55af2c050",
+    "title": "Kaj skriva Jama pod železniško postajo? [2]",
+    "legacy_href": "http://www.jknm.si/si/?id=304",
+    "expected": "/novica/kaj-skriva-jama-pod-zeleznisko-postajo"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 376,
+    "article_id": "b4096683-2396-4ac5-aaa8-c5f03087e010",
+    "title": "Brestanka",
+    "legacy_href": "http://www.jknm.si/si/?id=375",
+    "expected": "/novica/jama-velika-pec"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 378,
+    "article_id": "c2d951ac-6cac-4164-9924-fd5b42faf067",
+    "title": "Čaganka in 19 jamarjev",
+    "legacy_href": "http://www.jknm.si/si/?id=325&l=2013",
+    "expected": "/novica/caganka-dol-in-nazaj-v-oceh-biologa"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 405,
+    "article_id": "d968c73b-1102-4ade-ac77-6f5c28e89172",
+    "title": "Kotel [2]",
+    "legacy_href": "http://www.jknm.si/si/?id=236&l=2011",
+    "expected": "/novica/kotel"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 438,
+    "article_id": "09ff3545-695b-4339-a3c5-1bc30d10cbbb",
+    "title": "Jojkinovac in Grmeč 2016",
+    "legacy_href": "http://www.jknm.si/si/?id=412&l=2015",
+    "expected": "/novica/jojkinovac-2015"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 442,
+    "article_id": "9edc3d1a-b60f-477b-af05-c8714c125e4d",
+    "title": "Cvingerska jama - čiščenje",
+    "legacy_href": "http://www.jknm.si/si/?id=441",
+    "expected": "/novica/cvingerska-jama-dokumentiranje"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 442,
+    "article_id": "9edc3d1a-b60f-477b-af05-c8714c125e4d",
+    "title": "Cvingerska jama - čiščenje",
+    "legacy_href": "http://www.jknm.si/si/?id=450&l=2016",
+    "expected": "/novica/cvingerska-jama-ciscenje-2"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 444,
+    "article_id": "75b4598a-ee57-4cc9-a44c-fb35af27afbb",
+    "title": "Jama pri pesi",
+    "legacy_href": "https://www.youtube.com/watch?v=xMaLVV49IoM&feature=youtu.be",
+    "expected": "https://www.youtube.com/watch?v=xMaLVV49IoM&feature=youtu.be"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 450,
+    "article_id": "4062bf16-daf2-4c47-be9c-e564672eaf2d",
+    "title": "Cvingerska jama - čiščenje [2]",
+    "legacy_href": "http://www.jknm.si/si/?id=442",
+    "expected": "/novica/cvingerska-jama-ciscenje"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 450,
+    "article_id": "4062bf16-daf2-4c47-be9c-e564672eaf2d",
+    "title": "Cvingerska jama - čiščenje [2]",
+    "legacy_href": "http://www.jknm.si/si/?id=492&l=2017",
+    "expected": "/novica/cvingerska-jama-ciscenje-3"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 453,
+    "article_id": "eae21716-1eab-415c-b0c4-759416d2b027",
+    "title": "Čolnarjenje v Jami pri gostilni",
+    "legacy_href": "http://www.jknm.si/si/?id=452",
+    "expected": "/novica/sistem-zeljnskih-jam"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 460,
+    "article_id": "bb894b4d-36f6-4c0b-ad5b-93aabe2e366f",
+    "title": "Čaganka - ujeta pijavka",
+    "legacy_href": "http://www.jknm.si/si/?id=349",
+    "expected": "/novica/caganka-rekordnih-400"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 460,
+    "article_id": "bb894b4d-36f6-4c0b-ad5b-93aabe2e366f",
+    "title": "Čaganka - ujeta pijavka",
+    "legacy_href": "http://www.jknm.si/si/?id=351",
+    "expected": "/novica/caganka-projekt-400"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 447,
+    "article_id": "bca74c5b-5d4c-43ca-937c-83f0a2168124",
+    "title": "Zverinjačke rupe 2016",
+    "legacy_href": "http://www.jknm.si/si/?id=372&l=2014",
+    "expected": "/novica/jamarska-odprava-crna-gora-2014"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 488,
+    "article_id": "ed50eb36-3c8a-4ab2-92cc-2f90a51f96bd",
+    "title": "Jama nad mostom v Vavti vasi",
+    "legacy_href": "http://www.jknm.si/si/?id=184&l=2011",
+    "expected": "/novica/cloveske-ribice-so-zavarovane"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 482,
+    "article_id": "45b90c95-9b53-40d3-9dce-66913df50037",
+    "title": "Firecombat 2017",
+    "legacy_href": "http://www.gasilec.net/uploads/datoteke/Adriana/FC%202017/REZULTATI%20%205_%20Tekme%20ognjenih%20risov%202017.pdf",
+    "expected": "http://www.gasilec.net/uploads/datoteke/Adriana/FC%202017/REZULTATI%20%205_%20Tekme%20ognjenih%20risov%202017.pdf"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 492,
+    "article_id": "70d08d3b-f1bf-4b6d-a89f-9fe1443903f4",
+    "title": "Cvingerska jama - čiščenje [3]",
+    "legacy_href": "http://www.jknm.si/si/?id=442&l=2016",
+    "expected": "/novica/cvingerska-jama-ciscenje"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 492,
+    "article_id": "70d08d3b-f1bf-4b6d-a89f-9fe1443903f4",
+    "title": "Cvingerska jama - čiščenje [3]",
+    "legacy_href": "http://www.jknm.si/si/?id=450&l=2016",
+    "expected": "/novica/cvingerska-jama-ciscenje-2"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 492,
+    "article_id": "70d08d3b-f1bf-4b6d-a89f-9fe1443903f4",
+    "title": "Cvingerska jama - čiščenje [3]",
+    "legacy_href": "http://www.jknm.si/si/?id=500&l=2017",
+    "expected": "/novica/cvingerska-jama-raziskovanje-nadaljevanja"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 502,
+    "article_id": "6ac2dd6f-6897-489f-b4c0-7c7a0174982e",
+    "title": "Nevarnost zastrupitve z ogljikovim monoksidom v jamarstvu",
+    "legacy_href": "http://www.jknm.si/si/?id=499",
+    "expected": "/novica/caganka-proti-500-m"
+  },
+  {
+    "kind": "missing_static_link",
+    "legacy_id": 504,
+    "article_id": "e956dc08-b7ef-44e1-953a-eac381440de8",
+    "title": "Izšel je Dolenjski kras 7",
+    "legacy_href": "http://www.jknm.si/si/publikacije/",
+    "expected": "/publiciranje"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 513,
+    "article_id": "59da21ac-ede1-4420-bf10-d7493c98e619",
+    "title": "Prvomajski tabor Čaganka",
+    "legacy_href": "http://www.jknm.si/si/?id=499&l=2017",
+    "expected": "/novica/caganka-proti-500-m"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 595,
+    "article_id": "4762f314-1bfa-4518-b69b-d99d1e0e2255",
+    "title": "Mala Knežja jama je očiščena",
+    "legacy_href": "https://www.facebook.com/slovenskidrzavnigozdovi/?hc_ref=ARShthw-5Clx8im4ThzuMc1CAb5hBWZVp3whLmPwfrdqAJ5kv4Yn7DJVSJqJym4ZTB4&fref=nf&__tn__=kC-R",
+    "expected": "https://www.facebook.com/slovenskidrzavnigozdovi/?hc_ref=ARShthw-5Clx8im4ThzuMc1CAb5hBWZVp3whLmPwfrdqAJ5kv4Yn7DJVSJqJym4ZTB4&fref=nf&__tn__=kC-R"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 542,
+    "article_id": "38921f68-3c93-4985-9e75-12d82f6193a5",
+    "title": "Čiščenje Brezna v Debliških livadah [2]",
+    "legacy_href": "http://www.jknm.si/si/?id=530&l=2018",
+    "expected": "/novica/ciscenje-brezna-v-debliskih-livadah"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 530,
+    "article_id": "c45d8297-6d66-4355-a295-af7694dfd5b6",
+    "title": "Čiščenje Brezna v Debliških livadah",
+    "legacy_href": "http://www.jknm.si/si/?id=542",
+    "expected": "/novica/ciscenje-brezna-v-debliskih-livadah-2"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 537,
+    "article_id": "4914693a-711d-4c5d-b106-a8e7bfe621b5",
+    "title": "Mirna Peč - v naši občini ni več onesnaženih jam",
+    "legacy_href": "http://www.jknm.si/si/?id=395&l=2015",
+    "expected": "/novica/jama-preplasenega-medveda"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 556,
+    "article_id": "c3133753-ee06-416f-aa43-ca6936cd72a2",
+    "title": "Brezno Beli in Vrbovška podcestnica",
+    "legacy_href": "https://youtu.be/7_f6moZN-7s",
+    "expected": "https://youtu.be/7_f6moZN-7s"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 566,
+    "article_id": "60ed6cd4-aff1-4a24-8cd1-4332af600c8c",
+    "title": "Čiščenje Brezna 3 pri grobišču",
+    "legacy_href": "http://www.jknm.si/si/?id=564",
+    "expected": "/novica/sanitarno-ciscenje-brezna-na-kocevskem-rogu"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 573,
+    "article_id": "a08e8d0e-fdaa-4956-8424-d0b297353a84",
+    "title": "Vodoravna jama na Židovcu je postala prava jama",
+    "legacy_href": "http://www.jknm.si/si/?id=572",
+    "expected": "/novica/produktiven-konec-in-zacetek-leta"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 601,
+    "article_id": "3f54db24-2a86-470d-b19b-22430c25fa13",
+    "title": "Nagrada Viljema Puticka spet v roke JKNM",
+    "legacy_href": "http://www.jknm.si/si/?id=593&l=2021",
+    "expected": "/novica/kanin-2021-skalarjevo-brezno-vec-kot-tisoc-metrov-globoko"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 601,
+    "article_id": "3f54db24-2a86-470d-b19b-22430c25fa13",
+    "title": "Nagrada Viljema Puticka spet v roke JKNM",
+    "legacy_href": "http://www.jknm.si/si/?id=594&l=2021",
+    "expected": "/novica/kanin-2021-skalarjevo-brezno-nadaljevanje-raziskav"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 601,
+    "article_id": "3f54db24-2a86-470d-b19b-22430c25fa13",
+    "title": "Nagrada Viljema Puticka spet v roke JKNM",
+    "legacy_href": "http://www.jknm.si/si/?id=596&l=2021",
+    "expected": "/novica/kanin-2021-skalarjevo-brezno-medpraznicna-akcija"
+  },
+  {
+    "kind": "missing_external_link",
+    "legacy_id": 611,
+    "article_id": "7c248be2-d59f-4f7a-a7b9-3e5038cc27e5",
+    "title": "JK Novo mesto – 60 let – fotografska razstava in predavanje",
+    "legacy_href": "https://www.youtube.com/watch?v=BIQPlHyrvNk&t=407s&ab_channel=Va%C5%A1Kanal",
+    "expected": "https://www.youtube.com/watch?v=BIQPlHyrvNk&t=407s&ab_channel=Va%C5%A1Kanal"
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 616,
+    "article_id": "1abd781d-66ca-4c5c-91e2-f9a6dfe57219",
+    "title": "Predstavitev raziskav v Ajdovski jami pri Nemški vasi in Bruhalniku Podjama",
+    "legacy_href": "http://www.jknm.si/si/?id=589&l=2021",
+    "expected": "/novica/ajdovska-jama-odprt-vstop-v-vodni-rov"
+  }
+]

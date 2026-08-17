@@ -14,8 +14,10 @@ import { Article, Media, MediaToArticles } from "~/server/db/schema";
  * are exactly what's unreliable here.
  *
  * Does not touch B2 or the live app. Reads a local mirror of the media
- * bucket (pull one first, see the `b2 sync` command in HANDOFF.md /
- * TODO.md) and cross-references it against the DB. Two outputs:
+ * bucket (pull one first, via the `b2 sync` CLI — the command itself isn't
+ * currently written down anywhere; see `artifacts/b2-mirror` for the
+ * existing mirror this was run against) and cross-references it against
+ * the DB. Two outputs:
  *
  *   - `artifacts/media-dedupe-plan.json`: duplicate groups, the canonical
  *     row per group (oldest = first upload wins), every url that needs

@@ -177,12 +177,9 @@ export function ArticleAlgoliaCard({
 	// carry an absolute gradivo.jknm.org `image` URL directly.
 	const is_legacy_hit = /^\d+$/.test(hit.objectID);
 	const url = get_published_article_link(hit.url);
-	// Legacy articles' only stable permalink is the `?id=` redirect
-	// (`si/route.ts`); new-model articles have no legacy id, so their stable
-	// permalink is their slug URL (backed by `article_slugs` redirects).
-	const permalink_url = is_legacy_hit
-		? `${get_base_url(true)}/novica/?id=${hit.objectID}`
-		: `${get_base_url(true)}${url}`;
+	// Every article's stable permalink is its slug URL, backed by
+	// `article_slugs` redirects that follow renames and supersede-publish.
+	const permalink_url = `${get_base_url(true)}${url}`;
 
 	return (
 		<ArticleCard

@@ -1,3 +1,30 @@
+## script output
+
+--kind=article is built and run. Result: 135 findings across 667 checked articles (317 legacy links inspected):
+
+- missing_article_link (99) — the big one. Cross-references between old articles ("Cvingerska jama - dokumentiranje" linked to "Cvingerska jama - ciscenje", etc.) that never made it into the migrated content at all — not left as a stray www.jknm.si hotlink (those are already at 0 per HANDOFF.md), just silently dropped. This looks like a real migration gap, not noise.
+- missing_external_link (29) — dropped third-party links: club-member mailto addresses, YouTube/Picasa photo albums, an external caving-org site. Some targets (Picasa) are dead now regardless, but they were still present in the legacy article and vanished during migration.
+- missing_static_link (7) — legacy /si/publikacije/kras0N/ references that should now point at /publiciranje but don't appear anywhere in the migrated article.
+
+Output: artifacts/link-diff-article.json (script: scripts/legacy-link-diff.ts).
+
+One thing surfaced while building this that changes the plan: --kind=content isn't implemented. The map assumed the served mirror's static tree had the 5 evergreen pages' old content, but I checked — si/klub/default.asp, si/publikacije/default.asp, si/varstvo/default.asp etc. are all empty ASP redirect stubs, not saved HTML (e.g. klub/default.asp just redirects to klub/zgodovina/, which itself has no saved content either). There's no local legacy source to diff content-mode against. Options: live-fetch www.jknm.si directly for just these 5 pages (same site the article-mode resolve_pdf_bytes fallback already fetches live from), or drop content-mode from this script's scope. Also unresolved: is si/klub/'s content actually the zgodovina history, or a separate "about the club" page that just happens to redirect for a different reason? Worth a quick look before I guess.
+
+Want me to live-fetch the 5 pages and build --kind=content, or leave it and move to the media-hash-diff script instead?
+
+---
+
+The media-hash-diff script is built and run (scripts/legacy-media-hash-diff.ts). Checked 667 articles, 4,416 legacy media refs — everything resolved successfully (served mirror or live fetch), so nothing came back unresolved.
+
+Findings (419 total):
+
+- missing_hash (409) — legacy image never made it into Media at all. Almost entirely concentrated in the 2024–2025 tail (legacy_id ~635–691: Kanin camps, Silvestrovanje, "Jame v Novem mestu," etc.), exactly the range the map already flagged as outside the served mirror's 2023 cutoff. The script live-fetched them from www.jknm.si directly to confirm — they're real, recoverable images that were simply never ingested during migration, not lost. Biggest single articles: "Bosna - nekaj kraških zanimivosti" (31), two "Kanin 2024/2025" reports (18 each).
+- wrong_article (10) — all PDFs (DK journal issues, e.g. DK2_08_Ladisic_Jame_v_Novem_mestu.pdf), hash found in Media but not attached to this article. Worth a caveat: these look like the expected shared-file pattern already documented for 3631_cinkov_kriz.pdf — the same PDF cited by several articles, content-addressed and ingested once, attached to whichever article triggered ingestion but not the others that also link it. Not necessarily bugs, but real gaps in media_to_articles coverage for those other articles.
+
+Output: artifacts/media-hash-diff-article.json. Also added it and link-diff-article.json to .gitignore alongside the other generated artifacts/* outputs.
+
+That closes out all three "Remaining work" items from the wayfinder map (permalink deletion, link-diff, media-hash-diff). Nothing else queued up — want me to update the map issue with these two new scripts under Decisions so far / mark Remaining work done, or hold off since you haven't asked me to touch the tracker this session?
+
 ## deepseek report
 
 Found it. The report is artifacts/unrecovered-legacy-media.md, produced by the dry-run of scripts/recover-legacy-media-from-served-mirror.ts (a follow-up to scripts/rescue-stale-media.ts). Re-running with --limit 1 against each legacy_id is how you'd regenerate the list.

@@ -45,6 +45,9 @@ yarn-error.log*
 /artifacts/s3-jknm/
 /artifacts/*-postpass-plan.json
 /artifacts/media-dedupe-plan.json
+/artifacts/discrepancies/
+/artifacts/link-diff-*.json
+/artifacts/media-hash-diff-*.json
 
 # local scratch cache for one-off scripts
 scripts/.cache
