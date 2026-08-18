@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default async function Prijava() {
 	const session = await getServerAuthSession();
 	return (
-		<Shell without_footer without_header>
+		<Shell without_footer without_header full_bleed>
 			<div className="h-screen w-full min-w-full">
 				<SignIn session={session} />
 			</div>

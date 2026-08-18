@@ -17,14 +17,24 @@ import { cn } from "~/lib/utils";
 export function TocAwareLayout({
 	children,
 	known_has_toc = false,
+	full_bleed = false,
 }: {
 	children: React.ReactNode;
 	known_has_toc?: boolean;
+	/** Skips the default `px-6 md:px-12` page gutter for routes that lay out
+	 * their own full-width content (e.g. `/prijava`'s edge-to-edge split
+	 * screen). */
+	full_bleed?: boolean;
 }) {
 	const has_toc = useHasToc() || known_has_toc;
 
 	return (
-		<div className="flex w-full flex-1 justify-center gap-8 px-6 md:px-12">
+		<div
+			className={cn(
+				"flex w-full flex-1 justify-center gap-8",
+				!full_bleed && "px-6 md:px-12",
+			)}
+		>
 			<div
 				className={cn("hidden w-75 shrink-0", has_toc && "not_center:block")}
 				aria-hidden

@@ -56,11 +56,14 @@ export function Footer() {
 						</div>
 					</div>
 				</div>
-				<div className="mt-8 border-t border-gray-700 pt-8 text-center text-sm">
+				<div className="mt-8 flex flex-col items-center gap-2 border-t border-gray-700 pt-8 text-center text-sm">
 					<p>
 						&copy; {new Date().getFullYear()} Jamarski klub Novo mesto. Vse
 						pravice pridržane.
 					</p>
+					<Link href="/prijava" className="text-gray-400 hover:text-gray-300">
+						Prijava upravitelja
+					</Link>
 				</div>
 			</div>
 		</footer>

@@ -59,7 +59,7 @@ export default function ContactForm() {
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="mx-auto max-w-3xl space-y-4"
 			>
-				<div className="flex flex-col sm:flex-row sm:space-x-4">
+				<div className="flex flex-col gap-4 sm:flex-row sm:gap-4">
 					<div className="flex-1 space-y-4">
 						<FormField
 							control={form.control}
@@ -106,7 +106,7 @@ export default function ContactForm() {
 							)}
 						/>
 					</div>
-					<div className="mb-8 flex-1 flex-shrink-0">
+					<div className="mb-8 flex-1 shrink-0">
 						<FormField
 							control={form.control}
 							name="message"
