@@ -3,6 +3,7 @@ import path from "node:path";
 import { parse as parse_csv } from "csv-parse/sync";
 import { inArray } from "drizzle-orm";
 import { parse as parse_html } from "node-html-parser";
+import { strip_html_to_text } from "~/lib/sanitize-html";
 import { db } from "~/server/db";
 import { Article } from "~/server/db/schema";
 
@@ -116,7 +117,7 @@ function block_text_refs(content_json: unknown): BlockTextRef[] {
 	return refs;
 }
 
-function snippet_around(text: string, needle: string, radius = 40): string {
+function snippet_around(text: string, needle: string, radius = 120): string {
 	const at = text.indexOf(needle);
 	if (at === -1) return "";
 	const start = Math.max(0, at - radius);
@@ -124,16 +125,35 @@ function snippet_around(text: string, needle: string, radius = 40): string {
 	return `${start > 0 ? "…" : ""}${text.slice(start, end)}${end < text.length ? "…" : ""}`;
 }
 
+// The target article's title is the cheapest sanity check available: does it
+// actually match what the anchor text/surrounding sentence is talking about?
+// Re-derives the target legacy_id straight from the `id=` query param on the
+// legacy href — same value legacy-link-diff.ts already parsed to compute
+// `expected`, just not carried through into the finding JSON.
+function target_legacy_id(legacy_href: string): number | undefined {
+	const match = /[?&]id=(\d+)/.exec(legacy_href);
+	if (!match?.[1]) return undefined;
+	const id = Number(match[1]);
+	return Number.isFinite(id) ? id : undefined;
+}
+
 type Proposal =
 	| (Finding & {
 			outcome: "unique_match";
 			anchor_text: string;
+			target_title?: string;
+			legacy_context: string;
 			block_index: number;
 			block_id?: string;
 			block_type: string;
 			snippet: string;
 	  })
-	| (Finding & { outcome: "ambiguous"; anchor_text: string; match_count: number })
+	| (Finding & {
+			outcome: "ambiguous";
+			anchor_text: string;
+			target_title?: string;
+			match_count: number;
+	  })
 	| (Finding & { outcome: "no_match"; candidate_anchor_texts: string[] });
 
 async function main() {
@@ -167,6 +187,24 @@ async function main() {
 		articles.map((a) => [a.id, block_text_refs(a.content_json)]),
 	);
 
+	const target_legacy_ids = [
+		...new Set(
+			findings
+				.filter((f) => f.kind === "missing_article_link")
+				.map((f) => target_legacy_id(f.legacy_href))
+				.filter((id): id is number => id !== undefined),
+		),
+	];
+	const target_articles = target_legacy_ids.length
+		? await db.query.Article.findMany({
+				where: inArray(Article.legacy_id, target_legacy_ids),
+				columns: { legacy_id: true, title: true },
+			})
+		: [];
+	const title_by_target_legacy_id = new Map(
+		target_articles.map((a) => [a.legacy_id, a.title]),
+	);
+
 	const proposals: Proposal[] = [];
 	for (const finding of findings) {
 		const legacy_body = legacy_bodies.get(finding.legacy_id);
@@ -174,6 +212,10 @@ async function main() {
 			? anchor_texts_for_href(legacy_body, finding.legacy_href)
 			: [];
 		const refs = content_by_article.get(finding.article_id) ?? [];
+		const target_title =
+			finding.kind === "missing_article_link"
+				? title_by_target_legacy_id.get(target_legacy_id(finding.legacy_href) ?? -1)
+				: undefined;
 
 		let placed = false;
 		for (const anchor_text of candidates) {
@@ -187,6 +229,10 @@ async function main() {
 					...finding,
 					outcome: "unique_match",
 					anchor_text,
+					target_title,
+					legacy_context: legacy_body
+						? snippet_around(strip_html_to_text(legacy_body), anchor_text)
+						: "",
 					block_index: ref.block_index,
 					block_id: ref.block_id,
 					block_type: ref.block_type,
@@ -200,6 +246,7 @@ async function main() {
 					...finding,
 					outcome: "ambiguous",
 					anchor_text,
+					target_title,
 					match_count: matches.length,
 				});
 				placed = true;
