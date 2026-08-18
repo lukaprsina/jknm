@@ -158,6 +158,42 @@ anything, to fix — see the waiver system below.
   (checked via JPEG SOF header parsing), not the ~1500px originals described above — not usable
   as a fix source for either article.
 
+## Fixing `missing_article_link`/`missing_static_link` findings
+
+`legacy-link-diff.ts` resolves the correct target URL deterministically (legacy_id →
+`find_primary_slug`, or `resolve_legacy_static_path`), but doesn't say *where* in the article to
+put it. `scripts/propose-link-fixes.ts` closes that gap: it re-parses the legacy body for the
+anchor's own visible text, then searches the target-in-our-DB article's `content_json` blocks for
+that exact text. A unique hit is an unambiguous insertion point (`artifacts/link-fix-proposals/
+unique_match.json`); 0 or >1 hits fall back to `no_match.json`/`ambiguous.json` for manual
+handling. `scripts/apply-link-fixes.ts` applies `unique_match.json` — report-then-fix, same split
+as the rest of this tooling.
+
+**The `/novica?id=<n>` red herring.** Of the 87 `unique_match` findings the first real run
+produced, 83 turned out to already be linked — just via a broken `<a href="/novica?id=<n>">`, not
+missing text at all. `/novica?id=<n>` isn't `legacy_id` (confirmed: the same finding's legacy body
+href and the stale in-DB href carry two different numbers, e.g. legacy_id 606's legacy href was
+`?id=595` but the stale link sitting in the migrated article was `/novica?id=571`) and there is no
+`/novica` index route to resolve it live either way (only `/novica/[published_url]`). It's almost
+certainly a serial PK from the pre-unification `published_article`/`draft_article` tables (dropped
+in `59ba679`, replaced by the uuid `articles` table in `d44e968`) — some early auto-linking pass
+stamped these in before the schema unification, and they were never swept. No live mapping from
+that old id back to an article survives (table's gone); `apply-link-fixes.ts` doesn't need one
+since it never reads `<n>` — the fix target comes entirely from the legacy-side lookup. Only 4 of
+the 87 were genuine bare-text insertions.
+
+**Confidence-boosting the proposal, not just the target.** Since the old `<n>` can't be used as an
+independent cross-check, `propose-link-fixes.ts` instead surfaces the target article's own title
+(`target_title`, re-deriving the target legacy_id from the `id=` query param) and a wider
+before/after snippet (`legacy_context` from the original legacy body, `snippet` from the block
+being rewritten) next to each proposal, so a mismatch is visible without opening either article.
+Caught one genuine-looking edge case this way (legacy_id 495: anchor "Jama pod Pečjami" resolving
+to an article titled "Dolenjska, dežela udorov") that turned out correct on inspection — the
+target article's opening line names the same place ("...v Sevnici na Pečju..."), just declined.
+
+Applied 2026-08-18: all 87 `unique_match` proposals (83 rewrites + 4 inserts) written to the DB.
+`ambiguous.json` (8) and `no_match.json` (11) are still open, manual-only.
+
 ## Waivers
 
 `scripts/legacy-link-diff.ts` and `scripts/legacy-media-hash-diff.ts` are meant to be re-run

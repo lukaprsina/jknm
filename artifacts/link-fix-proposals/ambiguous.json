@@ -1,0 +1,93 @@
+[
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 414,
+    "article_id": "d630d4f4-0a23-4624-8c1d-db9e5c024bc6",
+    "title": "Odvodnica predzadnjič [5]",
+    "legacy_href": "http://www.jknm.si/si/?id=393&l=2015",
+    "expected": "/novica/odvodnica",
+    "outcome": "ambiguous",
+    "anchor_text": "prva",
+    "target_title": "Odvodnica",
+    "match_count": 2
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 460,
+    "article_id": "bb894b4d-36f6-4c0b-ad5b-93aabe2e366f",
+    "title": "Čaganka - ujeta pijavka",
+    "legacy_href": "http://www.jknm.si/si/?id=349",
+    "expected": "/novica/caganka-rekordnih-400",
+    "outcome": "ambiguous",
+    "anchor_text": "tukaj",
+    "target_title": "Čaganka – rekordnih 400!",
+    "match_count": 2
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 460,
+    "article_id": "bb894b4d-36f6-4c0b-ad5b-93aabe2e366f",
+    "title": "Čaganka - ujeta pijavka",
+    "legacy_href": "http://www.jknm.si/si/?id=351",
+    "expected": "/novica/caganka-projekt-400",
+    "outcome": "ambiguous",
+    "anchor_text": "tukaj",
+    "target_title": "Čaganka – projekt >400",
+    "match_count": 2
+  },
+  {
+    "kind": "missing_static_link",
+    "legacy_id": 300,
+    "article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
+    "title": "Publikacije Dolenjski kras",
+    "legacy_href": "http://www.jknm.si/si/publikacije/kras01/",
+    "expected": "/publiciranje",
+    "outcome": "ambiguous",
+    "anchor_text": "http://www.jknm.si/si/publikacije/kras01/",
+    "match_count": 2
+  },
+  {
+    "kind": "missing_static_link",
+    "legacy_id": 300,
+    "article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
+    "title": "Publikacije Dolenjski kras",
+    "legacy_href": "http://www.jknm.si/si/publikacije/kras02/",
+    "expected": "/publiciranje",
+    "outcome": "ambiguous",
+    "anchor_text": "http://www.jknm.si/si/publikacije/kras02/",
+    "match_count": 2
+  },
+  {
+    "kind": "missing_static_link",
+    "legacy_id": 300,
+    "article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
+    "title": "Publikacije Dolenjski kras",
+    "legacy_href": "http://www.jknm.si/si/publikacije/kras03/",
+    "expected": "/publiciranje",
+    "outcome": "ambiguous",
+    "anchor_text": "http://www.jknm.si/si/publikacije/kras03/",
+    "match_count": 2
+  },
+  {
+    "kind": "missing_static_link",
+    "legacy_id": 300,
+    "article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
+    "title": "Publikacije Dolenjski kras",
+    "legacy_href": "http://www.jknm.si/si/publikacije/kras04/",
+    "expected": "/publiciranje",
+    "outcome": "ambiguous",
+    "anchor_text": "http://www.jknm.si/si/publikacije/kras04/",
+    "match_count": 2
+  },
+  {
+    "kind": "missing_static_link",
+    "legacy_id": 300,
+    "article_id": "02b8ece6-6a68-471f-8e7a-f9950be1e589",
+    "title": "Publikacije Dolenjski kras",
+    "legacy_href": "http://www.jknm.si/si/publikacije/kras05/",
+    "expected": "/publiciranje",
+    "outcome": "ambiguous",
+    "anchor_text": "http://www.jknm.si/si/publikacije/kras05/",
+    "match_count": 2
+  }
+]

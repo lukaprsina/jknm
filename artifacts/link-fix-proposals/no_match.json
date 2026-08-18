@@ -1,0 +1,134 @@
+[
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 441,
+    "article_id": "d57b5175-af3b-47c6-af5a-606a5af2d2e6",
+    "title": "Cvingerska jama - dokumentiranje",
+    "legacy_href": "http://www.jknm.si/si/?id=442",
+    "expected": "/novica/cvingerska-jama-ciscenje",
+    "outcome": "no_match",
+    "candidate_anchor_texts": [
+      "v nadaljevanju te cvingerske zgodbe"
+    ]
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 37,
+    "article_id": "5c2ef6cf-6046-4142-af31-585271bb90ea",
+    "title": "Čaganka - nov dolenjski globinski rekord [4]",
+    "legacy_href": "http://www.jknm.si/si/?id=25",
+    "expected": "/novica/jame-na-caganki",
+    "outcome": "no_match",
+    "candidate_anchor_texts": [
+      "http://www.jknm.si/si/?id=25"
+    ]
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 37,
+    "article_id": "5c2ef6cf-6046-4142-af31-585271bb90ea",
+    "title": "Čaganka - nov dolenjski globinski rekord [4]",
+    "legacy_href": "http://www.jknm.si/si/?id=27",
+    "expected": "/novica/caganka-2",
+    "outcome": "no_match",
+    "candidate_anchor_texts": [
+      "http://www.jknm.si/si/?id=27"
+    ]
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 37,
+    "article_id": "5c2ef6cf-6046-4142-af31-585271bb90ea",
+    "title": "Čaganka - nov dolenjski globinski rekord [4]",
+    "legacy_href": "http://www.jknm.si/si/?id=32",
+    "expected": "/novica/caganka-3",
+    "outcome": "no_match",
+    "candidate_anchor_texts": [
+      "http://www.jknm.si/si/?id=32"
+    ]
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 258,
+    "article_id": "faa7e583-8973-4dc7-a44e-8bd5ebbfc3fb",
+    "title": "Čaganka - presežena magična globina 300 m",
+    "legacy_href": "http://www.jknm.si/si/?id=240&l=2011",
+    "expected": "/novica/k-pa-dolenjske-jame",
+    "outcome": "no_match",
+    "candidate_anchor_texts": [
+      "*?#$\"!%& pa Dolenjske jame!"
+    ]
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 180,
+    "article_id": "5818a5a5-2153-4f76-9ae2-bddefbf22659",
+    "title": "Novo mesto - Casola",
+    "legacy_href": "http://www.jknm.si/si/?id=169",
+    "expected": "/novica/disco",
+    "outcome": "no_match",
+    "candidate_anchor_texts": [
+      "http:..www.jknm.si.si.?id=169"
+    ]
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 197,
+    "article_id": "ffcbf2bc-8043-4b14-9ce2-92189c68b559",
+    "title": "Topli vrh 5",
+    "legacy_href": "http://www.jknm.si/si/?id=194",
+    "expected": "/novica/na-vinski-gori",
+    "outcome": "no_match",
+    "candidate_anchor_texts": [
+      "izpred enege tedna"
+    ]
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 463,
+    "article_id": "71f5ebf4-b77d-4824-861b-83716b261f6b",
+    "title": "Čaganka - kamin Game Over",
+    "legacy_href": "http://www.jknm.si/si/?id=32&l=2008",
+    "expected": "/novica/caganka-3",
+    "outcome": "no_match",
+    "candidate_anchor_texts": [
+      "v Klepčevo nadaljevanje"
+    ]
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 463,
+    "article_id": "71f5ebf4-b77d-4824-861b-83716b261f6b",
+    "title": "Čaganka - kamin Game Over",
+    "legacy_href": "http://www.jknm.si/si/?id=293&l=2012",
+    "expected": "/novica/caganka-predpriprava-na-zimsko-akcijo-2012",
+    "outcome": "no_match",
+    "candidate_anchor_texts": [
+      "zaplezala Irena"
+    ]
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 463,
+    "article_id": "71f5ebf4-b77d-4824-861b-83716b261f6b",
+    "title": "Čaganka - kamin Game Over",
+    "legacy_href": "http://www.jknm.si/si/?id=349&l=2014",
+    "expected": "/novica/caganka-rekordnih-400",
+    "outcome": "no_match",
+    "candidate_anchor_texts": [
+      "globino 400 m"
+    ]
+  },
+  {
+    "kind": "missing_article_link",
+    "legacy_id": 463,
+    "article_id": "71f5ebf4-b77d-4824-861b-83716b261f6b",
+    "title": "Čaganka - kamin Game Over",
+    "legacy_href": "http://www.jknm.si/si/?id=434&l=2016",
+    "expected": "/novica/caganka-prvomajsko-jamarjenje-z-odlicnimi-rezultati",
+    "outcome": "no_match",
+    "candidate_anchor_texts": [
+      "užni rov za skoraj za 600 m"
+    ]
+  }
+]
