@@ -20,9 +20,11 @@
 
 const MEDIA_PATH_RE = /\/media\/img\/novice\/[^"'\s\\<>)]+/g;
 
-/** Distinct `/media/img/novice/...` paths referenced in a legacy content blob (Objave.txt's html column, or a scraped legacy-html page), decoded and in first-appearance order. */
+/** Distinct `/media/img/novice/...` paths referenced in a legacy content blob (Objave.txt's html column, or a scraped legacy-html page), decoded and in first-appearance order. Excludes `.pdf` paths even though they live under the same per-article folder scheme as images — those are extracted separately by `extract_legacy_pdf_refs` (`legacy-media-hash-diff.ts`) and verified against `%PDF-` magic bytes, which this path's image-only byte resolution doesn't do. */
 export function extract_legacy_media_paths(html: string): string[] {
-	const matches = html.match(MEDIA_PATH_RE) ?? [];
+	const matches = (html.match(MEDIA_PATH_RE) ?? []).filter(
+		(match) => !/\.pdf$/i.test(match),
+	);
 	const decoded = matches.map((match) => {
 		try {
 			return decodeURIComponent(match);
