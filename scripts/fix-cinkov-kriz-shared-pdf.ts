@@ -11,7 +11,7 @@ import { authorize_b2, ingest_media } from "~/server/media/ingest";
  * legacy_id 78, 79 and 82 ("Iz klubskega arhiva: Brezno Cinkov križ [1/2/3]")
  * all link the same file, `3631_cinkov_kriz.pdf`, still pointing at the dead
  * `jknm.s3.eu-central-1.amazonaws.com` bucket. The per-article fuzzy match in
- * `recover-legacy-media-from-served-mirror.ts` couldn't resolve any of the
+ * `scripts/retired/recover-legacy-media-from-served-mirror.ts` couldn't resolve any of the
  * three (79 has no legacy source at all; 78 and 82's legacy content list 2
  * candidate paths where the filename didn't match either uniquely) - see
  * artifacts/unrecovered-legacy-media.md.

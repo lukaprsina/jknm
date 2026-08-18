@@ -48,6 +48,10 @@ yarn-error.log*
 /artifacts/discrepancies/
 /artifacts/link-diff/
 /artifacts/media-hash-diff/
+/artifacts/perceptual-cache/
 
 # local scratch cache for one-off scripts
 scripts/.cache
+
+# python
+__pycache__/

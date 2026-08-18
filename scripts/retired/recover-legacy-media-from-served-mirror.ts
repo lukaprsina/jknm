@@ -40,8 +40,8 @@ import { authorize_b2, ingest_media } from "~/server/media/ingest";
  * not guessed at.
  *
  * Usage:
- *   bun run scripts/recover-legacy-media-from-served-mirror.ts             # dry run
- *   bun run scripts/recover-legacy-media-from-served-mirror.ts --execute
+ *   bun run scripts/retired/recover-legacy-media-from-served-mirror.ts             # dry run
+ *   bun run scripts/retired/recover-legacy-media-from-served-mirror.ts --execute
  */
 
 const SERVED_ROOT = "D:\\Luka\\JKNM\\served";

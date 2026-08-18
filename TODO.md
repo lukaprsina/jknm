@@ -1,5 +1,7 @@
 # TODO
 
+- prijava v kolofon
+
 ## later
 
 - submit sitemap to bing webmaster and indexnow. AIs use bing.

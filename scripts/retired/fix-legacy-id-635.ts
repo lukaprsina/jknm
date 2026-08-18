@@ -3,7 +3,7 @@ import { db } from "~/server/db";
 import { Article } from "~/server/db/schema";
 
 /**
- * One-off: corrects the legacy_id set by scripts/undo-resurrect-611.ts —
+ * One-off: corrects the legacy_id set by scripts/retired/undo-resurrect-611.ts —
  * turns out 611 was never this article's old-site id; 635 is (per the
  * `?id=635&l=2024` links in varstvo/content.mdx). 611 belongs to a
  * different, already-fine article and is left alone here.

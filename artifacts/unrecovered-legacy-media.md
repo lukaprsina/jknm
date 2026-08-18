@@ -10,7 +10,7 @@ some earlier, unrelated attempt), just never repointed from the dead
 `jknm.s3.eu-central-1.amazonaws.com` url. `scripts/fix-wrong-article-media.ts`
 rewrote all six.
 
-Produced by `scripts/recover-legacy-media-from-served-mirror.ts` (dry-run
+Produced by `scripts/retired/recover-legacy-media-from-served-mirror.ts` (dry-run
 log), following on from `scripts/rescue-stale-media.ts`. Both scripts fetch
 from live buckets/mirror; if a row here is ever revisited, re-run
 `--limit 1` against the relevant legacy_id rather than trusting this file's

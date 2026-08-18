@@ -6,7 +6,7 @@ import { Article } from "~/server/db/schema";
 
 /**
  * Backfills `Article.uploaded_custom_thumbnail` for legacy-imported articles
- * from the real historical flag in scripts/articles.json (keyed by `old_id`,
+ * from the real historical flag in artifacts/articles.json (keyed by `old_id`,
  * which is what today's `legacy_id` was reconciled to point at — see
  * fix-legacy-ids-final-reconcile.ts). Not a heuristic: the old db had this
  * field before the rewrite dropped it, and recomputing it from EditorJS
@@ -29,7 +29,7 @@ import { Article } from "~/server/db/schema";
  *   bun run scripts/backfill-uploaded-custom-thumbnail.ts --execute
  */
 
-const LEGACY_JSON_PATH = "scripts/articles.json";
+const LEGACY_JSON_PATH = "artifacts/articles.json";
 const OUT_PATH = "artifacts/backfill-uploaded-custom-thumbnail-plan.json";
 
 interface LegacyArticle {

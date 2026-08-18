@@ -27,7 +27,7 @@ That closes out all three "Remaining work" items from the wayfinder map (permali
 
 ## deepseek report
 
-Found it. The report is artifacts/unrecovered-legacy-media.md, produced by the dry-run of scripts/recover-legacy-media-from-served-mirror.ts (a follow-up to scripts/rescue-stale-media.ts). Re-running with --limit 1 against each legacy_id is how you'd regenerate the list.
+Found it. The report is artifacts/unrecovered-legacy-media.md, produced by the dry-run of scripts/retired/recover-legacy-media-from-served-mirror.ts (a follow-up to scripts/rescue-stale-media.ts). Re-running with --limit 1 against each legacy_id is how you'd regenerate the list.
 Now the bucket findings — I checked all 23 refs against the synced artifacts\s3-jknm:
 Recoverable — the bytes are in this bucket (15 refs):
 - legacy_id 637 Radeščica (13 jpgs) — all present, but under cistilna-akcija-vvo-izvira-radescice-2-06-02-2024/ (the stale URLs reference a different slug, so the mirror-match failed). Not actually lost.

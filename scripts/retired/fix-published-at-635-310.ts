@@ -20,8 +20,8 @@ import { Article } from "~/server/db/schema";
  * published_at := created_at for these two rows; nothing else touches them.
  *
  * Usage:
- *   bun run scripts/fix-published-at-635-310.ts            # dry run
- *   bun run scripts/fix-published-at-635-310.ts --execute
+ *   bun run scripts/retired/fix-published-at-635-310.ts            # dry run
+ *   bun run scripts/retired/fix-published-at-635-310.ts --execute
  */
 
 async function main() {

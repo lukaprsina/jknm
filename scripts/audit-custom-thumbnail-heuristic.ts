@@ -8,7 +8,7 @@ import { db } from "~/server/db";
  * `reconstruct_thumbnail_crop` (src/components/article/new-adapter.ts) has no
  * way to tell "thumbnail picked from an image already in the article body"
  * apart from "thumbnail uploaded standalone" for any article whose settings
- * dialog hasn't been resaved since. scripts/articles.json is the old export
+ * dialog hasn't been resaved since. artifacts/articles.json is the old export
  * and still carries the real flag per article (keyed by `old_id`, not `id` —
  * see fix-legacy-ids-final-reconcile.ts for why `id` is the wrong key). This
  * script re-derives the flag with the same heuristic the backfill would use
@@ -21,7 +21,7 @@ import { db } from "~/server/db";
  * Writes nothing to the db. Usage: bun run scripts/audit-custom-thumbnail-heuristic.ts
  */
 
-const LEGACY_JSON_PATH = "scripts/articles.json";
+const LEGACY_JSON_PATH = "artifacts/articles.json";
 const OUT_PATH = "artifacts/custom-thumbnail-heuristic-audit.json";
 
 interface LegacyArticle {

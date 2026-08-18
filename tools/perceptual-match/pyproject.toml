@@ -1,0 +1,12 @@
+[project]
+name = "perceptual-match"
+version = "0.1.0"
+description = "DINOv2 perceptual-similarity pass for legacy-media-hash-diff's missing_hash findings"
+requires-python = ">=3.13"
+dependencies = [
+    "torch>=2.4",
+    "torchvision>=0.19",
+    "transformers>=4.44",
+    "pillow>=10.4",
+    "numpy>=2.0",
+]

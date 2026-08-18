@@ -12,7 +12,7 @@ import { Article } from "~/server/db/schema";
  *    legacy export by publish order, which is ambiguous when two articles
  *    share a publish date — the tiebreak was arbitrary and landed backwards
  *    for two pairs. Both artifacts/Objave.txt (the old site's own DB export)
- *    and scripts/articles.json's `old_id` independently give the true ids:
+ *    and artifacts/articles.json's `old_id` independently give the true ids:
  *      51 "Pregledali osem novih jam ..."   <-> 52 "Predstavljamo kratek film ..."
  *      309 "Brezno pri Vratnicah"           <-> 310 "Tečaj v Sežani"
  *
@@ -24,13 +24,13 @@ import { Article } from "~/server/db/schema";
  *    leftover from the original migration's bad numbering (see below) — it
  *    gets nulled.
  *
- * Root cause of that bad numbering, for the record: scripts/articles.json
+ * Root cause of that bad numbering, for the record: artifacts/articles.json
  * carries both `old_id` (the real jknm.si id) and `id` (a re-sequenced 1..684
  * counter). The original migration populated `legacy_id` from `id`, so every
  * gap in the real ids shifted everything after it, and new-site-only rows got
  * a number they never had.
  *
- * Note `old_id: null` in articles.json does NOT mean "no old-site page" — the
+ * Note `old_id: null` in artifacts/articles.json does NOT mean "no old-site page" — the
  * admin posted to both sites during the transition, and the scrape found real
  * pages for many such rows. The scrape, not that field, is what decides here.
  *
@@ -41,7 +41,7 @@ import { Article } from "~/server/db/schema";
 
 const LAST_REAL_LEGACY_ID = 692;
 
-/** Verified against both Objave.txt and articles.json's `old_id`. */
+/** Verified against both Objave.txt and artifacts/articles.json's `old_id`. */
 const SWAPS: { legacy_id: number; title_contains: string }[] = [
 	{ legacy_id: 51, title_contains: "Pregledali osem novih jam" },
 	{ legacy_id: 52, title_contains: "Predstavljamo kratek film" },

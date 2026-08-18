@@ -2,8 +2,8 @@ import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { parse as parse_csv } from "csv-parse/sync";
-import mime from "mime/lite";
 import { is_waived, load_waivers } from "~/lib/legacy-diff-waivers";
+import { resolve_legacy_image_bytes } from "~/lib/legacy-media-bytes";
 import { extract_legacy_media_paths } from "~/lib/legacy-media-source";
 import { resolve_pdf_bytes } from "~/lib/resolve-static-pdf";
 import { db } from "~/server/db";
@@ -115,28 +115,6 @@ function to_media_ref(kind: Kind, raw: string): MediaRef | null {
 	return { kind, url: url.toString(), key: url.pathname.replace(/^\/+/, "") };
 }
 
-async function read_served_image(key: string) {
-	const bytes = await fs
-		.readFile(path.join(SERVED_ROOT, key))
-		.catch(() => null);
-	if (!bytes) return null;
-	const extension = path.extname(key).slice(1).toLowerCase();
-	return {
-		bytes,
-		content_type: mime.getType(extension) ?? "application/octet-stream",
-	};
-}
-
-async function fetch_live_image(url: string) {
-	const response = await fetch(url);
-	if (!response.ok) return null;
-	return {
-		bytes: Buffer.from(await response.arrayBuffer()),
-		content_type:
-			response.headers.get("content-type") ?? "application/octet-stream",
-	};
-}
-
 async function resolve_media_bytes(ref: MediaRef) {
 	if (ref.kind === "pdf") {
 		try {
@@ -151,13 +129,13 @@ async function resolve_media_bytes(ref: MediaRef) {
 		}
 	}
 
-	const served = await read_served_image(ref.key);
-	if (served) return { bytes: served.bytes, source: "served" as const };
-
-	const live = await fetch_live_image(ref.url);
-	if (live) return { bytes: live.bytes, source: "live" as const };
-
-	return null;
+	const resolved = await resolve_legacy_image_bytes(
+		SERVED_ROOT,
+		ref.url,
+		ref.key,
+	);
+	if (!resolved) return null;
+	return { bytes: resolved.bytes, source: resolved.source };
 }
 
 function hash_bytes(bytes: Buffer): string {
