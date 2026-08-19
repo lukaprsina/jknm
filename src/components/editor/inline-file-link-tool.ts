@@ -2,13 +2,14 @@ import type { API, InlineTool, SanitizerConfig } from "@editorjs/editorjs";
 import { upload_file } from "../aws-s3/upload-file";
 
 /**
- * Inline Tool: pick a file (PDF), upload it, and wrap the selection (or, if
- * nothing is selected, the uploaded filename) in a plain `<a href>` — the
- * shape every pre-rewrite article uses for PDFs. `@editorjs/attaches` is a
- * Block Tool (a card widget); this is the missing inline counterpart,
- * modeled on the core `link` Inline Tool (vendor/editorjs/src/components/
- * inline-tools/inline-tool-link.ts), swapping its URL prompt for a file
- * upload via the same `upload_file` used by the image/attaches tools.
+ * Inline Tool: pick any file, upload it, and wrap the selection (or, if
+ * nothing is selected, the uploaded filename) in a plain `<a href>`. The
+ * shape every pre-rewrite article uses for PDFs and other attachments.
+ * `@editorjs/attaches` is a Block Tool (a card widget); this is the missing
+ * inline counterpart, modeled on the core `link` Inline Tool
+ * (vendor/editorjs/src/components/inline-tools/inline-tool-link.ts), swapping
+ * its URL prompt for a file upload via the same `upload_file` used by the
+ * image/attaches tools.
  */
 
 /**
@@ -22,7 +23,6 @@ function get_shared_file_input(): HTMLInputElement {
 	shared_file_input ??= (() => {
 		const input = document.createElement("input");
 		input.type = "file";
-		input.accept = "application/pdf";
 		input.style.display = "none";
 		document.body.appendChild(input);
 		return input;
@@ -38,7 +38,7 @@ function get_shared_file_input(): HTMLInputElement {
  * highlight. The `focus` fallback covers browsers where the `cancel` event
  * on `<input type="file">` isn't supported.
  */
-function pick_pdf_file(): Promise<File | null> {
+function pick_file(): Promise<File | null> {
 	const input = get_shared_file_input();
 	input.value = "";
 
@@ -115,7 +115,7 @@ export default class InlineFileLinkTool implements InlineTool {
 	}
 
 	private async handle_file_selected(): Promise<void> {
-		const file = await pick_pdf_file();
+		const file = await pick_file();
 
 		this.api.selection.restore();
 		this.api.selection.removeFakeBackground();

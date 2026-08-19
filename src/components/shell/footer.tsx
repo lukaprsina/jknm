@@ -62,7 +62,7 @@ export function Footer() {
 						pravice pridržane.
 					</p>
 					<Link href="/prijava" className="text-gray-400 hover:text-gray-300">
-						Prijava upravitelja
+						Administrator
 					</Link>
 				</div>
 			</div>

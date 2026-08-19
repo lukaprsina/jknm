@@ -117,7 +117,7 @@ export function IntranetIcon() {
 					<UsersIcon />
 				</Link>
 			</TooltipTrigger>
-			<TooltipContent>Prijava</TooltipContent>
+			<TooltipContent>Za člane</TooltipContent>
 		</Tooltip>
 	);
 }
