@@ -220,7 +220,7 @@ export const Media = pgTable("media", {
 	// set live by ingest_media() (src/server/media/ingest.ts), which also uses
 	// it to reuse an existing row instead of inserting a dupe. Rows created
 	// before that check existed may still be null until backfilled by
-	// scripts/analyze-media-duplicates.ts.
+	// scripts/retired/media/analyze-media-duplicates.ts.
 	hash: varchar("hash", { length: 64 }).unique(),
 	created_at: timestamp("created_at", { withTimezone: true })
 		.default(sql`CURRENT_TIMESTAMP`)

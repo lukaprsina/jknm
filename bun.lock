@@ -29,10 +29,6 @@
         "@editorjs/warning": "^1.4.0",
         "@hookform/resolvers": "^5.7.1",
         "@kodingdotninja/use-tailwind-breakpoint": "^1.0.0",
-        "@orama/orama": "^3.1.18",
-        "@orama/plugin-data-persistence": "^3.1.18",
-        "@orama/plugin-qps": "^3.1.18",
-        "@orama/stemmers": "^3.1.18",
         "@orpc/client": "beta",
         "@orpc/next": "beta",
         "@orpc/server": "beta",
@@ -635,14 +631,6 @@
     "@nolyfill/is-core-module": ["@nolyfill/is-core-module@1.0.39", "", {}, "sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA=="],
 
     "@opentelemetry/semantic-conventions": ["@opentelemetry/semantic-conventions@1.43.0", "", {}, "sha512-eSYWTm620tTk45EKSedaUL8MFYI8hW164hIXsgIHyxu3VobUB3fFCu5t0hQby6OoWRPsG1KkKUG2M5UadiLiVg=="],
-
-    "@orama/orama": ["@orama/orama@3.1.18", "", {}, "sha512-a61ljmRVVyG5MC/698C8/FfFDw5a8LOIvyOLW5fztgUXqUpc1jOfQzOitSCbge657OgXXThmY3Tk8fpiDb4UcA=="],
-
-    "@orama/plugin-data-persistence": ["@orama/plugin-data-persistence@3.1.18", "", { "dependencies": { "@msgpack/msgpack": "^3.1.2", "@orama/orama": "3.1.18", "dpack": "^0.6.22", "seqproto": "^0.2.3" } }, "sha512-pfBbpK96VRW/7IkdMHn2HaW3/+4k2C9Uwyup0IONNuz5bG3L1orCNFZPBmu+zcokOU2YH+IAVuQz6MlvqOe3iw=="],
-
-    "@orama/plugin-qps": ["@orama/plugin-qps@3.1.18", "", { "dependencies": { "@orama/orama": "3.1.18" } }, "sha512-q19pFGF1jRk+dGR4j/4MscCACtZo6DKO8ZjnM3AWJICzjWVYJYBvlGuD2+Jt079iUW04cGh4EpMw5WxaTpZQCw=="],
-
-    "@orama/stemmers": ["@orama/stemmers@3.1.18", "", {}, "sha512-xXs5fpiUvBs4jJZtnayJmUSomdxxiwwwvTbAzPHSyI6geLM7bxXHgpVlYz4JeMBycHX8bHF7j9m7F35BxhuZ8g=="],
 
     "@orpc/client": ["@orpc/client@2.0.0-beta.27", "", { "dependencies": { "@orpc/shared": "2.0.0-beta.27", "@standardserver/core": "^0.7.1", "@standardserver/fetch": "^0.7.1", "@standardserver/peer": "^0.7.1" } }, "sha512-wQ9D0ghcmGvC6+pkC7ccWm3syNs8/hvh257jmz+j+bdEYwSgDhxa1BVi70T4/IoAhbf0d6ohRYp78zlm9wchhQ=="],
 

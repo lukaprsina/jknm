@@ -1,10 +1,11 @@
 # TODO
 
-- legacy_id 606 (Kočevski Rog je očiščen pnevmatik): 2 body links point at dead `jknm.s3...amazonaws.com` paths (garbled, probably a PDF originally) — re-upload via inline-file-link-tool
-- legacy_id 637 + its `[2]` duplicate draft (Čistilna akcija ... Radeščice): 15 broken image/PDF refs on dead hosts, media never ingested — admin has originals
 - legacy_id 534 (Obisk Mihovške jame): `slika_5.JPG` dead on legacy site (fake-200 error page) — likely actually lost
 - legacy_id 642/657/666/677/685: 13 images DINOv2 flagged no_match — manual review
 - legacy_id 210/264/305/356: `.doc`/`.xls` attachments under image path scheme, unresolved by media-hash-diff — decide if these need fixing
+
+- 606: media is fixed; two malformed old-host partner links remain in the body.
+- 637: media is fixed; two old-host inline links (Dolenjski list and Vrelec) remain.
 
 - 534: okay, legacy img src was `/media/img/novice/2019/slika_5.JPG`, image exists at `/media/img/novice/2019/01/slika_5.JPG`. fixed on my site.
 - 637: admin needs to upload the better images.

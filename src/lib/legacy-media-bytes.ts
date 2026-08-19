@@ -6,7 +6,7 @@ import mime from "mime/lite";
  * Served-mirror-first, live-fetch-fallback byte resolution for legacy
  * *images* — the same pattern `resolve_pdf_bytes` (`resolve-static-pdf.ts`)
  * uses for PDFs, pulled out here so it isn't duplicated between
- * `scripts/legacy-media-hash-diff.ts` and `scripts/prepare-perceptual-match.ts`.
+ * `scripts/legacy-media-hash-diff.ts` and `scripts/retired/media/prepare-perceptual-match.ts`.
  *
  * Also mirrors `resolve_pdf_bytes`'s magic-byte check: the old ASP server
  * returns HTTP 200 with a generic HTML error page for some dead urls instead

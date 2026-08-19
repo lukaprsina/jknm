@@ -54,7 +54,7 @@ So the bucket resolves 15 of the 23; 6 files appear to be unrecoverable, and 2 w
 
 ## Dead `www.jknm.si` static-page links left in article content (intentionally, for now)
 
-Per `scripts/audit-article-hotlinks.ts`, 27 refs across 16 articles still link
+Per `scripts/retired/links/audit-article-hotlinks.ts`, 27 refs across 16 articles still link
 old-site pages that were never migrated (admin intentionally left these out —
 they're outdated). Leaving the surrounding paragraphs alone rather than
 stripping the links. `article-link` (13 refs, `/si/?id=N`) and `media-file`

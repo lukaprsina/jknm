@@ -1,7 +1,7 @@
 # Unrecovered legacy media (17 refs)
 
 `3631_cinkov_kriz.pdf` (legacy_id 78, 79, 82) resolved via
-`scripts/fix-cinkov-kriz-shared-pdf.ts` — see notable-pattern section below.
+`scripts/retired/repairs/fix-cinkov-kriz-shared-pdf.ts` — see notable-pattern section below.
 
 legacy_id 116, 145, 633, 75, 107, 500 (all "no unique filename match") also
 resolved, via a different route: `scripts/legacy-media-hash-diff.ts` found
@@ -54,5 +54,5 @@ source at all; 78's and 82's legacy content each list 2 candidate paths where
 the filename didn't match either uniquely) — but the file itself wasn't
 actually lost: it's `served/media/pdf/3631_Cinkov_kriz.pdf`, still linked
 live today from the static pages (zgodovina, raziskovanje) via the vsebina
-bucket. `scripts/fix-cinkov-kriz-shared-pdf.ts` ingested it once into
+bucket. `scripts/retired/repairs/fix-cinkov-kriz-shared-pdf.ts` ingested it once into
 gradivo and repointed all three articles at the same new url.

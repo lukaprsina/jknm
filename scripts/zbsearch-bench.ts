@@ -22,7 +22,7 @@ import { Article } from "~/server/db/schema";
  * package.json's `overrides`, which rewrites that specifier wherever it
  * shows up in the graph, not just top-level version ranges.
  *
- * Usage: bun run scripts/devroute/zbsearch-bench.ts
+ * Usage: bun run scripts/zbsearch-bench.ts
  */
 
 const SCHEMA = {

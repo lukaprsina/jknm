@@ -1,6 +1,6 @@
 """Step 2/3 of the perceptual-match pipeline.
 
-Reads the manifest scripts/prepare-perceptual-match.ts wrote
+Reads the manifest scripts/retired/media/prepare-perceptual-match.ts wrote
 (../../artifacts/media-hash-diff/perceptual-input.json), embeds every legacy
 and candidate image with DINOv2, and for each finding picks the
 highest-cosine-similarity candidate from that same article — chosen over a
@@ -17,7 +17,7 @@ bucket in step 3 before trusting them):
   - no_match   (< 0.75, or zero candidates on the article at all).
 
 Writes ../../artifacts/media-hash-diff/perceptual-match.json. Does not touch
-the waiver file - that's step 3 (scripts/review-perceptual-matches.ts).
+the waiver file - that's step 3 (scripts/retired/media/review-perceptual-matches.ts).
 
 Usage: uv run match.py
 """
@@ -49,7 +49,7 @@ def load_manifest() -> list[dict]:
     if not MANIFEST_PATH.exists():
         raise SystemExit(
             f"{MANIFEST_PATH} not found - run "
-            "`bun run scripts/prepare-perceptual-match.ts` first."
+            "`bun run scripts/retired/media/prepare-perceptual-match.ts` first."
         )
     return json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
 
@@ -161,7 +161,7 @@ def main() -> None:
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_PATH.write_text(json.dumps(results, indent=2), encoding="utf-8")
     print(f"\nWrote {len(results)} result(s) to {OUTPUT_PATH}")
-    print("Next: bun run scripts/review-perceptual-matches.ts")
+    print("Next: bun run scripts/retired/media/review-perceptual-matches.ts")
 
 
 if __name__ == "__main__":

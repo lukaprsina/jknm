@@ -86,7 +86,7 @@ There are **two independent ways bytes end up hosted**, and they don't know abou
 - `ingest_media`/`ingest_media_from_url` (`src/server/media/ingest.ts`) → `gradivo.jknm.org`,
   content-addressed (sha256 against `Media.hash`, `onConflictDoNothing`), creates a `Media` row.
   This is the path everything editor-facing and `scripts/legacy-media-hash-diff.ts` uses.
-- The static dehotlinking pipeline (`scripts/dehotlink-article-links.ts`,
+- The static dehotlinking pipeline (`scripts/retired/links/dehotlink-article-links.ts`,
   `scripts/dehotlink-static-pages.ts`, via `resolve_pdf_bytes` + `static_content_url`) →
   `vsebina.jknm.org`, **no `Media` row at all** — just a bucket upload.
 
@@ -142,9 +142,9 @@ anything, to fix — see the waiver system below.
 
 - **Built and running** as of 2026-08-18: `tools/perceptual-match/match.py` (DINOv2-small,
   `facebook/dinov2-small`, CLS-token cosine similarity), fed by
-  `scripts/prepare-perceptual-match.ts` (downloads legacy + candidate bytes to
+  `scripts/retired/media/prepare-perceptual-match.ts` (downloads legacy + candidate bytes to
   `artifacts/perceptual-cache/`, gitignored) and reviewed by
-  `scripts/review-perceptual-matches.ts`. Thresholds: `>= 0.90` same, `>= 0.75` maybe, else
+  `scripts/retired/media/review-perceptual-matches.ts`. Thresholds: `>= 0.90` same, `>= 0.75` maybe, else
   no_match.
 - Against the current (post-dedup) 27 real image findings, every one lands in `no_match` — no
   auto-waivable "same" cases yet. Spot-checked the closest score (legacy_id 642, 0.71) by eye:
