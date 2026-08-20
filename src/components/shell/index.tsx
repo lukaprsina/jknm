@@ -59,7 +59,7 @@ export async function Shell({
 				{!without_header ? (
 					<header className="w-full text-gray-800">
 						<DesktopHeader
-							className="hidden md:flex"
+							className="hidden lg:flex"
 							editor_controls={editor_controls}
 							nav_sections={nav_sections}
 						/>

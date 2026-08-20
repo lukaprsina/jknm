@@ -387,7 +387,7 @@ export function TimelineItem({
 				type="button"
 				title={`${item.value}: ${item.count} novic`}
 				className={cn(
-					"w-3 rounded-t-sm bg-blue-800/40 transition-colors hover:bg-blue-800/70",
+					"w-3 rounded-t-xs bg-blue-800/40 transition-colors hover:bg-blue-800/70",
 					item.isRefined && "bg-primary hover:bg-primary",
 				)}
 				style={{ height: bar_height }}

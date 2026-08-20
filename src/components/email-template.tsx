@@ -6,6 +6,7 @@ export async function AdminContactEmailTemplate({
 	email,
 	message,
 	address,
+	interest,
 }: z.infer<typeof contact_form_schema>) {
 	return (
 		<>
@@ -18,7 +19,10 @@ export async function AdminContactEmailTemplate({
 					<strong>E-pošta:</strong> {email}
 				</li>
 				<li>
-					<strong>Kraj/mesto:</strong> {address ?? "N/A"}
+					<strong>Prebivališče:</strong> {address}
+				</li>
+				<li>
+					<strong>Zanima me:</strong> {interest}
 				</li>
 				<li>
 					<strong>Sporočilo:</strong> {message}
@@ -32,6 +36,7 @@ export async function UserContactEmailTemplate({
 	email,
 	message,
 	address,
+	interest,
 }: z.infer<typeof contact_form_schema>) {
 	return (
 		<>
@@ -44,7 +49,10 @@ export async function UserContactEmailTemplate({
 					<strong>E-pošta:</strong> {email}
 				</li>
 				<li>
-					<strong>Kraj/mesto:</strong> {address ?? "N/A"}
+					<strong>Prebivališče:</strong> {address}
+				</li>
+				<li>
+					<strong>Zanima me:</strong> {interest}
 				</li>
 				<li>
 					<strong>Sporočilo:</strong> {message}

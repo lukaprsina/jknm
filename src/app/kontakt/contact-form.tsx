@@ -16,10 +16,11 @@ import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 
 export const contact_form_schema = z.object({
-	email: z.string(),
-	name: z.string(),
-	address: z.string().optional(),
-	message: z.string(),
+	email: z.string().min(1, "Obvezno polje").email("Neveljaven e-poštni naslov"),
+	name: z.string().min(1, "Obvezno polje"),
+	address: z.string().min(1, "Obvezno polje"),
+	interest: z.string().min(1, "Obvezno polje"),
+	message: z.string().min(1, "Obvezno polje"),
 });
 
 export default function ContactForm() {
@@ -29,6 +30,7 @@ export default function ContactForm() {
 			email: "",
 			name: "",
 			address: "",
+			interest: "",
 			message: "",
 		},
 	});
@@ -59,73 +61,76 @@ export default function ContactForm() {
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="mx-auto max-w-3xl space-y-4"
 			>
-				<div className="flex flex-col gap-4 sm:flex-row sm:gap-4">
-					<div className="flex-1 space-y-4">
-						<FormField
-							control={form.control}
-							name="email"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>E-pošta</FormLabel>
-									<FormControl>
-										<Input placeholder="" type="email" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="name"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Ime in priimek</FormLabel>
-									<FormControl>
-										<Input placeholder="" type="text" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="address"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Kraj/mesto</FormLabel>
-									<FormControl>
-										<Input
-											autoComplete="address-level2"
-											placeholder=""
-											type=""
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-					</div>
-					<div className="mb-8 flex-1 shrink-0">
-						<FormField
-							control={form.control}
-							name="message"
-							render={({ field }) => (
-								<FormItem className="h-full w-full">
-									<FormLabel>Sporočilo</FormLabel>
-									<FormControl>
-										<Textarea
-											placeholder=""
-											className="h-full w-full resize-none"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-					</div>
-				</div>
+				<FormField
+					control={form.control}
+					name="name"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Ime in priimek</FormLabel>
+							<FormControl>
+								<Input placeholder="" type="text" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="address"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Prebivališče</FormLabel>
+							<FormControl>
+								<Input
+									autoComplete="address-level2"
+									placeholder=""
+									type="text"
+									{...field}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="email"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>E-pošta</FormLabel>
+							<FormControl>
+								<Input placeholder="" type="email" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="interest"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Zanima me</FormLabel>
+							<FormControl>
+								<Input placeholder="" type="text" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="message"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Sporočilo</FormLabel>
+							<FormControl>
+								<Textarea placeholder="" className="resize-none" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
 				<Button type="submit">Pošlji sporočilo</Button>
 			</form>
 		</Form>

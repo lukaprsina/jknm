@@ -32,6 +32,7 @@ import { HomeLink } from "./home-link";
 import {
 	ContactIcon,
 	FacebookIcon,
+	InstagramIcon,
 	IntranetIcon,
 	SearchIcon,
 	YoutubeIcon,
@@ -78,7 +79,7 @@ export function MobileHeader({
 	editor_controls: ReactNode;
 }) {
 	const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
-	const md_breakpoint = useBreakpoint("md");
+	const lg_breakpoint = useBreakpoint("lg");
 	const has_toc = useHasToc();
 	const navbar_height = useNavbarHeight();
 	const is_top = useIsScrollTop();
@@ -89,7 +90,7 @@ export function MobileHeader({
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: has_toc isn't read here, but it changes the DOM layout that clientHeight measures below -- see comment inside.
 	useEffect(() => {
-		if (md_breakpoint) {
+		if (lg_breakpoint) {
 			mobile_nav_store.setState({ open: false });
 			mobile_toc_store.setState({ open: false });
 			return;
@@ -113,10 +114,10 @@ export function MobileHeader({
 			"--mobile-header-height",
 			`${height}px`,
 		);
-	}, [md_breakpoint, has_toc]);
+	}, [lg_breakpoint, has_toc]);
 
 	return (
-		<div className={cn("md:hidden", className)} {...props}>
+		<div className={cn("lg:hidden", className)} {...props}>
 			<div style={{ height: navbar_height }} className="min-h-20" aria-hidden />
 			<div ref={sticky_navbar_ref} className="fixed top-0 z-40 w-full">
 				<div
@@ -226,6 +227,7 @@ export function MobileSheet({
 								<SearchIcon />
 								<FacebookIcon />
 								<YoutubeIcon />
+								<InstagramIcon />
 								<ContactIcon />
 								<IntranetIcon />
 							</div>

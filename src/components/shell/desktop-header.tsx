@@ -12,6 +12,7 @@ import { HomeLink } from "./home-link";
 import {
 	ContactIcon,
 	FacebookIcon,
+	InstagramIcon,
 	IntranetIcon,
 	SearchIcon,
 	YoutubeIcon,
@@ -51,7 +52,7 @@ export function DesktopHeader({
 	const header_ref = useRef<HTMLDivElement | null>(null);
 	const is_header_sticky = useIsHeaderSticky();
 	const navbar_height = useNavbarHeight();
-	const md_breakpoint = useBreakpoint("md");
+	const lg_breakpoint = useBreakpoint("lg");
 
 	const handle_scroll = useCallback(() => {
 		if (!header_ref.current) return;
@@ -68,12 +69,12 @@ export function DesktopHeader({
 	useEffect(() => {
 		if (!sticky_navbar_ref.current) return;
 
-		if (md_breakpoint) {
+		if (lg_breakpoint) {
 			shell_store.setState({
 				navbar_height: sticky_navbar_ref.current.clientHeight,
 			});
 		}
-	}, [md_breakpoint]);
+	}, [lg_breakpoint]);
 
 	useEffect(() => {
 		window.addEventListener("scroll", handle_scroll);
@@ -99,8 +100,10 @@ export function DesktopHeader({
 				{...props}
 			>
 				<div className="flex h-full w-full items-center">
-					<div className="flex-1 flex items-center">
-						{/* left spacer (reserved for future items) */}
+					<div className="flex-1 flex items-center gap-4">
+						<FacebookIcon />
+						<YoutubeIcon />
+						<InstagramIcon />
 					</div>
 					<div className="flex-1 flex items-center justify-center">
 						<HomeLink>
@@ -113,14 +116,8 @@ export function DesktopHeader({
 							{/* <NoviceAutocomplete detached="" /> */}
 							<div className="flex items-center gap-4">
 								<SearchIcon />
-								<div>
-									<FacebookIcon />
-									<YoutubeIcon />
-								</div>
-								<div>
-									<ContactIcon />
-									<IntranetIcon />
-								</div>
+								<ContactIcon />
+								<IntranetIcon />
 							</div>
 						</div>
 					</div>

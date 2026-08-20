@@ -52,7 +52,7 @@ export function TocAwareLayout({
 					// the Root's `overflow: hidden` clipped the overflow
 					// instead of scrolling -- long TOCs were cut off.
 					"sticky top-24 hidden h-[calc(100vh-6rem)] w-[300px] shrink-0",
-					has_toc && "md:block",
+					has_toc && "lg:block",
 				)}
 			/>
 		</div>
