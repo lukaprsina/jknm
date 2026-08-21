@@ -175,6 +175,9 @@
       },
     },
   },
+  "patchedDependencies": {
+    "@editorjs/editorjs@2.31.6": "patches/@editorjs%2Feditorjs@2.31.6.patch",
+  },
   "overrides": {
     "@editorjs/editorjs": "2.31.6",
     "@types/react": "19.2.14",
