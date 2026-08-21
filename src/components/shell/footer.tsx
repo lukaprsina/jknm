@@ -4,8 +4,8 @@ import { FacebookIcon, InstagramIcon, YoutubeIcon } from "./icons";
 
 export function Footer() {
 	return (
-		<footer className="bg-gray-950 text-white">
-			<div className="bg-gradient-to-b from-gray-600 to-gray-950 py-12">
+		<footer className="bg-[#170806] text-white">
+			<div className="bg-linear-to-b from-[#73281b] to-[#170806] py-12">
 				<div className="container mx-auto px-4">
 					<div className="flex flex-col justify-between space-y-8 md:flex-row md:space-x-8 md:space-y-0">
 						<div className="flex-1">
@@ -34,7 +34,7 @@ export function Footer() {
 									<Mail className="mr-2 h-5 w-5" />
 									<Link
 										href="mailto:info@jknm.si"
-										className="hover:text-gray-300"
+										className="hover:text-[#e9d6d3]"
 									>
 										info@jknm.si
 									</Link>
@@ -43,7 +43,7 @@ export function Footer() {
 									<Phone className="mr-2 h-5 w-5 shrink-0" />
 									<Link
 										href="tel:+38641871385"
-										className="whitespace-nowrap hover:text-gray-300"
+										className="whitespace-nowrap hover:text-[#e9d6d3]"
 									>
 										+386 (0)41 871 385
 									</Link>
@@ -68,7 +68,7 @@ export function Footer() {
 						&copy; {new Date().getFullYear()} Jamarski klub Novo mesto. Vse
 						pravice pridržane.
 					</p>
-					<Link href="/prijava" className="text-gray-400 hover:text-gray-300">
+					<Link href="/prijava" className="text-[#d3ada7] hover:text-[#e9d6d3]">
 						Administrator
 					</Link>
 				</div>
