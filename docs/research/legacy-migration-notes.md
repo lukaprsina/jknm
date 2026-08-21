@@ -48,18 +48,23 @@ still to decide or do.
   + `static_content_url`) → `vsebina.jknm.org`, **no `Media` row**.
 - The same file can legitimately exist as byte-identical copies in both places with no link
   between them. `media-hash-diff`'s `wrong_article` finding means "a `Media` row with this hash
-  exists somewhere" — not "this article's link is broken." Check whether the citing article
-  already has a *working* link before treating it as a fix candidate
-  (`scripts/fix-wrong-article-media.ts`'s two-case split; confirmed 2026-08-20 all 4 live
-  `wrong_article` findings — legacy_id 659/663/664 — were already on working hosts).
+  exists somewhere" — not "this article's link is broken." `scripts/fix-wrong-article-media.ts`'s
+  two-case split only rewrites *dead*-host links (`stale-media-refs.ts`'s two hardcoded hosts);
+  a working `vsebina.jknm.org` link is left alone by design, reported as "already on a working
+  host" rather than touched. The 4 `wrong_article` findings on legacy_id 659/663/664 (shared DK
+  journal PDFs) were exactly that case — confirmed 2026-08-20 as harmless — but the maintainer
+  later decided (2026-08-21) these 3 articles specifically should be on the tracked
+  `gradivo`/`Media` pipeline rather than the untracked `vsebina` bucket, so
+  `scripts/retired/repairs/fix-vsebina-to-gradivo-media.ts` (a one-off, not
+  `fix-wrong-article-media.ts`) repointed all 4 links at the existing `gradivo` `Media` rows and
+  reconciled. `legacy-media-hash-diff.ts` now finds 0 unwaived findings.
 - `media_to_articles` is **fully derived per-article** from that article's own `content_json` on
   save (`reconcile_media_to_articles`) — never insert a row directly. Two articles legitimately
   sharing one `Media` row (same PDF cited from both) each need their *own* save/reconcile to get
   their own join row — an article whose `content_json` already links a shared PDF but was never
   itself re-saved has no join row of its own, and `sweep-stale-content.ts`'s orphan check only
   looks at `media_to_articles`, not `content_json` text. So it can look orphaned and get deleted
-  even while still genuinely referenced. Fix: run `reconcile_media_to_articles` on the citing
-  article directly (no content change needed) — done for 659/663/664 on 2026-08-20.
+  even while still genuinely referenced.
 
 ## The 2024–2025 "missing media" red herring
 
@@ -81,7 +86,9 @@ quality" from "actually missing" before deciding what to waive vs. fix. Waived m
   0 or >1 hits fall to `no_match.json`/`ambiguous.json` (manual). Fully resolved as of
   2026-08-20 — re-running `legacy-link-diff.ts` finds 0 `missing_article_link`/
   `missing_static_link` findings left.
-- `wrong_article`: `scripts/fix-wrong-article-media.ts` — see two-case split above.
+- `wrong_article`: `scripts/fix-wrong-article-media.ts` — see two-case split above. 2026-08-21:
+  all remaining findings resolved via the `vsebina`→`gradivo` one-off, not this script — see
+  above.
 - Static content-page hotlinks (Klub/Varstvo/Zgodovina) aren't legacy_id-driven, so there's no
   findings JSON for them — fixed with a hardcoded one-off, `scripts/fix-static-page-links.ts`.
   2026-08-20: ingested & rewrote 8 Zgodovina `Dolenjski_kras_N.pdf` links (old target was the

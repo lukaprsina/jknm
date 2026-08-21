@@ -754,4 +754,28 @@
 	{ "legacy_id": 679, "kind": "missing_hash", "legacy_url": "https://www.jknm.si/media/img/novice/2025/10/IMG20250322115241.jpg" },
 	{ "legacy_id": 681, "kind": "missing_hash", "legacy_url": "https://www.jknm.si/media/img/novice/2025/12/IMG_1522.JPG" },
 	{ "legacy_id": 512, "kind": "missing_hash", "legacy_url": "https://www.jknm.si/media/img/novice/2018/08/1.jpg" },
+
+	// Confirmed by the maintainer (see TODO.md history, commit 061e5a4) -
+	// intentional replacements/drops, not lost media.
+	{ "legacy_id": 657, "kind": "missing_hash", "legacy_url": "https://www.jknm.si/media/img/novice/2024/27/Slika_9.jpg" },
+	{ "legacy_id": 666, "kind": "missing_hash", "legacy_url": "https://www.jknm.si/media/img/novice/2024/36/slika_10.JPG" },
+	{ "legacy_id": 667, "kind": "missing_hash", "legacy_url": "https://www.jknm.si/media/img/novice/2024/37/Artemida.pdf" },
+	{ "legacy_id": 677, "kind": "missing_hash", "legacy_url": "https://www.jknm.si/media/img/novice/2025/08/putic3.JPG" },
+	{ "legacy_id": 677, "kind": "missing_hash", "legacy_url": "https://www.jknm.si/media/img/novice/2025/08/putic5.jpg" },
+	{ "legacy_id": 685, "kind": "missing_hash", "legacy_url": "https://www.jknm.si/media/img/novice/2025/16/20250826_005.jpg" },
+
+	// Legacy href is missing a `/01/` path segment (typo on the old site,
+	// permanent - the scraped legacy source can't be fixed). Confirmed by the
+	// maintainer: correct image lives at .../2019/01/slika_5.JPG and the new
+	// site's article already links it there.
+	{ "legacy_id": 534, "kind": "unresolved", "legacy_url": "https://www.jknm.si/media/img/novice/2019/slika_5.JPG" },
+
+	// .doc/.xls attachments under the image path scheme - the magic-byte
+	// check only accepts JPEG/PNG/GIF, so these trip `unresolved` by
+	// construction, not because anything's missing. See
+	// docs/research/legacy-migration-notes.md.
+	{ "legacy_id": 356, "kind": "unresolved", "legacy_url": "https://www.jknm.si/media/img/novice/2014/09/Tecaj_jamar_pripravnik_2014.xls" },
+	{ "legacy_id": 305, "kind": "unresolved", "legacy_url": "https://www.jknm.si/media/img/novice/2013/04/Tecaj_jamar_pripravnik_2013a.xls" },
+	{ "legacy_id": 210, "kind": "unresolved", "legacy_url": "https://www.jknm.si/media/img/novice/2011/28/Jama_na_GV1_03_04.doc" },
+	{ "legacy_id": 264, "kind": "unresolved", "legacy_url": "https://www.jknm.si/media/img/novice/2012/14/Tecaj_jamar_pripravnik_2012.xls" },
 ]
