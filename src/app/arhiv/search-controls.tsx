@@ -3,7 +3,7 @@ import { Button } from "~/components/ui/button";
 import { ButtonGroup } from "~/components/ui/button-group";
 import {
 	AuthorRefinement,
-	MySearchBox2,
+	MySearchBox,
 	MySortBy,
 	TimelineRefinement,
 } from "./components";
@@ -22,7 +22,7 @@ export function SearchControls({
 			</div>
 			<div className="flex flex-col gap-2 lg:flex-row lg:items-center">
 				<div className="flex items-center gap-2 lg:flex-3">
-					<MySearchBox2 />
+					<MySearchBox />
 				</div>
 				<div className="flex flex-col gap-2 min-[500px]:flex-row min-[500px]:items-center">
 					<div className="flex flex-1 items-center gap-2">

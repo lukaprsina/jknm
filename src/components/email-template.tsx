@@ -4,7 +4,6 @@ import type { contact_form_schema } from "../app/kontakt/contact-form";
 export async function AdminContactEmailTemplate({
 	name,
 	email,
-	message,
 	address,
 	interest,
 }: z.infer<typeof contact_form_schema>) {
@@ -24,9 +23,6 @@ export async function AdminContactEmailTemplate({
 				<li>
 					<strong>Zanima me:</strong> {interest}
 				</li>
-				<li>
-					<strong>Sporočilo:</strong> {message}
-				</li>
 			</ul>
 		</>
 	);
@@ -34,7 +30,6 @@ export async function AdminContactEmailTemplate({
 export async function UserContactEmailTemplate({
 	name,
 	email,
-	message,
 	address,
 	interest,
 }: z.infer<typeof contact_form_schema>) {
@@ -53,9 +48,6 @@ export async function UserContactEmailTemplate({
 				</li>
 				<li>
 					<strong>Zanima me:</strong> {interest}
-				</li>
-				<li>
-					<strong>Sporočilo:</strong> {message}
 				</li>
 			</ul>
 		</>
