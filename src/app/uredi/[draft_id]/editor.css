@@ -11,3 +11,15 @@
 	width: 14px;
 	height: 14px;
 }
+
+/* @editorjs/image hardcodes a fixed 50px reserve for an absolutely-positioned
+   caption, which overflows onto the image when the block is narrow enough
+   that the caption wraps to more than one line. Put it back in normal flow. */
+.image-tool__caption {
+	position: static !important;
+	margin-bottom: 0 !important;
+}
+
+.image-tool--caption {
+	padding-bottom: 0 !important;
+}
