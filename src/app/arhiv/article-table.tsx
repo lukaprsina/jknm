@@ -52,7 +52,7 @@ export function ArticleTable({
 			<Table className="w-full min-w-lg table-fixed">
 				<TableHeader>
 					<TableRow>
-						<TableHead className="h-9 px-2">
+						<TableHead className="h-8 px-2">
 							<Button
 								variant="ghost"
 								size="sm"
@@ -66,7 +66,7 @@ export function ArticleTable({
 								{sort === TITLE_ASC && <ChevronUpIcon />}
 							</Button>
 						</TableHead>
-						<TableHead className="h-9 w-40 px-2 sm:w-56">
+						<TableHead className="h-8 w-40 px-2 sm:w-56">
 							<Button
 								variant="ghost"
 								size="sm"
@@ -80,7 +80,7 @@ export function ArticleTable({
 								{sort === AUTHOR_ASC && <ChevronUpIcon />}
 							</Button>
 						</TableHead>
-						<TableHead className="h-9 w-28 px-2 sm:w-40">
+						<TableHead className="h-8 w-28 px-2 sm:w-40">
 							<Button
 								variant="ghost"
 								size="sm"
@@ -126,17 +126,17 @@ function ArticleTableRow({
 }) {
 	return (
 		<TableRow ref={ref} key={hit.objectID}>
-			<TableCell className="max-w-0 truncate p-2 font-medium">
+			<TableCell className="max-w-0 truncate py-1.5 px-2 font-medium">
 				<Button variant="link" size="sm" asChild className="h-auto p-0">
 					<Link href={get_published_article_link(hit.url)} className="truncate">
 						{hit.title}
 					</Link>
 				</Button>
 			</TableCell>
-			<TableCell className="truncate p-2">
+			<TableCell className="truncate py-1.5 px-2">
 				<Authors author_ids={hit.author_ids} format={format_author_sort_name} />
 			</TableCell>
-			<TableCell className="whitespace-nowrap p-2 text-muted-foreground">
+			<TableCell className="whitespace-nowrap py-1.5 px-2 text-muted-foreground">
 				{format_date_for_human(new Date(hit.published_at))}
 			</TableCell>
 		</TableRow>
