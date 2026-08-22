@@ -51,9 +51,13 @@ yarn-error.log*
 /artifacts/perceptual-cache/
 /artifacts/evergreen-page-audit/
 /artifacts/evergreen-links/
+/artifacts/evergreen-link-context/
+/artifacts/worddoc-crossref/
 
 # local scratch cache for one-off scripts
 scripts/.cache
 
 # python
 __pycache__/
+
+/worddoc/
