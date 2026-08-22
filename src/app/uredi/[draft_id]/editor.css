@@ -1,3 +1,5 @@
+/* biome-ignore-all lint/complexity/noImportantStyles: override editorjs' css */
+
 .ce-block__content,
 .ce-toolbar__content {
 	max-width: calc(100% - 180px);
@@ -22,4 +24,21 @@
 
 .image-tool--caption {
 	padding-bottom: 0 !important;
+}
+
+/* @editorjs/table (vendored, no source in this repo) themes itself entirely
+   through custom properties scoped on .tc-wrap, so retargeting those to our
+   design tokens reskins every tc-* rule at once instead of overriding each
+   one. Kept in sync by eye with the `article` variant in
+   ~/components/ui/table.tsx (the renderer published articles actually use
+   for `table` blocks) so the editing view previews close to the real
+   published look. */
+.tc-wrap {
+	--color-background: hsl(var(--muted)) !important;
+	--color-text-secondary: hsl(var(--muted-foreground)) !important;
+	--color-border: hsl(var(--border)) !important;
+}
+
+.tc-cell {
+	padding: calc(var(--spacing) * 1.4) 0.5rem !important;
 }

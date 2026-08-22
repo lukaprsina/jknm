@@ -1,4 +1,4 @@
-import { revalidatePath, updateTag } from "next/cache";
+import { revalidatePath, revalidateTag, updateTag } from "next/cache";
 import { type DomainEvent, invalidations_for } from "~/lib/cache-policy";
 
 /**
@@ -26,6 +26,23 @@ export function apply_server_invalidations(event: DomainEvent) {
 
 	for (const tag of tags) {
 		updateTag(tag);
+	}
+
+	for (const path of paths) {
+		revalidatePath(path);
+	}
+}
+
+/**
+ * Route Handler adapter for callers outside a Server Action. `updateTag` is
+ * intentionally not used here because Next only permits it in Server
+ * Actions; `revalidateTag` is the Route Handler-compatible counterpart.
+ */
+export function apply_route_invalidations(event: DomainEvent) {
+	const { tags, paths } = invalidations_for(event);
+
+	for (const tag of tags) {
+		revalidateTag(tag, "max");
 	}
 
 	for (const path of paths) {

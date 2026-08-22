@@ -11,6 +11,15 @@ import { createElement, useEffect, useMemo, useRef, useState } from "react";
 import ArticleDescription from "~/components/article/description";
 import { gallery_store, useGalleryImages } from "~/components/gallery-store";
 import { TableOfContents } from "~/components/toc/table-of-contents";
+import {
+	Table,
+	TableBody,
+	TableCaption,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "~/components/ui/table";
 import type { EditorJSImageData } from "~/lib/editor-utils";
 import {
 	extract_headings_from_content,
@@ -56,6 +65,7 @@ function ArticleBody({
 					image: NextImageRenderer,
 					attaches: AttachesRenderer,
 					header: HeaderRenderer,
+					table: TableRenderer,
 				}}
 			/>
 		</ArticleLinksInNewTab>
@@ -290,6 +300,59 @@ export const HeaderRenderer: RenderFn<{
 		className,
 		dangerouslySetInnerHTML: { __html: sanitize_inline_html(data.text) },
 	});
+};
+
+// @editorjs/table (config: withHeadings: true) always saves `content` plus
+// `withHeadings`; it never emits `header`/`footer`/`caption` — those are
+// other table tools' fields, kept optional here since the renderer package's
+// type allows for them.
+interface EditorJSTableData {
+	content: string[][];
+	withHeadings?: boolean;
+	header?: string[];
+	footer?: string[];
+	caption?: string;
+}
+
+export const TableRenderer: RenderFn<EditorJSTableData> = ({ data }) => {
+	const rows = data.withHeadings ? data.content.slice(1) : data.content;
+	const heading_row = data.withHeadings ? data.content[0] : data.header;
+
+	return (
+		<Table className="border-collapse">
+			{data.caption && (
+				<TableCaption>{HTMLReactParser(data.caption)}</TableCaption>
+			)}
+			{heading_row && (
+				<TableHeader>
+					<TableRow>
+						{heading_row.map((cell, i) => (
+							// biome-ignore lint/suspicious/noArrayIndexKey: table columns are positional and never reordered
+							<TableHead key={i} variant="article">
+								{HTMLReactParser(cell)}
+							</TableHead>
+						))}
+					</TableRow>
+				</TableHeader>
+			)}
+			<TableBody>
+				{rows.map((row, row_index) => (
+					// biome-ignore lint/suspicious/noArrayIndexKey: table rows are positional and never reordered
+					<TableRow key={row_index}>
+						{row.map((cell, cell_index) => (
+							<TableCell
+								// biome-ignore lint/suspicious/noArrayIndexKey: table columns are positional and never reordered
+								key={cell_index}
+								variant="article"
+							>
+								{HTMLReactParser(cell)}
+							</TableCell>
+						))}
+					</TableRow>
+				))}
+			</TableBody>
+		</Table>
+	);
 };
 
 interface EditorJSAttachesData {

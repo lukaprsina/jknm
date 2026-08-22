@@ -74,7 +74,7 @@ export interface InvalidationDescriptor {
  * Every article view is reachable from `/`, and every published/archived/
  * deleted change also changes what `/sitemap.xml` should list.
  */
-const ROOT_PATHS = ["/", "/sitemap.xml"] as const;
+export const CACHE_PATHS = ["/", "/sitemap.xml"] as const;
 
 /** The homepage feed's TanStack Query key (`app/infinite-articles.tsx`). */
 const HOMEPAGE_FEED_KEYS = [["infinite_published"]] as const;
@@ -96,13 +96,13 @@ const PUBLISHED_SET_TAGS = [
 
 const DRAFTS_ONLY: InvalidationDescriptor = {
 	tags: ["drafts"],
-	paths: ROOT_PATHS,
+	paths: CACHE_PATHS,
 	query_keys: [],
 };
 
 const PUBLISHED_SET_CHANGED: InvalidationDescriptor = {
 	tags: PUBLISHED_SET_TAGS,
-	paths: ROOT_PATHS,
+	paths: CACHE_PATHS,
 	query_keys: HOMEPAGE_FEED_KEYS,
 };
 
@@ -116,7 +116,7 @@ const PUBLISHED_SET_CHANGED: InvalidationDescriptor = {
 // of over-invalidating is a few extra cache misses.
 const AUTHORS_CHANGED: InvalidationDescriptor = {
 	tags: ["authors", "article"],
-	paths: ROOT_PATHS,
+	paths: CACHE_PATHS,
 	query_keys: [],
 };
 
@@ -142,7 +142,7 @@ const INVALIDATIONS: Record<DomainEvent, InvalidationDescriptor> = {
 	// who could see it there.
 	"article.unarchived": {
 		tags: ["drafts", "archive", "all-published", "article"],
-		paths: ROOT_PATHS,
+		paths: CACHE_PATHS,
 		query_keys: [],
 	},
 	"author.inserted": AUTHORS_CHANGED,

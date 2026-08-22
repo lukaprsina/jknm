@@ -272,8 +272,8 @@ function MemberSyncDialog({
 						<Table className="min-w-[40rem]">
 							<TableHeader>
 								<TableRow>
-									<TableHead className="h-9 px-2">Ime</TableHead>
-									<TableHead className="h-9 px-2">Sprememba</TableHead>
+									<TableHead variant="dense">Ime</TableHead>
+									<TableHead variant="dense">Sprememba</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
@@ -281,7 +281,10 @@ function MemberSyncDialog({
 									const row = to_change_row(change);
 									return (
 										<TableRow key={row.key}>
-											<TableCell className="whitespace-nowrap p-2 align-top">
+											<TableCell
+												variant="dense"
+												className="whitespace-nowrap align-top"
+											>
 												<div className="flex items-center gap-2">
 													<Badge
 														variant={CHANGE_KIND_VARIANT[change.kind]}
@@ -292,7 +295,10 @@ function MemberSyncDialog({
 													{row.name}
 												</div>
 											</TableCell>
-											<TableCell className="p-2 text-muted-foreground">
+											<TableCell
+												variant="dense"
+												className="text-muted-foreground"
+											>
 												{row.details.map((detail) => (
 													<div key={detail} className="whitespace-nowrap">
 														{detail}
@@ -483,8 +489,8 @@ function AlgoliaSyncDialog({
 						<Table className="min-w-160">
 							<TableHeader>
 								<TableRow>
-									<TableHead className="h-9 px-2">Ime</TableHead>
-									<TableHead className="h-9 px-2">Sprememba</TableHead>
+									<TableHead variant="dense">Ime</TableHead>
+									<TableHead variant="dense">Sprememba</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
@@ -492,7 +498,10 @@ function AlgoliaSyncDialog({
 									const row = to_algolia_change_row(change);
 									return (
 										<TableRow key={row.key}>
-											<TableCell className="whitespace-nowrap p-2 align-top">
+											<TableCell
+												variant="dense"
+												className="whitespace-nowrap align-top"
+											>
 												<div className="flex items-center gap-2">
 													<Badge
 														variant={ALGOLIA_CHANGE_KIND_VARIANT[change.kind]}
@@ -505,7 +514,10 @@ function AlgoliaSyncDialog({
 													{row.name}
 												</div>
 											</TableCell>
-											<TableCell className="p-2 text-muted-foreground">
+											<TableCell
+												variant="dense"
+												className="text-muted-foreground"
+											>
 												{row.details.map((detail) => (
 													<div key={detail} className="whitespace-nowrap">
 														{detail}

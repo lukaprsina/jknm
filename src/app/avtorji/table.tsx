@@ -145,9 +145,8 @@ export function AuthorsDataTable() {
 		},
 	});
 
-	const name_filter = (table.getColumn("name")?.getFilterValue() as
-		| string
-		| undefined) ?? "";
+	const name_filter =
+		(table.getColumn("name")?.getFilterValue() as string | undefined) ?? "";
 
 	return (
 		<div className="w-full">
@@ -182,10 +181,8 @@ export function AuthorsDataTable() {
 								return (
 									<TableHead
 										key={header.id}
-										className={cn(
-											"h-9 px-2",
-											COLUMN_WIDTH_CLASSES[header.column.id],
-										)}
+										variant="dense"
+										className={cn(COLUMN_WIDTH_CLASSES[header.column.id])}
 									>
 										{header.isPlaceholder
 											? null
@@ -206,15 +203,10 @@ export function AuthorsDataTable() {
 								{row.getVisibleCells().map((cell) => (
 									<TableCell
 										key={cell.id}
-										className={cn(
-											"p-2",
-											COLUMN_WIDTH_CLASSES[cell.column.id],
-										)}
+										variant="dense"
+										className={cn(COLUMN_WIDTH_CLASSES[cell.column.id])}
 									>
-										{flexRender(
-											cell.column.columnDef.cell,
-											cell.getContext(),
-										)}
+										{flexRender(cell.column.columnDef.cell, cell.getContext())}
 									</TableCell>
 								))}
 							</TableRow>

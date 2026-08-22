@@ -1,6 +1,39 @@
+import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
 import { cn } from "~/lib/utils";
+
+// Shared row-density scale for every <Table> in the app: `default` is the
+// unmodified shadcn look (unused so far, kept as an explicit opt-in rather
+// than deleting it). `dense` and `article` share the exact same arhiv
+// padding rhythm (h-auto py-[1.4] px-2) — the only intentional difference
+// is that `article` adds cell borders + a header background, since it's
+// read as prose content rather than scanned as admin data.
+const tableHeadVariants = cva(
+	"align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
+	{
+		variants: {
+			variant: {
+				default: "h-12 px-4 text-left",
+				dense: "h-auto py-[calc(var(--spacing)*1.4)] px-2 text-left",
+				article:
+					"h-auto border py-[calc(var(--spacing)*1.4)] px-2 text-left bg-muted/50",
+			},
+		},
+		defaultVariants: { variant: "default" },
+	},
+);
+
+const tableCellVariants = cva("align-middle [&:has([role=checkbox])]:pr-0", {
+	variants: {
+		variant: {
+			default: "p-4",
+			dense: "py-[calc(var(--spacing)*1.4)] px-2",
+			article: "border py-[calc(var(--spacing)*1.4)] px-2",
+		},
+	},
+	defaultVariants: { variant: "default" },
+});
 
 const Table = React.forwardRef<
 	HTMLTableElement,
@@ -68,14 +101,12 @@ TableRow.displayName = "TableRow";
 
 const TableHead = React.forwardRef<
 	HTMLTableCellElement,
-	React.ThHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
+	React.ThHTMLAttributes<HTMLTableCellElement> &
+		VariantProps<typeof tableHeadVariants>
+>(({ className, variant, ...props }, ref) => (
 	<th
 		ref={ref}
-		className={cn(
-			"h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
-			className,
-		)}
+		className={cn(tableHeadVariants({ variant }), className)}
 		{...props}
 	/>
 ));
@@ -83,11 +114,12 @@ TableHead.displayName = "TableHead";
 
 const TableCell = React.forwardRef<
 	HTMLTableCellElement,
-	React.TdHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
+	React.TdHTMLAttributes<HTMLTableCellElement> &
+		VariantProps<typeof tableCellVariants>
+>(({ className, variant, ...props }, ref) => (
 	<td
 		ref={ref}
-		className={cn("p-4 align-middle [&:has([role=checkbox])]:pr-0", className)}
+		className={cn(tableCellVariants({ variant }), className)}
 		{...props}
 	/>
 ));

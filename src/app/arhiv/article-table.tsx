@@ -52,11 +52,11 @@ export function ArticleTable({
 			<Table className="w-full min-w-lg table-fixed">
 				<TableHeader>
 					<TableRow>
-						<TableHead className="h-8 px-2">
+						<TableHead variant="dense">
 							<Button
 								variant="ghost"
 								size="sm"
-								className="-mx-2"
+								className="-mx-3 h-7"
 								onClick={() => {
 									setSort(sort === TITLE_ASC ? TITLE_DESC : TITLE_ASC);
 								}}
@@ -66,11 +66,11 @@ export function ArticleTable({
 								{sort === TITLE_ASC && <ChevronUpIcon />}
 							</Button>
 						</TableHead>
-						<TableHead className="h-8 w-40 px-2 sm:w-56">
+						<TableHead variant="dense" className="w-40 sm:w-56">
 							<Button
 								variant="ghost"
 								size="sm"
-								className="-mx-2"
+								className="-mx-3 h-7"
 								onClick={() => {
 									setSort(sort === AUTHOR_ASC ? AUTHOR_DESC : AUTHOR_ASC);
 								}}
@@ -80,11 +80,11 @@ export function ArticleTable({
 								{sort === AUTHOR_ASC && <ChevronUpIcon />}
 							</Button>
 						</TableHead>
-						<TableHead className="h-8 w-28 px-2 sm:w-40">
+						<TableHead variant="dense" className="w-28 text-right sm:w-40">
 							<Button
 								variant="ghost"
 								size="sm"
-								className="-mx-2"
+								className="-mr-3 ml-auto h-7"
 								onClick={() => {
 									setSort(
 										sort === PUBLISHED_AT_ASC
@@ -126,17 +126,20 @@ function ArticleTableRow({
 }) {
 	return (
 		<TableRow ref={ref} key={hit.objectID}>
-			<TableCell className="max-w-0 truncate py-1.5 px-2 font-medium">
+			<TableCell variant="dense" className="max-w-0 truncate font-medium">
 				<Button variant="link" size="sm" asChild className="h-auto p-0">
 					<Link href={get_published_article_link(hit.url)} className="truncate">
 						{hit.title}
 					</Link>
 				</Button>
 			</TableCell>
-			<TableCell className="truncate py-1.5 px-2">
+			<TableCell variant="dense" className="truncate">
 				<Authors author_ids={hit.author_ids} format={format_author_sort_name} />
 			</TableCell>
-			<TableCell className="whitespace-nowrap py-1.5 px-2 text-muted-foreground">
+			<TableCell
+				variant="dense"
+				className="whitespace-nowrap text-right text-muted-foreground"
+			>
 				{format_date_for_human(new Date(hit.published_at))}
 			</TableCell>
 		</TableRow>
