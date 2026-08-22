@@ -70,7 +70,6 @@ export const auth = betterAuth({
 
 				return {
 					user: {
-						id: profile.sub,
 						name: profile.name,
 						email: profile.email,
 						image: profile.picture,
