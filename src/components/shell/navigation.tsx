@@ -1,13 +1,17 @@
-import { useState } from "react";
+import Link from "next/link";
+import React, { useState } from "react";
 import {
 	NavigationMenu,
 	NavigationMenuContent,
 	NavigationMenuItem,
+	NavigationMenuLink,
 	NavigationMenuList,
+	navigationMenuTriggerStyle,
 } from "~/components/ui/navigation-menu";
 import type { NavSection } from "~/lib/static-nav-sections";
+import { cn } from "~/lib/utils";
 import { NavigationMenuTrigger } from "../navigation-menu-trigger";
-import { DesktopHeaderLink, ListItem } from "./header";
+import { buttonVariants } from "../ui/button";
 
 export function Navigation({ sections }: { sections: NavSection[] }) {
 	// Controlled so a trigger's onClick can open its own dropdown directly
@@ -72,3 +76,59 @@ function NavDropdown({
 		</NavigationMenuItem>
 	);
 }
+
+export function DesktopHeaderLink({
+	href,
+	children,
+}: {
+	href: string;
+	children: React.ReactNode;
+}) {
+	return (
+		<NavigationMenuItem>
+			<NavigationMenuLink asChild>
+				<Link
+					href={href}
+					className={cn(
+						navigationMenuTriggerStyle(),
+						"bg-transparent text-base dark:bg-primary/80 dark:text-primary-foreground",
+					)}
+				>
+					{children}
+				</Link>
+			</NavigationMenuLink>
+		</NavigationMenuItem>
+	);
+}
+
+export const ListItem = React.forwardRef<
+	React.ComponentRef<"a">,
+	React.ComponentPropsWithoutRef<"a"> & {
+		list_title?: React.ReactNode;
+	}
+>(({ className, list_title, href, ...props }, ref) => {
+	if (!href) {
+		return null;
+	}
+
+	return (
+		<li>
+			<NavigationMenuLink asChild>
+				<Link
+					href={href}
+					ref={ref}
+					className={cn(
+						"prose",
+						buttonVariants({ size: "sm", variant: "link" }),
+						"w-full justify-start text-left",
+						className,
+					)}
+					{...props}
+				>
+					{list_title}
+				</Link>
+			</NavigationMenuLink>
+		</li>
+	);
+});
+ListItem.displayName = "ListItem";

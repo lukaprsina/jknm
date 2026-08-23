@@ -5,19 +5,17 @@ import { cn } from "~/lib/utils";
 
 // Shared row-density scale for every <Table> in the app: `default` is the
 // unmodified shadcn look (unused so far, kept as an explicit opt-in rather
-// than deleting it). `dense` and `article` share the exact same arhiv
-// padding rhythm (h-auto py-[1.4] px-2) — the only intentional difference
-// is that `article` adds cell borders + a header background, since it's
-// read as prose content rather than scanned as admin data.
+// than deleting it). `dense` is used for scanned admin data, while `article`
+// has its own padding rhythm plus cell borders and a header background since
+// it is read as prose content.
 const tableHeadVariants = cva(
 	"align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
 	{
 		variants: {
 			variant: {
 				default: "h-12 px-4 text-left",
-				dense: "h-auto py-[calc(var(--spacing)*1.4)] px-2 text-left",
-				article:
-					"h-auto border py-[calc(var(--spacing)*1.4)] px-2 text-left bg-muted/50",
+				dense: "h-auto py-[1px] px-2 text-left",
+				article: "h-auto border py-[1px] px-2 text-left bg-muted/50",
 			},
 		},
 		defaultVariants: { variant: "default" },
@@ -28,8 +26,8 @@ const tableCellVariants = cva("align-middle [&:has([role=checkbox])]:pr-0", {
 	variants: {
 		variant: {
 			default: "p-4",
-			dense: "py-[calc(var(--spacing)*1.4)] px-2",
-			article: "border py-[calc(var(--spacing)*1.4)] px-2",
+			dense: "py-[1px] px-2",
+			article: "border py-[1px] px-2",
 		},
 	},
 	defaultVariants: { variant: "default" },

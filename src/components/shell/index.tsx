@@ -20,8 +20,6 @@ interface ShellProps {
 	className?: string;
 	/** Forwarded to `TocAwareLayout` -- see its `known_has_toc` doc. */
 	has_toc?: boolean;
-	/** Forwarded to `TocAwareLayout` -- see its `full_bleed` doc. */
-	full_bleed?: boolean;
 }
 
 /**
@@ -43,7 +41,6 @@ export async function Shell({
 	without_header,
 	className,
 	has_toc,
-	full_bleed,
 }: ShellProps) {
 	const editor_controls = (
 		<Suspense fallback={null}>
@@ -66,7 +63,7 @@ export async function Shell({
 						<MobileHeader editor_controls={editor_controls} />
 					</header>
 				) : undefined}
-				<TocAwareLayout known_has_toc={has_toc} full_bleed={full_bleed}>
+				<TocAwareLayout known_has_toc={has_toc}>
 					{children}
 				</TocAwareLayout>
 				{without_footer ? undefined : (

@@ -17,25 +17,19 @@ import { cn } from "~/lib/utils";
 export function TocAwareLayout({
 	children,
 	known_has_toc = false,
-	full_bleed = false,
 }: {
 	children: React.ReactNode;
 	known_has_toc?: boolean;
-	/** Skips the default `px-6 md:px-12` page gutter for routes that lay out
-	 * their own full-width content (e.g. `/prijava`'s edge-to-edge split
-	 * screen). */
-	full_bleed?: boolean;
 }) {
 	const has_toc = useHasToc() || known_has_toc;
 
 	return (
-		<div
-			className={cn(
-				"flex w-full flex-1 justify-center gap-8",
-				!full_bleed && "px-6 md:px-12",
-			)}
-		>
+		<div className="flex w-full flex-1 justify-center gap-8">
 			<div
+				// Mirrors `aside`'s width so `main` stays visually centered once
+				// there's enough viewport for both columns to fit alongside it;
+				// below `not_center` (1880px, see `use-breakpoint.ts`) this stays
+				// hidden and `main` sits off-center, hugged left by `aside` alone.
 				className={cn("hidden w-75 shrink-0", has_toc && "not_center:block")}
 				aria-hidden
 			/>
@@ -51,7 +45,7 @@ export function TocAwareLayout({
 					// height. `h-fit` left the viewport at content height and
 					// the Root's `overflow: hidden` clipped the overflow
 					// instead of scrolling -- long TOCs were cut off.
-					"sticky top-24 hidden h-[calc(100vh-6rem)] w-[300px] shrink-0",
+					"sticky top-24 hidden h-[calc(100vh-6rem)] w-75 shrink-0",
 					has_toc && "lg:block",
 				)}
 			/>

@@ -1,4 +1,5 @@
-import { cva } from "class-variance-authority";
+import { type VariantProps, cva } from "class-variance-authority";
+import { cn } from "~/lib/utils";
 
 export const article_variants = cva(
 	"prose dark:prose-invert prose-figcaption:text-base prose-figcaption:text-blue-800",
@@ -30,7 +31,11 @@ export const article_grid_variants = cva(
 	},
 );
 
-export const page_variants = cva("container h-full w-full pb-6 pt-8", {
+/** Horizontal gutter shared by every page's content column and the header —
+ * `container` (mx-auto) + a max-width + matching inline padding, with no
+ * vertical spacing so callers that aren't a top-level page (e.g. the header)
+ * can reuse the exact same edges. */
+export const page_gutter_variants = cva("container h-full w-full", {
 	variants: {
 		max_width: {
 			normal: "max-w-[848px]",
@@ -46,3 +51,9 @@ export const page_variants = cva("container h-full w-full pb-6 pt-8", {
 		max_width: "normal",
 	},
 });
+
+export function page_variants(
+	opts?: VariantProps<typeof page_gutter_variants>,
+) {
+	return cn(page_gutter_variants(opts), "pb-6 pt-8");
+}

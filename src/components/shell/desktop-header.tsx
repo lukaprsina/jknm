@@ -6,6 +6,7 @@ import { create } from "zustand";
 import { Separator } from "~/components/ui/separator";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 // import Logo from "~/assets/logo-barvni.svg";
+import { page_gutter_variants } from "~/lib/page-variants";
 import type { NavSection } from "~/lib/static-nav-sections";
 import { cn } from "~/lib/utils";
 import { HomeLink } from "./home-link";
@@ -94,13 +95,15 @@ export function DesktopHeader({
 			<div
 				ref={header_ref}
 				className={cn(
-					"container relative flex h-[182px] w-full items-end justify-between px-6 py-4 backdrop-blur-sm",
+					"relative flex h-45.5 w-full items-end justify-between py-4 backdrop-blur-sm",
 					className,
 				)}
 				{...props}
 			>
-				<div className="flex h-full w-full items-center">
-					<div className="flex-1 flex items-center gap-4">
+				<div
+					className={cn("flex", page_gutter_variants({ max_width: "wide" }))}
+				>
+					<div className="flex-1 flex items-end gap-4 pb-1">
 						<FacebookIcon />
 						<YoutubeIcon />
 						<InstagramIcon />
@@ -112,7 +115,7 @@ export function DesktopHeader({
 					</div>
 					<div className="flex-1 flex flex-col items-end justify-between">
 						<div className="flex justify-end">{editor_controls}</div>
-						<div className="flex flex-col items-end gap-4">
+						<div className="flex flex-col items-end gap-4 pb-4.5">
 							{/* <NoviceAutocomplete detached="" /> */}
 							<div className="flex items-center gap-4">
 								<SearchIcon />
@@ -131,18 +134,29 @@ export function DesktopHeader({
 			<div
 				ref={sticky_navbar_ref}
 				className={cn(
-					"relative z-40 flex w-full items-center justify-center px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:px-12",
+					"relative z-40 flex w-full items-center py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60",
 					is_header_sticky ? "fixed top-0 bg-white/80 transition-colors" : null,
 					className,
 				)}
 			>
-				{/* <LinksMenu /> */}
-				{is_header_sticky && (
-					<HomeLink className="absolute left-6 z-60 flex items-center md:left-12">
-						<Logo className="h-8 w-auto" />
-					</HomeLink>
-				)}
-				<Navigation sections={nav_sections} />
+				<div
+					className={cn(
+						"flex items-center",
+						page_gutter_variants({ max_width: "wide" }),
+					)}
+				>
+					<div className="flex flex-1 items-center">
+						{is_header_sticky && (
+							<HomeLink className="flex items-center">
+								<Logo className="h-8 w-auto" />
+							</HomeLink>
+						)}
+					</div>
+					<div className="flex flex-1 items-center justify-center">
+						<Navigation sections={nav_sections} />
+					</div>
+					<div className="flex-1" />
+				</div>
 			</div>
 		</>
 	);

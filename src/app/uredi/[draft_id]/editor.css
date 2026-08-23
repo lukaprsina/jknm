@@ -40,5 +40,5 @@
 }
 
 .tc-cell {
-	padding: calc(var(--spacing) * 1.4) 0.5rem !important;
+	padding: 1px 0.5rem !important;
 }
