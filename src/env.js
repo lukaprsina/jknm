@@ -66,7 +66,6 @@ export const env = createEnv({
 		NEXT_PUBLIC_AWS_REGION: z.string(),
 		NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME: z.string(),
 		NEXT_PUBLIC_AWS_MEDIA_BUCKET_NAME: z.string(),
-		NEXT_PUBLIC_AWS_STATIC_BUCKET_NAME: z.string(),
 		// Where this deployment is reachable — see src/lib/domains.ts. Set
 		// explicitly per environment, not inferred from VERCEL_URL: it carries
 		// no protocol and, for aliased production deployments, isn't even the
@@ -103,8 +102,6 @@ export const env = createEnv({
 			process.env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,
 		NEXT_PUBLIC_AWS_MEDIA_BUCKET_NAME:
 			process.env.NEXT_PUBLIC_AWS_MEDIA_BUCKET_NAME,
-		NEXT_PUBLIC_AWS_STATIC_BUCKET_NAME:
-			process.env.NEXT_PUBLIC_AWS_STATIC_BUCKET_NAME,
 		RESEND_API_KEY: process.env.RESEND_API_KEY,
 	},
 	/**
