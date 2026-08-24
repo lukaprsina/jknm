@@ -105,9 +105,9 @@
 		--primary-foreground: 0 0% 98%;
 		--secondary: 0 0% 96.1%;
 		--secondary-foreground: 0 0% 9%;
-		--muted: 0 0% 96.1%;
+		--muted: 0 0% 94.6%;
 		--muted-foreground: 0 0% 45.1%;
-		--accent: 0 0% 96.1%;
+		--accent: 0 0% 94.6%;
 		--accent-foreground: 0 0% 9%;
 		--destructive: 0 84.2% 60.2%;
 		--destructive-foreground: 0 0% 98%;
@@ -151,6 +151,26 @@
 
 	* {
 		@apply border-border;
+	}
+
+	/* Only `html`'s scrollbar-gutter reserves viewport space — the property
+	does not propagate from `body` (confirmed CSS WG behavior, unlike
+	overflow-x/-y), so a class on body alone is a no-op. */
+	html {
+		scrollbar-gutter: stable;
+	}
+
+	/* Radix (react-remove-scroll) compensates a locked scrollbar with its own
+	margin-right, sized off the *actual* native scrollbar width. Since the
+	gutter above already reserves that space permanently, the two stack and
+	shift content whenever a Select/Popover/Dialog opens — this zeroes
+	Radix's compensation so only the permanent gutter applies.
+	https://github.com/radix-ui/primitives/issues/3251 */
+	html body[data-scroll-locked] {
+		/* biome-ignore lint/complexity/noImportantStyles: must out-specificity react-remove-scroll's own !important rule */
+		--removed-body-scroll-bar-size: 0 !important;
+		/* biome-ignore lint/complexity/noImportantStyles: must out-specificity react-remove-scroll's own !important rule */
+		margin-right: 0 !important;
 	}
 
 	body {

@@ -5,7 +5,7 @@ import {
 	AuthorRefinement,
 	MySearchBox,
 	MySortBy,
-	TimelineRefinement,
+	YearHistogram,
 } from "./components";
 
 export function SearchControls({
@@ -17,14 +17,12 @@ export function SearchControls({
 }) {
 	return (
 		<div className="flex flex-col gap-2">
-			<div className="flex w-full items-center justify-between gap-4">
-				<TimelineRefinement />
-			</div>
+			<YearHistogram />
 			<div className="flex flex-col gap-2 lg:flex-row lg:items-center">
-				<div className="flex items-center gap-2 lg:flex-3">
+				<div className="flex items-center gap-2 lg:w-166.25 lg:flex-none">
 					<MySearchBox />
 				</div>
-				<div className="flex flex-col gap-2 min-[500px]:flex-row min-[500px]:items-center">
+				<div className="flex flex-1 flex-col gap-2 min-[500px]:flex-row min-[500px]:items-center">
 					<div className="flex flex-1 items-center gap-2">
 						<AuthorRefinement />
 					</div>

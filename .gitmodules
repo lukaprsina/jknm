@@ -16,3 +16,6 @@
 [submodule "vendor/editor-js-attaches"]
 	path = vendor/editor-js-attaches
 	url = https://github.com/editor-js/attaches
+[submodule "vendor/shadcn-multi-select-component"]
+	path = vendor/shadcn-multi-select-component
+	url = https://github.com/sersavan/shadcn-multi-select-component

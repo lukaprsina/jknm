@@ -68,11 +68,7 @@ export function ArticleCard({
 			onMouseEnter={() => setHover(true)}
 			onMouseLeave={() => setHover(false)}
 		>
-			<MagicCard
-				className="flex h-full flex-col"
-				innerClassName="h-full"
-				gradientColor="#D9D9D955"
-			>
+			<MagicCard className="flex h-full flex-col" innerClassName="h-full">
 				{has_thumbnail && image_url ? (
 					<AspectRatio
 						ratio={16 / 9}

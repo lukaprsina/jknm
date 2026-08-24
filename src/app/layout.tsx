@@ -58,7 +58,6 @@ export default async function RootLayout({
 						"font-sans antialiased",
 						open_sans.variable,
 						GeistMono.variable,
-						"scrollbar-gutter-stable",
 					)}
 				>
 					<Providers all_authors={all_authors}>

@@ -2,10 +2,10 @@
 
 import { use, useContext, useMemo } from "react";
 import { AllAuthorsContext } from "~/app/provider";
-import type { AuthorOption } from "~/components/author-command-popover";
-import { AuthorCommandPopover } from "~/components/author-command-popover";
 import { EditorContext } from "~/components/editor/editor-context";
 import { editor_store, useAuthorIds } from "~/components/editor/editor-store";
+import type { MultiSelectOption } from "~/components/ui/multi-select";
+import { MultiSelect } from "~/components/ui/multi-select";
 import { format_author_name } from "~/lib/author-name";
 import { ToolbarButtons } from "./toolbar-buttons";
 
@@ -19,11 +19,10 @@ export function MyToolbar() {
 		[author_ids],
 	);
 
-	const options: AuthorOption[] = useMemo(
+	const options: MultiSelectOption[] = useMemo(
 		() =>
 			all_authors.map((author) => ({
 				value: author.id.toString(),
-				author,
 				label: format_author_name(author),
 			})),
 		[all_authors],
@@ -34,18 +33,16 @@ export function MyToolbar() {
 		<div className="flex flex-col justify-between gap-4">
 			<div className="flex w-full flex-wrap items-center justify-between p-4">
 				<div className="flex items-center gap-2">
-					<AuthorCommandPopover
-						className="w-auto"
+					<MultiSelect
+						autoSize
+						hideSelectAll
 						options={options}
-						selectedValues={selected_values}
-						onToggle={(value) => {
-							const id = Number.parseInt(value, 10);
-							const next_ids = selected_values.includes(value)
-								? author_ids.filter((author_id) => author_id !== id)
-								: [...author_ids, id];
-							editor_store.setState({ author_ids: next_ids });
-						}}
-						onClear={() => editor_store.setState({ author_ids: [] })}
+						defaultValue={selected_values}
+						onValueChange={(values) =>
+							editor_store.setState({
+								author_ids: values.map((value) => Number.parseInt(value, 10)),
+							})
+						}
 						placeholder="Avtorji"
 					/>
 					<span className="flex flex-shrink-0">

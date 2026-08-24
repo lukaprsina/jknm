@@ -17,7 +17,7 @@ export function MagicCard({
 	className,
 	innerClassName,
 	gradientSize = 200,
-	gradientColor = "#262626",
+	gradientColor = "#D9D9D955",
 	gradientOpacity = 0.8,
 }: MagicCardProps) {
 	const mouseX = useMotionValue(-gradientSize);
@@ -63,6 +63,7 @@ export function MagicCard({
             radial-gradient(${gradientSize}px circle at ${mouseX}px ${mouseY}px, ${gradientColor}, transparent 100%)
           `,
 					opacity: gradientOpacity,
+					// mixBlendMode: "multiply",
 				}}
 			/>
 		</div>

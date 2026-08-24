@@ -1,11 +1,18 @@
 "use client";
 
 import type { Hit as SearchHit } from "instantsearch.js";
-import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronUpIcon, SearchXIcon } from "lucide-react";
 import Link from "next/link";
 import type { UseInfiniteHitsProps } from "react-instantsearch";
 import { Authors } from "~/components/authors";
 import { Button } from "~/components/ui/button";
+import {
+	Empty,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyMedia,
+	EmptyTitle,
+} from "~/components/ui/empty";
 import {
 	Table,
 	TableBody,
@@ -45,6 +52,25 @@ export function ArticleTable({
 		offset: 5,
 		...props,
 	});
+
+	if (items.length === 0) {
+		return (
+			<div>
+				<MyStats loaded_count={items.length} />
+				<Empty>
+					<EmptyHeader>
+						<EmptyMedia variant="icon">
+							<SearchXIcon />
+						</EmptyMedia>
+						<EmptyTitle>Ni najdenih novic</EmptyTitle>
+						<EmptyDescription>
+							Poskusite spremeniti iskalni niz ali filtre.
+						</EmptyDescription>
+					</EmptyHeader>
+				</Empty>
+			</div>
+		);
+	}
 
 	return (
 		<div>

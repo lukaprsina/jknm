@@ -1,5 +1,13 @@
+import { SearchXIcon } from "lucide-react";
 import type { InfiniteHitsProps } from "react-instantsearch";
 import { ArticleAlgoliaCard } from "~/components/article/card";
+import {
+	Empty,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyMedia,
+	EmptyTitle,
+} from "~/components/ui/empty";
 import { useInfiniteAlgoliaArticles } from "~/hooks/use-infinite-algolia";
 import { article_grid_variants, article_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
@@ -15,20 +23,34 @@ export function MyInfiniteHits(props: InfiniteHitsProps<PublishedArticleHit>) {
 	return (
 		<div>
 			<MyStats loaded_count={items.length} />
-			<ul
-				className={cn(
-					article_grid_variants(),
-					article_variants({ variant: "card" }),
-				)}
-			>
-				{items.map((hit, index) => (
-					<ArticleAlgoliaCard
-						hit={hit}
-						key={hit.objectID}
-						ref={load_more_ref(index)}
-					/>
-				))}
-			</ul>
+			{items.length === 0 ? (
+				<Empty>
+					<EmptyHeader>
+						<EmptyMedia variant="icon">
+							<SearchXIcon />
+						</EmptyMedia>
+						<EmptyTitle>Ni najdenih novic</EmptyTitle>
+						<EmptyDescription>
+							Poskusite spremeniti iskalni niz ali filtre.
+						</EmptyDescription>
+					</EmptyHeader>
+				</Empty>
+			) : (
+				<ul
+					className={cn(
+						article_grid_variants(),
+						article_variants({ variant: "card" }),
+					)}
+				>
+					{items.map((hit, index) => (
+						<ArticleAlgoliaCard
+							hit={hit}
+							key={hit.objectID}
+							ref={load_more_ref(index)}
+						/>
+					))}
+				</ul>
+			)}
 		</div>
 	);
 }

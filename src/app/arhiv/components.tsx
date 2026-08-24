@@ -1,13 +1,8 @@
 "use client";
 
 import type { RefinementListItem } from "instantsearch.js/es/connectors/refinement-list/connectRefinementList";
-import { XIcon } from "lucide-react";
-import {
-	parseAsArrayOf,
-	parseAsString,
-	parseAsStringLiteral,
-	useQueryState,
-} from "nuqs";
+import { CheckIcon, XIcon } from "lucide-react";
+import { parseAsString, parseAsStringLiteral, useQueryState } from "nuqs";
 import type React from "react";
 import { createContext, use, useCallback, useEffect, useState } from "react";
 import type { UseRefinementListProps } from "react-instantsearch";
@@ -19,10 +14,21 @@ import {
 	useStats,
 } from "react-instantsearch";
 import { AllAuthorsContext } from "~/app/provider";
-import type { AuthorOption } from "~/components/author-command-popover";
-import { AuthorCommandPopover } from "~/components/author-command-popover";
 import { Button } from "~/components/ui/button";
+import {
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+	CommandList,
+} from "~/components/ui/command";
 import { Input } from "~/components/ui/input";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "~/components/ui/popover";
 import {
 	Select,
 	SelectContent,
@@ -257,69 +263,113 @@ export function AuthorRefinement(
 		limit: 100,
 		...props,
 	});
-	const clear_author_refinements = useClearRefinements({
-		includedAttributes: ["author_ids"],
-	});
 	const all_authors = use(AllAuthorsContext);
-	const [urlAuthors, setUrlAuthors] = useQueryState(
-		"authors",
-		parseAsArrayOf(parseAsString).withDefault([]),
-	);
+	const [urlAuthor, setUrlAuthor] = useQueryState("author", parseAsString);
+	const [open, setOpen] = useState(false);
 
 	// Hydrates Algolia's author refinement from the URL once on mount.
 	// biome-ignore lint/correctness/useExhaustiveDependencies: mount-only hydration
 	useEffect(() => {
-		for (const value of urlAuthors) refinement_list.refine(value);
+		if (urlAuthor) refinement_list.refine(urlAuthor);
 	}, []);
 
-	const options: AuthorOption[] = refinement_list.items
+	const options = refinement_list.items
 		.map((item) => {
 			const author =
 				all_authors.find((author) => author.id === Number(item.value)) ?? null;
 			return {
 				value: item.value,
-				author,
 				label: `${author ? format_author_name(author) : item.value} (${item.count})`,
 				sort_label: author ? format_author_sort_name(author) : item.value,
 			};
 		})
-		.sort((a, b) => a.sort_label.localeCompare(b.sort_label, "sl"))
-		.map(({ sort_label: _sort_label, ...option }) => option);
+		.sort((a, b) => a.sort_label.localeCompare(b.sort_label, "sl"));
 
-	const selected_values = refinement_list.items
-		.filter((item) => item.isRefined)
-		.map((item) => item.value);
+	// A refinement list has no built-in single-select mode, so a selection
+	// swap means explicitly un-refining whatever was selected before
+	// refining the new value.
+	const selected_item = refinement_list.items.find((item) => item.isRefined);
+	const selected_author = selected_item
+		? (all_authors.find(
+				(author) => author.id === Number(selected_item.value),
+			) ?? null)
+		: null;
 
-	const onToggle = useCallback(
+	const select = useCallback(
 		(value: string) => {
+			if (selected_item && selected_item.value !== value) {
+				refinement_list.refine(selected_item.value);
+			}
 			refinement_list.refine(value);
-			void setUrlAuthors((previous) =>
-				previous.includes(value)
-					? previous.filter((v) => v !== value)
-					: [...previous, value],
-			);
+			void setUrlAuthor(value);
 		},
-		[refinement_list.refine, setUrlAuthors],
+		[refinement_list.refine, selected_item, setUrlAuthor],
 	);
 
-	const onClear = useCallback(() => {
-		clear_author_refinements.refine();
-		void setUrlAuthors(null);
-	}, [clear_author_refinements.refine, setUrlAuthors]);
+	const clear = useCallback(() => {
+		if (selected_item) refinement_list.refine(selected_item.value);
+		void setUrlAuthor(null);
+	}, [refinement_list.refine, selected_item, setUrlAuthor]);
 
 	return (
-		<AuthorCommandPopover
-			className="min-w-40 flex-1 lg:w-55 lg:flex-none"
-			options={options}
-			selectedValues={selected_values}
-			onToggle={onToggle}
-			onClear={clear_author_refinements.canRefine ? onClear : undefined}
-			placeholder="Vsi avtorji"
-		/>
+		<Popover open={open} onOpenChange={setOpen}>
+			<PopoverTrigger asChild>
+				<Button
+					variant="outline"
+					className="h-10 min-w-40 flex-1 justify-start gap-2 font-normal"
+				>
+					<span
+						className={cn(
+							"truncate",
+							!selected_author && "text-muted-foreground",
+						)}
+					>
+						{selected_author
+							? format_author_name(selected_author)
+							: "Vsi avtorji"}
+					</span>
+					{selected_author && (
+						<XIcon
+							className="ml-auto size-4 shrink-0 text-muted-foreground hover:text-foreground"
+							onClick={(event) => {
+								event.stopPropagation();
+								clear();
+							}}
+						/>
+					)}
+				</Button>
+			</PopoverTrigger>
+			<PopoverContent className="w-auto min-w-56 p-0" align="start">
+				<Command>
+					<CommandInput placeholder="Išči..." />
+					<CommandList>
+						<CommandEmpty>Ni najdenih rezultatov.</CommandEmpty>
+						<CommandGroup>
+							{options.map((option) => (
+								<CommandItem
+									key={option.value}
+									value={option.label}
+									onSelect={() => {
+										select(option.value);
+										setOpen(false);
+									}}
+									className="cursor-pointer"
+								>
+									<span className="flex-1">{option.label}</span>
+									{selected_item?.value === option.value && (
+										<CheckIcon className="size-4" />
+									)}
+								</CommandItem>
+							))}
+						</CommandGroup>
+					</CommandList>
+				</Command>
+			</PopoverContent>
+		</Popover>
 	);
 }
 
-export function TimelineRefinement(
+export function YearHistogram(
 	props: Omit<UseRefinementListProps, "attribute">,
 ) {
 	const refinement_list = useRefinementList({
@@ -347,7 +397,7 @@ export function TimelineRefinement(
 	return (
 		<ol className="scroll-fade-x flex flex-1 items-end gap-x-2 gap-y-2 overflow-x-auto pb-2">
 			{refinement_list.items.map((item) => (
-				<TimelineItem
+				<YearHistogramBar
 					onClick={() => {
 						clear_refinements.refine();
 						if (item.isRefined) {
@@ -369,7 +419,7 @@ export function TimelineRefinement(
 const MAX_BAR_HEIGHT_PX = 64;
 const MIN_BAR_HEIGHT_PX = 6;
 
-export function TimelineItem({
+export function YearHistogramBar({
 	item,
 	max_count,
 	...props
@@ -387,8 +437,8 @@ export function TimelineItem({
 				type="button"
 				title={`${item.value}: ${item.count} novic`}
 				className={cn(
-					"w-2.5 rounded-t-xs bg-blue-700/45 transition-colors hover:bg-blue-700/70",
-					item.isRefined && "bg-primary hover:bg-primary",
+					"w-3.5 rounded-t-xs bg-blue-700/70 transition-colors hover:bg-blue-800",
+					item.isRefined && "bg-blue-900 hover:bg-blue-900",
 				)}
 				style={{ height: bar_height }}
 				{...props}
@@ -409,10 +459,7 @@ export function ResetFiltersButton() {
 	const { query, clear_search, sort, setSort } = useSearchState();
 	const clear_refinements = useClearRefinements();
 	const [, setUrlQuery] = useQueryState("q", parseAsString.withDefault(""));
-	const [, setUrlAuthors] = useQueryState(
-		"authors",
-		parseAsArrayOf(parseAsString).withDefault([]),
-	);
+	const [, setUrlAuthor] = useQueryState("author", parseAsString);
 	const [, setUrlYear] = useQueryState("year", parseAsString);
 
 	const has_active_filters =
@@ -433,7 +480,7 @@ export function ResetFiltersButton() {
 				clear_search();
 				void setSort(DEFAULT_REFINEMENT);
 				void setUrlQuery(null);
-				void setUrlAuthors(null);
+				void setUrlAuthor(null);
 				void setUrlYear(null);
 			}}
 		>
