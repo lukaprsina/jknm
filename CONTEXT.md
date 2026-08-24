@@ -9,6 +9,8 @@ JKNM (Jamarski klub Novo mesto) is a Slovenian caving club's public news site: a
 This file is **domain vocabulary only** — the shared language for talking about articles and their lifecycle. Everything else has its own home:
 
 - **What the app is built from** (stack, transport, auth, code layout) → `docs/architecture.md`
+- **Domain/origin wiring and the jknm.si cutover plan** → `docs/architecture.md#domains`,
+  `docs/domain-cutover-checklist.md`
 - **Why we chose something** → `docs/adr/`
 - **Issue-tracker conventions** → `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`
 - **Open work** → GitHub issues, mapped from [#1](https://github.com/lukaprsina/jknm/issues/1)

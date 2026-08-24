@@ -122,9 +122,36 @@ Migrated from NextAuth v4 in #32.
 - `Session` is exported from `~/server/auth`, not from the library. Swapping the library again
   does not mean editing UI components.
 - Surface: 1 route handler (`api/auth/[...all]`), 11 server reads, 4 client call sites.
-- Env: `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` (must be explicit — an inferred base URL makes
-  Google answer `redirect_uri_mismatch`), `GOOGLE_CLIENT_ID`/`_SECRET`. The Google redirect URI
-  `{BETTER_AUTH_URL}/api/auth/callback/google` is unchanged from NextAuth v4.
+- Env: `BETTER_AUTH_SECRET`, `GOOGLE_CLIENT_ID`/`_SECRET`, plus `NEXT_PUBLIC_DEPLOYMENT_ORIGIN`
+  (`~/lib/domains.ts`'s `DEPLOYMENT_ORIGIN`) for `baseURL` — must be explicit, an inferred base
+  URL makes Google answer `redirect_uri_mismatch`. The Google redirect URI
+  `{DEPLOYMENT_ORIGIN}/api/auth/callback/google` is unchanged from NextAuth v4. `trustedOrigins`
+  additionally lists `jknm.org` and `jknm-si.vercel.app` for the domain transition — see
+  [Domains](#domains) below.
+
+## Domains
+
+All named in `src/lib/domains.ts`, one binding per role rather than one shared string — the
+roles have independent lifecycles (per-environment vs. flips-once-at-cutover vs. never-changes)
+and different owners (Vercel, Cloudflare, Google Workspace, Resend), so collapsing them risks an
+edit to one silently meaning another. See [ADR-0010](adr/0010-domains-modeled-by-role.md).
+
+| Constant | Value today | Role | Changes when |
+| --- | --- | --- | --- |
+| `DEPLOYMENT_ORIGIN` | `https://jknm-si.vercel.app` (prod) / `http://localhost:3000` (dev) | Where this deployment is reachable. Drives better-auth's `baseURL`, must match the Google OAuth redirect URI exactly | Per environment; env-sourced (`NEXT_PUBLIC_DEPLOYMENT_ORIGIN`), never inferred from `VERCEL_URL` |
+| `CANONICAL_ORIGIN` | = `DEPLOYMENT_ORIGIN` today | Public identity for `metadataBase`, `sitemap.ts`, `robots.ts`, Algolia permalinks, JSON-LD | Hand-edited once, on jknm.si cutover day |
+| `LEGACY_SITE_ORIGIN` | `https://www.jknm.si` | Recognizing/rewriting links pasted from the pre-rewrite 2008 site into content | Never — names a fact about old content, not app deployment |
+| `MEDIA_CDN_ORIGIN` | `https://gradivo.jknm.org` | Cloudflare-routed custom domain in front of the `jknm-gradivo` B2 bucket (ADR-0008) | Never automatically — see cutover checklist |
+| `WORKSPACE_EMAIL_DOMAIN` / `CONTACT_EMAIL` | `jknm.si` / `info@jknm.si` | Google Workspace membership check (`sign-in-gate.ts`) + human-facing contact address | Never |
+| `MAIL_FROM_DOMAIN` | `jknm.org` | Resend-verified sender domain for the contact form | Once `jknm.si` is SPF/DKIM-verified in Resend |
+
+`MEDIA_CDN_ORIGIN` staying `.org` is deliberate even after the `.si` cutover: it's Cloudflare's
+domain, mapped independently of the app's own origin, and every existing article's
+`content_json` already has `gradivo.jknm.org` URLs baked in. Moving it to `.si` is a separate,
+optional future migration (rewrite every article's stored media URLs, then repoint Cloudflare),
+not something the cutover itself requires.
+
+Full rollover checklist: `docs/domain-cutover-checklist.md`.
 
 ## Code structure
 

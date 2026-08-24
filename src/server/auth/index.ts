@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { cache } from "react";
 
 import { env } from "~/env";
+import { DEPLOYMENT_ORIGIN } from "~/lib/domains";
 import { db } from "~/server/db";
 import { accounts, sessions, users, verification } from "~/server/db/schema";
 import { to_app_session } from "./session-shape";
@@ -14,8 +15,14 @@ import { is_allowed_sign_in } from "./sign-in-gate";
 export type { Session } from "./session-shape";
 
 export const auth = betterAuth({
-	baseURL: env.BETTER_AUTH_URL,
+	baseURL: DEPLOYMENT_ORIGIN,
 	secret: env.BETTER_AUTH_SECRET,
+	// Extra origins allowed to complete a Google sign-in against this
+	// deployment during the domain transition — see src/lib/domains.ts.
+	// jknm.org: bought and pointed at Vercel, not yet the live app origin.
+	// jknm-si.vercel.app: today's DEPLOYMENT_ORIGIN, kept trusted so it
+	// doesn't break once DEPLOYMENT_ORIGIN is flipped to jknm.si at cutover.
+	trustedOrigins: ["https://jknm.org", "https://jknm-si.vercel.app"],
 	database: drizzleAdapter(db, {
 		provider: "pg",
 		// The adapter looks tables up by better-auth's model names, which are not

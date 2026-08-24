@@ -6,17 +6,17 @@ import {
 	UserContactEmailTemplate,
 } from "~/components/email-template";
 import { env } from "~/env";
+import { MAIL_FROM_DOMAIN } from "~/lib/domains";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
-/* TODO: zamenjaj domeno na jknm.si */
 export async function POST(req: Request) {
 	try {
 		const values = (await req.json()) as z.infer<typeof contact_form_schema>;
 
 		const admin_email = await resend.emails.send({
-			from: "Jamarski klub Novo mesto <noreply@jknm.org>",
-			to: ["info@jknm.org"],
+			from: `Jamarski klub Novo mesto <noreply@${MAIL_FROM_DOMAIN}>`,
+			to: [`info@${MAIL_FROM_DOMAIN}`],
 			subject: "Novo sporočilo iz strani jknm.si",
 			react: AdminContactEmailTemplate(values),
 		});
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 		}
 
 		const user_email = await resend.emails.send({
-			from: "Jamarski klub Novo mesto <noreply@jknm.org>",
+			from: `Jamarski klub Novo mesto <noreply@${MAIL_FROM_DOMAIN}>`,
 			to: values.email,
 			subject: "Potrditev prejema sporočila",
 			react: UserContactEmailTemplate(values),

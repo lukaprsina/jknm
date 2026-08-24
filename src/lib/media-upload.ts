@@ -1,10 +1,13 @@
-// Public domain media is served from (Cloudflare-routed in front of the
-// `jknm-gradivo` B2 bucket, per #12/#18) — media URLs are absolute and
-// permanent from the moment they're written, since media is immutable.
-export const MEDIA_PUBLIC_DOMAIN = "gradivo.jknm.org";
+import { MEDIA_CDN_ORIGIN } from "~/lib/domains";
 
+// Bare host, for consumers that match/compare hostnames rather than build
+// urls (editor-utils.ts's hotlink regex, audit-evergreen-pages.ts).
+export const MEDIA_PUBLIC_DOMAIN = new URL(MEDIA_CDN_ORIGIN).host;
+
+// Media URLs are absolute and permanent from the moment they're written,
+// since media is immutable.
 export function media_url(key: string) {
-	return `https://${MEDIA_PUBLIC_DOMAIN}/${key}`;
+	return `${MEDIA_CDN_ORIGIN}/${key}`;
 }
 
 export interface FileUploadResponse {

@@ -43,7 +43,7 @@ async function main() {
 	}
 	const page_config = STATIC_PAGES[slug];
 
-	const page_url = new URL(page_config.route, env.BETTER_AUTH_URL).toString();
+	const page_url = new URL(page_config.route, env.NEXT_PUBLIC_DEPLOYMENT_ORIGIN).toString();
 	const response = await fetch(page_url);
 	if (!response.ok) {
 		throw new Error(`GET ${page_url} -> ${response.status}`);
@@ -74,7 +74,7 @@ async function main() {
 
 	const draft_url = new URL(
 		`/uredi/${draft.id}`,
-		env.BETTER_AUTH_URL,
+		env.NEXT_PUBLIC_DEPLOYMENT_ORIGIN,
 	).toString();
 	console.log(`\nDone. Draft: ${draft_url}`);
 	console.log(

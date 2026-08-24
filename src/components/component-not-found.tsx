@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CONTACT_EMAIL } from "~/lib/domains";
 import { page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
 
@@ -28,7 +29,8 @@ export function ArticleNotFound() {
 		>
 			<p>Če menite, da je prišlo do napake, nas kontaktirajte.</p>
 			<p>
-				Naša e-pošta: <Link href="mailto:info@jknm.si">info@jknm.si</Link>
+				Naša e-pošta:{" "}
+				<Link href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</Link>
 			</p>
 		</NotFoundContent>
 	);

@@ -8,7 +8,7 @@ import { ArchivedArticles } from "~/components/archived-articles";
 import { DraftArticles } from "~/components/draft-articles";
 import { Shell } from "~/components/shell";
 import { article_variants, page_variants } from "~/lib/page-variants";
-import { SITE_ORIGIN } from "~/lib/site-config";
+import { CANONICAL_ORIGIN } from "~/lib/domains";
 import { cn } from "~/lib/utils";
 import { getServerAuthSession } from "~/server/auth";
 import { InfiniteArticles } from "./infinite-articles";
@@ -31,17 +31,17 @@ const ORGANIZATION_JSON_LD = JSON.stringify({
 	"@graph": [
 		{
 			"@type": "Organization",
-			"@id": `${SITE_ORIGIN}/#organization`,
+			"@id": `${CANONICAL_ORIGIN}/#organization`,
 			name: CLUB_NAME,
-			url: SITE_ORIGIN,
-			logo: `${SITE_ORIGIN}/opengraph-image.png`,
+			url: CANONICAL_ORIGIN,
+			logo: `${CANONICAL_ORIGIN}/opengraph-image.png`,
 		},
 		{
 			"@type": "WebSite",
-			"@id": `${SITE_ORIGIN}/#website`,
-			url: SITE_ORIGIN,
+			"@id": `${CANONICAL_ORIGIN}/#website`,
+			url: CANONICAL_ORIGIN,
 			name: CLUB_NAME,
-			publisher: { "@id": `${SITE_ORIGIN}/#organization` },
+			publisher: { "@id": `${CANONICAL_ORIGIN}/#organization` },
 		},
 	],
 }).replace(/</g, "\\u003c");

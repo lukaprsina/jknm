@@ -7,8 +7,10 @@
  * is testable at all. Keep it free of database, request and library access.
  */
 
+import { WORKSPACE_EMAIL_DOMAIN } from "~/lib/domains";
+
 /** The one domain club editors sign in from. */
-export const ALLOWED_EMAIL_DOMAIN = "@jknm.si";
+export const ALLOWED_EMAIL_DOMAIN = `@${WORKSPACE_EMAIL_DOMAIN}`;
 
 export interface SignInCandidate {
 	/** The OAuth provider id, e.g. `"google"`. */

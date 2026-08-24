@@ -6,6 +6,7 @@ import { Logo } from "~/components/shell/logo";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { CardFooter } from "~/components/ui/card";
 import { sign_in_with_google, sign_out } from "~/lib/auth-client";
+import { CONTACT_EMAIL } from "~/lib/domains";
 import { article_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
 import type { Session } from "~/server/auth";
@@ -31,7 +32,7 @@ export default function SignIn({ session }: { session: Session | null }) {
 						<div className="flex flex-col space-y-2 text-center">
 							<h1 className="text-2xl font-semibold tracking-tight">Prijava</h1>
 							<p className="text-sm text-muted-foreground">
-								Prijava je možna samo z Google računom info@jknm.si.
+								Prijava je možna samo z Google računom {CONTACT_EMAIL}.
 							</p>
 						</div>
 						<div className="w-full text-center">

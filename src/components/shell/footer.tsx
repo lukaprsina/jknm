@@ -1,5 +1,6 @@
 import { Mail, Phone } from "lucide-react";
 import Link from "next/link";
+import { CONTACT_EMAIL } from "~/lib/domains";
 import { FacebookIcon, InstagramIcon, YoutubeIcon } from "./icons";
 
 export function Footer() {
@@ -33,10 +34,10 @@ export function Footer() {
 								<li className="flex items-center">
 									<Mail className="mr-2 h-5 w-5" />
 									<Link
-										href="mailto:info@jknm.si"
+										href={`mailto:${CONTACT_EMAIL}`}
 										className="hover:text-[#d7e7ef]"
 									>
-										info@jknm.si
+										{CONTACT_EMAIL}
 									</Link>
 								</li>
 								<li className="flex flex-wrap items-center gap-x-1">

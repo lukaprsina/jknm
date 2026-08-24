@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import type { MetadataRoute } from "next";
-import { SITE_ORIGIN } from "~/lib/site-config";
+import { CANONICAL_ORIGIN } from "~/lib/domains";
 import { EXCLUDE_CONTENT_KIND } from "~/server/article/article-queries";
 import { find_primary_slug_or_first } from "~/server/article/lifecycle-rules";
 import { db } from "~/server/db";
@@ -43,13 +43,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		if (!slug) continue;
 
 		article_entries.push({
-			url: `${SITE_ORIGIN}/novica/${encodeURIComponent(slug)}`,
+			url: `${CANONICAL_ORIGIN}/novica/${encodeURIComponent(slug)}`,
 			lastModified: article.updated_at,
 		});
 	}
 
 	const static_entries: MetadataRoute.Sitemap = STATIC_ROUTES.map((path) => ({
-		url: `${SITE_ORIGIN}${path}`,
+		url: `${CANONICAL_ORIGIN}${path}`,
 	}));
 
 	return [...static_entries, ...article_entries];

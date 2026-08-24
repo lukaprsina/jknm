@@ -8,7 +8,7 @@ import { ScrollProvider } from "~/contexts/scroll-context";
 import { format_author_name } from "~/lib/author-name";
 import type { ContentPageSlug } from "~/lib/content-pages";
 import { strip_html_to_text } from "~/lib/sanitize-html";
-import { SITE_ORIGIN } from "~/lib/site-config";
+import { CANONICAL_ORIGIN } from "~/lib/domains";
 import { get_new_article_by_slug } from "~/server/article/get-article";
 import { is_visible_to } from "~/server/article/lifecycle-rules";
 import { getServerAuthSession } from "~/server/auth";
@@ -91,7 +91,7 @@ function build_article_json_ld(article: NewArticleWithRelations, slug: string) {
 		headline: strip_html_to_text(article.title),
 		datePublished: (article.published_at ?? article.created_at).toISOString(),
 		dateModified: article.updated_at.toISOString(),
-		url: `${SITE_ORIGIN}${resolve_canonical_article_path(article, slug)}`,
+		url: `${CANONICAL_ORIGIN}${resolve_canonical_article_path(article, slug)}`,
 		author: article.articles_to_authors.map((rel) => ({
 			"@type": "Person",
 			name: format_author_name(rel.author),

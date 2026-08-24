@@ -14,6 +14,7 @@ import { InfoCard } from "~/components/info-card";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { useToast } from "~/hooks/use-toast";
+import { LEGACY_SITE_ORIGIN } from "~/lib/domains";
 import { get_article_by_new_id } from "~/server/article/get-article";
 
 const DEFAULT_LEGACY_ID = 1;
@@ -62,7 +63,7 @@ export function PreveriClient({
 	});
 
 	const iframe_src = useCallback(
-		(id: number) => `https://www.jknm.si/si/?id=${id}`,
+		(id: number) => `${LEGACY_SITE_ORIGIN}/si/?id=${id}`,
 		[],
 	);
 

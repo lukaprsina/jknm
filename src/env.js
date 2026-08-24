@@ -35,10 +35,6 @@ export const env = createEnv({
 			process.env.NODE_ENV === "production"
 				? z.string().min(32)
 				: z.string().optional(),
-		// better-auth discourages inferring the base URL from the request, and
-		// Google answers a wrong one with `redirect_uri_mismatch` — so this is
-		// explicit rather than preprocessed from VERCEL_URL.
-		BETTER_AUTH_URL: z.url(),
 		// Shared secret for `/api/internal/revalidate` — lets a script that
 		// mutated the DB directly (bypassing the oRPC/Server Action layer, e.g.
 		// `scripts/migrate/publish-content-page.ts`) ask the *live* server
@@ -71,17 +67,11 @@ export const env = createEnv({
 		NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME: z.string(),
 		NEXT_PUBLIC_AWS_MEDIA_BUCKET_NAME: z.string(),
 		NEXT_PUBLIC_AWS_STATIC_BUCKET_NAME: z.string(),
-		// Despite the name, this is no longer an auth variable: #32 left the auth
-		// client same-origin, so nothing here configures it. Its only consumer is
-		// `get_base_url()`. Renaming it means a coordinated Vercel change, so #32
-		// left it alone deliberately.
-		NEXT_PUBLIC_NEXTAUTH_URL: z.preprocess(
-			// This makes Vercel deployments not fail if you don't set it, since
-			// VERCEL_URL is present on every deployment.
-			(str) => process.env.VERCEL_URL ?? str,
-			// VERCEL_URL doesn't include `https` so it cant be validated as a URL
-			process.env.VERCEL ? z.string() : z.url(),
-		),
+		// Where this deployment is reachable — see src/lib/domains.ts. Set
+		// explicitly per environment, not inferred from VERCEL_URL: it carries
+		// no protocol and, for aliased production deployments, isn't even the
+		// assigned domain, which previously left this silently wrong.
+		NEXT_PUBLIC_DEPLOYMENT_ORIGIN: z.url(),
 	},
 
 	/**
@@ -92,7 +82,6 @@ export const env = createEnv({
 		DATABASE_URL: process.env.DATABASE_URL,
 		NODE_ENV: process.env.NODE_ENV,
 		BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
-		BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
 		REVALIDATE_SECRET: process.env.REVALIDATE_SECRET,
 		GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
 		GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
@@ -108,7 +97,7 @@ export const env = createEnv({
 		NEXT_PUBLIC_ALGOLIA_SEARCH_KEY: process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY,
 		NEXT_PUBLIC_ALGOLIA_PUBLISHED_ARTICLE_INDEX:
 			process.env.NEXT_PUBLIC_ALGOLIA_PUBLISHED_ARTICLE_INDEX,
-		NEXT_PUBLIC_NEXTAUTH_URL: process.env.NEXT_PUBLIC_NEXTAUTH_URL,
+		NEXT_PUBLIC_DEPLOYMENT_ORIGIN: process.env.NEXT_PUBLIC_DEPLOYMENT_ORIGIN,
 		NEXT_PUBLIC_AWS_REGION: process.env.NEXT_PUBLIC_AWS_REGION,
 		NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME:
 			process.env.NEXT_PUBLIC_AWS_PUBLISHED_BUCKET_NAME,

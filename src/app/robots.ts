@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { SITE_ORIGIN } from "~/lib/site-config";
+import { CANONICAL_ORIGIN } from "~/lib/domains";
 
 /**
  * `Allow: /` under `userAgent: "*"` already covers every named crawler,
@@ -23,6 +23,6 @@ export default function robots(): MetadataRoute.Robots {
 				disallow: ["/uredi/", "/preveri/", "/prijava/", "/avtorji/", "/api/"],
 			},
 		],
-		sitemap: `${SITE_ORIGIN}/sitemap.xml`,
+		sitemap: `${CANONICAL_ORIGIN}/sitemap.xml`,
 	};
 }

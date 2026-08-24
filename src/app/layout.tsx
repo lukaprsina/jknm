@@ -8,7 +8,7 @@ import { Open_Sans } from "next/font/google";
 import { StrictMode } from "react";
 import { Toaster } from "~/components/ui/toaster";
 import { TooltipProvider } from "~/components/ui/tooltip";
-import { SITE_ORIGIN } from "~/lib/site-config";
+import { CANONICAL_ORIGIN } from "~/lib/domains";
 import { cn } from "~/lib/utils";
 import { cachedAllAuthors } from "~/server/cached-global-state";
 import Providers from "./provider";
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 	// Required for every relative URL-bearing metadata field (canonicals,
 	// OG images) elsewhere in the app to resolve at all — Next hard build-
 	// errors on a relative URL-based field without this set.
-	metadataBase: new URL(SITE_ORIGIN),
+	metadataBase: new URL(CANONICAL_ORIGIN),
 	title: {
 		default: "Jamarski klub Novo mesto",
 		template: "%s | Jamarski klub Novo mesto",
