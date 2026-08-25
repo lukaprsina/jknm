@@ -13,15 +13,28 @@ import { get_article_by_new_id_validator } from "./validators";
 
 // --- Unified `articles` table (#20) ---
 
-export async function get_article_by_new_id(
-	input: z.infer<typeof get_article_by_new_id_validator>,
-) {
-	const validated_input = get_article_by_new_id_validator.safeParse(input);
-	if (!validated_input.success) {
-		throw new Error(validated_input.error.message);
-	}
+// `generateMetadata` and the page body on `/uredi/[draft_id]` both need the
+// same article; `cache` dedupes that within the request. It keys by argument
+// reference, so `id` must be a primitive, not a freshly-literal `{ id }`
+// object, for repeat calls to actually hit the same cache entry. No
+// `unstable_cache` here — this serves the editor, which must always see
+// fresh draft content. Not exported directly: a "use server" file's exports
+// must be async function declarations, which `cache()`'s return value isn't.
+const cachedArticleById = cache(
+	async (id: z.infer<typeof get_article_by_new_id_validator>) => {
+		const validated_id = get_article_by_new_id_validator.safeParse(id);
+		if (!validated_id.success) {
+			throw new Error(validated_id.error.message);
+		}
 
-	return find_article_with_relations(db, eq(Article.id, input.id));
+		return find_article_with_relations(db, eq(Article.id, validated_id.data));
+	},
+);
+
+export async function get_article_by_new_id(
+	id: z.infer<typeof get_article_by_new_id_validator>,
+) {
+	return cachedArticleById(id);
 }
 
 /**

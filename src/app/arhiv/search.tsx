@@ -23,7 +23,9 @@ const SearchControlsDynamic = dynamic(
 		})),
 	{
 		ssr: false,
-		loading: () => <Skeleton className="h-[172px] w-full bg-[hsl(0_0%_90%)]" />,
+		loading: () => (
+			<Skeleton className="h-59 w-full bg-[hsl(0_0%_90%)] lg:h-35" />
+		),
 	},
 );
 
@@ -38,7 +40,7 @@ const ArticleTableDynamic = dynamic(
 			<div className="flex flex-col gap-2">
 				{Array.from({ length: 10 }).map((_, index) => (
 					// biome-ignore lint/suspicious/noArrayIndexKey: fixed-count, never-reordered loading placeholders
-					<Skeleton key={index} className="h-9 w-full bg-[hsl(0_0%_90%)]" />
+					<Skeleton key={index} className="h-6 w-full bg-[hsl(0_0%_90%)]" />
 				))}
 			</div>
 		),

@@ -48,7 +48,7 @@ export async function generateMetadata(
 
 	let article_title: string | undefined;
 	if (UUID_REGEX.test(decoded)) {
-		const article = await get_article_by_new_id({ id: decoded });
+		const article = await get_article_by_new_id(decoded);
 		article_title = article?.title;
 	}
 
@@ -92,7 +92,7 @@ export default async function EditorPage(props: EditorPageProps) {
 		);
 	}
 
-	const article = await get_article_by_new_id({ id: decoded });
+	const article = await get_article_by_new_id(decoded);
 
 	if (!article) {
 		return (
@@ -133,7 +133,7 @@ export default async function EditorPage(props: EditorPageProps) {
 	// immediately — there's no live source left to protect, so the draft is
 	// treated as standalone from here on (mirrors `resolve_lifecycle_target`).
 	const source = article.supersedes_id
-		? await get_article_by_new_id({ id: article.supersedes_id })
+		? await get_article_by_new_id(article.supersedes_id)
 		: undefined;
 	const is_source_live = source !== undefined && source.status !== "deleted";
 

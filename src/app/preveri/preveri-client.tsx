@@ -58,7 +58,7 @@ export function PreveriClient({
 	const current_id = page_info.current_id;
 	const article = useQuery({
 		queryKey: ["preveri-client", current_id],
-		queryFn: () => get_article_by_new_id({ id: current_id ?? "" }),
+		queryFn: () => get_article_by_new_id(current_id ?? ""),
 		enabled: Boolean(current_id),
 	});
 

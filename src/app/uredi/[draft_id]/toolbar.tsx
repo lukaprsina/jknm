@@ -30,27 +30,23 @@ export function MyToolbar() {
 
 	if (!editor_context) return null;
 	return (
-		<div className="flex flex-col justify-between gap-4">
-			<div className="flex w-full flex-wrap items-center justify-between p-4">
-				<div className="flex items-center gap-2">
-					<MultiSelect
-						autoSize
-						hideSelectAll
-						options={options}
-						defaultValue={selected_values}
-						onValueChange={(values) =>
-							editor_store.setState({
-								author_ids: values.map((value) => Number.parseInt(value, 10)),
-							})
-						}
-						placeholder="Avtorji"
-					/>
-					<span className="flex flex-shrink-0">
-						{editor_context.savingText}
-					</span>
-				</div>
-				<ToolbarButtons />
+		<div className="flex w-full flex-wrap items-center justify-between p-4">
+			<div className="flex items-center gap-2">
+				<MultiSelect
+					autoSize
+					hideSelectAll
+					options={options}
+					defaultValue={selected_values}
+					onValueChange={(values) =>
+						editor_store.setState({
+							author_ids: values.map((value) => Number.parseInt(value, 10)),
+						})
+					}
+					placeholder="Avtorji"
+				/>
+				<span className="flex shrink-0">{editor_context.savingText}</span>
 			</div>
+			<ToolbarButtons />
 		</div>
 	);
 }

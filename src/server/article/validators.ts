@@ -27,9 +27,7 @@ export const publish_article_validator = z.object({
 	author_ids: z.array(z.number()),
 });
 
-export const get_article_by_new_id_validator = z.object({
-	id: z.string().uuid(),
-});
+export const get_article_by_new_id_validator = z.string().uuid();
 
 // --- Status lifecycle: archive / delete / unarchive / supersede-publish (#21) ---
 
