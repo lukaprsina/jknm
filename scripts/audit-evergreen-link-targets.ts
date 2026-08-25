@@ -93,7 +93,10 @@ interface LinkContext {
 
 async function main() {
 	const pages = await db.query.Article.findMany({
-		where: and(eq(Article.article_kind, "content"), eq(Article.status, "published")),
+		where: and(
+			eq(Article.article_kind, "content"),
+			eq(Article.status, "published"),
+		),
 		columns: { id: true, title: true, content_json: true },
 	});
 
@@ -132,7 +135,12 @@ async function main() {
 			const target = slug_row
 				? await db.query.Article.findFirst({
 						where: eq(Article.id, slug_row.article_id),
-						columns: { title: true, published_at: true, status: true, content_json: true },
+						columns: {
+							title: true,
+							published_at: true,
+							status: true,
+							content_json: true,
+						},
 					})
 				: undefined;
 
@@ -165,10 +173,16 @@ async function main() {
 		const out_path = path.join(OUT_DIR, `${slugify(page.title)}.json`);
 		await fs.writeFile(
 			out_path,
-			JSON.stringify({ title: page.title, article_id: page.id, links: results }, null, 2),
+			JSON.stringify(
+				{ title: page.title, article_id: page.id, links: results },
+				null,
+				2,
+			),
 			"utf8",
 		);
-		console.log(`[${page.title}] ${results.length} /novica link(s) -> ${out_path}`);
+		console.log(
+			`[${page.title}] ${results.length} /novica link(s) -> ${out_path}`,
+		);
 	}
 }
 

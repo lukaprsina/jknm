@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
-import { chromium } from "playwright";
 import { inArray } from "drizzle-orm";
+import { chromium } from "playwright";
 import { find_primary_slug } from "~/server/article/lifecycle-rules";
 import { db } from "~/server/db";
 import { Article } from "~/server/db/schema";
@@ -44,14 +44,19 @@ async function load_proposals(): Promise<Proposal[]> {
 
 async function main() {
 	const proposals = await load_proposals();
-	const article_ids = [...new Set(proposals.map((proposal) => proposal.article_id))];
+	const article_ids = [
+		...new Set(proposals.map((proposal) => proposal.article_id)),
+	];
 	const articles = await db.query.Article.findMany({
 		where: inArray(Article.id, article_ids),
 		columns: { id: true },
 		with: { article_slugs: { columns: { slug: true, is_primary: true } } },
 	});
 	const slug_by_id = new Map(
-		articles.map((article) => [article.id, find_primary_slug(article.article_slugs)?.slug]),
+		articles.map((article) => [
+			article.id,
+			find_primary_slug(article.article_slugs)?.slug,
+		]),
 	);
 
 	const rows = proposals
@@ -63,7 +68,10 @@ async function main() {
 			const current_target = `${CURRENT_ORIGIN}${proposal.expected}`;
 			const legacy_source = `${LEGACY_ORIGIN}/si/?id=${proposal.legacy_id}`;
 			const legacy_target = proposal.legacy_href.replace(/^http:/, "https:");
-			const anchor = proposal.anchor_text ?? proposal.candidate_anchor_texts?.join(" / ") ?? "—";
+			const anchor =
+				proposal.anchor_text ??
+				proposal.candidate_anchor_texts?.join(" / ") ??
+				"—";
 			return `<article class="card" data-index="${index}">
 				<div class="meta"><span class="badge">${escape_html(proposal.outcome)}</span> <b>${proposal.kind}</b> · legacy_id ${proposal.legacy_id}</div>
 				<h2>${escape_html(proposal.title)}</h2>
@@ -82,7 +90,9 @@ async function main() {
 		.join("\n");
 
 	const browser = await chromium.launch({ headless: false });
-	const page = await browser.newPage({ viewport: { width: 1200, height: 900 } });
+	const page = await browser.newPage({
+		viewport: { width: 1200, height: 900 },
+	});
 	await page.setContent(`<!doctype html><meta charset="utf-8"><title>JKNM link-fix review</title>
 	<style>
 		body{font:15px system-ui,sans-serif;max-width:1100px;margin:24px auto;padding:0 18px;background:#f5f5f5;color:#222}.card{background:white;border:1px solid #ddd;border-radius:8px;padding:16px;margin:14px 0}.meta{color:#666}.badge{background:#eee;border-radius:4px;padding:2px 6px;font-size:12px}.links{display:flex;gap:8px;flex-wrap:wrap}.links a,button{border:1px solid #999;border-radius:5px;padding:6px 9px;background:#fff;color:#111;text-decoration:none;cursor:pointer}.links a:hover,button:hover{background:#eef}.decision{display:flex;gap:6px;align-items:center;margin-top:14px}.decision span{color:#176b2c;font-weight:600}.notes{display:block;margin-top:10px;color:#666}.notes textarea{display:block;box-sizing:border-box;width:100%;margin-top:4px;padding:6px;border:1px solid #bbb;border-radius:4px;font:inherit;resize:vertical}code{font-size:12px;word-break:break-all}
@@ -91,7 +101,9 @@ async function main() {
 		for (const card of document.querySelectorAll('.card')) { for(const button of card.querySelectorAll('button')) button.onclick=()=>{card.querySelector('.decision span').textContent='Selected: '+button.dataset.decision}; }
 	</script>`);
 	console.log("Review opened in Chromium. Close the browser when finished.");
-	await new Promise<void>((resolve) => browser.on("disconnected", () => resolve()));
+	await new Promise<void>((resolve) =>
+		browser.on("disconnected", () => resolve()),
+	);
 }
 
 main().catch((error) => {

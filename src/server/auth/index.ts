@@ -22,7 +22,12 @@ export const auth = betterAuth({
 	// jknm.org: bought and pointed at Vercel, not yet the live app origin.
 	// jknm-si.vercel.app: today's DEPLOYMENT_ORIGIN, kept trusted so it
 	// doesn't break once DEPLOYMENT_ORIGIN is flipped to jknm.si at cutover.
-	trustedOrigins: ["https://jknm.org", "https://jknm-si.vercel.app"],
+	trustedOrigins: [
+		"https://jknm.org",
+		"https://jknm-si.vercel.app",
+		"https://jknm.localhost",
+		"http://jknm.si",
+	],
 	database: drizzleAdapter(db, {
 		provider: "pg",
 		// The adapter looks tables up by better-auth's model names, which are not

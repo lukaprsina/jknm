@@ -200,10 +200,7 @@ export function AuthorsTableHeaderButtons({
 					</DialogHeader>
 					<div className="max-h-64 space-y-2 overflow-y-auto">
 						{authors.map((author) => (
-							<div
-								key={author.id}
-								className="flex items-center gap-2 text-sm"
-							>
+							<div key={author.id} className="flex items-center gap-2 text-sm">
 								<Checkbox
 									id={`delete-author-${author.id}`}
 									checked={selectedIds.has(author.id)}

@@ -119,7 +119,11 @@ async function main() {
 				continue;
 			}
 
-			const result = apply_fix(data.text, proposal.anchor_text, proposal.expected);
+			const result = apply_fix(
+				data.text,
+				proposal.anchor_text,
+				proposal.expected,
+			);
 			if (!result) {
 				console.warn(
 					`[${proposal.legacy_id}] ${proposal.title} - anchor text "${proposal.anchor_text}" no longer found in block ${block.id ?? proposal.block_index} — skipping`,

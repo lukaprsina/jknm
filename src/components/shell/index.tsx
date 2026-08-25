@@ -63,9 +63,7 @@ export async function Shell({
 						<MobileHeader editor_controls={editor_controls} />
 					</header>
 				) : undefined}
-				<TocAwareLayout known_has_toc={has_toc}>
-					{children}
-				</TocAwareLayout>
+				<TocAwareLayout known_has_toc={has_toc}>{children}</TocAwareLayout>
 				{without_footer ? undefined : (
 					<>
 						<Separator />

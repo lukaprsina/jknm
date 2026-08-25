@@ -114,7 +114,8 @@ type Finding =
 	| StaleAssetHost;
 
 const OLD_DOMAIN_RE = /https?:\/\/(?:www\.)?jknm\.si[^\s"'<>)\\]*/gi;
-const PREVIEW_DOMAIN_RE = /https?:\/\/[^\s"'<>)\\]*\.vercel\.app[^\s"'<>)\\]*/gi;
+const PREVIEW_DOMAIN_RE =
+	/https?:\/\/[^\s"'<>)\\]*\.vercel\.app[^\s"'<>)\\]*/gi;
 const VSEBINA_LINK_RE = /https?:\/\/vsebina\.jknm\.org[^\s"'<>)\\]*/gi;
 // `href` shows up two ways once content_json is JSON.stringify'd: as a real
 // object property (`"href":"value"`, from tools that store links as data,
@@ -124,10 +125,8 @@ const VSEBINA_LINK_RE = /https?:\/\/vsebina\.jknm\.org[^\s"'<>)\\]*/gi;
 // HTML case, which produced 0 false-negative findings until the link dump
 // below exposed it.
 const HREF_RE = /"?href"?[:=]\\?"([^"\\]*)/gi;
-const LEGACY_ID_QUERY_RE = new RegExp(
-	String.raw`"?href"?[:=]\\?"([^"\\]*\?[^"\\]*\bid=\d+[^"\\]*)`,
-	"gi",
-);
+const LEGACY_ID_QUERY_RE =
+	/"?href"?[:=]\\?"([^"\\]*\?[^"\\]*\bid=\d+[^"\\]*)/gi;
 const DEAD_SELF_LINK_RE = /"?href"?[:=]\\?"http:\/\/\/\\?"/gi;
 
 function count_matches(text: string, re: RegExp): Map<string, number> {

@@ -1,8 +1,8 @@
 import { env } from "~/env";
 import { format_author_name, format_author_sort_name } from "~/lib/author-name";
 import { convert_content_to_text } from "~/lib/content-to-text";
-import type { PublicAuthor } from "~/server/author/public-shape";
 import type { PublishedArticleHit } from "~/lib/validators";
+import type { PublicAuthor } from "~/server/author/public-shape";
 import type {
 	ArticleContentType,
 	ArticleKind,

@@ -214,7 +214,9 @@ async function main() {
 		const refs = content_by_article.get(finding.article_id) ?? [];
 		const target_title =
 			finding.kind === "missing_article_link"
-				? title_by_target_legacy_id.get(target_legacy_id(finding.legacy_href) ?? -1)
+				? title_by_target_legacy_id.get(
+						target_legacy_id(finding.legacy_href) ?? -1,
+					)
 				: undefined;
 
 		let placed = false;

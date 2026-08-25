@@ -96,7 +96,9 @@ async function main() {
 	);
 
 	if (!execute) {
-		console.log("\nDry run only - re-run with --execute to rewrite + reconcile.");
+		console.log(
+			"\nDry run only - re-run with --execute to rewrite + reconcile.",
+		);
 	}
 }
 

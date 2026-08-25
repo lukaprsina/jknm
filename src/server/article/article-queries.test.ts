@@ -138,9 +138,9 @@ describe("find_published_articles_page", () => {
 
 		if (!article) throw new Error("no article returned");
 
-		await db.insert(ArticlesToAuthors).values([
-			{ article_id: article.id, author_id: 1, order: 0 },
-		]);
+		await db
+			.insert(ArticlesToAuthors)
+			.values([{ article_id: article.id, author_id: 1, order: 0 }]);
 
 		const page = await find_published_articles_page(db, { limit: 10 });
 

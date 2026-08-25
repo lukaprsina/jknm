@@ -43,7 +43,10 @@ async function main() {
 	}
 	const page_config = STATIC_PAGES[slug];
 
-	const page_url = new URL(page_config.route, env.NEXT_PUBLIC_DEPLOYMENT_ORIGIN).toString();
+	const page_url = new URL(
+		page_config.route,
+		env.NEXT_PUBLIC_DEPLOYMENT_ORIGIN,
+	).toString();
 	const response = await fetch(page_url);
 	if (!response.ok) {
 		throw new Error(`GET ${page_url} -> ${response.status}`);

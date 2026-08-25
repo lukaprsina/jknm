@@ -36,11 +36,7 @@ interface MismatchRow {
 }
 
 function normalize_anchor(text: string): string {
-	return text
-		.replace(/\*\*/g, "")
-		.replace(/\s+/g, " ")
-		.trim()
-		.toLowerCase();
+	return text.replace(/\*\*/g, "").replace(/\s+/g, " ").trim().toLowerCase();
 }
 
 const A_TAG_RE = /<a\b[^>]*href="([^"]+)"[^>]*>([^<]*)<\/a>/gi;
@@ -130,7 +126,11 @@ function collect_occurrences(content_json: unknown): Occurrence[] {
 	return out;
 }
 
-function replace_href_in_match(match_text: string, old_href: string, new_href: string): string {
+function replace_href_in_match(
+	match_text: string,
+	old_href: string,
+	new_href: string,
+): string {
 	return match_text.replace(`href="${old_href}"`, `href="${new_href}"`);
 }
 
@@ -139,7 +139,9 @@ async function main() {
 		columns: { id: true, legacy_id: true },
 	});
 	const by_legacy_id = new Map(
-		legacy_articles.filter((a) => a.legacy_id !== null).map((a) => [a.legacy_id!, a.id]),
+		legacy_articles
+			.filter((a) => a.legacy_id !== null)
+			.map((a) => [a.legacy_id!, a.id]),
 	);
 
 	for (const page_title of PAGES) {
@@ -168,7 +170,8 @@ async function main() {
 
 		console.log(`\n== ${page_title} (${mismatches.length} mismatch(es)) ==`);
 		let page_ok = true;
-		const planned: { row: MismatchRow; occ: Occurrence; new_href: string }[] = [];
+		const planned: { row: MismatchRow; occ: Occurrence; new_href: string }[] =
+			[];
 
 		for (const row of mismatches) {
 			const anchor_norm = normalize_anchor(row.anchor);
@@ -176,7 +179,9 @@ async function main() {
 				(o, i) => !used[i] && o.anchor_norm === anchor_norm,
 			);
 			if (occ_idx === -1) {
-				console.log(`  ! "${row.anchor}": no matching occurrence found in current content_json (drift?) — skipping page`);
+				console.log(
+					`  ! "${row.anchor}": no matching occurrence found in current content_json (drift?) — skipping page`,
+				);
 				page_ok = false;
 				continue;
 			}
@@ -192,16 +197,23 @@ async function main() {
 
 			const target_article_id = by_legacy_id.get(row.word_doc_legacy_id);
 			if (!target_article_id) {
-				console.log(`  ! "${row.anchor}": legacy_id ${row.word_doc_legacy_id} not found — skipping`);
+				console.log(
+					`  ! "${row.anchor}": legacy_id ${row.word_doc_legacy_id} not found — skipping`,
+				);
 				page_ok = false;
 				continue;
 			}
 			const primary_slug = await db.query.ArticleSlug.findFirst({
-				where: and(eq(ArticleSlug.article_id, target_article_id), eq(ArticleSlug.is_primary, true)),
+				where: and(
+					eq(ArticleSlug.article_id, target_article_id),
+					eq(ArticleSlug.is_primary, true),
+				),
 				columns: { slug: true },
 			});
 			if (!primary_slug) {
-				console.log(`  ! "${row.anchor}": target article ${target_article_id} has no primary slug — skipping`);
+				console.log(
+					`  ! "${row.anchor}": target article ${target_article_id} has no primary slug — skipping`,
+				);
 				page_ok = false;
 				continue;
 			}
@@ -211,7 +223,9 @@ async function main() {
 		}
 
 		if (!page_ok) {
-			console.log(`  aborting DB write for "${page_title}" due to warnings above`);
+			console.log(
+				`  aborting DB write for "${page_title}" due to warnings above`,
+			);
 			continue;
 		}
 
@@ -231,16 +245,21 @@ async function main() {
 			for (const { occ, new_href } of items) {
 				const before = text.slice(occ.match_start, occ.match_end);
 				const after = replace_href_in_match(before, occ.href, new_href);
-				text = text.slice(0, occ.match_start) + after + text.slice(occ.match_end);
+				text =
+					text.slice(0, occ.match_start) + after + text.slice(occ.match_end);
 			}
 			ref.set(text);
 		}
 
-		await db.update(Article).set({ content_json }).where(eq(Article.id, db_page.id));
+		await db
+			.update(Article)
+			.set({ content_json })
+			.where(eq(Article.id, db_page.id));
 		console.log(`  wrote ${planned.length} fix(es) to "${page_title}"`);
 	}
 
-	if (!EXECUTE) console.log("\n(dry run — rerun with --execute to write changes)");
+	if (!EXECUTE)
+		console.log("\n(dry run — rerun with --execute to write changes)");
 }
 
 main()

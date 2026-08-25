@@ -115,7 +115,9 @@ async function main() {
 			columns: { id: true, content_json: true },
 		});
 		if (!article?.content_json) {
-			console.warn(`[${title}] article not found — skipping ${fixes.length} fix(es)`);
+			console.warn(
+				`[${title}] article not found — skipping ${fixes.length} fix(es)`,
+			);
 			missing += fixes.length;
 			continue;
 		}
@@ -125,7 +127,9 @@ async function main() {
 
 		for (const fix of fixes) {
 			if (!text.includes(fix.old_href)) {
-				console.warn(`[${title}] href not found, already fixed?: ${fix.old_href}`);
+				console.warn(
+					`[${title}] href not found, already fixed?: ${fix.old_href}`,
+				);
 				missing += 1;
 				continue;
 			}
@@ -139,7 +143,8 @@ async function main() {
 					fixed += 1;
 					continue;
 				}
-				if (!b2) throw new Error("unreachable: execute implies b2 was authorized");
+				if (!b2)
+					throw new Error("unreachable: execute implies b2 was authorized");
 				const media = await db.transaction((tx) =>
 					ingest_media_from_url(fix.media_url, { tx, b2 }),
 				);
@@ -173,7 +178,9 @@ async function main() {
 		`\n${fixed} fixed, ${missing} not found (already fixed?), ${ingest_failed} ingest failure(s).`,
 	);
 	if (!execute) {
-		console.log("\nDry run only — re-run with --execute to ingest + rewrite + reconcile.");
+		console.log(
+			"\nDry run only — re-run with --execute to ingest + rewrite + reconcile.",
+		);
 	}
 }
 

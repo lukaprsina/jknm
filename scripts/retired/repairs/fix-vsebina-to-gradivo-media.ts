@@ -1,10 +1,10 @@
 import { parseArgs } from "node:util";
 import { eq } from "drizzle-orm";
+import { rewrite_urls } from "~/lib/stale-media-refs";
 import { reconcile_media_to_articles } from "~/server/article/reconcile-media";
 import { db } from "~/server/db";
 import type { ArticleContentType } from "~/server/db/schema";
 import { Article, Media } from "~/server/db/schema";
-import { rewrite_urls } from "~/lib/stale-media-refs";
 
 /**
  * One-off fix for `artifacts/media-hash-diff/wrong_article.json`'s 4
@@ -84,7 +84,9 @@ async function main() {
 			continue;
 		}
 
-		console.log(`[${fix.title}]\n    ${fix.old_url}\n    -> ${media.original.url}`);
+		console.log(
+			`[${fix.title}]\n    ${fix.old_url}\n    -> ${media.original.url}`,
+		);
 
 		if (!execute) continue;
 
@@ -105,7 +107,9 @@ async function main() {
 
 	console.log(`\n${fixed} rewritten.`);
 	if (!execute) {
-		console.log("\nDry run only - re-run with --execute to rewrite + reconcile.");
+		console.log(
+			"\nDry run only - re-run with --execute to rewrite + reconcile.",
+		);
 	}
 }
 

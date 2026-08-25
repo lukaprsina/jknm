@@ -1,10 +1,10 @@
 import { parseArgs } from "node:util";
 import { eq } from "drizzle-orm";
 import { reconcile_media_to_articles } from "~/server/article/reconcile-media";
-import { ingest_media_from_url } from "~/server/media/ingest";
 import { db } from "~/server/db";
 import type { ArticleContentType } from "~/server/db/schema";
 import { Article } from "~/server/db/schema";
+import { ingest_media_from_url } from "~/server/media/ingest";
 
 /**
  * Fixes findings #1 and #2 from `scripts/audit-evergreen-pages.ts`:
@@ -38,11 +38,14 @@ async function fix_varstvo(execute: boolean) {
 	}
 
 	let raw = JSON.stringify(article.content_json);
-	const re = /https?:\/\/[^\s"'<>)\\]*jknm-si\.vercel\.app(\/novica\/[^\s"'<>)\\]*)/gi;
+	const re =
+		/https?:\/\/[^\s"'<>)\\]*jknm-si\.vercel\.app(\/novica\/[^\s"'<>)\\]*)/gi;
 	const replacements = new Set<string>();
 	for (const m of raw.matchAll(re)) replacements.add(m[0]);
 
-	console.log(`[Varstvo] ${replacements.size} distinct preview-domain url(s) found`);
+	console.log(
+		`[Varstvo] ${replacements.size} distinct preview-domain url(s) found`,
+	);
 	for (const url of replacements) {
 		const relative = url.replace(/^https?:\/\/[^/]*jknm-si\.vercel\.app/i, "");
 		console.log(`    ${url}\n    -> ${relative}`);
@@ -79,7 +82,9 @@ async function fix_zgodovina(execute: boolean) {
 	}
 
 	if (!execute) {
-		console.log(`[Zgodovina]\n    ${ZGODOVINA_PDF_URL}\n    -> (would ingest onto gradivo.jknm.org)`);
+		console.log(
+			`[Zgodovina]\n    ${ZGODOVINA_PDF_URL}\n    -> (would ingest onto gradivo.jknm.org)`,
+		);
 		return;
 	}
 
@@ -89,7 +94,9 @@ async function fix_zgodovina(execute: boolean) {
 		return;
 	}
 
-	console.log(`[Zgodovina]\n    ${ZGODOVINA_PDF_URL}\n    -> ${media.original.url}`);
+	console.log(
+		`[Zgodovina]\n    ${ZGODOVINA_PDF_URL}\n    -> ${media.original.url}`,
+	);
 
 	const rewritten = original.split(ZGODOVINA_PDF_URL).join(media.original.url);
 	const content = JSON.parse(rewritten) as ArticleContentType;
@@ -112,7 +119,9 @@ async function main() {
 	await fix_zgodovina(execute);
 
 	if (!execute) {
-		console.log("\nDry run only - re-run with --execute to rewrite + reconcile.");
+		console.log(
+			"\nDry run only - re-run with --execute to rewrite + reconcile.",
+		);
 	}
 }
 

@@ -40,23 +40,19 @@ interface WordLink {
 }
 
 function normalize_anchor(text: string): string {
-	return text
-		.replace(/\*\*/g, "")
-		.replace(/\s+/g, " ")
-		.trim()
-		.toLowerCase();
+	return text.replace(/\*\*/g, "").replace(/\s+/g, " ").trim().toLowerCase();
 }
 
 function split_into_h1_sections(md: string): Map<string, string> {
 	const lines = md.split("\n");
 	const sections = new Map<string, string>();
-	let current_title: string | null = null;
+	let current_title: string | undefined;
 	let buf: string[] = [];
 	for (const line of lines) {
 		const m = /^# (.+)$/.exec(line);
 		if (m) {
 			if (current_title) sections.set(current_title, buf.join("\n"));
-			current_title = m[1]!.trim();
+			current_title = m[1]?.trim();
 			buf = [];
 		} else {
 			buf.push(line);
@@ -127,7 +123,9 @@ function collect_block_texts(content_json: unknown): string[] {
 		}
 	};
 	for (const block of blocks) {
-		const b = block as { data?: { text?: unknown; items?: unknown; content?: unknown } };
+		const b = block as {
+			data?: { text?: unknown; items?: unknown; content?: unknown };
+		};
 		if (typeof b.data?.text === "string") out.push(b.data.text);
 		walk_items(b.data?.items);
 		if (Array.isArray(b.data?.content)) {
@@ -174,14 +172,19 @@ interface CrossrefRow {
 }
 
 async function main() {
-	const pandoc_md = (await fs.readFile(PANDOC_PATH, "utf8")).replace(/\r\n/g, "\n");
+	const pandoc_md = (await fs.readFile(PANDOC_PATH, "utf8")).replace(
+		/\r\n/g,
+		"\n",
+	);
 	const sections = split_into_h1_sections(pandoc_md);
 
 	const legacy_articles = await db.query.Article.findMany({
 		columns: { id: true, legacy_id: true, title: true, status: true },
 	});
 	const by_legacy_id = new Map(
-		legacy_articles.filter((a) => a.legacy_id !== null).map((a) => [a.legacy_id!, a]),
+		legacy_articles
+			.filter((a) => a.legacy_id !== null)
+			.map((a) => [a.legacy_id!, a]),
 	);
 
 	await fs.rm(OUT_DIR, { recursive: true, force: true });
@@ -198,7 +201,11 @@ async function main() {
 		const word_links = extract_word_links(section_text);
 
 		const db_page = await db.query.Article.findFirst({
-			where: and(eq(Article.article_kind, "content"), eq(Article.status, "published"), eq(Article.title, page_title)),
+			where: and(
+				eq(Article.article_kind, "content"),
+				eq(Article.status, "published"),
+				eq(Article.title, page_title),
+			),
 			columns: { content_json: true },
 		});
 		const db_links = db_page ? extract_db_links(db_page.content_json) : [];
@@ -209,7 +216,9 @@ async function main() {
 			const word_target = by_legacy_id.get(wl.legacy_id);
 
 			// find the next not-yet-used db link with the same normalized anchor
-			const db_idx = db_links.findIndex((dl, i) => !used[i] && dl.anchor_norm === wl.anchor_norm);
+			const db_idx = db_links.findIndex(
+				(dl, i) => !used[i] && dl.anchor_norm === wl.anchor_norm,
+			);
 			if (db_idx !== -1) used[db_idx] = true;
 			const db_link = db_idx !== -1 ? db_links[db_idx] : undefined;
 
@@ -254,7 +263,9 @@ async function main() {
 						: "word_target_not_found";
 		}
 
-		rows.sort((a, b) => (a.verdict === b.verdict ? 0 : a.verdict === "mismatch" ? -1 : 1));
+		rows.sort((a, b) =>
+			a.verdict === b.verdict ? 0 : a.verdict === "mismatch" ? -1 : 1,
+		);
 		const out_path = path.join(OUT_DIR, `${page_title.toLowerCase()}.json`);
 		await fs.writeFile(out_path, JSON.stringify(rows, null, 2), "utf8");
 
@@ -262,18 +273,32 @@ async function main() {
 			acc[r.verdict] = (acc[r.verdict] ?? 0) + 1;
 			return acc;
 		}, {});
-		console.log(`[${page_title}] ${rows.length} word-doc internal link(s) ->`, counts, `-> ${out_path}`);
+		console.log(
+			`[${page_title}] ${rows.length} word-doc internal link(s) ->`,
+			counts,
+			`-> ${out_path}`,
+		);
 
-		all_mismatches.set(page_title, rows.filter((r) => r.verdict === "mismatch" || r.verdict === "db_link_missing"));
+		all_mismatches.set(
+			page_title,
+			rows.filter(
+				(r) => r.verdict === "mismatch" || r.verdict === "db_link_missing",
+			),
+		);
 	}
 
-	const md_lines: string[] = ["# Zgodovina/Raziskovanje/Varstvo word-doc link mismatches", ""];
+	const md_lines: string[] = [
+		"# Zgodovina/Raziskovanje/Varstvo word-doc link mismatches",
+		"",
+	];
 	for (const [page_title, rows] of all_mismatches) {
 		if (rows.length === 0) continue;
 		md_lines.push(`## ${page_title} (${rows.length})`, "");
 		for (const r of rows) {
 			md_lines.push(`### "${r.anchor}"`, "");
-			md_lines.push(`- Word doc says -> **${r.word_doc_target_title ?? "(legacy_id not found in DB)"}** (legacy_id ${r.word_doc_legacy_id})`);
+			md_lines.push(
+				`- Word doc says -> **${r.word_doc_target_title ?? "(legacy_id not found in DB)"}** (legacy_id ${r.word_doc_legacy_id})`,
+			);
 			md_lines.push(
 				r.db_href
 					? `- DB currently links to -> **${r.db_target_title}** (\`${r.db_href}\`)`

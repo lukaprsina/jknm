@@ -93,7 +93,9 @@ async function main() {
 		blocks.forEach((block, block_index) => {
 			const data = block.data as { text?: unknown } | undefined;
 			if (typeof data?.text !== "string") return;
-			for (const m of data.text.matchAll(/<a\s+href="([^"]*)"[^>]*>([^<]*)<\/a>/g)) {
+			for (const m of data.text.matchAll(
+				/<a\s+href="([^"]*)"[^>]*>([^<]*)<\/a>/g,
+			)) {
 				const href = m[1] ?? "";
 				if (is_stale_href(href)) {
 					stale_matches.push({ block_index, href, text: m[2] ?? "" });
@@ -135,7 +137,9 @@ async function main() {
 		}
 	}
 
-	console.log(`\n${fixed} link(s) fixed, ${skipped_articles} article(s) skipped.`);
+	console.log(
+		`\n${fixed} link(s) fixed, ${skipped_articles} article(s) skipped.`,
+	);
 	if (!execute) {
 		console.log("\nDry run only — re-run with --execute to write.");
 	}
