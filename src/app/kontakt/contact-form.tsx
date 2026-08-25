@@ -77,7 +77,7 @@ export default function ContactForm() {
 				<Form {...form}>
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
-						className="ml-4 max-w-3xl space-y-4 md:ml-10"
+						className="mx-auto max-w-3xl space-y-4 sm:-translate-x-22"
 					>
 						<FormField
 							control={form.control}
@@ -166,7 +166,7 @@ export default function ContactForm() {
 								</FormItem>
 							)}
 						/>
-						<div className="sm:pl-44">
+						<div className="flex flex-col items-end sm:pl-44">
 							<Button type="submit" disabled={form.formState.isSubmitting}>
 								Pošlji sporočilo
 							</Button>

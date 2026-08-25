@@ -327,8 +327,16 @@ export const TableRenderer: RenderFn<EditorJSTableData> = ({ data }) => {
 				<TableHeader>
 					<TableRow>
 						{heading_row.map((cell, i) => (
-							// biome-ignore lint/suspicious/noArrayIndexKey: table columns are positional and never reordered
-							<TableHead key={i} variant="article">
+							<TableHead
+								// biome-ignore lint/suspicious/noArrayIndexKey: table columns are positional and never reordered
+								key={i}
+								variant="article"
+								// @editorjs/table's "With headings" toggle bolds the header row via
+								// CSS only (`tc-table--heading`) — it never inserts a <b> tag into
+								// the cell content, so this has to be applied here too rather than
+								// relying on the cell's HTML.
+								className={data.withHeadings ? "font-bold" : undefined}
+							>
 								{HTMLReactParser(cell)}
 							</TableHead>
 						))}

@@ -15,7 +15,7 @@ const tableHeadVariants = cva(
 			variant: {
 				default: "h-12 px-4 text-left",
 				dense: "h-auto py-[1px] px-2 text-left",
-				article: "h-auto border py-[1px] px-2 text-left bg-muted/50",
+				article: "h-auto border py-[1px] px-2 text-left bg-muted",
 			},
 		},
 		defaultVariants: { variant: "default" },
@@ -74,7 +74,7 @@ const TableFooter = React.forwardRef<
 	<tfoot
 		ref={ref}
 		className={cn(
-			"border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
+			"border-t bg-muted font-medium [&>tr]:last:border-b-0",
 			className,
 		)}
 		{...props}
@@ -89,7 +89,7 @@ const TableRow = React.forwardRef<
 	<tr
 		ref={ref}
 		className={cn(
-			"border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
+			"border-b transition-colors data-[state=selected]:bg-muted",
 			className,
 		)}
 		{...props}

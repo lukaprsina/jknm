@@ -147,7 +147,13 @@ export function DesktopHeader({
 				>
 					<div className="flex flex-1 items-center">
 						{is_header_sticky && (
-							<HomeLink className="flex items-center">
+							<HomeLink
+								className="flex items-center"
+								style={{
+									marginLeft:
+										"max(-5rem, calc(-4px - max(0px, (100vw - 1280px) / 2)))",
+								}}
+							>
 								<Logo className="h-8 w-auto" />
 							</HomeLink>
 						)}

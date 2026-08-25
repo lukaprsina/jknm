@@ -181,7 +181,7 @@
 .prose {
 	max-width: 1280px;
 	line-height: 1.5;
-	--tw-prose-body: var(--color-neutral-800);
+	--tw-prose-body: var(--color-neutral-900); /* was var(--color-neutral-800) */
 	--tw-prose-bullets: var(--color-neutral-500);
 	--tw-prose-links: var(--color-blue-800);
 }

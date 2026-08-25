@@ -19,3 +19,6 @@
 [submodule "vendor/shadcn-multi-select-component"]
 	path = vendor/shadcn-multi-select-component
 	url = https://github.com/sersavan/shadcn-multi-select-component
+[submodule "vendor/editorjs-table"]
+	path = vendor/editorjs-table
+	url = https://github.com/editor-js/table
