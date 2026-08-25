@@ -54,7 +54,14 @@ export async function Shell({
 		<SearchProvider>
 			<div className={cn("flex min-h-dvh w-full flex-col", className)}>
 				{!without_header ? (
-					<header className="w-full text-gray-800">
+					// `contents`: keeps the `<header>` landmark without giving it its
+					// own box. A sticky descendant can only stay pinned as long as
+					// there's room left in its containing block below its static
+					// position -- a boxed `<header>` ends right where its own content
+					// ends, starving the sticky nav of any room to actually stick. A
+					// `contents` header makes the tall page wrapper the containing
+					// block instead (same as `<TocAwareLayout>`'s working sticky aside).
+					<header className="contents text-gray-800">
 						<DesktopHeader
 							className="hidden lg:flex"
 							editor_controls={editor_controls}

@@ -1,10 +1,8 @@
 "use client";
 
 import type React from "react";
-import { useCallback, useEffect, useRef } from "react";
-import { create } from "zustand";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Separator } from "~/components/ui/separator";
-import { useBreakpoint } from "~/hooks/use-breakpoint";
 // import Logo from "~/assets/logo-barvni.svg";
 import { page_gutter_variants } from "~/lib/page-variants";
 import type { NavSection } from "~/lib/static-nav-sections";
@@ -21,24 +19,6 @@ import {
 import { Logo } from "./logo";
 import { Navigation } from "./navigation";
 
-export interface ShellStore {
-	is_header_sticky: boolean;
-	navbar_height: number | undefined;
-}
-
-export const shell_store = create<ShellStore>(() => ({
-	is_header_sticky: false,
-	navbar_height: undefined,
-}));
-
-export function useIsHeaderSticky(): boolean {
-	return shell_store((state) => state.is_header_sticky);
-}
-
-export function useNavbarHeight(): number | undefined {
-	return shell_store((state) => state.navbar_height);
-}
-
 export function DesktopHeader({
 	className,
 	editor_controls,
@@ -49,45 +29,22 @@ export function DesktopHeader({
 	editor_controls: React.ReactNode;
 	nav_sections: NavSection[];
 }) {
-	const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
 	const header_ref = useRef<HTMLDivElement | null>(null);
-	const is_header_sticky = useIsHeaderSticky();
-	const navbar_height = useNavbarHeight();
-	const lg_breakpoint = useBreakpoint("lg");
+	// Cosmetic only (background tint + mini logo) -- the nav row itself is
+	// always `sticky`, so this never changes its position or the document's
+	// layout, just how it's painted once scrolled past the hero.
+	const [is_scrolled, set_is_scrolled] = useState(false);
 
 	const handle_scroll = useCallback(() => {
 		if (!header_ref.current) return;
-
 		// TODO: + 2 is a hack for the separator
-		const should_be_sticky =
-			window.scrollY > header_ref.current.clientHeight + 2;
-
-		if (should_be_sticky !== shell_store.getState().is_header_sticky) {
-			shell_store.setState({ is_header_sticky: should_be_sticky });
-		}
+		set_is_scrolled(window.scrollY > header_ref.current.clientHeight + 2);
 	}, []);
 
 	useEffect(() => {
-		if (!sticky_navbar_ref.current) return;
-
-		if (lg_breakpoint) {
-			shell_store.setState({
-				navbar_height: sticky_navbar_ref.current.clientHeight,
-			});
-		}
-	}, [lg_breakpoint]);
-
-	useEffect(() => {
-		window.addEventListener("scroll", handle_scroll);
-
-		return () => {
-			window.removeEventListener("scroll", handle_scroll);
-		};
-	}, [handle_scroll]);
-
-	// activate on mount
-	useEffect(() => {
 		handle_scroll();
+		window.addEventListener("scroll", handle_scroll);
+		return () => window.removeEventListener("scroll", handle_scroll);
 	}, [handle_scroll]);
 
 	return (
@@ -126,16 +83,11 @@ export function DesktopHeader({
 					</div>
 				</div>
 			</div>
-			<Separator
-				style={{
-					marginBottom: is_header_sticky ? navbar_height : "",
-				}}
-			/>
+			<Separator />
 			<div
-				ref={sticky_navbar_ref}
 				className={cn(
-					"relative z-40 flex w-full items-center py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-					is_header_sticky ? "fixed top-0 bg-white/80 transition-colors" : null,
+					"sticky top-0 z-40 flex w-full items-center py-4 backdrop-blur supports-backdrop-filter:bg-background/60",
+					is_scrolled && "bg-white/80 transition-colors",
 					className,
 				)}
 			>
@@ -146,7 +98,7 @@ export function DesktopHeader({
 					)}
 				>
 					<div className="flex flex-1 items-center">
-						{is_header_sticky && (
+						{is_scrolled && (
 							<HomeLink
 								className="flex items-center"
 								style={{

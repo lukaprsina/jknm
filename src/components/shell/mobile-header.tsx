@@ -28,7 +28,6 @@ import { useIsScrollTop } from "~/hooks/use-is-scroll-top";
 import { useScrollDirection } from "~/hooks/use-scroll-direction";
 import type { NavSection } from "~/lib/static-nav-sections";
 import { cn } from "~/lib/utils";
-import { shell_store, useNavbarHeight } from "./desktop-header";
 import { HomeLink } from "./home-link";
 import {
 	ContactIcon,
@@ -84,7 +83,6 @@ export function MobileHeader({
 	const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
 	const lg_breakpoint = useBreakpoint("lg");
 	const has_toc = useHasToc();
-	const navbar_height = useNavbarHeight();
 	const is_top = useIsScrollTop();
 	const scroll_direction = useScrollDirection();
 	// Never hidden right at the top -- otherwise a small rubber-band bounce
@@ -108,21 +106,24 @@ export function MobileHeader({
 		// `clientHeight` here -- see `MobileTocPopover` for why (matches
 		// fumadocs' own popover, which floats over the page rather than
 		// pushing it down).
-		const height = sticky_navbar_ref.current.clientHeight;
-		shell_store.setState({ navbar_height: height });
 		// Kept in sync so `.prose` headings' `scroll-margin-top` (globals.css)
 		// clears the sticky header when scrolling to an anchor link, whether
 		// "Jamarski klub Novo mesto" wraps to one line (113px) or two (137px).
 		document.documentElement.style.setProperty(
 			"--mobile-header-height",
-			`${height}px`,
+			`${sticky_navbar_ref.current.clientHeight}px`,
 		);
 	}, [lg_breakpoint, has_toc]);
 
 	return (
-		<div className={cn("lg:hidden", className)} {...props}>
-			<div style={{ height: navbar_height }} className="min-h-20" aria-hidden />
-			<div ref={sticky_navbar_ref} className="fixed top-0 z-40 w-full">
+		// `contents`: same containing-block starvation issue as `<header>` in
+		// `shell/index.tsx` -- this div's only child is the sticky navbar, so a
+		// boxed wrapper ends exactly where the sticky div ends and it never
+		// gets room to stay pinned. `contents` lets the sticky div's containing
+		// block skip straight to the tall page wrapper, `lg:hidden` still hides
+		// the whole subtree at the desktop breakpoint same as before.
+		<div className={cn("contents lg:hidden", className)} {...props}>
+			<div ref={sticky_navbar_ref} className="sticky top-0 z-40 w-full">
 				<div
 					className={cn(
 						"grid transition-[grid-template-rows] duration-300 ease-in-out",
