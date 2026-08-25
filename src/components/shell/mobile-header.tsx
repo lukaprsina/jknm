@@ -26,6 +26,7 @@ import {
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { useIsScrollTop } from "~/hooks/use-is-scroll-top";
 import { useScrollDirection } from "~/hooks/use-scroll-direction";
+import type { NavSection } from "~/lib/static-nav-sections";
 import { cn } from "~/lib/utils";
 import { shell_store, useNavbarHeight } from "./desktop-header";
 import { HomeLink } from "./home-link";
@@ -72,11 +73,13 @@ export function useMobileTocOpen(): boolean {
 
 export function MobileHeader({
 	editor_controls,
+	nav_sections,
 	className,
 	...props
 }: ComponentProps<"div"> & {
 	/** Admin-only editor chrome, rendered opaquely so no `Session` reaches the client. */
 	editor_controls: ReactNode;
+	nav_sections: NavSection[];
 }) {
 	const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
 	const lg_breakpoint = useBreakpoint("lg");
@@ -137,7 +140,10 @@ export function MobileHeader({
 							<HomeLink className="text-xl font-bold min-[450px]:text-2xl">
 								Jamarski klub Novo mesto
 							</HomeLink>
-							<MobileSheet editor_controls={editor_controls} />
+							<MobileSheet
+								editor_controls={editor_controls}
+								nav_sections={nav_sections}
+							/>
 						</div>
 					</div>
 				</div>
@@ -146,15 +152,6 @@ export function MobileHeader({
 		</div>
 	);
 }
-
-const MOBILE_NAV_LINKS = [
-	{ title: "Zgodovina", href: "zgodovina" },
-	{ title: "Raziskovanje", href: "raziskovanje" },
-	{ title: "Publiciranje", href: "publiciranje" },
-	{ title: "Varstvo", href: "varstvo" },
-	{ title: "Klub", href: "klub" },
-	{ title: "Arhiv novic", href: "arhiv" },
-];
 
 function NavSectionLabel({ children }: { children: ReactNode }) {
 	return (
@@ -166,15 +163,17 @@ function NavSectionLabel({ children }: { children: ReactNode }) {
 
 export function MobileSheet({
 	editor_controls,
+	nav_sections,
 }: {
 	editor_controls: ReactNode;
+	nav_sections: NavSection[];
 }) {
 	const open = useMobileNavOpen();
+	const close_nav = () => mobile_nav_store.setState({ open: false });
 
 	return (
 		<Sheet
 			open={open}
-			modal={false}
 			onOpenChange={(new_state) => {
 				mobile_nav_store.setState({ open: new_state });
 				if (new_state) mobile_toc_store.setState({ open: false });
@@ -186,9 +185,12 @@ export function MobileSheet({
 					<span className="sr-only">Meni</span>
 				</Button>
 			</SheetTrigger>
-			<SheetContent onOpenAutoFocus={(e) => e.preventDefault()}>
-				<SheetHeader>
-					<div className="flex w-full items-center justify-center">
+			<SheetContent
+				onOpenAutoFocus={(e) => e.preventDefault()}
+				className="flex flex-col"
+			>
+				<SheetHeader className="shrink-0">
+					<div className="flex w-full items-center justify-start pl-8">
 						<SheetClose asChild>
 							<HomeLink>
 								<Logo className="w-32" />
@@ -201,20 +203,20 @@ export function MobileSheet({
 						<SheetDescription>Mobile navigation bar</SheetDescription>
 					</VisuallyHidden>
 				</SheetHeader>
-				<ScrollArea className="my-4 h-[calc(100vh-8rem)]">
+				<ScrollArea className="my-4 min-h-0 flex-1">
 					<div className="flex flex-col gap-6 px-6 pb-8">
 						<nav className="flex flex-col gap-1">
 							<NavSectionLabel>Vsebina</NavSectionLabel>
-							{MOBILE_NAV_LINKS.map((link) => (
+							{nav_sections.map((section) => (
 								<Link
-									key={link.href}
-									href={`/${link.href}`}
+									key={section.section}
+									href={`/${section.section}`}
 									onClick={() => {
 										mobile_nav_store.setState({ open: false });
 									}}
 									className="rounded-md px-2 py-2 text-base font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
 								>
-									{link.title}
+									{section.title}
 								</Link>
 							))}
 						</nav>
@@ -224,12 +226,12 @@ export function MobileSheet({
 						<div className="flex flex-col gap-3">
 							<NavSectionLabel>Povezave</NavSectionLabel>
 							<div className="flex items-center justify-between px-1">
-								<SearchIcon />
-								<FacebookIcon />
-								<YoutubeIcon />
-								<InstagramIcon />
-								<ContactIcon />
-								<IntranetIcon />
+								<SearchIcon onNavigate={close_nav} />
+								<FacebookIcon onNavigate={close_nav} />
+								<YoutubeIcon onNavigate={close_nav} />
+								<InstagramIcon onNavigate={close_nav} />
+								<ContactIcon onNavigate={close_nav} />
+								<IntranetIcon onNavigate={close_nav} />
 							</div>
 						</div>
 
@@ -336,14 +338,15 @@ export function MobileTocPopover({ is_top }: { is_top: boolean }) {
 	useEffect(() => {
 		if (!open) return;
 
-		const on_click_outside = (e: MouseEvent) => {
+		const on_pointer_down_outside = (e: PointerEvent) => {
 			if (!(e.target instanceof HTMLElement)) return;
 			if (container_ref.current?.contains(e.target)) return;
 			mobile_toc_store.setState({ open: false });
 		};
 
-		window.addEventListener("click", on_click_outside);
-		return () => window.removeEventListener("click", on_click_outside);
+		window.addEventListener("pointerdown", on_pointer_down_outside);
+		return () =>
+			window.removeEventListener("pointerdown", on_pointer_down_outside);
 	}, [open]);
 
 	return (

@@ -97,9 +97,12 @@ trade at this site's traffic.
 
 ## Auth
 
-**better-auth** 1.6.23, Google provider only, gated on verified `@jknm.si` emails. Database
+**better-auth** 1.6.27, Google provider only, gated on verified `@jknm.si` emails. Database
 sessions via `drizzleAdapter` (cookie caching deliberately off, so sign-out means sign-out).
 Migrated from NextAuth v4 in #32.
+
+The version is intentionally pinned to 1.6.27. Better Auth 1.7 adds the required
+`account.issuer` identity field; upgrading requires a coordinated database migration and issuer backfill before deployment.
 
 - No `middleware.ts`/`proxy.ts` anywhere — access is enforced per-page/per-action via
   `getServerAuthSession()` + `redirect()`/`notFound()`, which is also what better-auth's own

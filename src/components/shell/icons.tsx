@@ -11,14 +11,21 @@ import { Button, buttonVariants } from "../ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { useSearchContext } from "./search-context";
 
+interface NavigateProps {
+	/** Called after the icon's own action -- lets a container (e.g. the
+	 * mobile nav sheet) close itself when one of these is used. */
+	onNavigate?: () => void;
+}
+
 // simpleicons.org
-export function FacebookIcon() {
+export function FacebookIcon({ onNavigate }: NavigateProps = {}) {
 	return (
 		<Tooltip>
 			<TooltipTrigger asChild>
 				<Link
 					href="https://www.facebook.com/jknovomesto"
 					target="_blank"
+					onClick={onNavigate}
 					className={cn(
 						buttonVariants({ variant: "ghost", size: "icon" }),
 						"h-9 w-9 rounded-full p-0 text-center",
@@ -42,13 +49,14 @@ export function FacebookIcon() {
 }
 
 // simpleicons.org
-export function YoutubeIcon() {
+export function YoutubeIcon({ onNavigate }: NavigateProps = {}) {
 	return (
 		<Tooltip>
 			<TooltipTrigger asChild>
 				<Link
 					href="https://www.youtube.com/@JamarskiKlubNovomesto"
 					target="_blank"
+					onClick={onNavigate}
 					className={cn(
 						buttonVariants({ variant: "ghost", size: "icon" }),
 						"h-9 w-9 rounded-full p-0 text-center",
@@ -72,13 +80,14 @@ export function YoutubeIcon() {
 }
 
 // simpleicons.org
-export function InstagramIcon() {
+export function InstagramIcon({ onNavigate }: NavigateProps = {}) {
 	return (
 		<Tooltip>
 			<TooltipTrigger asChild>
 				<Link
 					href="https://www.instagram.com/jamarskiklubnm/"
 					target="_blank"
+					onClick={onNavigate}
 					className={cn(
 						buttonVariants({ variant: "ghost", size: "icon" }),
 						"h-9 w-9 rounded-full p-0 text-center",
@@ -101,13 +110,14 @@ export function InstagramIcon() {
 	);
 }
 
-export function IntranetIcon() {
+export function IntranetIcon({ onNavigate }: NavigateProps = {}) {
 	return (
 		<Tooltip>
 			<TooltipTrigger asChild>
 				<Link
 					href="http://clani.jknm.si/"
 					target="_blank"
+					onClick={onNavigate}
 					className={cn(
 						buttonVariants({ variant: "ghost", size: "icon" }),
 						"h-9 w-9 rounded-full p-0 text-center",
@@ -122,7 +132,7 @@ export function IntranetIcon() {
 	);
 }
 
-export function SearchIcon() {
+export function SearchIcon({ onNavigate }: NavigateProps = {}) {
 	const { setSearchOpen } = useSearchContext();
 
 	return (
@@ -133,6 +143,7 @@ export function SearchIcon() {
 					size="icon"
 					onClick={() => {
 						setSearchOpen(true);
+						onNavigate?.();
 					}}
 					className={cn(
 						"h-9 w-9 rounded-full p-0 text-center",
@@ -147,12 +158,13 @@ export function SearchIcon() {
 	);
 }
 
-export function ContactIcon() {
+export function ContactIcon({ onNavigate }: NavigateProps = {}) {
 	return (
 		<Tooltip>
 			<TooltipTrigger asChild>
 				<Link
 					href="/kontakt"
+					onClick={onNavigate}
 					className={cn(
 						buttonVariants({ variant: "ghost", size: "icon" }),
 						"h-9 w-9 rounded-full p-0 text-center",

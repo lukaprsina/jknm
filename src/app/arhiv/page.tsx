@@ -3,7 +3,6 @@ import { Suspense } from "react";
 import { Shell } from "~/components/shell";
 import { page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
-import { getServerAuthSession } from "~/server/auth";
 import { Search } from "./search";
 
 export const dynamic = "force-dynamic";
@@ -15,9 +14,7 @@ export const metadata: Metadata = {
 	alternates: { canonical: "/arhiv" },
 };
 
-export default async function Novice() {
-	const session = await getServerAuthSession();
-
+export default function Novice() {
 	return (
 		<Shell>
 			<div className={cn(page_variants({ max_width: "wide" }))}>
@@ -25,7 +22,7 @@ export default async function Novice() {
 					<h1>Arhiv novic</h1>
 				</div>
 				<Suspense fallback={null}>
-					<Search session={session} />
+					<Search />
 				</Suspense>
 			</div>
 		</Shell>

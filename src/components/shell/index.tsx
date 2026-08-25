@@ -60,7 +60,10 @@ export async function Shell({
 							editor_controls={editor_controls}
 							nav_sections={nav_sections}
 						/>
-						<MobileHeader editor_controls={editor_controls} />
+						<MobileHeader
+							editor_controls={editor_controls}
+							nav_sections={nav_sections}
+						/>
 					</header>
 				) : undefined}
 				<TocAwareLayout known_has_toc={has_toc}>{children}</TocAwareLayout>

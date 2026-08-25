@@ -13,7 +13,6 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { env } from "~/env";
 import { article_grid_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
-import type { Session } from "~/server/auth";
 import { DEFAULT_REFINEMENT, SearchStateProvider } from "./components";
 
 const SearchControlsDynamic = dynamic(
@@ -91,7 +90,7 @@ function ResetPageOnTabChange() {
 	return null;
 }
 
-export function Search({ session }: { session: Session | null }) {
+export function Search() {
 	const [activeTab, setActiveTab] = useQueryState(
 		"view",
 		parseAsStringLiteral(["card", "table"] as const).withDefault("card"),
@@ -117,7 +116,7 @@ export function Search({ session }: { session: Session | null }) {
 					{activeTab === "card" ? (
 						<MyInfiniteHitsDynamic />
 					) : (
-						<ArticleTableDynamic session={session} />
+						<ArticleTableDynamic />
 					)}
 				</div>
 			</SearchStateProvider>

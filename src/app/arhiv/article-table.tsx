@@ -26,7 +26,6 @@ import { get_published_article_link } from "~/lib/article-utils";
 import { format_author_sort_name } from "~/lib/author-name";
 import { format_date_for_human } from "~/lib/format-date";
 import type { PublishedArticleHit } from "~/lib/validators";
-import type { Session } from "~/server/auth";
 import type { IntersectionRef } from "../infinite-articles";
 import {
 	AUTHOR_ASC,
@@ -39,10 +38,9 @@ import {
 	useSearchState,
 } from "./components";
 
-export function ArticleTable({
-	session,
-	...props
-}: { session: Session | null } & UseInfiniteHitsProps<PublishedArticleHit>) {
+export function ArticleTable(
+	props: UseInfiniteHitsProps<PublishedArticleHit>,
+) {
 	const { sort, setSort } = useSearchState();
 
 	const { load_more_ref, items } = useInfiniteAlgoliaArticles({
@@ -130,7 +128,6 @@ export function ArticleTable({
 					{items.map((item, index) => (
 						<ArticleTableRow
 							hit={item}
-							session={session}
 							key={item.objectID}
 							ref={load_more_ref(index)}
 						/>
@@ -144,22 +141,23 @@ export function ArticleTable({
 function ArticleTableRow({
 	ref,
 	hit,
-	session: _,
 }: {
 	ref?: IntersectionRef;
 	hit: SearchHit<PublishedArticleHit>;
-	session: Session | null;
 }) {
 	return (
 		<TableRow ref={ref} key={hit.objectID}>
-			<TableCell variant="dense" className="max-w-0 truncate font-medium">
-				<Button variant="link" size="sm" asChild className="h-auto p-0">
-					<Link href={get_published_article_link(hit.url)} className="truncate">
-						{hit.title}
-					</Link>
+			<TableCell variant="dense" className="font-medium">
+				<Button
+					variant="link"
+					size="sm"
+					asChild
+					className="h-auto whitespace-normal p-0 text-left"
+				>
+					<Link href={get_published_article_link(hit.url)}>{hit.title}</Link>
 				</Button>
 			</TableCell>
-			<TableCell variant="dense" className="truncate">
+			<TableCell variant="dense">
 				<Authors author_ids={hit.author_ids} format={format_author_sort_name} />
 			</TableCell>
 			<TableCell

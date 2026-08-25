@@ -84,7 +84,7 @@
 		"algoliasearch": "^5.57.0",
 		"b2-js": "^1.2.4",
 		"babel-plugin-react-compiler": "^1.0.0",
-		"better-auth": "^1.7.1",
+		"better-auth": "1.6.27",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
 		"cmdk": "1.1.1",
