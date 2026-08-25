@@ -1,0 +1,17 @@
+# Vendored git submodules are documentation/source references for local agents,
+# not inputs to the Next.js deployment.
+vendor/
+
+# Local research, migration inputs, and agent/developer tooling.
+artifacts/
+docs/
+.agents/
+.claude/
+.vscode/
+tools/
+scripts/
+.mcp.json
+AGENTS.md
+CONTEXT.md
+TODO.md
+opencode.md
