@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { parse as parse_csv } from "csv-parse/sync";
 import { parse as parse_html } from "node-html-parser";
+import { LEGACY_SITE_ORIGIN } from "~/lib/domains";
 import { is_waived, load_waivers } from "~/lib/legacy-diff-waivers";
 import { resolve_legacy_static_path } from "~/lib/legacy-si-paths";
 import { find_primary_slug } from "~/server/article/lifecycle-rules";
@@ -141,24 +142,47 @@ function classify_legacy_href(raw_href: string): Classification | null {
 	return { kind: "bare_domain" };
 }
 
-interface MissingLink {
-	kind:
-		| "missing_article_link"
-		| "missing_static_link"
-		| "missing_external_link";
-	legacy_id: number;
-	article_id: string;
-	title: string;
-	legacy_href: string;
-	expected: string;
+type MissingLink =
+	| {
+			kind: "missing_external_link";
+			legacy_id: number;
+			article_id: string;
+			legacy_url: string;
+			new_url: string;
+			title: string;
+			anchor_text: string;
+			legacy_href: string;
+			expected: string;
+	  }
+	| {
+			kind: "missing_article_link" | "missing_static_link";
+			legacy_id: number;
+			article_id: string;
+			title: string;
+			legacy_href: string;
+			expected: string;
+	  };
+
+const NEW_SITE_ORIGIN = "https://www.jknm.org";
+
+function article_url(origin: string, legacy_id: number): string {
+	return `${origin}/si/?id=${legacy_id}`;
 }
 
-function extract_hrefs(body_html: string): string[] {
+function extract_anchors(
+	body_html: string,
+): { href: string; anchor_text: string }[] {
 	const root = parse_html(body_html);
 	return root
 		.querySelectorAll("a")
-		.map((a) => a.getAttribute("href"))
-		.filter((href): href is string => !!href);
+		.map((a) => ({
+			href: a.getAttribute("href"),
+			anchor_text: a.textContent.trim(),
+		}))
+		.filter(
+			(anchor): anchor is { href: string; anchor_text: string } =>
+				!!anchor.href,
+		);
 }
 
 function extract_our_hrefs(content_json: unknown): Set<string> {
@@ -219,10 +243,10 @@ async function main() {
 		if (!legacy || !article.content_json) continue;
 
 		checked += 1;
-		const legacy_hrefs = extract_hrefs(legacy.body_html);
+		const legacy_anchors = extract_anchors(legacy.body_html);
 		const our_hrefs = extract_our_hrefs(article.content_json);
 
-		for (const legacy_href of legacy_hrefs) {
+		for (const { href: legacy_href, anchor_text } of legacy_anchors) {
 			const classification = classify_legacy_href(legacy_href);
 			if (!classification) continue;
 			legacy_links_seen += 1;
@@ -240,7 +264,10 @@ async function main() {
 						kind: "missing_external_link",
 						legacy_id: article.legacy_id,
 						article_id: article.id,
+						legacy_url: article_url(LEGACY_SITE_ORIGIN, article.legacy_id),
+						new_url: article_url(NEW_SITE_ORIGIN, article.legacy_id),
 						title: article.title,
+						anchor_text,
 						legacy_href,
 						expected: classification.href,
 					});

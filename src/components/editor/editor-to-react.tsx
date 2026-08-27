@@ -252,6 +252,8 @@ export const NextImageRenderer: RenderFn<EditorJSImageData> = ({
 	return (
 		<figure className="max-h-[1500] max-w-[1500]">
 			<Image
+				draggable={false}
+				onContextMenu={(event) => event.preventDefault()}
 				onClick={() => {
 					// registerImages already computed this image's effective
 					// dimensions when building the gallery's image list — reuse
@@ -314,9 +316,51 @@ interface EditorJSTableData {
 	caption?: string;
 }
 
+// Matches cell text like "~ 300 m", "cca 1.200 m", "12,5 km", "-" — numbers
+// as they actually appear in caving reports, not raw floats.
+const NUMERIC_CELL_REGEX =
+	/^(?:[~≈±><]|ca\.?|cca\.?)?\s*[-+]?\s*(?:\d+[\d\s.,]*\d*)\s*(?:[a-zA-Z°%µ/²³]+)?$|^[-–—/]$/;
+
+function is_numeric_cell(cell: string): boolean {
+	const text = cell
+		.replace(/<[^>]*>/g, "")
+		.replace(/&nbsp;/g, " ")
+		.trim();
+	return text !== "" && NUMERIC_CELL_REGEX.test(text);
+}
+
+// A column is treated as numeric (and right-aligned) if most of its non-empty
+// cells look like measurements — authors write "~ 300 m" next to "545 m" in
+// the same column, so per-cell alignment would look ragged.
+const NUMERIC_COLUMN_THRESHOLD = 0.8;
+
+function get_numeric_columns(rows: string[][]): Set<number> {
+	const column_count = Math.max(0, ...rows.map((row) => row.length));
+	const numeric_columns = new Set<number>();
+
+	for (let col = 0; col < column_count; col++) {
+		let non_empty = 0;
+		let numeric = 0;
+
+		for (const row of rows) {
+			const cell = row[col];
+			if (!cell?.trim()) continue;
+			non_empty++;
+			if (is_numeric_cell(cell)) numeric++;
+		}
+
+		if (non_empty > 0 && numeric / non_empty >= NUMERIC_COLUMN_THRESHOLD) {
+			numeric_columns.add(col);
+		}
+	}
+
+	return numeric_columns;
+}
+
 export const TableRenderer: RenderFn<EditorJSTableData> = ({ data }) => {
 	const rows = data.withHeadings ? data.content.slice(1) : data.content;
 	const heading_row = data.withHeadings ? data.content[0] : data.header;
+	const numeric_columns = useMemo(() => get_numeric_columns(rows), [rows]);
 
 	return (
 		<Table className="border-collapse">
@@ -331,11 +375,14 @@ export const TableRenderer: RenderFn<EditorJSTableData> = ({ data }) => {
 								// biome-ignore lint/suspicious/noArrayIndexKey: table columns are positional and never reordered
 								key={i}
 								variant="article"
-								// @editorjs/table's "With headings" toggle bolds the header row via
-								// CSS only (`tc-table--heading`) — it never inserts a <b> tag into
-								// the cell content, so this has to be applied here too rather than
-								// relying on the cell's HTML.
-								className={data.withHeadings ? "font-bold" : undefined}
+								className={cn(
+									// @editorjs/table's "With headings" toggle bolds the header row via
+									// CSS only (`tc-table--heading`) — it never inserts a <b> tag into
+									// the cell content, so this has to be applied here too rather than
+									// relying on the cell's HTML.
+									data.withHeadings && "font-bold",
+									numeric_columns.has(i) && "text-right",
+								)}
 							>
 								{HTMLReactParser(cell)}
 							</TableHead>
@@ -352,6 +399,9 @@ export const TableRenderer: RenderFn<EditorJSTableData> = ({ data }) => {
 								// biome-ignore lint/suspicious/noArrayIndexKey: table columns are positional and never reordered
 								key={cell_index}
 								variant="article"
+								className={cn(
+									numeric_columns.has(cell_index) && "text-right tabular-nums",
+								)}
 							>
 								{HTMLReactParser(cell)}
 							</TableCell>

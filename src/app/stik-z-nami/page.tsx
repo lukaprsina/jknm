@@ -7,10 +7,10 @@ import { cn } from "~/lib/utils";
 import ContactForm from "./contact-form";
 
 export const metadata: Metadata = {
-	title: "Kontakt",
+	title: "Stik z nami",
 	description:
 		"Kontaktirajte Jamarski klub Novo mesto ali nas obiščite na Seidlovi cesti 29.",
-	alternates: { canonical: "/kontakt" },
+	alternates: { canonical: "/stik-z-nami" },
 };
 
 export default function ContactPage() {
@@ -18,7 +18,7 @@ export default function ContactPage() {
 		<Shell>
 			<div className={cn(page_variants({ max_width: "wide" }))}>
 				<div className="prose mb-6">
-					<h1>Kontakt</h1>
+					<h1>Stik z nami</h1>
 				</div>
 				<div className="flex flex-col gap-6">
 					<MagicCard innerClassName="w-full p-6">

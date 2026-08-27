@@ -13,7 +13,7 @@ describe("resolve_legacy_static_path", () => {
 		[["raziskovanje"], "/raziskovanje"],
 		[["raziskovanje", "kanin"], "/raziskovanje"],
 		[["varstvo"], "/varstvo"],
-		[["etc", "kontakt"], "/kontakt"],
+		[["etc", "kontakt"], "/stik-z-nami"],
 		[["etc", "iskanje"], "/arhiv"],
 	])("redirects %j to %s", (segments, path) => {
 		expect(resolve_legacy_static_path(segments)).toEqual({

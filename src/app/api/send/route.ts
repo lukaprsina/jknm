@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 import type { z } from "zod";
-import type { contact_form_schema } from "~/app/kontakt/contact-form";
+import type { contact_form_schema } from "~/app/stik-z-nami/contact-form";
 import {
 	AdminContactEmailTemplate,
 	UserContactEmailTemplate,

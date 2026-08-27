@@ -437,8 +437,8 @@ export function YearHistogramBar({
 				type="button"
 				title={`${item.value}: ${item.count} novic`}
 				className={cn(
-					"w-3.5 rounded-t-xs bg-blue-700/70 transition-colors hover:bg-blue-800",
-					item.isRefined && "bg-blue-900 hover:bg-blue-900",
+					"w-3.5 rounded-t-xs bg-blue-800/50 transition-colors hover:bg-blue-800/75",
+					item.isRefined && "bg-blue-800 hover:bg-blue-800",
 				)}
 				style={{ height: bar_height }}
 				{...props}

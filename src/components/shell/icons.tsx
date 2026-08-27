@@ -163,7 +163,7 @@ export function ContactIcon({ onNavigate }: NavigateProps = {}) {
 		<Tooltip>
 			<TooltipTrigger asChild>
 				<Link
-					href="/kontakt"
+					href="/stik-z-nami"
 					onClick={onNavigate}
 					className={cn(
 						buttonVariants({ variant: "ghost", size: "icon" }),

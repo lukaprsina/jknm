@@ -159,7 +159,7 @@ Full rollover checklist: `docs/domain-cutover-checklist.md`.
 ## Code structure
 
 - `src/app/` — App Router. `(static)` = static content pages, `novica` = article pages,
-  `uredi` = admin editor, `arhiv`/`avtorji`/`kontakt`/`preveri` = archive/authors/contact/verify,
+  `uredi` = admin editor, `arhiv`/`avtorji`/`stik-z-nami`/`preveri` = archive/authors/contact/verify,
   `api/` = route handlers (better-auth, media upload, contact email, Supabase keep-alive).
   The 2008-site converter and `scripts/migrate-legacy-articles.ts` were deleted (#26); the
   article migration has run, and every migrated article carries its 2008-site id in
@@ -183,7 +183,7 @@ Full rollover checklist: `docs/domain-cutover-checklist.md`.
   the fallback (setting `openGraph` at all, even without `images`, would shallow-replace it per
   Next's segment-metadata merge rules). `page.tsx` (homepage) renders a static `Organization`/
   `WebSite` JSON-LD `<script>` (`ORGANIZATION_JSON_LD`). `alternates.canonical` is set on every
-  static page (`/`, `/arhiv`, `/kontakt`, `/klub`, `/publiciranje`, `/raziskovanje`, `/varstvo`,
+  static page (`/`, `/arhiv`, `/stik-z-nami`, `/klub`, `/publiciranje`, `/raziskovanje`, `/varstvo`,
   `/zgodovina`) matching `sitemap.ts`'s `STATIC_ROUTES`, mirroring the pattern already used on
   `/novica/[slug]`. `/avtorji` is deliberately excluded — it `redirect()`s anonymous visitors to
   `/` before rendering, so a canonical pointing at itself would be misleading.
@@ -197,6 +197,13 @@ Full rollover checklist: `docs/domain-cutover-checklist.md`.
   `article/procedures.ts`, `author/procedures.ts`.
 - `src/server/author/` — insert, rename, delete, sync from Google.
 - `src/server/db/schema.ts` — Drizzle schema.
+
+The legacy hyperlink audit is report-only: `scripts/legacy-link-diff.ts` compares links
+scraped from the old article bodies with links in `Article.content_json` and writes one
+JSON artifact per finding kind under `artifacts/link-diff/`. The remaining
+`missing_external_link.json` report includes clickable `legacy_url` and `new_url` source
+article links using `/si/?id=<legacy_id>` on `www.jknm.si` and `www.jknm.org`; those routes
+redirect to the migrated article when the id resolves.
 
 ## Article schema
 

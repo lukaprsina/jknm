@@ -163,6 +163,8 @@ function GalleryImage({ image }: { image: EditorJSImageData }) {
 			 */}
 			<div className="grid w-fit gap-2">
 				<Image
+					draggable={false}
+					onContextMenu={(event) => event.preventDefault()}
 					className="rounded-xl"
 					src={image.file.url}
 					alt={image.caption || "Slika"}

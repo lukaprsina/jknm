@@ -159,7 +159,7 @@ Unwrapped `await getServerAuthSession()` in the render path:
 | 9 | `src/app/uredi/[draft_id]/page.tsx:70` | |
 
 `<Shell>` render sites (all inherit #1):
-`(static)/layout.tsx`, `arhiv/page.tsx`, `avtorji/page.tsx`, `kontakt/page.tsx`,
+`(static)/layout.tsx`, `arhiv/page.tsx`, `avtorji/page.tsx`, `stik-z-nami/page.tsx`,
 `not-found.tsx`, `novica/[published_url]/page.tsx`, `page.tsx`, `preveri/page.tsx`,
 `prijava/page.tsx`, `uredi/[draft_id]/page.tsx`.
 

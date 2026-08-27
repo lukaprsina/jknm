@@ -19,7 +19,7 @@ const STATIC_ROUTES = [
 	"/",
 	"/arhiv",
 	"/avtorji",
-	"/kontakt",
+	"/stik-z-nami",
 	"/klub",
 	"/publiciranje",
 	"/raziskovanje",

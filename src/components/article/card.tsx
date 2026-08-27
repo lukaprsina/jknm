@@ -78,6 +78,8 @@ export function ArticleCard({
 						)}
 					>
 						<Image
+						draggable={false}
+						onContextMenu={(event) => event.preventDefault()}
 							// https://jknm.s3.eu-central-1.amazonaws.com/potop-v-termalni-izvir-29-02-2008/1_gradbena%20jama.jpg
 							// https://jknm.s3.eu-central-1.amazonaws.com/potop-v-termalni-izvir-29-02-2008/thumbnail.jpg
 							// https://jknm-draft.s3.eu-central-1.amazonaws.com//uredi/41/thumbnail.png

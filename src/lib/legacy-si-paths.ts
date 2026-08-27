@@ -50,7 +50,7 @@ export function resolve_legacy_static_path(
 			return { outcome: "redirect", path: "/varstvo" };
 		case "etc":
 			if (second === "kontakt")
-				return { outcome: "redirect", path: "/kontakt" };
+				return { outcome: "redirect", path: "/stik-z-nami" };
 			if (second === "iskanje") return { outcome: "redirect", path: "/arhiv" };
 			return { outcome: "gone" };
 		default:
