@@ -26,6 +26,25 @@ const config: NextConfig = {
 	images: {
 		unoptimized: true,
 	},
+	// Preserves the 2008-site's raw asset URLs (`jknm.si/media/...`,
+	// `jknm.si/img/...`) byte-identical at the same paths post-cutover, so
+	// existing Google Images / hotlink / bookmark links keep resolving with
+	// no redirect needed — the URL never changes from Google's perspective.
+	// Backed by the `jknm-legacy` B2 bucket (`b2 sync` from the 2008-site
+	// filesystem snapshot), not `MEDIA_CDN_ORIGIN` — this is the old static
+	// site's asset tree, unrelated to the EditorJS media pipeline.
+	async rewrites() {
+		return [
+			{
+				source: "/media/:path*",
+				destination: "https://f003.backblazeb2.com/file/jknm-legacy/media/:path*",
+			},
+			{
+				source: "/img/:path*",
+				destination: "https://f003.backblazeb2.com/file/jknm-legacy/img/:path*",
+			},
+		];
+	},
 	// Vercel's own docs don't document automatic `noindex` on production
 	// alias hostnames (`jknm-turborepo.vercel.app`, `jknm-si.vercel.app`),
 	// and they're publicly reachable.

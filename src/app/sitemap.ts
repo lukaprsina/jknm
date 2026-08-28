@@ -18,7 +18,6 @@ export const revalidate = 3600;
 const STATIC_ROUTES = [
 	"/",
 	"/arhiv",
-	"/avtorji",
 	"/stik-z-nami",
 	"/klub",
 	"/publiciranje",
