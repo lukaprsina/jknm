@@ -61,11 +61,6 @@ export function SaveButton() {
 
 	return (
 		<div className="not-prose flex gap-1 text-sm">
-			<span className="pt-3">
-				{typeof editor_context.savingText === "undefined"
-					? editor_context.savingText
-					: null}
-			</span>
 			<Tooltip>
 				<TooltipTrigger asChild>
 					<Button

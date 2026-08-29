@@ -44,7 +44,11 @@ export function MyToolbar() {
 					}
 					placeholder="Avtorji"
 				/>
-				<span className="flex shrink-0">{editor_context.savingText}</span>
+				{editor_context.statusText && (
+					<pre className="prose bg-background text-accent-foreground h-10 flex shrink-0 whitespace-pre-wrap text-sm">
+						{editor_context.statusText}
+					</pre>
+				)}
 			</div>
 			<ToolbarButtons />
 		</div>

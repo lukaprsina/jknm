@@ -40,9 +40,6 @@ export function UploadDialog() {
 							const editor_content = await editor_context.editor?.save();
 							if (!editor_content) return;
 
-							// TODO
-							// update_settings_from_editor(draft_article, editor_content);
-
 							setDialogOpen(true);
 						}}
 						size="icon"

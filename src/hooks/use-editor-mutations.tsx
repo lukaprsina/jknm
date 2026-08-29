@@ -2,17 +2,14 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import {
 	DraftArticleContext,
 	PublishedArticleContext,
 } from "~/components/article/context";
 import { resolve_default_published_at } from "~/components/article/new-adapter";
 import { EditorContext } from "~/components/editor/editor-context";
-import {
-	update_settings_from_editor,
-	validate_article,
-} from "~/components/editor/editor-lib";
+import { commitEditorState } from "~/components/editor/editor-lib";
 import { editor_store } from "~/components/editor/editor-store";
 import { useToast } from "~/hooks/use-toast";
 import { get_published_article_link } from "~/lib/article-utils";
@@ -39,11 +36,17 @@ export function useEditorMutations() {
 		throw new Error("Missing context");
 	}
 
+	// `save_draft` never blocks on an invalid heading (Q11: drafts are allowed
+	// to be incomplete), so its own commit can leave an error in `statusText`
+	// right before the mutation settles — this guards that settle from
+	// clobbering a still-relevant error with a blank status.
+	const save_had_error = useRef(false);
+
 	const save_article_mutation = useMutation({
 		mutationFn: (input: Parameters<typeof saveArticle>[0]) =>
 			unwrap_server_function(saveArticle(input)),
 		onSettled: () => {
-			editor_context.setSavingText(undefined);
+			if (!save_had_error.current) editor_context.setStatusText(undefined);
 			editor_context.setDirty(false);
 		},
 		onError: (error) => {
@@ -61,7 +64,7 @@ export function useEditorMutations() {
 			router.push(`/novica/${data.slug}`);
 		},
 		onSettled: async () => {
-			editor_context.setSavingText(undefined);
+			editor_context.setStatusText(undefined);
 			editor_context.setDirty(false);
 			await apply_client_invalidations(query_client, "article.published");
 		},
@@ -119,35 +122,29 @@ export function useEditorMutations() {
 			override_published_at?: Date,
 			thumbnail_crop?: ThumbnailType,
 		) => {
-			editor_context.setSavingText("Shranjujem osnutek ...");
-			const editor_content = await editor_context.editor?.save();
-			if (!editor_content) return;
+			editor_context.setStatusText("Shranjujem osnutek ...");
 
-			const article_id = draft_article.id;
+			const result = await commitEditorState({
+				editor: editor_context.editor,
+				article: draft_article,
+				overrides: {
+					published_at: override_published_at ?? default_published_at,
+					thumbnail_crop,
+				},
+			});
+			if (!result) return;
 
-			const updated = validate_article(editor_content, toaster);
-			const published_at = override_published_at ?? default_published_at;
+			save_had_error.current = Boolean(result.error);
+			editor_context.setStatusText(result.error);
 
 			const state = editor_store.getState();
-			const resolved_thumbnail_crop = thumbnail_crop ?? state.thumbnail_crop;
-
-			update_settings_from_editor({
-				title: updated?.title ?? "",
-				url: updated?.url ?? "",
-				s3_url: "",
-				thumbnail_crop: resolved_thumbnail_crop,
-				published_at,
-				editor_content,
-				article_id,
-			});
-
 			save_article_mutation.mutate({
-				article_id,
+				article_id: draft_article.id,
 				article: {
-					title: updated?.title ?? state.title,
-					published_at,
-					content: editor_content,
-					thumbnail_crop: resolved_thumbnail_crop ?? undefined,
+					title: result.title,
+					published_at: state.published_at,
+					content: result.editor_content,
+					thumbnail_crop: state.thumbnail_crop ?? undefined,
 				},
 				author_ids: state.author_ids,
 			});
@@ -156,49 +153,43 @@ export function useEditorMutations() {
 			override_published_at?: Date,
 			thumbnail_crop?: ThumbnailType,
 		) => {
-			editor_context.setSavingText("Objavljam spremembe ...");
-			const editor_content = await editor_context.editor?.save();
-			if (!editor_content) return;
+			editor_context.setStatusText("Objavljam spremembe ...");
 
-			const updated = validate_article(editor_content, toaster);
-			if (!updated) return;
+			const result = await commitEditorState({
+				editor: editor_context.editor,
+				article: draft_article,
+				overrides: {
+					published_at: override_published_at ?? default_published_at,
+					thumbnail_crop,
+				},
+			});
+			if (!result) return;
 
-			const article_id = draft_article.id;
-			const published_at = override_published_at ?? default_published_at;
+			// Publish never proceeds with an invalid heading (Q11); save_draft
+			// always proceeds — drafts may be incomplete work-in-progress.
+			if (result.error) {
+				editor_context.setStatusText(result.error);
+				return;
+			}
 
 			const state = editor_store.getState();
-			const resolved_thumbnail_crop = thumbnail_crop ?? state.thumbnail_crop;
-
-			update_settings_from_editor({
-				title: updated.title,
-				url: updated.url,
-				s3_url: "",
-				thumbnail_crop: resolved_thumbnail_crop,
-				published_at,
-				editor_content,
-				article_id,
-				author_ids: draft_article.draft_articles_to_authors.map(
-					(a) => a.author_id,
-				),
-			});
-
 			publish_article_mutation.mutate({
-				article_id,
+				article_id: draft_article.id,
 				article: {
-					title: updated.title,
-					published_at,
-					content: editor_content,
-					thumbnail_crop: resolved_thumbnail_crop ?? undefined,
+					title: result.title,
+					published_at: state.published_at,
+					content: result.editor_content,
+					thumbnail_crop: state.thumbnail_crop ?? undefined,
 				},
 				author_ids: state.author_ids,
 			});
 		},
 		delete_article: () => {
-			editor_context.setSavingText("Brišem novičko ...");
+			editor_context.setStatusText("Brišem novičko ...");
 			delete_article_mutation.mutate({ article_id: draft_article.id });
 		},
 		discard_draft: () => {
-			editor_context.setSavingText("Zavračam osnutek ...");
+			editor_context.setStatusText("Zavračam osnutek ...");
 			discard_draft_mutation.mutate({ article_id: draft_article.id });
 		},
 	};

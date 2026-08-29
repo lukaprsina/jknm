@@ -16,21 +16,20 @@ import {
 	useState,
 } from "react";
 import { resolve_default_published_at } from "~/components/article/new-adapter";
-import { useToast } from "~/hooks/use-toast";
 import { convert_title_to_url } from "~/lib/article-utils";
 import { extract_media_refs_from_content } from "~/lib/editor-utils";
 import {
 	DraftArticleContext,
 	PublishedArticleContext,
 } from "../article/context";
-import { update_settings_from_editor, validate_article } from "./editor-lib";
+import { commitEditorState } from "./editor-lib";
 import { editor_store } from "./editor-store";
 import { EDITOR_JS_PLUGINS } from "./plugins";
 
 export interface EditorContextType {
 	editor?: EditorJS;
-	savingText: string | undefined;
-	setSavingText: (value: string | undefined) => void;
+	statusText: string | undefined;
+	setStatusText: (value: string | undefined) => void;
 	dirty: boolean;
 	setDirty: (value: boolean) => void;
 }
@@ -42,11 +41,10 @@ export const EditorContext = createContext<EditorContextType | undefined>(
 export function EditorProvider({ children }: { children: ReactNode }) {
 	const article = useContext(DraftArticleContext);
 	const published = useContext(PublishedArticleContext);
-	const [savingText, setSavingText] = useState<string | undefined>();
+	const [statusText, setStatusText] = useState<string | undefined>();
 	const [editorInstance, setEditorInstance] = useState<EditorJS | null>(null);
 	const editorJS = useRef<EditorJS | null>(null);
 	const [dirty, setDirty] = useState(false);
-	const toaster = useToast();
 
 	// Seeded synchronously during render (not in an effect/onReady) so the
 	// toolbar and settings panel never paint a previous draft's state —
@@ -117,21 +115,16 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 				});
 
 				async function update_article() {
-					const editor_content = await editorJS.current?.save();
-					if (!editor_content || !article) return;
+					if (!article) return;
 
-					const updated = validate_article(editor_content, toaster);
-
-					update_settings_from_editor({
-						title: updated?.title ?? article.title,
-						url: updated?.url ?? convert_title_to_url(article.title),
-						// New (uuid) articles have no per-draft S3 directory — media is
-						// decoupled (#18).
-						s3_url: "",
-						thumbnail_crop: article.thumbnail_crop,
-						editor_content,
-						article_id: article.id,
+					// Surfaced even on initial load (not just user-triggered saves):
+					// an article that's missing its heading is invalid whether the
+					// editor just mounted or the user just clicked save.
+					const result = await commitEditorState({
+						editor: editorJS.current ?? undefined,
+						article,
 					});
+					setStatusText(result?.error);
 				}
 
 				void update_article();
@@ -148,7 +141,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 		});
 
 		return temp_editor;
-	}, [content, article, toaster]);
+	}, [content, article]);
 
 	useEffect(() => {
 		if (editorJS.current != null) return;
@@ -164,8 +157,8 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 			value={{
 				editor: editorInstance ?? undefined,
 				dirty,
-				savingText,
-				setSavingText,
+				statusText,
+				setStatusText,
 				setDirty,
 			}}
 		>
