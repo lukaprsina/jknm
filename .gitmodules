@@ -1,27 +1,9 @@
 [submodule "vendor/fumadocs"]
 	path = vendor/fumadocs
 	url = https://github.com/fuma-nama/fumadocs
-[submodule "vendor/better-auth"]
-	path = vendor/better-auth
-	url = https://github.com/better-auth/better-auth
 [submodule "vendor/editorjs"]
 	path = vendor/editorjs
 	url = https://github.com/codex-team/editor.js
-[submodule "vendor/orama-docs"]
-	path = vendor/orama-docs
-	url = https://github.com/oramasearch/docs
 [submodule "vendor/zbsearch"]
 	path = vendor/zbsearch
 	url = https://github.com/micheleriva/zbsearch
-[submodule "vendor/editor-js-attaches"]
-	path = vendor/editor-js-attaches
-	url = https://github.com/editor-js/attaches
-[submodule "vendor/shadcn-multi-select-component"]
-	path = vendor/shadcn-multi-select-component
-	url = https://github.com/sersavan/shadcn-multi-select-component
-[submodule "vendor/editorjs-table"]
-	path = vendor/editorjs-table
-	url = https://github.com/editor-js/table
-[submodule "vendor/headroomjs"]
-	path = vendor/headroomjs
-	url = https://github.com/WickyNilliams/headroom.js
