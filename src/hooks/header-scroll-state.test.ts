@@ -11,6 +11,7 @@ const config: HeaderScrollConfig = {
 	top_offset: 10,
 	hide_tolerance: 24,
 	reveal_rate: 3,
+	noise_deadband: 0,
 };
 
 function step(

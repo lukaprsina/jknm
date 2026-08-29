@@ -70,6 +70,7 @@ export async function Shell({
 						<MobileHeader
 							editor_controls={editor_controls}
 							nav_sections={nav_sections}
+							known_has_toc={has_toc}
 						/>
 					</header>
 				) : undefined}

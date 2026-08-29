@@ -12,6 +12,13 @@ export interface HeaderScrollConfig {
 	 * how a mobile browser's own address bar snaps back on the first sign of
 	 * upward intent while resisting on the way down. */
 	reveal_rate: number;
+	/** Per-sample deltas smaller than this (in either direction) are treated
+	 * as noise, not a direction change. Real `scrollY` samples aren't
+	 * monotonic even during steady one-way scrolling -- sub-pixel/rounding
+	 * jitter routinely produces an occasional 1-5px sample against the
+	 * overall direction, which would otherwise keep resetting
+	 * `pending_down` before `hide_tolerance` is ever reached. */
+	noise_deadband: number;
 }
 
 export interface HeaderScrollState {
@@ -53,6 +60,10 @@ export function resolve_header_scroll_state(
 	}
 
 	const diff = scroll_y - last_scroll_y;
+
+	if (Math.abs(diff) < config.noise_deadband) {
+		return state;
+	}
 
 	if (diff <= 0) {
 		const revealed = -diff * config.reveal_rate;

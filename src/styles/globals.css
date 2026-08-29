@@ -175,6 +175,13 @@
 
 	body {
 		@apply bg-background text-foreground;
+		/* The mobile header's scroll-hide spacer resizes every scroll frame
+		 * right above the scrolled content. Without this, the browser's
+		 * scroll anchoring "corrects" scrollY to compensate, which our own
+		 * scroll handler reads as a huge delta and reacts to -- a feedback
+		 * loop that flickered the header between shown and hidden every
+		 * frame. https://developer.chrome.com/blog/scroll-anchoring */
+		overflow-anchor: none;
 	}
 }
 

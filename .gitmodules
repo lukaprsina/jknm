@@ -22,3 +22,6 @@
 [submodule "vendor/editorjs-table"]
 	path = vendor/editorjs-table
 	url = https://github.com/editor-js/table
+[submodule "vendor/headroomjs"]
+	path = vendor/headroomjs
+	url = https://github.com/WickyNilliams/headroom.js

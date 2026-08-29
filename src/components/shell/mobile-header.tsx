@@ -33,7 +33,6 @@ import {
 import { clamp } from "~/hooks/header-scroll-state";
 import { useBreakpoint } from "~/hooks/use-breakpoint";
 import { useHeaderHiddenAmount } from "~/hooks/use-header-hidden-amount";
-import { useIsScrollTop } from "~/hooks/use-is-scroll-top";
 import type { NavSection } from "~/lib/static-nav-sections";
 import { cn } from "~/lib/utils";
 import { HomeLink } from "./home-link";
@@ -81,58 +80,62 @@ export function useMobileTocOpen(): boolean {
 export function MobileHeader({
 	editor_controls,
 	nav_sections,
+	known_has_toc = false,
 	className,
 	...props
 }: ComponentProps<"div"> & {
 	/** Admin-only editor chrome, rendered opaquely so no `Session` reaches the client. */
 	editor_controls: ReactNode;
 	nav_sections: NavSection[];
+	/** Route-level hint (`Shell`'s `has_toc` prop, same one `TocAwareLayout`
+	 * takes as `known_has_toc`) for pages that always render a
+	 * `<TableOfContents>`. Seeds the very first render so the TOC trigger row
+	 * and `--mobile-header-height` are correct immediately, instead of
+	 * popping in once `toc_visibility_store` catches up post-hydration. */
+	known_has_toc?: boolean;
 }) {
 	const sticky_navbar_ref = useRef<HTMLDivElement | null>(null);
-	const header_content_ref = useRef<HTMLDivElement | null>(null);
+	const title_row_ref = useRef<HTMLDivElement | null>(null);
 	const lg_breakpoint = useBreakpoint("lg");
-	const has_toc = useHasToc();
-	const is_top = useIsScrollTop();
+	const has_toc = useHasToc() || known_has_toc;
 
-	// Measures the *combined* title-row + TOC-trigger-row height, since both
-	// now move as one rigid block (see below). `useLayoutEffect` + a
-	// synchronous initial read avoid a flash-of-zero-height on mount; the
-	// observer then tracks it as the title wraps to one or two lines, or as
-	// `has_toc` adds/removes the trigger row.
-	const content_height = useMotionValue(0);
+	// Measures the title row alone -- the TOC trigger row is a separate,
+	// always-visible sibling below it, not part of what `hidden` hides.
+	// Starts at the one-line height (32px padding + 40px icon button) instead
+	// of `0`: the title only wraps below ~350px viewport width, so this is
+	// correct in the server-rendered HTML too, before the `ResizeObserver`
+	// below gets a chance to measure it for real.
+	const title_height = useMotionValue(72);
 	useLayoutEffect(() => {
-		const el = header_content_ref.current;
+		const el = title_row_ref.current;
 		if (!el) return;
 
-		content_height.set(el.getBoundingClientRect().height);
+		title_height.set(el.getBoundingClientRect().height);
 
 		const observer = new ResizeObserver((entries) => {
 			const entry = entries[0];
-			if (entry) content_height.set(entry.contentRect.height);
+			if (entry) title_height.set(entry.contentRect.height);
 		});
 		observer.observe(el);
 		return () => observer.disconnect();
-	}, [content_height]);
+	}, [title_height]);
 
-	// Continuous px-hidden value, driven straight off scroll like a mobile
-	// browser's own address bar -- see `use-header-hidden-amount.ts`. Title
-	// row and TOC trigger row live inside one `position: absolute` block
-	// translated by `-hidden` together, so they can never drift apart the
-	// way independently-reflowing siblings could -- one transform, one
-	// source of truth, no `overflow-hidden` clipping either (the block
-	// simply slides above the viewport's own top edge as it hides). A
-	// separate in-flow spacer (`spacer_height`) is what actually reclaims
-	// the page's layout space, since `transform` never does -- it's still a
-	// `height`, so it still costs a reflow every sample, but a cheap one:
-	// it's an empty box, not the painted title/logo/TOC content, which is
-	// what used to reflow (and repaint mid-clip) under the old `overflow-
-	// hidden` + `height` wrapper.
-	const hidden = useHeaderHiddenAmount(content_height);
+	// Continuous px-hidden value driven straight off scroll -- see
+	// `use-header-hidden-amount.ts`. Only the title row is translated by
+	// `-hidden`; `spacer_height` reclaims the layout space it leaves behind,
+	// since `transform` doesn't do that on its own. `overflowAnchor: "none"`
+	// on the spacer keeps the browser's scroll-anchoring from "correcting"
+	// `scrollY` in response to that resize, which would otherwise feed back
+	// into `hidden` and produce a runaway oscillation.
+	const hidden = useHeaderHiddenAmount(title_height);
 	const spacer_height = useTransform(
-		[content_height, hidden],
+		[title_height, hidden],
 		([max, amount]) => Math.max((max as number) - (amount as number), 0),
 	);
-	const translate_y = useTransform(hidden, (amount) => `-${amount}px`);
+	const translate_y = useTransform(
+		hidden,
+		(amount) => `translateY(-${amount}px)`,
+	);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: has_toc isn't read here, but it changes the DOM layout that clientHeight measures below -- see comment inside.
 	useEffect(() => {
@@ -142,42 +145,34 @@ export function MobileHeader({
 			return;
 		}
 
-		if (!header_content_ref.current) return;
+		if (!sticky_navbar_ref.current) return;
 
 		// Kept in sync so `.prose` headings' `scroll-margin-top` (globals.css)
-		// clears the sticky header when scrolling to an anchor link. Reads
-		// `header_content_ref`'s own box height, not the spacer's -- `.
-		// getBoundingClientRect`/`clientHeight` reports an element's own size
-		// regardless of any `transform` applied to it, so this stays the
-		// header's true resting height even mid-scroll.
+		// clears the sticky header when scrolling to an anchor link. Read at
+		// mount/breakpoint-change time, while the header is still fully shown,
+		// so mid-scroll hiding doesn't affect it.
 		document.documentElement.style.setProperty(
 			"--mobile-header-height",
-			`${header_content_ref.current.clientHeight}px`,
+			`${sticky_navbar_ref.current.clientHeight}px`,
 		);
 	}, [lg_breakpoint, has_toc]);
 
 	return (
 		// `contents`: same containing-block starvation issue as `<header>` in
-		// `shell/index.tsx` -- this div's only child is the sticky navbar, so a
-		// boxed wrapper ends exactly where the sticky div ends and it never
-		// gets room to stay pinned. `contents` lets the sticky div's containing
-		// block skip straight to the tall page wrapper, `lg:hidden` still hides
-		// the whole subtree at the desktop breakpoint same as before.
+		// `shell/index.tsx` -- a boxed wrapper here would starve the sticky
+		// navbar of room to stay pinned.
 		<div className={cn("contents lg:hidden", className)} {...props}>
 			<div ref={sticky_navbar_ref} className="sticky top-0 z-40 w-full">
-				<motion.div style={{ height: spacer_height }} aria-hidden />
 				<motion.div
-					ref={header_content_ref}
+					style={{ height: spacer_height, overflowAnchor: "none" }}
+					aria-hidden
+				/>
+				<motion.div
+					ref={title_row_ref}
 					className="absolute inset-x-0 top-0"
 					style={{ transform: translate_y }}
 				>
-					<div
-						className={cn(
-							"flex items-center justify-between px-6 py-4 transition-colors",
-							!is_top &&
-								"bg-white/90 backdrop-blur-sm supports-backdrop-filter:bg-background/60",
-						)}
-					>
+					<div className="flex items-center justify-between bg-white/90 px-6 py-4 backdrop-blur-sm supports-backdrop-filter:bg-background/60">
 						<HomeLink className="text-xl font-bold min-[450px]:text-2xl">
 							Jamarski klub Novo mesto
 						</HomeLink>
@@ -186,8 +181,8 @@ export function MobileHeader({
 							nav_sections={nav_sections}
 						/>
 					</div>
-					{has_toc && <MobileTocPopover is_top={is_top} />}
 				</motion.div>
+				{has_toc && <MobileTocPopover />}
 			</div>
 		</div>
 	);
@@ -347,7 +342,7 @@ function ProgressCircle({
  * a reading-progress indicator: the ring fills as the active heading moves
  * through the TOC, and the label swaps from "Na tej strani" to the current
  * heading's title while collapsed. */
-export function MobileTocPopover({ is_top }: { is_top: boolean }) {
+export function MobileTocPopover() {
 	const open = useMobileTocOpen();
 	const { entries, active_id } = useMobileTocProgress();
 	const container_ref = useRef<HTMLDivElement>(null);
@@ -357,12 +352,6 @@ export function MobileTocPopover({ is_top }: { is_top: boolean }) {
 	const progress =
 		entries.length === 0 ? 0 : (active_index + 1) / entries.length;
 	const show_active_title = active_entry !== undefined && !open;
-	// Matches fumadocs' `(!isNavTransparent || open)`: the trigger row stays
-	// transparent while collapsed at the top of the page, and only picks up
-	// the same tint the navbar uses once scrolled or expanded -- keeping it
-	// in sync with `MobileHeader`'s own `!is_top` background so there's a
-	// single shared paint, not two independently-approximated ones.
-	const show_bg = !is_top || open;
 
 	// Radix `Collapsible` has no built-in outside-click handling (unlike
 	// `Dialog`/`Sheet`) -- fine for a normal accordion, but this one floats
@@ -394,13 +383,7 @@ export function MobileTocPopover({ is_top }: { is_top: boolean }) {
 			// TODO: do we want border here?
 			className={cn("relative w-full" /* , "border-t" */)}
 		>
-			<CollapsibleTrigger
-				className={cn(
-					"flex h-10 w-full items-center gap-2.5 px-6 text-start text-sm text-muted-foreground transition-colors focus-visible:outline-none",
-					show_bg &&
-						"bg-white/90 backdrop-blur-sm supports-backdrop-filter:bg-background/60",
-				)}
-			>
+			<CollapsibleTrigger className="flex h-10 w-full items-center gap-2.5 bg-white/90 px-6 text-start text-sm text-muted-foreground backdrop-blur-sm transition-colors focus-visible:outline-none supports-backdrop-filter:bg-background/60">
 				<ProgressCircle
 					value={progress}
 					className={cn("shrink-0", open && "text-foreground")}
