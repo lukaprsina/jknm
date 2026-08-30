@@ -6,7 +6,6 @@ import { headers } from "next/headers";
 import { cache } from "react";
 
 import { env } from "~/env";
-import { DEPLOYMENT_ORIGIN } from "~/lib/domains";
 import { db } from "~/server/db";
 import { accounts, sessions, users, verification } from "~/server/db/schema";
 import { to_app_session } from "./session-shape";
@@ -15,19 +14,30 @@ import { is_allowed_sign_in } from "./sign-in-gate";
 export type { Session } from "./session-shape";
 
 export const auth = betterAuth({
-	baseURL: DEPLOYMENT_ORIGIN,
-	secret: env.BETTER_AUTH_SECRET,
-	// Extra origins allowed to complete a Google sign-in against this
-	// deployment during the domain transition — see src/lib/domains.ts.
+	// Object form (not DEPLOYMENT_ORIGIN) because the app is reachable from
+	// several hosts at once during the domain transition — see
+	// src/lib/domains.ts. A single fixed baseURL always built the OAuth
+	// callback for DEPLOYMENT_ORIGIN's host regardless of which domain the
+	// sign-in started on, so a flow started on jknm.org either silently
+	// completed on jknm-si.vercel.app (if that origin already had a session
+	// cookie) or 403'd as INVALID_ORIGIN (if it didn't). allowedHosts derives
+	// the callback host per request instead, and auto-feeds trustedOrigins.
 	// jknm.org: bought and pointed at Vercel, not yet the live app origin.
 	// jknm-si.vercel.app: today's DEPLOYMENT_ORIGIN, kept trusted so it
 	// doesn't break once DEPLOYMENT_ORIGIN is flipped to jknm.si at cutover.
-	trustedOrigins: [
-		"https://jknm.org",
-		"https://jknm-si.vercel.app",
-		"https://jknm.localhost",
-		"http://jknm.si",
-	],
+	// jknm.si: not live yet (still the old site until DNS cuts over) but
+	// listed ahead of time so the flip doesn't also require an auth deploy.
+	// jknm.localhost: portless dev proxy.
+	baseURL: {
+		allowedHosts: [
+			"jknm.org",
+			"jknm-si.vercel.app",
+			"jknm.si",
+			"jknm.localhost",
+		],
+		protocol: "https",
+	},
+	secret: env.BETTER_AUTH_SECRET,
 	database: drizzleAdapter(db, {
 		provider: "pg",
 		// The adapter looks tables up by better-auth's model names, which are not

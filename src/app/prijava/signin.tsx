@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { parseAsString, useQueryState } from "nuqs";
 import { InfoCard } from "~/components/info-card";
 import { Logo } from "~/components/shell/logo";
 import { Button, buttonVariants } from "~/components/ui/button";
@@ -63,13 +64,23 @@ export default function SignIn({ session }: { session: Session | null }) {
 	);
 }
 
+// Only a same-origin relative path is safe to hand to callbackURL — an
+// absolute or protocol-relative value in ?next= would let a crafted link
+// redirect a signed-in user off-site after Google auth completes.
+function sanitize_next(next: string | null): string {
+	if (!next || !next.startsWith("/") || next.startsWith("//")) return "/";
+	return next;
+}
+
 function GoogleSignInButton() {
+	const [next] = useQueryState("next", parseAsString);
+
 	return (
 		<button
 			type="button"
 			className="gsi-material-button"
 			onClick={async () => {
-				await sign_in_with_google({ callback_url: "/" });
+				await sign_in_with_google({ callback_url: sanitize_next(next) });
 			}}
 		>
 			<div className="gsi-material-button-state"></div>

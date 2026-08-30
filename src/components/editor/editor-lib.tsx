@@ -51,7 +51,9 @@ export async function commitEditorState({
 	]).map((ref) => ref.data);
 
 	const thumbnail_crop =
-		overrides?.thumbnail_crop ?? editor_store.getState().thumbnail_crop ?? undefined;
+		overrides?.thumbnail_crop ??
+		editor_store.getState().thumbnail_crop ??
+		undefined;
 
 	editor_store.setState({
 		draft_id: article.id,

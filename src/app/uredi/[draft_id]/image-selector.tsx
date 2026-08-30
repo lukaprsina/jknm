@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- ReactCrop clones a raw <img> ref; biome enforces the same rule. */
 
-import { PlusIcon, TrashIcon } from "lucide-react";
+import { Loader2Icon, PlusIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
 import type React from "react";
 import { useMemo, useRef, useState } from "react";
@@ -37,6 +37,7 @@ export function ImageSelector({
 	const selected_url = use_thumbnail_store((s) => s.selected_url);
 	const live_crop = use_thumbnail_store((s) => s.live_crop);
 	const custom_thumbnail = use_thumbnail_store((s) => s.custom_thumbnail);
+	const uploading = use_thumbnail_store((s) => s.uploading);
 	const actions = use_thumbnail_store((s) => s.actions);
 
 	const images = useMemo((): EditorJSImageData[] => {
@@ -84,6 +85,7 @@ export function ImageSelector({
 				type="file"
 				className="hidden"
 				accept="image/*"
+				disabled={uploading}
 				ref={input_ref}
 				onChange={async (event) => {
 					const file = event.target.files?.item(0);
@@ -93,6 +95,8 @@ export function ImageSelector({
 
 					const uploaded = await actions.uploadCustomThumbnail(file, formImage);
 					if (!uploaded) return;
+
+					actions.selectImage(uploaded.url);
 				}}
 			/>
 			<div className="flex gap-4">
@@ -160,18 +164,26 @@ export function ImageSelector({
 						})}
 						<Card
 							onClick={() => {
-								if (!input_ref.current) return;
+								if (uploading || !input_ref.current) return;
 								input_ref.current.value = "";
 								input_ref.current.click();
 							}}
-							className="box-border flex cursor-pointer items-center justify-center border-2 p-2"
+							aria-disabled={uploading}
+							className={cn(
+								"box-border flex items-center justify-center border-2 p-2",
+								uploading ? "cursor-not-allowed opacity-60" : "cursor-pointer",
+							)}
 						>
 							<div className="w-[300px]">
 								<AspectRatio
 									ratio={16 / 9}
 									className="flex h-full items-center justify-center"
 								>
-									<PlusIcon />
+									{uploading ? (
+										<Loader2Icon className="animate-spin" />
+									) : (
+										<PlusIcon />
+									)}
 								</AspectRatio>
 							</div>
 						</Card>

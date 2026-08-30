@@ -6,7 +6,7 @@ import "./src/env.js";
 import type { NextConfig } from "next";
 
 const config: NextConfig = {
-	allowedDevOrigins: ["jknm.local", "*.jknm.local"], // portless
+	allowedDevOrigins: ["jknm.localhost", "*.jknm.localhost"], // portless
 	experimental: {
 		serverActions: {
 			bodySizeLimit: "100mb",
