@@ -9,7 +9,6 @@ import {
 	useIsSupersedingDraft,
 } from "~/components/article/context";
 import { DeleteArticleButton } from "~/components/article/delete-article-button";
-import { EditorContext } from "~/components/editor/editor-context";
 import { Button } from "~/components/ui/button";
 import {
 	Tooltip,
@@ -33,7 +32,6 @@ export function ToolbarButtons() {
 }
 
 export function SaveButton() {
-	const editor_context = useContext(EditorContext);
 	const editor_mutations = useEditorMutations();
 
 	const handleKeyPress = useCallback(
@@ -56,8 +54,6 @@ export function SaveButton() {
 			document.removeEventListener("keydown", handleKeyPress);
 		};
 	});
-
-	if (!editor_context) return null;
 
 	return (
 		<div className="not-prose flex gap-1 text-sm">
@@ -89,13 +85,12 @@ export function KeyboardShortcut({ children }: { children: React.ReactNode }) {
 }
 
 export function ClearButton() {
-	const editor_context = useContext(EditorContext);
 	const draft_article = useContext(DraftArticleContext);
 	const editor_mutations = useEditorMutations();
 	const is_superseding = useIsSupersedingDraft();
 	const router = useRouter();
 
-	if (!editor_context || !draft_article) return null;
+	if (!draft_article) return null;
 
 	const article_id = draft_article.id;
 	const archive_label = is_superseding

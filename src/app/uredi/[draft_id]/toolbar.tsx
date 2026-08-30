@@ -1,8 +1,8 @@
 "use client";
 
-import { use, useContext, useMemo } from "react";
+import { use, useMemo } from "react";
 import { AllAuthorsContext } from "~/app/provider";
-import { EditorContext } from "~/components/editor/editor-context";
+import { useEditorContext } from "~/components/editor/editor-context";
 import { editor_store, useAuthorIds } from "~/components/editor/editor-store";
 import type { MultiSelectOption } from "~/components/ui/multi-select";
 import { MultiSelect } from "~/components/ui/multi-select";
@@ -10,7 +10,7 @@ import { format_author_name } from "~/lib/author-name";
 import { ToolbarButtons } from "./toolbar-buttons";
 
 export function MyToolbar() {
-	const editor_context = useContext(EditorContext);
+	const editor_context = useEditorContext();
 	const all_authors = use(AllAuthorsContext);
 	const author_ids = useAuthorIds();
 
@@ -28,7 +28,6 @@ export function MyToolbar() {
 		[all_authors],
 	);
 
-	if (!editor_context) return null;
 	return (
 		<div className="flex w-full flex-wrap items-center justify-between p-4">
 			<div className="flex items-center gap-2">
@@ -50,7 +49,7 @@ export function MyToolbar() {
 					</pre>
 				)}
 			</div>
-			<ToolbarButtons />
+			{editor_context.state === "ready" && <ToolbarButtons />}
 		</div>
 	);
 }

@@ -8,8 +8,7 @@ import {
 	PublishedArticleContext,
 } from "~/components/article/context";
 import { resolve_default_published_at } from "~/components/article/new-adapter";
-import { EditorContext } from "~/components/editor/editor-context";
-import { commitEditorState } from "~/components/editor/editor-lib";
+import { useEditorContext } from "~/components/editor/editor-context";
 import { editor_store } from "~/components/editor/editor-store";
 import { useToast } from "~/hooks/use-toast";
 import { get_published_article_link } from "~/lib/article-utils";
@@ -27,12 +26,12 @@ export function useEditorMutations() {
 	const query_client = useQueryClient();
 	const draft_article = useContext(DraftArticleContext);
 	const published_article = useContext(PublishedArticleContext);
-	const editor_context = useContext(EditorContext);
+	const editor_context = useEditorContext();
 
 	const toaster = useToast();
 	const router = useRouter();
 
-	if (!draft_article || !editor_context) {
+	if (!draft_article) {
 		throw new Error("Missing context");
 	}
 
@@ -124,13 +123,9 @@ export function useEditorMutations() {
 		) => {
 			editor_context.setStatusText("Shranjujem osnutek ...");
 
-			const result = await commitEditorState({
-				editor: editor_context.editor,
-				article: draft_article,
-				overrides: {
-					published_at: override_published_at ?? default_published_at,
-					thumbnail_crop,
-				},
+			const result = await editor_context.commit({
+				published_at: override_published_at ?? default_published_at,
+				thumbnail_crop,
 			});
 			if (!result) return;
 
@@ -155,13 +150,9 @@ export function useEditorMutations() {
 		) => {
 			editor_context.setStatusText("Objavljam spremembe ...");
 
-			const result = await commitEditorState({
-				editor: editor_context.editor,
-				article: draft_article,
-				overrides: {
-					published_at: override_published_at ?? default_published_at,
-					thumbnail_crop,
-				},
+			const result = await editor_context.commit({
+				published_at: override_published_at ?? default_published_at,
+				thumbnail_crop,
 			});
 			if (!result) return;
 

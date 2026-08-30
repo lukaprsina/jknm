@@ -1,9 +1,8 @@
 "use client";
 
 import { ArrowUpToLineIcon } from "lucide-react";
-import { useContext, useState } from "react";
-import { DraftArticleContext } from "~/components/article/context";
-import { EditorContext } from "~/components/editor/editor-context";
+import { useState } from "react";
+import { useEditorContext } from "~/components/editor/editor-context";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -25,11 +24,8 @@ import { KeyboardShortcut } from "./toolbar-buttons";
 
 export function UploadDialog() {
 	const [dialogOpen, setDialogOpen] = useState(false);
-	const editor_context = useContext(EditorContext);
+	const editor_context = useEditorContext();
 	const editor_mutations = useEditorMutations();
-	const draft_article = useContext(DraftArticleContext);
-
-	if (!editor_context || !draft_article) return null;
 
 	return (
 		<AlertDialog open={dialogOpen} onOpenChange={(open) => setDialogOpen(open)}>
@@ -37,8 +33,8 @@ export function UploadDialog() {
 				<TooltipTrigger asChild>
 					<Button
 						onClick={async () => {
-							const editor_content = await editor_context.editor?.save();
-							if (!editor_content) return;
+							const result = await editor_context.commit();
+							if (!result) return;
 
 							setDialogOpen(true);
 						}}

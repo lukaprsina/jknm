@@ -18,33 +18,71 @@ import {
 import { resolve_default_published_at } from "~/components/article/new-adapter";
 import { convert_title_to_url } from "~/lib/article-utils";
 import { extract_media_refs_from_content } from "~/lib/editor-utils";
+import type { ThumbnailType } from "~/lib/validators";
 import {
 	DraftArticleContext,
 	PublishedArticleContext,
 } from "../article/context";
-import { commitEditorState } from "./editor-lib";
+import { commitEditorState, type EditorCommitResult } from "./editor-lib";
 import { editor_store } from "./editor-store";
 import { EDITOR_JS_PLUGINS } from "./plugins";
 
+/**
+ * "initializing" until EditorJS's `onReady` fires; consumers that need the
+ * editor to be usable (toolbar buttons) gate on `"ready"` once, at the
+ * toolbar root, rather than each re-deriving readiness themselves.
+ */
+export type EditorState = "initializing" | "ready";
+
 export interface EditorContextType {
-	editor?: EditorJS;
+	state: EditorState;
 	statusText: string | undefined;
 	setStatusText: (value: string | undefined) => void;
 	dirty: boolean;
 	setDirty: (value: boolean) => void;
+	commit: (overrides?: {
+		published_at?: Date;
+		thumbnail_crop?: ThumbnailType;
+	}) => Promise<EditorCommitResult | undefined>;
 }
 
 export const EditorContext = createContext<EditorContextType | undefined>(
 	undefined,
 );
 
+/**
+ * Every consumer of `EditorContext` lives inside `EditorProvider` by
+ * construction (`editor.tsx` wires the tree once) — this throws instead of
+ * making every call site repeat an `if (!context) return null` guard against
+ * a case that can't occur.
+ */
+export function useEditorContext(): EditorContextType {
+	const context = useContext(EditorContext);
+	if (!context) {
+		throw new Error("useEditorContext must be used within an EditorProvider");
+	}
+	return context;
+}
+
 export function EditorProvider({ children }: { children: ReactNode }) {
 	const article = useContext(DraftArticleContext);
 	const published = useContext(PublishedArticleContext);
 	const [statusText, setStatusText] = useState<string | undefined>();
-	const [editorInstance, setEditorInstance] = useState<EditorJS | null>(null);
+	const [state, setState] = useState<EditorState>("initializing");
 	const editorJS = useRef<EditorJS | null>(null);
 	const [dirty, setDirty] = useState(false);
+
+	const commit = useCallback(
+		(overrides?: { published_at?: Date; thumbnail_crop?: ThumbnailType }) => {
+			if (!article) return Promise.resolve(undefined);
+			return commitEditorState({
+				editor: editorJS.current ?? undefined,
+				article,
+				overrides,
+			});
+		},
+		[article],
+	);
 
 	// Seeded synchronously during render (not in an effect/onReady) so the
 	// toolbar and settings panel never paint a previous draft's state —
@@ -100,7 +138,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 			inlineToolbar: true,
 			autofocus: true,
 			onReady: () => {
-				setEditorInstance(editorJS.current);
+				setState("ready");
 
 				// Undo/DragDrop need the editor's blocks painted in the DOM, which
 				// isn't guaranteed yet when `onReady` fires — wait two paints instead
@@ -114,16 +152,11 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 					});
 				});
 
+				// Surfaced even on initial load (not just user-triggered saves): an
+				// article that's missing its heading is invalid whether the editor
+				// just mounted or the user just clicked save.
 				async function update_article() {
-					if (!article) return;
-
-					// Surfaced even on initial load (not just user-triggered saves):
-					// an article that's missing its heading is invalid whether the
-					// editor just mounted or the user just clicked save.
-					const result = await commitEditorState({
-						editor: editorJS.current ?? undefined,
-						article,
-					});
+					const result = await commit();
 					setStatusText(result?.error);
 				}
 
@@ -141,7 +174,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 		});
 
 		return temp_editor;
-	}, [content, article]);
+	}, [content, commit]);
 
 	useEffect(() => {
 		if (editorJS.current != null) return;
@@ -150,16 +183,15 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 		editorJS.current = temp_editor;
 	}, [editor_factory]);
 
-	if (!article) return null;
-
 	return (
 		<EditorContext.Provider
 			value={{
-				editor: editorInstance ?? undefined,
+				state,
 				dirty,
 				statusText,
 				setStatusText,
 				setDirty,
+				commit,
 			}}
 		>
 			{children}

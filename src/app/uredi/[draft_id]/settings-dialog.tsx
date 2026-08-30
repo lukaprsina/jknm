@@ -1,6 +1,5 @@
 import { Settings2Icon } from "lucide-react";
-import { useContext, useState } from "react";
-import { EditorContext } from "~/components/editor/editor-context";
+import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,
@@ -19,8 +18,6 @@ import { SettingsForm } from "./settings-form";
 
 export function SettingsDialog() {
 	const [dialogOpen, setDialogOpen] = useState(false);
-	const editor_context = useContext(EditorContext);
-	if (!editor_context) return null;
 
 	return (
 		<Dialog open={dialogOpen} onOpenChange={(open) => setDialogOpen(open)}>
