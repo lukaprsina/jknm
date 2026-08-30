@@ -22,17 +22,22 @@ export const auth = betterAuth({
 	// completed on jknm-si.vercel.app (if that origin already had a session
 	// cookie) or 403'd as INVALID_ORIGIN (if it didn't). allowedHosts derives
 	// the callback host per request instead, and auto-feeds trustedOrigins.
-	// jknm.org: bought and pointed at Vercel, not yet the live app origin.
+	// jknm.org / www.jknm.org: bought and pointed at Vercel (both host
+	// variants are attached there), not yet the live app origin.
 	// jknm-si.vercel.app: today's DEPLOYMENT_ORIGIN, kept trusted so it
 	// doesn't break once DEPLOYMENT_ORIGIN is flipped to jknm.si at cutover.
-	// jknm.si: not live yet (still the old site until DNS cuts over) but
-	// listed ahead of time so the flip doesn't also require an auth deploy.
+	// jknm.si / www.jknm.si: not live yet (still the old site until DNS cuts
+	// over) but listed ahead of time, both variants, so the flip doesn't also
+	// require an auth deploy — see docs/domain-cutover-checklist.md, which
+	// hasn't decided yet which of the two becomes canonical.
 	// jknm.localhost: portless dev proxy.
 	baseURL: {
 		allowedHosts: [
 			"jknm.org",
+			"www.jknm.org",
 			"jknm-si.vercel.app",
 			"jknm.si",
+			"www.jknm.si",
 			"jknm.localhost",
 		],
 		protocol: "https",
