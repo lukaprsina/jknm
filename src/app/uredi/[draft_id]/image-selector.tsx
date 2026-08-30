@@ -1,23 +1,22 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- ReactCrop clones a raw <img> ref; biome enforces the same rule. */
 
+import { PlusIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
 import type React from "react";
-import { useCallback, useContext, useMemo, useRef, useState } from "react";
-import type { Crop } from "react-image-crop";
-import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
-import { useEditorImageData } from "~/components/editor/editor-store";
-import { Card } from "~/components/ui/card";
-import { cn } from "~/lib/utils";
-import type { ThumbnailType } from "~/lib/validators";
+import { useMemo, useRef, useState } from "react";
+import type { PercentCrop } from "react-image-crop";
+import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import { PlusIcon, TrashIcon } from "lucide-react";
-import { DraftArticleContext } from "~/components/article/context";
-import { upload_image_by_file } from "~/components/aws-s3/upload-file";
+import { useEditorImageData } from "~/components/editor/editor-store";
 import { AspectRatio } from "~/components/ui/aspect-ratio";
 import { Button } from "~/components/ui/button";
+import { Card } from "~/components/ui/card";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import type { EditorJSImageData } from "~/lib/editor-utils";
+import { cn } from "~/lib/utils";
+import type { ThumbnailType } from "~/lib/validators";
+import { create_thumbnail_store } from "./thumbnail-selection-store";
 
 export function ImageSelector({
 	image: formImage,
@@ -26,112 +25,58 @@ export function ImageSelector({
 	image: ThumbnailType | undefined;
 	setImage: (image: ThumbnailType | undefined) => void;
 }) {
-	const draft_article = useContext(DraftArticleContext);
 	const store_images = useEditorImageData();
 	const input_ref = useRef<HTMLInputElement>(null);
-	const [crop, setCrop] = useState<Crop>();
-	const [uploadedVersion, setUploadedVersion] = useState<number>(() =>
-		Date.now(),
+
+	// Per-mount instance — this state lives and dies with the dialog, unlike
+	// `gallery_store`, which is a deliberate singleton for a different reason
+	// (registered piecemeal as a whole article body renders).
+	const [use_thumbnail_store] = useState(() =>
+		create_thumbnail_store(formImage),
 	);
-	const [customThumbnailExists, setCustomThumbnailExists] = useState<boolean>(
-		formImage?.uploaded_custom_thumbnail ?? false,
+	const selected_url = use_thumbnail_store((s) => s.selected_url);
+	const live_crop = use_thumbnail_store((s) => s.live_crop);
+	const custom_thumbnail = use_thumbnail_store((s) => s.custom_thumbnail);
+	const actions = use_thumbnail_store((s) => s.actions);
+
+	const images = useMemo((): EditorJSImageData[] => {
+		if (!custom_thumbnail) return store_images;
+
+		const custom_image: EditorJSImageData = {
+			file: { url: custom_thumbnail.url },
+			caption: "",
+		};
+
+		return [...store_images, custom_image];
+	}, [store_images, custom_thumbnail]);
+
+	const selected_index = images.findIndex(
+		(image) => image.file.url === selected_url,
 	);
-	// Media is immutable/decoupled (#8, #18): every upload gets a fresh URL,
-	// so it's tracked directly instead of derived from a fixed draft-bucket key.
-	const [customThumbnailUrl, setCustomThumbnailUrl] = useState<string>(
-		formImage?.uploaded_custom_thumbnail ? (formImage.image_url ?? "") : "",
-	);
-	const [doCenterCrop, setDoCenterCrop] = useState<boolean>(false);
-	const [selectedImageIndex, setSelectedImageIndex] = useState<
-		number | undefined
-	>(undefined);
+	const selected_image =
+		selected_index === -1 ? undefined : images[selected_index];
 
-	const images = useMemo(() => {
-		const temp = [...store_images];
+	const is_selected_custom =
+		custom_thumbnail !== null && custom_thumbnail.url === selected_url;
 
-		if (customThumbnailExists && draft_article && customThumbnailUrl) {
-			const editor_image = {
-				file: {
-					url: customThumbnailUrl,
-				},
-				caption: "",
-			} satisfies EditorJSImageData;
+	function commit(crop: PercentCrop) {
+		if (!selected_url) return;
 
-			temp.push(editor_image);
-		}
-
-		return temp;
-	}, [customThumbnailExists, customThumbnailUrl, draft_article, store_images]);
-
-	// `crop` mirrors `formImage` (the source of truth), but ReactCrop also
-	// writes into it directly as the user drags — so it can't be a plain
-	// derived value, only re-synced when `formImage` itself changes.
-	const [previousFormImage, setPreviousFormImage] = useState(formImage);
-	if (formImage !== previousFormImage) {
-		setPreviousFormImage(formImage);
-		setCrop(formImage);
+		setFormImage({
+			...crop,
+			image_url: selected_url,
+			uploaded_custom_thumbnail: is_selected_custom,
+			unit: "%",
+		});
 	}
 
-	// Defaults to whichever image matches `formImage` until the user makes an
-	// explicit selection (click), which then wins regardless of later prop changes.
-	const imageIndex = useMemo(() => {
-		if (typeof selectedImageIndex === "number") return selectedImageIndex;
-		if (!formImage) return undefined;
-
-		const index = images.findIndex(
-			(image) => image.file.url === formImage.image_url,
-		);
-
-		return index === -1 ? undefined : index;
-	}, [formImage, images, selectedImageIndex]);
-
-	const handle_image_load = useCallback(
-		(event: React.SyntheticEvent<HTMLImageElement>) => {
-			const { naturalWidth: width, naturalHeight: height } =
-				event.currentTarget;
-
-			if (typeof imageIndex !== "number") return;
-			const image_url = images[imageIndex]?.file.url;
-
-			if (typeof image_url === "undefined") return;
-			let current_crop: Crop | undefined;
-			if (!doCenterCrop) {
-				current_crop = crop;
-			}
-
-			current_crop ??= centerCrop(
-				makeAspectCrop(
-					{
-						unit: "%",
-						width: 100,
-					},
-					16 / 9,
-					width,
-					height,
-				),
-				width,
-				height,
-			);
-
-			const thumbnail = {
-				...current_crop,
-				uploaded_custom_thumbnail: customThumbnailExists,
-				image_url,
-				unit: "%",
-			} satisfies ThumbnailType;
-
-			setDoCenterCrop(false);
-			setFormImage(thumbnail);
-		},
-		[
-			crop,
-			customThumbnailExists,
-			doCenterCrop,
-			imageIndex,
-			images,
-			setFormImage,
-		],
-	);
+	function handle_crop_image_load(
+		event: React.SyntheticEvent<HTMLImageElement>,
+	) {
+		const { naturalWidth: width, naturalHeight: height } = event.currentTarget;
+		const crop = actions.resolveCrop(width, height);
+		if (crop) commit(crop);
+	}
 
 	return (
 		<>
@@ -141,29 +86,13 @@ export function ImageSelector({
 				accept="image/*"
 				ref={input_ref}
 				onChange={async (event) => {
-					const files = event.target.files;
-					const file = files?.item(0);
+					const file = event.target.files?.item(0);
 					if (!file) return;
 
 					setFormImage(undefined);
-					setCustomThumbnailExists(false);
 
-					const response = await upload_image_by_file({
-						file,
-						custom_title: "thumbnail-uploaded.png",
-						crop: formImage,
-					});
-
-					if (
-						typeof response.file === "undefined" ||
-						!("width" in response.file)
-					) {
-						return;
-					}
-
-					setCustomThumbnailUrl(response.file.url);
-					setCustomThumbnailExists(true);
-					setUploadedVersion(Date.now());
+					const uploaded = await actions.uploadCustomThumbnail(file, formImage);
+					if (!uploaded) return;
 				}}
 			/>
 			<div className="flex gap-4">
@@ -172,17 +101,15 @@ export function ImageSelector({
 						{images.map((image, index) => {
 							let width = image.file.width;
 							let height = image.file.height;
-							let is_custom_image = false;
+							const is_custom_image =
+								custom_thumbnail !== null &&
+								image.file.url === custom_thumbnail.url;
+
 							if (!image.file.url) {
 								width = 0;
 								height = 0;
 							}
-
-							if (
-								customThumbnailExists &&
-								image.file.url === customThumbnailUrl
-							) {
-								is_custom_image = true;
+							if (is_custom_image) {
 								width = 300;
 								height = (300 * 9) / 16;
 							}
@@ -193,22 +120,20 @@ export function ImageSelector({
 									key={`${image.file.url}-${index}`}
 									className={cn(
 										"box-border flex cursor-pointer items-center justify-center border-2 p-2",
-										imageIndex === index && "border-blue-500",
+										index === selected_index && "border-blue-500",
 										"max-h-[300px] max-w-[300px]",
 										"relative",
 									)}
 								>
 									<Image
-										src={`${image.file.url}?v=${uploadedVersion}`}
+										src={image.file.url}
 										alt={`Izbira slike #${index}`}
 										width={width}
 										height={height}
 										className="h-full w-full rounded-sm object-contain"
 										onClick={() => {
 											setFormImage(undefined);
-											setUploadedVersion(Date.now());
-											setSelectedImageIndex(index);
-											setDoCenterCrop(true);
+											actions.selectImage(image.file.url);
 										}}
 									/>
 									{is_custom_image && (
@@ -219,10 +144,12 @@ export function ImageSelector({
 											className="absolute right-0 top-0 m-4 shadow-2xl"
 											onClick={() => {
 												// Media is immutable (#8) — nothing to delete on B2,
-												// just clear the local selection.
-												setCustomThumbnailExists(false);
-												setCustomThumbnailUrl("");
-												setFormImage(undefined);
+												// just clear the local selection. Only clears the
+												// form if the removed thumbnail was the selected one
+												// — deleting an unselected custom thumbnail shouldn't
+												// discard whatever else is currently selected.
+												if (is_selected_custom) setFormImage(undefined);
+												actions.removeCustomThumbnail();
 											}}
 										>
 											<TrashIcon />
@@ -250,22 +177,15 @@ export function ImageSelector({
 						</Card>
 					</div>
 				</ScrollArea>
-				{typeof imageIndex === "number" && images[imageIndex]?.file.url && (
+				{selected_image?.file.url && (
 					<div className="flex w-[500px] max-w-[500px] items-center justify-center">
 						<ReactCrop
 							className="w-full"
+							crop={live_crop}
+							onChange={(_, percent_crop) => actions.setLiveCrop(percent_crop)}
 							onComplete={(_, percent_crop) => {
-								if (!images[imageIndex]) return;
-
-								setFormImage({
-									...percent_crop,
-									image_url: images[imageIndex].file.url,
-									uploaded_custom_thumbnail: customThumbnailExists,
-								});
-							}}
-							crop={crop}
-							onChange={(pixelCrop) => {
-								setCrop(pixelCrop);
+								actions.commitCrop(percent_crop);
+								commit(percent_crop);
 							}}
 							aspect={16 / 9}
 							ruleOfThirds
@@ -274,12 +194,12 @@ export function ImageSelector({
 						>
 							{/* biome-ignore lint/performance/noImgElement: ReactCrop clones a raw <img> ref, incompatible with next/image */}
 							<img
-								src={`${images[imageIndex].file.url}?v=${uploadedVersion}`}
+								src={selected_image.file.url}
 								alt="Obrezovanje slike"
-								width={images[imageIndex].file.width}
-								height={images[imageIndex].file.height}
+								width={selected_image.file.width}
+								height={selected_image.file.height}
 								className="h-full w-full min-w-[500px] object-contain"
-								onLoad={(event) => handle_image_load(event)}
+								onLoad={handle_crop_image_load}
 							/>
 						</ReactCrop>
 					</div>
