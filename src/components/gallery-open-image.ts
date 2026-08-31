@@ -1,12 +1,19 @@
 "use client";
 
 import { parseAsString, useQueryState } from "nuqs";
+import { useEffect } from "react";
 import { useGalleryImages } from "~/components/gallery-store";
+import type { CarouselApi } from "~/components/ui/carousel";
 import type { EditorJSImageData } from "~/lib/editor-utils";
+import {
+	decode_photo_param,
+	encode_photo_param,
+} from "~/lib/gallery-photo-param";
 
 /**
  * The gallery's open/closed state lives in the URL (a `photo` query param
- * holding the open image's url) rather than in `gallery_store`, so that:
+ * holding the open image's url, CDN-shortened by gallery-photo-param) rather
+ * than in `gallery_store`, so that:
  * - navigating to a different page never carries a stale open image with it
  *   (the old bug: the URL for the new page simply has no `photo` param).
  * - opening pushes a history entry, so a phone/browser back gesture closes
@@ -25,11 +32,12 @@ const GALLERY_PARAM = "photo";
 let opened_via_push = false;
 
 export function useOpenImage(): EditorJSImageData | undefined {
-	const [photo_url] = useQueryState(GALLERY_PARAM, parseAsString);
+	const [photo_param] = useQueryState(GALLERY_PARAM, parseAsString);
 	const images = useGalleryImages();
 
-	if (!photo_url) return undefined;
-	return images.find((image) => image.file.url === photo_url);
+	if (!photo_param) return undefined;
+	const url = decode_photo_param(photo_param);
+	return images.find((image) => image.file.url === url);
 }
 
 export function useOpenGalleryImage(): (image: EditorJSImageData) => void {
@@ -37,8 +45,37 @@ export function useOpenGalleryImage(): (image: EditorJSImageData) => void {
 
 	return (image) => {
 		opened_via_push = true;
-		void setPhoto(image.file.url, { history: "push" });
+		void setPhoto(encode_photo_param(image.file.url), { history: "push" });
 	};
+}
+
+/**
+ * Keeps the `photo` param pointed at whatever slide the carousel is
+ * currently on, so a swipe (not just the initial open) is reflected in the
+ * url — reloading or sharing mid-browse lands on the photo actually being
+ * viewed. Uses `history: "replace"` (nuqs's default) so swiping never grows
+ * the back-stack; `closeGallery`'s single pushed entry from open is still
+ * the only thing a back gesture pops.
+ */
+export function useSyncSelectedImage(
+	emblaApi: CarouselApi,
+	images: EditorJSImageData[],
+): void {
+	const [, setPhoto] = useQueryState(GALLERY_PARAM, parseAsString);
+
+	useEffect(() => {
+		if (!emblaApi) return;
+
+		const handle_select = () => {
+			const image = images[emblaApi.selectedScrollSnap()];
+			if (image) void setPhoto(encode_photo_param(image.file.url));
+		};
+
+		emblaApi.on("select", handle_select);
+		return () => {
+			emblaApi.off("select", handle_select);
+		};
+	}, [emblaApi, images, setPhoto]);
 }
 
 /**

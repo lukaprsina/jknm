@@ -2,9 +2,13 @@
 
 import { XIcon } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { closeGallery, useOpenImage } from "~/components/gallery-open-image";
+import {
+	closeGallery,
+	useOpenImage,
+	useSyncSelectedImage,
+} from "~/components/gallery-open-image";
 import { useGalleryImages } from "~/components/gallery-store";
 import { Button } from "~/components/ui/button";
 import type { CarouselApi } from "~/components/ui/carousel";
@@ -59,15 +63,17 @@ function MyCarousel({ open_image }: { open_image: EditorJSImageData }) {
 	const md_breakpoint = useBreakpoint("md", true);
 	const container_ref = useRef<HTMLDivElement>(null);
 
-	useEffect(() => {
-		if (!emblaApi) return;
+	// Known synchronously (open_image and images are both already resolved
+	// before this component ever mounts), so Embla can open directly on the
+	// right slide via startIndex instead of mounting at slide 0 and
+	// scrollTo-ing after the fact — the latter visibly flashed the first
+	// image before snapping to the opened one.
+	const start_index = Math.max(
+		0,
+		images.findIndex((image) => image.file.url === open_image.file.url),
+	);
 
-		const index = images.findIndex(
-			(image) => image.file.url === open_image.file.url,
-		);
-		if (index >= 0) emblaApi.scrollTo(index, true);
-	}, [emblaApi, open_image, images]);
-
+	useSyncSelectedImage(emblaApi, images);
 	useGalleryDismissal(emblaApi, container_ref, closeGallery);
 
 	return (
@@ -77,6 +83,7 @@ function MyCarousel({ open_image }: { open_image: EditorJSImageData }) {
 			opts={{
 				align: "center",
 				duration: 0,
+				startIndex: start_index,
 			}}
 			className="pointer-events-none flex h-full min-h-[350px] w-full items-center justify-center md:max-w-[80%]"
 		>
