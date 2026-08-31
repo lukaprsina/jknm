@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { createElement, useEffect, useMemo, useRef, useState } from "react";
 import ArticleDescription from "~/components/article/description";
+import { useOpenGalleryImage } from "~/components/gallery-open-image";
 import { gallery_store, useGalleryImages } from "~/components/gallery-store";
 import { TableOfContents } from "~/components/toc/table-of-contents";
 import {
@@ -248,6 +249,7 @@ export const NextImageRenderer: RenderFn<EditorJSImageData> = ({
 		[data.file],
 	);
 	const gallery_images = useGalleryImages();
+	const openGalleryImage = useOpenGalleryImage();
 
 	return (
 		<figure className="max-h-[1500] max-w-[1500]">
@@ -261,7 +263,7 @@ export const NextImageRenderer: RenderFn<EditorJSImageData> = ({
 					const registered = gallery_images.find(
 						(image) => image.file.url === data.file.url,
 					);
-					gallery_store.getState().openImage(
+					openGalleryImage(
 						registered ?? {
 							...data,
 							file: {

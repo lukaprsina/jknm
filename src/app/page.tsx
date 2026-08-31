@@ -64,35 +64,24 @@ export default async function HomePageServer() {
 		queryClient.prefetchInfiniteQuery(publishedFeedQueryOptions()),
 	]);
 
-	if (!session) {
-		return (
-			<>
-				<OrganizationJsonLd />
-				<Shell without_footer>
-					<div
-						className={cn(
-							page_variants({ max_width: "wide" }),
-							article_variants(),
-						)}
-					>
-						<InfiniteArticles />
-					</div>
-				</Shell>
-			</>
-		);
-	}
-
 	return (
 		<>
 			<OrganizationJsonLd />
 			<HydrationBoundary state={dehydrate(queryClient)}>
 				<Shell without_footer>
-					<div className={cn(page_variants({ max_width: "wide" }))}>
-						<DraftArticles />
-						<ArchivedArticles />
-						<div>
-							<InfiniteArticles />
-						</div>
+					<div
+						className={cn(
+							page_variants({ max_width: "wide" }),
+							!session && article_variants(),
+						)}
+					>
+						{session && (
+							<>
+								<DraftArticles />
+								<ArchivedArticles />
+							</>
+						)}
+						<InfiniteArticles />
 					</div>
 				</Shell>
 			</HydrationBoundary>

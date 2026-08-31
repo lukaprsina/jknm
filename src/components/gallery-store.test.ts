@@ -7,7 +7,7 @@ function make_image(url: string): EditorJSImageData {
 }
 
 beforeEach(() => {
-	gallery_store.setState({ images: [], open_image: undefined });
+	gallery_store.setState({ images: [] });
 });
 
 describe("registerImages", () => {
@@ -42,20 +42,6 @@ describe("registerImages", () => {
 			"a",
 			"b",
 		]);
-	});
-});
-
-describe("openImage / closeGallery", () => {
-	test("openImage sets the open image", () => {
-		const image = make_image("a");
-		gallery_store.getState().openImage(image);
-		expect(gallery_store.getState().open_image).toBe(image);
-	});
-
-	test("closeGallery clears the open image", () => {
-		gallery_store.getState().openImage(make_image("a"));
-		gallery_store.getState().closeGallery();
-		expect(gallery_store.getState().open_image).toBeUndefined();
 	});
 });
 

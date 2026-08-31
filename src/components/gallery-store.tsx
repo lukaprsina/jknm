@@ -6,7 +6,6 @@ import type { EditorJSImageData } from "~/lib/editor-utils";
 
 interface GalleryState {
 	images: EditorJSImageData[];
-	open_image: EditorJSImageData | undefined;
 }
 
 interface GalleryActions {
@@ -15,8 +14,6 @@ interface GalleryActions {
 	/** Dedup-by-url append — used by callers that register one image at a time as they render. */
 	addImage: (image: EditorJSImageData) => void;
 	removeImage: (url: string) => void;
-	openImage: (image: EditorJSImageData) => void;
-	closeGallery: () => void;
 }
 
 type GalleryStore = GalleryState & GalleryActions;
@@ -32,7 +29,6 @@ function dedupe_by_url(images: EditorJSImageData[]): EditorJSImageData[] {
 
 export const gallery_store = create<GalleryStore>((set, get) => ({
 	images: [],
-	open_image: undefined,
 	registerImages: (images) => set({ images: dedupe_by_url(images) }),
 	addImage: (image) => {
 		if (get().images.some((existing) => existing.file.url === image.file.url))
@@ -43,16 +39,10 @@ export const gallery_store = create<GalleryStore>((set, get) => ({
 		set((state) => ({
 			images: state.images.filter((image) => image.file.url !== url),
 		})),
-	openImage: (image) => set({ open_image: image }),
-	closeGallery: () => set({ open_image: undefined }),
 }));
 
 export function useGalleryImages(): EditorJSImageData[] {
 	return gallery_store((state) => state.images);
-}
-
-export function useOpenImage(): EditorJSImageData | undefined {
-	return gallery_store((state) => state.open_image);
 }
 
 /**

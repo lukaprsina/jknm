@@ -4,11 +4,8 @@ import { XIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import {
-	gallery_store,
-	useGalleryImages,
-	useOpenImage,
-} from "~/components/gallery-store";
+import { closeGallery, useOpenImage } from "~/components/gallery-open-image";
+import { useGalleryImages } from "~/components/gallery-store";
 import { Button } from "~/components/ui/button";
 import type { CarouselApi } from "~/components/ui/carousel";
 import {
@@ -38,15 +35,17 @@ function GalleryPortal({ open_image }: { open_image: EditorJSImageData }) {
 			className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-around bg-black/90 backdrop-blur-sm md:p-10"
 			onClick={(event) => {
 				if (event.target === event.currentTarget) {
-					gallery_store.getState().closeGallery();
+					closeGallery();
 				}
 			}}
 			// useGalleryDismissal already closes on Escape via a window
-			// listener; this is only here to satisfy the a11y lint rule
-			// pairing onClick with a keyboard handler on this dialog div.
-			onKeyDown={(event) => {
-				if (event.key === "Escape") gallery_store.getState().closeGallery();
-			}}
+			// listener; this exists only to satisfy the a11y lint rule pairing
+			// onClick with a keyboard handler on this dialog div. It must NOT
+			// also call closeGallery() — closeGallery() is a real
+			// window.history.back() now, and React's synthetic keydown here
+			// plus the window-level listener would both fire for the same
+			// Escape press, popping two history entries instead of one.
+			onKeyDown={() => {}}
 		>
 			<MyCarousel open_image={open_image} />
 		</div>,
@@ -69,9 +68,7 @@ function MyCarousel({ open_image }: { open_image: EditorJSImageData }) {
 		if (index >= 0) emblaApi.scrollTo(index, true);
 	}, [emblaApi, open_image, images]);
 
-	useGalleryDismissal(emblaApi, container_ref, () =>
-		gallery_store.getState().closeGallery(),
-	);
+	useGalleryDismissal(emblaApi, container_ref, closeGallery);
 
 	return (
 		<Carousel
@@ -120,7 +117,7 @@ function CloseButton({ className }: { className?: string }) {
 			variant="outline"
 			size="icon"
 			className={cn(className, "absolute h-8 w-8 rounded-full")}
-			onClick={() => gallery_store.getState().closeGallery()}
+			onClick={() => closeGallery()}
 		>
 			<XIcon />
 			<span className="sr-only">Zapri</span>
