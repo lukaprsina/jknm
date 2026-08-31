@@ -1,18 +1,13 @@
 import { eq } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
+import {
+	is_valid_legacy_id,
+	resolve_legacy_id_redirect,
+} from "~/lib/legacy-si-paths";
 import { legacy_gone, legacy_redirect } from "~/lib/site-config";
 import { find_article_with_relations } from "~/server/article/article-queries";
-import { find_primary_slug_or_first } from "~/server/article/lifecycle-rules";
 import { db } from "~/server/db";
 import { Article } from "~/server/db/schema";
-
-const LEGACY_ID_RE = /^\d+$/;
-
-// Postgres `integer` (what `Article.legacy_id` is) tops out here — an
-// all-digit id past this overflows the column and the driver throws,
-// turning a "this id never existed" case into a 500 instead of the 410 it
-// should be.
-const PG_INT_MAX = 2147483647;
 
 /**
  * Legacy URL shape: `https://www.jknm.si/si/?id=<legacy_id>&l=<year>`. `l`
@@ -31,7 +26,7 @@ export async function GET(request: NextRequest) {
 		return NextResponse.redirect(new URL("/", request.url), 301);
 	}
 
-	if (!LEGACY_ID_RE.test(id) || Number(id) > PG_INT_MAX) {
+	if (!is_valid_legacy_id(id)) {
 		return legacy_gone();
 	}
 
@@ -40,18 +35,9 @@ export async function GET(request: NextRequest) {
 		eq(Article.legacy_id, Number(id)),
 	);
 
-	// Anything not `published` (draft/archived/deleted) 410s rather than
-	// redirecting: these are inbound links from search results and old
-	// bookmarks, not an admin surface, so there's no session to branch on —
-	// unlike `/novica/[slug]`'s `is_visible_to`, which does gate archived
-	// articles in for signed-in admins.
-	if (article?.status !== "published") {
-		return legacy_gone();
-	}
+	const resolution = resolve_legacy_id_redirect(article ?? null);
 
-	const slug = find_primary_slug_or_first(article.article_slugs)?.slug;
-
-	if (!slug) {
+	if (resolution.outcome === "gone") {
 		return legacy_gone();
 	}
 
@@ -59,5 +45,5 @@ export async function GET(request: NextRequest) {
 	// (the non-primary-slug redirect on `/novica/[slug]`) — 301 and 308 are
 	// equivalent to Google, so this is a consistency choice, not a
 	// correctness one.
-	return legacy_redirect(`/novica/${encodeURIComponent(slug)}`, request);
+	return legacy_redirect(resolution.path, request);
 }
