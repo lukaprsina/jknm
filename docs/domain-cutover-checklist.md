@@ -6,29 +6,28 @@ the roles behind each constant: `docs/architecture.md#domains`, `src/lib/domains
 
 Not automatic — every item below is a manual step, in roughly this order.
 
-- [ ] **DNS**: point `jknm.si` (and `www.jknm.si` if the old site served both) at Vercel, add
-      both as domains on the Vercel project.
-- [ ] **`NEXT_PUBLIC_DEPLOYMENT_ORIGIN`**: set to `https://www.jknm.si` (or `https://jknm.si`,
-      whichever becomes canonical) in the Vercel dashboard, Production environment.
-- [ ] **`src/lib/domains.ts`**: hand-edit `CANONICAL_ORIGIN` to the literal `https://www.jknm.si`
+- [x] **DNS**: point `jknm.si` (and `www.jknm.si` if the old site served both) at Vercel, add
+      both as domains on the Vercel project. `www.jknm.si` is canonical; bare `jknm.si` 308s to
+      it. Done as of 2026-08-31.
+- [x] **`NEXT_PUBLIC_DEPLOYMENT_ORIGIN`**: set to `https://www.jknm.si` in Vercel, Production
+      environment (`vercel env rm`/`add` + `vercel --prod` redeploy, 2026-08-31).
+- [x] **`src/lib/domains.ts`**: hand-edit `CANONICAL_ORIGIN` to the literal `https://www.jknm.si`
       (stop deriving it from `DEPLOYMENT_ORIGIN`) — commit this separately so the flip has its
-      own line in `git blame`.
-- [ ] **Google Cloud Console** (OAuth client): add
-      `https://www.jknm.si/api/auth/callback/google` as an authorized redirect URI. Leave the
-      `jknm-si.vercel.app` one in place until confident nothing still depends on it.
-- [ ] **`src/server/auth/index.ts`**: `trustedOrigins` already lists `jknm.org` and
-      `jknm-si.vercel.app` — no change needed unless one of those is being retired too.
-- [ ] **Resend**: ask the old site's maintainer (they hold the `jknm.si` DNS) to add the SPF/DKIM
-      records Resend requires to verify `jknm.si` as a sending domain.
-- [ ] **`src/lib/domains.ts`**: once verified, change `MAIL_FROM_DOMAIN` from `"jknm.org"` to
-      `"jknm.si"`. Decide at the same time whether `send/route.ts`'s `to:` inbox should also move
-      off `info@jknm.org`, or stay as a dedicated support inbox — that's a live decision, not a
-      mechanical rename.
-- [ ] **Smoke test on the real domain** before deleting anything: sign in with Google, submit the
-      contact form, check `/sitemap.xml` and a published article's OG tags resolve to
-      `www.jknm.si` URLs, not the `.vercel.app` alias.
+      own line in `git blame`. Verified live: `/sitemap.xml` and `/robots.txt` now emit
+      `www.jknm.si` URLs.
+- [x] **Google Cloud Console** (OAuth client): add
+      `https://www.jknm.si/api/auth/callback/google` as an authorized redirect URI. Done ahead of
+      the rest of this cutover. `jknm.localhost`/`jknm-si.vercel.app`/`jknm.org` were dropped from
+      `allowedHosts` (`src/server/auth/index.ts`) since dev no longer runs through a `portless`
+      proxy (Google rejects the non-standard `.localhost` TLD) and the transitional hosts are no
+      longer needed; only `jknm.si`, `www.jknm.si`, `localhost:3000` remain.
+- [ ] **Resend**: skipped for now — the `jknm.si` DNS owner hasn't configured mail there yet.
+      `MAIL_FROM_DOMAIN` stays `"jknm.org"` until that changes; revisit this item later, not part
+      of this cutover.
+- [x] **Smoke test on the real domain**: sign-in and contact form confirmed working on
+      `www.jknm.si` (2026-08-31).
 - [ ] **Old site decommission**: once traffic and search rankings have settled on the new domain,
-      remove the `jknm-si.vercel.app` Google OAuth redirect URI and `trustedOrigins` entry.
+      remove the `jknm-si.vercel.app` Google OAuth redirect URI if one was added.
 
 ## Explicitly out of scope for cutover day
 

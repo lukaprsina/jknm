@@ -128,9 +128,10 @@ The version is intentionally pinned to 1.6.27. Better Auth 1.7 adds the required
 - Env: `BETTER_AUTH_SECRET`, `GOOGLE_CLIENT_ID`/`_SECRET`, plus `NEXT_PUBLIC_DEPLOYMENT_ORIGIN`
   (`~/lib/domains.ts`'s `DEPLOYMENT_ORIGIN`) for `baseURL` — must be explicit, an inferred base
   URL makes Google answer `redirect_uri_mismatch`. The Google redirect URI
-  `{DEPLOYMENT_ORIGIN}/api/auth/callback/google` is unchanged from NextAuth v4. `trustedOrigins`
-  additionally lists `jknm.org` and `jknm-si.vercel.app` for the domain transition — see
-  [Domains](#domains) below.
+  `{DEPLOYMENT_ORIGIN}/api/auth/callback/google` is unchanged from NextAuth v4. `baseURL.allowedHosts`
+  lists `jknm.si`, `www.jknm.si`, and `localhost:3000` (dev runs on a plain port, not a
+  `portless` `.localhost` proxy — Google OAuth rejects that non-standard TLD), which
+  auto-feeds `trustedOrigins` — see [Domains](#domains) below.
 
 ## Domains
 
@@ -141,8 +142,8 @@ edit to one silently meaning another. See [ADR-0010](adr/0010-domains-modeled-by
 
 | Constant | Value today | Role | Changes when |
 | --- | --- | --- | --- |
-| `DEPLOYMENT_ORIGIN` | `https://jknm-si.vercel.app` (prod) / `http://localhost:3000` (dev) | Where this deployment is reachable. Drives better-auth's `baseURL`, must match the Google OAuth redirect URI exactly | Per environment; env-sourced (`NEXT_PUBLIC_DEPLOYMENT_ORIGIN`), never inferred from `VERCEL_URL` |
-| `CANONICAL_ORIGIN` | = `DEPLOYMENT_ORIGIN` today | Public identity for `metadataBase`, `sitemap.ts`, `robots.ts`, Algolia permalinks, JSON-LD | Hand-edited once, on jknm.si cutover day |
+| `DEPLOYMENT_ORIGIN` | `https://www.jknm.si` (prod) / `http://localhost:3000` (dev) | Where this deployment is reachable. Drives `CANONICAL_ORIGIN` at cutover time, must match the Google OAuth redirect URI exactly | Per environment; env-sourced (`NEXT_PUBLIC_DEPLOYMENT_ORIGIN`), never inferred from `VERCEL_URL` |
+| `CANONICAL_ORIGIN` | `https://www.jknm.si`, hand-edited literal (2026-08-31 cutover) | Public identity for `metadataBase`, `sitemap.ts`, `robots.ts`, Algolia permalinks, JSON-LD | No longer tracks `DEPLOYMENT_ORIGIN` automatically — edit by hand if this ever changes again |
 | `LEGACY_SITE_ORIGIN` | `https://www.jknm.si` | Recognizing/rewriting links pasted from the pre-rewrite 2008 site into content | Never — names a fact about old content, not app deployment |
 | `MEDIA_CDN_ORIGIN` | `https://gradivo.jknm.org` | Cloudflare-routed custom domain in front of the `jknm-gradivo` B2 bucket (ADR-0008) | Never automatically — see cutover checklist |
 | `WORKSPACE_EMAIL_DOMAIN` / `CONTACT_EMAIL` | `jknm.si` / `info@jknm.si` | Google Workspace membership check (`sign-in-gate.ts`) + human-facing contact address | Never |

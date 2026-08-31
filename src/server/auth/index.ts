@@ -15,32 +15,21 @@ export type { Session } from "./session-shape";
 
 export const auth = betterAuth({
 	// Object form (not DEPLOYMENT_ORIGIN) because the app is reachable from
-	// several hosts at once during the domain transition — see
-	// src/lib/domains.ts. A single fixed baseURL always built the OAuth
-	// callback for DEPLOYMENT_ORIGIN's host regardless of which domain the
-	// sign-in started on, so a flow started on jknm.org either silently
-	// completed on jknm-si.vercel.app (if that origin already had a session
-	// cookie) or 403'd as INVALID_ORIGIN (if it didn't). allowedHosts derives
-	// the callback host per request instead, and auto-feeds trustedOrigins.
-	// jknm.org / www.jknm.org: bought and pointed at Vercel (both host
-	// variants are attached there), not yet the live app origin.
-	// jknm-si.vercel.app: today's DEPLOYMENT_ORIGIN, kept trusted so it
-	// doesn't break once DEPLOYMENT_ORIGIN is flipped to jknm.si at cutover.
-	// jknm.si / www.jknm.si: not live yet (still the old site until DNS cuts
-	// over) but listed ahead of time, both variants, so the flip doesn't also
-	// require an auth deploy — see docs/domain-cutover-checklist.md, which
-	// hasn't decided yet which of the two becomes canonical.
-	// jknm.localhost: portless dev proxy.
+	// several hosts at once — see src/lib/domains.ts. A single fixed baseURL
+	// always built the OAuth callback for DEPLOYMENT_ORIGIN's host regardless
+	// of which domain the sign-in started on. allowedHosts derives the
+	// callback host per request instead, and auto-feeds trustedOrigins.
+	// jknm.si / www.jknm.si: live post-cutover, both host variants attached
+	// on Vercel — see docs/domain-cutover-checklist.md, which hasn't decided
+	// yet which of the two becomes canonical.
+	// localhost:3000: plain `next dev`, no proxy — Google OAuth rejects the
+	// non-standard `.localhost` TLD a `portless` proxy would otherwise give
+	// us, so dev must run on a real port instead.
+	// protocol is deliberately unset: better-auth derives it per request
+	// (http for loopback hosts, https otherwise), which is what lets
+	// localhost:3000 and the two live hosts share one allowedHosts list.
 	baseURL: {
-		allowedHosts: [
-			"jknm.org",
-			"www.jknm.org",
-			"jknm-si.vercel.app",
-			"jknm.si",
-			"www.jknm.si",
-			"jknm.localhost",
-		],
-		protocol: "https",
+		allowedHosts: ["jknm.si", "www.jknm.si", "localhost:3000"],
 	},
 	secret: env.BETTER_AUTH_SECRET,
 	database: drizzleAdapter(db, {

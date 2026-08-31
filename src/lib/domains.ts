@@ -12,11 +12,12 @@ export const DEPLOYMENT_ORIGIN = env.NEXT_PUBLIC_DEPLOYMENT_ORIGIN;
 /**
  * Public identity for anything that must be a stable absolute URL a crawler
  * or search index will see: `metadataBase`, `sitemap.ts`, `robots.ts`,
- * Algolia permalinks. Equals `DEPLOYMENT_ORIGIN` until the `jknm.si` DNS
- * cutover (old site -> Vercel), then gets hand-edited to the real domain in
- * one commit, same day the DNS is flipped.
+ * Algolia permalinks. Hand-edited to the literal domain on `jknm.si` cutover
+ * day (2026-08-31) rather than derived from `DEPLOYMENT_ORIGIN`, so a future
+ * per-environment change to `DEPLOYMENT_ORIGIN` can't silently drag the
+ * public identity along with it.
  */
-export const CANONICAL_ORIGIN: string = DEPLOYMENT_ORIGIN;
+export const CANONICAL_ORIGIN = "https://www.jknm.si";
 
 /**
  * The pre-rewrite 2008 site (`jknm.si`, classic-ASP). Used only to

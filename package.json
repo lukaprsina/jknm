@@ -8,7 +8,7 @@
 		"db:push": "dotenv -e .env.local -- drizzle-kit push",
 		"db:push:staging": "dotenv -e .env.local -e .env.staging --override -- drizzle-kit push",
 		"db:studio": "dotenv -e .env.local -- drizzle-kit studio",
-		"dev": "portless jknm next dev",
+		"dev": "next dev",
 		"dev:staging": "dotenv -e .env.local -e .env.staging --override -- portless jknm:staging next dev",
 		"lint": "eslint .",
 		"check:fix": "bunx @biomejs/biome check --write",
