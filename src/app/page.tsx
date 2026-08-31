@@ -12,7 +12,7 @@ import { article_variants, page_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
 import { getServerAuthSession } from "~/server/auth";
 import { InfiniteArticles } from "./infinite-articles";
-import { get_infinite_published2 } from "./infinite-server";
+import { publishedFeedQueryOptions } from "./published-feed-query";
 
 export const metadata: Metadata = {
 	alternates: { canonical: "/" },
@@ -61,11 +61,7 @@ export default async function HomePageServer() {
 
 	const [session] = await Promise.all([
 		getServerAuthSession(),
-		queryClient.prefetchInfiniteQuery({
-			queryKey: ["infinite_published"],
-			queryFn: (props) => get_infinite_published2({ limit: 31, ...props }),
-			initialPageParam: undefined,
-		}),
+		queryClient.prefetchInfiniteQuery(publishedFeedQueryOptions()),
 	]);
 
 	if (!session) {

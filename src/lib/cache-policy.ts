@@ -76,8 +76,10 @@ export interface InvalidationDescriptor {
  */
 export const CACHE_PATHS = ["/", "/sitemap.xml"] as const;
 
-/** The homepage feed's TanStack Query key (`app/infinite-articles.tsx`). */
-const HOMEPAGE_FEED_KEYS = [["infinite_published"]] as const;
+/** The homepage feed's TanStack Query key (`app/published-feed-query.ts`). */
+export const PUBLISHED_FEED_QUERY_KEY = ["infinite_published"] as const;
+
+const HOMEPAGE_FEED_KEYS = [PUBLISHED_FEED_QUERY_KEY] as const;
 
 /**
  * Every tag touched when an article enters or leaves the published set:

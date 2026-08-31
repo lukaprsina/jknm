@@ -39,9 +39,12 @@ pattern that stood in for it.
   is the only transport, so each procedure is imported and called directly; reads go
   straight to RSC/Drizzle, not through oRPC.
 - **Reads** — mostly RSC calling query helpers / Drizzle directly. Client-side TanStack Query
-  is used in three places: the infinite homepage feed (`src/app/infinite-no-trpc.tsx`,
-  a filename fossil from the tRPC era), the `/preveri` admin tool, and the member-sync
-  preview in `src/components/settings/index.tsx`.
+  is used in three places: the infinite homepage feed (query key owned by
+  `src/lib/cache-policy.ts`'s `PUBLISHED_FEED_QUERY_KEY`, `pageParam` shape and limit fixed
+  once in `src/app/published-feed-query.ts`'s `publishedFeedQueryOptions()`, consumed
+  identically by `page.tsx`'s server-side prefetch, `infinite-articles.tsx`'s client hook, and
+  `cache-policy.ts`'s own `HOMEPAGE_FEED_KEYS`), the `/preveri` admin tool, and the
+  member-sync preview in `src/components/settings/index.tsx`.
   - The member-sync preview (`previewMemberSync`) is a deliberate exception to "reads go
     through RSC, not oRPC": it's a read, but it calls the Google Admin API, which is too
     slow to run on every render of the settings menu — it only runs when the sync dialog is

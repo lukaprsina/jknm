@@ -7,17 +7,11 @@ import { NewPublishedArticleCard } from "~/components/article/new-card";
 import { Sponsors } from "~/components/shell/sponsors";
 import { article_grid_variants, article_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
-import { get_infinite_published2 } from "./infinite-server";
+import { publishedFeedQueryOptions } from "./published-feed-query";
 
 export type IntersectionRef = ReturnType<typeof useIntersectionObserver>["ref"];
 export function InfiniteArticles() {
-	const infinite_published = useInfiniteQuery({
-		queryKey: ["infinite_published"],
-		queryFn: ({ pageParam }) =>
-			get_infinite_published2({ pageParam, limit: 60 }),
-		initialPageParam: undefined as Date | undefined,
-		getNextPageParam: (lastPage) => lastPage.next_cursor,
-	});
+	const infinite_published = useInfiniteQuery(publishedFeedQueryOptions());
 
 	const [last_observer_ref, is_last_intersecting] = useIntersectionObserver({
 		threshold: 0,
