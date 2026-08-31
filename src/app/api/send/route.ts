@@ -1,18 +1,25 @@
 import { Resend } from "resend";
-import type { z } from "zod";
-import type { contact_form_schema } from "~/app/stik-z-nami/contact-form";
 import {
 	AdminContactEmailTemplate,
 	UserContactEmailTemplate,
 } from "~/components/email-template";
 import { env } from "~/env";
+import { contact_form_schema } from "~/lib/contact-form";
 import { MAIL_FROM_DOMAIN } from "~/lib/domains";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
 	try {
-		const values = (await req.json()) as z.infer<typeof contact_form_schema>;
+		const parsed = contact_form_schema.safeParse(await req.json());
+		if (!parsed.success) {
+			console.error("[api/send] invalid payload:", parsed.error.message);
+			return Response.json(
+				{ error: "invalid payload", type: "validation" },
+				{ status: 400 },
+			);
+		}
+		const values = parsed.data;
 
 		const admin_email = await resend.emails.send({
 			from: `Jamarski klub Novo mesto <noreply@${MAIL_FROM_DOMAIN}>`,

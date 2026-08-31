@@ -1,5 +1,5 @@
 import type * as z from "zod";
-import type { contact_form_schema } from "../app/stik-z-nami/contact-form";
+import type { contact_form_schema } from "~/lib/contact-form";
 
 export async function AdminContactEmailTemplate({
 	name,

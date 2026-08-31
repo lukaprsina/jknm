@@ -5,7 +5,7 @@ import { Check } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+import type * as z from "zod";
 import { Button } from "~/components/ui/button";
 import {
 	Form,
@@ -17,14 +17,8 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
+import { contact_form_schema } from "~/lib/contact-form";
 import { cn } from "~/lib/utils";
-
-export const contact_form_schema = z.object({
-	email: z.string().min(1, "Obvezno polje").email("Neveljaven e-poštni naslov"),
-	name: z.string().min(1, "Obvezno polje"),
-	address: z.string().min(1, "Obvezno polje"),
-	interest: z.string().min(1, "Obvezno polje"),
-});
 
 export default function ContactForm() {
 	const [sent, set_sent] = useState(false);
