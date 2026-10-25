@@ -13,7 +13,10 @@ import { editor_store } from "~/components/editor/editor-store";
 import { useToast } from "~/hooks/use-toast";
 import { get_published_article_link } from "~/lib/article-utils";
 import { apply_client_invalidations } from "~/lib/cache-invalidation-client";
-import { unwrap_server_function } from "~/lib/orpc-action";
+import {
+	type ServerFunctionInput,
+	unwrap_server_function,
+} from "~/lib/orpc-action";
 import type { ThumbnailType } from "~/lib/validators";
 import {
 	deleteArticle,
@@ -42,7 +45,7 @@ export function useEditorMutations() {
 	const save_had_error = useRef(false);
 
 	const save_article_mutation = useMutation({
-		mutationFn: (input: Parameters<typeof saveArticle>[0]) =>
+		mutationFn: (input: ServerFunctionInput<typeof saveArticle>) =>
 			unwrap_server_function(saveArticle(input)),
 		onSettled: () => {
 			if (!save_had_error.current) editor_context.setStatusText(undefined);
@@ -57,7 +60,7 @@ export function useEditorMutations() {
 	});
 
 	const publish_article_mutation = useMutation({
-		mutationFn: (input: Parameters<typeof publishArticle>[0]) =>
+		mutationFn: (input: ServerFunctionInput<typeof publishArticle>) =>
 			unwrap_server_function(publishArticle(input)),
 		onSuccess: (data) => {
 			router.push(`/novica/${data.slug}`);
@@ -76,7 +79,7 @@ export function useEditorMutations() {
 	});
 
 	const delete_article_mutation = useMutation({
-		mutationFn: (input: Parameters<typeof deleteArticle>[0]) =>
+		mutationFn: (input: ServerFunctionInput<typeof deleteArticle>) =>
 			unwrap_server_function(deleteArticle(input)),
 		onSettled: async () => {
 			await apply_client_invalidations(query_client, "article.deleted");
@@ -91,7 +94,7 @@ export function useEditorMutations() {
 	});
 
 	const discard_draft_mutation = useMutation({
-		mutationFn: (input: Parameters<typeof discardDraft>[0]) =>
+		mutationFn: (input: ServerFunctionInput<typeof discardDraft>) =>
 			unwrap_server_function(discardDraft(input)),
 		onSettled: async () => {
 			await apply_client_invalidations(query_client, "article.draft_discarded");

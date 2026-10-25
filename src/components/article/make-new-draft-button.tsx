@@ -11,7 +11,10 @@ import {
 	PopoverTrigger,
 } from "~/components/ui/popover";
 import { get_draft_article_link } from "~/lib/article-utils";
-import { unwrap_server_function } from "~/lib/orpc-action";
+import {
+	type ServerFunctionInput,
+	unwrap_server_function,
+} from "~/lib/orpc-action";
 import { article_variants } from "~/lib/page-variants";
 import { cn } from "~/lib/utils";
 import { createArticle } from "~/server/orpc/article/procedures";
@@ -24,7 +27,7 @@ export default function MakeNewDraftButton({
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
 	const create_draft_mutation = useMutation({
-		mutationFn: (input: Parameters<typeof createArticle>[0]) =>
+		mutationFn: (input: ServerFunctionInput<typeof createArticle>) =>
 			unwrap_server_function(createArticle(input)),
 		onSuccess: (data) => {
 			router.push(get_draft_article_link(data.id));

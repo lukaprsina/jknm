@@ -17,7 +17,10 @@ import {
 import type { ButtonProps } from "~/components/ui/button";
 import { Button } from "~/components/ui/button";
 import { useToast } from "~/hooks/use-toast";
-import { unwrap_server_function } from "~/lib/orpc-action";
+import {
+	type ServerFunctionInput,
+	unwrap_server_function,
+} from "~/lib/orpc-action";
 import { archiveArticle } from "~/server/orpc/article/procedures";
 
 /**
@@ -40,7 +43,7 @@ export function ArchiveArticleButton({
 	const toaster = useToast();
 
 	const mutation = useMutation({
-		mutationFn: (input: Parameters<typeof archiveArticle>[0]) =>
+		mutationFn: (input: ServerFunctionInput<typeof archiveArticle>) =>
 			unwrap_server_function(archiveArticle(input)),
 		onSuccess: () => on_archived?.(),
 		onError: (error) => {

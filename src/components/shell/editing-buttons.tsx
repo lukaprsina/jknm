@@ -11,7 +11,10 @@ import {
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { get_draft_article_link } from "~/lib/article-utils";
-import { unwrap_server_function } from "~/lib/orpc-action";
+import {
+	type ServerFunctionInput,
+	unwrap_server_function,
+} from "~/lib/orpc-action";
 import { createSupersedingDraft } from "~/server/orpc/article/procedures";
 import MakeNewDraftButton from "../article/make-new-draft-button";
 import type { EditableArticleRef } from "../article/new-adapter";
@@ -58,7 +61,7 @@ export function EditButton({
 	const router = useRouter();
 
 	const mutation = useMutation({
-		mutationFn: (input: Parameters<typeof createSupersedingDraft>[0]) =>
+		mutationFn: (input: ServerFunctionInput<typeof createSupersedingDraft>) =>
 			unwrap_server_function(createSupersedingDraft(input)),
 		onSuccess: (draft) => {
 			const new_url = get_draft_article_link(draft.id);

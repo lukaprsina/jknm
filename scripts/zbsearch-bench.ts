@@ -1,3 +1,4 @@
+// @ts-nocheck -- zbsearch experiment: deps removed from package.json, parked
 import { brotliCompressSync, gzipSync } from "node:zlib";
 import { persist, restore } from "@zbsearch/plugin-data-persistence";
 import { pluginQPS } from "@zbsearch/plugin-qps";

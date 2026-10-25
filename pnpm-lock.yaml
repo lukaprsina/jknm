@@ -81,16 +81,16 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(react@19.2.8)(tailwindcss@4.3.3)
       '@orpc/client':
-        specifier: beta
+        specifier: 2.0.0-beta.46
         version: 2.0.0-beta.46
       '@orpc/next':
-        specifier: beta
+        specifier: 2.0.0-beta.46
         version: 2.0.0-beta.46(next@16.3.2(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@26.6.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
       '@orpc/server':
-        specifier: beta
+        specifier: 2.0.0-beta.46
         version: 2.0.0-beta.46
       '@orpc/tanstack-query':
-        specifier: beta
+        specifier: 2.0.0-beta.46
         version: 2.0.0-beta.46(@tanstack/query-core@5.104.5)
       '@radix-ui/react-accordion':
         specifier: ^1.2.15
@@ -495,6 +495,9 @@ importers:
       typescript-eslint:
         specifier: ^8.67.0
         version: 8.72.0(eslint@9.39.5(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
+      vite:
+        specifier: ^8.3.5
+        version: 8.3.5(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)
       vitest:
         specifier: ^4.1.11
         version: 4.1.12(@types/node@26.6.5)(vite@8.3.5(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))

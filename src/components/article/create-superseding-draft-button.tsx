@@ -17,7 +17,10 @@ import {
 import type { ButtonProps } from "~/components/ui/button";
 import { Button } from "~/components/ui/button";
 import { get_draft_article_link } from "~/lib/article-utils";
-import { unwrap_server_function } from "~/lib/orpc-action";
+import {
+	type ServerFunctionInput,
+	unwrap_server_function,
+} from "~/lib/orpc-action";
 import { createSupersedingDraft } from "~/server/orpc/article/procedures";
 
 /**
@@ -38,7 +41,7 @@ export function CreateSupersedingDraftButton({
 	const router = useRouter();
 
 	const mutation = useMutation({
-		mutationFn: (input: Parameters<typeof createSupersedingDraft>[0]) =>
+		mutationFn: (input: ServerFunctionInput<typeof createSupersedingDraft>) =>
 			unwrap_server_function(createSupersedingDraft(input)),
 		onSuccess: (draft) => {
 			router.push(get_draft_article_link(draft.id));

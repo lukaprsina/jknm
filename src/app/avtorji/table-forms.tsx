@@ -16,7 +16,10 @@ import {
 import { Input } from "~/components/ui/input";
 import { useToast } from "~/hooks/use-toast";
 import { format_author_name } from "~/lib/author-name";
-import { unwrap_server_function } from "~/lib/orpc-action";
+import {
+	type ServerFunctionInput,
+	unwrap_server_function,
+} from "~/lib/orpc-action";
 import { insertGuest, renameGuest } from "~/server/orpc/author/procedures";
 import type { GuestAuthor } from "./table";
 
@@ -36,7 +39,7 @@ export function EditAuthorNameForm({
 	const toaster = useToast();
 
 	const rename_guest_mutation = useMutation({
-		mutationFn: (input: Parameters<typeof renameGuest>[0]) =>
+		mutationFn: (input: ServerFunctionInput<typeof renameGuest>) =>
 			unwrap_server_function(renameGuest(input)),
 		onSettled: () => {
 			router.refresh();
@@ -122,7 +125,7 @@ export function InsertAuthorForm() {
 	const router = useRouter();
 
 	const insert_guest_mutation = useMutation({
-		mutationFn: (input: Parameters<typeof insertGuest>[0]) =>
+		mutationFn: (input: ServerFunctionInput<typeof insertGuest>) =>
 			unwrap_server_function(insertGuest(input)),
 		onSettled: () => {
 			router.refresh();

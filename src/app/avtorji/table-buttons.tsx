@@ -33,7 +33,10 @@ import {
 } from "~/components/ui/tooltip";
 import { useToast } from "~/hooks/use-toast";
 import { format_author_name } from "~/lib/author-name";
-import { unwrap_server_function } from "~/lib/orpc-action";
+import {
+	type ServerFunctionInput,
+	unwrap_server_function,
+} from "~/lib/orpc-action";
 import { deleteGuests } from "~/server/orpc/author/procedures";
 import type { GuestAuthor } from "./table";
 import { EditAuthorNameForm, InsertAuthorForm } from "./table-forms";
@@ -44,7 +47,7 @@ export function AuthorsTableCellButtons({ author }: { author: GuestAuthor }) {
 	const router = useRouter();
 
 	const delete_guests_mutation = useMutation({
-		mutationFn: (input: Parameters<typeof deleteGuests>[0]) =>
+		mutationFn: (input: ServerFunctionInput<typeof deleteGuests>) =>
 			unwrap_server_function(deleteGuests(input)),
 		onSettled: () => {
 			router.refresh();
@@ -128,7 +131,7 @@ export function AuthorsTableHeaderButtons({
 	const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
 	const delete_guests_mutation = useMutation({
-		mutationFn: (input: Parameters<typeof deleteGuests>[0]) =>
+		mutationFn: (input: ServerFunctionInput<typeof deleteGuests>) =>
 			unwrap_server_function(deleteGuests(input)),
 		onSettled: () => {
 			router.refresh();

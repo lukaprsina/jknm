@@ -17,7 +17,10 @@ import {
 import type { ButtonProps } from "~/components/ui/button";
 import { Button } from "~/components/ui/button";
 import { useToast } from "~/hooks/use-toast";
-import { unwrap_server_function } from "~/lib/orpc-action";
+import {
+	type ServerFunctionInput,
+	unwrap_server_function,
+} from "~/lib/orpc-action";
 import { deleteArticle } from "~/server/orpc/article/procedures";
 
 /**
@@ -40,7 +43,7 @@ export function DeleteArticleButton({
 	const toaster = useToast();
 
 	const mutation = useMutation({
-		mutationFn: (input: Parameters<typeof deleteArticle>[0]) =>
+		mutationFn: (input: ServerFunctionInput<typeof deleteArticle>) =>
 			unwrap_server_function(deleteArticle(input)),
 		onSuccess: () => on_deleted?.(),
 		onError: (error) => {
