@@ -78,9 +78,6 @@
 		"@tanstack/react-table": "^9.1.2",
 		"@types/node-dir": "^0.0.37",
 		"@vercel/speed-insights": "^2.0.0",
-		"@zbsearch/plugin-data-persistence": "4.0.0",
-		"@zbsearch/plugin-qps": "4.0.0",
-		"@zbsearch/stemmers": "4.0.0",
 		"algoliasearch": "^5.57.0",
 		"b2-js": "^1.2.4",
 		"babel-plugin-react-compiler": "^1.0.0",
@@ -148,7 +145,6 @@
 		"usehooks-ts": "^3.1.0",
 		"uuid": "^14.0.2",
 		"vaul": "^1.1.2",
-		"zbsearch": "4.0.0",
 		"zod": "^4.4.3",
 		"zustand": "^5.0.15"
 	},
