@@ -10,15 +10,12 @@
 		"db:push:staging": "dotenv -e .env.local -e .env.staging --override -- drizzle-kit push",
 		"db:studio": "dotenv -e .env.local -- drizzle-kit studio",
 		"dev": "next dev",
-		"dev:staging": "dotenv -e .env.local -e .env.staging --override -- portless jknm:staging next dev",
+		"dev:staging": "dotenv -e .env.local -e .env.staging --override next dev",
 		"lint": "eslint .",
 		"check:fix": "vpx @biomejs/biome check --write",
 		"start": "next start",
 		"test": "vitest run",
-		"test:watch": "vitest",
-		"review:link-fixes": "dotenv -e .env.local -- tsx scripts/review-link-fixes.ts",
-		"migrate:vsebina-postpass": "dotenv -e .env.local -e .env.staging --override -- vpr scripts/migrate/vsebina-postpass.ts",
-		"sweep": "vpr scripts/sweep-stale-content.ts"
+		"test:watch": "vitest"
 	},
 	"dependencies": {
 		"@algolia/autocomplete-js": "^1.19.9",
@@ -176,7 +173,6 @@
 		"eslint-plugin-react-hooks": "7.1.1",
 		"htmlparser2": "^12.0.0",
 		"playwright": "^1.62.1",
-		"portless": "^0.15.6",
 		"postcss": "^8.5.26",
 		"prettier": "^3.9.4",
 		"prettier-plugin-tailwindcss": "^0.8.0",

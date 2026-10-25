@@ -11,17 +11,6 @@ const config: NextConfig = {
 			bodySizeLimit: "100mb",
 		},
 	},
-	// Turbopack's build-time file tracing doesn't reliably pick up sharp's
-	// platform-specific native binary (it's resolved via a dynamic require at
-	// runtime), so the deployed /api/media function was missing
-	// libvips-cpp.so on Vercel even though it worked locally. Force it in.
-	// Remove in Next 16.3+. lovell/sharp #4567
-	outputFileTracingIncludes: {
-		"/api/media": [
-			"./node_modules/@img/sharp-linux-x64/**/*",
-			"./node_modules/@img/sharp-libvips-linux-x64/**/*",
-		],
-	},
 	images: {
 		unoptimized: true,
 	},
