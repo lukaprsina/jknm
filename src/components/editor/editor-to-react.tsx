@@ -39,16 +39,24 @@ import type {
 // Editor content is rendered from stored HTML (paragraph/list/quote/etc.
 // all pass through html-react-parser), so patching every renderer isn't
 // practical — force target="_blank" on the mounted DOM instead.
-function ArticleLinksInNewTab({ children }: { children: React.ReactNode }) {
+// Links only change when the content does, so `content` is the effect's dep.
+function ArticleLinksInNewTab({
+	children,
+	content,
+}: {
+	children: React.ReactNode;
+	content: unknown;
+}) {
 	const ref = useRef<HTMLDivElement>(null);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: `content` is the trigger, not a value the effect reads
 	useEffect(() => {
 		const links = ref.current?.querySelectorAll("a[href]") ?? [];
 		for (const link of links) {
 			link.setAttribute("target", "_blank");
 			link.setAttribute("rel", "noopener noreferrer");
 		}
-	});
+	}, [content]);
 
 	return <div ref={ref}>{children}</div>;
 }
@@ -59,7 +67,7 @@ function ArticleBody({
 	blocks_data: NonNullable<ReturnType<typeof useEditorData>["blocks_data"]>;
 }) {
 	return (
-		<ArticleLinksInNewTab>
+		<ArticleLinksInNewTab content={blocks_data}>
 			<Blocks
 				data={blocks_data}
 				renderers={{
@@ -214,6 +222,8 @@ export function EditorToReact({
 	);
 }
 
+// Intentional: from 2008 to 2023 every image came from the old site at ~480px,
+// so small images are doubled for display. Don't "fix" this.
 const DOUBLE_IMAGES = true as boolean;
 const SMALL_IMAGE_THRESHOLD = 500;
 
@@ -250,42 +260,65 @@ export const NextImageRenderer: RenderFn<EditorJSImageData> = ({
 	);
 	const gallery_images = useGalleryImages();
 	const openGalleryImage = useOpenGalleryImage();
+	// Blocks saved without dimensions get a made-up 1500x1000 in
+	// `get_effective_dimensions`; once the real file has loaded, its natural
+	// size replaces that so the lightbox doesn't fit it to the wrong ratio.
+	const [measured, setMeasured] = useState<{
+		width: number;
+		height: number;
+	}>();
+
+	const open_in_gallery = () => {
+		// registerImages already computed this image's effective
+		// dimensions when building the gallery's image list — reuse
+		// that instead of recomputing get_effective_dimensions here.
+		const registered = gallery_images.find(
+			(image) => image.file.url === data.file.url,
+		);
+		const dimensions =
+			!image_props.dimensions_exist && measured ? measured : registered?.file;
+		openGalleryImage({
+			...(registered ?? data),
+			file: {
+				...data.file,
+				width: dimensions?.width ?? image_props.width,
+				height: dimensions?.height ?? image_props.height,
+			},
+		});
+	};
 
 	return (
-		<figure className="max-h-[1500] max-w-[1500]">
+		// No max-height here: a tall portrait image (e.g. 1125x1686 on a wide
+		// viewport) overflows a clamped figure and paints over the next block
+		// and its own caption. The <img> scales via `max-w-full h-auto`.
+		<figure className="[&_img]:my-0">
 			<Image
 				draggable={false}
 				onContextMenu={(event) => event.preventDefault()}
-				onClick={() => {
-					// registerImages already computed this image's effective
-					// dimensions when building the gallery's image list — reuse
-					// that instead of recomputing get_effective_dimensions here.
-					const registered = gallery_images.find(
-						(image) => image.file.url === data.file.url,
-					);
-					openGalleryImage(
-						registered ?? {
-							...data,
-							file: {
-								...data.file,
-								width: image_props.width,
-								height: image_props.height,
-							},
-						},
-					);
+				onClick={open_in_gallery}
+				onLoad={(event) => {
+					if (image_props.dimensions_exist) return;
+					const { naturalWidth, naturalHeight } = event.currentTarget;
+					if (naturalWidth && naturalHeight)
+						setMeasured({ width: naturalWidth, height: naturalHeight });
 				}}
-				className={cn(
-					"cursor-pointer",
-					className,
-					!image_props.dimensions_exist && "object-contain",
-				)}
-				alt={data.caption || "Slika"}
+				onKeyDown={(event) => {
+					if (event.key === "Enter" || event.key === " ") {
+						event.preventDefault();
+						open_in_gallery();
+					}
+				}}
+				role="button"
+				tabIndex={0}
+				className={cn("block h-auto max-w-full cursor-pointer", className)}
+				// The figcaption already carries the caption text, so repeating it
+				// as alt makes screen readers read it twice.
+				alt={data.caption ? "" : "Slika"}
 				src={data.file.url}
 				width={image_props.width}
 				height={image_props.height}
-				priority={true}
 			/>
-			<figcaption>{HTMLReactParser(data.caption)}</figcaption>
+			{data.caption && <figcaption>{HTMLReactParser(data.caption)}</figcaption>}
 		</figure>
 	);
 };
