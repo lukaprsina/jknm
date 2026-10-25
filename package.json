@@ -2,6 +2,7 @@
 	"name": "jknm",
 	"version": "0.1.0",
 	"private": true,
+	"packageManager": "pnpm@12.15.0",
 	"type": "module",
 	"scripts": {
 		"build": "next build",
@@ -11,13 +12,13 @@
 		"dev": "next dev",
 		"dev:staging": "dotenv -e .env.local -e .env.staging --override -- portless jknm:staging next dev",
 		"lint": "eslint .",
-		"check:fix": "bunx @biomejs/biome check --write",
+		"check:fix": "vpx @biomejs/biome check --write",
 		"start": "next start",
 		"test": "vitest run",
 		"test:watch": "vitest",
 		"review:link-fixes": "dotenv -e .env.local -- tsx scripts/review-link-fixes.ts",
-		"migrate:vsebina-postpass": "dotenv -e .env.local -e .env.staging --override -- bun run scripts/migrate/vsebina-postpass.ts",
-		"sweep": "bun run scripts/sweep-stale-content.ts"
+		"migrate:vsebina-postpass": "dotenv -e .env.local -e .env.staging --override -- vpr scripts/migrate/vsebina-postpass.ts",
+		"sweep": "vpr scripts/sweep-stale-content.ts"
 	},
 	"dependencies": {
 		"@algolia/autocomplete-js": "^1.19.9",
